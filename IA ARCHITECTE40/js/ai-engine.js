@@ -1,0 +1,1055 @@
+/* ═══════════════════════════════════════════════════════
+   IA Architecte — Local AI Engine v8.7 | ai-engine.js
+   UNIVERSAL NAVIGATOR & KNOWLEDGE HUB (EN/FR)
+   ═══════════════════════════════════════════════════════ */
+
+(function(window) {
+  'use strict';
+
+  const miner = (code) => {
+    const res = { color: '#3b82f6', radius: '24px', font: 'Inter, sans-serif', shadow: '0 20px 50px rgba(0,0,0,0.3)' };
+    if(!code) return res;
+    const c = code.match(/--primary:\s*(#[a-f0-9]{3,6}|rgba?\(.*?\))/i) || code.match(/color:\s*(#[a-f0-9]{3,6})/i);
+    const r = code.match(/border-radius:\s*(\d+px|%)/i);
+    const s = code.match(/box-shadow:\s*([^;]+)/i);
+    if(c) res.color = c[1];
+    if(r) res.radius = r[1];
+    if(s) res.shadow = s[1];
+    return res;
+  };
+
+  const AIEngine = {
+    generate: (p) => {
+      const prompt = (p || "").toLowerCase();
+      const ed = window.editor || (window.parent && window.parent.editor);
+      const code = ed ? ed.getValue() : "";
+      const s = miner(code);
+      const lang = window.lang || 'en';
+
+      // 1. Search in Professional Libraries for exact/fuzzy matches
+      const libs = [
+        ...(window.APPS_PRO_DATA || []),
+        ...(window.APPS_DATA || []),
+        ...(window.REALWORLD_APPS_DATA || [])
+      ];
+
+      for(const app of libs) {
+        const title = (lang === 'fr' ? app.fr : app.en).toLowerCase();
+        if(prompt === title || prompt.includes(title) || (app.id && prompt.includes(app.id))) {
+          return `\n<!-- 🏛️ IA-PRO [${app.en.toUpperCase()}] Model -->\n${app.code}`;
+        }
+      }
+
+      // 2. Full Page / Landing Intents (Only if no specific app found)
+      if(prompt.includes('page') || prompt.includes('full') || prompt.includes('landing') || prompt.includes('real estate') || prompt.includes('immobilier')) {
+        const title = prompt.includes('real estate') || prompt.includes('immobilier') ? (lang === 'fr' ? 'ÉLITE IMMOBILIER' : 'ELITE REAL ESTATE') : 'GENESIS';
+        const slogan = prompt.includes('real estate') || prompt.includes('immobilier') ? (lang === 'fr' ? 'Trouvez votre demeure idéale.' : 'Find your perfect home.') : (lang === 'fr' ? 'Intelligence Autonome v12.5.' : 'Autonomous Intelligence v12.5.');
+        
+        return `\n<!-- 🏛️ Genesis Full Landing [IA-PRO v12.5] -->\n<nav style="display:flex;justify-content:space-between;padding:30px 10%;background:rgba(15,23,42,0.8);backdrop-filter:blur(20px);align-items:center;border-bottom:1px solid rgba(255,255,255,0.05);position:sticky;top:0;z-index:100;font-family:sans-serif;">\n  <b style="color:${s.color};font-size:26px;font-weight:900;">${title}</b>\n  <div style="display:flex;gap:40px;color:#94a3b8;font-weight:600;"><span>Home</span><span>Listings</span><span>Contact</span></div>\n  <button id="auth-nav" style="padding:12px 30px;background:${s.color};border:none;border-radius:${s.radius};color:#fff;font-weight:800;cursor:pointer;">Sign In</button>\n</nav>\n<header style="padding:150px 10%;text-align:center;background:radial-gradient(circle at top, #1e293b, #030712);color:#fff;font-family:sans-serif;">\n  <h1 style="font-size:5rem;margin-bottom:20px;font-weight:900;">Modern Living.</h1>\n  <p style="color:#94a3b8;margin-bottom:40px;font-size:1.4rem;">${slogan}</p>\n  <button id="cta-main" style="padding:22px 55px;background:${s.color};border:none;border-radius:${s.radius};color:#fff;font-weight:900;font-size:18px;cursor:pointer;box-shadow:${s.shadow};">View Properties</button>\n</header>\n`;
+      }
+
+      // 2. Component-Specific Intents (using Design Engine)
+      const it = AIEngine.intentOf(prompt);
+      const designTypes = ['pricing', 'hero', 'contact', 'team'];
+      
+      if(designTypes.includes(it)) {
+        return AIEngine.getDesign(it, 'glass', lang);
+      }
+
+      if(it === 'dashboard') {
+        return `\n<!-- 📊 Premium Dashboard Module -->\n<section style="padding:40px 5%; background:#0f172a; display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:25px; font-family:sans-serif;">\n  <div class="card" style="padding:35px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.05); border-radius:24px;">\n    <h4 style="margin:0 0 10px; opacity:0.6; font-size:11px; letter-spacing:1px;">REVENUE</h4>\n    <h2 style="margin:0; font-size:32px; color:${s.color};">$84,200</h2>\n  </div>\n  <div class="card" style="padding:35px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.05); border-radius:24px;">\n    <h4 style="margin:0 0 10px; opacity:0.6; font-size:11px; letter-spacing:1px;">ANALYTICS</h4>\n    <h2 style="margin:0; font-size:32px; color:#10b981;">+12.5%</h2>\n  </div>\n</section>`;
+      }
+
+      return `<div style="padding:60px;text-align:center;background:#030712;color:#fff;border-radius:${s.radius};font-family:sans-serif;border:1px solid ${s.color}66;">\n  <h3 style="color:${s.color}; margin-bottom:10px;">${prompt.toUpperCase()}</h3>\n  <p style="opacity:0.6;">Draft generated by IA-PRO Engine.</p>\n</div>`;
+    },
+
+    beautify: (code) => {
+      return code.replace(/padding:\s*\d+px/g, 'padding: 60px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(20px);');
+    },
+
+    injectMeta: (code) => {
+      const title = code.match(/<h1[^>]*>(.*?)<\/h1>/i)?.[1] || "Project";
+      return `\n  <title>${title}</title>\n  <meta name="description" content="Generated by IA-PRO Universal Engine v12.2">\n`;
+    },
+
+    architectLogic: (code, lang = 'en') => {
+      const isFr = lang === 'fr';
+      const s = miner(code);
+      const low = code.toLowerCase();
+      const isDashboard = low.includes("dashboard") || low.includes("admin");
+      
+      let generatedUI = "";
+      const isStub = code.length < 800 || !low.includes("<section") || !low.includes("<footer");
+      
+      if(isStub) {
+        if(isDashboard) {
+          generatedUI = `\n<!-- 📊 Dashboard Expansion -->\n<section style="padding:40px 5%; background:#0f172a; display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:20px; font-family:sans-serif;">\n  <div class="card" style="padding:30px; background:#1e293b; border-radius:15px; border:1px solid rgba(255,255,255,0.1); color:#fff;">\n    <h4 style="margin:0 0 10px; opacity:0.6; font-size:12px;">SYSTEM STATUS</h4>\n    <h2 style="margin:0; font-size:28px; color:#10b981;">ONLINE</h2>\n  </div>\n</section>`;
+        } else {
+          generatedUI = `\n<!-- 🏛️ Site Builder Expansion -->\n<section id="cta" style="padding:120px 10%; background:radial-gradient(circle at bottom, #1e293b, #030712); text-align:center; color:#fff; font-family:sans-serif;">\n  <h2 style="font-size:3rem; font-weight:900; margin-bottom:20px;">Ready to Scale?</h2>\n  <p style="opacity:0.6; margin-bottom:40px;">Join the elite innovators.</p>\n  <button id="cta-main" style="padding:18px 45px; background:${s.color}; color:#fff; border:none; border-radius:${s.radius}; font-weight:900; cursor:pointer; font-size:1.1rem; box-shadow:${s.shadow};">ACTIVATE NOW</button>\n</section>`;
+        }
+      }
+
+      const script = `
+<script>
+(function() {
+  window.GeniusDB = {
+    data: JSON.parse(localStorage.getItem('ia_pro_db') || '{}'),
+    set: function(key, val) { 
+      this.data[key] = val; 
+      localStorage.setItem('ia_pro_db', JSON.stringify(this.data));
+    },
+    get: function(key) { return this.data[key]; }
+  };
+
+  const state = { color: "${s.color}", radius: "${s.radius}" };
+  
+  const notify = (m) => {
+    let t = document.getElementById("ia-pro-toast") || document.createElement("div");
+    t.id = "ia-pro-toast";
+    t.style = "position:fixed;top:40px;left:50%;transform:translateX(-50%);background:#0f172a;backdrop-filter:blur(15px);color:#fff;padding:14px 28px;border-radius:15px;z-index:999999;font-weight:900;border:1px solid " + state.color + ";font-family:sans-serif;box-shadow:0 20px 50px rgba(0,0,0,0.5);transition:0.3s ease;opacity:0;";
+    t.innerHTML = m; 
+    if(!t.parentElement) document.body.appendChild(t);
+    setTimeout(() => { t.style.opacity = "1"; }, 10);
+    setTimeout(() => { t.style.opacity = "0"; setTimeout(()=>t.remove(),300); }, 3500);
+  };
+
+  const showModal = (title) => {
+    const it = (title || "Access").toUpperCase();
+    const isContact = it.includes("CONTACT");
+    const isJoin = it.includes("START") || it.includes("JOIN") || it.includes("GET") || it.includes("EXPLORE");
+    
+    let f = '<input id="ia-m-email" type="email" placeholder="Email" style="width:100%;padding:14px;margin-bottom:12px;background:#111;border:1px solid #333;color:#fff;border-radius:' + state.radius + '">';
+    if(isContact) {
+      f = '<input id="ia-m-name" type="text" placeholder="Name" style="width:100%;padding:14px;margin-bottom:12px;background:#111;border:1px solid #333;color:#fff;border-radius:'+state.radius+'">' + f + '<textarea id="ia-m-msg" placeholder="Message" style="width:100%;padding:14px;margin-bottom:12px;background:#111;border:1px solid #333;color:#fff;border-radius:'+state.radius+';height:80px;"></textarea>';
+    } else if(isJoin) {
+      f = '<input id="ia-m-name" type="text" placeholder="Full Name" style="width:100%;padding:14px;margin-bottom:12px;background:#111;border:1px solid #333;color:#fff;border-radius:'+state.radius+'">' + f;
+    }
+
+    const ov = document.createElement("div");
+    ov.style = "position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);z-index:999999;display:flex;align-items:center;justify-content:center;font-family:sans-serif;";
+    ov.innerHTML = "<div style='background:#0f172a;padding:50px;border-radius:"+state.radius+";border:1px solid #1e293b;width:380px;color:#fff;text-align:center;'><h2 style='margin-bottom:30px;font-weight:900;'>"+it+"</h2>"+f+"<button id='ia-m-btn' style='width:100%;padding:16px;background:"+state.color+";border:none;border-radius:"+state.radius+";color:#fff;font-weight:900;cursor:pointer;'>PROCEED</button></div>";
+    
+    const saved = GeniusDB.get('user_email');
+    if(saved && ov.querySelector('#ia-m-email')) ov.querySelector('#ia-m-email').value = saved;
+
+    ov.querySelector("#ia-m-btn").onclick = () => { 
+       const email = ov.querySelector('#ia-m-email')?.value;
+       if(email) GeniusDB.set('user_email', email);
+       ov.querySelector("div").innerHTML = "<h2 style='color:#10b981'>SUCCESS</h2><p style='opacity:0.6'>Action registered by Genius Engine.</p>";
+       setTimeout(()=>ov.remove(),1500); 
+    };
+    ov.onclick = (e) => { if(e.target===ov) ov.remove(); };
+    document.body.appendChild(ov);
+  };
+
+  const init = () => {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting) {
+          entry.target.style.opacity = "1";
+          entry.target.style.transform = "translateY(0)";
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.ia-reveal').forEach(el => {
+      el.style.opacity = "0";
+      el.style.transform = "translateY(30px)";
+      el.style.transition = "all 0.8s cubic-bezier(0.16, 1, 0.3, 1)";
+      obs.observe(el);
+    });
+
+    const bodyStyle = document.createElement("style");
+    bodyStyle.textContent = ".ia-gen-active { cursor:pointer; transition:0.3s ease; } .ia-gen-active:hover { transform:translateY(-3px) scale(1.02); box-shadow: 0 0 50px " + state.color + " !important; }";
+    document.head.appendChild(bodyStyle);
+
+    document.querySelectorAll("button, .btn, a, [role='button']").forEach(el => {
+      const lid = (el.id || "").toLowerCase();
+      const txt = (el.textContent || "").trim().toUpperCase();
+      const html = el.innerHTML;
+      let ok = false;
+
+      if(["LOGIN", "AUTH", "CONTACT", "START", "JOIN", "EXPLORE", "GET", "ORDER", "BUY"].some(k => txt.includes(k)) || lid.includes("login") || lid.includes("auth")) {
+        el.onclick = (e) => { e.preventDefault(); showModal(txt); };
+        ok = true;
+      } else if(lid.includes("item") || txt.includes("ITEM")) {
+        el.onclick = () => { el.style.border = "2px solid "+state.color; notify("Selection: " + txt); };
+        ok = true;
+      } else if(html.includes(\"💾\") || txt.includes("SAVE")) {
+        el.onclick = () => { notify(\"${isFr ? "💾 Salvare Reușită!" : "💾 Save Successful!"}\"); };
+        ok = true;
+      }
+
+      if(ok) {
+        el.classList.add("ia-gen-active");
+        el.style.boxShadow = "0 0 35px " + state.color + "88";
+        el.style.border = "1px solid " + state.color;
+      }
+    });
+    notify(\"${isFr ? "🏛️ IA-PRO v12.2 ACTIF" : "🏛️ IA-PRO v12.2 ACTIVE"}\");
+  };
+  init();
+})();
+</script>`;
+
+      return generatedUI + script;
+    },
+
+
+    syncToEditor: (html) => {
+      const parent = window.parent;
+      if(!parent || !parent.smartInject) return;
+      let cleanHtml = html.replace(/<button[^>]*onclick[^>]*>.*?<\/button>/gi, '').trim();
+      parent.smartInject("\n<!-- 🏛️ Genesis Elite Section [IA-PRO v8.7] -->\n" + cleanHtml + "\n", 'logic');
+    },
+
+    intentOf: (p) => {
+      const q = p.toLowerCase();
+      if(q.includes('hero') || q.includes('héros')) return 'hero';
+      if(q.includes('pricing') || q.includes('tarif') || q.includes('prix')) return 'pricing';
+      if(q.includes('contact')) return 'contact';
+      if(q.includes('team') || q.includes('équipe')) return 'team';
+      if(q.includes('dashboard') || q.includes('tableau de bord')) return 'dashboard';
+      if(q.includes('navbar') || q.includes('menu')) return 'navbar';
+      if(q.includes('footer') || q.includes('pied')) return 'footer';
+      return 'generic';
+    },
+    explain: (c) => [],
+    autoExplain: (c, l) => c,
+    getAppSummary: (c, l) => "🏛️ IA-PRO UNIVERSAL v8.7",
+    getFunctionalGuide: (c, l) => ({ ready: true }),
+    smartFix: (code) => {
+      if(!code) return code;
+      let res = code;
+      // 1. Ensure basic structure
+      if(!res.includes('<style>')) res = "<style>\n  :root { --primary: #3b82f6; --radius: 12px; }\n  body { font-family: 'Inter', sans-serif; line-height: 1.6; }\n</style>\n" + res;
+      // 2. Add glassmorphic containers to divs without classes
+      res = res.replace(/<div(?! class)/gi, '<div class="ia-glass" style="backdrop-filter:blur(10px); background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.05); border-radius:15px; padding:20px; margin:10px 0;"');
+      // 3. Fix missing closing tags (basic)
+      const tags = ['div', 'section', 'header', 'footer', 'main'];
+      tags.forEach(t => {
+        const opened = (res.match(new RegExp('<'+t, 'gi')) || []).length;
+        const closed = (res.match(new RegExp('</'+t+'>', 'gi')) || []).length;
+        if(opened > closed) res += `\n</${t}>`.repeat(opened - closed);
+      });
+      return res;
+    },
+
+    applyResponsiveness: (code) => {
+      if(!code) return code;
+      let res = code;
+      if(!res.includes('viewport')) {
+        res = '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n' + res;
+      }
+      const media = `\n<style>\n  @media (max-width: 768px) {\n    section, header, footer { padding: 40px 5% !important; }\n    h1 { font-size: 2.5rem !important; }\n    .grid, [style*="display:grid"] { grid-template-columns: 1fr !important; }\n    .flex, [style*="display:flex"] { flex-direction: column !important; }\n  }\n</style>\n`;
+      return res + media;
+    },
+
+    applyDarkMode: (code) => {
+      if(!code) return code;
+      const darkCSS = `
+<style id="ia-dark-logic">
+  body.ia-dark-mode { background: #020617 !important; color: #f8fafc !important; }
+  .ia-dark-mode .card, .ia-dark-mode section, .ia-dark-mode header { background: rgba(30,41,59,0.5) !important; color: #fff !important; border-color: rgba(255,255,255,0.1) !important; }
+  .ia-dark-mode button:not([style*="background"]) { background: #3b82f6 !important; color: #fff !important; }
+</style>
+<script>
+  function toggleIADarkMode() {
+    document.body.classList.toggle('ia-dark-mode');
+    localStorage.setItem('ia_dark_mode', document.body.classList.contains('ia-dark-mode'));
+  }
+  if(localStorage.getItem('ia_dark_mode') === 'true') document.body.classList.add('ia-dark-mode');
+</script>
+`;
+      return code + darkCSS;
+    },
+
+    /* 🎨 IA-PRO DESIGN ENGINE (v8.8 - Visual Component Templates) */
+    APP_COMPONENTS: {
+      pricing: {
+        en: { title: "Elite Pricing", btn: "Get Started" },
+        fr: { title: "Tarif Elite", btn: "Commencer" },
+        html: `
+<section class="ia-design-pricing">
+  <div class="card">
+    <h3>Pro</h3>
+    <div class="price">$29<span>/mo</span></div>
+    <ul>
+      <li>10 Projects</li>
+      <li>AI Support</li>
+      <li>Unlimited Assets</li>
+    </ul>
+    <button>CTA_BTN</button>
+  </div>
+</section>`
+      },
+      hero: {
+        en: { title: "Innovate Today", p: "Transform your vision into reality with AI.", btn: "Explore" },
+        fr: { title: "Innovez Aujourd'hui", p: "Transformez votre vision en réalité avec l'IA.", btn: "Explorer" },
+        html: `
+<header class="ia-design- hero">
+  <h1>HERO_TITLE</h1>
+  <p>HERO_DESC</p>
+  <button>HERO_BTN</button>
+</header>`
+      },
+      contact: {
+        en: { title: "Contact Us", name: "Name", msg: "Message", btn: "Send" },
+        fr: { title: "Contactez-nous", name: "Nom", msg: "Message", btn: "Envoyer" },
+        html: `
+<section class="ia-design- contact">
+  <h2>CONTACT_TITLE</h2>
+  <form onsubmit="event.preventDefault(); alert('Sent!');">
+    <input type="text" placeholder="NAME_PLACE">
+    <textarea placeholder="MSG_PLACE"></textarea>
+    <button>SEND_BTN</button>
+  </form>
+</section>`
+      },
+      team: {
+        en: { title: "Our Team", role: "Expert Developer" },
+        fr: { title: "Notre Équipe", role: "Développeur Expert" },
+        html: `
+<section class="ia-design- team">
+  <h2>TEAM_TITLE</h2>
+  <div class="grid">
+    <div class="member"><div class="avatar"></div><b>Alex Design</b><p>TEAM_ROLE</p></div>
+    <div class="member"><div class="avatar"></div><b>Sara Logic</b><p>TEAM_ROLE</p></div>
+  </div>
+</section>`
+      }
+    },
+
+    getDesignStyles: (style) => {
+      const presets = {
+        glass: `background:rgba(255,255,255,0.05); backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.1); border-radius:30px; box-shadow:0 20px 50px rgba(0,0,0,0.3); color:#fff;`,
+        minimal: `background:#fff; border:1px solid #eee; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.05); color:#111;`,
+        sleek: `background:linear-gradient(145deg, #1e293b, #0f172a); border:1px solid rgba(255,255,255,0.05); border-radius:24px; box-shadow:0 30px 60px rgba(0,0,0,0.5); color:#fff;`,
+        cyber: `background:#000; border:2px solid #8b5cf6; border-radius:0; box-shadow:0 0 20px rgba(139, 92, 246, 0.5); color:#fff; font-family:monospace;`
+      };
+      return presets[style] || presets.minimal;
+    },
+
+    getDesign: (type, style, userLang = 'en') => {
+      const comp = AIEngine.APP_COMPONENTS[type] || AIEngine.APP_COMPONENTS.pricing;
+      const labels = comp[userLang] || comp.en;
+      const css = AIEngine.getDesignStyles(style);
+      let html = comp.html;
+
+      // Map tokens
+      html = html.replace('CTA_BTN', labels.btn || "Click")
+                 .replace('HERO_TITLE', labels.title)
+                 .replace('HERO_DESC', labels.p)
+                 .replace('HERO_BTN', labels.btn)
+                 .replace('CONTACT_TITLE', labels.title)
+                 .replace('NAME_PLACE', labels.name)
+                 .replace('MSG_PLACE', labels.msg)
+                 .replace('SEND_BTN', labels.btn)
+                 .replace('TEAM_TITLE', labels.title)
+                 .replace(/TEAM_ROLE/g, labels.role);
+
+      // Inject professional CSS structure
+      const fullCode = `
+<!-- 🏛️ IA-PRO Designer Module [${type} / ${style}] -->
+<style>
+  .ia-design-${type} {
+    padding: 80px 10%; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 40px; ${css}
+  }
+  .ia-design-${type} h1, .ia-design-${type} h2, .ia-design-${type} h3 { margin: 0; font-weight: 900; letter-spacing: -2px; }
+  .ia-design-${type} button { padding: 16px 32px; border: none; border-radius: 12px; cursor: pointer; font-family: inherit; font-weight: 800; transition: transform 0.2s; }
+  .ia-design-${type} button:hover { transform: scale(1.05); filter: brightness(1.1); }
+  .ia-design-pricing .card { padding: 50px; background: rgba(255,255,255,0.03); border-radius: 20px; min-width: 300px; }
+  .ia-design-pricing .price { font-size: 3rem; font-weight: 900; margin: 20px 0; }
+  .ia-design-pricing ul { list-style: none; padding: 0; margin-bottom: 30px; opacity: 0.8; }
+  .ia-design-pricing li { margin-bottom: 10px; font-size: 14px; }
+  .ia-design-contact form { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 15px; }
+  .ia-design-contact input, .ia-design-contact textarea { padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: inherit; }
+  .ia-design-team .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; width: 100%; }
+  .ia-design-team .avatar { width: 80px; height: 80px; background: linear-gradient(135deg, #8b5cf6, #3b82f6); border-radius: 50%; margin: 0 auto 15px; }
+</style>
+${html}`;
+
+      return fullCode;
+    },
+
+    /* 🏭 IA-PRO APP FACTORY (v9.0 - Smart Manufacturing) */
+    findBlueprint: (query) => {
+      if(!window.TEMPLATES) return null;
+      const q = query.toLowerCase();
+      const queryWords = q.split(/\s+/).filter(w => w.length > 3);
+      
+      const scored = window.TEMPLATES.map(t => {
+        let sc = 0;
+        const nameEn = t.en.toLowerCase();
+        const nameFr = t.fr.toLowerCase();
+        
+        // Exact match in prompt
+        if(q.includes(nameEn) || q.includes(nameFr)) sc += 100;
+        
+        // Word overlap
+        queryWords.forEach(qw => {
+          if(nameEn.includes(qw) || nameFr.includes(qw)) sc += 30;
+          if(t.icon && qw.includes(t.icon)) sc += 20;
+        });
+
+        // Content scan (fallback)
+        if(t.code && t.code.toLowerCase().includes(q)) sc += 5;
+        
+        return { t, sc };
+      }).filter(x => x.sc > 0).sort((a,b) => b.sc - a.sc);
+      
+      return scored.length > 0 ? scored[0].t : window.TEMPLATES[0];
+    },
+
+    specialize: (blueprint, theme, lang = 'en') => {
+      let code = blueprint.code;
+      const t = (theme || "Project").trim().toUpperCase();
+      const isFr = (lang === 'fr');
+      
+      const palettes = {
+        'sushi': { c1: '#ef4444', c2: '#fbbf24', text: isFr ? "Savourer l'Excellence" : "Savor Excellence", btn: isFr ? "Commander" : "Order Now" },
+        'medico': { c1: '#3b82f6', c2: '#10b981', text: isFr ? "Santé & Bien-être" : "Health & Wellness", btn: isFr ? "Rendez-vous" : "Book Now" },
+        'gym': { c1: '#ff0000', c2: '#111111', text: isFr ? "Dépassez vos limites" : "Push your limits", btn: isFr ? "Nous rejoindre" : "Join Now" },
+        'fitness': { c1: '#ff0000', c2: '#111111', text: isFr ? "Dépassez vos limites" : "Push your limits", btn: isFr ? "Nous rejoindre" : "Join Now" },
+        'eco': { c1: '#10b981', c2: '#064e3b', text: isFr ? "Solution Durable" : "Sustainable Solution", btn: isFr ? "Découvrir" : "Explore" },
+        'law': { c1: '#c5a059', c2: '#1a1a1a', text: isFr ? "Défense d'Experts" : "Expert Defense", btn: isFr ? "Consulter" : "Consult" },
+        'avocat': { c1: '#c5a059', c2: '#1a1a1a', text: isFr ? "Défense d'Experts" : "Expert Defense", btn: isFr ? "Consulter" : "Consult" },
+        'moto': { c1: '#f97316', c2: '#111111', text: isFr ? "Vitesse & Style" : "Speed & Style", btn: isFr ? "Acheter" : "Shop Now" }
+      };
+
+      const themeKey = Object.keys(palettes).find(k => theme.toLowerCase().includes(k));
+      const res = palettes[themeKey] || { c1: '#8b5cf6', c2: '#3b82f6', text: isFr ? "Le futur des apps web" : "The future of web apps", btn: isFr ? "Démarrer" : "Get Started" };
+      
+      // Smart Content Swapping
+      code = code.replace(/<title>.*?<\/title>/gi, `<title>${t} APP — IA-PRO</title>`)
+                 .replace(/<h1>.*?<\/h1>/gi, `<h1>${t}</h1>`)
+                 .replace(/<p>(.*?)<\/p>/gi, `<p>${res.text}</p>`)
+                 .replace(/<button([^>]*)>(.*?)<\/button>/gi, (m, attr, label) => {
+                    if(label.toLowerCase() === "sign in" || label.includes('Connexion')) return m;
+                    return `<button${attr}>${res.btn}</button>`;
+                 })
+                 .replace(/#3b82f6/gi, res.c1)
+                 .replace(/#8b5cf6/gi, res.c2)
+                 .replace(/#c5a059/gi, res.c1)
+                 .replace(/#ff0000/gi, res.c1);
+
+      return code;
+    },
+
+    manufactureApp: (theme, lang = 'en') => {
+      const isFr = (lang === 'fr');
+      let bp = AIEngine.findBlueprint(theme);
+      
+      if(!bp && window.TEMPLATES) bp = window.TEMPLATES[0];
+      if(!bp) return ""; 
+
+      let code = AIEngine.specialize(bp, theme, lang);
+      const loginCode = window.AppGenius?.patterns?.[4]?.code || "";
+      
+      // 🧬 [LAYOUT NORMALIZER v1.0] - Force Vertical Stacking
+      const layoutFix = `
+<style>
+  html, body { 
+    margin: 0; padding: 0; width: 100%; min-height: 100%; 
+    display: flex !important; flex-direction: column !important; 
+    overflow-x: hidden !important; 
+  }
+  section, header, footer, div { width: 100%; box-sizing: border-box; }
+</style>`;
+
+      const loginSection = `
+<!-- 🔐 IA-PRO MANDATORY AUTH GATEWAY -->
+<section style="padding:100px 10%; background:#0f172a; border-top:1px solid rgba(255,255,255,0.1); font-family:'Inter',sans-serif; flex-shrink: 0;">
+  <div style="max-width:400px; margin:auto;">
+    <h2 style="text-align:center; color:#fff; margin-bottom:30px; font-weight:900; letter-spacing:-1px;">
+      ${isFr ? '🔑 ACCÈS SÉCURISÉ' : '🔑 SECURE ACCESS'}
+    </h2>
+    ${loginCode}
+  </div>
+</section>`;
+
+      // Inject Layout Fix in Head
+      if(code.includes('</head>')) code = code.replace('</head>', layoutFix + '</head>');
+      else code = layoutFix + code;
+
+      // Inject Login at end of Body
+      if(code.includes('</body>')) code = code.replace('</body>', loginSection + '</body>');
+      else code += loginSection;
+
+      const meta = AIEngine.injectMeta(code);
+      if(code.includes('</head>')) code = code.replace('</head>', meta + '</head>');
+
+      const logic = AIEngine.architectLogic(code, lang);
+      
+      const branding = `
+<footer style="padding:40px 10%; background:#080c14; border-top:1px solid rgba(255,255,255,0.05); color:#475569; font-family:sans-serif; text-align:center; font-size:11px; font-weight:700; letter-spacing:1px; flex-shrink: 0;">
+  🏛️ ${isFr ? 'FABRIQUÉ AVEC IA-PRO GENIUS ENGINE' : 'MANUFACTURED WITH IA-PRO GENIUS ENGINE'}
+</footer>`;
+
+      if(code.includes('</body>')) code = code.replace('</body>', branding + '</body>');
+      else code += branding;
+
+      return `\n<!-- 🏭 IA-PRO Manufactured App [${theme.toUpperCase()}] -->\n${code}\n${logic}`;
+    },
+
+    packageElite: (code, theme, lang = 'en') => {
+      const isFr = (lang === 'fr');
+      const t = theme.toUpperCase();
+      
+      // 1. Generate PWA Manifest Object
+      const manifest = {
+        name: `${t} Pro Application`,
+        short_name: t,
+        start_url: ".",
+        display: "standalone",
+        background_color: "#080c14",
+        theme_color: "#3b82f6"
+      };
+
+      // 2. High-End Splash Styling
+      const splashStyle = `
+<style>
+  #iapro-splash {
+    position:fixed; top:0; left:0; width:100%; height:100%; 
+    background:#080c14; display:flex; align-items:center; justify-content:center; 
+    z-index:99999; font-family:sans-serif; color:#fff;
+    transition: opacity 0.8s ease;
+  }
+  .splash-pulse { animation: iapro-pulse 2s infinite; font-weight: 900; letter-spacing: 2px; }
+  @keyframes iapro-pulse { 0%, 100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(0.95); } }
+</style>
+<div id="iapro-splash">
+  <div class="splash-pulse">🧬 IA-PRO MANUFACTURING...</div>
+</div>
+<script>
+  window.addEventListener('load', () => {
+    const s = document.getElementById('iapro-splash');
+    setTimeout(() => { s.style.opacity = '0'; setTimeout(() => s.remove(), 800); }, 1500);
+  });
+</script>`;
+
+      let bundled = code;
+      if(bundled.includes('</body>')) bundled = bundled.replace('</body>', splashStyle + '</body>');
+      else bundled += splashStyle;
+
+      return {
+        html: bundled,
+        manifest: JSON.stringify(manifest, null, 2),
+        filename: `${theme.toLowerCase().replace(/\s+/g, '-')}-app-pro.html`
+      };
+    },
+
+    analyzeElement: (tag, classes, content, lang = 'en') => {
+      const isFr = (lang === 'fr');
+      const t = tag.toLowerCase();
+      const c = (classes || "").toLowerCase();
+      
+      const res = {
+        title: isFr ? "Amélioration Genius" : "Genius Enhancement",
+        advice: isFr ? "Optimisation visuelle détectée." : "Visual optimization detected.",
+        code: ""
+      };
+
+      if(t === 'button' || c.includes('btn')) {
+         res.advice = isFr ? "Ajouter un effet hover 3D et un flou vitreux." : "Add a 3D hover effect and glass blur.";
+         res.code = "style='transition:0.3s; backdrop-filter:blur(10px); transform:perspective(500px) rotateX(0);' onmouseover='this.style.transform=\"perspective(500px) rotateX(10deg) scale(1.05)\"' onmouseout='this.style.transform=\"perspective(500px) rotateX(0) scale(1)\"'";
+      } else if(t === 'h1' || t === 'h2' || c.includes('title')) {
+         res.advice = isFr ? "Appliquer un dégradé de texte premium." : "Apply a premium text gradient.";
+         res.code = "style='background:linear-gradient(90deg, #fff, #3b82f6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-weight:900;'";
+      } else if(t === 'img' || c.includes('card')) {
+         res.advice = isFr ? "Ajouter une ombre portée et un arrondi doux." : "Add a drop shadow and a soft border-radius.";
+         res.code = "style='border-radius:20px; box-shadow:0 20px 40px rgba(0,0,0,0.3); transition:0.3s;' onmouseover='this.style.transform=\"translateY(-10px)\"' onmouseout='this.style.transform=\"translateY(0)\"'";
+      } else {
+         res.advice = isFr ? "Améliorer le contraste et le style global." : "Improve global contrast and style.";
+         res.code = "style='border:1px solid rgba(255,255,255,0.1); backdrop-filter:blur(20px); border-radius:15px;'";
+      }
+      
+      return res;
+    },
+
+    /* ✨ [GENIUS MOTION ENGINE v12.0] - High-End Animation Presets */
+    getAnimation: (type) => {
+      const presets = {
+        reveal: {
+          class: 'ia-reveal',
+          title_en: 'Scroll Reveal',
+          title_fr: 'Apparition Scroll'
+        },
+        float: {
+          class: 'ia-float-pro',
+          title_en: 'Elite Float',
+          title_fr: 'Flottement Elite'
+        },
+        pulse: {
+          class: 'ia-pulse-pro',
+          title_en: 'Smart Pulse',
+          title_fr: 'Pulsation IA'
+        }
+      };
+      return presets[type] || presets.reveal;
+    },
+
+    // 🏗️ [MULTI-PAGE ARCHITECT v10.0.1] - Diversity Hardening
+    findPageBlueprint: (type, theme) => {
+      if(!window.TEMPLATES) return null;
+      const tLow = type.toLowerCase();
+      const themeLow = theme.toLowerCase();
+      
+      const scored = window.TEMPLATES.map(tmp => {
+        let sc = 0;
+        const nameEn = tmp.en.toLowerCase();
+        const code = tmp.code.toLowerCase();
+        
+        // --- 1. NEGATIVE SCORING (The "Generic Killer") ---
+        // If we are NOT looking for the Home page, penalize the Global Landing template heavily
+        if(tLow !== 'home' && nameEn.includes('landing')) sc -= 200;
+        
+        // --- 2. POSITIVE MATCHING ---
+        // Page Type Keywords (EN & FR)
+        const keys = {
+          'services': ['services', 'expertise', 'what we do', 'servicii', 'prestations'],
+          'contact': ['contact', 'get in touch', 'map', 'nous contacter', 'formulaire'],
+          'about': ['about', 'vision', 'mission', 'history', 'à propos', 'equipe'],
+          'gallery': ['gallery', 'portfolio', 'projects', 'images', 'view', 'galerie', 'projets']
+        };
+
+        const targetKeys = keys[tLow] || [tLow];
+        targetKeys.forEach(k => {
+          if(nameEn.includes(k)) sc += 150;
+        });
+
+        // Functional Hints
+        if(tLow === 'contact' && code.includes('<form')) sc += 100;
+        if(tLow === 'services' && (code.includes('grid') || code.includes('flex'))) sc += 50;
+        if(tLow === 'gallery' && code.includes('img')) sc += 80;
+        
+        // Theme Overlap
+        if(nameEn.includes(themeLow)) sc += 30;
+        
+        return { tmp, sc };
+      }).sort((a,b) => b.sc - a.sc);
+
+      // Log for Studio Logic
+      const best = scored[0].tmp;
+      console.log(`[IA-PRO] Match: "${best.en}" for Page: "${type}"`);
+      return best;
+    },
+
+    generatePageHeader: (title, theme = "Elite Project", lang = "en") => {
+      const isFr = (lang === 'fr');
+      return `
+<header class="ia-page-header" style="padding:120px 10% 60px; background:linear-gradient(180deg, rgba(15,23,42,1) 0%, rgba(8,12,20,1) 100%); text-align:center; border-bottom:1px solid rgba(255,255,255,0.05);">
+  <div style="font-size:10px; color:#3b82f6; font-weight:900; letter-spacing:3px; text-transform:uppercase; margin-bottom:15px; opacity:0.7;">
+    ${theme.toUpperCase()} // ${isFr ? 'SECTION' : 'MODULE'}
+  </div>
+  <h1 style="font-size:clamp(32px, 6vw, 64px); font-weight:900; color:#fff; letter-spacing:-2px; margin:0;">
+    ${title.toUpperCase()}
+  </h1>
+  <div style="width:60px; height:4px; background:#3b82f6; margin:30px auto 0; border-radius:10px;"></div>
+</header>`;
+    },
+
+    manufactureFullSite: (theme, pageList, lang = 'en') => {
+      const isFr = (lang === 'fr');
+      const t = theme.toUpperCase();
+      
+      // 1. Generate Virtual Router & Global CSS
+      let siteCode = `
+<style>
+  /* 🧬 IA-PRO VIRTUAL ROUTER v10.0.1 */
+  html, body { margin:0; padding:0; width:100%; min-height:100vh; background:#080c14; color:#fff; font-family:'Inter',sans-serif; overflow-x:hidden; }
+  .ia-page { display:none; animation: ia-fade-in 0.6s ease; width:100%; }
+  .ia-page.active { display:block !important; }
+  @keyframes ia-fade-in { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+  
+  /* 💎 GLASSMORPHIC NAVBAR */
+  .ia-nav { 
+    position:fixed; top:20px; left:50%; transform:translateX(-50%); 
+    z-index:9999; display:flex; gap:10px; padding:10px 20px;
+    background:rgba(15,23,42,0.8); backdrop-filter:blur(20px); 
+    border:1px solid rgba(255,255,255,0.1); border-radius:100px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  }
+  .ia-nav-link { 
+    color:rgba(255,255,255,0.5); text-decoration:none; font-size:10px; font-weight:900; 
+    text-transform:uppercase; letter-spacing:1px; cursor:pointer; transition:0.3s;
+    padding:10px 20px; border-radius:50px; white-space:nowrap;
+  }
+  .ia-nav-link:hover, .ia-nav-link.active { color:#fff; background:rgba(255,255,255,0.1); }
+</style>
+
+<nav class="ia-nav">
+  ${pageList.map((p, i) => {
+    const label = (lang === 'fr') ? 
+      (p === 'Home' ? 'Accueil' : p === 'Services' ? 'Services' : p === 'About' ? 'À Propos' : p === 'Gallery' ? 'Galerie' : p) : p;
+    return `<a class="ia-nav-link ${i===0?'active':''}" onclick="showPage('${p.toLowerCase()}')">${label}</a>`;
+  }).join('')}
+</nav>
+
+<script>
+  function showPage(id) {
+    document.querySelectorAll('.ia-page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-'+id).classList.add('active');
+    document.querySelectorAll('.ia-nav-link').forEach(l => {
+      l.classList.remove('active');
+      if(l.textContent.toLowerCase().includes(id.substring(0,3))) l.classList.add('active');
+    });
+    window.scrollTo({ top:0, behavior:'smooth' });
+  }
+</script>
+`;
+
+      // 2. Manufacture individual pages
+      pageList.forEach((pName, idx) => {
+        const bp = AIEngine.findPageBlueprint(pName, theme);
+        let pCode = AIEngine.specialize(bp, theme, lang);
+        
+        // Strip Boilerplate
+        pCode = pCode.replace(/<!DOCTYPE.*?>/gi, '')
+                     .replace(/<html.*?>/gi, '')
+                     .replace(/<\/html>/gi, '')
+                     .replace(/<head>[\s\S]*?<\/head>/gi, '')
+                     .replace(/<body.*?>/gi, '')
+                     .replace(/<\/body>/gi, '');
+        
+        // Inject Page Header for Sub-pages
+        let finalPageCode = pCode;
+        if(idx > 0) { // All pages except Home get a specialized header
+           const pageTitle = (lang === 'fr') ? 
+             (pName === 'Services' ? 'Nos Services' : pName === 'About' ? 'À Propos' : pName === 'Gallery' ? 'Notre Galerie' : pName === 'Contact' ? 'Contactez-nous' : pName) : (pName + " US");
+           const header = AIEngine.generatePageHeader(pageTitle, theme, lang);
+           finalPageCode = header + pCode;
+        }
+
+        siteCode += `\n<div class="ia-page ${idx===0?'active':''}" id="page-${pName.toLowerCase()}">${finalPageCode}</div>`;
+      });
+
+      // 3. Add Branding & Logic
+      const branding = `
+<footer style="padding:80px 10%; background:#05070a; text-align:center; font-family:sans-serif; border-top:1px solid rgba(255,255,255,0.02);">
+  <div style="color:#3b82f6; font-size:11px; font-weight:900; letter-spacing:4px; margin-bottom:15px; text-transform:uppercase;">IA-PRO SITE ARCHITECT</div>
+  <div style="color:#475569; font-size:10px; font-weight:700; letter-spacing:1px;">© 2026 ${t} — ELITE MANUFACTURING v10.0.1</div>
+</footer>`;
+
+      siteCode += branding;
+
+      // Wrap in shell
+      return `<!DOCTYPE html><html><head><title>${t} SITE — IA-PRO</title></head><body>${siteCode}</body></html>`;
+    },
+    
+    getCodeScore: (code) => {
+      let seo = 100, perf = 100, a11y = 100, bp = 100;
+      if(!code) return { seo:0, perf:0, a11y:0, bp:0 };
+      
+      const low = code.toLowerCase();
+      
+      if(!low.includes('<title>')) seo -= 30;
+      if(!low.includes('<meta name="description"')) seo -= 25;
+      if(!low.includes('<h1')) seo -= 15;
+      if(low.includes('alt=""') || low.includes('<img') && !low.includes('alt=')) seo -= 15;
+
+      if(low.includes('style="') && (low.match(/style="/g) || []).length > 20) perf -= 15; 
+      if(low.includes('<script ') && !low.includes('defer') && (!low.includes('</body>') || low.indexOf('<script ') < low.indexOf('</body>'))) perf -= 20; 
+      if((low.match(/<img/g) || []).length > 2 && !low.includes('loading="lazy"')) perf -= 15;
+
+      if(!low.includes('lang=')) a11y -= 20;
+      if(low.includes('<img') && !low.includes('alt=')) a11y -= 30;
+      if(!low.includes('<main')) a11y -= 15;
+
+      if(!low.includes('<!doctype html>')) bp -= 20;
+      if(!low.includes('charset=')) bp -= 15;
+      if(!low.includes('viewport')) bp -= 15;
+
+      return {
+        seo: Math.max(0, seo),
+        perf: Math.max(0, perf),
+        a11y: Math.max(0, a11y),
+        bp: Math.max(0, bp)
+      };
+    },
+
+    checkCodeHealth: (code, lang = 'en') => {
+      const isFr = (lang === 'fr');
+      const tips = [];
+      if(!code) return tips;
+      const low = code.toLowerCase();
+
+      if(!low.includes('<meta name="description"')) {
+        tips.push({
+          issue: isFr ? 'Meta description manquante' : 'Missing meta description',
+          suggestion: isFr ? 'Ajoutez une balise meta description pour un meilleur référencement.' : 'Add a meta description tag for better SEO.',
+          fixId: 'add_meta_desc'
+        });
+      }
+      
+      if(!low.includes('lang=')) {
+        tips.push({
+          issue: isFr ? 'Attribut de langue manquant' : 'Missing language attribute',
+          suggestion: isFr ? 'Ajoutez lang="fr" ou lang="en" à la balise <html>.' : 'Add lang="en" to the <html> tag.',
+          fixId: 'add_html_lang'
+        });
+      }
+
+      if(low.includes('<img') && (!low.includes('alt=') || low.includes('alt=""'))) {
+        tips.push({
+          issue: isFr ? 'Attributs alt manquants' : 'Missing alt attributes',
+          suggestion: isFr ? 'Certaines images n\'ont pas de texte alternatif.' : 'Some images are missing alternative text.',
+          fixId: 'add_img_alts'
+        });
+      }
+
+      if(!low.includes('<!doctype html>')) {
+        tips.push({
+          issue: isFr ? 'Déclaration DOCTYPE manquante' : 'Missing DOCTYPE declaration',
+          suggestion: isFr ? 'Ajoutez <!DOCTYPE html> au début du document.' : 'Add <!DOCTYPE html> at the beginning of the document.',
+          fixId: 'add_doctype'
+        });
+      }
+      
+      if(!low.includes('viewport')) {
+        tips.push({
+          issue: isFr ? 'Balise meta viewport manquante' : 'Missing viewport meta tag',
+          suggestion: isFr ? 'Ajoutez la balise viewport pour la réactivité mobile.' : 'Add the viewport meta tag for mobile responsiveness.',
+          fixId: 'add_viewport'
+        });
+      }
+
+      return tips;
+    },
+
+    applyAutoFix: (code, fixId, lang = 'en') => {
+      let res = code;
+      const low = code.toLowerCase();
+      const isFr = (lang === 'fr');
+      const descText = isFr ? 'Une application professionnelle.' : 'A professional application.';
+      
+      if(fixId === 'add_meta_desc') {
+        if(low.includes('</head>')) {
+           res = res.replace(/<\/head>/i, `  <meta name="description" content="${descText}">\n</head>`);
+        }
+      } 
+      else if(fixId === 'add_html_lang') {
+        if(low.includes('<html>')) {
+           res = res.replace(/<html>/i, `<html lang="${lang}">`);
+        } else if(!low.includes('<html')) {
+           res = `<html lang="${lang}">\n` + res + (low.includes('</html>')?'':'\n</html>');
+        }
+      }
+      else if(fixId === 'add_img_alts') {
+        res = res.replace(/<img([^>]*?)>/gi, (match, inner) => {
+          if(!inner.toLowerCase().includes('alt=')) {
+             return `<img ${inner.trim()} alt="Image">`;
+          }
+          return match;
+        });
+      }
+      else if(fixId === 'add_doctype') {
+        res = '<!DOCTYPE html>\n' + res;
+      }
+      else if(fixId === 'add_viewport') {
+        if(low.includes('</head>')) {
+           res = res.replace(/<\/head>/i, '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n</head>');
+        }
+      }
+      
+      return res;
+    },
+
+    /* 🧠 IA-PRO UNIVERSAL KNOWLEDGE HUB (v8.8 - Expanded Design Hub) */
+    APP_KNOWLEDGE: [
+      // DESIGN & UI HUB (New Keywords)
+      { id: 'designer', type: 'designer', en: 'AI Design Lab', fr: 'Lab de Design IA', keywords: ['design', 'ui', 'build', 'create', 'component', 'styliser', 'creer', 'construire', 'tableau', 'formulaire', 'hero'] },
+      
+      // SIDEBAR TABS (22 items)
+      { id: 'ai', type: 'tab', en: 'AI Assistant', fr: 'Assistant IA', keywords: ['ai', 'chat', 'help', 'ask', 'question', 'ia', 'aide', 'assistant'] },
+      { id: 'iapro', type: 'tab', en: 'IA PRO Navigator', fr: 'IA PRO Navigateur', keywords: ['iapro', 'pro', 'navigator', 'search', 'google', 'find', 'navigateur', 'cherche', 'trouver'] },
+      { id: 'guide', type: 'tab', en: 'Functional Guide', fr: 'Guide Fonctionnel', keywords: ['guide', 'documentation', 'steps', 'how-to', 'doc', 'etapes', 'comment'] },
+      { id: 'snippets', type: 'tab', en: 'Snippets Library', fr: 'Bibliothèque Snippets', keywords: ['snippet', 'code', 'component', 'part', 'composant', 'bout de code'] },
+      { id: 'templates', type: 'tab', en: 'Templates Hub', fr: 'Centre de Modèles', keywords: ['template', 'site', 'model', 'landing', 'modèle', 'page'] },
+      { id: 'tools', type: 'tab', en: 'Tools Studio', fr: 'Studio d\'Outils', keywords: ['tools', 'utility', 'utilities', 'items', 'outils', 'utilitaires'] },
+      { id: 'tpro', type: 'tab', en: 'Toolbox Pro', fr: 'Toolbox Pro', keywords: ['toolbox', 'pro', 'widget', 'boîte à outils'] },
+      { id: 'appspro', type: 'tab', en: 'Apps Pro', fr: 'Apps Pro', keywords: ['appspro', 'elite apps', 'premium apps'] },
+      { id: 'apps', type: 'tab', en: 'Apps Gallery', fr: 'Galerie d\'Apps', keywords: ['apps', 'mobile', 'webapps', 'applications'] },
+      { id: 'sites', type: 'tab', en: 'Sites Builder', fr: 'Constructeur de Sites', keywords: ['sites', 'web', 'builder', 'construction', 'conception'] },
+      { id: 'elite', type: 'tab', en: 'Elite Apps', fr: 'Elite Apps', keywords: ['elite', 'premium', 'luxe', 'high-end'] },
+      { id: 'realworld', type: 'tab', en: 'RealWorld Logic', fr: 'Logique RealWorld', keywords: ['realworld', 'business', 'commerce', 'vrai monde', 'réel'] },
+      { id: 'models', type: 'tab', en: '3D Models', fr: 'Modèles 3D', keywords: ['3d', 'model', 'threejs', 'aura', 'modèle'] },
+      { id: 'audit', type: 'tab', en: 'Code Audit', fr: 'Audit de Code', keywords: ['audit', 'check', 'quality', 'w3c', 'performance', 'qualité', 'erreur'] },
+      { id: 'genius', type: 'tab', en: 'Genius Engine', fr: 'Moteur Genius', keywords: ['genius', 'brain', 'logic', 'engine', 'moteur', 'cerveau', 'logique'] },
+      { id: 'assets', type: 'tab', en: 'Assets Vault', fr: 'Coffre d\'Assets', keywords: ['assets', 'resources', 'files', 'fichiers', 'ressources'] },
+      { id: 'media', type: 'tab', en: 'Media Studio', fr: 'Studio Médias', keywords: ['media', 'image', 'video', 'gallery', 'médias', 'galerie'] },
+      { id: 'transcode', type: 'tab', en: 'Transcode Tool', fr: 'Outil Transcode', keywords: ['transcode', 'base64', 'encode', 'decode', 'url'] },
+      { id: 'stylelab', type: 'tab', en: 'Style Lab', fr: 'Lab de Style', keywords: ['style', 'css', 'design', 'color', 'couleur', 'thème'] },
+      { id: 'data', type: 'tab', en: 'Data Vault', fr: 'Seuil de Données', keywords: ['data', 'json', 'vault', 'database', 'données', 'base de données'] },
+      { id: 'games', type: 'tab', en: 'Arcade Games', fr: 'Jeux Arcade', keywords: ['games', 'play', 'snake', 'arcade', 'jeux', 'jouer'] },
+      { id: 'settings', type: 'tab', en: 'Settings', fr: 'Paramètres', keywords: ['settings', 'config', 'preference', 'mode', 'paramètres'] },
+
+      // MAGIC BAR & UI TOOLBAR (15 items)
+      { id: 'mbtn-beautify', type: 'magic', en: 'Magic Beautify', fr: 'Embellir le Code', keywords: ['beautify', 'format', 'clean', 'propre', 'ranger', 'joli'] },
+      { id: 'mbtn-mobile', type: 'magic', en: 'Mobile Responsive', fr: 'Optimisation Mobile', keywords: ['mobile', 'phone', 'responsive', 'tablet', 'téléphone', 'tablette'] },
+      { id: 'mbtn-dark', type: 'magic', en: 'Dark Mode', fr: 'Mode Sombre', keywords: ['dark', 'night', 'black', 'sombre', 'noir', 'nuit'] },
+      { id: 'mbtn-seo', type: 'magic', en: 'SEO Meta Generator', fr: 'Générateur Meta SEO', keywords: ['seo', 'google', 'meta', 'keywords', 'référencement', 'mots clés'] },
+      { id: 'mbtn-real', type: 'magic', en: 'Real Mode Deployment', fr: 'Déploiement Mode Réel', keywords: ['real mode', 'functional', 'logic', 'deploy', 'déployer', 'fonctionnel'] },
+      { id: 'mbtn-check-ready', type: 'magic', en: 'Functional Check', fr: 'Vérification Fonctionnelle', keywords: ['check', 'ready', 'validation', 'vérifier', 'prêt'] },
+      { id: 'mbtn-explain', type: 'magic', en: 'AI Code Tutor', fr: 'Tuteur AI Code', keywords: ['explain', 'understand', 'tutor', 'expliquer', 'comprendre', 'tuteur'] },
+      { id: 'mbtn-style-lab', type: 'magic', en: 'Quick Style Lab', fr: 'Lab Style Rapide', keywords: ['lab', 'styles', 'quickly', 'rapide'] },
+      { id: 'toggle-left', type: 'magic', en: 'Toggle Sidebar', fr: 'Masquer Barre Latérale', keywords: ['toggle', 'sidebar', 'hide', 'show', 'barre', 'masquer', 'afficher'] },
+      { id: 'toggle-right', type: 'magic', en: 'Toggle Preview', fr: 'Masquer Aperçu', keywords: ['preview', 'pane', 'viewport', 'aperçu'] },
+      { id: 'btn-run', type: 'magic', en: 'Run Preview', fr: 'Lancer l\'Aperçu', keywords: ['run', 'play', 'live', 'execute', 'lancer', 'exécuter'] },
+      { id: 'btn-save', type: 'magic', en: 'Save Code', fr: 'Sauvegarder le Code', keywords: ['save', 'store', 'persistent', 'sauver', 'enregistrer'] },
+      { id: 'btn-export-all', type: 'magic', en: 'Download Project', fr: 'Télécharger le Projet', keywords: ['download', 'zip', 'export', 'télécharger', 'zipper'] },
+      { id: 'btn-deploy', type: 'magic', en: 'Cloud Deploy', fr: 'Déploiement Cloud', keywords: ['deploy', 'publish', 'cloud', 'publier'] },
+      { id: 'btn-shortcuts', type: 'magic', en: 'Shortcuts List', fr: 'Liste des Raccourcis', keywords: ['shortcuts', 'keyboard', 'keys', 'raccourcis', 'clavier'] },
+
+      // LOGIC & DATA SPECIALTIES (from AppGenius)
+      { id: 'logic-counter', type: 'genius', en: 'Counter Logic', fr: 'Logique de Compteur', keywords: ['counter', 'increment', 'decrement', 'compteur', 'nombre'] },
+      { id: 'logic-storage', type: 'genius', en: 'Local Storage Save', fr: 'Sauvegarde Locale', keywords: ['save data', 'localstorage', 'persistent', 'persistance'] },
+      { id: 'logic-crypto', type: 'genius', en: 'Crypto Tracker', fr: 'Suivi Crypto', keywords: ['crypto', 'bitcoin', 'api', 'price', 'prix'] },
+      { id: 'logic-todo', type: 'genius', en: 'Todo List Manager', fr: 'Gestionnaire Todo', keywords: ['todo', 'list', 'task', 'tâches', 'liste'] },
+      { id: 'logic-auth', type: 'genius', en: 'Real Login Auth', fr: 'Auth Connexion Réelle', keywords: ['login', 'auth', 'password', 'connexion', 'mot de passe'] },
+      { id: 'logic-crud', type: 'genius', en: 'CRUD Table Data', fr: 'Données Table CRUD', keywords: ['crud', 'table', 'database', 'tableau', 'données'] },
+      { id: 'kit-ecommerce', type: 'genius', en: 'E-commerce Core', fr: 'Noyau E-commerce', keywords: ['shop', 'cart', 'checkout', 'boutique', 'panier'] },
+      { id: 'kit-blog', type: 'genius', en: 'Blog Engine', fr: 'Moteur de Blog', keywords: ['blog', 'news', 'posts', 'articles', 'actu'] },
+
+      // DATABASE UTILS
+      { id: 'exportDB', type: 'func', en: 'Export Database JSON', fr: 'Exporter la Base JSON', keywords: ['export db', 'backup', 'sauvegarde', 'export'] },
+      { id: 'importDB', type: 'func', en: 'Import Database JSON', fr: 'Importer la Base JSON', keywords: ['import db', 'restore', 'restaurer', 'import'] },
+      { id: 'wipe', type: 'func', en: 'Wipe All Data', fr: 'Effacer Toutes les Données', keywords: ['wipe', 'delete all', 'reset', 'effacer', 'remise à zero'] }
+    ],
+
+    ask: (query, userLang = 'en') => {
+      const rawQ = (query || "").toLowerCase().trim();
+      const isFr = userLang === 'fr';
+
+      // 1. Noise-Stripping (Prefixes/Stopwords) to extract the "core" intent
+      const noise = ['make', 'a', 'app', 'site', 'create', 'build', 'fă', 'căuta', 'găsește', 'vrea', 'un', 'o', 'le', 'la', 'the', 'is', 'for'];
+      let cleanQ = rawQ;
+      noise.forEach(word => {
+        const reg = new RegExp(`\\b${word}\\b`, 'gi');
+        cleanQ = cleanQ.replace(reg, '');
+      });
+      const q = cleanQ.trim().replace(/\s+/g, ' ');
+      const qWords = q.split(' ').filter(w => w.length > 2); // Only meaningful words
+
+      const results = [];
+
+      // Combine Core Knowledge + Libraries (Expanded Index)
+      const universal = [
+        ...AIEngine.APP_KNOWLEDGE,
+        ...(window.APPS_PRO_DATA || []).map(a => ({ ...a, type: 'app-pro' })),
+        ...(window.APPS_DATA || []).map(a => ({ ...a, type: 'app' })),
+        ...(window.SITES_DATA || []).map(a => ({ ...a, type: 'site' })),
+        ...(window.REALWORLD_APPS_DATA || []).map(a => ({ ...a, type: 'real' })),
+        ...(window.MODELS_DATA || []).map(a => ({ ...a, type: 'model' })),
+        ...(window.GAMES_DATA || []).map(a => ({ ...a, type: 'game' })),
+        ...(window.TEMPLATES || []).map(a => ({ ...a, type: 'template' })),
+        ...(window.TOOLBOX_PRO_DATA || []).flatMap(cat => cat.items || []).map(i => ({ ...i, type: 'snippet' }))
+      ];
+
+      universal.forEach(item => {
+        let score = 0;
+        const name = (isFr ? (item.fr || item.en) : (item.en || item.fr || item.id || "")).toLowerCase();
+        const keywords = (item.keywords || [name]).map(k => k.toLowerCase());
+        
+        // Exact or partial name match
+        if(name === q) score += 50;
+        else if(name.includes(q)) score += 30;
+        else if(q.includes(name)) score += 20;
+
+        // Keyword matches
+        const kwMatch = keywords.filter(k => q.includes(k) || k.includes(q));
+        score += kwMatch.length * 15;
+
+        // Fuzzy Intersection (e.g. "restaurante" matches "restaurant")
+        qWords.forEach(qw => {
+          keywords.forEach(kw => {
+            if(kw.startsWith(qw.substring(0, 4)) || qw.startsWith(kw.substring(0, 4))) {
+              score += 10;
+            }
+          });
+        });
+
+        if(score > 0) results.push({ item, score });
+      });
+
+      results.sort((a, b) => b.score - a.score);
+
+      if(results.length > 0) {
+        const top = results.slice(0, 5).map(r => r.item);
+        const name = isFr ? (top[0].fr || top[0].en) : (top[0].en || top[0].fr || top[0].en || "Result");
+        
+        return { 
+          text: isFr ? `J'ai trouvé une correspondance : "**${name}**".` : `I found a match: "**${name}**".`, 
+          actions: top, 
+          found: true 
+        };
+      }
+
+      return {
+        text: isFr ? `Désolé, je ne trouve pas "**${q}**". Voulez-vous générer ce composant ?` : `Sorry, I can't find "**${q}**". Would you like me to generate this component?`,
+        found: false
+      };
+    },
+
+    execute: (feature) => {
+      if(!feature) return;
+      const isFr = (window.lang === 'fr');
+      const el = document.getElementById(feature.id) || document.querySelector(`[data-tab="${feature.id}"]`);
+      
+      // Handle Component Injection (Snippets/Tools)
+      if(feature.type === 'snippet') {
+        if(feature.code) {
+          if(window.smartInject) window.smartInject(feature.code, 'ui');
+          if(window.showToast) window.showToast(isFr ? "✨ Composant injecté !" : "✨ Component injected!");
+          return;
+        }
+      }
+
+      // Handle Asset Loading (Apps, Sites, Models, Games, Templates)
+      if(['app-pro', 'app', 'site', 'real', 'model', 'game', 'template'].includes(feature.type)) {
+        if(window.editor && feature.code) {
+          window.editor.setValue(feature.code);
+          if(window.runPreview) window.runPreview();
+          
+          let assetMsg = isFr ? "🚀 Modèle chargé !" : "🚀 Model loaded!";
+          if(feature.type === 'game') assetMsg = isFr ? "🎮 Jeu chargé !" : "🎮 Game loaded!";
+          if(feature.type === 'model') assetMsg = isFr ? "🧬 Modèle 3D chargé !" : "🧬 3D Model loaded!";
+          
+          if(window.showToast) window.showToast(assetMsg);
+          return;
+        }
+      }
+
+      if(feature.type === 'tab') {
+        if(window.renderTab) window.renderTab(feature.id);
+      } 
+      else if(feature.type === 'magic') {
+        if(el) el.click();
+        else if(feature.id === 'btn-run' && window.runPreview) window.runPreview();
+      } 
+      else if(feature.type === 'designer') {
+        if(window.renderTab) window.renderTab('iapro');
+      }
+      else if(feature.type === 'genius') {
+        if(window.renderTab) window.renderTab('genius');
+      }
+      else if(feature.type === 'func') {
+        if(feature.id === 'exportDB' && window.exportDB) window.exportDB();
+        else if(feature.id === 'importDB') {
+          const inp = document.getElementById('db-import-file');
+          if(inp) inp.click();
+        }
+      }
+
+      if(el) {
+        el.classList.add('feature-pulse');
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => el.classList.remove('feature-pulse'), 4000);
+      }
+    }
+  };
+
+  window.AIEngine = AIEngine;
+  console.log("🏛️ IA-PRO: Global Navigator v12.5 ACTIVE");
+})(window);
+

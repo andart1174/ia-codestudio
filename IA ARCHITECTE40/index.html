@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IA Architecte — Code Studio Pro</title>
+  <meta name="description" content="IA Architecte — Professional bilingual AI-powered HTML/CSS/JS code editor. EN/FR." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/three.min.js"></script>
+</head>
+<body>
+
+  <!-- 🚀 CACHE VERIFICATION BADGE -->
+  <div id="v-badge" style="position:fixed;top:5px;right:5px;background:#ef4444;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:10px;z-index:999999;box-shadow:0 0 15px rgba(239,68,68,0.5);pointer-events:none;">V3.7 STABLE</div>
+
+  <!-- BACK BUTTON -->
+  <a href="../site web ia/index.html" style="position:fixed; top:12px; left:12px; z-index:999999; background:linear-gradient(135deg, #10B981, #059669); color:white; padding:7px 14px; border-radius:8px; text-decoration:none; font-family:'Inter', sans-serif; font-weight:700; font-size:13px; box-shadow:0 4px 15px rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.2); transition:all 0.3s; display:flex; align-items:center; gap:6px;">
+    ← Back
+  </a>
+
+  <!-- ══ TOP BAR ══════════════════════════════════════ -->
+  <header class="topbar">
+    <div class="topbar-brand">
+      <div class="brand-icon">🏛️</div>
+      <div class="brand-text">
+        <span class="brand-name">IA <span class="brand-accent">Architecte</span></span>
+        <span class="brand-sub" id="lbl-subtitle">Professional Code Studio</span>
+      </div>
+    </div>
+
+    <div class="topbar-center">
+      <button class="panel-toggle" id="toggle-left" title="Toggle tools panel">
+        <span>⊞</span><span id="lbl-tools">Tools</span>
+      </button>
+      <div class="quality-wrap">
+        <svg class="quality-ring" viewBox="0 0 40 40">
+          <circle cx="20" cy="20" r="15" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="3.5"/>
+          <circle id="ring-arc" cx="20" cy="20" r="15" fill="none" stroke="#10B981" stroke-width="3.5" />
+        </svg>
+        <span id="quality-score" class="quality-score">100</span>
+      </div>
+      <button class="panel-toggle green-toggle" id="toggle-right" title="Toggle preview panel">
+        <span>👁</span><span id="lbl-preview">Preview</span>
+      </button>
+    </div>
+
+      <div class="topbar-actions-group">
+        <button class="action-btn icon-btn" id="btn-undo" title="Undo (Ctrl+Z)">↩</button>
+        <button class="action-btn icon-btn" id="btn-redo" title="Redo (Ctrl+Y)">↪</button>
+      </div>
+      <div class="sep"></div>
+      <button class="action-btn premium-btn" id="btn-premium">💎 <span id="lbl-premium">Premium $30/mo</span></button>
+      <div class="sep"></div>
+      <div class="top-actions">
+        <button class="action-btn" id="btn-format"><span class="t-icon">✨</span><span id="lbl-format">Format</span></button>
+        <button class="action-btn" id="btn-copy"><span class="t-icon">📋</span><span id="lbl-copy">Copy</span></button>
+        <button class="action-btn blue-btn" id="btn-save"><span class="t-icon">💾</span><span id="lbl-save">Save</span></button>
+        <button class="action-btn purple-btn" id="btn-export-all"><span class="t-icon">📦</span><span id="lbl-export-all">Export All</span></button>
+        <button class="action-btn cloud-btn" id="btn-deploy"><span class="t-icon">☁️</span><span id="lbl-deploy">Deploy</span></button>
+        <div class="sep"></div>
+        <button class="action-btn green-btn" id="btn-export-html"><span class="t-icon">📄</span><span>HTML</span></button>
+        <button class="action-btn green-btn" id="btn-export-css"><span class="t-icon">🎨</span><span>CSS</span></button>
+        <button class="action-btn green-btn" id="btn-export-js"><span class="t-icon">⚡</span><span>JS</span></button>
+      </div>
+      <div class="sep"></div>
+      <button class="action-btn" id="btn-shortcuts" title="Keyboard Shortcuts">⌨️</button>
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="fr">FR</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ MAIN BODY ═══════════════════════════════════ -->
+  <main class="studio-body">
+
+    <!-- LEFT PANEL -->
+    <aside class="left-panel" id="left-panel">
+      <div class="left-tabs" id="left-tabs">
+        <button class="ltab active" data-tab="ai"        id="tab-ai">🤖<span class="ltab-lbl" id="lbl-tab-ai">AI</span></button>
+        <button class="ltab ltab-pro" data-tab="iapro"   id="tab-iapro">💎<span class="ltab-lbl" id="lbl-tab-iapro">IA PRO</span></button>
+        <button class="ltab"        data-tab="guide"     id="tab-guide">📖<span class="ltab-lbl" id="lbl-tab-guide">Guide</span></button>
+        <button class="ltab"        data-tab="snippets"  id="tab-snippets">📦<span class="ltab-lbl" id="lbl-tab-snip">Snippets</span></button>
+        <button class="ltab"        data-tab="templates" id="tab-templates">🗂<span class="ltab-lbl" id="lbl-tab-tpl">Templates</span></button>
+        <button class="ltab"        data-tab="tools"     id="tab-tools">🛠<span class="ltab-lbl" id="lbl-tab-tools">Tools</span></button>
+        <button class="ltab"        data-tab="tpro"      id="tab-tpro">🧰<span class="ltab-lbl" id="lbl-tab-tpro">Toolbox Pro</span></button>
+        <button class="ltab"        data-tab="appspro"   id="tab-appspro">💎<span class="ltab-lbl" id="lbl-tab-apro">Apps Pro</span></button>
+        <button class="ltab ltab-pro" data-tab="appsultra" id="tab-appsultra">✨<span class="ltab-lbl" id="lbl-tab-appsultra">Apps Ultra</span></button>
+        <button class="ltab"        data-tab="apps"      id="tab-apps">📱<span class="ltab-lbl" id="lbl-tab-apps">Apps</span></button>
+        <button class="ltab"        data-tab="sites"     id="tab-sites">🌐<span class="ltab-lbl" id="lbl-tab-sites">Sites</span></button>
+        <button class="ltab"        data-tab="elite"     id="tab-elite">🚀<span class="ltab-lbl" id="lbl-tab-elite">Elite</span></button>
+        <button class="ltab"        data-tab="realworld" id="tab-realworld">✨<span class="ltab-lbl" id="lbl-tab-realworld">RealWorld</span></button>
+        <button class="ltab"        data-tab="models"    id="tab-models">🧬<span class="ltab-lbl" id="lbl-tab-models">Models</span></button>
+        <button class="ltab"        data-tab="audit"     id="tab-audit">🧪<span class="ltab-lbl" id="lbl-tab-audit">Audit</span></button>
+        <button class="ltab"        data-tab="genius"    id="tab-genius">🧠<span class="ltab-lbl" id="lbl-tab-genius">Genius</span></button>
+        <button class="ltab"        data-tab="assets"    id="tab-assets">📦<span class="ltab-lbl" id="lbl-tab-assets">Assets</span></button>
+        <button class="ltab"        data-tab="media"     id="tab-media">🖼️<span class="ltab-lbl" id="lbl-tab-media">Media</span></button>
+        <button class="ltab"        data-tab="transcode" id="tab-transcode">🔠<span class="ltab-lbl" id="lbl-tab-trans">Transcode</span></button>
+        <button class="ltab"        data-tab="stylelab"  id="tab-stylelab">🎨<span class="ltab-lbl" id="lbl-tab-style">Style Lab</span></button>
+        <button class="ltab"        data-tab="data"      id="tab-data">📊<span class="ltab-lbl" id="lbl-tab-data">Data</span></button>
+        <button class="ltab"        data-tab="games"     id="tab-games">🎮<span class="ltab-lbl" id="lbl-tab-games">Games</span></button>
+        <button class="ltab ltab-pro" data-tab="gamespro" id="tab-gamespro">🥽<span class="ltab-lbl" id="lbl-tab-gamespro">Games Pro</span></button>
+        <button class="ltab"        data-tab="settings"  id="tab-settings">⚙<span class="ltab-lbl" id="lbl-tab-set">Settings</span></button>
+      </div>
+      <div class="left-body" id="left-body"></div>
+    </aside>
+
+    <!-- CENTER: Monaco Editor -->
+    <section class="editor-section">
+      <div class="editor-topbar">
+        <div class="win-dots"><span></span><span></span><span class="dot-active"></span></div>
+        <span class="file-label">index.html — IA Architecte Studio</span>
+        <div class="editor-stats" id="editor-stats"></div>
+      </div>
+      
+      <!-- 🪄 AI ONE-CLICK MAGIC BAR -->
+      <div class="magic-bar">
+        <button class="magic-btn" id="mbtn-beautify" title="Magic Beautify">✨ <span id="lbl-magic-beautify">Beautify</span></button>
+        <button class="magic-btn" id="mbtn-mobile" title="Auto Mobile">📱 <span id="lbl-magic-mobile">Mobile</span></button>
+        <button class="magic-btn" id="mbtn-dark" title="Dark Mode">🌙 <span id="lbl-magic-dark">Dark</span></button>
+        <button class="magic-btn" id="mbtn-seo" title="Smart SEO">🔍 <span id="lbl-magic-seo">SEO</span></button>
+        <div class="magic-sep"></div>
+        <button class="magic-btn purple-btn" id="mbtn-real" title="Real Functional Mode">🚀 <span id="lbl-magic-real">REAL MODE</span></button>
+        <button class="magic-btn green-btn" id="mbtn-check-ready" title="Functional Readiness Check">✅ <span id="lbl-magic-check">CHECK READY</span></button>
+        <button class="magic-btn blue-btn" id="mbtn-explain" title="AI Code Tutor">🎓 <span id="lbl-magic-explain">EXPLAIN</span></button>
+        <div class="magic-sep"></div>
+        <button class="magic-btn" id="mbtn-style-lab" title="Style Lab">🎨 <span id="lbl-magic-lab">Lab</span></button>
+      </div>
+
+      <div id="monaco-container"></div>
+      <div class="editor-statusbar">
+        <span class="status-left">🏛️ IA Architecte &nbsp;|&nbsp; HTML / CSS / JS</span>
+        <span id="status-save" class="status-muted"></span>
+        <span id="status-score" class="status-score score-good">Q: 100</span>
+      </div>
+    </section>
+
+    <!-- RIGHT PANEL -->
+    <aside class="right-panel" id="right-panel">
+      <div class="preview-topbar">
+        <span class="preview-label" id="lbl-livepreview">👁 Live Preview</span>
+        <div class="vp-group">
+          <button class="vp-btn" data-w="390px" title="Mobile (iPhone 15)">📱</button>
+          <button class="vp-btn" data-w="820px" title="Tablet (iPad Air)">📲</button>
+          <button class="vp-btn active" data-w="100%" title="Desktop (Default)">🖥️</button>
+          <button class="vp-btn" id="bp-btn" title="Blueprint Mode">📐</button>
+          <button class="vp-btn" id="inspect-btn" title="Inspect Code Line">🔍</button>
+          <div class="vp-sep"></div>
+        </div>
+        <div class="action-btn scale-indicator">
+          Scale: <span id="scale-val">100</span>%
+        </div>
+        <button class="run-btn" id="btn-run">▶ <span id="lbl-run">Run</span></button>
+      </div>
+      <div class="preview-viewport">
+        <div class="preview-frame-wrap" id="preview-frame-wrap">
+          <iframe id="preview-iframe" title="Application Preview" sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-popups allow-downloads"></iframe>
+        </div>
+      </div>
+      <div class="preview-statusbar">
+        <label class="autorun-label">
+          <input type="checkbox" id="autorun-chk" checked />
+          <span class="toggle-sw"></span>
+          <span id="lbl-autorun" class="status-muted">Auto-run</span>
+        </label>
+        <span id="issue-label" class="status-muted"></span>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Shortcuts Modal -->
+  <div class="modal-overlay" id="shortcuts-modal" style="display:none">
+    <div class="modal-box">
+      <div class="modal-hdr"><h3 id="lbl-shortcuts-title">Keyboard Shortcuts</h3><button onclick="document.getElementById('shortcuts-modal').style.display='none'" class="modal-close">✕</button></div>
+      <div class="modal-body" id="shortcuts-body"></div>
+    </div>
+  </div>
+
+  <!-- Deploy Modal -->
+  <div class="modal-overlay" id="deploy-modal" style="display:none">
+    <div class="modal-box deploy-box">
+      <div class="modal-hdr">
+        <h3 id="lbl-deploy-title">🚀 Cloud Deployment</h3>
+        <button onclick="document.getElementById('deploy-modal').style.display='none'" class="modal-close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="deploy-hud">
+          <div class="cloud-pulse">☁️</div>
+          <div class="sync-lines"><span></span><span></span><span></span></div>
+          <div class="deploy-status" id="deploy-status">Connecting to Hub...</div>
+        </div>
+        <div class="deploy-options" id="deploy-options" style="display:none">
+          <div class="deploy-card" id="btn-publish-live">
+            <span class="d-icon">🔗</span>
+            <div class="d-text">
+              <b id="lbl-pub-title">Live Share</b>
+              <p id="lbl-pub-desc">Instant public URL via CodePen.</p>
+            </div>
+          </div>
+          <div class="deploy-card" id="btn-netlify-pack">
+            <span class="d-icon">🚀</span>
+            <div class="d-text">
+              <b id="lbl-net-title">Professional Hosting</b>
+              <p id="lbl-net-desc">Prepare ZIP for Netlify Drop.</p>
+            </div>
+          </div>
+          <div class="deploy-card" id="btn-mobile-pack">
+            <span class="d-icon">📱</span>
+            <div class="d-text">
+              <b id="lbl-mob-title">Mobile Transformation</b>
+              <p id="lbl-mob-desc">Export as Installable App (Android/iOS).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+  <script src="js/genius-core.js"></script>
+  <script src="js/ai-engine.js"></script>
+  <script src="js/apps-pro-library.js"></script>
+  <script src="js/toolbox-pro-data.js"></script>
+  <script src="js/apps-data.js"></script>
+  <script src="js/apps-data2.js"></script>
+  <script src="js/apps-data3.js"></script>
+  <script src="js/apps-data4.js"></script>
+  <script src="js/apps-data5.js"></script>
+  <script src="js/apps-data6.js"></script>
+  <script src="js/apps-data7.js"></script>
+  <script src="js/apps-data8.js"></script>
+  <script src="js/apps-data9.js"></script>
+  <script src="js/apps-data10.js"></script>
+  <script src="js/apps-data11.js"></script>
+  <script src="js/apps-data12.js"></script>
+  <script src="js/sites-data.js"></script>
+  <script src="js/pro-apps-data.js"></script>
+  <script src="js/apps-ultra-library.js"></script>
+  <script src="js/models-data.js"></script>
+  <script src="js/games-library.js"></script>
+  <script src="js/games-pro-library.js"></script>
+  <script src="js/realworld-apps.js"></script>
+  <script src="js/templates-library.js"></script>
+  <script src="js/media-studio.js"></script>
+  <script src="js/app-genius.js"></script>
+  <!-- STRIPE GATEWAY INTERCEPTOR -->
+  <script src="js/payment-gateway.js?v=2"></script>
+  <script src="js/code-studio.js?v=2"></script>
+</body>
+</html>

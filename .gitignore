@@ -1,0 +1,9 @@
+node_modules/
+*.log
+babel_err.txt
+babel_out.txt
+error.txt
+lint_error.txt
+hex.txt
+test.txt
+txt.txt

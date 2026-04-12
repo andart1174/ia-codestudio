@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="nav_title">AI CODE STUDIO</title>
+    
+    <!-- SEO and Meta tags -->
+    <meta name="description" content="Découvrez nos deux plateformes phares propulsées par l'IA. Conception structurelle avancée et génération intelligente dans un seul écosystème.">
+    
+    <!-- CSS Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Dynamic Glowing Background -->
+    <div class="aura-container">
+        <div class="aura-orb orb-1"></div>
+        <div class="aura-orb orb-2"></div>
+        <div class="aura-orb orb-3"></div>
+        <div class="aura-orb orb-4"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">AI CODE STUDIO</div>
+        <div class="lang-toggle-container" style="display: flex; flex-direction: column; align-items: flex-end;">
+            <div class="lang-toggle">
+                <button class="lang-btn active" data-lang="fr">FR</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+            </div>
+            
+            <div class="support-menu">
+                <button class="support-btn" onclick="openModal('contact')">
+                    <span>💬</span> <span data-i18n="menu_contact">Contact</span>
+                </button>
+                <button class="support-btn" onclick="openModal('tutoriels')">
+                    <span>📖</span> <span data-i18n="menu_tutoriels">Tutoriels</span>
+                </button>
+                <button class="support-btn" onclick="openModal('faq')">
+                    <span>❓</span> <span data-i18n="menu_faq">FAQ</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Modals Section -->
+    <div id="modal-contact" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeModal('contact')">×</button>
+            <h2 class="modal-title" data-i18n="modal_contact_title">Contact Us</h2>
+            <form class="contact-form" onsubmit="handleContactSubmit(event)">
+                <div class="form-group">
+                    <label data-i18n="form_name">Full Name</label>
+                    <input type="text" placeholder="..." required>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="form_email">Email</label>
+                    <input type="email" placeholder="email@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="form_message">Message</label>
+                    <textarea rows="5" placeholder="..." required></textarea>
+                </div>
+                <button type="submit" class="btn-submit" data-i18n="form_send">Send message 🚀</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-tutoriels" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeModal('tutoriels')">×</button>
+            <h2 class="modal-title" data-i18n="modal_tutoriels_title">Learning Center</h2>
+            <div class="tutorial-grid">
+                <div class="tutorial-card">
+                    <h3 data-i18n="tut1_title">🏛️ IA Architecte</h3>
+                    <p data-i18n="tut1_desc">Apprenez à structurer des projets complexes, à utiliser l'audit de code en temps réel et à exporter vos créations proprement.</p>
+                </div>
+                <div class="tutorial-card">
+                    <h3 data-i18n="tut2_title">✨ Aura Gen</h3>
+                    <p data-i18n="tut2_desc">Maîtrisez la génération d'interfaces fluides, l'injection de composants React și sincronizarea 3D.</p>
+                </div>
+                <div class="tutorial-card">
+                    <h3 data-i18n="tut3_title">💎 Acces Premium</h3>
+                    <p data-i18n="tut3_desc">Découvrez comment débloquer l'export illimité și funcțiile avansate de deploy cloud.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-faq" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeModal('faq')">×</button>
+            <h2 class="modal-title" data-i18n="modal_faq_title">Frequently Asked Questions</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span data-i18n="faq1_q">What is AI Code Studio?</span>
+                        <span>↓</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p data-i18n="faq1_a">C'est un écosystème complet pour les développeurs, combinant un IDE architectural puissant și un générateur d'UI piloté par l'IA.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span data-i18n="faq2_q">How does the subscription work?</span>
+                        <span>↓</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p data-i18n="faq2_a">L'abonnement de 30$/mois vous donne un accès illimité à tous les exports, déploiments cloud și funcții premium din ambele aplicații.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span data-i18n="faq3_q">Can I use the code for commercial projects?</span>
+                        <span>↓</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p data-i18n="faq3_a">Oui, tout le code généré via nos plateformes vă aparține 100% și poate fi utilizat în orice proiect comercial sau personal.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero reveal">
+            <h1 data-i18n="hero_title">L'Avenir de l'Intelligence Artificielle</h1>
+            <p data-i18n="hero_subtitle">Découvrez nos deux plateformes phares propulsées par l'IA. Conception structurelle avancée et génération intelligente dans un seul écosystème.</p>
+        </section>
+
+        <style>
+            /* Premium Portal Specific Styles */
+            .premium-portal-wrap { text-align: center; margin: 30px 0; animation: fadeIn 0.8s ease forwards; }
+            .premium-portal-btn {
+                background: linear-gradient(135deg, #f59e0b, #d946ef);
+                color: #fff; border: 2px solid rgba(245,158,11,0.5); padding: 16px 36px;
+                border-radius: 50px; font-size: 18px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px;
+                cursor: pointer; box-shadow: 0 0 25px rgba(245, 158, 11, 0.4);
+                transition: all 0.3s; animation: pulseGlowPortal 2s infinite ease-in-out;
+                display: inline-flex; align-items: center; gap: 10px;
+            }
+            .premium-portal-btn:hover {
+                transform: scale(1.05) translateY(-2px); box-shadow: 0 10px 35px rgba(245, 158, 11, 0.6);
+            }
+            .premium-portal-btn.active-sub {
+                background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.5);
+                color: #10b981; animation: none; box-shadow: none; pointer-events: none;
+            }
+            @keyframes pulseGlowPortal {
+                0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); transform: scale(1); }
+                50% { box-shadow: 0 0 35px rgba(245, 158, 11, 0.6); transform: scale(1.03); }
+            }
+
+            /* Support Menu Styles */
+            .support-menu {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                margin-top: 10px;
+                align-items: flex-end;
+            }
+            .support-btn {
+                background: rgba(13, 17, 23, 0.9);
+                color: #fff;
+                border: 1px solid rgba(255,255,255,0.1);
+                padding: 8px 16px;
+                border-radius: 10px;
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: all 0.3s;
+                backdrop-filter: blur(10px);
+                white-space: nowrap;
+            }
+            .support-btn:hover {
+                background: rgba(255,255,255,0.05);
+                border-color: #8b5cf6;
+                transform: translateX(-5px);
+            }
+
+            /* Modal Overlay - HIDDEN BY DEFAULT */
+            .modal-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.85);
+                backdrop-filter: blur(15px);
+                z-index: 99999;
+                display: none; /* Crucial change to hide them */
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            }
+            .modal-overlay.active {
+                display: flex !important;
+            }
+            .modal-content {
+                background: linear-gradient(145deg, #0f172a, #020617);
+                border-radius: 24px;
+                border: 1px solid rgba(255,255,255,0.1);
+                width: 100%;
+                max-width: 600px;
+                padding: 40px;
+                position: relative;
+                max-height: 90vh;
+                overflow-y: auto;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            }
+            .modal-close-btn {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                background: transparent;
+                border: none;
+                color: #94a3b8;
+                font-size: 24px;
+                cursor: pointer;
+            }
+            .modal-title {
+                font-size: 28px;
+                font-weight: 800;
+                margin-bottom: 25px;
+                text-align: center;
+                background: linear-gradient(90deg, #06b6d4, #8b5cf6);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+        </style>
+        
+        <div class="premium-portal-wrap">
+            <button class="premium-portal-btn" id="portal-premium-btn" onclick="triggerPremiumPortal()">
+                💎 Devenir Premium ($30/mo)
+            </button>
+        </div>
+
+        <script>
+            function checkPremiumPortal() {
+                const btn = document.getElementById('portal-premium-btn');
+                const subDate = localStorage.getItem('ia_premium_sub_date');
+                if (subDate) {
+                    const daysPassed = Math.floor((Date.now() - parseInt(subDate)) / (1000 * 60 * 60 * 24));
+                    const left = 30 - daysPassed;
+                    if (left > 0) {
+                        btn.classList.add('active-sub');
+                        btn.innerText = '✅ Premium Activ (' + left + ' jours restants)';
+                    } else {
+                        localStorage.removeItem('ia_premium_sub_date');
+                    }
+                }
+            }
+            function triggerPremiumPortal() {
+                window.open('https://checkout.stripe.com/subscribe/test', '_blank');
+                // Simulare plata completa pe front-end
+                if (confirm("TEST MODE: Simulăm finalizarea plății pe Stripe? Apasă OK dacă ai 'plătit' pentru a porni abonamentul.")) {
+                    localStorage.setItem('ia_premium_sub_date', Date.now().toString());
+                    window.location.reload();
+                }
+            }
+            document.addEventListener('DOMContentLoaded', checkPremiumPortal);
+
+            /* Local Modal Scripts to be sure they work */
+            function openModal(id) {
+                const m = document.getElementById('modal-' + id);
+                if(m) {
+                    m.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+            function closeModal(id) {
+                const m = document.getElementById('modal-' + id);
+                if(m) {
+                    m.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            }
+        </script>
+
+        <!-- Applications Showcase -->
+        <section class="showcase">
+            
+            <!-- App 1: IA Architecte 40 -->
+            <article class="app-card reveal">
+                <div class="card-icon">🏛️</div>
+                <h2 data-i18n="app1_title">IA ARCHITECTE</h2>
+                <p data-i18n="app1_desc">Un moteur puissant pour l'architecture et la conception logique, offrant des outils de niveau professionnel pour structurer vos projets.</p>
+                <a href="../IA ARCHITECTE40/index.html" class="btn-launch" data-i18n="btn_launch">Lancer l'Application</a>
+            </article>
+
+            <!-- App 2: AURA GEN 111 -->
+            <article class="app-card card-aura reveal" style="transition-delay: 0.2s;">
+                <div class="card-icon">✨</div>
+                <h2 data-i18n="app2_title">AURA GEN</h2>
+                <p data-i18n="app2_desc">Le summum de la génération d'UI et de l'intelligence visuelle. Créez des expériences éblouissantes avec notre technologie d'avant-garde.</p>
+                <a href="../AURA GEN 111/dist/index.html" class="btn-launch" data-i18n="btn_launch">Lancer l'Application</a>
+            </article>
+
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p data-i18n="footer_text">© 2026 AI CODE STUDIO. Tous droits réservés.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/i18n.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+</html>
