@@ -63,26 +63,43 @@
 
     <!-- ===== LOGIN MODAL ===== -->
     <div id="modal-login" class="modal-overlay">
-        <div class="modal-content" style="max-width: 420px;">
+        <div class="modal-content" style="max-width: 420px; padding: 36px 30px;">
             <button class="modal-close-btn" onclick="closeModal('login')">×</button>
-            <div style="text-align:center; margin-bottom: 28px;">
-                <div style="font-size: 2.5rem; margin-bottom: 10px;">🔐</div>
-                <h2 class="modal-title" data-i18n="login_title">Connexion Admin</h2>
-                <p style="color: #94a3b8; font-size: 14px;" data-i18n="login_subtitle">Accédez au panneau d'administration</p>
+            <div style="text-align:center; margin-bottom: 24px;">
+                <h2 class="modal-title" id="auth-title" data-i18n="login_title" style="margin-bottom:0;">Se connecter</h2>
             </div>
-            <form id="login-form" onsubmit="handleLoginSubmit(event)">
-                <div class="form-group">
-                    <label data-i18n="form_email">Email</label>
-                    <input type="email" id="login-email" placeholder="admin@ia-codestudio.com" required autocomplete="email">
+            <form id="login-form" onsubmit="handleAuthSubmit(event)">
+                <div class="form-group" id="auth-name-group" style="display:none; position:relative;">
+                    <span style="position:absolute; left:14px; top:13px; color:#94a3b8; font-size:16px;">👤</span>
+                    <input type="text" id="auth-name" placeholder="Votre nom" style="padding-left: 42px;">
                 </div>
-                <div class="form-group">
-                    <label data-i18n="login_password">Mot de passe</label>
-                    <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
+                <div class="form-group" style="position:relative;">
+                    <span style="position:absolute; left:14px; top:13px; color:#94a3b8; font-size:16px;">✉️</span>
+                    <input type="email" id="auth-email" placeholder="Email" required autocomplete="email" style="padding-left: 42px;">
                 </div>
-                <div id="login-error" style="display:none; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #f87171; padding: 10px 14px; border-radius: 10px; font-size: 13px; margin-bottom: 16px;" data-i18n="login_error">Email ou mot de passe incorrect.</div>
-                <button type="submit" class="btn-submit" id="login-submit-btn" data-i18n="login_btn">Se connecter 🚀</button>
+                <div class="form-group" style="position:relative;">
+                    <span style="position:absolute; left:14px; top:13px; color:#94a3b8; font-size:16px;">🔒</span>
+                    <input type="password" id="auth-password" placeholder="••••••••" required autocomplete="current-password" style="padding-left: 42px;">
+                </div>
+                <div id="auth-error" style="display:none; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #f87171; padding: 10px 14px; border-radius: 10px; font-size: 13px; margin-bottom: 16px;">Erreur.</div>
+                <button type="submit" class="btn-submit" id="auth-submit-btn" data-i18n="login_btn" style="background: #3b82f6; box-shadow: none;">Connexion</button>
             </form>
-            <p style="text-align:center; margin-top:18px; font-size:12px; color:#64748b;" data-i18n="login_hint">Réservé aux administrateurs de platform.</p>
+            <div style="text-align:center; margin-top:20px;">
+                <a href="#" id="auth-toggle-link" onclick="toggleAuthMode(event)" style="color:#94a3b8; font-size:14px; text-decoration:none; transition: color 0.3s;" data-i18n="login_no_account">Pas de compte ? Inscrivez-vous</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== USER PROFILE MODAL ===== -->
+    <div id="modal-user" class="modal-overlay">
+        <div class="modal-content" style="max-width: 380px; text-align: center; padding: 40px 30px;">
+            <button class="modal-close-btn" onclick="closeModal('user')">×</button>
+            <div style="font-size: 3rem; margin-bottom: 15px;">👤</div>
+            <h2 class="modal-title" style="margin-bottom: 5px; font-size: 24px;" id="user-profile-name">Nom</h2>
+            <p style="color:#94a3b8; font-size:14px; margin-bottom: 24px;" id="user-profile-email">email@exemple.com</p>
+            <button class="btn-submit" onclick="adminLogout()" style="background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); color:#f87171; box-shadow: none; font-size: 14px; padding: 12px;">
+                Se Déconnecter 🚪
+            </button>
         </div>
     </div>
 
@@ -514,58 +531,133 @@
 
         <script>
             /* ============================================================
-               AUTH SYSTEM — Login + Admin Panel
-               Credentials: admin@ia-codestudio.com / admin2026
+               AUTH SYSTEM — Login + Register + Admin Panel
                ============================================================ */
-            
-            const ADMIN_CREDENTIALS = [
-                { email: 'admin@ia-codestudio.com', password: 'admin2026', name: 'André Admin' },
-                { email: 'admin@aistudio.com',      password: 'aistudio2026', name: 'Super Admin' }
-            ];
+
+            let isSignUpMode = false;
+
+            function toggleAuthMode(e) {
+                e.preventDefault();
+                isSignUpMode = !isSignUpMode;
+                const nameGroup = document.getElementById('auth-name-group');
+                const title = document.getElementById('auth-title');
+                const btn = document.getElementById('auth-submit-btn');
+                const toggleLink = document.getElementById('auth-toggle-link');
+                const nameInput = document.getElementById('auth-name');
+                const errBox = document.getElementById('auth-error');
+                
+                errBox.style.display = 'none';
+
+                if (isSignUpMode) {
+                    nameGroup.style.display = 'block';
+                    nameInput.required = true;
+                    title.textContent = translations[currentLang].signup_title || "Créer un compte";
+                    title.setAttribute('data-i18n', 'signup_title');
+                    btn.textContent = translations[currentLang].signup_btn || "S'inscrire";
+                    btn.setAttribute('data-i18n', 'signup_btn');
+                    toggleLink.textContent = translations[currentLang].login_has_account || "Déjà un compte ? Connectez-vous";
+                    toggleLink.setAttribute('data-i18n', 'login_has_account');
+                } else {
+                    nameGroup.style.display = 'none';
+                    nameInput.required = false;
+                    title.textContent = translations[currentLang].login_title || "Se connecter";
+                    title.setAttribute('data-i18n', 'login_title');
+                    btn.textContent = translations[currentLang].login_btn || "Connexion";
+                    btn.setAttribute('data-i18n', 'login_btn');
+                    toggleLink.textContent = translations[currentLang].login_no_account || "Pas de compte ? Inscrivez-vous";
+                    toggleLink.setAttribute('data-i18n', 'login_no_account');
+                }
+            }
 
             function authCheck() {
                 const session = localStorage.getItem('genius_session');
                 const loginBtn = document.getElementById('login-nav-btn');
                 const userBtn  = document.getElementById('user-nav-btn');
                 const userName = document.getElementById('user-nav-name');
+                const adminBadge = document.querySelector('.admin-badge');
+                
                 if (session) {
                     const user = JSON.parse(session);
                     if (loginBtn) loginBtn.style.display = 'none';
                     if (userBtn)  { userBtn.style.display = 'flex'; }
-                    if (userName) userName.textContent = user.name || 'Admin';
+                    if (userName) userName.textContent = user.name || 'User';
+
+                    if (user.role === 'Admin') {
+                        if (adminBadge) adminBadge.style.display = 'inline-block';
+                        userBtn.onclick = () => openModal('admin');
+                    } else {
+                        if (adminBadge) adminBadge.style.display = 'none';
+                        userBtn.onclick = () => {
+                            document.getElementById('user-profile-name').textContent = user.name;
+                            document.getElementById('user-profile-email').textContent = user.email;
+                            openModal('user');
+                        };
+                    }
                 } else {
                     if (loginBtn) loginBtn.style.display = 'flex';
                     if (userBtn)  userBtn.style.display  = 'none';
                 }
             }
 
-            function handleLoginSubmit(e) {
+            function handleAuthSubmit(e) {
                 e.preventDefault();
-                const email = document.getElementById('login-email').value.trim().toLowerCase();
-                const password = document.getElementById('login-password').value;
-                const errBox = document.getElementById('login-error');
-                const btn = document.getElementById('login-submit-btn');
+                const email = document.getElementById('auth-email').value.trim().toLowerCase();
+                const password = document.getElementById('auth-password').value;
+                const name = document.getElementById('auth-name').value.trim();
+                const errBox = document.getElementById('auth-error');
+                const btn = document.getElementById('auth-submit-btn');
 
                 btn.disabled = true;
-                btn.textContent = '⏳ Vérification...';
+                btn.textContent = '⏳...';
 
                 setTimeout(() => {
-                    const match = ADMIN_CREDENTIALS.find(c => c.email === email && c.password === password);
-                    if (match) {
-                        const user = { email: match.email, name: match.name, role: 'Admin', loginAt: Date.now() };
-                        localStorage.setItem('genius_session', JSON.stringify(user));
-                        errBox.style.display = 'none';
-                        closeModal('login');
-                        authCheck();
-                        adminLog('✅ Connexion réussie — ' + match.name);
-                        // Open admin panel after login
-                        setTimeout(() => openModal('admin'), 300);
+                    let users = JSON.parse(localStorage.getItem('ia_users') || '[]');
+                    const isAdmin = email === 'andart1174@gmail.com';
+
+                    if (isSignUpMode) {
+                        if (users.find(u => u.email === email)) {
+                            errBox.textContent = currentLang === 'en' ? "Email already registered." : "Email déjà utilisé.";
+                            errBox.style.display = 'block';
+                        } else {
+                            const finalName = name || email.split('@')[0];
+                            const newUser = { email, password, name: finalName, role: isAdmin ? 'Admin' : 'User', createdAt: Date.now() };
+                            users.push(newUser);
+                            localStorage.setItem('ia_users', JSON.stringify(users));
+                            
+                            // Auto login
+                            const sessionUser = { email: newUser.email, name: newUser.name, role: newUser.role, loginAt: Date.now() };
+                            localStorage.setItem('genius_session', JSON.stringify(sessionUser));
+                            errBox.style.display = 'none';
+                            closeModal('login');
+                            authCheck();
+                            if(isAdmin) setTimeout(() => openModal('admin'), 300);
+                        }
                     } else {
-                        errBox.style.display = 'block';
-                        btn.disabled = false;
-                        btn.textContent = '🚀 Se connecter';
+                        // Login Check
+                        const match = users.find(u => u.email === email && u.password === password);
+                        
+                        if (match) {
+                            // Ensure the hardcoded admin overrides role properly if needed later
+                            if (isAdmin && match.role !== 'Admin') {
+                                match.role = 'Admin';
+                                localStorage.setItem('ia_users', JSON.stringify(users));
+                            }
+                            
+                            const sessionUser = { email: match.email, name: match.name, role: match.role, loginAt: Date.now() };
+                            localStorage.setItem('genius_session', JSON.stringify(sessionUser));
+                            errBox.style.display = 'none';
+                            closeModal('login');
+                            authCheck();
+                            if (match.role === 'Admin') setTimeout(() => openModal('admin'), 300);
+                        } else {
+                            errBox.textContent = translations[currentLang]?.login_error || "Email ou mot de passe incorrect.";
+                            errBox.style.display = 'block';
+                        }
                     }
-                }, 900);
+                    
+                    btn.disabled = false;
+                    btn.textContent = isSignUpMode ? (translations[currentLang].signup_btn || "S'inscrire") : (translations[currentLang].login_btn || "Connexion");
+                }, 600);
             }
 
             function adminLog(msg) {
