@@ -141,13 +141,13 @@
     });
 
     document.getElementById('stm-pay').addEventListener('click', () => {
-        window.open('https://checkout.stripe.com/pay/test', '_blank');
+        window.open('https://buy.stripe.com/cNi5kE97Mfbb6Yl4aubfO01', '_blank');
         if (activeCallback) activeCallback();
         overlay.classList.remove('active');
     });
 
     document.getElementById('stm-sub').addEventListener('click', () => {
-        window.open('https://checkout.stripe.com/subscribe/test', '_blank'); // Demo subscription link
+        window.open('https://buy.stripe.com/bJecN6bfUfbbaax36qbfO02', '_blank'); // Demo subscription link
         
         if (isSubMode && activeCallback) {
             // Already handled by code-studio logic if isSubMode
