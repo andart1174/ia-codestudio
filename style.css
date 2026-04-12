@@ -103,6 +103,7 @@ html, body {
   position: sticky;
   top: 0;
   z-index: 100;
+  position: relative;
 }
 
 .navbar-spacer {
@@ -110,15 +111,18 @@ html, body {
 }
 
 .navbar-center {
-  flex: 1;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   justify-content: center;
   align-items: center;
+  pointer-events: auto;
 }
 
 .logo {
   font-family: 'Outfit', sans-serif;
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 800;
   letter-spacing: 2px;
   background: linear-gradient(90deg, var(--aura-cyan), var(--aura-magenta));
@@ -126,8 +130,9 @@ html, body {
   -webkit-text-fill-color: transparent;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   transition: transform 0.3s ease;
+  white-space: nowrap;
 }
 
 .logo:hover {
@@ -135,16 +140,16 @@ html, body {
 }
 
 .logo-img {
-  height: 62px;
-  width: 62px;
+  height: 72px;
+  width: 72px;
   object-fit: contain;
   border-radius: 12px;
-  filter: drop-shadow(0 0 12px rgba(139, 92, 246, 0.5));
+  filter: drop-shadow(0 0 14px rgba(139, 92, 246, 0.6));
   transition: filter 0.3s ease;
 }
 
 .logo:hover .logo-img {
-  filter: drop-shadow(0 0 20px rgba(6, 182, 212, 0.7));
+  filter: drop-shadow(0 0 22px rgba(6, 182, 212, 0.8));
 }
 
 .lang-toggle {
