@@ -81,6 +81,12 @@
                     <span style="position:absolute; left:14px; top:13px; color:#94a3b8; font-size:16px;">🔒</span>
                     <input type="password" id="auth-password" placeholder="••••••••" required autocomplete="current-password" style="padding-left: 42px;">
                 </div>
+                <div style="text-align: right; margin-bottom: 15px; margin-top: -10px;">
+                    <a href="#" id="auth-forgot-link" onclick="toggleRecoveryMode(event)" style="color:#06b6d4; font-size:12px; text-decoration:none;" data-i18n="login_forgot">Mot de passe oublié ?</a>
+                </div>
+                <p id="recovery-hint" style="display:none; color:#10b981; font-size:13px; margin-bottom:15px; text-align:center;">
+                    Entrez votre email et votre nouveau mot de passe.
+                </p>
                 <div id="auth-error" style="display:none; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #f87171; padding: 10px 14px; border-radius: 10px; font-size: 13px; margin-bottom: 16px;">Erreur.</div>
                 <button type="submit" class="btn-submit" id="auth-submit-btn" data-i18n="login_btn" style="background: #3b82f6; box-shadow: none;">Connexion</button>
             </form>
@@ -535,37 +541,70 @@
                ============================================================ */
 
             let isSignUpMode = false;
+            let isRecoveryMode = false;
 
             function toggleAuthMode(e) {
-                e.preventDefault();
+                if(e) e.preventDefault();
                 isSignUpMode = !isSignUpMode;
+                isRecoveryMode = false;
+                updateAuthUI();
+            }
+
+            function toggleRecoveryMode(e) {
+                if(e) e.preventDefault();
+                isRecoveryMode = true;
+                isSignUpMode = false;
+                updateAuthUI();
+            }
+
+            function updateAuthUI() {
                 const nameGroup = document.getElementById('auth-name-group');
                 const title = document.getElementById('auth-title');
                 const btn = document.getElementById('auth-submit-btn');
                 const toggleLink = document.getElementById('auth-toggle-link');
+                const forgotLink = document.getElementById('auth-forgot-link');
+                const recoveryHint = document.getElementById('recovery-hint');
                 const nameInput = document.getElementById('auth-name');
                 const errBox = document.getElementById('auth-error');
                 
                 errBox.style.display = 'none';
 
-                if (isSignUpMode) {
+                if (isRecoveryMode) {
+                    nameGroup.style.display = 'none';
+                    nameInput.required = false;
+                    forgotLink.style.display = 'none';
+                    recoveryHint.style.display = 'block';
+                    title.textContent = translations[currentLang].recovery_title || "Récupération";
+                    title.setAttribute('data-i18n', 'recovery_title');
+                    btn.textContent = translations[currentLang].recovery_btn || "Sauvegarder et Connecter";
+                    btn.setAttribute('data-i18n', 'recovery_btn');
+                    toggleLink.textContent = translations[currentLang].login_has_account || "Déjà un compte ? Connectez-vous";
+                    toggleLink.setAttribute('data-i18n', 'login_has_account');
+                    toggleLink.onclick = (e) => { e.preventDefault(); isRecoveryMode=false; isSignUpMode=false; updateAuthUI(); };
+                } else if (isSignUpMode) {
                     nameGroup.style.display = 'block';
                     nameInput.required = true;
+                    forgotLink.style.display = 'none';
+                    recoveryHint.style.display = 'none';
                     title.textContent = translations[currentLang].signup_title || "Créer un compte";
                     title.setAttribute('data-i18n', 'signup_title');
                     btn.textContent = translations[currentLang].signup_btn || "S'inscrire";
                     btn.setAttribute('data-i18n', 'signup_btn');
                     toggleLink.textContent = translations[currentLang].login_has_account || "Déjà un compte ? Connectez-vous";
                     toggleLink.setAttribute('data-i18n', 'login_has_account');
+                    toggleLink.onclick = toggleAuthMode;
                 } else {
                     nameGroup.style.display = 'none';
                     nameInput.required = false;
+                    forgotLink.style.display = 'inline-block';
+                    recoveryHint.style.display = 'none';
                     title.textContent = translations[currentLang].login_title || "Se connecter";
                     title.setAttribute('data-i18n', 'login_title');
                     btn.textContent = translations[currentLang].login_btn || "Connexion";
                     btn.setAttribute('data-i18n', 'login_btn');
                     toggleLink.textContent = translations[currentLang].login_no_account || "Pas de compte ? Inscrivez-vous";
                     toggleLink.setAttribute('data-i18n', 'login_no_account');
+                    toggleLink.onclick = toggleAuthMode;
                 }
             }
 
@@ -621,7 +660,31 @@
                     let users = JSON.parse(localStorage.getItem('ia_users') || '[]');
                     const isAdmin = email === 'andart1174@gmail.com';
 
-                    if (isSignUpMode) {
+                    if (isRecoveryMode) {
+                        let userToReset = users.find(u => u.email === email);
+                        
+                        // Absolute admin recognition bypass in recovery
+                        if (!userToReset && isAdmin) {
+                            userToReset = { email: email, password: password, name: 'Admin', role: 'Admin', createdAt: Date.now() };
+                            users.push(userToReset);
+                        }
+
+                        if (userToReset) {
+                            userToReset.password = password;
+                            if (isAdmin && userToReset.role !== 'Admin') userToReset.role = 'Admin';
+                            localStorage.setItem('ia_users', JSON.stringify(users));
+                            
+                            const sessionUser = { email: userToReset.email, name: userToReset.name, role: userToReset.role, loginAt: Date.now() };
+                            localStorage.setItem('genius_session', JSON.stringify(sessionUser));
+                            errBox.style.display = 'none';
+                            closeModal('login');
+                            authCheck();
+                            if (userToReset.role === 'Admin') setTimeout(() => openModal('admin'), 300);
+                        } else {
+                            errBox.textContent = currentLang === 'en' ? "Account not found." : "Compte introuvable.";
+                            errBox.style.display = 'block';
+                        }
+                    } else if (isSignUpMode) {
                         if (users.find(u => u.email === email)) {
                             errBox.textContent = currentLang === 'en' ? "Email already registered." : "Email déjà utilisé.";
                             errBox.style.display = 'block';
@@ -672,7 +735,9 @@
                     }
                     
                     btn.disabled = false;
-                    btn.textContent = isSignUpMode ? (translations[currentLang].signup_btn || "S'inscrire") : (translations[currentLang].login_btn || "Connexion");
+                    btn.textContent = isRecoveryMode ? (translations[currentLang].recovery_btn || "Sauvegarder et Connecter") : 
+                                      isSignUpMode ? (translations[currentLang].signup_btn || "S'inscrire") : 
+                                      (translations[currentLang].login_btn || "Connexion");
                 }, 600);
             }
 
