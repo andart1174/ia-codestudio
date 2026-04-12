@@ -96,7 +96,7 @@ html, body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 5%;
+  padding: 1.2rem 5%;
   background: rgba(7, 9, 15, 0.6);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--glass-border);
@@ -105,14 +105,46 @@ html, body {
   z-index: 100;
 }
 
+.navbar-spacer {
+  flex: 1;
+}
+
+.navbar-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .logo {
   font-family: 'Outfit', sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 800;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   background: linear-gradient(90deg, var(--aura-cyan), var(--aura-magenta));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.04);
+}
+
+.logo-img {
+  height: 62px;
+  width: 62px;
+  object-fit: contain;
+  border-radius: 12px;
+  filter: drop-shadow(0 0 12px rgba(139, 92, 246, 0.5));
+  transition: filter 0.3s ease;
+}
+
+.logo:hover .logo-img {
+  filter: drop-shadow(0 0 20px rgba(6, 182, 212, 0.7));
 }
 
 .lang-toggle {
