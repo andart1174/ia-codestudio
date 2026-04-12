@@ -1,6 +1,6 @@
 const translations = {
   fr: {
-    nav_title: "AI CODE STUDIO",
+    nav_title: "IA CODE STUDIO",
     hero_title: "L'Avenir de l'Intelligence Artificielle",
     hero_subtitle: "Découvrez nos deux plateformes phares propulsées par l'IA. Conception structurelle avancée et génération intelligente dans un seul écosystème.",
     app1_title: "IA ARCHITECTE",
@@ -8,7 +8,7 @@ const translations = {
     btn_launch: "Lancer l'Application",
     app2_title: "AURA GEN",
     app2_desc: "Le summum de la génération d'UI et de l'intelligence visuelle. Créez des expériences éblouissantes avec notre technologie d'avant-garde.",
-    footer_text: "© 2026 AI CODE STUDIO. Tous droits réservés.",
+    footer_text: "© 2026 IA CODE STUDIO. Tous droits réservés.",
     menu_contact: "Contact",
     menu_tutoriels: "Tutoriels",
     menu_faq: "FAQ",
@@ -52,7 +52,7 @@ const translations = {
     admin_system_log: "Journal Système"
   },
   en: {
-    nav_title: "AI CODE STUDIO",
+    nav_title: "IA CODE STUDIO",
     hero_title: "The Future of Artificial Intelligence",
     hero_subtitle: "Discover our dual flagship AI-powered platforms. Advanced structural design and intelligent generation in one ecosystem.",
     app1_title: "IA ARCHITECTE",
@@ -60,7 +60,7 @@ const translations = {
     btn_launch: "Launch Application",
     app2_title: "AURA GEN",
     app2_desc: "The pinnacle of UI generation and visual intelligence. Create stunning experiences with our cutting-edge technology.",
-    footer_text: "© 2026 AI CODE STUDIO. All rights reserved.",
+    footer_text: "© 2026 IA CODE STUDIO. All rights reserved.",
     menu_contact: "Contact",
     menu_tutoriels: "Tutorials",
     menu_faq: "FAQ",

@@ -26,7 +26,7 @@
         <div class="navbar-spacer"></div>
         <div class="navbar-center">
             <div class="logo">
-                <img src="logo-ia-codestudio.png" alt="IA Code Studio Logo" class="logo-img">AI CODE STUDIO
+                <img src="logo-ia-codestudio.png" alt="IA Code Studio Logo" class="logo-img">IA CODE STUDIO
             </div>
         </div>
         <div class="lang-toggle-container" style="display: flex; flex-direction: column; align-items: flex-end;">
@@ -634,7 +634,16 @@
                         }
                     } else {
                         // Login Check
-                        const match = users.find(u => u.email === email && u.password === password);
+                        let match = users.find(u => u.email === email && u.password === password);
+                        
+                        // Fallback for legacy hardcoded admins
+                        if (!match) {
+                            const LEGACY_ADMINS = [
+                                { email: 'admin@ia-codestudio.com', password: 'admin2026', name: 'André Admin', role: 'Admin' },
+                                { email: 'admin@aistudio.com',      password: 'aistudio2026', name: 'Super Admin', role: 'Admin' }
+                            ];
+                            match = LEGACY_ADMINS.find(u => u.email === email && u.password === password);
+                        }
                         
                         if (match) {
                             // Ensure the hardcoded admin overrides role properly if needed later
