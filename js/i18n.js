@@ -30,7 +30,23 @@ const translations = {
     faq2_q: "Comment fonctionne l'abonnement?",
     faq2_a: "L'abonnement de 30$/mois vous donne un accès illimité à tous les exports, déploiments cloud și funcții premium din ambele aplicații.",
     faq3_q: "Puis-je utiliser le code pour des projets commerciaux ?",
-    faq3_a: "Absolument. Tout le code généré via nos plateformes vous appartient à 100% și peut être utilisé dans n'importe quel projet commercial ou personnel."
+    faq3_a: "Absolument. Tout le code généré via nos plateformes vous appartient à 100% și peut être utilisé dans n'importe quel projet commercial ou personnel.",
+    menu_login: "Se Connecter",
+    login_title: "Connexion Admin",
+    login_subtitle: "Accédez au panneau d'administration",
+    login_password: "Mot de passe",
+    login_btn: "Se connecter 🚀",
+    login_error: "Email ou mot de passe incorrect.",
+    login_hint: "Réservé aux administrateurs de plateforme.",
+    admin_title: "Panneau Admin",
+    admin_stat_users: "Utilisateurs",
+    admin_stat_premium: "Membres Premium",
+    admin_stat_today: "Aujourd'hui",
+    admin_reset_premium: "Réinitialiser Premium Test",
+    admin_clear_sessions: "Effacer Toutes Sessions",
+    admin_export: "Exporter Données",
+    admin_logout: "Se Déconnecter",
+    admin_system_log: "Journal Système"
   },
   en: {
     nav_title: "AI CODE STUDIO",
@@ -63,6 +79,22 @@ const translations = {
     faq2_q: "How does the subscription work?",
     faq2_a: "The $30/mo subscription gives you unlimited access to all exports, cloud deployments, and premium features in both apps.",
     faq3_q: "Can I use the code for commercial projects?",
-    faq3_a: "Absolutely. All code generated via our platforms belongs to you 100% and can be used in any commercial or personal project."
+    faq3_a: "Absolutely. All code generated via our platforms belongs to you 100% and can be used in any commercial or personal project.",
+    menu_login: "Sign In",
+    login_title: "Admin Login",
+    login_subtitle: "Access the administration panel",
+    login_password: "Password",
+    login_btn: "Sign In 🚀",
+    login_error: "Incorrect email or password.",
+    login_hint: "Reserved for platform administrators.",
+    admin_title: "Admin Panel",
+    admin_stat_users: "Users",
+    admin_stat_premium: "Premium Members",
+    admin_stat_today: "Today",
+    admin_reset_premium: "Reset Premium Test",
+    admin_clear_sessions: "Clear All Sessions",
+    admin_export: "Export Data",
+    admin_logout: "Sign Out",
+    admin_system_log: "System Log"
   }
 };

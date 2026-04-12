@@ -30,9 +30,21 @@
             </div>
         </div>
         <div class="lang-toggle-container" style="display: flex; flex-direction: column; align-items: flex-end;">
-            <div class="lang-toggle">
-                <button class="lang-btn active" data-lang="fr">FR</button>
-                <button class="lang-btn" data-lang="en">EN</button>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <div class="lang-toggle">
+                    <button class="lang-btn active" data-lang="fr">FR</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                </div>
+                <!-- Login / User Button -->
+                <div id="auth-nav-area">
+                    <button class="login-nav-btn" id="login-nav-btn" onclick="openModal('login')">
+                        <span>🔐</span> <span data-i18n="menu_login">Se Connecter</span>
+                    </button>
+                    <button class="user-nav-btn" id="user-nav-btn" style="display:none;" onclick="openModal('admin')">
+                        <span>👤</span> <span id="user-nav-name">Admin</span>
+                        <span class="admin-badge">ADMIN</span>
+                    </button>
+                </div>
             </div>
             
             <div class="support-menu">
@@ -48,6 +60,117 @@
             </div>
         </div>
     </nav>
+
+    <!-- ===== LOGIN MODAL ===== -->
+    <div id="modal-login" class="modal-overlay">
+        <div class="modal-content" style="max-width: 420px;">
+            <button class="modal-close-btn" onclick="closeModal('login')">×</button>
+            <div style="text-align:center; margin-bottom: 28px;">
+                <div style="font-size: 2.5rem; margin-bottom: 10px;">🔐</div>
+                <h2 class="modal-title" data-i18n="login_title">Connexion Admin</h2>
+                <p style="color: #94a3b8; font-size: 14px;" data-i18n="login_subtitle">Accédez au panneau d'administration</p>
+            </div>
+            <form id="login-form" onsubmit="handleLoginSubmit(event)">
+                <div class="form-group">
+                    <label data-i18n="form_email">Email</label>
+                    <input type="email" id="login-email" placeholder="admin@ia-codestudio.com" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="login_password">Mot de passe</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
+                </div>
+                <div id="login-error" style="display:none; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #f87171; padding: 10px 14px; border-radius: 10px; font-size: 13px; margin-bottom: 16px;" data-i18n="login_error">Email ou mot de passe incorrect.</div>
+                <button type="submit" class="btn-submit" id="login-submit-btn" data-i18n="login_btn">Se connecter 🚀</button>
+            </form>
+            <p style="text-align:center; margin-top:18px; font-size:12px; color:#64748b;" data-i18n="login_hint">Réservé aux administrateurs de platform.</p>
+        </div>
+    </div>
+
+    <!-- ===== ADMIN PANEL MODAL ===== -->
+    <div id="modal-admin" class="modal-overlay">
+        <div class="modal-content" style="max-width: 800px;">
+            <button class="modal-close-btn" onclick="closeModal('admin')">×</button>
+            <div style="display:flex; align-items:center; gap:16px; margin-bottom:28px;">
+                <div style="width:52px;height:52px;background:linear-gradient(135deg,#8b5cf6,#06b6d4);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;">⚙️</div>
+                <div>
+                    <h2 class="modal-title" style="margin-bottom:4px; text-align:left;" data-i18n="admin_title">Panneau Admin</h2>
+                    <p style="color:#94a3b8; font-size:13px;" id="admin-welcome-msg">Bienvenue, Admin</p>
+                </div>
+            </div>
+
+            <!-- Admin Stats -->
+            <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:14px; margin-bottom:24px;">
+                <div class="admin-stat-card" id="stat-users">
+                    <div class="admin-stat-icon">👥</div>
+                    <div class="admin-stat-value" id="stat-users-count">0</div>
+                    <div class="admin-stat-label" data-i18n="admin_stat_users">Utilisateurs</div>
+                </div>
+                <div class="admin-stat-card" style="border-color: rgba(245,158,11,0.2);">
+                    <div class="admin-stat-icon">💎</div>
+                    <div class="admin-stat-value" id="stat-premium-count">0</div>
+                    <div class="admin-stat-label" data-i18n="admin_stat_premium">Membres Premium</div>
+                </div>
+                <div class="admin-stat-card" style="border-color: rgba(16,185,129,0.2);">
+                    <div class="admin-stat-icon">📅</div>
+                    <div class="admin-stat-value" id="stat-today">0</div>
+                    <div class="admin-stat-label" data-i18n="admin_stat_today">Aujourd'hui</div>
+                </div>
+            </div>
+
+            <!-- ===== PREMIUM USER MANAGEMENT ===== -->
+            <div style="background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.25); border-radius:16px; padding:18px; margin-bottom:18px;">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+                    <span style="font-size:1.1rem;">💎</span>
+                    <span style="font-weight:800; font-size:14px; color:#fbbf24;">Gestion Utilisateurs Premium</span>
+                </div>
+
+                <!-- Add Premium User Form -->
+                <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+                    <input type="email" id="premium-user-email" placeholder="email@exemple.com"
+                        style="flex:1; min-width:200px; background:rgba(255,255,255,0.05); border:1px solid rgba(245,158,11,0.3); border-radius:10px; color:#fff; padding:10px 14px; font-size:13px; outline:none; font-family:'Inter',sans-serif;">
+                    <select id="premium-duration" style="background:#0d0c14; border:1px solid rgba(245,158,11,0.3); border-radius:10px; color:#fbbf24; padding:10px 14px; font-size:13px; outline:none; cursor:pointer; font-family:'Inter',sans-serif;">
+                        <option value="30">30 jours</option>
+                        <option value="60">60 jours</option>
+                        <option value="90">90 jours</option>
+                        <option value="365">1 an</option>
+                        <option value="9999">Illimité</option>
+                    </select>
+                    <button onclick="adminAddPremiumUser()" style="background:linear-gradient(135deg,#f59e0b,#d946ef); color:#fff; border:none; padding:10px 18px; border-radius:10px; font-weight:700; cursor:pointer; font-size:13px; white-space:nowrap; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        ✚ Activer Premium
+                    </button>
+                </div>
+
+                <!-- Current Premium Users List -->
+                <div id="premium-users-list" style="display:flex; flex-direction:column; gap:8px; max-height:180px; overflow-y:auto;">
+                    <div style="text-align:center; color:#64748b; font-size:12px; padding:10px; font-style:italic;" id="no-premium-msg">Aucun utilisateur premium enregistré.</div>
+                </div>
+            </div>
+
+            <!-- Admin Actions -->
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; margin-bottom:18px;">
+                <button class="admin-action-btn" onclick="adminClearSessions()" style="background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.2); color:#f87171;">
+                    <span>🗑️</span> <span data-i18n="admin_clear_sessions">Effacer Sessions</span>
+                </button>
+                <button class="admin-action-btn" onclick="adminExportData()" style="background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.2); color:#10b981;">
+                    <span>📤</span> <span data-i18n="admin_export">Exporter Données</span>
+                </button>
+                <button class="admin-action-btn" onclick="adminLogout()" style="background: rgba(100,116,139,0.08); border-color: rgba(100,116,139,0.2); color:#94a3b8;">
+                    <span>🚪</span> <span data-i18n="admin_logout">Se Déconnecter</span>
+                </button>
+            </div>
+
+            <!-- System Log -->
+            <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius:14px; padding:14px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                    <span style="font-weight:700;font-size:13px;" data-i18n="admin_system_log">Journal Système</span>
+                    <span style="font-size:11px; color:#10b981;">&#9679; LIVE</span>
+                </div>
+                <div id="admin-log" style="font-family:monospace;font-size:11px;color:#64748b;max-height:100px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;">
+                    <span style="color:#8b5cf6;">[ SYSTEM ] AI Code Studio Admin Panel v3.0 — Prêt.</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Modals Section -->
     <div id="modal-contact" class="modal-overlay">
@@ -138,6 +261,109 @@
         </section>
 
         <style>
+            /* ===== LOGIN & ADMIN STYLES ===== */
+            .login-nav-btn {
+                background: linear-gradient(135deg, rgba(139,92,246,0.15), rgba(6,182,212,0.15));
+                color: #fff;
+                border: 1px solid rgba(139,92,246,0.4);
+                padding: 8px 16px;
+                border-radius: 10px;
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: all 0.3s;
+                backdrop-filter: blur(10px);
+                white-space: nowrap;
+            }
+            .login-nav-btn:hover {
+                background: linear-gradient(135deg, rgba(139,92,246,0.3), rgba(6,182,212,0.3));
+                border-color: rgba(139,92,246,0.7);
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(139,92,246,0.3);
+            }
+            .user-nav-btn {
+                background: rgba(16,185,129,0.1);
+                color: #10b981;
+                border: 1px solid rgba(16,185,129,0.3);
+                padding: 8px 16px;
+                border-radius: 10px;
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: all 0.3s;
+                backdrop-filter: blur(10px);
+                white-space: nowrap;
+            }
+            .user-nav-btn:hover {
+                background: rgba(16,185,129,0.2);
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(16,185,129,0.2);
+            }
+            .admin-badge {
+                background: linear-gradient(90deg, #f59e0b, #ec4899);
+                color: #fff;
+                font-size: 9px;
+                font-weight: 900;
+                padding: 2px 6px;
+                border-radius: 4px;
+                letter-spacing: 0.5px;
+            }
+            .admin-stat-card {
+                background: rgba(255,255,255,0.02);
+                border: 1px solid rgba(139,92,246,0.2);
+                border-radius: 14px;
+                padding: 18px;
+                text-align: center;
+                transition: all 0.3s;
+            }
+            .admin-stat-card:hover {
+                background: rgba(255,255,255,0.04);
+                transform: translateY(-4px);
+            }
+            .admin-stat-icon { font-size: 1.6rem; margin-bottom: 8px; }
+            .admin-stat-value { font-size: 2rem; font-weight: 900; background: linear-gradient(90deg, #06b6d4, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+            .admin-stat-label { font-size: 12px; color: #64748b; margin-top: 4px; }
+            .admin-action-btn {
+                background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.2); color: #c4b5fd;
+                padding: 12px 16px; border-radius: 12px; cursor: pointer; font-size: 13px; font-weight: 600;
+                display: flex; align-items: center; gap: 10px; transition: all 0.3s;
+            }
+            .admin-action-btn:hover { background: rgba(139,92,246,0.15); transform: scale(1.02); }
+            .form-group { margin-bottom: 18px; }
+            .form-group label { display: block; color: #94a3b8; font-size: 13px; margin-bottom: 8px; font-weight: 600; }
+            .form-group input, .form-group textarea {
+                width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+                border-radius: 10px; color: #fff; padding: 12px 16px; font-size: 14px;
+                transition: all 0.3s; outline: none; font-family: 'Inter', sans-serif;
+            }
+            .form-group input:focus, .form-group textarea:focus {
+                border-color: #8b5cf6; background: rgba(139,92,246,0.08);
+                box-shadow: 0 0 0 3px rgba(139,92,246,0.15);
+            }
+            .btn-submit {
+                width: 100%; background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+                color: #fff; border: none; padding: 14px; border-radius: 12px;
+                font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.3s;
+                letter-spacing: 0.5px;
+            }
+            .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(139,92,246,0.4); }
+            .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+            .tutorial-card, .faq-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 18px; margin-bottom: 12px; }
+            .tutorial-grid { display: flex; flex-direction: column; gap: 0; }
+            .tutorial-card h3 { font-size: 16px; margin-bottom: 8px; }
+            .tutorial-card p { color: #94a3b8; font-size: 13px; line-height: 1.5; }
+            .faq-question { background: none; border: none; color: #fff; font-weight: 600; font-size: 14px; width: 100%; text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 0; }
+            .faq-answer { display: none; margin-top: 10px; }
+            .faq-item.active .faq-answer { display: block; }
+            .faq-answer p { color: #94a3b8; font-size: 13px; line-height: 1.6; }
+            .contact-form .form-group { margin-bottom: 16px; }
+
             /* Premium Portal Specific Styles */
             .premium-portal-wrap { text-align: center; margin: 30px 0; animation: fadeIn 0.8s ease forwards; }
             .premium-portal-btn {
@@ -284,6 +510,227 @@
                     document.body.style.overflow = 'auto';
                 }
             }
+        </script>
+
+        <script>
+            /* ============================================================
+               AUTH SYSTEM — Login + Admin Panel
+               Credentials: admin@ia-codestudio.com / admin2026
+               ============================================================ */
+            
+            const ADMIN_CREDENTIALS = [
+                { email: 'admin@ia-codestudio.com', password: 'admin2026', name: 'André Admin' },
+                { email: 'admin@aistudio.com',      password: 'aistudio2026', name: 'Super Admin' }
+            ];
+
+            function authCheck() {
+                const session = localStorage.getItem('genius_session');
+                const loginBtn = document.getElementById('login-nav-btn');
+                const userBtn  = document.getElementById('user-nav-btn');
+                const userName = document.getElementById('user-nav-name');
+                if (session) {
+                    const user = JSON.parse(session);
+                    if (loginBtn) loginBtn.style.display = 'none';
+                    if (userBtn)  { userBtn.style.display = 'flex'; }
+                    if (userName) userName.textContent = user.name || 'Admin';
+                } else {
+                    if (loginBtn) loginBtn.style.display = 'flex';
+                    if (userBtn)  userBtn.style.display  = 'none';
+                }
+            }
+
+            function handleLoginSubmit(e) {
+                e.preventDefault();
+                const email = document.getElementById('login-email').value.trim().toLowerCase();
+                const password = document.getElementById('login-password').value;
+                const errBox = document.getElementById('login-error');
+                const btn = document.getElementById('login-submit-btn');
+
+                btn.disabled = true;
+                btn.textContent = '⏳ Vérification...';
+
+                setTimeout(() => {
+                    const match = ADMIN_CREDENTIALS.find(c => c.email === email && c.password === password);
+                    if (match) {
+                        const user = { email: match.email, name: match.name, role: 'Admin', loginAt: Date.now() };
+                        localStorage.setItem('genius_session', JSON.stringify(user));
+                        errBox.style.display = 'none';
+                        closeModal('login');
+                        authCheck();
+                        adminLog('✅ Connexion réussie — ' + match.name);
+                        // Open admin panel after login
+                        setTimeout(() => openModal('admin'), 300);
+                    } else {
+                        errBox.style.display = 'block';
+                        btn.disabled = false;
+                        btn.textContent = '🚀 Se connecter';
+                    }
+                }, 900);
+            }
+
+            function adminLog(msg) {
+                const log = document.getElementById('admin-log');
+                if (!log) return;
+                const entry = document.createElement('span');
+                const time = new Date().toLocaleTimeString('fr-FR');
+                entry.textContent = `[ ${time} ] ${msg}`;
+                entry.style.color = '#8b5cf6';
+                log.appendChild(entry);
+                log.scrollTop = log.scrollHeight;
+            }
+
+            function getPremiumUsers() {
+                const raw = localStorage.getItem('ia_premium_users');
+                return raw ? JSON.parse(raw) : [];
+            }
+
+            function savePremiumUsers(list) {
+                localStorage.setItem('ia_premium_users', JSON.stringify(list));
+            }
+
+            function renderPremiumUsersList() {
+                const list = getPremiumUsers();
+                const container = document.getElementById('premium-users-list');
+                const noMsg = document.getElementById('no-premium-msg');
+                if (!container) return;
+
+                // Remove all user rows (keep the no-msg element)
+                Array.from(container.children).forEach(c => {
+                    if (c.id !== 'no-premium-msg') c.remove();
+                });
+
+                if (list.length === 0) {
+                    if (noMsg) noMsg.style.display = 'block';
+                    return;
+                }
+                if (noMsg) noMsg.style.display = 'none';
+
+                list.forEach((u, idx) => {
+                    const now = Date.now();
+                    const expiry = u.addedAt + u.days * 86400000;
+                    const daysLeft = Math.ceil((expiry - now) / 86400000);
+                    const isExpired = daysLeft <= 0 && u.days !== 9999;
+                    const labelDays = u.days === 9999 ? 'Illimité' : (isExpired ? 'Expiré' : daysLeft + ' jours restants');
+                    const colorExpiry = isExpired ? '#f87171' : (u.days === 9999 ? '#06b6d4' : '#10b981');
+
+                    const row = document.createElement('div');
+                    row.style = 'display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.03); border:1px solid rgba(245,158,11,0.12); border-radius:10px; padding:10px 14px; gap:10px;';
+                    row.innerHTML = `
+                        <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:0;">
+                            <span style="font-size:1.1rem;">💎</span>
+                            <div style="min-width:0;">
+                                <div style="font-size:13px; font-weight:600; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${u.email}</div>
+                                <div style="font-size:11px; color:${colorExpiry};">${labelDays}</div>
+                            </div>
+                        </div>
+                        <button onclick="adminRemovePremiumUser(${idx})"
+                            style="background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.25); color:#f87171; padding:6px 12px; border-radius:8px; cursor:pointer; font-size:12px; font-weight:700; white-space:nowrap; transition:all 0.2s; flex-shrink:0;"
+                            onmouseover="this.style.background='rgba(239,68,68,0.2)'" onmouseout="this.style.background='rgba(239,68,68,0.1)'">
+                            ✕ Retirer
+                        </button>
+                    `;
+                    container.appendChild(row);
+                });
+            }
+
+            function adminAddPremiumUser() {
+                const emailInput = document.getElementById('premium-user-email');
+                const daysSelect = document.getElementById('premium-duration');
+                if (!emailInput || !daysSelect) return;
+                const email = emailInput.value.trim().toLowerCase();
+                const days = parseInt(daysSelect.value);
+                if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    adminLog('⚠️ Email invalide.');
+                    emailInput.focus();
+                    return;
+                }
+                const list = getPremiumUsers();
+                const existing = list.findIndex(u => u.email === email);
+                if (existing >= 0) {
+                    list[existing].addedAt = Date.now();
+                    list[existing].days = days;
+                    adminLog('🔄 Premium mis à jour pour : ' + email + ' (' + (days === 9999 ? 'Illimité' : days + ' jours') + ')');
+                } else {
+                    list.push({ email, addedAt: Date.now(), days });
+                    adminLog('✅ Premium activé pour : ' + email + ' (' + (days === 9999 ? 'Illimité' : days + ' jours') + ')');
+                }
+                savePremiumUsers(list);
+                emailInput.value = '';
+                renderPremiumUsersList();
+                refreshAdminStats();
+            }
+
+            function adminRemovePremiumUser(idx) {
+                const list = getPremiumUsers();
+                if (idx < 0 || idx >= list.length) return;
+                const removed = list[idx];
+                list.splice(idx, 1);
+                savePremiumUsers(list);
+                adminLog('🗑️ Premium retiré pour : ' + removed.email);
+                renderPremiumUsersList();
+                refreshAdminStats();
+            }
+
+            function refreshAdminStats() {
+                const premiumUsers = getPremiumUsers();
+                document.getElementById('stat-users-count').textContent = Math.max(1, premiumUsers.length);
+                document.getElementById('stat-premium-count').textContent = premiumUsers.filter(u => {
+                    if (u.days === 9999) return true;
+                    return (u.addedAt + u.days * 86400000) > Date.now();
+                }).length;
+                document.getElementById('stat-today').textContent = new Date().getDate();
+
+                const session = localStorage.getItem('genius_session');
+                if (session) {
+                    const user = JSON.parse(session);
+                    const welcomeEl = document.getElementById('admin-welcome-msg');
+                    if (welcomeEl) welcomeEl.textContent = `Bienvenue, ${user.name} 👑`;
+                }
+                renderPremiumUsersList();
+            }
+
+            function adminResetPremium() {
+                localStorage.removeItem('ia_premium_sub_date');
+                adminLog('🔄 Premium (session locale) réinitialisé.');
+                refreshAdminStats();
+                checkPremiumPortal();
+            }
+
+            function adminClearSessions() {
+                if (!confirm('Effacer TOUTES les sessions locales ? Cette action est irréversible.')) return;
+                const keys = Object.keys(localStorage).filter(k => k.startsWith('genius_db_') || k === 'genius_session' || k === 'ia_premium_sub_date' || k === 'ia_premium_users');
+                keys.forEach(k => localStorage.removeItem(k));
+                adminLog('🗑️ Toutes les sessions ont été effacées.');
+                refreshAdminStats();
+                setTimeout(() => { closeModal('admin'); authCheck(); }, 1500);
+            }
+
+            function adminExportData() {
+                const data = {};
+                Object.keys(localStorage).forEach(k => { data[k] = localStorage.getItem(k); });
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url; a.download = 'ia-codestudio-data-export.json';
+                a.click(); URL.revokeObjectURL(url);
+                adminLog('📤 Export JSON téléchargé.');
+            }
+
+            function adminLogout() {
+                localStorage.removeItem('genius_session');
+                closeModal('admin');
+                authCheck();
+                adminLog('🚪 Déconnexion effectuée.');
+            }
+
+            // Hook openModal to refresh admin stats when panel opens
+            const _origOpenModal = openModal;
+            function openModal(id) {
+                _origOpenModal(id);
+                if (id === 'admin') refreshAdminStats();
+            }
+
+            document.addEventListener('DOMContentLoaded', authCheck);
         </script>
 
         <!-- Applications Showcase -->
