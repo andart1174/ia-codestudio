@@ -578,6 +578,13 @@
                 
                 if (session) {
                     const user = JSON.parse(session);
+                    
+                    // Force upgrade if they have an old cached session as standard user
+                    if (user.email === 'andart1174@gmail.com' && user.role !== 'Admin') {
+                        user.role = 'Admin';
+                        localStorage.setItem('genius_session', JSON.stringify(user));
+                    }
+
                     if (loginBtn) loginBtn.style.display = 'none';
                     if (userBtn)  { userBtn.style.display = 'flex'; }
                     if (userName) userName.textContent = user.name || 'User';
