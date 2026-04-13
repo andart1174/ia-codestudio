@@ -143,6 +143,12 @@
                     <div class="admin-stat-label" data-i18n="admin_stat_today">Nouveaux (24h)</div>
                 </div>
             </div>
+
+            <!-- Firebase Status -->
+            <div id="firebase-status" style="font-size: 11px; margin-top: -15px; margin-bottom: 20px; font-weight: bold; text-align: right; color:#94a3b8;">
+                Firebase: <span style="color:#cbd5e1">Connexion en cours...</span>
+            </div>
+
             <!-- ===== BASE UTILISATEURS (FULL DATABASE) ===== -->
             <div style="background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.25); border-radius:16px; padding:18px; margin-bottom:18px;">
                 <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
@@ -695,41 +701,63 @@
             async function syncFirebaseWithLocal() {
                 if (!db) return;
                 try {
-                    // Users
+                    // Users Sync - Smart Merge
                     const uSnap = await db.collection('users').get();
-                    let fbUsers = [];
-                    uSnap.forEach(d => fbUsers.push(d.data()));
-                    if (fbUsers.length > 0) {
-                        localStorage.setItem('ia_users', JSON.stringify(fbUsers));
-                    } else {
-                        // Migration: Upload Local to Cloud
-                        let lsU = JSON.parse(localStorage.getItem('ia_users') || '[]');
-                        for(let u of lsU) await db.collection('users').doc(u.email).set(u);
+                    let lsU = JSON.parse(localStorage.getItem('ia_users') || '[]');
+                    let memU = {};
+                    lsU.forEach(u => memU[u.email] = u);
+                    uSnap.forEach(d => {
+                        let data = d.data();
+                        // Merge fields or use firebase data
+                        memU[data.email] = { ...memU[data.email], ...data };
+                    });
+                    const mergedU = Object.values(memU);
+                    localStorage.setItem('ia_users', JSON.stringify(mergedU));
+                    // Upload any that aren't in Firebase
+                    for(let u of mergedU) {
+                        try { await db.collection('users').doc(u.email).set(u); } catch(e){}
                     }
 
-                    // Messages
+                    // Messages Sync - Smart Merge
                     const mSnap = await db.collection('messages').get();
-                    let fbMsgs = [];
-                    mSnap.forEach(d => fbMsgs.push(d.data()));
-                    if (fbMsgs.length > 0) {
-                        localStorage.setItem('ia_messages', JSON.stringify(fbMsgs));
-                    } else {
-                        let lsM = JSON.parse(localStorage.getItem('ia_messages') || '[]');
-                        for(let m of lsM) await db.collection('messages').add(m);
+                    let lsM = JSON.parse(localStorage.getItem('ia_messages') || '[]');
+                    let memM = [];
+                    let hashes = new Set();
+                    lsM.forEach(m => {
+                        let h = m.date + '_' + m.email;
+                        if (!hashes.has(h)) { memM.push(m); hashes.add(h); }
+                    });
+                    mSnap.forEach(d => {
+                        let m = d.data();
+                        let h = m.date + '_' + m.email;
+                        if (!hashes.has(h)) { memM.push(m); hashes.add(h); }
+                    });
+                    // Sort descending date
+                    memM.sort((a,b) => b.date - a.date);
+                    localStorage.setItem('ia_messages', JSON.stringify(memM));
+                    for(let m of memM) {
+                         try { await db.collection('messages').doc(m.date + '_' + m.email).set(m); } catch(e){}
                     }
 
-                    // Premium
+                    // Premium - Smart Merge
                     const pSnap = await db.collection('premium').get();
-                    let fbPrem = [];
-                    pSnap.forEach(d => fbPrem.push(d.data()));
-                    if (fbPrem.length > 0) {
-                        localStorage.setItem('ia_premium_users', JSON.stringify(fbPrem));
-                    } else {
-                        let lsP = JSON.parse(localStorage.getItem('ia_premium_users') || '[]');
-                        for(let p of lsP) await db.collection('premium').doc(p.email).set(p);
+                    let lsP = JSON.parse(localStorage.getItem('ia_premium_users') || '[]');
+                    let memP = {};
+                    lsP.forEach(p => memP[p.email] = p);
+                    pSnap.forEach(d => {
+                        let m = d.data();
+                        memP[m.email] = { ...memP[m.email], ...m };
+                    });
+                    const mergedP = Object.values(memP);
+                    localStorage.setItem('ia_premium_users', JSON.stringify(mergedP));
+                    for(let p of mergedP) {
+                        try { await db.collection('premium').doc(p.email).set(p); } catch(e){}
                     }
+                    
+                    if (document.getElementById('firebase-status')) document.getElementById('firebase-status').innerHTML = 'Firebase: <span style="color:#10b981">Connecté (Test Mode) ✅</span>';
                 } catch(e) {
                     console.log("Firebase sync warning:", e);
+                    if (document.getElementById('firebase-status')) document.getElementById('firebase-status').innerHTML = 'Firebase: <span style="color:#ef4444">Erreur Réseau/Permissions ❌</span>';
                 }
             }
 
