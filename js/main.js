@@ -105,13 +105,23 @@ function handleContactSubmit(e) {
   const emailInput = e.target.querySelector('input[type="email"]').value;
   const messageInput = e.target.querySelector('textarea').value;
   const messages = JSON.parse(localStorage.getItem('ia_messages') || '[]');
-  messages.push({
+  
+  const newMsg = {
       name: nameInput,
       email: emailInput,
       message: messageInput,
       date: Date.now()
-  });
+  };
+  messages.push(newMsg);
   localStorage.setItem('ia_messages', JSON.stringify(messages));
+  
+  // Save to Firebase if available
+  if (typeof firebase !== 'undefined') {
+      try {
+          const db = firebase.firestore();
+          db.collection('messages').add(newMsg).catch(e => console.log('Firebase MSGs log error', e));
+      } catch(e) {}
+  }
 
   // Visual feedback
   btn.disabled = true;
@@ -130,7 +140,7 @@ function handleContactSubmit(e) {
     }
     
     setTimeout(() => {
-      closeModal('contact');
+      if(typeof closeModal === 'function') closeModal('contact');
       e.target.reset();
       btn.disabled = false;
       btn.textContent = originalText;

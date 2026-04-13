@@ -10,6 +10,10 @@
     
     <!-- CSS Styles -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- Firebase SDK (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
@@ -566,6 +570,22 @@
                AUTH SYSTEM — Login + Register + Admin Panel
                ============================================================ */
 
+            // Initialize Firebase
+            const firebaseConfig = {
+              apiKey: "AIzaSyBWwpp5eOzj2Ta8gQUa78zqdnvAlFG6RwE",
+              authDomain: "ia-codestudio-7ce3a.firebaseapp.com",
+              projectId: "ia-codestudio-7ce3a",
+              storageBucket: "ia-codestudio-7ce3a.firebasestorage.app",
+              messagingSenderId: "484008154719",
+              appId: "1:484008154719:web:eb1b805c1419a271be6dea",
+              measurementId: "G-EH6VWC2W9K"
+            };
+
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            const db = firebase.firestore();
+
             let isSignUpMode = false;
             let isRecoveryMode = false;
 
@@ -671,7 +691,49 @@
                 }
             }
 
-            function handleAuthSubmit(e) {
+            // ============ FIREBASE SYNC OVERRIDE ============
+            async function syncFirebaseWithLocal() {
+                if (!db) return;
+                try {
+                    // Users
+                    const uSnap = await db.collection('users').get();
+                    let fbUsers = [];
+                    uSnap.forEach(d => fbUsers.push(d.data()));
+                    if (fbUsers.length > 0) {
+                        localStorage.setItem('ia_users', JSON.stringify(fbUsers));
+                    } else {
+                        // Migration: Upload Local to Cloud
+                        let lsU = JSON.parse(localStorage.getItem('ia_users') || '[]');
+                        for(let u of lsU) await db.collection('users').doc(u.email).set(u);
+                    }
+
+                    // Messages
+                    const mSnap = await db.collection('messages').get();
+                    let fbMsgs = [];
+                    mSnap.forEach(d => fbMsgs.push(d.data()));
+                    if (fbMsgs.length > 0) {
+                        localStorage.setItem('ia_messages', JSON.stringify(fbMsgs));
+                    } else {
+                        let lsM = JSON.parse(localStorage.getItem('ia_messages') || '[]');
+                        for(let m of lsM) await db.collection('messages').add(m);
+                    }
+
+                    // Premium
+                    const pSnap = await db.collection('premium').get();
+                    let fbPrem = [];
+                    pSnap.forEach(d => fbPrem.push(d.data()));
+                    if (fbPrem.length > 0) {
+                        localStorage.setItem('ia_premium_users', JSON.stringify(fbPrem));
+                    } else {
+                        let lsP = JSON.parse(localStorage.getItem('ia_premium_users') || '[]');
+                        for(let p of lsP) await db.collection('premium').doc(p.email).set(p);
+                    }
+                } catch(e) {
+                    console.log("Firebase sync warning:", e);
+                }
+            }
+
+            async function handleAuthSubmit(e) {
                 e.preventDefault();
                 const email = document.getElementById('auth-email').value.trim().toLowerCase();
                 const password = document.getElementById('auth-password').value;
@@ -682,7 +744,10 @@
                 btn.disabled = true;
                 btn.textContent = '⏳...';
 
-                setTimeout(() => {
+                // Sync first
+                await syncFirebaseWithLocal();
+
+                setTimeout(async () => {
                     let users = JSON.parse(localStorage.getItem('ia_users') || '[]');
                     const isAdmin = email === 'andart1174@gmail.com';
 
@@ -698,6 +763,11 @@
                         if (userToReset) {
                             userToReset.password = password;
                             if (isAdmin && userToReset.role !== 'Admin') userToReset.role = 'Admin';
+                            
+                            // Save to Firebase & Local
+                            await db.collection('users').doc(userToReset.email).set(userToReset);
+                            users = users.filter(u => u.email !== userToReset.email);
+                            users.push(userToReset);
                             localStorage.setItem('ia_users', JSON.stringify(users));
                             
                             const sessionUser = { email: userToReset.email, name: userToReset.name, role: userToReset.role, loginAt: Date.now() };
@@ -717,6 +787,9 @@
                         } else {
                             const finalName = name || email.split('@')[0];
                             const newUser = { email, password, name: finalName, role: isAdmin ? 'Admin' : 'User', createdAt: Date.now() };
+                            
+                            // Save to Firebase & Local
+                            await db.collection('users').doc(newUser.email).set(newUser);
                             users.push(newUser);
                             localStorage.setItem('ia_users', JSON.stringify(users));
                             
@@ -869,7 +942,7 @@
                 });
             }
 
-            function adminAddPremiumUser() {
+            async function adminAddPremiumUser() {
                 const emailInput = document.getElementById('premium-user-email');
                 const daysSelect = document.getElementById('premium-duration');
                 if (!emailInput || !daysSelect) return;
@@ -882,53 +955,74 @@
                 }
                 const list = getPremiumUsers();
                 const existing = list.findIndex(u => u.email === email);
+                const pData = { email, addedAt: Date.now(), days };
+                
                 if (existing >= 0) {
-                    list[existing].addedAt = Date.now();
-                    list[existing].days = days;
+                    list[existing] = pData;
                     adminLog('🔄 Premium mis à jour pour : ' + email + ' (' + (days === 9999 ? 'Illimité' : days + ' jours') + ')');
                 } else {
-                    list.push({ email, addedAt: Date.now(), days });
+                    list.push(pData);
                     adminLog('✅ Premium activé pour : ' + email + ' (' + (days === 9999 ? 'Illimité' : days + ' jours') + ')');
                 }
+                
+                await db.collection('premium').doc(pData.email).set(pData);
                 savePremiumUsers(list);
                 emailInput.value = '';
                 renderPremiumUsersList();
                 refreshAdminStats();
             }
 
-            function adminRemovePremiumUser(idx) {
+            async function adminRemovePremiumUser(idx) {
                 const list = getPremiumUsers();
                 if (idx < 0 || idx >= list.length) return;
                 const removed = list[idx];
                 list.splice(idx, 1);
+                
+                await db.collection('premium').doc(removed.email).delete();
                 savePremiumUsers(list);
                 adminLog('🗑️ Premium retiré pour : ' + removed.email);
                 renderPremiumUsersList();
                 refreshAdminStats();
             }
 
-            function refreshAdminStats() {
-                const premiumUsers = getPremiumUsers();
-                const allUsers = JSON.parse(localStorage.getItem('ia_users') || '[]');
-                
-                document.getElementById('stat-users-count').textContent = Math.max(1, allUsers.length);
-                document.getElementById('stat-premium-count').textContent = premiumUsers.filter(u => {
-                    if (u.days === 9999) return true;
-                    return (u.addedAt + u.days * 86400000) > Date.now();
-                }).length;
-                const now = Date.now();
-                const newUsersToday = allUsers.filter(u => u.createdAt && (now - u.createdAt) < 86400000).length;
-                document.getElementById('stat-today').textContent = newUsersToday;
+            async function refreshAdminStats() {
+                // Immediate local render
+                _executeRender();
 
-                const session = localStorage.getItem('genius_session');
-                if (session) {
-                    const user = JSON.parse(session);
-                    const welcomeEl = document.getElementById('admin-welcome-msg');
-                    if (welcomeEl) welcomeEl.textContent = `Bienvenue, ${user.name} 👑`;
+                // Background sync
+                if(!window._isSyncingStats) {
+                    window._isSyncingStats = true;
+                    try {
+                        await syncFirebaseWithLocal();
+                        _executeRender();
+                    } finally {
+                        window._isSyncingStats = false;
+                    }
                 }
-                renderPremiumUsersList();
-                renderAdminMessages();
-                renderAllUsersAdmin();
+
+                function _executeRender() {
+                    const premiumUsers = getPremiumUsers();
+                    const allUsers = JSON.parse(localStorage.getItem('ia_users') || '[]');
+                    
+                    document.getElementById('stat-users-count').textContent = Math.max(1, allUsers.length);
+                    document.getElementById('stat-premium-count').textContent = premiumUsers.filter(u => {
+                        if (u.days === 9999) return true;
+                        return (u.addedAt + u.days * 86400000) > Date.now();
+                    }).length;
+                    const now = Date.now();
+                    const newUsersToday = allUsers.filter(u => u.createdAt && (now - u.createdAt) < 86400000).length;
+                    document.getElementById('stat-today').textContent = newUsersToday;
+
+                    const session = localStorage.getItem('genius_session');
+                    if (session) {
+                        const user = JSON.parse(session);
+                        const welcomeEl = document.getElementById('admin-welcome-msg');
+                        if (welcomeEl) welcomeEl.textContent = `Bienvenue, ${user.name} 👑`;
+                    }
+                    renderPremiumUsersList();
+                    renderAdminMessages();
+                    renderAllUsersAdmin();
+                }
             }
 
             function renderAllUsersAdmin() {
