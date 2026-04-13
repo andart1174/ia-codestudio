@@ -1200,19 +1200,42 @@ function wirePremium() {
   const lbl = document.getElementById('lbl-premium');
   if(!btn) return;
   
+  // --- PREMIUM CHECK SYSTEM (V2) ---
+  let subStatus = null;
+  
+  // 1. Check legacy timestamp
   const subDate = localStorage.getItem('ia_premium_sub_date');
   if (subDate) {
     const daysPassed = Math.floor((Date.now() - parseInt(subDate)) / (1000 * 60 * 60 * 24));
     const daysLeft = 30 - daysPassed;
-    
     if (daysLeft > 0) {
-      btn.classList.add('active-sub');
-      lbl.textContent = lang === 'fr' ? `Premium Activ (${daysLeft} zile rămase)` : `Premium Active (${daysLeft} days left)`;
-      return;
+      subStatus = { type: 'legacy', days: daysLeft };
     } else {
-      localStorage.removeItem('ia_premium_sub_date'); // expired
+      localStorage.removeItem('ia_premium_sub_date');
     }
   }
+
+  // 2. Check Database list
+  if (!subStatus) {
+    try {
+      const session = JSON.parse(localStorage.getItem('genius_session') || '{}');
+      const premiumUsers = JSON.parse(localStorage.getItem('ia_premium_users') || '[]');
+      if (session.email && premiumUsers.includes(session.email)) {
+        subStatus = { type: 'database' };
+      }
+    } catch(e) {}
+  }
+
+  if (subStatus) {
+    btn.classList.add('active-sub');
+    if (subStatus.type === 'legacy') {
+      lbl.textContent = lang === 'fr' ? `Premium Actif (${subStatus.days} jours restants)` : `Premium Active (${subStatus.days} days left)`;
+    } else {
+      lbl.textContent = lang === 'fr' ? `Premium Actif (Cloud)` : `Premium Active (Cloud)`;
+    }
+    return;
+  }
+  // ---------------------------------
 
   btn.addEventListener('click', () => {
     if (window.showStripeModal) {

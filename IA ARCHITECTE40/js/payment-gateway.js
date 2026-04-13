@@ -96,17 +96,36 @@
     let isSubMode = false;
 
     window.showStripeModal = function(actionName, onPaid, isSubscriptionReq = false) {
-        // ALWAYS bypass if user is Premium!
+        // --- PREMIUM CHECK SYSTEM (V2) ---
+        let isPremium = false;
+        
+        // 1. Check legacy timestamp
         const subDate = localStorage.getItem('ia_premium_sub_date');
         if (subDate) {
             const daysPassed = Math.floor((Date.now() - parseInt(subDate)) / (1000 * 60 * 60 * 24));
             if (daysPassed < 30) {
-                if (onPaid) onPaid(); // Instant bypass
-                return;
+                isPremium = true;
             } else {
                 localStorage.removeItem('ia_premium_sub_date'); // expired
             }
         }
+
+        // 2. Check Database list (From Admin Panel)
+        if (!isPremium) {
+            try {
+                const session = JSON.parse(localStorage.getItem('genius_session') || '{}');
+                const premiumUsers = JSON.parse(localStorage.getItem('ia_premium_users') || '[]');
+                if (session.email && premiumUsers.includes(session.email)) {
+                    isPremium = true;
+                }
+            } catch(e) { console.error("Premium list check failed", e); }
+        }
+
+        if (isPremium) {
+            if (onPaid) onPaid(); // Instant bypass
+            return;
+        }
+        // ---------------------------------
 
         activeCallback = onPaid;
         isSubMode = isSubscriptionReq;

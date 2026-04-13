@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     Code,
@@ -126,17 +126,30 @@ const App = () => {
 
     useEffect(() => {
         const checkPremium = () => {
+            // 1. Check legacy timestamp
             const subDate = localStorage.getItem('ia_premium_sub_date');
             if (subDate) {
                 const daysPassed = Math.floor((Date.now() - parseInt(subDate)) / (1000 * 60 * 60 * 24));
                 const left = 30 - daysPassed;
                 if (left > 0) {
                     setPremiumDaysLeft(left);
+                    return;
                 } else {
                     localStorage.removeItem('ia_premium_sub_date');
-                    setPremiumDaysLeft(null);
                 }
             }
+
+            // 2. Check Database list (Cloud Sync)
+            try {
+                const session = JSON.parse(localStorage.getItem('genius_session') || '{}');
+                const premiumUsers = JSON.parse(localStorage.getItem('ia_premium_users') || '[]');
+                if (session.email && premiumUsers.includes(session.email)) {
+                    setPremiumDaysLeft('∞'); // Indicator for cloud premium
+                    return;
+                }
+            } catch(e) {}
+
+            setPremiumDaysLeft(null);
         };
         checkPremium();
         window.addEventListener('storage', checkPremium);

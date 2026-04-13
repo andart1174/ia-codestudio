@@ -4,16 +4,27 @@ const StripeModal = ({ actionName, cost, onConfirm, onClose, isFr, isSub = false
     
     // Auto-bypass if they already have premium (safety net)
     useEffect(() => {
+        // 1. Check legacy timestamp
         const subDate = localStorage.getItem('ia_premium_sub_date');
         if (subDate) {
             const daysPassed = Math.floor((Date.now() - parseInt(subDate)) / (1000 * 60 * 60 * 24));
             if (daysPassed < 30) {
-                // They shouldn't even see this modal, but if they do, accept instantly
-                onConfirm(); 
+                onConfirm(); // Instant bypass
+                return;
             } else {
                 localStorage.removeItem('ia_premium_sub_date');
             }
         }
+
+        // 2. Check Database list
+        try {
+            const session = JSON.parse(localStorage.getItem('genius_session') || '{}');
+            const premiumUsers = JSON.parse(localStorage.getItem('ia_premium_users') || '[]');
+            if (session.email && premiumUsers.includes(session.email)) {
+                onConfirm(); // Instant bypass
+                return;
+            }
+        } catch(e) {}
     }, [onConfirm]);
 
     const handleSubClick = () => {
