@@ -61,6 +61,11 @@ function openModal(id) {
   if (modal) {
     modal.classList.add('active');
     document.body.style.overflow = 'hidden'; // Prevent scroll
+    
+    // Auto-refresh stats if opening admin panel
+    if (id === 'admin' && typeof refreshAdminStats === 'function') {
+        refreshAdminStats();
+    }
   }
 }
 

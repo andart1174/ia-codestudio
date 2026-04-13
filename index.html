@@ -145,8 +145,13 @@
             </div>
 
             <!-- Firebase Status -->
-            <div id="firebase-status" style="font-size: 11px; margin-top: -15px; margin-bottom: 20px; font-weight: bold; text-align: right; color:#94a3b8;">
-                Firebase: <span style="color:#cbd5e1">Connexion en cours...</span>
+            <div id="firebase-status-container" style="display:flex; justify-content:space-between; align-items:center; margin-top: -15px; margin-bottom: 20px;">
+                <button onclick="refreshAdminStats()" style="background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); color:#10b981; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; transition: 0.2s;" onmouseover="this.style.background='rgba(16,185,129,0.2)'" onmouseout="this.style.background='rgba(16,185,129,0.1)'">
+                    🔄 Synchroniser Direct
+                </button>
+                <div id="firebase-status" style="font-size: 11px; font-weight: bold; color:#94a3b8;">
+                    Firebase: <span style="color:#cbd5e1">Attente d'ouverture...</span>
+                </div>
             </div>
 
             <!-- ===== BASE UTILISATEURS (FULL DATABASE) ===== -->
@@ -1049,24 +1054,33 @@
                         const premiumUsers = getPremiumUsers();
                         const allUsers = JSON.parse(localStorage.getItem('ia_users') || '[]');
                         
+                        // Critical fix: Ensure stats update even if empty
                         document.getElementById('stat-users-count').textContent = allUsers.length;
                         document.getElementById('stat-premium-count').textContent = premiumUsers.filter(u => {
                             if (u.days === 9999) return true;
-                            return (u.addedAt + u.days * 86400000) > Date.now();
+                            const expiryDate = (u.addedAt || 0) + (u.days || 0) * 86400000;
+                            return expiryDate > Date.now();
                         }).length;
+                        
                         const now = Date.now();
                         const newUsersToday = allUsers.filter(u => u.createdAt && (now - u.createdAt) < 86400000).length;
                         document.getElementById('stat-today').textContent = newUsersToday;
 
+                        // Identity update
                         const session = localStorage.getItem('genius_session');
                         if (session) {
-                            const user = JSON.parse(session);
-                            const welcomeEl = document.getElementById('admin-welcome-msg');
-                            if (welcomeEl) welcomeEl.textContent = `Bienvenue, ${user.name} 👑`;
+                            try {
+                                const user = JSON.parse(session);
+                                const welcomeEl = document.getElementById('admin-welcome-msg');
+                                if (welcomeEl) welcomeEl.textContent = `Bienvenue, ${user.name} 👑`;
+                            } catch(e) {}
                         }
+                        
                         renderPremiumUsersList();
                         renderAdminMessages();
                         renderAllUsersAdmin();
+                        
+                        if(label) console.log(`Render complete: ${label}`);
                     } catch(e) {
                          document.getElementById('stat-users-count').textContent = "ERR";
                          adminLog(`❌ Erreur rendu (${label}): ` + e.toString());
