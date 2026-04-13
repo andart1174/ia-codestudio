@@ -115,8 +115,14 @@
             try {
                 const session = JSON.parse(localStorage.getItem('genius_session') || '{}');
                 const premiumUsers = JSON.parse(localStorage.getItem('ia_premium_users') || '[]');
-                if (session.email && premiumUsers.includes(session.email)) {
-                    isPremium = true;
+                const userEmail = session.email ? session.email.toLowerCase() : '';
+                
+                const record = premiumUsers.find(u => u.email.toLowerCase() === userEmail);
+                if (record) {
+                    const expiry = (record.addedAt || 0) + (record.days || 0) * 86400000;
+                    if (record.days === 9999 || expiry > Date.now()) {
+                        isPremium = true;
+                    }
                 }
             } catch(e) { console.error("Premium list check failed", e); }
         }

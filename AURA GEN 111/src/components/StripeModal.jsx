@@ -20,9 +20,15 @@ const StripeModal = ({ actionName, cost, onConfirm, onClose, isFr, isSub = false
         try {
             const session = JSON.parse(localStorage.getItem('genius_session') || '{}');
             const premiumUsers = JSON.parse(localStorage.getItem('ia_premium_users') || '[]');
-            if (session.email && premiumUsers.includes(session.email)) {
-                onConfirm(); // Instant bypass
-                return;
+            const userEmail = session.email ? session.email.toLowerCase() : '';
+            
+            const record = premiumUsers.find(u => u.email.toLowerCase() === userEmail);
+            if (record) {
+                const expiry = (record.addedAt || 0) + (record.days || 0) * 86400000;
+                if (record.days === 9999 || expiry > Date.now()) {
+                    onConfirm(); // Instant bypass
+                    return;
+                }
             }
         } catch(e) {}
     }, [onConfirm]);
