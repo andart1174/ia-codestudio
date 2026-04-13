@@ -134,12 +134,23 @@
                     <div class="admin-stat-label" data-i18n="admin_stat_premium">Membres Premium</div>
                 </div>
                 <div class="admin-stat-card" style="border-color: rgba(16,185,129,0.2);">
-                    <div class="admin-stat-icon">📅</div>
+                    <div class="admin-stat-icon">📈</div>
                     <div class="admin-stat-value" id="stat-today">0</div>
-                    <div class="admin-stat-label" data-i18n="admin_stat_today">Aujourd'hui</div>
+                    <div class="admin-stat-label" data-i18n="admin_stat_today">Nouveaux (24h)</div>
                 </div>
             </div>
-
+            <!-- ===== BASE UTILISATEURS (FULL DATABASE) ===== -->
+            <div style="background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.25); border-radius:16px; padding:18px; margin-bottom:18px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span style="font-size:1.1rem;">👥</span>
+                        <span style="font-weight:800; font-size:14px; color:#3b82f6;">Base d'Utilisateurs Enregistrés</span>
+                    </div>
+                </div>
+                <div id="admin-all-users-list" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap:10px; max-height:250px; overflow-y:auto; padding-right:5px;">
+                    <div style="text-align:center; color:#64748b; font-size:12px; padding:10px; font-style:italic;" id="no-users-msg">Aucun utilisateur enregistré.</div>
+                </div>
+            </div>
             <!-- ===== ADMINISTRATION SPLIT ===== -->
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px;">
                 
@@ -905,7 +916,9 @@
                     if (u.days === 9999) return true;
                     return (u.addedAt + u.days * 86400000) > Date.now();
                 }).length;
-                document.getElementById('stat-today').textContent = new Date().getDate();
+                const now = Date.now();
+                const newUsersToday = allUsers.filter(u => u.createdAt && (now - u.createdAt) < 86400000).length;
+                document.getElementById('stat-today').textContent = newUsersToday;
 
                 const session = localStorage.getItem('genius_session');
                 if (session) {
@@ -915,6 +928,49 @@
                 }
                 renderPremiumUsersList();
                 renderAdminMessages();
+                renderAllUsersAdmin();
+            }
+
+            function renderAllUsersAdmin() {
+                const list = JSON.parse(localStorage.getItem('ia_users') || '[]');
+                const container = document.getElementById('admin-all-users-list');
+                const noMsg = document.getElementById('no-users-msg');
+                if (!container) return;
+
+                Array.from(container.children).forEach(c => {
+                    if(c.id !== 'no-users-msg') c.remove();
+                });
+
+                if(list.length === 0) {
+                    if(noMsg) noMsg.style.display = 'block';
+                    return;
+                }
+                if(noMsg) noMsg.style.display = 'none';
+
+                // Sort newest first
+                list.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0)).forEach(u => {
+                    const dateStr = u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'Ancien';
+                    const isAdm = u.role === 'Admin';
+                    const badge = isAdm ? `<span style="background:rgba(139,92,246,0.2); color:#c4b5fd; padding:3px 6px; border-radius:6px; font-size:10px; font-weight:700;">Admin</span>` : 
+                                          `<span style="background:rgba(148,163,184,0.1); color:#94a3b8; padding:3px 6px; border-radius:6px; font-size:10px; font-weight:700;">User</span>`;
+                    
+                    const el = document.createElement('div');
+                    el.style = 'background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:12px; display:flex; flex-direction:column; gap:6px; transition:border-color 0.2s;';
+                    el.onmouseover = () => el.style.borderColor = 'rgba(59,130,246,0.3)';
+                    el.onmouseout = () => el.style.borderColor = 'rgba(255,255,255,0.06)';
+                    
+                    el.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-weight:700; font-size:13px; color:#fff; word-break:break-all;">${u.name}</span>
+                            ${badge}
+                        </div>
+                        <div style="font-size:11px; color:#94a3b8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${u.email}">
+                            ${u.email}
+                        </div>
+                        <div style="font-size:10px; color:#64748b; margin-top:2px;">Inscrit le: ${dateStr}</div>
+                    `;
+                    container.appendChild(el);
+                });
             }
 
             function adminResetPremium() {
