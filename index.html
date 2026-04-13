@@ -1028,41 +1028,46 @@
 
             async function refreshAdminStats() {
                 // Immediate local render
-                _executeRender();
+                _executeRender('init');
 
                 // Background sync
                 if(!window._isSyncingStats) {
                     window._isSyncingStats = true;
                     try {
                         await syncFirebaseWithLocal();
-                        _executeRender();
+                        _executeRender('post-sync');
                     } finally {
                         window._isSyncingStats = false;
                     }
                 }
 
-                function _executeRender() {
-                    const premiumUsers = getPremiumUsers();
-                    const allUsers = JSON.parse(localStorage.getItem('ia_users') || '[]');
-                    
-                    document.getElementById('stat-users-count').textContent = Math.max(1, allUsers.length);
-                    document.getElementById('stat-premium-count').textContent = premiumUsers.filter(u => {
-                        if (u.days === 9999) return true;
-                        return (u.addedAt + u.days * 86400000) > Date.now();
-                    }).length;
-                    const now = Date.now();
-                    const newUsersToday = allUsers.filter(u => u.createdAt && (now - u.createdAt) < 86400000).length;
-                    document.getElementById('stat-today').textContent = newUsersToday;
+                function _executeRender(label) {
+                    try {
+                        const premiumUsers = getPremiumUsers();
+                        const allUsers = JSON.parse(localStorage.getItem('ia_users') || '[]');
+                        
+                        document.getElementById('stat-users-count').textContent = allUsers.length;
+                        document.getElementById('stat-premium-count').textContent = premiumUsers.filter(u => {
+                            if (u.days === 9999) return true;
+                            return (u.addedAt + u.days * 86400000) > Date.now();
+                        }).length;
+                        const now = Date.now();
+                        const newUsersToday = allUsers.filter(u => u.createdAt && (now - u.createdAt) < 86400000).length;
+                        document.getElementById('stat-today').textContent = newUsersToday;
 
-                    const session = localStorage.getItem('genius_session');
-                    if (session) {
-                        const user = JSON.parse(session);
-                        const welcomeEl = document.getElementById('admin-welcome-msg');
-                        if (welcomeEl) welcomeEl.textContent = `Bienvenue, ${user.name} 👑`;
+                        const session = localStorage.getItem('genius_session');
+                        if (session) {
+                            const user = JSON.parse(session);
+                            const welcomeEl = document.getElementById('admin-welcome-msg');
+                            if (welcomeEl) welcomeEl.textContent = `Bienvenue, ${user.name} 👑`;
+                        }
+                        renderPremiumUsersList();
+                        renderAdminMessages();
+                        renderAllUsersAdmin();
+                    } catch(e) {
+                         document.getElementById('stat-users-count').textContent = "ERR";
+                         adminLog(`❌ Erreur rendu (${label}): ` + e.toString());
                     }
-                    renderPremiumUsersList();
-                    renderAdminMessages();
-                    renderAllUsersAdmin();
                 }
             }
 
