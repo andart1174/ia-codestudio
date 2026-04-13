@@ -218,6 +218,9 @@ const App = () => {
             }
             const lineCount = selectedText.split('\n').length;
             if (lineCount > 10) {
+                // Proactive bypass for premium users
+                if (premiumDaysLeft) return;
+
                 e.preventDefault();
                 e.stopPropagation();
                 
@@ -270,7 +273,7 @@ const App = () => {
     };
 
     const handleExport = async () => {
-        setStripeAction({ name: 'Project Export', cost: '$2.00', url: 'https://buy.stripe.com/test_...', action: async () => {
+        const performExport = async () => {
             const zip = new JSZip();
             
             // Export project with all files
@@ -297,7 +300,18 @@ const App = () => {
 
         const blob = await zip.generateAsync({ type: 'blob' });
             saveAs(blob, `AuraGen_Project_${new Date().getTime()}.zip`);
-        }});
+        };
+
+        if (premiumDaysLeft) {
+            await performExport();
+        } else {
+            setStripeAction({ 
+                name: 'Project Export', 
+                cost: '$2.00', 
+                url: 'https://buy.stripe.com/test_...', 
+                action: performExport 
+            });
+        }
     };
 
     const handleSave = () => {
