@@ -140,14 +140,17 @@
                 </div>
             </div>
 
-            <!-- ===== PREMIUM USER MANAGEMENT ===== -->
-            <div style="background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.25); border-radius:16px; padding:18px; margin-bottom:18px;">
-                <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
-                    <span style="font-size:1.1rem;">💎</span>
-                    <span style="font-weight:800; font-size:14px; color:#fbbf24;">Gestion Utilisateurs Premium</span>
-                </div>
+            <!-- ===== ADMINISTRATION SPLIT ===== -->
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px;">
+                
+                <!-- Premium Management -->
+                <div style="background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.25); border-radius:16px; padding:18px;">
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+                        <span style="font-size:1.1rem;">💎</span>
+                        <span style="font-weight:800; font-size:14px; color:#fbbf24;">Utilisateurs Premium</span>
+                    </div>
 
-                <!-- Add Premium User Form -->
+                    <!-- Add Premium User Form -->
                 <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
                     <input type="email" id="premium-user-email" placeholder="email@exemple.com"
                         style="flex:1; min-width:200px; background:rgba(255,255,255,0.05); border:1px solid rgba(245,158,11,0.3); border-radius:10px; color:#fff; padding:10px 14px; font-size:13px; outline:none; font-family:'Inter',sans-serif;">
@@ -166,6 +169,18 @@
                 <!-- Current Premium Users List -->
                 <div id="premium-users-list" style="display:flex; flex-direction:column; gap:8px; max-height:180px; overflow-y:auto;">
                     <div style="text-align:center; color:#64748b; font-size:12px; padding:10px; font-style:italic;" id="no-premium-msg">Aucun utilisateur premium enregistré.</div>
+                </div>
+                </div>
+
+                <!-- Messages Management -->
+                <div style="background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.25); border-radius:16px; padding:18px;">
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+                        <span style="font-size:1.1rem;">📩</span>
+                        <span style="font-weight:800; font-size:14px; color:#10b981;">Boîte de Réception</span>
+                    </div>
+                    <div id="admin-messages-list" style="display:flex; flex-direction:column; gap:8px; max-height:220px; overflow-y:auto; padding-right:5px;">
+                        <div style="text-align:center; color:#64748b; font-size:12px; padding:10px; font-style:italic;" id="no-messages-msg">Aucun message reçu.</div>
+                    </div>
                 </div>
             </div>
 
@@ -806,6 +821,43 @@
                 });
             }
 
+            function renderAdminMessages() {
+                const list = JSON.parse(localStorage.getItem('ia_messages') || '[]');
+                const container = document.getElementById('admin-messages-list');
+                const noMsg = document.getElementById('no-messages-msg');
+                if (!container) return;
+
+                Array.from(container.children).forEach(c => {
+                    if (c.id !== 'no-messages-msg') c.remove();
+                });
+
+                if (list.length === 0) {
+                    if (noMsg) noMsg.style.display = 'block';
+                    return;
+                }
+                if (noMsg) noMsg.style.display = 'none';
+
+                // Sort by date descending
+                list.sort((a,b) => b.date - a.date).forEach((msg, idx) => {
+                    const dateObj = new Date(msg.date);
+                    const formattedDate = dateObj.toLocaleDateString() + ' ' + dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    
+                    const row = document.createElement('div');
+                    row.style = 'background:rgba(255,255,255,0.03); border:1px solid rgba(16,185,129,0.12); border-radius:10px; padding:12px;';
+                    row.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                            <span style="font-weight:700; font-size:13px; color:#fff;">${msg.name}</span>
+                            <span style="font-size:11px; color:#94a3b8;">${formattedDate}</span>
+                        </div>
+                        <div style="font-size:11px; color:#10b981; margin-bottom:8px;">${msg.email}</div>
+                        <div style="font-size:13px; color:#cbd5e1; line-height:1.4; word-break:break-word;">
+                            ${msg.message.replace(/</g, "&lt;")}
+                        </div>
+                    `;
+                    container.appendChild(row);
+                });
+            }
+
             function adminAddPremiumUser() {
                 const emailInput = document.getElementById('premium-user-email');
                 const daysSelect = document.getElementById('premium-duration');
@@ -846,7 +898,9 @@
 
             function refreshAdminStats() {
                 const premiumUsers = getPremiumUsers();
-                document.getElementById('stat-users-count').textContent = Math.max(1, premiumUsers.length);
+                const allUsers = JSON.parse(localStorage.getItem('ia_users') || '[]');
+                
+                document.getElementById('stat-users-count').textContent = Math.max(1, allUsers.length);
                 document.getElementById('stat-premium-count').textContent = premiumUsers.filter(u => {
                     if (u.days === 9999) return true;
                     return (u.addedAt + u.days * 86400000) > Date.now();
@@ -860,6 +914,7 @@
                     if (welcomeEl) welcomeEl.textContent = `Bienvenue, ${user.name} 👑`;
                 }
                 renderPremiumUsersList();
+                renderAdminMessages();
             }
 
             function adminResetPremium() {
