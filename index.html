@@ -537,17 +537,53 @@
         <script>
             function checkPremiumPortal() {
                 const btn = document.getElementById('portal-premium-btn');
+                if (!btn) return;
+                
+                // 1. Get current logged user
+                const session = localStorage.getItem('genius_session');
+                if (!session) {
+                    btn.classList.remove('active-sub');
+                    btn.innerText = '💎 Devenir Premium ($30/mo)';
+                    return;
+                }
+                
+                const user = JSON.parse(session);
+                const email = user.email.toLowerCase();
+                
+                // 2. Check in premium database
+                const premiumList = JSON.parse(localStorage.getItem('ia_premium_users') || '[]');
+                const record = premiumList.find(p => p.email.toLowerCase() === email);
+                
+                if (record) {
+                    const now = Date.now();
+                    const expiry = (record.addedAt || 0) + (record.days || 0) * 86400000;
+                    const daysLeft = Math.ceil((expiry - now) / 86400000);
+                    const isUnlimited = record.days === 9999;
+                    
+                    if (isUnlimited || daysLeft > 0) {
+                        btn.classList.add('active-sub');
+                        btn.innerText = '✅ Premium ACTIV (' + (isUnlimited ? 'Illimité' : daysLeft + ' jours restants') + ')';
+                        return;
+                    }
+                }
+                
+                // Fallback to legacy key (for safety)
                 const subDate = localStorage.getItem('ia_premium_sub_date');
                 if (subDate) {
                     const daysPassed = Math.floor((Date.now() - parseInt(subDate)) / (1000 * 60 * 60 * 24));
                     const left = 30 - daysPassed;
                     if (left > 0) {
                         btn.classList.add('active-sub');
-                        btn.innerText = '✅ Premium Activ (' + left + ' jours restants)';
+                        btn.innerText = '✅ Premium ACTIV (' + left + ' jours restants)';
+                        return;
                     } else {
                         localStorage.removeItem('ia_premium_sub_date');
                     }
                 }
+
+                // Not premium
+                btn.classList.remove('active-sub');
+                btn.innerText = '💎 Devenir Premium ($30/mo)';
             }
             function triggerPremiumPortal() {
                 window.open('https://buy.stripe.com/bJecN6bfUfbbaax36qbfO02', '_blank');
@@ -1044,6 +1080,8 @@
                     try {
                         await syncFirebaseWithLocal();
                         _executeRender('post-sync');
+                        // Refresh premium button after sync
+                        if(typeof checkPremiumPortal === 'function') checkPremiumPortal();
                     } finally {
                         window._isSyncingStats = false;
                     }
