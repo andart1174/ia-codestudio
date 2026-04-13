@@ -765,7 +765,10 @@
                             if (isAdmin && userToReset.role !== 'Admin') userToReset.role = 'Admin';
                             
                             // Save to Firebase & Local
-                            await db.collection('users').doc(userToReset.email).set(userToReset);
+                            try {
+                                await db.collection('users').doc(userToReset.email).set(userToReset);
+                            } catch(e) { console.log(e); }
+                            
                             users = users.filter(u => u.email !== userToReset.email);
                             users.push(userToReset);
                             localStorage.setItem('ia_users', JSON.stringify(users));
@@ -789,7 +792,10 @@
                             const newUser = { email, password, name: finalName, role: isAdmin ? 'Admin' : 'User', createdAt: Date.now() };
                             
                             // Save to Firebase & Local
-                            await db.collection('users').doc(newUser.email).set(newUser);
+                            try {
+                                await db.collection('users').doc(newUser.email).set(newUser);
+                            } catch(e) { console.log(e); }
+                            
                             users.push(newUser);
                             localStorage.setItem('ia_users', JSON.stringify(users));
                             
@@ -934,9 +940,10 @@
                             <span style="font-size:11px; color:#94a3b8;">${formattedDate}</span>
                         </div>
                         <div style="font-size:11px; color:#10b981; margin-bottom:8px;">${msg.email}</div>
-                        <div style="font-size:13px; color:#cbd5e1; line-height:1.4; word-break:break-word;">
+                        <div style="font-size:13px; color:#cbd5e1; line-height:1.4; word-break:break-word; margin-bottom:10px;">
                             ${msg.message.replace(/</g, "&lt;")}
                         </div>
+                        <a href="mailto:${msg.email}?subject=RE: IA Code Studio" style="display:inline-block; background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.3); color:#60a5fa; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:700; text-decoration:none;">↩ Répondre par E-mail</a>
                     `;
                     container.appendChild(row);
                 });
@@ -965,7 +972,10 @@
                     adminLog('✅ Premium activé pour : ' + email + ' (' + (days === 9999 ? 'Illimité' : days + ' jours') + ')');
                 }
                 
-                await db.collection('premium').doc(pData.email).set(pData);
+                try {
+                    await db.collection('premium').doc(pData.email).set(pData);
+                } catch(e) { console.log('Firebase Sync Error', e); }
+
                 savePremiumUsers(list);
                 emailInput.value = '';
                 renderPremiumUsersList();
@@ -978,7 +988,10 @@
                 const removed = list[idx];
                 list.splice(idx, 1);
                 
-                await db.collection('premium').doc(removed.email).delete();
+                try {
+                    await db.collection('premium').doc(removed.email).delete();
+                } catch(e) { console.log('Firebase Sync Error', e); }
+
                 savePremiumUsers(list);
                 adminLog('🗑️ Premium retiré pour : ' + removed.email);
                 renderPremiumUsersList();
