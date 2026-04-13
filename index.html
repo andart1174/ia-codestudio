@@ -701,8 +701,11 @@
             async function syncFirebaseWithLocal() {
                 if (!db) return;
                 try {
+                    // Timeout helper function
+                    const timeout = (ms) => new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout Firebase")), ms));
+
                     // Users Sync - Smart Merge
-                    const uSnap = await db.collection('users').get();
+                    const uSnap = await Promise.race([db.collection('users').get(), timeout(4000)]);
                     let lsU = JSON.parse(localStorage.getItem('ia_users') || '[]');
                     let memU = {};
                     lsU.forEach(u => memU[u.email] = u);
@@ -719,7 +722,7 @@
                     }
 
                     // Messages Sync - Smart Merge
-                    const mSnap = await db.collection('messages').get();
+                    const mSnap = await Promise.race([db.collection('messages').get(), timeout(4000)]);
                     let lsM = JSON.parse(localStorage.getItem('ia_messages') || '[]');
                     let memM = [];
                     let hashes = new Set();
@@ -740,7 +743,7 @@
                     }
 
                     // Premium - Smart Merge
-                    const pSnap = await db.collection('premium').get();
+                    const pSnap = await Promise.race([db.collection('premium').get(), timeout(4000)]);
                     let lsP = JSON.parse(localStorage.getItem('ia_premium_users') || '[]');
                     let memP = {};
                     lsP.forEach(p => memP[p.email] = p);
@@ -772,8 +775,8 @@
                 btn.disabled = true;
                 btn.textContent = '⏳...';
 
-                // Sync first
-                await syncFirebaseWithLocal();
+                // Sync first non-blocking
+                syncFirebaseWithLocal().catch(e=>console.log(e));
 
                 setTimeout(async () => {
                     let users = JSON.parse(localStorage.getItem('ia_users') || '[]');
