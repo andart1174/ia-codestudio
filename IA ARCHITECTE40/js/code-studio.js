@@ -573,16 +573,31 @@ window.addEventListener('DOMContentLoaded',()=>{
       getSelection: () => ({ startLineNumber:1, startColumn:1, endLineNumber:1, endColumn:1 }),
       pushUndoStop: () => {}, executeEdits: () => {}, focus: () => ta.focus()
     };
+    editor = window.editor; // Assign local editor so all other modules can interact with it immediately
     showToast('⚠️ ' + (lang === 'fr' ? 'Éditeur Monaco hors ligne — Mode texte actif' : 'Monaco offline — Text editor active'));
   }
   const monacoTimeout = setTimeout(() => { if (!window.editor || !window.editor.getModel || !window.editor.getModel()) showFallbackEditor(); }, 15000);
 
-  // Load Monaco with primary CDN (jsdelivr), fallback to unpkg
-  function loadMonaco(cdnPath) {
-    require.config({paths:{vs: cdnPath}});
+  // Load Monaco using paths array fallback (jsdelivr -> unpkg -> cdnjs)
+  function loadMonaco() {
+    if (typeof require === 'undefined') {
+      setTimeout(loadMonaco, 100);
+      return;
+    }
+    require.config({
+      paths: {
+        vs: [
+          'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs',
+          'https://unpkg.com/monaco-editor@0.45.0/min/vs',
+          'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs'
+        ]
+      }
+    });
     require(['vs/editor/editor.main'],()=>{
       clearTimeout(monacoTimeout); // Cancel fallback timer - Monaco loaded!
-      editor=monaco.editor.create(document.getElementById('monaco-container'),{
+      const container = document.getElementById('monaco-container');
+      if (container) container.innerHTML = ''; // Clear fallback textarea if it was displayed
+      editor=monaco.editor.create(container,{
         value:code,language:'html',theme:editorTheme,fontSize,wordWrap,
         minimap:{enabled:true,scale:1},automaticLayout:true,scrollBeyondLastLine:false,
         padding:{top:16,bottom:16},lineNumbers:'on',roundedSelection:true,
@@ -641,13 +656,7 @@ window.addEventListener('DOMContentLoaded',()=>{
     });
   }
 
-  // Try jsdelivr first, then unpkg as fallback
-  try {
-    loadMonaco('https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs');
-  } catch(e) {
-    console.warn('jsdelivr failed, trying unpkg...', e);
-    loadMonaco('https://unpkg.com/monaco-editor@0.45.0/min/vs');
-  }
+  loadMonaco();
 
   window.addEventListener('message', e => {
     if(!e.data || e.data.type !== 'inspect') return;

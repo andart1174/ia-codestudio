@@ -627,7 +627,35 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+  <!-- 🎛️ Monaco Editor Loader with multi-CDN fallback -->
+  <script>
+    (function() {
+      const cdns = [
+        'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js',
+        'https://unpkg.com/monaco-editor@0.45.0/min/vs/loader.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js'
+      ];
+      let currentIdx = 0;
+      function loadNext() {
+        if (currentIdx >= cdns.length) {
+          console.error('All Monaco Loader CDNs failed.');
+          return;
+        }
+        const s = document.createElement('script');
+        s.src = cdns[currentIdx];
+        s.onerror = function() {
+          console.warn('Monaco loader failed from ' + cdns[currentIdx] + ', trying next...');
+          currentIdx++;
+          loadNext();
+        };
+        s.onload = function() {
+          console.log('Monaco loader loaded successfully from ' + cdns[currentIdx]);
+        };
+        document.head.appendChild(s);
+      }
+      loadNext();
+    })();
+  </script>
   <script src="js/genius-core.js"></script>
   <script src="js/ai-engine.js"></script>
   <script src="js/apps-pro-library.js"></script>
