@@ -9,10 +9,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <script src="js/three.min.js"></script>
-  <!-- 🔥 Firebase SDK - Loaded statically for reliability -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 </head>
 <body>
 
@@ -643,12 +639,27 @@
         }
         const s = document.createElement('script');
         s.src = cdns[currentIdx];
+        
+        let timeoutTriggered = false;
+        const loadTimeout = setTimeout(() => {
+          if (window.require) return; // Monaco loader already loaded successfully
+          timeoutTriggered = true;
+          console.warn('Monaco loader timed out from ' + cdns[currentIdx] + ', trying next...');
+          s.remove(); // Remove the hanging script
+          currentIdx++;
+          loadNext();
+        }, 2500); // 2.5s timeout per CDN
+
         s.onerror = function() {
+          if (timeoutTriggered) return;
+          clearTimeout(loadTimeout);
           console.warn('Monaco loader failed from ' + cdns[currentIdx] + ', trying next...');
           currentIdx++;
           loadNext();
         };
         s.onload = function() {
+          if (timeoutTriggered) return;
+          clearTimeout(loadTimeout);
           console.log('Monaco loader loaded successfully from ' + cdns[currentIdx]);
         };
         document.head.appendChild(s);
@@ -1236,6 +1247,10 @@
     </div>
   </div>
 
+  <!-- 🔥 Firebase SDK - Loaded statically at the bottom to prevent load blocking -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <!-- 🔐 User Auth & Database manager -->
   <script src="js/user-auth-db.js"></script>
 </body>
