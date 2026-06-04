@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Testimonial Carousel</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f172a; color: #fff; font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+  
+  .testimonial-container {
+    width: 100%;
+    max-width: 800px;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .carousel-track {
+    display: flex;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .testimonial-card {
+    min-width: 100%;
+    padding: 40px;
+    background: #1e293b;
+    border-radius: 24px;
+    border: 1px solid #334155;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  }
+  
+  .quote-icon {
+    font-size: 48px;
+    color: #38bdf8;
+    opacity: 0.5;
+    margin-bottom: 20px;
+    line-height: 1;
+  }
+  
+  .review-text {
+    font-size: 20px;
+    line-height: 1.6;
+    color: #e2e8f0;
+    margin-bottom: 30px;
+    font-weight: 300;
+    font-style: italic;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  .avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #38bdf8;
+  }
+  
+  .user-details h4 { font-size: 16px; font-weight: 700; color: #fff; text-align: left; margin-bottom: 4px; }
+  .user-details p { font-size: 14px; color: #94a3b8; text-align: left; }
+  
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+  }
+  
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #334155;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .dot.active { background: #38bdf8; transform: scale(1.2); }
+</style>
+</head>
+<body>
+  <div class="testimonial-container">
+    <div class="carousel-track" id="track">
+      <!-- Testimonial 1 -->
+      <div class="testimonial-card">
+        <div class="quote-icon">"</div>
+        <p class="review-text">This platform completely revolutionized how we build web apps. The UI components are flawless and the speed is incredible.</p>
+        <div class="user-info">
+          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150" class="avatar" alt="User">
+          <div class="user-details"><h4>Sarah Jenkins</h4><p>CTO at TechFlow</p></div>
+        </div>
+      </div>
+      <!-- Testimonial 2 -->
+      <div class="testimonial-card">
+        <div class="quote-icon">"</div>
+        <p class="review-text">An absolute game-changer. Our team's productivity skyrocketed after implementing these architecture patterns.</p>
+        <div class="user-info">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150" class="avatar" alt="User">
+          <div class="user-details"><h4>Michael Chen</h4><p>Lead Developer</p></div>
+        </div>
+      </div>
+      <!-- Testimonial 3 -->
+      <div class="testimonial-card">
+        <div class="quote-icon">"</div>
+        <p class="review-text">The best developer experience I have ever had. The attention to detail in the components is simply mind-blowing.</p>
+        <div class="user-info">
+          <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=150" class="avatar" alt="User">
+          <div class="user-details"><h4>Elena Rodriguez</h4><p>Product Manager</p></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="controls">
+      <div class="dot active" onclick="goTo(0)"></div>
+      <div class="dot" onclick="goTo(1)"></div>
+      <div class="dot" onclick="goTo(2)"></div>
+    </div>
+  </div>
+
+<script>
+  let currentIndex = 0;
+  const track = document.getElementById('track');
+  const dots = document.querySelectorAll('.dot');
+  
+  function goTo(index) {
+    currentIndex = index;
+    track.style.transform = `translateX(-${index * 100}%)`;
+    dots.forEach(d => d.classList.remove('active'));
+    dots[index].classList.add('active');
+  }
+  
+  // Auto-rotate every 5 seconds
+  setInterval(() => {
+    let next = (currentIndex + 1) % dots.length;
+    goTo(next);
+  }, 5000);
+</script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Parallax Timeline</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f172a; color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+  
+  .timeline-section { padding: 100px 20px; max-width: 1000px; margin: 0 auto; position: relative; }
+  .timeline-title { text-align: center; font-size: 40px; font-weight: 900; margin-bottom: 80px; color: #10b981; }
+  
+  /* The central line */
+  .timeline-section::before {
+    content: '';
+    position: absolute;
+    top: 180px; bottom: 100px; left: 50%;
+    width: 4px;
+    background: #334155;
+    transform: translateX(-50%);
+  }
+  
+  .timeline-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 60px;
+    position: relative;
+    width: 100%;
+    opacity: 0; /* Hidden by default for JS animation */
+    transform: translateY(50px);
+    transition: all 0.8s ease-out;
+  }
+  .timeline-item.visible { opacity: 1; transform: translateY(0); }
+  
+  /* Left and Right alignment logic */
+  .timeline-item .content { width: 45%; padding: 30px; background: #1e293b; border-radius: 16px; border: 1px solid #334155; position: relative; }
+  .timeline-item:nth-child(even) { flex-direction: row-reverse; }
+  
+  /* The glowing dot on the line */
+  .timeline-dot {
+    position: absolute;
+    left: 50%;
+    width: 20px; height: 20px;
+    background: #10b981;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 15px #10b981;
+    z-index: 2;
+  }
+  
+  .content .date { font-size: 14px; color: #10b981; font-weight: bold; margin-bottom: 10px; display: block; }
+  .content h3 { font-size: 22px; font-weight: 800; margin-bottom: 10px; }
+  .content p { font-size: 15px; color: #94a3b8; line-height: 1.6; }
+  
+  /* Arrows pointing to the line */
+  .timeline-item:nth-child(odd) .content::before {
+    content: ''; position: absolute; right: -10px; top: 30px;
+    border-style: solid; border-width: 10px 0 10px 10px; border-color: transparent transparent transparent #334155;
+  }
+  .timeline-item:nth-child(even) .content::before {
+    content: ''; position: absolute; left: -10px; top: 30px;
+    border-style: solid; border-width: 10px 10px 10px 0; border-color: transparent #334155 transparent transparent;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Adding a tall header so we can scroll down to the timeline -->
+  <div style="height: 60vh; display:flex; align-items:center; justify-content:center; flex-direction:column; background:linear-gradient(#0f172a, #1e293b);">
+    <h1 style="font-size: 48px;">Our Journey</h1>
+    <p style="color:#94a3b8; margin-top:20px;">Scroll down to explore the timeline ↓</p>
+  </div>
+
+  <section class="timeline-section">
+    <h2 class="timeline-title">Project Roadmap</h2>
+    
+    <div class="timeline-item">
+      <div class="content">
+        <span class="date">Q1 2026</span>
+        <h3>Foundation Build</h3>
+        <p>Architecting the core systems, setting up the databases, and designing the initial UI components for maximum scalability.</p>
+      </div>
+      <div class="timeline-dot"></div>
+      <div style="width: 45%;"></div> <!-- Empty spacer for alignment -->
+    </div>
+    
+    <div class="timeline-item">
+      <div style="width: 45%;"></div> <!-- Empty spacer -->
+      <div class="timeline-dot"></div>
+      <div class="content">
+        <span class="date">Q2 2026</span>
+        <h3>Beta Release</h3>
+        <p>Releasing the platform to 1,000 early adopters to gather critical feedback and optimize the user experience workflows.</p>
+      </div>
+    </div>
+    
+    <div class="timeline-item">
+      <div class="content">
+        <span class="date">Q3 2026</span>
+        <h3>Global Launch</h3>
+        <p>Marketing scale-up and official global release, introducing premium tiers and the highly anticipated AI module integration.</p>
+      </div>
+      <div class="timeline-dot"></div>
+      <div style="width: 45%;"></div>
+    </div>
+  </section>
+  
+  <div style="height: 50vh;"></div> <!-- Bottom padding for scrolling -->
+
+<script>
+  // Intersection Observer for scroll animation
+  const items = document.querySelectorAll('.timeline-item');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.2 });
+  
+  items.forEach(item => observer.observe(item));
+</script>
+</body>
+</html>

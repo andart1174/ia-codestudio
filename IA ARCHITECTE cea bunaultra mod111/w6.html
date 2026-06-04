@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>3D Parallax Cards</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f172a; color: #fff; font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  
+  .gallery { display: flex; gap: 40px; padding: 50px; perspective: 1000px; }
+  
+  .card-3d {
+    width: 320px;
+    height: 440px;
+    border-radius: 24px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    transition: transform 0.1s ease-out;
+    transform-style: preserve-3d;
+    cursor: pointer;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  }
+  
+  /* Dark overlay for text readability */
+  .card-3d::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+    border-radius: 24px;
+  }
+
+  .card-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 30px;
+    z-index: 2;
+    transform: translateZ(60px); /* This pops the text out in 3D! */
+  }
+  
+  .category { display: inline-block; padding: 6px 12px; background: #38bdf8; color: #000; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 15px; }
+  .card-content h3 { font-size: 28px; font-weight: 800; margin-bottom: 10px; line-height: 1.2; }
+  .card-content p { color: #cbd5e1; font-size: 15px; line-height: 1.5; opacity: 0.8; }
+</style>
+</head>
+<body>
+
+  <div class="gallery">
+    <!-- Card 1 -->
+    <div class="card-3d" id="card1" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800');">
+      <div class="card-content">
+        <div class="category">DESIGN</div>
+        <h3>Abstract 3D Renders</h3>
+        <p>Creating immersive visual experiences for modern brands.</p>
+      </div>
+    </div>
+    
+    <!-- Card 2 -->
+    <div class="card-3d" id="card2" style="background-image: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=800');">
+      <div class="card-content">
+        <div class="category" style="background:#f43f5e;">DEVELOPMENT</div>
+        <h3>High-Speed Apps</h3>
+        <p>Performance optimized web applications scaling globally.</p>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Math for 3D tilt effect
+  document.querySelectorAll('.card-3d').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left; 
+      const y = e.clientY - rect.top;
+      
+      const centerX = rect.width / 2; 
+      const centerY = rect.height / 2;
+      
+      // Calculate rotation based on cursor position
+      const rotateX = ((y - centerY) / centerY) * -15; // Max 15 deg tilt
+      const rotateY = ((x - centerX) / centerX) * 15;
+      
+      card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+    });
+    
+    // Reset on mouse leave
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+      card.style.transition = 'transform 0.5s ease'; // Smooth reset
+      setTimeout(() => card.style.transition = 'transform 0.1s ease-out', 500); // Remove smooth for instant follow
+    });
+  });
+</script>
+</body>
+</html>

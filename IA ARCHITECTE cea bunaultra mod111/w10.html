@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ultra-Modern Footer</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e2e8f0; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; min-height: 100vh; }
+  
+  /* Push footer to bottom */
+  .spacer { flex: 1; display: flex; align-items: center; justify-content: center; color: #64748b; font-size: 24px; font-weight: bold; }
+  
+  .modern-footer {
+    background: #020617;
+    color: #fff;
+    padding: 80px 40px 40px;
+    border-top: 1px solid #334155;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Decorative background */
+  .modern-footer::before {
+    content: ''; position: absolute; top: 0; right: 0; width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(139,92,246,0.1) 0%, rgba(2,6,23,0) 70%);
+    border-radius: 50%; pointer-events: none;
+  }
+  
+  .footer-grid {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 40px; margin-bottom: 60px;
+  }
+  
+  .brand h2 { font-size: 32px; font-weight: 900; margin-bottom: 15px; background: linear-gradient(to right, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .brand p { color: #94a3b8; line-height: 1.6; font-size: 15px; max-width: 300px; }
+  
+  .footer-col h4 { font-size: 18px; font-weight: 700; margin-bottom: 25px; color: #e2e8f0; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 15px; }
+  .footer-col ul a { color: #94a3b8; text-decoration: none; font-size: 15px; transition: 0.2s; }
+  .footer-col ul a:hover { color: #a855f7; padding-left: 5px; }
+  
+  .newsletter p { color: #94a3b8; font-size: 14px; margin-bottom: 20px; }
+  .newsletter-form { display: flex; background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 5px; }
+  .newsletter-form input { flex: 1; background: transparent; border: none; outline: none; padding: 12px 15px; color: #fff; font-size: 14px; }
+  .newsletter-form button { background: #a855f7; color: #fff; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+  .newsletter-form button:hover { background: #9333ea; }
+  
+  .footer-bottom {
+    max-width: 1200px; margin: 0 auto;
+    padding-top: 30px; border-top: 1px solid #1e293b;
+    display: flex; justify-content: space-between; align-items: center;
+    color: #64748b; font-size: 14px;
+  }
+  
+  .social-links { display: flex; gap: 15px; }
+  .social-links a { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: #0f172a; border: 1px solid #1e293b; border-radius: 50%; color: #94a3b8; text-decoration: none; font-weight: bold; transition: 0.3s; }
+  .social-links a:hover { background: #a855f7; color: #fff; transform: translateY(-3px); border-color: #a855f7; }
+
+  @media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .footer-grid { grid-template-columns: 1fr; } .footer-bottom { flex-direction: column; gap: 20px; text-align: center; } }
+</style>
+</head>
+<body>
+  
+  <div class="spacer">Scroll Down ↓</div>
+
+  <footer class="modern-footer">
+    <div class="footer-grid">
+      <div class="brand">
+        <h2>WebArch.</h2>
+        <p>Empowering developers to build beautiful, high-performance web applications faster than ever.</p>
+      </div>
+      
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#">Features</a></li>
+          <li><a href="#">Integrations</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">Changelog</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col newsletter">
+        <h4>Stay Updated</h4>
+        <p>Get the latest UI components and framework updates straight to your inbox.</p>
+        <div class="newsletter-form">
+          <input type="email" placeholder="Enter your email">
+          <button>Subscribe</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; 2026 WebArch Studio. All rights reserved.</p>
+      <div class="social-links">
+        <a href="#">Tw</a>
+        <a href="#">In</a>
+        <a href="#">Gh</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mega Menu Navigation</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f172a; color: #fff; font-family: 'Inter', sans-serif; min-height: 100vh; }
+  
+  /* Navbar Styling */
+  .navbar {
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: sticky;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px;
+    height: 80px;
+    z-index: 1000;
+  }
+  
+  .logo { font-size: 24px; font-weight: 900; color: #fff; text-decoration: none; letter-spacing: -0.5px; }
+  .logo span { color: #38bdf8; }
+  
+  .nav-links { display: flex; height: 100%; list-style: none; }
+  .nav-links > li { height: 100%; display: flex; align-items: center; }
+  .nav-links a { color: #cbd5e1; text-decoration: none; font-weight: 500; font-size: 15px; padding: 0 20px; transition: color 0.2s; }
+  .nav-links a:hover { color: #fff; }
+  
+  /* Dropdown logic */
+  .has-dropdown { position: relative; cursor: pointer; }
+  .has-dropdown > a::after { content: ' ▾'; font-size: 12px; }
+  
+  .dropdown {
+    position: absolute;
+    top: 80px; /* Right below navbar */
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 20px;
+    min-width: 300px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .has-dropdown:hover .dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+  
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px;
+    border-radius: 10px;
+    transition: background 0.2s;
+  }
+  .dropdown-item:hover { background: #0f172a; }
+  .dropdown-item .icon { font-size: 24px; background: rgba(56, 189, 248, 0.1); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
+  .dropdown-item .text h4 { color: #fff; font-size: 15px; margin-bottom: 2px; }
+  .dropdown-item .text p { color: #64748b; font-size: 12px; }
+  
+  .nav-btn { background: #fff; color: #000 !important; padding: 12px 24px !important; border-radius: 50px; font-weight: 700 !important; transition: transform 0.2s; margin-left: 10px; }
+  .nav-btn:hover { transform: scale(1.05); color: #000; }
+
+  .hero-mock { height: calc(100vh - 80px); display: flex; align-items: center; justify-content: center; font-size: 48px; font-weight: bold; color: #334155; }
+</style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="#" class="logo">Web<span>Arch</span></a>
+    
+    <ul class="nav-links">
+      <li><a href="#">Home</a></li>
+      <li class="has-dropdown">
+        <a href="#">Products</a>
+        <!-- Mega Menu Dropdown -->
+        <div class="dropdown">
+          <a href="#" class="dropdown-item">
+            <div class="icon">🚀</div>
+            <div class="text"><h4>Web Apps</h4><p>High-performance web applications.</p></div>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon">📱</div>
+            <div class="text"><h4>Mobile iOS</h4><p>Native mobile experiences.</p></div>
+          </a>
+          <a href="#" class="dropdown-item">
+            <div class="icon">☁️</div>
+            <div class="text"><h4>Cloud Hosting</h4><p>Scalable infrastructure setups.</p></div>
+          </a>
+        </div>
+      </li>
+      <li><a href="#">Pricing</a></li>
+      <li><a href="#">Blog</a></li>
+      <li><a href="#" class="nav-btn">Get Started</a></li>
+    </ul>
+  </nav>
+  
+  <div class="hero-mock">Hover over "Products" ⬆️</div>
+</body>
+</html>

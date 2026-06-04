@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Neumorphism Login Form</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* Neumorphism works best on a specific mid-tone background */
+  body { background: #e0e5ec; color: #4a5568; font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+  
+  .neu-card {
+    width: 380px;
+    padding: 50px 40px;
+    background: #e0e5ec;
+    border-radius: 30px;
+    /* The Neumorphic magic: Light top-left shadow + Dark bottom-right shadow */
+    box-shadow: 9px 9px 16px rgba(163,177,198,0.6), -9px -9px 16px rgba(255,255,255,0.5);
+  }
+  
+  .neu-card h2 {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 40px;
+    color: #2d3748;
+    letter-spacing: 1px;
+  }
+  
+  .input-group { margin-bottom: 25px; }
+  .input-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 10px; color: #718096; padding-left: 5px; }
+  
+  .neu-input {
+    width: 100%;
+    padding: 15px 20px;
+    border: none;
+    outline: none;
+    background: #e0e5ec;
+    border-radius: 50px;
+    font-size: 15px;
+    color: #2d3748;
+    /* Inset shadow for the "pressed in" look */
+    box-shadow: inset 6px 6px 10px rgba(163,177,198,0.5), inset -6px -6px 10px rgba(255,255,255,0.8);
+    transition: 0.2s;
+  }
+  .neu-input:focus {
+    box-shadow: inset 8px 8px 12px rgba(163,177,198,0.7), inset -8px -8px 12px rgba(255,255,255,1);
+  }
+  
+  .neu-btn {
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    border: none;
+    outline: none;
+    background: #e0e5ec;
+    color: #3182ce;
+    font-size: 16px;
+    font-weight: 800;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 6px 6px 10px rgba(163,177,198,0.6), -6px -6px 10px rgba(255,255,255,0.5);
+    transition: 0.2s;
+  }
+  .neu-btn:hover { color: #2b6cb0; }
+  .neu-btn:active {
+    box-shadow: inset 4px 4px 8px rgba(163,177,198,0.5), inset -4px -4px 8px rgba(255,255,255,0.8);
+    color: #2b6cb0;
+  }
+  
+  .links {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 13px;
+  }
+  .links a { color: #718096; text-decoration: none; font-weight: bold; }
+  .links a:hover { color: #3182ce; }
+</style>
+</head>
+<body>
+  <div class="neu-card">
+    <h2>Welcome Back</h2>
+    <div class="input-group">
+      <label>Email Address</label>
+      <input type="email" class="neu-input" placeholder="Enter your email">
+    </div>
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" class="neu-input" placeholder="Enter your password">
+    </div>
+    <button class="neu-btn">Sign In</button>
+    
+    <div class="links">
+      <a href="#">Forgot Password?</a> &nbsp;|&nbsp; <a href="#">Create Account</a>
+    </div>
+  </div>
+</body>
+</html>

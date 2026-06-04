@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Glassmorphism Component</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { 
+    font-family: 'Inter', sans-serif; 
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Beautiful mesh gradient background to show off the glass effect */
+    background-color: #4158D0;
+    background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+  }
+  
+  /* The Glassmorphism Magic */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.1); /* Transparent white */
+    backdrop-filter: blur(16px) saturate(180%); /* Blur the background behind it */
+    -webkit-backdrop-filter: blur(16px) saturate(180%); /* Safari support */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle white border */
+    border-radius: 24px;
+    padding: 40px;
+    width: 400px;
+    color: #fff;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Shimmer effect inside the card */
+  .glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; width: 50%; height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
+    transform: skewX(-25deg);
+    animation: shimmer 6s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { left: -100%; }
+    20% { left: 200%; }
+    100% { left: 200%; }
+  }
+
+  h2 { font-size: 28px; font-weight: 800; margin-bottom: 10px; }
+  p { font-size: 15px; line-height: 1.6; color: rgba(255, 255, 255, 0.8); margin-bottom: 30px; }
+  
+  .glass-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .glass-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+  }
+</style>
+</head>
+<body>
+  <div class="glass-card">
+    <h2>Premium Access</h2>
+    <p>Unlock all exclusive features, advanced analytics, and priority 24/7 support. Join over 100k+ professionals today.</p>
+    <button class="glass-btn">Upgrade Now</button>
+  </div>
+</body>
+</html>

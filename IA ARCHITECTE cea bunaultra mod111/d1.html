@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Docker Compose Builder</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{background:#0f172a;color:#fff;font-family:Inter,sans-serif;padding:30px;height:100vh;display:flex;flex-direction:column}
+h2{color:#0ea5e9;margin-bottom:20px;display:flex;align-items:center;gap:10px} .split{display:flex;gap:20px;flex:1;overflow:hidden}
+.panel{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:25px;width:350px;display:flex;flex-direction:column;gap:15px;overflow-y:auto}
+.output{background:#020617;border:1px solid #334155;border-radius:12px;padding:20px;flex:1;font-family:monospace;font-size:13px;color:#a5b4fc;overflow:auto;white-space:pre}
+label{display:flex;align-items:center;gap:10px;font-size:14px;color:#cbd5e1;cursor:pointer;padding:10px;background:#0f172a;border-radius:8px;border:1px solid #334155;transition:0.2s}
+label:hover{border-color:#0ea5e9} input[type=checkbox]{accent-color:#0ea5e9;width:18px;height:18px;cursor:pointer}
+.btn{background:#0ea5e9;color:#fff;border:none;padding:12px;border-radius:8px;font-weight:900;cursor:pointer;margin-top:10px;font-size:14px}
+.btn:active{transform:scale(0.98)}</style></head>
+<body><h2>🐳 Docker Compose Builder</h2>
+<div class="split">  <div class="panel">
+    <label><input type="checkbox" id="svc_node" checked> Node.js App (Port 3000)</label>
+    <label><input type="checkbox" id="svc_pg" checked> PostgreSQL Database</label>
+    <label><input type="checkbox" id="svc_redis"> Redis Cache</label>
+    <label><input type="checkbox" id="svc_nginx"> Nginx Reverse Proxy</label>
+    <button class="btn" onclick="generate()">🔄 Generate YAML</button>  </div>
+  <div class="output" id="out"></div></div>
+<script>
+function generate() {
+  let y = "version: '3.8'\nservices:\n";
+  if(document.getElementById('svc_node').checked) {
+    y += "  app:\n    build: .\n    container_name: my_app\n    restart: unless-stopped\n    ports:\n      - \"3000:3000\"\n    environment:\n      - NODE_ENV=production\n";
+    if(document.getElementById('svc_pg').checked) y += "      - DATABASE_URL=postgresql://user:pass@db:5432/mydb\n";
+    if(document.getElementById('svc_redis').checked) y += "      - REDIS_URL=redis://redis:6379\n";
+    if(document.getElementById('svc_pg').checked || document.getElementById('svc_redis').checked) {
+      y += "    depends_on:\n";
+      if(document.getElementById('svc_pg').checked) y += "      - db\n";
+      if(document.getElementById('svc_redis').checked) y += "      - redis\n";
+    }
+  }
+  if(document.getElementById('svc_pg').checked) {
+    y += "\n  db:\n    image: postgres:15-alpine\n    container_name: my_postgres\n    restart: unless-stopped\n    environment:\n      POSTGRES_USER: user\n      POSTGRES_PASSWORD: pass\n      POSTGRES_DB: mydb\n    volumes:\n      - postgres_data:/var/lib/postgresql/data\n";
+  }
+  if(document.getElementById('svc_redis').checked) {
+    y += "\n  redis:\n    image: redis:7-alpine\n    container_name: my_redis\n    restart: unless-stopped\n    volumes:\n      - redis_data:/data\n";
+  }
+  if(document.getElementById('svc_nginx').checked) {
+    y += "\n  nginx:\n    image: nginx:alpine\n    container_name: my_nginx\n    restart: unless-stopped\n    ports:\n      - \"80:80\"\n      - \"443:443\"\n    volumes:\n      - ./nginx.conf:/etc/nginx/nginx.conf:ro\n";
+    if(document.getElementById('svc_node').checked) y += "    depends_on:\n      - app\n";
+  }
+  let v = [];  if(document.getElementById('svc_pg').checked) v.push("  postgres_data:");  if(document.getElementById('svc_redis').checked) v.push("  redis_data:");
+  if(v.length > 0) y += "\nvolumes:\n" + v.join("\n") + "\n";
+  document.getElementById('out').textContent = y;
+}
+generate();
+</script></body></html>

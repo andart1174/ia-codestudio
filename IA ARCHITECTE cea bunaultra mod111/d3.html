@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>CI/CD Pipeline</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{background:#0f172a;color:#fff;font-family:Inter,sans-serif;padding:30px;height:100vh;display:flex;flex-direction:column}
+h2{color:#8b5cf6;margin-bottom:20px;display:flex;align-items:center;gap:10px} .split{display:flex;gap:20px;flex:1;overflow:hidden}
+.panel{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:25px;width:350px;display:flex;flex-direction:column;gap:15px;overflow-y:auto}
+.output{background:#020617;border:1px solid #334155;border-radius:12px;padding:20px;flex:1;font-family:monospace;font-size:13px;color:#c4b5fd;overflow:auto;white-space:pre}
+label{display:flex;align-items:center;gap:10px;font-size:14px;color:#cbd5e1;cursor:pointer;padding:10px;background:#0f172a;border-radius:8px;border:1px solid #334155}
+input[type=checkbox]{accent-color:#8b5cf6;width:18px;height:18px}
+.btn{background:#8b5cf6;color:#fff;border:none;padding:12px;border-radius:8px;font-weight:900;cursor:pointer;margin-top:10px;font-size:14px}
+.btn:active{transform:scale(0.98)}
+.node{background:#0f172a;border:2px solid #334155;padding:10px 15px;border-radius:8px;font-weight:bold;color:#64748b;display:flex;align-items:center;gap:10px;margin-bottom:10px;transition:0.3s}
+.node.active{border-color:#8b5cf6;color:#fff;background:#2e1065}
+.node.done{border-color:#10b981;color:#10b981;background:#064e3b}</style></head>
+<body><h2>🚀 CI/CD Pipeline Simulator</h2>
+<div class="split">  <div class="panel">
+    <label><input type="checkbox" id="c_lint" checked> Code Linting</label>
+    <label><input type="checkbox" id="c_test" checked> Unit Tests</label>
+    <label><input type="checkbox" id="c_build" checked> Docker Build & Push</label>
+    <label><input type="checkbox" id="c_deploy"> SSH Deploy</label>
+    <button class="btn" onclick="runSim()">▶ Run Pipeline Simulator</button>
+    <button class="btn" style="background:#334155" onclick="document.getElementById('out').style.display='block';document.getElementById('viz').style.display='none';generate();">📝 View YAML</button>  </div>
+  <div class="output" id="viz">    <div class="node" id="n_checkout">📦 Checkout Code</div>    <div class="node" id="n_lint" style="display:none">🧹 Run Linter</div>    <div class="node" id="n_test" style="display:none">🧪 Run Tests</div>    <div class="node" id="n_build" style="display:none">🐳 Build Docker Image</div>    <div class="node" id="n_deploy" style="display:none">🚀 Deploy to Prod</div>  </div>
+  <div class="output" id="out" style="display:none"></div></div>
+<script>
+function runSim() {
+  document.getElementById('viz').style.display='block'; document.getElementById('out').style.display='none';
+  const steps = ['checkout'];  if(document.getElementById('c_lint').checked) steps.push('lint');  if(document.getElementById('c_test').checked) steps.push('test');  if(document.getElementById('c_build').checked) steps.push('build');  if(document.getElementById('c_deploy').checked) steps.push('deploy');
+  document.querySelectorAll('.node').forEach(n => { n.className='node'; n.style.display='none'; n.textContent = n.textContent.replace('✅ ',''); });
+  steps.forEach(s => document.getElementById('n_'+s).style.display='flex');
+  let i = 0;  function next() {    if(i > 0) { let prev=document.getElementById('n_'+steps[i-1]); prev.className='node done'; prev.textContent='✅ '+prev.textContent; }    if(i < steps.length) { document.getElementById('n_'+steps[i]).className='node active'; i++; setTimeout(next, 800); }  }  next();
+}
+function generate() {
+  let y = "name: CI/CD Pipeline\non:\n  push:\n    branches: [main]\n\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - name: Checkout\n        uses: actions/checkout@v4\n";
+  if(document.getElementById('c_lint').checked) y += "\n      - name: Setup Node\n        uses: actions/setup-node@v4\n      - run: npm ci\n      - run: npm run lint\n";
+  if(document.getElementById('c_test').checked) y += "\n      - name: Run Tests\n        run: npm run test\n";
+  if(document.getElementById('c_build').checked) y += "\n      - name: Build & Push Docker\n        uses: docker/build-push-action@v5\n        with:\n          push: true\n          tags: myrepo/app:latest\n";
+  if(document.getElementById('c_deploy').checked) y += "\n      - name: Deploy via SSH\n        uses: appleboy/ssh-action@v1\n        with:\n          host: ${{ secrets.HOST }}\n          key: ${{ secrets.SSH_KEY }}\n          script: docker-compose pull && docker-compose up -d\n";
+  document.getElementById('out').textContent = y;
+}
+runSim();
+</script></body></html>

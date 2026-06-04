@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Dockerfile Builder</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{background:#0f172a;color:#fff;font-family:Inter,sans-serif;padding:30px;height:100vh;display:flex;flex-direction:column}
+h2{color:#14b8a6;margin-bottom:20px;display:flex;align-items:center;gap:10px} .split{display:flex;gap:20px;flex:1;overflow:hidden}
+.panel{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:25px;width:350px;display:flex;flex-direction:column;gap:15px;overflow-y:auto}
+.output{background:#020617;border:1px solid #334155;border-radius:12px;padding:20px;flex:1;font-family:monospace;font-size:13px;color:#34d399;overflow:auto;white-space:pre}
+label{display:flex;flex-direction:column;gap:5px;font-size:12px;color:#94a3b8;font-weight:bold}
+select,input{background:#0f172a;border:1px solid #475569;color:#fff;padding:10px;border-radius:6px;font-size:13px;outline:none}
+select:focus,input:focus{border-color:#14b8a6}
+.btn{background:#14b8a6;color:#000;border:none;padding:12px;border-radius:8px;font-weight:900;cursor:pointer;margin-top:10px;font-size:14px}
+.btn:active{transform:scale(0.98)}</style></head>
+<body><h2>📦 Dockerfile Builder</h2>
+<div class="split">  <div class="panel">
+    <label>Base Image <select id="base"><option value="node">Node.js (Alpine)</option><option value="python">Python (Slim)</option></select></label>
+    <label>Working Directory <input type="text" id="workdir" value="/app"></label>
+    <label>Exposed Port <input type="text" id="port" value="3000"></label>
+    <label>Start Command <input type="text" id="cmd" value='npm start'></label>
+    <button class="btn" onclick="generate()">🔄 Generate Dockerfile</button>  </div>
+  <div class="output" id="out"></div></div>
+<script>
+function generate() {
+  const base = document.getElementById('base').value;
+  const wd = document.getElementById('workdir').value;
+  const port = document.getElementById('port').value;
+  const cmd = document.getElementById('cmd').value.split(' ').map(s=>'"'+s+'"').join(', ');
+  let d = "# Auto-generated Multi-stage Dockerfile\n\n";
+  if(base === 'node') {
+    d += "# Stage 1: Build\nFROM node:20-alpine AS builder\nWORKDIR "+wd+"\nCOPY package*.json ./\nRUN npm ci --only=production\nCOPY . .\nRUN npm run build\n\n";
+    d += "# Stage 2: Production\nFROM node:20-alpine AS production\nWORKDIR "+wd+"\n\n# Run as non-root user\nRUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001\n";
+    d += "COPY --from=builder --chown=nodejs:nodejs "+wd+"/dist ./dist\nCOPY --from=builder --chown=nodejs:nodejs "+wd+"/node_modules ./node_modules\nCOPY --from=builder "+wd+"/package.json ./\n\n";
+  } else {
+    d += "# Python Stage\nFROM python:3.11-slim\nWORKDIR "+wd+"\n\n# Run as non-root user\nRUN useradd -m appuser\n";
+    d += "COPY requirements.txt ./\nRUN pip install --no-cache-dir -r requirements.txt\nCOPY . .\nRUN chown -R appuser:appuser "+wd+"\n";
+  }
+  d += "USER " + (base==='node'?'nodejs':'appuser') + "\n\nEXPOSE "+port+"\n\nCMD [" + cmd + "]\n";
+  document.getElementById('out').textContent = d;
+}
+document.getElementById('base').onchange=()=>{if(document.getElementById('base').value==='python'){document.getElementById('port').value='8000';document.getElementById('cmd').value='python app.py';}else{document.getElementById('port').value='3000';document.getElementById('cmd').value='npm start';};generate();};
+generate();
+</script></body></html>
