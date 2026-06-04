@@ -520,7 +520,7 @@ const TOOLS_ANIMS=[['fadeIn','opacity:0→1'],['slideUp','translateY(20px)→0']
 let lastSaved=null, code=DEFAULT_CODE, lang='en'; const t=k=>(LANG[lang]||LANG.en)[k]||k;
 let editor=null,autoRun=true,blueprintOn=false,inspectActive=false;
 let fontSize=14,wordWrap='off',editorTheme='vs-dark',activeTab='ai';
-let aiHistory=[{role:'bot',text:'👋 Hello! I\'m your AI assistant. Describe what you want to build and I\'ll generate the code for you.\n\n🇬🇧 **English** and 🇫🇷 **French** supported!'}];
+let aiHistory=[{role:'bot',text:'👋 Hello! I\'m your AI assistant. Describe what you want to build and I\'ll generate the code for you.\n\n🌐 **English** and **French** supported!'}];
 
 const STYLE_LAB = {
   effects: [
