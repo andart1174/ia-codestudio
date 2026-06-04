@@ -9,6 +9,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <script src="js/three.min.js"></script>
+  <!-- 🔥 Firebase SDK - Loaded statically for reliability -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 </head>
 <body>
 
@@ -42,9 +46,6 @@
       <div style="width: 1px; height: 16px; background: rgba(255,255,255,0.15); margin: 0 4px;"></div>
       <button class="panel-toggle" id="topbar-showroom" title="Open Showroom" style="background:rgba(16, 185, 129, 0.08); border-color:rgba(16, 185, 129, 0.3); color:#10b981;">
         <span>🌌</span><span id="lbl-top-showroom">Showroom</span>
-      </button>
-      <button class="panel-toggle" id="topbar-collab" title="Open Live Collab Panel" style="background:rgba(59, 130, 246, 0.08); border-color:rgba(59, 130, 246, 0.3); color:#60a5fa;">
-        <span>🧑‍💻</span><span id="lbl-top-collab">Collab</span>
       </button>
     </div>
 
@@ -95,7 +96,6 @@
         <button class="ltab" data-tab="devsim" id="tab-devsim" style="background:linear-gradient(90deg,rgba(59,130,246,0.2),rgba(37,99,235,0.2));border:1px solid rgba(59,130,246,0.4);">📱<span class="ltab-lbl" id="lbl-tab-devsim" style="color:#60a5fa;">Simulator</span></button>
         <button class="ltab" data-tab="hosting" id="tab-hosting" style="background:linear-gradient(90deg,rgba(249,115,22,0.2),rgba(234,88,12,0.2));border:1px solid rgba(249,115,22,0.4);">🌐<span class="ltab-lbl" id="lbl-tab-hosting" style="color:#fdba74;">Hosting</span></button>
         <button class="ltab" data-tab="seo" id="tab-seo" style="background:linear-gradient(90deg,rgba(16,185,129,0.2),rgba(5,150,105,0.2));border:1px solid rgba(16,185,129,0.4);">🔍<span class="ltab-lbl" id="lbl-tab-seo" style="color:#34d399;">SEO</span></button>
-        <button class="ltab" data-tab="social" id="tab-social" style="background:linear-gradient(90deg,rgba(59,130,246,0.2),rgba(14,165,233,0.2));border:1px solid rgba(59,130,246,0.4);">📱<span class="ltab-lbl" id="lbl-tab-social" style="color:#38bdf8;">Social</span></button>
         <button class="ltab" data-tab="promo" id="tab-promo" style="background:linear-gradient(90deg,rgba(236,72,153,0.2),rgba(244,63,94,0.2));border:1px solid rgba(236,72,153,0.4);">🚀<span class="ltab-lbl" id="lbl-tab-promo" style="color:#fb7185;">Promo AI</span></button>
         <button class="ltab" data-tab="a11y" id="tab-a11y" style="background:linear-gradient(90deg,rgba(236,72,153,0.2),rgba(219,39,119,0.2));border:1px solid rgba(236,72,153,0.4);">🧪<span class="ltab-lbl" id="lbl-tab-a11y" style="color:#f472b6;">A11y</span></button>
         <button class="ltab" data-tab="anim" id="tab-anim" style="background:linear-gradient(90deg,rgba(139,92,246,0.2),rgba(109,40,217,0.2));border:1px solid rgba(139,92,246,0.4);">🎞️<span class="ltab-lbl" id="lbl-tab-anim" style="color:#a78bfa;">Animate</span></button>
@@ -105,7 +105,6 @@
         <button class="ltab" data-tab="stack" id="tab-stack" style="background:linear-gradient(90deg,rgba(56,189,248,0.2),rgba(2,132,199,0.2));border:1px solid rgba(56,189,248,0.4);">🏗️<span class="ltab-lbl" id="lbl-tab-stack" style="color:#38bdf8;">Stack</span></button>
         <button class="ltab" data-tab="pwa" id="tab-pwa" style="background:linear-gradient(90deg,rgba(16,185,129,0.2),rgba(5,150,105,0.2));border:1px solid rgba(16,185,129,0.4);">🚀<span class="ltab-lbl" id="lbl-tab-pwa" style="color:#34d399;">PWA</span></button>
         <button class="ltab" data-tab="mock" id="tab-mock" style="background:linear-gradient(90deg,rgba(245,158,11,0.2),rgba(217,119,6,0.2));border:1px solid rgba(245,158,11,0.4);">🗄️<span class="ltab-lbl" id="lbl-tab-mock" style="color:#fcd34d;">Backend</span></button>
-        <button class="ltab" data-tab="collab" id="tab-collab" style="background:linear-gradient(90deg,rgba(59,130,246,0.2),rgba(29,78,216,0.2));border:1px solid rgba(59,130,246,0.4);">🧑‍💻<span class="ltab-lbl" id="lbl-tab-collab" style="color:#60a5fa;">Collab</span></button>
         <button class="ltab" data-tab="pm" id="tab-pm" style="background:linear-gradient(90deg,rgba(168,85,247,0.2),rgba(126,34,206,0.2));border:1px solid rgba(168,85,247,0.4);">📁<span class="ltab-lbl" id="lbl-tab-pm" style="color:#d8b4fe;">Projects</span></button>
         <button class="ltab" data-tab="tm" id="tab-tm" style="background:linear-gradient(90deg,rgba(217,70,239,0.2),rgba(192,38,211,0.2));border:1px solid rgba(217,70,239,0.4);">🕰️<span class="ltab-lbl" id="lbl-tab-tm" style="color:#f0abfc;">History</span></button>
         <button class="ltab" data-tab="3d" id="tab-3d" style="background:linear-gradient(90deg,rgba(14,165,233,0.2),rgba(2,132,199,0.2));border:1px solid rgba(14,165,233,0.4);">🎲<span class="ltab-lbl" id="lbl-tab-3d" style="color:#7dd3fc;">3D WebGL</span></button>
@@ -1211,8 +1210,6 @@
 
   <!-- 🔐 User Auth & Database manager -->
   <script src="js/user-auth-db.js"></script>
-  <!-- 💬 Global Social Hub & Admin Dashboard -->
-  <script src="js/social-hub.js"></script>
 </body>
 </html>
 

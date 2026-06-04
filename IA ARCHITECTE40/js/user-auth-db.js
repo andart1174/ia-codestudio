@@ -835,6 +835,13 @@
     }
 
     if (config && config.apiKey) {
+      // ✅ Check if Firebase was pre-loaded via static <script> tags in HTML head
+      if (typeof firebase !== 'undefined' && firebase.app) {
+        console.log('🔥 Firebase SDK pre-loaded from static scripts — initializing directly');
+        FirebaseDb.init(config);
+        return;
+      }
+      // 🔄 Fallback: dynamically load if somehow not pre-loaded
       loadScripts(firebaseScripts, (err) => {
         if (err) {
           console.warn("Failed to load Firebase scripts (offline?), using Local Mode.");
