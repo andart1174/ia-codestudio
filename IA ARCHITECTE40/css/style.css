@@ -480,13 +480,127 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh
   70% { box-shadow: 0 0 0 15px rgba(139, 92, 246, 0); }
   100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
 }
-.feature-pulse {
-  animation: highIntensityPulse 1.2s infinite ease-in-out;
-  border-width: 2px !important;
-  z-index: 10000 !important;
-  pointer-events: auto;
-  outline: 2px solid rgba(139, 92, 246, 0.5);
+@keyframes highIntensityPulse {
+  0% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.8), 0 0 0 2px rgba(139, 92, 246, 0.5); }
+  50% { box-shadow: 0 0 20px 5px rgba(139, 92, 246, 0.6), 0 0 0 8px rgba(139, 92, 246, 0.3); }
+  100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.8), 0 0 0 2px rgba(139, 92, 246, 0.5); }
 }
+.feature-pulse {
+  animation: highIntensityPulse 1.5s infinite ease-in-out;
+  border: 2px solid #8b5cf6 !important;
+  z-index: 10000000 !important;
+  position: relative;
+  pointer-events: auto !important;
+}
+
+/* 🌟 Guided Onboarding Tour Styles */
+.ia-tour-backdrop {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(4px);
+  z-index: 9999990;
+  transition: opacity 0.4s ease;
+  pointer-events: all;
+}
+.tour-highlight-bubble {
+  position: fixed;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  border-radius: 16px;
+  padding: 16px;
+  width: 290px;
+  color: #e2e8f0;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 25px rgba(139, 92, 246, 0.15);
+  backdrop-filter: blur(10px);
+  z-index: 10000010 !important;
+  font-family: system-ui, -apple-system, sans-serif;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.tour-highlight-bubble.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+.tour-highlight-bubble h4 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #c4b5fd;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tour-highlight-bubble p {
+  margin: 0 0 14px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #94a3b8;
+}
+.tour-highlight-bubble .tour-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.tour-highlight-bubble .tour-steps {
+  font-size: 10px;
+  color: #64748b;
+}
+.tour-highlight-bubble .tour-btns {
+  display: flex;
+  gap: 6px;
+}
+.tour-highlight-bubble button {
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+}
+.tour-btn-skip {
+  background: transparent;
+  color: #64748b;
+  transition: color 0.2s;
+}
+.tour-btn-skip:hover {
+  color: #94a3b8;
+}
+.tour-btn-next {
+  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3);
+}
+.tour-btn-next:hover {
+  filter: brightness(1.1);
+}
+.tour-highlight-bubble::after {
+  content: "";
+  position: absolute;
+  border-style: solid;
+}
+.tour-highlight-bubble.arrow-left::after {
+  top: 30px; left: -8px;
+  border-width: 8px 8px 8px 0;
+  border-color: transparent #1e293b transparent transparent;
+}
+.tour-highlight-bubble.arrow-right::after {
+  top: 30px; right: -8px;
+  border-width: 8px 0 8px 8px;
+  border-color: transparent transparent transparent #1e293b;
+}
+.tour-highlight-bubble.arrow-bottom::after {
+  bottom: -8px; left: 50%; transform: translateX(-50%);
+  border-width: 8px 8px 0 8px;
+  border-color: #0f172a transparent transparent transparent;
+}
+.tour-highlight-bubble.arrow-top::after {
+  top: -8px; left: 50%; transform: translateX(-50%);
+  border-width: 0 8px 8px 8px;
+  border-color: transparent transparent #1e293b transparent;
+}
+
 
 /* 🎨 Designer Lab Elite UI (v8.8) */
 .iapro-design-btn {
@@ -534,31 +648,50 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh
 }
 .ia-reveal.visible {
   opacity: 1;
+  transform: translateY(0);
 }
 
-/* 💎 Premium Subscription Button */
-.premium-btn {
-  background: linear-gradient(135deg, #f59e0b, #d946ef);
-  color: #fff;
-  border: 1px solid rgba(245, 158, 11, 0.4);
-  box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
-  animation: premiumPulse 2s infinite ease-in-out;
-}
-.premium-btn:hover {
-  background: linear-gradient(135deg, #fbbf24, #e879f9) !important;
-  box-shadow: 0 0 25px rgba(245, 158, 11, 0.6);
-  transform: scale(1.03);
-}
-@keyframes premiumPulse {
-  0%, 100% { box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); transform: scale(1); }
-  50% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.6); transform: scale(1.02); }
-}
-.premium-btn.active-sub {
-  background: rgba(16, 185, 129, 0.1);
-  border-color: rgba(16, 185, 129, 0.3);
-  color: #10b981;
-  animation: none;
-  box-shadow: none;
-  pointer-events: none;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
+/* ── 🚀 NEXUS FORGE — Tab Animation ──────────────────── */
+@keyframes nxPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(244,114,182,0);
+    border-color: rgba(244,114,182,0.7);
+  }
+  50% {
+    box-shadow: 0 0 18px 4px rgba(244,114,182,0.35), inset 0 0 12px rgba(167,139,250,0.15);
+    border-color: rgba(244,114,182,1);
+  }
+}
+
+@keyframes nxGlow {
+  0%, 100% { text-shadow: 0 0 8px rgba(244,114,182,0.6); }
+  50%       { text-shadow: 0 0 18px rgba(244,114,182,1), 0 0 32px rgba(167,139,250,0.6); }
+}
+
+/* NEXUS FORGE active tab state */
+[data-tab="nexusforge"].active {
+  background: linear-gradient(90deg, rgba(244,114,182,0.3), rgba(167,139,250,0.3), rgba(56,189,248,0.2)) !important;
+  border-left-color: #f472b6 !important;
+  box-shadow: inset 3px 0 14px rgba(244,114,182,0.25) !important;
+}
+[data-tab="nexusforge"].active .ltab-lbl {
+  animation: nxGlow 2s ease-in-out infinite;
+}
+
+/* NEXUS FORGE panel scrollbar */
+#panel-nexusforge::-webkit-scrollbar { width: 4px; }
+#panel-nexusforge::-webkit-scrollbar-thumb {
+  background: rgba(244,114,182,0.25);
+  border-radius: 99px;
+}
+
+/* Slide-up animation for toasts */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}

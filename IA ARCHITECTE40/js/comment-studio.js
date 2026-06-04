@@ -1,0 +1,194 @@
+(function() {
+'use strict';
+/* ══════════════════════════════════════════════
+   💬 AI Comment Studio v1.0
+   Adds professional comments to your code
+   ══════════════════════════════════════════════ */
+var t_cs = {
+  en:{ tab:'Comments', title:'💬 AI Comment Studio', sub:'Add professional comments to your code',
+       analyze:'🔍 Analyze & Comment Code', addHeader:'📋 Add File Header', addJsDoc:'📝 Add JSDoc Comments',
+       addHtml:'🏷️ Add HTML Section Labels', clear:'🗑️ Remove All IA Comments',
+       noCode:'No code to comment.', done:'Comments added!', cleared:'Comments removed!' },
+  fr:{ tab:'Commentaires', title:'💬 Studio Commentaires IA', sub:'Ajoutez des commentaires professionnels',
+       analyze:'🔍 Analyser et Commenter', addHeader:'📋 Ajouter En-tête Fichier', addJsDoc:'📝 Ajouter Commentaires JSDoc',
+       addHtml:'🏷️ Étiqueter Sections HTML', clear:'🗑️ Supprimer Commentaires IA',
+       noCode:'Aucun code à commenter.', done:'Commentaires ajoutés !', cleared:'Commentaires supprimés !' }
+};
+function gl(){return window.lang||'en';}
+function t(k){return t_cs[gl()][k]||k;}
+
+var COMMENT_MARK = '/* IA-COMMENT */';
+var HTML_MARK = '<!-- IA-COMMENT -->';
+
+function addFileHeader(code) {
+  var isFr = gl()==='fr';
+  var isHTML = code.trim().startsWith('<') || code.includes('<!DOCTYPE');
+  var now = new Date();
+  var dateStr = now.toLocaleDateString(isFr?'fr-FR':'en-US',{year:'numeric',month:'long',day:'numeric'});
+
+  // Detect technologies
+  var techs = [];
+  if (code.includes('three.js')||code.includes('THREE.')) techs.push('Three.js');
+  if (code.includes('canvas')) techs.push('Canvas API');
+  if (code.includes('fetch(')||code.includes('XMLHttpRequest')) techs.push('Fetch API');
+  if (code.includes('localStorage')) techs.push('localStorage');
+  if (code.includes('animation')||code.includes('@keyframes')) techs.push('CSS Animations');
+  if (code.includes('grid')||code.includes('flexbox')||code.includes('flex')) techs.push('CSS Grid/Flex');
+  if (techs.length === 0) techs.push('HTML/CSS/JS');
+
+  if (isHTML) {
+    var header = '<!-- ' + HTML_MARK + '\n' +
+      '  ╔══════════════════════════════════════════════╗\n' +
+      '  ║  IA Architecte Studio — Generated File       ║\n' +
+      '  ╚══════════════════════════════════════════════╝\n' +
+      '  📅 ' + (isFr?'Créé le':'Created:') + ' ' + dateStr + '\n' +
+      '  🛠️  ' + (isFr?'Technologies :':'Technologies:') + ' ' + techs.join(', ') + '\n' +
+      '  📏 ' + (isFr?'Lignes :':'Lines:') + ' ' + code.split('\n').length + '\n' +
+      '-->\n';
+    return code.includes('<!DOCTYPE') ? code.replace('<!DOCTYPE', header + '<!DOCTYPE') : header + code;
+  } else {
+    var jsHeader = '/' + '*' + COMMENT_MARK + '\n' +
+      ' * ╔══════════════════════════════════════════════╗\n' +
+      ' * ║  IA Architecte Studio — Generated Script     ║\n' +
+      ' * ╚══════════════════════════════════════════════╝\n' +
+      ' * @date    ' + dateStr + '\n' +
+      ' * @tech    ' + techs.join(', ') + '\n' +
+      ' * @lines   ' + code.split('\n').length + '\n' +
+      ' *' + '/\n';
+    return jsHeader + code;
+  }
+}
+
+function addHtmlSectionLabels(code) {
+  var isFr = gl()==='fr';
+  var sectionMap = {
+    '<nav':     isFr?'<!-- IA-COMMENT 🧭 Navigation / Barre de navigation -->':'<!-- IA-COMMENT 🧭 Navigation Bar -->',
+    '<header':  isFr?'<!-- IA-COMMENT 🎯 Section Hero / En-tête principal -->':'<!-- IA-COMMENT 🎯 Hero / Main Header Section -->',
+    '<main':    isFr?'<!-- IA-COMMENT 📄 Contenu Principal -->':'<!-- IA-COMMENT 📄 Main Content Area -->',
+    '<section': isFr?'<!-- IA-COMMENT 📦 Section de Contenu -->':'<!-- IA-COMMENT 📦 Content Section -->',
+    '<footer':  isFr?'<!-- IA-COMMENT 🔗 Pied de Page -->':'<!-- IA-COMMENT 🔗 Footer -->',
+    '<aside':   isFr?'<!-- IA-COMMENT 📌 Sidebar / Panneau Latéral -->':'<!-- IA-COMMENT 📌 Sidebar / Aside Panel -->',
+    '<form':    isFr?'<!-- IA-COMMENT 📝 Formulaire Interactif -->':'<!-- IA-COMMENT 📝 Interactive Form -->',
+    '<table':   isFr?'<!-- IA-COMMENT 📊 Tableau de Données -->':'<!-- IA-COMMENT 📊 Data Table -->',
+    '<script':  isFr?'<!-- IA-COMMENT ⚡ Scripts JavaScript -->':'<!-- IA-COMMENT ⚡ JavaScript Logic -->',
+    '<style':   isFr?'<!-- IA-COMMENT 🎨 Styles CSS -->':'<!-- IA-COMMENT 🎨 CSS Styles -->'
+  };
+  Object.keys(sectionMap).forEach(function(tag) {
+    // Only add if not already labeled
+    var rx = new RegExp('(' + tag.replace('<','<') + '(?!.*' + HTML_MARK + '))', 'g');
+    code = code.replace(rx, '\n' + sectionMap[tag] + '\n$1');
+  });
+  return code;
+}
+
+function addJsDocComments(code) {
+  var isFr = gl()==='fr';
+  // Add JSDoc to function declarations
+  var fnRx = /((?:^|\n)[ \t]*(?:function\s+\w+|(?:var|let|const)\s+\w+\s*=\s*function|\w+\s*:\s*function))/g;
+  var count = 0;
+  code = code.replace(fnRx, function(match) {
+    if (count > 20) return match; // limit
+    count++;
+    var jsdoc = '\n/**' + COMMENT_MARK + '\n' +
+      ' * ' + (isFr?'Fonction générée par IA Architecte':'Function generated by IA Architecte') + '\n' +
+      ' * @description ' + (isFr?'Logique métier principale':'Core business logic') + '\n' +
+      ' * @returns {*} ' + (isFr?'Résultat de la fonction':'Function result') + '\n' +
+      ' */';
+    return jsdoc + match;
+  });
+  return code;
+}
+
+function removeIAComments(code) {
+  // Remove HTML IA comments
+  code = code.replace(/\n?<!--\s*IA-COMMENT[^-]*-->\n?/g, '\n');
+  // Remove JS IA comments (block)
+  code = code.replace(/\n?\/\*[^*]*IA-COMMENT[\s\S]*?\*\/\n?/g, '\n');
+  // Remove JSDoc IA comments
+  code = code.replace(/\n?\/\*\*\/\* IA-COMMENT \*\/[\s\S]*?\*\/\n?/g, '\n');
+  return code.replace(/\n{3,}/g, '\n\n');
+}
+
+function renderCommentTab() {
+  var parent = document.getElementById('left-body'); if(!parent) return;
+  parent.innerHTML = '';
+  var isFr = gl()==='fr';
+  var wrap = document.createElement('div');
+  wrap.style = 'display:flex;flex-direction:column;height:100%;overflow:hidden;background:#0f172a;';
+  var hdr = document.createElement('div');
+  hdr.style = 'padding:12px 14px 8px;border-bottom:1px solid rgba(99,102,241,0.25);flex-shrink:0;';
+  hdr.innerHTML = '<div style="font-size:13px;font-weight:900;color:#818cf8;">' + t('title') + '</div><div style="font-size:10px;color:#64748b;margin-top:2px;">' + t('sub') + '</div>';
+  wrap.appendChild(hdr);
+
+  var body = document.createElement('div');
+  body.style = 'flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;';
+
+  var actions = [
+    { key:'addHeader', icon:'📋', desc: isFr?'Ajoute un bloc d\'en-tête professionnel avec date, technologies et métriques':'Adds a professional header block with date, technologies and metrics',
+      fn: function(code){ return addFileHeader(code); } },
+    { key:'addHtml', icon:'🏷️', desc: isFr?'Étiquette automatiquement nav, header, section, footer, form':'Auto-labels nav, header, section, footer, form elements',
+      fn: function(code){ return addHtmlSectionLabels(code); } },
+    { key:'addJsDoc', icon:'📝', desc: isFr?'Ajoute des commentaires JSDoc à toutes les fonctions JS':'Adds JSDoc comments to all JavaScript functions',
+      fn: function(code){ return addJsDocComments(code); } }
+  ];
+
+  actions.forEach(function(action) {
+    var card = document.createElement('div');
+    card.style = 'background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;';
+    card.innerHTML = '<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:18px;">' + action.icon + '</span><span style="font-size:11px;font-weight:bold;color:#e2e8f0;">' + t(action.key) + '</span></div>' +
+      '<div style="font-size:9px;color:#64748b;line-height:1.4;">' + action.desc + '</div>';
+    var btn = document.createElement('button');
+    btn.textContent = '→ ' + (isFr?'Appliquer':'Apply');
+    btn.style = 'width:100%;background:linear-gradient(90deg,#4f46e5,#6366f1);color:#fff;border:none;padding:7px;border-radius:6px;font-size:10px;cursor:pointer;font-weight:bold;';
+    btn.onclick = function() {
+      if(!window.editor){if(window.showToast)window.showToast(t('noCode'));return;}
+      var code = window.editor.getValue();
+      if(!code.trim()){if(window.showToast)window.showToast(t('noCode'));return;}
+      window.editor.setValue(action.fn(code));
+      if(window.runPreview) window.runPreview();
+      if(window.showToast) window.showToast(t('done'));
+    };
+    card.appendChild(btn);
+    body.appendChild(card);
+  });
+
+  // Apply all
+  var allBtn = document.createElement('button');
+  allBtn.textContent = '⚡ ' + (isFr?'Tout Appliquer (Header + Labels + JSDoc)':'Apply All (Header + Labels + JSDoc)');
+  allBtn.style = 'width:100%;background:linear-gradient(90deg,#818cf8,#4f46e5);color:#fff;border:none;padding:10px;border-radius:8px;font-size:11px;cursor:pointer;font-weight:900;';
+  allBtn.onclick = function() {
+    if(!window.editor) return;
+    var code = window.editor.getValue();
+    code = addFileHeader(code);
+    code = addHtmlSectionLabels(code);
+    code = addJsDocComments(code);
+    window.editor.setValue(code);
+    if(window.runPreview) window.runPreview();
+    if(window.showToast) window.showToast(t('done'));
+  };
+  body.appendChild(allBtn);
+
+  // Separator
+  var sep = document.createElement('div'); sep.style='border-top:1px solid #1e293b;margin:4px 0;'; body.appendChild(sep);
+
+  // Remove all
+  var clearBtn = document.createElement('button');
+  clearBtn.textContent = t('clear');
+  clearBtn.style = 'width:100%;background:none;border:1px solid #334155;color:#64748b;padding:8px;border-radius:8px;font-size:10px;cursor:pointer;';
+  clearBtn.onclick = function() {
+    if(!window.editor) return;
+    window.editor.setValue(removeIAComments(window.editor.getValue()));
+    if(window.showToast) window.showToast(t('cleared'));
+  };
+  body.appendChild(clearBtn);
+
+  wrap.appendChild(body); parent.appendChild(wrap);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var oAL=window.applyLang;
+  window.applyLang=function(){if(typeof oAL==='function')oAL();var el=document.getElementById('lbl-tab-comments');if(el)el.textContent=t('tab');if(window.activeTab==='comments')renderCommentTab();};
+  var oRT=window.renderTab;
+  window.renderTab=function(tab){if(tab==='comments'){window.activeTab='comments';document.querySelectorAll('.ltab').forEach(function(b){b.classList.remove('active');});var el=document.getElementById('tab-comments');if(el)el.classList.add('active');renderCommentTab();return;}if(typeof oRT==='function')oRT(tab);};
+});
+})();

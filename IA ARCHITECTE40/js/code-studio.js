@@ -1,7 +1,7 @@
 'use strict';
 /* IA Architecte — Code Studio Pro | EN/FR */
 
-const LANG={en:{subtitle:'Professional Code Studio',tools:'Tools',preview:'Preview',tabAi:'AI',tabGuide:'Guide',tabSnip:'Snippets',tabTpl:'Templates',tabTools:'Tools',tabTPro:'Toolbox Pro',tabAPro:'Apps Pro',tabAppsUltra:'Apps Ultra',tabApps:'Apps',tabSites:'Sites',tabElite:'Elite',tabRealWorld:'RealWorld',tabModels:'Models',tabAudit:'Audit',tabAssets:'Assets',tabMedia:'Media',tabStyle:'Style Lab',tabTrans:'Transcode',tabGenius:'Genius',tabData:'Data Vault',tabSet:'Settings',tabGames:'Games Arcade',tabGamesPro:'Games Pro',hintAi:'Describe what you want to create.',hintSnip:'Click to insert at cursor.',hintTpl:'Click to load full template.',format:'Format',copy:'Copy',copied:'Copied!',save:'Save',load:'Load',export:'Export',exportAll:'Export All',deploy:'Deploy',run:'Run',autorun:'Auto-run',noIssues:'No issues',issues:'issue(s)',lines:'lines',chars:'chars',wordWrap:'Word Wrap',fontSize:'Font Size',theme:'Theme',dark:'Dark',light:'Light',hc:'HC Black',savedAt:'Saved',unsaved:'Unsaved',restore:'Restore Save',shortcuts:'Shortcuts',aiSend:'Send',explain:'Explain my code',fixErrors:'Fix errors',makeResponsive:'Make responsive',addAnimation:'Add animation',addDarkMode:'Dark mode',aiHow:'🤖 How does the AI work?',aiHowDesc:'Type what you want to create in English or French, then press ➤ or Enter. The AI generates HTML/CSS/JS components instantly.',aiExTags:['hero section','contact form','pricing table','navbar','dashboard','profile card','animated button','modal popup'],deployTitle:'🚀 Cloud Deployment',pubTitle:'Live Share',pubDesc:'Instant public URL via CodePen.',netTitle:'Professional Hosting',netDesc:'Prepare ZIP for Netlify Drop.',mobTitle:'Mobile Transformation',mobDesc:'Export as Installable App (Android/iOS).',mobileReady:'Mobile Build Ready! Check your downloads.',deployConn:'Connecting to Hub...',deployReady:'Cloud Sync Ready!',photoStudio:'Photo Studio',videoStudio:'Video Studio',importPhoto:'Import Photo',importVideo:'Importer Video',insertMedia:'Insert to Code',youtubeLink:'YouTube Link',rounded:'Rounded',shadow:'Shadow',grayscale:'Grayscale',sepia:'Sepia',autoplay:'Autoplay',loop:'Loop',muted:'Muted',processing:'Processing...',selectFirst:'Please select a file first.',dataVault:'Data Vault',genData:'Generate Data',dataType:'Data Type',entries:'Entries',inject:'Inject Data',magicBeautify:'Beautify',magicMobile:'Auto-Mobile',magicDark:'Dark Mode',magicSEO:'Smart SEO',magicLogic:'Magic Logic [PRO]',magicLogicDesc:'Auto-generate app logic',magicLab:'Style Lab',magicReal:'REAL MODE',magicExplain:'AI TUTOR',transStudio:'Transcode Studio',encode:'Encode',decode:'Decode',injectTrans:'Inject as Code',genSubtitle:'AI App Generator & Logic Wizard',genHint:'Exp: "Make a calculator with blue buttons"',genMarket:'Logic Marketplace',genPWA:'PWA Builder',genInject:'Inject Logic',dbExplorer:'Genius DB Explorer',refresh:'Refresh',exportData:'Export JSON',importData:'Import JSON',wipe:'Wipe Database',styleTuner:'Live Style Tuner',primary:'Primary Color',radius:'Border Radius',blur:'Glass Blur',resetStyles:'Reset Styles',globalize:'Globalize (EN/FR)',globalizeDone:'App translated successfully!',bizMarket:'Business Kits',loadGame:'Load Game',injectGame:'Inject Game',readmeTitle:'IA ARCHITECTE - PROJECT EXPORT',readmeApp:'This file is a standalone version of your application. You can open it directly in any browser.',readmeSource:'This folder contains the raw source code of your project. Use these files to continue development in professional editors like VS Code.',zipSuccess:'✓ ZIP (App+Code)!'},fr:{subtitle:'Studio Code Professionnel',tools:'Outils',preview:'Aperçu',tabAi:'IA',tabGuide:'Guide',tabSnip:'Extraits',tabTpl:'Modèles',tabTools:'Outils',tabTPro:'Toolbox Pro',tabAPro:'Apps Pro',tabAppsUltra:'Apps Ultra',tabApps:'Apps',tabSites:'Sites Web',tabElite:'Elite Apps',tabRealWorld:'RealWorld Pro',tabModels:'Modèles 3D',tabAudit:'Audit Pro',tabAssets:'Assets',tabMedia:'Média',tabStyle:'Style Pro',tabTrans:'Transcodage',tabGenius:'Génie AI',tabData:'Seuil de Données',tabSet:'Paramètres',tabGames:'Arcade Jeux',tabGamesPro:'Arcade Pro',hintAi:'Décrivez ce que vous voulez créer.',hintSnip:'Cliquez pour insérer au curseur.',hintTpl:'Cliquez pour charger le modèle.',format:'Formater',copy:'Copier',copied:'Copié!',save:'Sauver',load:'Charger',export:'Exporter',exportAll:'Tout Exporter',deploy:'Déployer',run:'Exécuter',autorun:'Auto-exec',noIssues:'Aucun problème',issues:'problème(s)',lines:'lignes',chars:'caractères',wordWrap:'Retour ligne',fontSize:'Taille police',theme:'Thème',dark:'Sombre',light:'Clair',hc:'HC Noir',savedAt:'Sauvé',unsaved:'Non sauvé',restore:'Restaurer',shortcuts:'Raccourcis',aiSend:'Envoyer',explain:'Expliquer mon code',fixErrors:'Corriger erreurs',makeResponsive:'Rendre responsive',addAnimation:'Ajouter animation',addDarkMode:'Mode sombre',aiHow:'🤖 Comment fonctionne l\'IA?',aiHowDesc:'Tapez ce que vous voulez créer en français ou anglais, puis cliquez sur ➤ ou Entrée. L\'IA génère des composants HTML/CSS/JS instantanément.',aiExTags:['section hero','formulaire contact','tableau de prix','barre navigation','tableau de bord','carte profil','bouton animé','modale popup'],deployTitle:'🚀 Déploiement Cloud',pubTitle:'Lien Public (Live)',pubDesc:'URL publique instantanée via CodePen.',netTitle:'Hébergement Pro',netDesc:'Préparer ZIP pour Netlify Drop.',mobTitle:'Transformation Mobile',mobDesc:'Exporter en App Installable (Android/iOS).',mobileReady:'Build Mobile Prêt ! Vidifiez vos téléchargements.',deployConn:'Connexion au Hub...',deployReady:'Synchronisation Cloud Prête!',photoStudio:'Studio Photo',videoStudio:'Studio Vidéo',importPhoto:'Importer Photo',importVideo:'Importer Vidéo',insertMedia:'Insérer au Code',youtubeLink:'Lien YouTube',rounded:'Arrondi',shadow:'Ombre',grayscale:'Gris',sepia:'Sépia',autoplay:'Lecture Auto',loop:'Boucle',muted:'Muet',processing:'Traitement...',selectFirst:'Veuillez d\'abord choisir un fichier.',dataVault:'Seuil de Données',genData:'Générer Données',dataType:'Type de Données',entries:'Entrées',inject:'Injecter Données',magicBeautify:'Embellir',magicMobile:'Auto-Mobile',magicDark:'Mode Sombre',magicSEO:'Smart SEO',magicLogic:'Logique Magique [PRO]',magicLogicDesc:'Auto-générer la logique',magicLab:'Lab Style',magicReal:'MODE RÉEL',magicExplain:'ASSISTANT AI',transStudio:'Studio Transcodage',encode:'Coder',decode:'Décoder',injectTrans:'Injecter le Code',genSubtitle:'Générateur d\'Applications AI & Magic Logic',genHint:'Ex: "Faire une calculatrice avec des boutons bleus"',genMarket:'Librarie de Logique',genPWA:'Créateur de PWA',genInject:'Injecter Logique',dbExplorer:'Explorateur GeniusDB',refresh:'Actualiser',exportData:'Exporter JSON',importData:'Importer JSON',wipe:'Vider la Base',styleTuner:'Éditeur de Style Live',primary:'Couleur Primaire',radius:'Rayon Bordure',blur:'Flou Verre',resetStyles:'Réinitialiser Style',globalize:'Globaliser (EN/FR)',globalizeDone:'Application traduite avec succès !',bizMarket:'Packs Business',loadGame:'Charger Jeu',injectGame:'Injecter Jeu',readmeTitle:'IA ARCHITECTE - EXPORTATION DE PROJET',readmeApp:'Ce fichier est une version autonome de votre application. Vous pouvez l\'ouvrir directement dans n\'importe quel navigateur.',readmeSource:'Ce dossier contient le code source brut de votre projet. Utilisez ces fichiers pour continuer le développement dans des éditeurs professionnels comme VS Code.',zipSuccess:'✓ ZIP (App+Code)!'}};
+const LANG={en:{subtitle:'Professional Code Studio',tools:'Tools',preview:'Preview',tabAi:'AI',tabIaUltra:'IA ULTRA',tabGuide:'Guide',tabSnip:'Snippets',tabTpl:'Templates',tabTools:'Tools',tabTPro:'Toolbox Pro',tabAPro:'Apps Pro',tabSites:'Sites',tabElite:'Elite',tabAudit:'Audit',tabAssets:'Assets',tabMedia:'Media',tabStyle:'Style Lab',tabTrans:'Transcode',tabGenius:'Genius',tabData:'Data Vault',tabSet:'Settings',hintAi:'Describe what you want to create.',hintSnip:'Click to insert at cursor.',hintTpl:'Click to load full template.',format:'Format',copy:'Copy',copied:'Copied!',save:'Save',load:'Load',export:'Export',exportAll:'Export All',deploy:'Deploy',run:'Run',autorun:'Auto-run',noIssues:'No issues',issues:'issue(s)',lines:'lines',chars:'chars',wordWrap:'Word Wrap',fontSize:'Font Size',theme:'Theme',dark:'Dark',light:'Light',hc:'HC Black',savedAt:'Saved',unsaved:'Unsaved',restore:'Restore Save',shortcuts:'Shortcuts',aiSend:'Send',explain:'Explain my code',fixErrors:'Fix errors',makeResponsive:'Make responsive',addAnimation:'Add animation',addDarkMode:'Dark mode',aiHow:'🤖 How does the AI work?',aiHowDesc:'Type what you want to create in English or French, then press ➤ or Enter. The AI generates HTML/CSS/JS components instantly.',aiExTags:['hero section','contact form','pricing table','navbar','dashboard','profile card','animated button','modal popup'],deployTitle:'🚀 Cloud Deployment',pubTitle:'Live Share',pubDesc:'Instant public URL via CodePen.',netTitle:'Professional Hosting',netDesc:'Prepare ZIP for Netlify Drop.',mobTitle:'Mobile Transformation',mobDesc:'Export as Installable App (Android/iOS).',mobileReady:'Mobile Build Ready! Check your downloads.',deployConn:'Connecting to Hub...',deployReady:'Cloud Sync Ready!',photoStudio:'Photo Studio',videoStudio:'Video Studio',importPhoto:'Import Photo',importVideo:'Importer Video',insertMedia:'Insert to Code',youtubeLink:'YouTube Link',rounded:'Rounded',shadow:'Shadow',grayscale:'Grayscale',sepia:'Sepia',autoplay:'Autoplay',loop:'Loop',muted:'Muted',processing:'Processing...',selectFirst:'Please select a file first.',dataVault:'Data Vault',genData:'Generate Data',dataType:'Data Type',entries:'Entries',inject:'Inject Data',magicBeautify:'Beautify',magicMobile:'Auto-Mobile',magicDark:'Dark Mode',magicSEO:'Smart SEO',magicLogic:'Magic Logic [PRO]',magicLogicDesc:'Auto-generate app logic',magicLab:'Style Lab',magicReal:'REAL MODE',magicExplain:'AI TUTOR',transStudio:'Transcode Studio',encode:'Encode',decode:'Decode',injectTrans:'Inject as Code',genSubtitle:'AI App Generator & Logic Wizard',genHint:'Exp: "Make a calculator with blue buttons"',genMarket:'Logic Marketplace',genPWA:'PWA Builder',genInject:'Inject Logic',dbExplorer:'Genius DB Explorer',refresh:'Refresh',exportData:'Export JSON',importData:'Import JSON',wipe:'Wipe Database',styleTuner:'Live Style Tuner',primary:'Primary Color',radius:'Border Radius',blur:'Glass Blur',resetStyles:'Reset Styles',globalize:'Globalize (EN/FR)',globalizeDone:'App translated successfully!',bizMarket:'Business Kits',loadGame:'Load Game',injectGame:'Inject Game',readmeTitle:'IA ARCHITECTE - PROJECT EXPORT',readmeApp:'This file is a standalone version of your application. You can open it directly in any browser.',readmeSource:'This folder contains the raw source code of your project. Use these files to continue development in professional editors like VS Code.',zipSuccess:'✓ ZIP (App+Code)!'},fr:{subtitle:'Studio Code Professionnel',tools:'Outils',preview:'Aperçu',tabAi:'IA',tabIaUltra:'IA ULTRA',tabGuide:'Guide',tabSnip:'Extraits',tabTpl:'Modèles',tabTools:'Outils',tabTPro:'Toolbox Pro',tabAPro:'Apps Pro',tabSites:'Sites Web',tabElite:'Elite Apps',tabAudit:'Audit Pro',tabAssets:'Assets',tabMedia:'Média',tabStyle:'Style Pro',tabTrans:'Transcodage',tabGenius:'Génie AI',tabData:'Seuil de Données',tabSet:'Paramètres',hintAi:'Décrivez ce que vous voulez créer.',hintSnip:'Cliquez pour insérer au curseur.',hintTpl:'Cliquez pour charger le modèle.',format:'Formater',copy:'Copier',copied:'Copié!',save:'Sauver',load:'Charger',export:'Exporter',exportAll:'Tout Exporter',deploy:'Déployer',run:'Exécuter',autorun:'Auto-exec',noIssues:'Aucun problème',issues:'problème(s)',lines:'lignes',chars:'caractères',wordWrap:'Retour ligne',fontSize:'Taille police',theme:'Thème',dark:'Sombre',light:'Clair',hc:'HC Noir',savedAt:'Sauvé',unsaved:'Non sauvé',restore:'Restaurer',shortcuts:'Raccourcis',aiSend:'Envoyer',explain:'Expliquer mon code',fixErrors:'Corriger erreurs',makeResponsive:'Rendre responsive',addAnimation:'Ajouter animation',addDarkMode:'Mode sombre',aiHow:'🤖 Comment fonctionne l\'IA?',aiHowDesc:'Tapez ce que vous voulez créer en français ou anglais, puis cliquez sur ➤ ou Entrée. L\'IA génère des composants HTML/CSS/JS instantanément.',aiExTags:['section hero','formulaire contact','tableau de prix','barre navigation','tableau de bord','carte profil','bouton animé','modale popup'],deployTitle:'🚀 Déploiement Cloud',pubTitle:'Lien Public (Live)',pubDesc:'URL publique instantanée via CodePen.',netTitle:'Hébergement Pro',netDesc:'Préparer ZIP pour Netlify Drop.',mobTitle:'Transformation Mobile',mobDesc:'Exporter en App Installable (Android/iOS).',mobileReady:'Build Mobile Prêt ! Vidifiez vos téléchargements.',deployConn:'Connexion au Hub...',deployReady:'Synchronisation Cloud Prête!',photoStudio:'Studio Photo',videoStudio:'Studio Vidéo',importPhoto:'Importer Photo',importVideo:'Importer Vidéo',insertMedia:'Insérer au Code',youtubeLink:'Lien YouTube',rounded:'Arrondi',shadow:'Ombre',grayscale:'Gris',sepia:'Sépia',autoplay:'Lecture Auto',loop:'Boucle',muted:'Muet',processing:'Traitement...',selectFirst:'Veuillez d\'abord choisir un fichier.',dataVault:'Seuil de Données',genData:'Générer Données',dataType:'Type de Données',entries:'Entrées',inject:'Injecter Données',magicBeautify:'Embellir',magicMobile:'Auto-Mobile',magicDark:'Mode Sombre',magicSEO:'Smart SEO',magicLogic:'Logique Magique [PRO]',magicLogicDesc:'Auto-générer la logique',magicLab:'Lab Style',magicReal:'MODE RÉEL',magicExplain:'ASSISTANT AI',transStudio:'Studio Transcodage',encode:'Coder',decode:'Décoder',injectTrans:'Injecter le Code',genSubtitle:'Générateur d\'Applications AI & Magic Logic',genHint:'Ex: "Faire une calculatrice avec des boutons bleus"',genMarket:'Librarie de Logique',genPWA:'Créateur de PWA',genInject:'Injecter Logique',dbExplorer:'Explorateur GeniusDB',refresh:'Actualiser',exportData:'Exporter JSON',importData:'Importer JSON',wipe:'Vider la Base',styleTuner:'Éditeur de Style Live',primary:'Couleur Primaire',radius:'Rayon Bordure',blur:'Flou Verre',resetStyles:'Réinitialiser Style',globalize:'Globaliser (EN/FR)',globalizeDone:'Application traduite avec succès !',bizMarket:'Packs Business',loadGame:'Charger Jeu',injectGame:'Injecter Jeu',readmeTitle:'IA ARCHITECTE - EXPORTATION DE PROJET',readmeApp:'Ce fichier est une version autonome de votre application. Vous pouvez l\'ouvrir directement dans n\'importe quel navigateur.',readmeSource:'Ce dossier contient le code source brut de votre projet. Utilisez ces fichiers pour continuer le développement dans des éditeurs professionnels comme VS Code.',zipSuccess:'✓ ZIP (App+Code)!'}};
 
 /* ── Core Utilities ──────────────────────────────── */
 function insertAtCursor(text) {
@@ -540,12 +540,11 @@ window.addEventListener('DOMContentLoaded',()=>{
   wirePanels();
   wireLangBtns();
   wireTopbar();
-  wirePremium();
   wirePreview();
   wireShortcuts();
   wireMagicButtons();
   renderTab(activeTab);
-  document.querySelectorAll('.ltab').forEach(b=>b.addEventListener('click',()=>renderTab(b.dataset.tab)));
+  document.querySelectorAll('.ltab').forEach(b=>b.addEventListener('click',()=>(window.renderTab||renderTab)(b.dataset.tab)));
 
   require.config({paths:{vs:'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs'}});
   require(['vs/editor/editor.main'],()=>{
@@ -568,6 +567,16 @@ window.addEventListener('DOMContentLoaded',()=>{
     // 🔒 ANTI-THEFT PROTECTION: Global Copy Interceptor (Catches Ctrl+C, Ctrl+X AND Mouse Right-Click)
     ['copy', 'cut'].forEach(evt => {
        document.addEventListener(evt, (e) => {
+          // Verify premium membership
+          const isPremium = window.AppAuth && window.AppAuth.currentUser && window.AppAuth.currentUser.membership === 'premium';
+          if (!isPremium) {
+             e.preventDefault();
+             e.stopPropagation();
+             const paywall = document.getElementById('paywall-modal');
+             if (paywall) paywall.style.display = 'flex';
+             return;
+          }
+
           let selectedText = window.getSelection().toString();
           if(window.editor && window.editor.hasTextFocus()) {
              const selection = window.editor.getSelection();
@@ -579,17 +588,9 @@ window.addEventListener('DOMContentLoaded',()=>{
           }
           
           const lineCount = selectedText.split('\n').length;
-          if (lineCount > 15) {
+          if (lineCount > 10) {
              e.preventDefault();
              e.stopPropagation();
-             
-             if (window.showStripeModal) {
-                 window.showStripeModal('Export All', () => {
-                     const btn = document.getElementById('btn-export-all');
-                     if (btn) btn.click();
-                 });
-                 return;
-             }
              
              const warningMsg = "/*\n 🔒 IA ARCHITECTE SECURITY 🔒\n Mass copying is disabled for security reasons.\n Please use the 'EXPORT ALL' button to run the application!\n \n 🔒 SÉCURITÉ IA ARCHITECTE 🔒\n La copie massive est désactivée par mesure de sécurité.\n Veuillez utiliser le bouton 'EXPORT ALL' pour exécuter l'application!\n*/";
              
@@ -818,6 +819,167 @@ function runPreview(){
   const fr=document.getElementById('preview-iframe');if(!fr)return;
   const ed = window.editor || (typeof editor !== 'undefined' ? editor : null);
   let src = ed ? ed.getValue() : code;
+
+  // 🌐 MULTI-FRAMEWORK PREVIEW TRANSCOMPILER (React, Vue, Svelte, Angular)
+  const isReact = /React\s*JSX/i.test(src) || (src.includes('import React') && src.includes('export default function'));
+  const isVue = /Vue\s*3\s*SFC/i.test(src) || (src.includes('<template>') && src.includes('<script setup>'));
+  const isSvelte = /Svelte/i.test(src) || (src.includes("from 'svelte'") && src.includes('{#if'));
+  const isAngular = /Angular/i.test(src) || src.includes('@Component');
+
+  console.log("🔮 PREVIEW COMPILER DEBUG:", {
+    srcLength: src.length,
+    srcStart: src.substring(0, 150),
+    isReact,
+    isVue,
+    isSvelte,
+    isAngular
+  });
+
+  if (isReact) {
+    let cleanReact = src.replace(/import\s+[\s\S]*?\s+from\s+['"][^'"]+['"];?/g, '');
+    cleanReact = cleanReact.replace(/export\s+default\s+/g, '');
+    src = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
+</head>
+<body style="margin:0; background: transparent;">
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useMemo, useCallback } = React;
+    ${cleanReact}
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>`;
+  } else if (isVue) {
+    let template = '';
+    let script = '';
+    let style = '';
+    
+    const tMatch = src.match(/<template>([\s\S]*?)<\/template>/i);
+    if(tMatch) template = tMatch[1];
+    
+    const sMatch = src.match(/<script[^>]*>([\s\S]*?)<\/script>/i);
+    if(sMatch) script = sMatch[1];
+    
+    const stMatch = src.match(/<style[^>]*>([\s\S]*?)<\/style>/i);
+    if(stMatch) style = stMatch[1];
+    
+    let varNames = [];
+    const varRegex = /(?:const|let|var|function)\s+([a-zA-Z_$][a-zA-Z0-9_$]*)/g;
+    let match;
+    while ((match = varRegex.exec(script)) !== null) {
+      varNames.push(match[1]);
+    }
+    
+    let cleanScript = script.replace(/import\s+[\s\S]*?\s+from\s+['"][^'"]+['"];?/g, '');
+    let returnedObj = varNames.length ? `{ ${[...new Set(varNames)].join(', ')} }` : '{}';
+    
+    let setupLogic = '';
+    if (script.includes('export default')) {
+      setupLogic = script.replace(/export\s+default\s+/g, 'const AppOptions = ') + '\ncreateApp(AppOptions).mount("#app");';
+    } else {
+      setupLogic = `
+        const AppOptions = {
+          setup() {
+            ${cleanScript}
+            return ${returnedObj};
+          }
+        };
+        createApp(AppOptions).mount("#app");
+      `;
+    }
+
+    src = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>${style}</style>
+</head>
+<body style="margin:0; background: transparent;">
+  <div id="app">${template}</div>
+  <script>
+    const { createApp, ref, reactive, onMounted, computed, watch, nextTick } = Vue;
+    ${setupLogic}
+  </script>
+</body>
+</html>`;
+  } else if (isSvelte) {
+    let template = src.replace(/<script>([\s\S]*?)<\/script>/gi, '')
+                      .replace(/<style[^>]*>([\s\S]*?)<\/style>/gi, '')
+                      .trim();
+    
+    let script = '';
+    const sMatch = src.match(/<script>([\s\S]*?)<\/script>/i);
+    if(sMatch) script = sMatch[1];
+    
+    let style = '';
+    const stMatch = src.match(/<style[^>]*>([\s\S]*?)<\/style>/i);
+    if(stMatch) style = stMatch[1];
+    
+    template = template.replace(/<!--[\s\S]*?-->/g, '');
+    template = template.replace(/\{#if\s+[^}]+\}/gi, '')
+                       .replace(/\{\/if\}/gi, '')
+                       .replace(/\{#each\s+[^}]+\}/gi, '')
+                       .replace(/\{\/each\}/gi, '');
+                       
+    script = script.replace(/import\s+[\s\S]*?\s+from\s+['"][^'"]+['"];?/g, '');
+    script = script.replace(/onMount\(\s*\(\s*\)\s*=>\s*([\s\S]*?)\)/g, 'window.addEventListener("DOMContentLoaded", () => { $1 })');
+    
+    src = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>${style}</style>
+</head>
+<body style="margin:0; background: transparent;">
+  ${template}
+  <script>
+    (function(){
+      try {
+        ${script}
+      } catch(e) {
+        console.error("Svelte Runtime error:", e);
+      }
+    })();
+  </script>
+</body>
+</html>`;
+  } else if (isAngular) {
+    let angularHtml = '';
+    let angularCss = '';
+    
+    const htmlMatch = src.match(/bypassSecurityTrustHtml\(\s*[`']([\s\S]*?)[`']\s*\)/i);
+    if(htmlMatch) {
+      angularHtml = htmlMatch[1];
+    } else {
+      const templateMatch = src.match(/template:\s*[`']([\s\S]*?)[`']\s*,/i);
+      if(templateMatch) angularHtml = templateMatch[1];
+    }
+    
+    const styleMatch = src.match(/styles:\s*\[\s*[`']([\s\S]*?)[`']\s*\]/i);
+    if(styleMatch) angularCss = styleMatch[1];
+    
+    src = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>${angularCss}</style>
+</head>
+<body style="margin:0; background: transparent;">
+  ${angularHtml}
+</body>
+</html>`;
+  }
   
   // 🔬 PROXY FIX: Bypass CDN blocking by using THREE from the parent window
   if(src.includes('THREE.')) {
@@ -899,6 +1061,40 @@ function runPreview(){
     src = src.replace('</body>', debugScript + '</body>');
   }
 
+  // Inject Free Mode watermark if user is not premium
+  const isPremium = window.AppAuth && window.AppAuth.currentUser && window.AppAuth.currentUser.membership === 'premium';
+  if (!isPremium) {
+     const watermarkCss = `
+     <style id="ia-watermark-styles">
+       .ia-watermark-free {
+         position: fixed !important;
+         bottom: 12px !important;
+         right: 12px !important;
+         background: rgba(15, 23, 42, 0.8) !important;
+         backdrop-filter: blur(4px) !important;
+         border: 1px solid rgba(139, 92, 246, 0.4) !important;
+         color: #a78bfa !important;
+         font-family: system-ui, -apple-system, sans-serif !important;
+         font-size: 9px !important;
+         font-weight: 800 !important;
+         padding: 5px 10px !important;
+         border-radius: 20px !important;
+         pointer-events: none !important;
+         z-index: 2147483647 !important;
+         box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+         letter-spacing: 0.05em !important;
+         text-transform: uppercase !important;
+       }
+     </style>`;
+     const watermarkDiv = `<div class="ia-watermark-free">✨ IA Architecte - Free Mode</div>`;
+     
+     if (src.includes('</body>')) {
+        src = src.replace('</body>', watermarkCss + watermarkDiv + '</body>');
+     } else {
+        src = src + watermarkCss + watermarkDiv;
+     }
+  }
+
   fr.srcdoc=src;
 }
 window.runPreview = runPreview;
@@ -957,6 +1153,7 @@ function wireLangBtns(){
 }
 
 function applyLang(){
+  window.appLang = lang; // 🚀 Sync global language with all 50+ secondary studios
   const s=(id,k)=>{const e=document.getElementById(id);if(e)e.textContent=t(k);};
   s('lbl-subtitle','subtitle');s('lbl-tools','tools');s('lbl-preview','preview');
   s('lbl-tab-ai','tabAi');s('lbl-tab-snip','tabSnip');s('lbl-tab-tpl','tabTpl');s('lbl-tab-tools','tabTools');s('lbl-tab-tpro','tabTPro');s('lbl-tab-apro','tabAPro');s('lbl-tab-appsultra','tabAppsUltra');s('lbl-tab-apps','tabApps');s('lbl-tab-sites','tabSites');s('lbl-tab-elite','tabElite');s('lbl-tab-realworld','tabRealWorld');s('lbl-tab-models','tabModels');s('lbl-tab-audit','tabAudit');s('lbl-tab-assets','tabAssets');s('lbl-tab-media','tabMedia');s('lbl-tab-data','tabData');s('lbl-tab-games','tabGames');s('lbl-tab-gamespro','tabGamesPro');s('lbl-tab-set','tabSet');
@@ -1007,18 +1204,29 @@ function sanitizeStandalone(html) {
 }
 
 function wireTopbar(){
-  document.getElementById('btn-format').addEventListener('click',()=>editor?.getAction('editor.action.formatDocument')?.run());
+  const isUserPremium = () => {
+    if (window.AppAuth && window.AppAuth.currentUser) {
+      return window.AppAuth.currentUser.membership === 'premium';
+    }
+    return false;
+  };
+  const showPaywall = () => {
+    const paywall = document.getElementById('paywall-modal');
+    if (paywall) paywall.style.display = 'flex';
+  };
+
+  document.getElementById('btn-format').addEventListener('click',()=>{
+     if (!isUserPremium()) { showPaywall(); return; }
+     editor?.getAction('editor.action.formatDocument')?.run();
+  });
   const cb=document.getElementById('btn-copy');
   cb.addEventListener('click',()=> {
+     if (!isUserPremium()) {
+        showPaywall();
+        return;
+     }
      const lineCount = code.split('\n').length;
-     if (lineCount > 15) {
-        if (window.showStripeModal) {
-            window.showStripeModal('Export All', () => {
-                const btn = document.getElementById('btn-export-all');
-                if (btn) btn.click();
-            });
-            return;
-        }
+     if (lineCount > 10) {
         const warningMsg = "/*\n 🔒 IA ARCHITECTE SECURITY 🔒\n Mass copying is disabled for security reasons.\n Please use the 'EXPORT ALL' button to run the application!\n \n 🔒 SÉCURITÉ IA ARCHITECTE 🔒\n La copie massive est désactivée par mesure de sécurité.\n Veuillez utiliser le bouton 'EXPORT ALL' pour exécuter l'application!\n*/";
         navigator.clipboard.writeText(warningMsg).then(()=>{
            if (document.getElementById('lbl-copy')) {
@@ -1043,44 +1251,28 @@ function wireTopbar(){
     localStorage.setItem('ia_arch_code',code);lastSaved=new Date();
     document.getElementById('status-save').textContent=`${t('savedAt')} ${lastSaved.toLocaleTimeString()}`;
   });
-  document.getElementById('btn-export-html').addEventListener('click',(e)=>{
-    if (window.showStripeModal && e.currentTarget.dataset.paid !== 'true') {
-        window.showStripeModal('Export HTML', () => { document.getElementById('btn-export-html').dataset.paid = 'true'; document.getElementById('btn-export-html').click(); });
-        return;
-    }
-    e.currentTarget.dataset.paid = '';
+  document.getElementById('btn-export-html').addEventListener('click',()=>{
+    if (!isUserPremium()) { showPaywall(); return; }
     if(!editor) return;
     const sanitized = sanitizeStandalone(editor.getValue());
     downloadFile(sanitized,`IA_Project_${Date.now()}.html`,'text/html');
   });
-  document.getElementById('btn-export-css').addEventListener('click',(e)=>{
-    if (window.showStripeModal && e.currentTarget.dataset.paid !== 'true') {
-        window.showStripeModal('Export CSS', () => { document.getElementById('btn-export-css').dataset.paid = 'true'; document.getElementById('btn-export-css').click(); });
-        return;
-    }
-    e.currentTarget.dataset.paid = '';
+  document.getElementById('btn-export-css').addEventListener('click',()=>{
+    if (!isUserPremium()) { showPaywall(); return; }
     if(!editor) return;
     const m=editor.getValue().match(/<style[^>]*>([\s\S]*?)<\/style>/gi);
     const css=m?m.map(x=>x.replace(/<style[^>]*>|<\/style>/gi,'')).join('\n'):'/* No CSS found */';
     downloadFile(css,`IA_Styles_${Date.now()}.css`,'text/css');
   });
-  document.getElementById('btn-export-js').addEventListener('click',(e)=>{
-    if (window.showStripeModal && e.currentTarget.dataset.paid !== 'true') {
-        window.showStripeModal('Export JS', () => { document.getElementById('btn-export-js').dataset.paid = 'true'; document.getElementById('btn-export-js').click(); });
-        return;
-    }
-    e.currentTarget.dataset.paid = '';
+  document.getElementById('btn-export-js').addEventListener('click',()=>{
+    if (!isUserPremium()) { showPaywall(); return; }
     if(!editor) return;
     const m=editor.getValue().match(/<script[^>]*>([\s\S]*?)<\/script>/gi);
     const js=m?m.map(x=>x.replace(/<script[^>]*>|<\/script>/gi,'')).join('\n'):'/* No JS found */';
     downloadFile(js,`IA_Script_${Date.now()}.js`,'application/javascript');
   });
-  document.getElementById('btn-export-all').addEventListener('click',async(e)=>{
-    if (window.showStripeModal && e.currentTarget.dataset.paid !== 'true') {
-        window.showStripeModal('Export All', () => { document.getElementById('btn-export-all').dataset.paid = 'true'; document.getElementById('btn-export-all').click(); });
-        return;
-    }
-    e.currentTarget.dataset.paid = '';
+  document.getElementById('btn-export-all').addEventListener('click',async()=>{
+    if (!isUserPremium()) { showPaywall(); return; }
     const btn=document.getElementById('btn-export-all');
     const lbl=document.getElementById('lbl-export-all');
     const origText=lbl.textContent;
@@ -1182,84 +1374,10 @@ ${bodyContent.trim()}
   document.getElementById('btn-shortcuts').addEventListener('click',()=>{
     renderShortcutsModal();document.getElementById('shortcuts-modal').style.display='flex';
   });
-  document.getElementById('btn-deploy').addEventListener('click', (e) => {
-    if (window.showStripeModal && e.currentTarget.dataset.paid !== 'true') {
-        window.showStripeModal('Deploy App', () => { document.getElementById('btn-deploy').dataset.paid = 'true'; document.getElementById('btn-deploy').click(); });
-        return;
-    }
-    e.currentTarget.dataset.paid = '';
-    openDeployModal();
-  });
+  document.getElementById('btn-deploy').addEventListener('click',openDeployModal);
   document.getElementById('btn-publish-live').addEventListener('click',publishLive);
   document.getElementById('btn-netlify-pack').addEventListener('click',()=>document.getElementById('btn-export-all').click());
   document.getElementById('btn-mobile-pack').addEventListener('click',buildMobileApp);
-}
-
-function wirePremium() {
-  const btn = document.getElementById('btn-premium');
-  const lbl = document.getElementById('lbl-premium');
-  if(!btn) return;
-  
-  // --- PREMIUM CHECK SYSTEM (V2) ---
-  let subStatus = null;
-  
-  // 1. Check legacy timestamp
-  const subDate = localStorage.getItem('ia_premium_sub_date');
-  if (subDate) {
-    const daysPassed = Math.floor((Date.now() - parseInt(subDate)) / (1000 * 60 * 60 * 24));
-    const daysLeft = 30 - daysPassed;
-    if (daysLeft > 0) {
-      subStatus = { type: 'legacy', days: daysLeft };
-    } else {
-      localStorage.removeItem('ia_premium_sub_date');
-    }
-  }
-
-  // 2. Check Database list
-  if (!subStatus) {
-    try {
-      const session = JSON.parse(localStorage.getItem('genius_session') || '{}');
-      const premiumUsers = JSON.parse(localStorage.getItem('ia_premium_users') || '[]');
-      const userEmail = session.email ? session.email.toLowerCase() : '';
-      
-      const record = premiumUsers.find(u => u.email.toLowerCase() === userEmail);
-      if (record) {
-        const expiry = (record.addedAt || 0) + (record.days || 0) * 86400000;
-        if (record.days === 9999 || expiry > Date.now()) {
-          subStatus = { 
-            type: 'database', 
-            days: record.days === 9999 ? '∞' : Math.ceil((expiry - Date.now()) / 86400000)
-          };
-        }
-      }
-    } catch(e) {}
-  }
-
-  if (subStatus) {
-    btn.classList.add('active-sub');
-    if (subStatus.type === 'legacy' || (subStatus.type === 'database' && subStatus.days !== '∞')) {
-      const days = subStatus.days;
-      lbl.textContent = lang === 'fr' ? `Premium Actif (${days} jours restants)` : `Premium Active (${days} days left)`;
-    } else {
-      lbl.textContent = lang === 'fr' ? `Premium Actif (Cloud)` : `Premium Active (Cloud)`;
-    }
-    return;
-  }
-  // ---------------------------------
-
-  btn.addEventListener('click', () => {
-    if (window.showStripeModal) {
-       window.showStripeModal('Abonnement Premium / Premium Subs.', () => {
-          // Success Callback after $30 payment
-          setTimeout(() => {
-              if (confirm("TEST MODE: Simulăm finalizarea plății pe Stripe? Apasă OK dacă ai 'plătit' pentru a porni abonamentul.")) {
-                  localStorage.setItem('ia_premium_sub_date', Date.now().toString());
-                  window.location.reload();
-              }
-          }, 500);
-       }, true); // The 'true' flag will indicate it's a subscription request
-    }
-  });
 }
 
 function wirePreview(){
@@ -1324,9 +1442,19 @@ function renderShortcutsModal(){
   body.innerHTML=shortcuts.map(([k,d])=>`<div class="shortcut-item"><span>${d}</span><span class="shortcut-key">${k}</span></div>`).join('');
 }
 
+let isDelegating = false;
 function renderTab(tab){
   activeTab=tab;
   document.querySelectorAll('.ltab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  
+  // Ensure left panel is expanded
+  const leftPanel = document.getElementById('left-panel');
+  if(leftPanel && leftPanel.classList.contains('collapsed')) {
+    leftPanel.classList.remove('collapsed');
+    const ed = document.querySelector('.editor-section');
+    if(ed) ed.classList.remove('editor-expand-left');
+  }
+
   const body=document.getElementById('left-body');if(!body)return;body.innerHTML='';
   body.style.padding='10px';body.style.overflow='';body.style.height='';
   switch(tab){
@@ -1336,12 +1464,8 @@ function renderTab(tab){
     case 'tools': renderTools(body); break;
     case 'tpro': renderToolboxPro(body); break;
     case 'appspro': renderAppsPro(body); break;
-    case 'appsultra': renderAppsUltra(body); break;
-    case 'apps': renderApps(body); break;
     case 'sites': renderSites(body); break;
     case 'elite': renderEliteApps(body); break;
-    case 'realworld': renderRealWorld(body); break;
-    case 'models': renderModels(body); break;
     case 'guide': renderGuide(body); break;
     case 'audit': renderAudit(body); break;
     case 'assets': renderAssets(body); break;
@@ -1351,11 +1475,22 @@ function renderTab(tab){
     case 'genius': renderGenius(body); break;
     case 'data': renderDataVault(body); break;
     case 'settings': renderSettings(body); break;
-    case 'games': renderGames(body); break;
-    case 'gamespro': renderGamesPro(body); break;
+    case 'iaultra': if(typeof renderIAUltra === 'function') renderIAUltra(body); break;
     case 'iapro': renderIAPro(body); break;
+    case 'draw3d': if(typeof renderDraw3DTab === 'function') renderDraw3DTab(body); break;
+    // FUTURE TECH PRO
+    case 'bcireader': if(window.renderBci) window.renderBci(); break;
+    case 'digitaltwin': if(window.renderDigitalTwin) window.renderDigitalTwin(); break;
+    case 'qkdcrypto': if(window.renderQKD) window.renderQKD(); break;
+    case 'noneuclidean': if(window.renderNonEuclidean) window.renderNonEuclidean(); break;
+    case 'dnastorage': if(window.renderDnaStorage) window.renderDnaStorage(); break;
+    case 'neuromorphic': if(window.renderNeuromorphic) window.renderNeuromorphic(); break;
+    case 'satmesh': if(window.renderSatelliteMesh) window.renderSatelliteMesh(); break;
+    case 'quantcircuit': if(window.renderQuantumCircuit) window.renderQuantumCircuit(); break;
+    case 'fusionplasma': if(window.renderFusionPlasma) window.renderFusionPlasma(); break;
   }
 }
+window.renderTab = renderTab; // expose so module patches can chain to it
 
 function renderIAPro(body) {
   body.style.padding = '0';
