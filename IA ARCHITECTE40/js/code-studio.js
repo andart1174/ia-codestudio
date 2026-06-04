@@ -547,80 +547,107 @@ window.addEventListener('DOMContentLoaded',()=>{
   document.querySelectorAll('.ltab').forEach(b=>b.addEventListener('click',()=>(window.renderTab||renderTab)(b.dataset.tab)));
 
   // 🚀 Immediate preview with DEFAULT_CODE (before Monaco CDN loads)
-  // This prevents the white blank screen while waiting for Monaco editor
   runPreview();
 
-  require.config({paths:{vs:'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs'}});
-  require(['vs/editor/editor.main'],()=>{
-    editor=monaco.editor.create(document.getElementById('monaco-container'),{
-      value:code,language:'html',theme:editorTheme,fontSize,wordWrap,
-      minimap:{enabled:true,scale:1},automaticLayout:true,scrollBeyondLastLine:false,
-      padding:{top:16,bottom:16},lineNumbers:'on',roundedSelection:true,
-      cursorBlinking:'smooth',cursorSmoothCaretAnimation:'on',smoothScrolling:true,
-      formatOnPaste:true,bracketPairColorization:{enabled:true},folding:true,
-      scrollbar:{useShadows:false,verticalScrollbarSize:5,horizontalScrollbarSize:5}
+  // 🛡️ FALLBACK TEXTAREA: Shows if Monaco CDN fails or takes too long (8s timeout)
+  function showFallbackEditor() {
+    const container = document.getElementById('monaco-container');
+    if (!container || container.querySelector('textarea')) return;
+    container.innerHTML = '';
+    const ta = document.createElement('textarea');
+    ta.id = 'fallback-editor';
+    ta.value = code;
+    ta.spellcheck = false;
+    ta.style.cssText = 'width:100%;height:100%;background:#0d1117;color:#e2e8f0;font-family:"JetBrains Mono","Fira Code",monospace;font-size:13px;padding:16px;border:none;outline:none;resize:none;line-height:1.6;tab-size:2;';
+    ta.addEventListener('input', () => {
+      code = ta.value;
+      updateQuality(); updateStats();
+      if (autoRun) runPreview();
     });
-    editor.onDidChangeModelContent(()=>{
-      code=editor.getValue();
-      updateQuality();
-      updateStats();
-      if(activeTab === 'audit') renderTab('audit'); // Real-time Auditor Refresh
-      if(autoRun)runPreview();
-    });
-    
-    // 🔒 ANTI-THEFT PROTECTION: Global Copy Interceptor (Catches Ctrl+C, Ctrl+X AND Mouse Right-Click)
-    ['copy', 'cut'].forEach(evt => {
-       document.addEventListener(evt, (e) => {
-          // Verify premium membership (uses isPremium() which also checks Stripe payments)
-          const isPremium = window.AppAuth && window.AppAuth.isPremium ? window.AppAuth.isPremium() : (window.AppAuth && window.AppAuth.currentUser && window.AppAuth.currentUser.membership === 'premium');
-          if (!isPremium) {
-             e.preventDefault();
-             e.stopPropagation();
-             const paywall = document.getElementById('paywall-modal');
-             if (paywall) paywall.style.display = 'flex';
-             return;
-          }
+    container.appendChild(ta);
+    window.editor = {
+      getValue: () => ta.value,
+      setValue: (v) => { ta.value = v; code = v; if(autoRun) runPreview(); },
+      getModel: () => ({ getValue: () => ta.value }),
+      hasTextFocus: () => document.activeElement === ta,
+      getSelection: () => ({ startLineNumber:1, startColumn:1, endLineNumber:1, endColumn:1 }),
+      pushUndoStop: () => {}, executeEdits: () => {}, focus: () => ta.focus()
+    };
+    showToast('⚠️ ' + (lang === 'fr' ? 'Éditeur Monaco hors ligne — Mode texte actif' : 'Monaco offline — Text editor active'));
+  }
+  const monacoTimeout = setTimeout(() => { if (!window.editor || !window.editor.getModel || !window.editor.getModel()) showFallbackEditor(); }, 8000);
 
-          let selectedText = window.getSelection().toString();
-          if(window.editor && window.editor.hasTextFocus()) {
-             const selection = window.editor.getSelection();
-             selectedText = window.editor.getModel().getValueInRange(selection);
-          }
-          
-          if (!selectedText && window.editor) {
-             selectedText = window.getSelection().toString() || '';
-          }
-          
-          const lineCount = selectedText.split('\n').length;
-          if (lineCount > 10) {
-             e.preventDefault();
-             e.stopPropagation();
-             
-             const warningMsg = "/*\n 🔒 IA ARCHITECTE SECURITY 🔒\n Mass copying is disabled for security reasons.\n Please use the 'EXPORT ALL' button to run the application!\n \n 🔒 SÉCURITÉ IA ARCHITECTE 🔒\n La copie massive est désactivée par mesure de sécurité.\n Veuillez utiliser le bouton 'EXPORT ALL' pour exécuter l'application!\n*/";
-             
-             if (e.clipboardData) {
-                e.clipboardData.setData('text/plain', warningMsg);
-             } else {
-                navigator.clipboard.writeText(warningMsg);
-             }
-             
-             const copyBtn = document.getElementById('lbl-copy');
-             if(copyBtn) {
-                const orig = copyBtn.textContent;
-                copyBtn.textContent = evt === 'cut' ? '🔒 LIMIT CUT' : '🔒 LIMIT COPY';
-                copyBtn.style.color = '#ef4444';
-                setTimeout(() => {
-                   copyBtn.textContent = orig;
-                   copyBtn.style.color = '';
-                }, 2500);
-             }
-          }
-       }, true); // True = Capture phase (runs before Monaco's internal copy handler)
-    });
+  // Load Monaco with primary CDN (jsdelivr), fallback to unpkg
+  function loadMonaco(cdnPath) {
+    require.config({paths:{vs: cdnPath}});
+    require(['vs/editor/editor.main'],()=>{
+      clearTimeout(monacoTimeout); // Cancel fallback timer - Monaco loaded!
+      editor=monaco.editor.create(document.getElementById('monaco-container'),{
+        value:code,language:'html',theme:editorTheme,fontSize,wordWrap,
+        minimap:{enabled:true,scale:1},automaticLayout:true,scrollBeyondLastLine:false,
+        padding:{top:16,bottom:16},lineNumbers:'on',roundedSelection:true,
+        cursorBlinking:'smooth',cursorSmoothCaretAnimation:'on',smoothScrolling:true,
+        formatOnPaste:true,bracketPairColorization:{enabled:true},folding:true,
+        scrollbar:{useShadows:false,verticalScrollbarSize:5,horizontalScrollbarSize:5}
+      });
+      editor.onDidChangeModelContent(()=>{
+        code=editor.getValue();
+        updateQuality();
+        updateStats();
+        if(activeTab === 'audit') renderTab('audit');
+        if(autoRun)runPreview();
+      });
+      
+      // 🔒 ANTI-THEFT PROTECTION: Global Copy Interceptor
+      ['copy', 'cut'].forEach(evt => {
+         document.addEventListener(evt, (e) => {
+            const isPremium = window.AppAuth && window.AppAuth.isPremium ? window.AppAuth.isPremium() : (window.AppAuth && window.AppAuth.currentUser && window.AppAuth.currentUser.membership === 'premium');
+            if (!isPremium) {
+               e.preventDefault();
+               e.stopPropagation();
+               const paywall = document.getElementById('paywall-modal');
+               if (paywall) paywall.style.display = 'flex';
+               return;
+            }
 
-    window.editor = editor; // 🚀 Globalize for IA-PRO Features
-    updateQuality();updateStats();runPreview();
-  });
+            let selectedText = window.getSelection().toString();
+            if(window.editor && window.editor.hasTextFocus()) {
+               const selection = window.editor.getSelection();
+               selectedText = window.editor.getModel().getValueInRange(selection);
+            }
+            if (!selectedText && window.editor) {
+               selectedText = window.getSelection().toString() || '';
+            }
+            const lineCount = selectedText.split('\n').length;
+            if (lineCount > 10) {
+               e.preventDefault();
+               e.stopPropagation();
+               const warningMsg = "/*\n 🔒 IA ARCHITECTE SECURITY 🔒\n Mass copying is disabled for security reasons.\n Please use the 'EXPORT ALL' button to run the application!\n \n 🔒 SÉCURITÉ IA ARCHITECTE 🔒\n La copie massive est désactivée par mesure de sécurité.\n Veuillez utiliser le bouton 'EXPORT ALL' pour exécuter l'application!\n*/";
+               if (e.clipboardData) { e.clipboardData.setData('text/plain', warningMsg); }
+               else { navigator.clipboard.writeText(warningMsg); }
+               const copyBtn = document.getElementById('lbl-copy');
+               if(copyBtn) {
+                  const orig = copyBtn.textContent;
+                  copyBtn.textContent = evt === 'cut' ? '🔒 LIMIT CUT' : '🔒 LIMIT COPY';
+                  copyBtn.style.color = '#ef4444';
+                  setTimeout(() => { copyBtn.textContent = orig; copyBtn.style.color = ''; }, 2500);
+               }
+            }
+         }, true);
+      });
+
+      window.editor = editor;
+      updateQuality();updateStats();runPreview();
+    });
+  }
+
+  // Try jsdelivr first, then unpkg as fallback
+  try {
+    loadMonaco('https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs');
+  } catch(e) {
+    console.warn('jsdelivr failed, trying unpkg...', e);
+    loadMonaco('https://unpkg.com/monaco-editor@0.45.0/min/vs');
+  }
 
   window.addEventListener('message', e => {
     if(!e.data || e.data.type !== 'inspect') return;
