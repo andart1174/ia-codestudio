@@ -578,19 +578,16 @@ window.addEventListener('DOMContentLoaded',()=>{
   }
   const monacoTimeout = setTimeout(() => { if (!window.editor || !window.editor.getModel || !window.editor.getModel()) showFallbackEditor(); }, 15000);
 
-  // Load Monaco using paths array fallback (jsdelivr -> unpkg -> cdnjs)
+  // Load Monaco using the proven working CDN prefix
   function loadMonaco() {
     if (typeof require === 'undefined') {
       setTimeout(loadMonaco, 100);
       return;
     }
+    const cdnPath = window.MONACO_CDN_PREFIX || 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs';
     require.config({
       paths: {
-        vs: [
-          'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs',
-          'https://unpkg.com/monaco-editor@0.45.0/min/vs',
-          'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs'
-        ]
+        vs: cdnPath
       }
     });
     require(['vs/editor/editor.main'],()=>{
