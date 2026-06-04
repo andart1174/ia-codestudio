@@ -548,12 +548,21 @@
   const FirebaseDb = {
     init(config) {
       try {
+        if (typeof firebase === 'undefined') {
+          throw new Error("Firebase SDK was not loaded from CDN.");
+        }
+
         if (AppState.firebaseApp) {
           // Already initialized, check if config matches
           return;
         }
 
-        AppState.firebaseApp = firebase.initializeApp(config);
+        if (firebase.apps && firebase.apps.length > 0) {
+          AppState.firebaseApp = firebase.app();
+        } else {
+          AppState.firebaseApp = firebase.initializeApp(config);
+        }
+
         AppState.db = firebase.database();
         AppState.isFirebase = true;
 
@@ -642,7 +651,7 @@
 
       } catch (err) {
         console.error("Firebase init failed, switching to Local Mode:", err);
-        if (window.showToast) window.showToast(t('invalidConfig'));
+        if (window.showToast) window.showToast(t('invalidConfig') + ": " + err.message);
         AppState.isFirebase = false;
         MockDb.init();
       }
