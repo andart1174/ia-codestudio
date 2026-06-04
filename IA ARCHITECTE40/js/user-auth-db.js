@@ -779,25 +779,45 @@
     }
   };
 
+  const DEFAULT_FIREBASE_CONFIG = {
+    apiKey: "AIzaSyBWwpp5eOzj2Ta8gQUa78zqdnVAlFG6RwE",
+    authDomain: "ia-codestudio-7ce3a.firebaseapp.com",
+    databaseURL: "https://ia-codestudio-7ce3a-default-rtdb.firebaseio.com",
+    projectId: "ia-codestudio-7ce3a",
+    storageBucket: "ia-codestudio-7ce3a.firebasestorage.app",
+    messagingSenderId: "484008154719",
+    appId: "1:484008154719:web:eb1b805c1419a271be6dea",
+    measurementId: "G-EH6VWC2W9K"
+  };
+
   // --- INITIALIZATION ---
   function initDatabase() {
+    let config = null;
     const savedConfig = localStorage.getItem('firebase_config');
     if (savedConfig) {
       try {
-        const config = JSON.parse(savedConfig);
-        loadScripts(firebaseScripts, (err) => {
-          if (err) {
-            console.warn("Failed to load Firebase scripts, falling back to Local Mode.");
-            AppState.isFirebase = false;
-            MockDb.init();
-          } else {
-            FirebaseDb.init(config);
-          }
-        });
-        return;
+        config = JSON.parse(savedConfig);
       } catch(e) {
         console.error("Failed to parse firebase config:", e);
       }
+    }
+
+    // Use default keys if no configuration is manually saved in LocalStorage
+    if (!config) {
+      config = DEFAULT_FIREBASE_CONFIG;
+    }
+
+    if (config && config.apiKey) {
+      loadScripts(firebaseScripts, (err) => {
+        if (err) {
+          console.warn("Failed to load Firebase scripts, falling back to Local Mode.");
+          AppState.isFirebase = false;
+          MockDb.init();
+        } else {
+          FirebaseDb.init(config);
+        }
+      });
+      return;
     }
 
     // Default to Local Mode
