@@ -56,11 +56,21 @@
     return (TXT[l] || TXT.fr)[key] || key;
   }
 
-  // Firebase Scripts to load
-  const firebaseScripts = [
+  // Firebase Scripts to load (multi-CDN sets)
+  const firebaseScriptsGstatic = [
     'https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js',
     'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js',
     'https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js'
+  ];
+  const firebaseScriptsJsdelivr = [
+    'https://cdn.jsdelivr.net/npm/firebase@9.22.0/firebase-app-compat.js',
+    'https://cdn.jsdelivr.net/npm/firebase@9.22.0/firebase-auth-compat.js',
+    'https://cdn.jsdelivr.net/npm/firebase@9.22.0/firebase-database-compat.js'
+  ];
+  const firebaseScriptsCdnjs = [
+    'https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.0/firebase-app-compat.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.0/firebase-auth-compat.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.0/firebase-database-compat.js'
   ];
 
   // State Management
@@ -814,6 +824,69 @@
     measurementId: "G-EH6VWC2W9K"
   };
 
+  // --- DYNAMIC FIREBASE LOADER WITH MULTI-CDN FALLBACK ---
+  function loadFirebaseWithFallback(callback) {
+    if (typeof firebase !== 'undefined' && firebase.app) {
+      return callback(null);
+    }
+    const cdnSets = [
+      firebaseScriptsGstatic,
+      firebaseScriptsJsdelivr,
+      firebaseScriptsCdnjs
+    ];
+    let currentSetIdx = 0;
+
+    function tryLoadSet() {
+      if (currentSetIdx >= cdnSets.length) {
+        return callback(new Error("All Firebase CDNs failed."));
+      }
+      const urls = cdnSets[currentSetIdx];
+      let scriptIdx = 0;
+      const loadedScripts = [];
+
+      function loadNextScript() {
+        if (scriptIdx >= urls.length) {
+          return callback(null);
+        }
+        const url = urls[scriptIdx];
+        const s = document.createElement('script');
+        s.src = url;
+        loadedScripts.push(s);
+
+        let timeoutTriggered = false;
+        const loadTimeout = setTimeout(() => {
+          timeoutTriggered = true;
+          loadedScripts.forEach(el => el.remove());
+          console.warn("Firebase script timed out: " + url + ", trying next CDN...");
+          currentSetIdx++;
+          tryLoadSet();
+        }, 2500); // 2.5s timeout per script tag
+
+        s.onload = () => {
+          if (timeoutTriggered) return;
+          clearTimeout(loadTimeout);
+          scriptIdx++;
+          loadNextScript();
+        };
+
+        s.onerror = () => {
+          if (timeoutTriggered) return;
+          clearTimeout(loadTimeout);
+          loadedScripts.forEach(el => el.remove());
+          console.warn("Firebase script failed: " + url + ", trying next CDN...");
+          currentSetIdx++;
+          tryLoadSet();
+        };
+
+        document.head.appendChild(s);
+      }
+
+      loadNextScript();
+    }
+
+    tryLoadSet();
+  }
+
   // --- INITIALIZATION ---
   function initDatabase() {
     // Always start with the built-in Firebase config (most reliable)
@@ -835,16 +908,16 @@
     }
 
     if (config && config.apiKey) {
-      // ✅ Check if Firebase was pre-loaded via static <script> tags in HTML head
+      // ✅ Check if Firebase is already loaded
       if (typeof firebase !== 'undefined' && firebase.app) {
-        console.log('🔥 Firebase SDK pre-loaded from static scripts — initializing directly');
+        console.log('🔥 Firebase SDK pre-loaded — initializing directly');
         FirebaseDb.init(config);
         return;
       }
-      // 🔄 Fallback: dynamically load if somehow not pre-loaded
-      loadScripts(firebaseScripts, (err) => {
+      // 🔄 Load dynamically in the background with multi-CDN fallback (never blocks Monaco!)
+      loadFirebaseWithFallback((err) => {
         if (err) {
-          console.warn("Failed to load Firebase scripts (offline?), using Local Mode.");
+          console.warn("Failed to load Firebase scripts (offline?), using Local Mode.", err);
           AppState.isFirebase = false;
           MockDb.init();
         } else {

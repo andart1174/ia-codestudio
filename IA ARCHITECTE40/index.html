@@ -63,11 +63,7 @@
       </div>
       <div class="sep"></div>
       <button class="action-btn" id="btn-shortcuts" title="Keyboard Shortcuts">⌨️</button>
-      <div class="sep"></div>
-      <div class="live-counter-badge" id="live-dev-counter" style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; color: #10b981; font-size: 10px; font-weight: 800; cursor: pointer; transition: all 0.3s;" title="Developers Online">
-        <span style="display: inline-block; width: 6px; height: 6px; background: #10b981; border-radius: 50%; box-shadow: 0 0 6px #10b981; animation: livePulse 1.5s infinite;"></span>
-        <span id="lbl-live-devs">1 Dev Online</span>
-      </div>
+
       <div class="sep"></div>
       <div class="lang-toggle">
         <button class="lang-btn active" data-lang="en">EN</button>
@@ -703,12 +699,11 @@
   <script src="js/stack-builder.js"></script>
   <script src="js/pwa-generator.js"></script>
   <script src="js/backend-mock-studio.js"></script>
-  <script src="js/code-collab-live.js"></script>
   <script src="js/project-manager.js"></script>
   <script src="js/time-machine.js"></script>
   <script src="js/three-js-architect.js"></script>
   <script src="js/architecture-visualizer.js"></script>
-  <script src="js/code-studio.js?v=monaco-cdn-v2"></script>
+  <script src="js/code-studio.js?v=monaco-cdn-v3"></script>
   <!-- 🤖 IA Guide Bot + ⌨️ Command Palette -->
   <script src="js/ia-guide-bot.js"></script>
   <script src="js/command-palette.js"></script>
@@ -1247,12 +1242,8 @@
     </div>
   </div>
 
-  <!-- 🔥 Firebase SDK - Loaded statically at the bottom to prevent load blocking -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <!-- 🔐 User Auth & Database manager -->
-  <script src="js/user-auth-db.js?v=monaco-cdn-v2"></script>
+  <script src="js/user-auth-db.js?v=monaco-cdn-v3"></script>
 </body>
 </html>
 
