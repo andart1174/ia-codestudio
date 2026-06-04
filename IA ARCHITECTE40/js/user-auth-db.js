@@ -95,21 +95,9 @@
   // --- MOCK DATABASE CONTROLLER (LocalStorage fallback) ---
   const MockDb = {
     init() {
-      // Setup mock users if not existing
+      // Setup mock users if not existing (no default admin in local mode - security fix)
       if (!localStorage.getItem('mock_users')) {
-        const defaultUsers = {
-          'admin@iaarchitecte.com': {
-            uid: 'mock_admin_uid',
-            email: 'admin@iaarchitecte.com',
-            password: 'admin1234',
-            nickname: 'Admin Architect',
-            role: 'admin',
-            membership: 'premium',
-            isMuted: false,
-            isBanned: false,
-            createdAt: new Date().toISOString()
-          }
-        };
+        const defaultUsers = {}; // No default users - all users must register
         localStorage.setItem('mock_users', JSON.stringify(defaultUsers));
       }
 
@@ -241,8 +229,9 @@
           return reject(new Error(t('errUserExists')));
         }
         const uid = 'mock_user_' + Math.random().toString(36).substr(2, 9);
-        const role = (email.toLowerCase() === 'admin@iaarchitecte.com') ? 'admin' : 'user';
-        const membership = (email.toLowerCase() === 'admin@iaarchitecte.com') ? 'premium' : 'free';
+        // In local/offline mode, all users are regular users (no admin via mock)
+        const role = 'user';
+        const membership = 'free';
         
         users[email] = {
           uid: uid,
@@ -827,25 +816,28 @@
 
   // --- INITIALIZATION ---
   function initDatabase() {
-    let config = null;
+    // Always start with the built-in Firebase config (most reliable)
+    // A manually saved config from localStorage can override it only if valid
+    let config = DEFAULT_FIREBASE_CONFIG;
+    
     const savedConfig = localStorage.getItem('firebase_config');
     if (savedConfig) {
       try {
-        config = JSON.parse(savedConfig);
+        const parsed = JSON.parse(savedConfig);
+        // Only use saved config if it has different/custom apiKey
+        if (parsed && parsed.apiKey && parsed.apiKey !== DEFAULT_FIREBASE_CONFIG.apiKey) {
+          config = parsed;
+        }
       } catch(e) {
-        console.error("Failed to parse firebase config:", e);
+        console.warn("Saved Firebase config was invalid, using default config.");
+        localStorage.removeItem('firebase_config'); // Clear bad config
       }
-    }
-
-    // Use default keys if no configuration is manually saved in LocalStorage
-    if (!config) {
-      config = DEFAULT_FIREBASE_CONFIG;
     }
 
     if (config && config.apiKey) {
       loadScripts(firebaseScripts, (err) => {
         if (err) {
-          console.warn("Failed to load Firebase scripts, falling back to Local Mode.");
+          console.warn("Failed to load Firebase scripts (offline?), using Local Mode.");
           AppState.isFirebase = false;
           MockDb.init();
         } else {
@@ -1115,15 +1107,34 @@
           return;
         }
 
+        // Show loading state
+        const origText = newBtnLogin.textContent;
+        newBtnLogin.textContent = getLang() === 'fr' ? '⏳ Connexion...' : '⏳ Signing in...';
+        newBtnLogin.disabled = true;
+
         window.AppAuth.signIn(email, pass)
           .then(() => {
             document.getElementById('auth-modal').style.display = 'none';
-            if (window.showToast) window.showToast("Success! Hello " + window.AppAuth.currentUser.nickname);
+            const user = window.AppAuth.currentUser;
+            if (window.showToast) window.showToast('✅ ' + (getLang() === 'fr' ? 'Connecté ! Bonjour ' : 'Connected! Hello ') + (user ? user.nickname : ''));
             // Open the social panel to show the chat/dashboard immediately
             if (window.renderTab) window.renderTab('social');
           })
           .catch(err => {
-            alert(err.message || t('errInvalidCredentials'));
+            // Translate Firebase error codes to user-friendly messages
+            let msg = err.message || t('errInvalidCredentials');
+            if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+              msg = t('errInvalidCredentials');
+            } else if (err.code === 'auth/too-many-requests') {
+              msg = getLang() === 'fr' ? 'Trop de tentatives. Réessayez dans quelques minutes.' : 'Too many attempts. Please try again in a few minutes.';
+            } else if (err.code === 'auth/network-request-failed') {
+              msg = getLang() === 'fr' ? 'Erreur réseau. Vérifiez votre connexion internet.' : 'Network error. Check your internet connection.';
+            }
+            alert(msg);
+          })
+          .finally(() => {
+            newBtnLogin.textContent = origText;
+            newBtnLogin.disabled = false;
           });
       });
     }
@@ -1147,6 +1158,11 @@
           return;
         }
 
+        // Show loading state
+        const origText = newBtnRegister.textContent;
+        newBtnRegister.textContent = getLang() === 'fr' ? '⏳ Création...' : '⏳ Creating...';
+        newBtnRegister.disabled = true;
+
         window.AppAuth.signUp(email, pass, nick)
           .then(() => {
             // Automatically log in
@@ -1154,12 +1170,24 @@
           })
           .then(() => {
             document.getElementById('auth-modal').style.display = 'none';
-            alert(t('successRegister'));
+            if (window.showToast) window.showToast('✅ ' + t('successRegister'));
             // Open the social panel to show the chat/dashboard immediately
             if (window.renderTab) window.renderTab('social');
           })
           .catch(err => {
-            alert(err.message || t('errUserExists'));
+            let msg = err.message || t('errUserExists');
+            if (err.code === 'auth/email-already-in-use') {
+              msg = t('errUserExists');
+            } else if (err.code === 'auth/weak-password') {
+              msg = t('errPasswordLength');
+            } else if (err.code === 'auth/network-request-failed') {
+              msg = getLang() === 'fr' ? 'Erreur réseau. Vérifiez votre connexion internet.' : 'Network error. Check your internet connection.';
+            }
+            alert(msg);
+          })
+          .finally(() => {
+            newBtnRegister.textContent = origText;
+            newBtnRegister.disabled = false;
           });
       });
     }
@@ -1225,6 +1253,7 @@
     const pwF4 = document.getElementById('paywall-feat4');
     const pwBtn = document.getElementById('paywall-upgrade-btn');
     const pwLic = document.getElementById('paywall-license-btn');
+    const pwNote = document.getElementById('paywall-price-note');
 
     if (getLang() === 'fr') {
       if (pwTitle) pwTitle.textContent = "IA ARCHITECTE PREMIUM";
@@ -1233,8 +1262,9 @@
       if (pwF2) pwF2.textContent = "Exportation complète en ZIP, HTML autonome et modules JS";
       if (pwF3) pwF3.textContent = "Collaboration en temps réel via Firebase Live";
       if (pwF4) pwF4.textContent = "Pas de filigrane (watermark) sur les aperçus";
-      if (pwBtn) pwBtn.textContent = "Devenir Premium / Upgrade Now";
-      if (pwLic) pwLic.textContent = "J'ai une clé de licence / Activer";
+      if (pwBtn) pwBtn.textContent = "👑 Devenir Premium / Upgrade Now";
+      if (pwLic) pwLic.textContent = "🔑 J'ai une clé de licence / Activer";
+      if (pwNote) pwNote.textContent = "Paiement sécurisé · Annulez à tout moment · Activation instantanée";
     } else {
       if (pwTitle) pwTitle.textContent = "IA ARCHITECTE PREMIUM";
       if (pwSub) pwSub.textContent = "Unlock the full power of creation and export without limits.";
@@ -1242,8 +1272,9 @@
       if (pwF2) pwF2.textContent = "Full export in ZIP, standalone HTML and JS modules";
       if (pwF3) pwF3.textContent = "Real-time collaboration via Firebase Live";
       if (pwF4) pwF4.textContent = "No watermark on preview stages";
-      if (pwBtn) pwBtn.textContent = "Upgrade Now / Become Premium";
-      if (pwLic) pwLic.textContent = "I have a License Key / Redeem Key";
+      if (pwBtn) pwBtn.textContent = "👑 Upgrade Now / Become Premium";
+      if (pwLic) pwLic.textContent = "🔑 I have a License Key / Redeem Key";
+      if (pwNote) pwNote.textContent = "Secure payment · Cancel anytime · Instant activation";
     }
   };
 

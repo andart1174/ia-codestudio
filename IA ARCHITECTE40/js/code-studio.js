@@ -567,8 +567,8 @@ window.addEventListener('DOMContentLoaded',()=>{
     // 🔒 ANTI-THEFT PROTECTION: Global Copy Interceptor (Catches Ctrl+C, Ctrl+X AND Mouse Right-Click)
     ['copy', 'cut'].forEach(evt => {
        document.addEventListener(evt, (e) => {
-          // Verify premium membership
-          const isPremium = window.AppAuth && window.AppAuth.currentUser && window.AppAuth.currentUser.membership === 'premium';
+          // Verify premium membership (uses isPremium() which also checks Stripe payments)
+          const isPremium = window.AppAuth && window.AppAuth.isPremium ? window.AppAuth.isPremium() : (window.AppAuth && window.AppAuth.currentUser && window.AppAuth.currentUser.membership === 'premium');
           if (!isPremium) {
              e.preventDefault();
              e.stopPropagation();
@@ -1062,7 +1062,7 @@ function runPreview(){
   }
 
   // Inject Free Mode watermark if user is not premium
-  const isPremium = window.AppAuth && window.AppAuth.currentUser && window.AppAuth.currentUser.membership === 'premium';
+  const isPremium = (window.AppAuth && typeof window.AppAuth.isPremium === 'function') ? window.AppAuth.isPremium() : (window.AppAuth && window.AppAuth.currentUser && window.AppAuth.currentUser.membership === 'premium');
   if (!isPremium) {
      const watermarkCss = `
      <style id="ia-watermark-styles">
@@ -1205,6 +1205,10 @@ function sanitizeStandalone(html) {
 
 function wireTopbar(){
   const isUserPremium = () => {
+    // Use the full isPremium() check (covers Stripe, license keys, AND Firebase membership)
+    if (window.AppAuth && typeof window.AppAuth.isPremium === 'function') {
+      return window.AppAuth.isPremium();
+    }
     if (window.AppAuth && window.AppAuth.currentUser) {
       return window.AppAuth.currentUser.membership === 'premium';
     }

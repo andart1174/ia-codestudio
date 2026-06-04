@@ -1139,9 +1139,9 @@
       <!-- Register View -->
       <div id="auth-view-register" style="display: none;">
         <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px;">
-          <input type="text" id="reg-nickname" placeholder="Nickname / Pseudonim (ex: DevHero)" style="width: 100%; background: #0f172a; border: 1px solid #334155; color: #e2e8f0; padding: 10px 12px; border-radius: 8px; font-size: 11px; outline: none; box-sizing: border-box;" required>
+          <input type="text" id="reg-nickname" placeholder="Nickname / Pseudo (ex: DevHero)" style="width: 100%; background: #0f172a; border: 1px solid #334155; color: #e2e8f0; padding: 10px 12px; border-radius: 8px; font-size: 11px; outline: none; box-sizing: border-box;" required>
           <input type="email" id="reg-email" placeholder="Email Address / Adresse Email" style="width: 100%; background: #0f172a; border: 1px solid #334155; color: #e2e8f0; padding: 10px 12px; border-radius: 8px; font-size: 11px; outline: none; box-sizing: border-box;" required>
-          <input type="password" id="reg-password" placeholder="Password / Mot de passe" style="width: 100%; background: #0f172a; border: 1px solid #334155; color: #e2e8f0; padding: 10px 12px; border-radius: 8px; font-size: 11px; outline: none; box-sizing: border-box;" required>
+          <input type="password" id="reg-password" placeholder="Password / Mot de passe (min 6 chars)" style="width: 100%; background: #0f172a; border: 1px solid #334155; color: #e2e8f0; padding: 10px 12px; border-radius: 8px; font-size: 11px; outline: none; box-sizing: border-box;" required>
         </div>
         <button id="btn-do-register" style="width: 100%; background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; padding: 12px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer;">Register / S'inscrire</button>
         
@@ -1195,12 +1195,15 @@
       
       <!-- Action buttons -->
       <div style="display: flex; flex-direction: column; gap: 10px;">
-        <a id="paywall-upgrade-btn" href="https://buy.stripe.com/bJecN6bfUfbbaax36qbfO02" target="_blank" style="display: block; text-decoration: none; text-align: center; background: linear-gradient(135deg, #8b5cf6, #ec4899); color: #fff; border: none; padding: 14px; border-radius: 10px; font-size: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4); transition: transform 0.2s;">
-          Upgrade Now / Become Premium
+        <a id="paywall-upgrade-btn" href="https://iaarchitecte.com/#pricing" target="_blank" style="display: block; text-decoration: none; text-align: center; background: linear-gradient(135deg, #8b5cf6, #ec4899); color: #fff; border: none; padding: 14px; border-radius: 10px; font-size: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4); transition: transform 0.2s; letter-spacing: 0.5px;">
+          👑 Upgrade Now / Become Premium
         </a>
         <button id="paywall-license-btn" onclick="document.getElementById('paywall-modal').style.display='none'; if(window.renderTab) window.renderTab('social');" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; padding: 10px; border-radius: 10px; font-size: 11px; cursor: pointer;">
-          I have a License Key / Redeem Key
+          🔑 I have a License Key / Redeem Key
         </button>
+        <div style="font-size: 9px; color: #475569; margin-top: 4px;">
+          <span id="paywall-price-note">Secure payment · Cancel anytime · Instant activation</span>
+        </div>
       </div>
 
     </div>
@@ -1212,3 +1215,4 @@
   <script src="js/social-hub.js"></script>
 </body>
 </html>
+
