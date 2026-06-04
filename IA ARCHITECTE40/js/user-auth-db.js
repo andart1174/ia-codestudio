@@ -779,6 +779,32 @@
     }
   };
 
+  function loadScripts(urls, callback) {
+    let index = 0;
+    function loadNext() {
+      if (index >= urls.length) {
+        return callback(null);
+      }
+      const url = urls[index];
+      if (document.querySelector(`script[src="${url}"]`)) {
+        index++;
+        loadNext();
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = url;
+      script.onload = () => {
+        index++;
+        loadNext();
+      };
+      script.onerror = () => {
+        callback(new Error("Failed to load script: " + url));
+      };
+      document.head.appendChild(script);
+    }
+    loadNext();
+  }
+
   const DEFAULT_FIREBASE_CONFIG = {
     apiKey: "AIzaSyBWwpp5eOzj2Ta8gQUa78zqdnVAlFG6RwE",
     authDomain: "ia-codestudio-7ce3a.firebaseapp.com",

@@ -500,6 +500,13 @@
     const saved = localStorage.getItem('firebase_config');
     if (saved) {
       try { conf = JSON.parse(saved); } catch(e) {}
+    } else {
+      // Show default hardcoded Firebase config keys in UI
+      conf = {
+        apiKey: "AIzaSyBWwpp5eOzj2Ta8gQUa78zqdnVAlFG6RwE",
+        databaseURL: "https://ia-codestudio-7ce3a-default-rtdb.firebaseio.com",
+        projectId: "ia-codestudio-7ce3a"
+      };
     }
 
     form.innerHTML = `
