@@ -1160,6 +1160,36 @@
       ? 'register' 
       : (document.getElementById('auth-view-recover').style.display === 'block' ? 'recover' : 'login');
     window.showAuthView(currentView);
+
+    // Paywall Modal translations (English/French only)
+    const pwTitle = document.getElementById('paywall-title');
+    const pwSub = document.getElementById('paywall-subtitle');
+    const pwF1 = document.getElementById('paywall-feat1');
+    const pwF2 = document.getElementById('paywall-feat2');
+    const pwF3 = document.getElementById('paywall-feat3');
+    const pwF4 = document.getElementById('paywall-feat4');
+    const pwBtn = document.getElementById('paywall-upgrade-btn');
+    const pwLic = document.getElementById('paywall-license-btn');
+
+    if (getLang() === 'fr') {
+      if (pwTitle) pwTitle.textContent = "IA ARCHITECTE PREMIUM";
+      if (pwSub) pwSub.textContent = "Débloquez la puissance complète de création et d'exportation sans limites.";
+      if (pwF1) pwF1.textContent = "Copie de code et formatage instantanés dans Monaco";
+      if (pwF2) pwF2.textContent = "Exportation complète en ZIP, HTML autonome et modules JS";
+      if (pwF3) pwF3.textContent = "Collaboration en temps réel via Firebase Live";
+      if (pwF4) pwF4.textContent = "Pas de filigrane (watermark) sur les aperçus";
+      if (pwBtn) pwBtn.textContent = "Devenir Premium / Upgrade Now";
+      if (pwLic) pwLic.textContent = "J'ai une clé de licence / Activer";
+    } else {
+      if (pwTitle) pwTitle.textContent = "IA ARCHITECTE PREMIUM";
+      if (pwSub) pwSub.textContent = "Unlock the full power of creation and export without limits.";
+      if (pwF1) pwF1.textContent = "Instant code copy and formatting in Monaco";
+      if (pwF2) pwF2.textContent = "Full export in ZIP, standalone HTML and JS modules";
+      if (pwF3) pwF3.textContent = "Real-time collaboration via Firebase Live";
+      if (pwF4) pwF4.textContent = "No watermark on preview stages";
+      if (pwBtn) pwBtn.textContent = "Upgrade Now / Become Premium";
+      if (pwLic) pwLic.textContent = "I have a License Key / Redeem Key";
+    }
   };
 
   // Wire presence update on count change

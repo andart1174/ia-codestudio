@@ -1125,8 +1125,8 @@
       <!-- Login View -->
       <div id="auth-view-login">
         <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px;">
-          <input type="email" id="login-email" placeholder="Email (ex: admin@iaarchitecte.com)" style="width: 100%; background: #0f172a; border: 1px solid #334155; color: #e2e8f0; padding: 10px 12px; border-radius: 8px; font-size: 11px; outline: none; box-sizing: border-box;" required>
-          <input type="password" id="login-password" placeholder="Password / Mot de passe (ex: admin1234)" style="width: 100%; background: #0f172a; border: 1px solid #334155; color: #e2e8f0; padding: 10px 12px; border-radius: 8px; font-size: 11px; outline: none; box-sizing: border-box;" required>
+          <input type="email" id="login-email" placeholder="Email" style="width: 100%; background: #0f172a; border: 1px solid #334155; color: #e2e8f0; padding: 10px 12px; border-radius: 8px; font-size: 11px; outline: none; box-sizing: border-box;" required>
+          <input type="password" id="login-password" placeholder="Password / Mot de passe" style="width: 100%; background: #0f172a; border: 1px solid #334155; color: #e2e8f0; padding: 10px 12px; border-radius: 8px; font-size: 11px; outline: none; box-sizing: border-box;" required>
         </div>
         <button id="btn-do-login" style="width: 100%; background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: #fff; border: none; padding: 12px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer;">Connexion / Login</button>
         
@@ -1175,31 +1175,31 @@
       
       <div style="font-size: 40px; margin-bottom: 12px; filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.6));">👑</div>
       <h3 id="paywall-title" style="margin: 0 0 6px; font-size: 18px; font-weight: 900; color: #fff; background: linear-gradient(90deg, #a78bfa, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">IA ARCHITECTE PREMIUM</h3>
-      <p id="paywall-subtitle" style="font-size: 11px; color: #94a3b8; margin: 0 0 20px; line-height: 1.5;">Deblochează puterea completă de creație și export fără limite.</p>
+      <p id="paywall-subtitle" style="font-size: 11px; color: #94a3b8; margin: 0 0 20px; line-height: 1.5;">Unlock the full power of creation and export without limits.</p>
       
       <!-- Features list -->
       <div style="text-align: left; display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 16px; border-radius: 12px;">
         <div style="display: flex; align-items: center; gap: 10px; font-size: 11px; color: #cbd5e1;">
-          <span style="color: #10b981;">✔</span> <span id="paywall-feat1">Copiere de cod și formatare instantanee în Monaco</span>
+          <span style="color: #10b981;">✔</span> <span id="paywall-feat1">Instant code copy and formatting in Monaco</span>
         </div>
         <div style="display: flex; align-items: center; gap: 10px; font-size: 11px; color: #cbd5e1;">
-          <span style="color: #10b981;">✔</span> <span id="paywall-feat2">Export complet în ZIP, HTML standalone și module JS</span>
+          <span style="color: #10b981;">✔</span> <span id="paywall-feat2">Full export in ZIP, standalone HTML and JS modules</span>
         </div>
         <div style="display: flex; align-items: center; gap: 10px; font-size: 11px; color: #cbd5e1;">
-          <span style="color: #10b981;">✔</span> <span id="paywall-feat3">Colaborare în timp real prin Firebase live</span>
+          <span style="color: #10b981;">✔</span> <span id="paywall-feat3">Real-time collaboration via Firebase Live</span>
         </div>
         <div style="display: flex; align-items: center; gap: 10px; font-size: 11px; color: #cbd5e1;">
-          <span style="color: #10b981;">✔</span> <span id="paywall-feat4">Fără watermark pe ecranele de previzualizare</span>
+          <span style="color: #10b981;">✔</span> <span id="paywall-feat4">No watermark on preview stages</span>
         </div>
       </div>
       
       <!-- Action buttons -->
       <div style="display: flex; flex-direction: column; gap: 10px;">
-        <a id="paywall-upgrade-btn" href="https://iaarchitecte.com" target="_blank" style="display: block; text-decoration: none; text-align: center; background: linear-gradient(135deg, #8b5cf6, #ec4899); color: #fff; border: none; padding: 14px; border-radius: 10px; font-size: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4); transition: transform 0.2s;">
-          Upgrade Now / Devino Premium
+        <a id="paywall-upgrade-btn" href="https://buy.stripe.com/bJecN6bfUfbbaax36qbfO02" target="_blank" style="display: block; text-decoration: none; text-align: center; background: linear-gradient(135deg, #8b5cf6, #ec4899); color: #fff; border: none; padding: 14px; border-radius: 10px; font-size: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4); transition: transform 0.2s;">
+          Upgrade Now / Become Premium
         </a>
-        <button onclick="document.getElementById('paywall-modal').style.display='none'; if(window.renderTab) window.renderTab('social');" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; padding: 10px; border-radius: 10px; font-size: 11px; cursor: pointer;">
-          I have a License Key / Am cod de licență
+        <button id="paywall-license-btn" onclick="document.getElementById('paywall-modal').style.display='none'; if(window.renderTab) window.renderTab('social');" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; padding: 10px; border-radius: 10px; font-size: 11px; cursor: pointer;">
+          I have a License Key / Redeem Key
         </button>
       </div>
 
