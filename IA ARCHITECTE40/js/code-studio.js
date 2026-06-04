@@ -575,7 +575,7 @@ window.addEventListener('DOMContentLoaded',()=>{
     };
     showToast('⚠️ ' + (lang === 'fr' ? 'Éditeur Monaco hors ligne — Mode texte actif' : 'Monaco offline — Text editor active'));
   }
-  const monacoTimeout = setTimeout(() => { if (!window.editor || !window.editor.getModel || !window.editor.getModel()) showFallbackEditor(); }, 8000);
+  const monacoTimeout = setTimeout(() => { if (!window.editor || !window.editor.getModel || !window.editor.getModel()) showFallbackEditor(); }, 3000);
 
   // Load Monaco with primary CDN (jsdelivr), fallback to unpkg
   function loadMonaco(cdnPath) {

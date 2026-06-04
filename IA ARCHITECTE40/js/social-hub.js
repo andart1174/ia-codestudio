@@ -104,7 +104,8 @@
   };
 
   function gl() {
-    return window.lang || 'fr'; // default to French
+    // Use app language (set by language buttons in toolbar), default to English
+    return window.lang || 'en';
   }
 
   function t(key) {
