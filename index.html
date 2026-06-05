@@ -1258,7 +1258,17 @@
                 if (id === 'admin') refreshAdminStats();
             }
 
-            document.addEventListener('DOMContentLoaded', authCheck);
+            document.addEventListener('DOMContentLoaded', () => {
+                authCheck();
+                // Background sync on load if user session exists to keep premium state updated
+                if (localStorage.getItem('genius_session')) {
+                    syncFirebaseWithLocal()
+                        .then(() => {
+                            if (typeof checkPremiumPortal === 'function') checkPremiumPortal();
+                        })
+                        .catch(e => console.log('Startup sync warning:', e));
+                }
+            });
         </script>
 
         <!-- Applications Showcase -->
