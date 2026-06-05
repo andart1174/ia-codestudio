@@ -546,9 +546,16 @@ window.addEventListener('DOMContentLoaded',()=>{
   renderTab(activeTab);
   document.querySelectorAll('.ltab').forEach(b=>b.addEventListener('click',()=>(window.renderTab||renderTab)(b.dataset.tab)));
 
+  let monacoCheckCount = 0;
   function loadMonaco() {
     if (typeof require === 'undefined') {
-      setTimeout(loadMonaco, 100);
+      setTimeout(loadMonaco, 50);
+      return;
+    }
+    // Wait for dynamic CDN prefix to be defined to avoid mixed-origin AMD loading failures
+    if (typeof window.MONACO_CDN_PREFIX === 'undefined' && monacoCheckCount < 30) {
+      monacoCheckCount++;
+      setTimeout(loadMonaco, 50);
       return;
     }
     const cdnPath = window.MONACO_CDN_PREFIX || 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs';
