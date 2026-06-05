@@ -546,93 +546,43 @@ window.addEventListener('DOMContentLoaded',()=>{
   renderTab(activeTab);
   document.querySelectorAll('.ltab').forEach(b=>b.addEventListener('click',()=>(window.renderTab||renderTab)(b.dataset.tab)));
 
-  let monacoCheckCount = 0;
-  function loadMonaco() {
-    if (typeof require === 'undefined') {
-      setTimeout(loadMonaco, 50);
-      return;
-    }
-    // Wait for dynamic CDN prefix to be defined to avoid mixed-origin AMD loading failures
-    if (typeof window.MONACO_CDN_PREFIX === 'undefined' && monacoCheckCount < 30) {
-      monacoCheckCount++;
-      setTimeout(loadMonaco, 50);
-      return;
-    }
-    const cdnPath = window.MONACO_CDN_PREFIX || 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs';
-    require.config({paths:{vs:cdnPath}});
-    require(['vs/editor/editor.main'],()=>{
-      editor=monaco.editor.create(document.getElementById('monaco-container'),{
-        value:code,language:'html',theme:editorTheme,fontSize,wordWrap,
-        minimap:{enabled:true,scale:1},automaticLayout:true,scrollBeyondLastLine:false,
-        padding:{top:16,bottom:16},lineNumbers:'on',roundedSelection:true,
-        cursorBlinking:'smooth',cursorSmoothCaretAnimation:'on',smoothScrolling:true,
-        formatOnPaste:true,bracketPairColorization:{enabled:true},folding:true,
-        scrollbar:{useShadows:false,verticalScrollbarSize:5,horizontalScrollbarSize:5}
-      });
-      editor.onDidChangeModelContent(()=>{
-        code=editor.getValue();
-        updateQuality();
-        updateStats();
-        if(activeTab === 'audit') renderTab('audit'); // Real-time Auditor Refresh
-        if(autoRun)runPreview();
-      });
-      
-      // 🔒 ANTI-THEFT PROTECTION: Global Copy Interceptor (Catches Ctrl+C, Ctrl+X AND Mouse Right-Click)
-      ['copy', 'cut'].forEach(evt => {
-         document.addEventListener(evt, (e) => {
-            // If not premium, block completely and show paywall
-            if (typeof window.isUserPremium === 'function' && !window.isUserPremium()) {
-               e.preventDefault();
-               e.stopPropagation();
-               if (typeof window.showPaywallModal === 'function') {
-                  window.showPaywallModal();
-               }
-               return;
-            }
-
-            let selectedText = window.getSelection().toString();
-            if(window.editor && window.editor.hasTextFocus()) {
-               const selection = window.editor.getSelection();
-               selectedText = window.editor.getModel().getValueInRange(selection);
-            }
-            
-            if (!selectedText && window.editor) {
-               selectedText = window.getSelection().toString() || '';
-            }
-            
-            const lineCount = selectedText.split('\n').length;
-            if (lineCount > 10) {
-               e.preventDefault();
-               e.stopPropagation();
-               
-               const warningMsg = "/*\n 🔒 IA ARCHITECTE SECURITY 🔒\n Mass copying is disabled for security reasons.\n Please use the 'EXPORT ALL' button to run the application!\n \n 🔒 SÉCURITÉ IA ARCHITECTE 🔒\n La copie massive est désactivée par mesure de sécurité.\n Veuillez utiliser le bouton 'EXPORT ALL' pour exécuter l'application!\n*/";
-               
-               if (e.clipboardData) {
-                  e.clipboardData.setData('text/plain', warningMsg);
-               } else {
-                  navigator.clipboard.writeText(warningMsg);
-               }
-               
-               const copyBtn = document.getElementById('lbl-copy');
-               if(copyBtn) {
-                  const orig = copyBtn.textContent;
-                  copyBtn.textContent = evt === 'cut' ? '🔒 LIMIT CUT' : '🔒 LIMIT COPY';
-                  copyBtn.style.color = '#ef4444';
-                  setTimeout(() => {
-                     copyBtn.textContent = orig;
-                     copyBtn.style.color = '';
-                  }, 2500);
-               }
-            }
-         }, true); // True = Capture phase (runs before Monaco's internal copy handler)
-      });
-
-      window.editor = editor; // 🚀 Globalize for IA-PRO Features
-      updateQuality();updateStats();runPreview();
+  require.config({paths:{vs:'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs'}});
+  require(['vs/editor/editor.main'],()=>{
+    editor=monaco.editor.create(document.getElementById('monaco-container'),{
+      value:code,language:'html',theme:editorTheme,fontSize,wordWrap,
+      minimap:{enabled:true,scale:1},automaticLayout:true,scrollBeyondLastLine:false,
+      padding:{top:16,bottom:16},lineNumbers:'on',roundedSelection:true,
+      cursorBlinking:'smooth',cursorSmoothCaretAnimation:'on',smoothScrolling:true,
+      formatOnPaste:true,bracketPairColorization:{enabled:true},folding:true,
+      scrollbar:{useShadows:false,verticalScrollbarSize:5,horizontalScrollbarSize:5}
     });
-  }
+    editor.onDidChangeModelContent(()=>{
+      code=editor.getValue();
+      updateQuality();
+      updateStats();
+      if(activeTab === 'audit') renderTab('audit'); // Real-time Auditor Refresh
+      if(autoRun)runPreview();
+    });
+    
+    // 🔒 ANTI-THEFT PROTECTION: Global Copy Interceptor (Catches Ctrl+C, Ctrl+X AND Mouse Right-Click)
+    ['copy', 'cut'].forEach(evt => {
+       document.addEventListener(evt, (e) => {
+          // If not premium, block completely and show paywall modal
+          if (typeof window.isUserPremium === 'function' && !window.isUserPremium()) {
+             e.preventDefault();
+             e.stopPropagation();
+             if (typeof window.showPaywallModal === 'function') {
+                window.showPaywallModal();
+             }
+             return;
+          }
+          // Premium users can copy anything without warning/interruption
+       }, true); // True = Capture phase (runs before Monaco's internal copy handler)
+    });
 
-  loadMonaco();
+    window.editor = editor; // 🚀 Globalize for IA-PRO Features
+    updateQuality();updateStats();runPreview();
+  });
 
   window.addEventListener('message', e => {
     if(!e.data || e.data.type !== 'inspect') return;
@@ -1193,27 +1143,13 @@ function wireTopbar(){
         if (typeof window.showPaywallModal === 'function') window.showPaywallModal();
         return;
      }
-     const lineCount = code.split('\n').length;
-     if (lineCount > 10) {
-        const warningMsg = "/*\n 🔒 IA ARCHITECTE SECURITY 🔒\n Mass copying is disabled for security reasons.\n Please use the 'EXPORT ALL' button to run the application!\n \n 🔒 SÉCURITÉ IA ARCHITECTE 🔒\n La copie massive est désactivée par mesure de sécurité.\n Veuillez utiliser le bouton 'EXPORT ALL' pour exécuter l'application!\n*/";
-        navigator.clipboard.writeText(warningMsg).then(()=>{
-           if (document.getElementById('lbl-copy')) {
-              document.getElementById('lbl-copy').textContent='🔒 LIMIT COPY';
-              document.getElementById('lbl-copy').style.color='#ef4444';
-              setTimeout(()=>{
-                  document.getElementById('lbl-copy').textContent=t('copy');
-                  document.getElementById('lbl-copy').style.color='';
-              },2500);
-           }
-        });
-     } else {
-        navigator.clipboard.writeText(code).then(()=>{
-           if (document.getElementById('lbl-copy')) {
-              document.getElementById('lbl-copy').textContent=t('copied');
-              setTimeout(()=>document.getElementById('lbl-copy').textContent=t('copy'),2000);
-           }
-        });
-     }
+     // Premium users can copy everything without restrictions
+     navigator.clipboard.writeText(code).then(()=>{
+        if (document.getElementById('lbl-copy')) {
+           document.getElementById('lbl-copy').textContent=t('copied');
+           setTimeout(()=>document.getElementById('lbl-copy').textContent=t('copy'),2000);
+        }
+     });
   });
   document.getElementById('btn-save').addEventListener('click',()=>{
     localStorage.setItem('ia_arch_code',code);lastSaved=new Date();

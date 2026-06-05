@@ -622,51 +622,7 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <!-- 🎛️ Monaco Editor Loader with multi-CDN fallback -->
-  <script>
-    (function() {
-      const cdns = [
-        'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js',
-        'https://unpkg.com/monaco-editor@0.45.0/min/vs/loader.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js'
-      ];
-      let currentIdx = 0;
-      function loadNext() {
-        if (currentIdx >= cdns.length) {
-          console.error('All Monaco Loader CDNs failed.');
-          return;
-        }
-        const s = document.createElement('script');
-        s.src = cdns[currentIdx];
-        
-        let timeoutTriggered = false;
-        const loadTimeout = setTimeout(() => {
-          if (window.require) return; // Monaco loader already loaded successfully
-          timeoutTriggered = true;
-          console.warn('Monaco loader timed out from ' + cdns[currentIdx] + ', trying next...');
-          s.remove(); // Remove the hanging script
-          currentIdx++;
-          loadNext();
-        }, 2500); // 2.5s timeout per CDN
- 
-        s.onerror = function() {
-          if (timeoutTriggered) return;
-          clearTimeout(loadTimeout);
-          console.warn('Monaco loader failed from ' + cdns[currentIdx] + ', trying next...');
-          currentIdx++;
-          loadNext();
-        };
-        s.onload = function() {
-          if (timeoutTriggered) return;
-          clearTimeout(loadTimeout);
-          console.log('Monaco loader loaded successfully from ' + cdns[currentIdx]);
-          window.MONACO_CDN_PREFIX = cdns[currentIdx].replace('/loader.js', '').replace('/loader.min.js', '');
-        };
-        document.head.appendChild(s);
-      }
-      loadNext();
-    })();
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
   <script src="js/premium-lock.js"></script>
   <script src="js/genius-core.js"></script>
   <script src="js/ai-engine.js"></script>
@@ -709,7 +665,7 @@
   <script src="js/time-machine.js"></script>
   <script src="js/three-js-architect.js"></script>
   <script src="js/architecture-visualizer.js"></script>
-  <script src="js/code-studio.js?v=premium-lock-v3"></script>
+  <script src="js/code-studio.js?v=premium-lock-v4"></script>
   <!-- 🤖 IA Guide Bot + ⌨️ Command Palette -->
   <script src="js/ia-guide-bot.js"></script>
   <script src="js/command-palette.js"></script>
