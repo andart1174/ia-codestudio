@@ -1,0 +1,823 @@
+[
+  {
+    "step": 69,
+    "tool": "replace_file_content",
+    "description": "\"Add customMediaDataUrl and customMediaType top-level variables.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Add customMediaDataUrl and customMediaType top-level variables.\"",
+      "EndLine": "18",
+      "Instruction": "\"Add custom background variables customMediaDataUrl and customMediaType inside IIFE.\"",
+      "ReplacementContent": "\"  let currentMode = '3d'; // '3d' or 'draw'\\n  let currentEnv = 'studio';\\n  let customMediaDataUrl = '';\\n  let customMediaType = ''; // 'image' or 'video'\\n\\n  // Three.js variables\"",
+      "StartLine": "15",
+      "TargetContent": "\"  let currentMode = '3d'; // '3d' or 'draw'\\n  let currentEnv = 'studio';\\n\\n  // Three.js variables\"",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 73,
+    "tool": "replace_file_content",
+    "description": "\"Add Custom Photo/Video and Presets options to se-env dropdown, and append a custom media upload section beneath it.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Add Custom Photo/Video and Presets options to se-env dropdown, and append a custom media upload section beneath it.\"",
+      "EndLine": "726",
+      "Instruction": "\"Update the se-env dropdown options and add the se-custom-media-container div.\"",
+      "ReplacementContent": "\"          <select id=\\\"se-env\\\" style=\\\"width:100%;padding:6px;background:#1e293b;color:white;border:1px solid #475569;border-radius:4px;margin-bottom:8px;\\\">\\n              <option value=\\\"studio\\\">🎥 Studio (Default)</option>\\n              <option value=\\\"bright_studio\\\">🎨 ${isEN ? 'Premium White Studio (Brilliant)' : 'Studio Blanc Premium (Brillant)'}</option>\\n              <option value=\\\"cherry_blossom\\\">🌸 ${isEN ? 'Sakura Spring Garden (Romantic)' : 'Jardin de Cerisiers (Romantique)'}</option>\\n              <option value=\\\"crystal_oasis\\\">💎 ${isEN ? 'Magic Crystal Oasis (Luminous)' : 'Oasis de Cristal Magique (Lumineux)'}</option>\\n              <option value=\\\"aurora\\\">🌌 ${isEN ? 'Aurora Borealis (Magical Glow)' : 'Aurore Boréale (Éclat Magique)'}</option>\\n              <option value=\\\"heaven\\\">🏛️ ${isEN ? 'Golden Palace / Heaven (Celestial)' : 'Palais Doré / Paradis (Céleste)'}</option>\\n              <option value=\\\"cosmos\\\">🌠 Cosmos (Stars)</option>\\n              <option value=\\\"solar\\\">🪐 Solar System</option>\\n              <option value=\\\"storm\\\">⛈️ Storm (Rain & Lightning)</option>\\n              <option value=\\\"ocean\\\">🌊 Deep Ocean</option>\\n              <option value=\\\"cyber\\\">🟢 Cyber Matrix</option>\\n              <option value=\\\"sunset\\\">🌅 Synthwave Sunset</option>\\n              <option value=\\\"hologram\\\">🧊 Hologram Grid</option>\\n              <option value=\\\"forest\\\">🌲 Enchanted Forest</option>\\n              <option value=\\\"mars\\\">🏜️ Martian Desert</option>\\n              <option value=\\\"tokyo\\\">🌃 Neon Tokyo Night</option>\\n              <option value=\\\"blackhole\\\">🕳️ Black Hole</option>\\n              <option value=\\\"custom_photo\\\">🖼️ ${isEN ? 'Custom Photo' : 'Photo Personnalisée'}</option>\\n              <option value=\\\"custom_video\\\">🎥 ${isEN ? 'Custom Video' : 'Vidéo Personnalisée'}</option>\\n              <option value=\\\"preset_fireplace\\\">🔥 ${isEN ? 'Cozy Fireplace' : 'Cheminée Chaleureuse'}</option>\\n  \n<truncated 1576 bytes>",
+      "StartLine": "699",
+      "TargetContent": "\"          <select id=\\\"se-env\\\" style=\\\"width:100%;padding:6px;background:#1e293b;color:white;border:1px solid #475569;border-radius:4px;margin-bottom:8px;\\\">\\n              <option value=\\\"studio\\\">🎥 Studio (Default)</option>\\n              <option value=\\\"bright_studio\\\">🎨 ${isEN ? 'Premium White Studio (Brilliant)' : 'Studio Blanc Premium (Brillant)'}</option>\\n              <option value=\\\"cherry_blossom\\\">🌸 ${isEN ? 'Sakura Spring Garden (Romantic)' : 'Jardin de Cerisiers (Romantique)'}</option>\\n              <option value=\\\"crystal_oasis\\\">💎 ${isEN ? 'Magic Crystal Oasis (Luminous)' : 'Oasis de Cristal Magique (Lumineux)'}</option>\\n              <option value=\\\"aurora\\\">🌌 ${isEN ? 'Aurora Borealis (Magical Glow)' : 'Aurore Boréale (Éclat Magique)'}</option>\\n              <option value=\\\"heaven\\\">🏛️ ${isEN ? 'Golden Palace / Heaven (Celestial)' : 'Palais Doré / Paradis (Céleste)'}</option>\\n              <option value=\\\"cosmos\\\">🌠 Cosmos (Stars)</option>\\n              <option value=\\\"solar\\\">🪐 Solar System</option>\\n              <option value=\\\"storm\\\">⛈️ Storm (Rain & Lightning)</option>\\n              <option value=\\\"ocean\\\">🌊 Deep Ocean</option>\\n              <option value=\\\"cyber\\\">🟢 Cyber Matrix</option>\\n              <option value=\\\"sunset\\\">🌅 Synthwave Sunset</option>\\n              <option value=\\\"hologram\\\">🧊 Hologram Grid</option>\\n              <option value=\\\"forest\\\">🌲 Enchanted Forest</option>\\n              <option value=\\\"mars\\\">🏜️ Martian Desert</option>\\n              <option value=\\\"tokyo\\\">🌃 Neon Tokyo Night</option>\\n              <option value=\\\"blackhole\\\">🕳️ Black Hole</option>\\n          </select>\\n\\n          <label class=\\\"se-lbl\\\" id=\\\"lbl-bg-effect\\\" style=\\\"color:#8b5cf6;\\\">✨ ${isEN ? 'Scene Background' : 'Fond de Scène'}</label>\\n          <select id=\\\"se-bg-effect\\\" style=\\\"width:100%;padding:6px;background:#1e293b;color:white;border:1px solid #475569;border-radius:4px;margin-bottom:8px;\\\">\\n             \n<truncated 252 bytes>",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 77,
+    "tool": "replace_file_content",
+    "description": "\"Bind change event for custom environment select and custom media file upload inside setupEvents.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Bind change event for custom environment select and custom media file upload inside setupEvents.\"",
+      "EndLine": "1770",
+      "Instruction": "\"Replace the simple se-env change listener with a version that toggles the upload panel, and bind the se-custom-media-file change listener.\"",
+      "ReplacementContent": "\"       // Environment\\n       const mediaInput = document.getElementById('se-custom-media-file');\\n       const mediaContainer = document.getElementById('se-custom-media-container');\\n       const mediaBtnText = document.getElementById('se-custom-media-btn-text');\\n       const mediaStatus = document.getElementById('se-custom-media-status');\\n\\n       document.getElementById('se-env').addEventListener('change', (e) => {\\n           currentEnv = e.target.value;\\n           \\n           if (currentEnv === 'custom_photo' || currentEnv === 'custom_video') {\\n               mediaContainer.style.display = 'block';\\n               if (currentEnv === 'custom_photo') {\\n                   mediaInput.accept = \\\"image/*\\\";\\n                   mediaBtnText.innerHTML = `📁 ${isEN ? 'Upload Photo' : 'Télécharger Photo'}`;\\n               } else {\\n                   mediaInput.accept = \\\"video/*\\\";\\n                   mediaBtnText.innerHTML = `📁 ${isEN ? 'Upload Video' : 'Télécharger Vidéo'}`;\\n               }\\n               mediaStatus.style.display = 'none';\\n               mediaInput.value = '';\\n           } else {\\n               mediaContainer.style.display = 'none';\\n           }\\n           \\n           buildEnv(currentEnv, scene);\\n       });\\n\\n       if (mediaInput) {\\n           mediaInput.addEventListener('change', (e) => {\\n               const file = e.target.files[0];\\n               if (!file) return;\\n               \\n               mediaStatus.style.display = 'block';\\n               mediaStatus.style.color = '#38bdf8';\\n               mediaStatus.innerText = isEN ? 'Processing...' : 'Traitement...';\\n               \\n               const reader = new FileReader();\\n               reader.onload = (event) => {\\n                   customMediaDataUrl = event.target.result;\\n                   customMediaType = file.type.startsWith('image/') ? 'image' : 'video';\\n                   \\n                   mediaStatus.style.color = '#10b981';\\n                   mediaStatus.innerText = isEN ? '✔️ Lo\n<truncated 437 bytes>",
+      "StartLine": "1765",
+      "TargetContent": "\"       // Environment\\n       document.getElementById('se-env').addEventListener('change', (e) => {\\n           currentEnv = e.target.value;\\n           buildEnv(currentEnv, scene);\\n       });\"",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 81,
+    "tool": "replace_file_content",
+    "description": "\"Bind change event for custom environment select and custom media file upload inside setupEvents with correct spaces.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Bind change event for custom environment select and custom media file upload inside setupEvents with correct spaces.\"",
+      "EndLine": "1770",
+      "Instruction": "\"Replace the se-env change event listener with custom media handling inside setupEvents.\"",
+      "ReplacementContent": "\"  function setupEvents() {\\n      // Environment\\n      const mediaInput = document.getElementById('se-custom-media-file');\\n      const mediaContainer = document.getElementById('se-custom-media-container');\\n      const mediaBtnText = document.getElementById('se-custom-media-btn-text');\\n      const mediaStatus = document.getElementById('se-custom-media-status');\\n\\n      document.getElementById('se-env').addEventListener('change', (e) => {\\n          currentEnv = e.target.value;\\n          \\n          if (currentEnv === 'custom_photo' || currentEnv === 'custom_video') {\\n              mediaContainer.style.display = 'block';\\n              if (currentEnv === 'custom_photo') {\\n                  mediaInput.accept = \\\"image/*\\\";\\n                  mediaBtnText.innerHTML = `📁 ${isEN ? 'Upload Photo' : 'Télécharger Photo'}`;\\n              } else {\\n                  mediaInput.accept = \\\"video/*\\\";\\n                  mediaBtnText.innerHTML = `📁 ${isEN ? 'Upload Video' : 'Télécharger Vidéo'}`;\\n              }\\n              mediaStatus.style.display = 'none';\\n              mediaInput.value = '';\\n          } else {\\n              mediaContainer.style.display = 'none';\\n          }\\n          \\n          buildEnv(currentEnv, scene);\\n      });\\n\\n      if (mediaInput) {\\n          mediaInput.addEventListener('change', (e) => {\\n              const file = e.target.files[0];\\n              if (!file) return;\\n              \\n              mediaStatus.style.display = 'block';\\n              mediaStatus.style.color = '#38bdf8';\\n              mediaStatus.innerText = isEN ? 'Processing...' : 'Traitement...';\\n              \\n              const reader = new FileReader();\\n              reader.onload = (event) => {\\n                  customMediaDataUrl = event.target.result;\\n                  customMediaType = file.type.startsWith('image/') ? 'image' : 'video';\\n                  \\n                  mediaStatus.style.color = '#10b981';\\n                  mediaStatus.innerText = isEN ? '✔️ Loaded successf\n<truncated 414 bytes>",
+      "StartLine": "1764",
+      "TargetContent": "\"  function setupEvents() {\\n      // Environment\\n      document.getElementById('se-env').addEventListener('change', (e) => {\\n          currentEnv = e.target.value;\\n          buildEnv(currentEnv, scene);\\n      });\"",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 85,
+    "tool": "replace_file_content",
+    "description": "\"Update updateSceneBrightness to adjust background plane material color scalar.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Update updateSceneBrightness to adjust background plane material color scalar.\"",
+      "EndLine": "2632",
+      "Instruction": "\"Modify updateSceneBrightness to update the background plane material color scalar if the background plane exists.\"",
+      "ReplacementContent": "\"      const updateSceneBrightness = () => {\\n          const mult = parseFloat(document.getElementById('se-scene-brightness').value);\\n          document.getElementById('se-brightness-val').innerText = mult.toFixed(1) + 'x';\\n          if(mainAmbientLight) mainAmbientLight.intensity = 0.6 * mult;\\n          if(mainHemiLight) mainHemiLight.intensity = 0.8 * mult;\\n          if(mainDirLight) mainDirLight.intensity = 1.2 * mult;\\n          if(scene && scene.bgPlane && scene.bgPlane.material) {\\n              scene.bgPlane.material.color.setScalar(mult);\\n          }\\n      };\"",
+      "StartLine": "2626",
+      "TargetContent": "\"      const updateSceneBrightness = () => {\\n          const mult = parseFloat(document.getElementById('se-scene-brightness').value);\\n          document.getElementById('se-brightness-val').innerText = mult.toFixed(1) + 'x';\\n          if(mainAmbientLight) mainAmbientLight.intensity = 0.6 * mult;\\n          if(mainHemiLight) mainHemiLight.intensity = 0.8 * mult;\\n          if(mainDirLight) mainDirLight.intensity = 1.2 * mult;\\n      };\"",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 97,
+    "tool": "replace_file_content",
+    "description": "\"Add custom photo/video background handling and preset loops into buildEnv function.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Add custom photo/video background handling and preset loops into buildEnv function.\"",
+      "EndLine": "1042",
+      "Instruction": "\"Replace the top section of buildEnv to clean up old videos and implement custom video/photo background rendering.\"",
+      "ReplacementContent": "\"  function buildEnv(type, scn) {\\n      if(!scn) return;\\n      if (scn._bgVideo) {\\n          try {\\n              scn._bgVideo.pause();\\n              scn._bgVideo.src = \\\"\\\";\\n              scn._bgVideo.load();\\n          } catch(e) {}\\n          scn._bgVideo = null;\\n      }\\n      if (scn.bgPlane) {\\n          scn.bgPlane = null;\\n      }\\n      if(scn.envGroup) { scn.remove(scn.envGroup); }\\n      if(bgGroup) { bgGroup = null; } // Reference cleanup\\n      scn.fog = null;\\n      scn.background = null;\\n      const grp = new THREE.Group();\\n      scn.envGroup = grp;\\n      scn.add(grp);\\n      if(!scn.animCbs) scn.animCbs = [];\\n      // Only remove environment-specific callbacks, preserve audio/user callbacks\\n      else scn.animCbs = scn.animCbs.filter(cb => !cb._isEnv);\\n      // Helper: add an env-tagged callback\\n      const _addEnvCb = (fn) => { fn._isEnv = true; scn.animCbs.push(fn); };\\n\\n      if (type === 'custom_photo' || type === 'custom_video' || type.startsWith('preset_')) {\\n          let mediaUrl = '';\\n          let mediaType = '';\\n          \\n          if (type === 'custom_photo') {\\n              mediaUrl = typeof customMediaDataUrl !== 'undefined' ? customMediaDataUrl : '';\\n              mediaType = 'image';\\n          } else if (type === 'custom_video') {\\n              mediaUrl = typeof customMediaDataUrl !== 'undefined' ? customMediaDataUrl : '';\\n              mediaType = 'video';\\n          } else if (type === 'preset_fireplace') {\\n              mediaUrl = 'https://videos.pexels.com/video-files/1806923/1806923-sd_640_360_24fps.mp4';\\n              mediaType = 'video';\\n          } else if (type === 'preset_river') {\\n              mediaUrl = 'https://videos.pexels.com/video-files/853889/853889-sd_640_360_25fps.mp4';\\n              mediaType = 'video';\\n          } else if (type === 'preset_ocean') {\\n              mediaUrl = 'https://videos.pexels.com/video-files/1448735/1448735-sd_640_360_24fps.mp4';\\n              mediaType = 'video';\\n          }\\n          \\n          if (med\n<truncated 4211 bytes>",
+      "StartLine": "1027",
+      "TargetContent": "\"  function buildEnv(type, scn) {\\n      if(!scn) return;\\n      if(scn.envGroup) { scn.remove(scn.envGroup); }\\n      if(bgGroup) { bgGroup = null; } // Reference cleanup\\n      scn.fog = null;\\n      scn.background = null;\\n      const grp = new THREE.Group();\\n      scn.envGroup = grp;\\n      scn.add(grp);\\n      if(!scn.animCbs) scn.animCbs = [];\\n      // Only remove environment-specific callbacks, preserve audio/user callbacks\\n      else scn.animCbs = scn.animCbs.filter(cb => !cb._isEnv);\\n      // Helper: add an env-tagged callback\\n      const _addEnvCb = (fn) => { fn._isEnv = true; scn.animCbs.push(fn); };\\n\\n      if(type === 'studio') {\"",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 103,
+    "tool": "replace_file_content",
+    "description": "\"Inject custom background variables customMediaDataUrl and customMediaType into exported page template.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Inject custom background variables customMediaDataUrl and customMediaType into exported page template.\"",
+      "EndLine": "9438",
+      "Instruction": "\"Insert customMediaDataUrl and customMediaType definitions right after envType inside the generated HTML template.\"",
+      "ReplacementContent": "\"  const config = ${configJSON};\\n  const envType = \\\"${currentEnv}\\\";\\n  const customMediaDataUrl = \\\"${customMediaDataUrl || ''}\\\";\\n  const customMediaType = \\\"${customMediaType || ''}\\\";\\n  const currentBgEffect = \\\"${currentBgEffect}\\\";\\n  window._cuGlowIntensity = ${window._cuGlowIntensity || 1.0};\\n  let loadedFont = null;\\n  let bgGroup = null;\"",
+      "StartLine": "9433",
+      "TargetContent": "\"  const config = ${configJSON};\\n  const envType = \\\"${currentEnv}\\\";\\n  const currentBgEffect = \\\"${currentBgEffect}\\\";\\n  window._cuGlowIntensity = ${window._cuGlowIntensity || 1.0};\\n  let loadedFont = null;\\n  let bgGroup = null;\"",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 143,
+    "tool": "replace_file_content",
+    "description": "\"Correct the buildEnv background plane depth settings, clean up previous background variables, and use CORS-supported preset loops from Wikimedia Commons.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Correct the buildEnv background plane depth settings, clean up previous background variables, and use CORS-supported preset loops from Wikimedia Commons.\"",
+      "EndLine": "1169",
+      "Instruction": "\"Update buildEnv to correctly dispose variables, use Z-buffer testing (depthTest: true) to keep background behind models, and load Wikimedia Commons URLs for preset video loops.\"",
+      "ReplacementContent": "\"      if (scn.bgPlane) {\\n          try {\\n              if (scn.bgPlane.parent) {\\n                  scn.bgPlane.parent.remove(scn.bgPlane);\\n              } else {\\n                  scn.remove(scn.bgPlane);\\n              }\\n          } catch(e) {}\\n          scn.bgPlane = null;\\n      }\\n      if(scn.envGroup) { scn.remove(scn.envGroup); }\\n      if(bgGroup) { bgGroup = null; } // Reference cleanup\\n      scn.fog = null;\\n      scn.background = null;\\n      const grp = new THREE.Group();\\n      scn.envGroup = grp;\\n      scn.add(grp);\\n      if(!scn.animCbs) scn.animCbs = [];\\n      // Only remove environment-specific callbacks, preserve audio/user callbacks\\n      else scn.animCbs = scn.animCbs.filter(cb => !cb._isEnv);\\n      // Helper: add an env-tagged callback\\n      const _addEnvCb = (fn) => { fn._isEnv = true; scn.animCbs.push(fn); };\\n\\n      if (type === 'custom_photo' || type === 'custom_video' || type.startsWith('preset_')) {\\n          let mediaUrl = '';\\n          let mediaType = '';\\n          \\n          if (type === 'custom_photo') {\\n              mediaUrl = typeof customMediaDataUrl !== 'undefined' ? customMediaDataUrl : '';\\n              mediaType = 'image';\\n          } else if (type === 'custom_video') {\\n              mediaUrl = typeof customMediaDataUrl !== 'undefined' ? customMediaDataUrl : '';\\n              mediaType = 'video';\\n          } else if (type === 'preset_fireplace') {\\n              mediaUrl = 'https://upload.wikimedia.org/wikipedia/commons/f/f2/Kaminfeuer_2.webm';\\n              mediaType = 'video';\\n          } else if (type === 'preset_river') {\\n              mediaUrl = 'https://upload.wikimedia.org/wikipedia/commons/1/18/River_rushing_loop_60fps.webm';\\n              mediaType = 'video';\\n          } else if (type === 'preset_ocean') {\\n              mediaUrl = 'https://upload.wikimedia.org/wikipedia/commons/1/1d/Seawaves.webm';\\n              mediaType = 'video';\\n          }\\n          \\n          if (mediaUrl) {\\n              const bgGeo = new THREE.PlaneGeomet\n<truncated 4289 bytes>",
+      "StartLine": "1037",
+      "TargetContent": "\"      if (scn.bgPlane) {\\n          scn.bgPlane = null;\\n      }\\n      if(scn.envGroup) { scn.remove(scn.envGroup); }\\n      if(bgGroup) { bgGroup = null; } // Reference cleanup\\n      scn.fog = null;\\n      scn.background = null;\\n      const grp = new THREE.Group();\\n      scn.envGroup = grp;\\n      scn.add(grp);\\n      if(!scn.animCbs) scn.animCbs = [];\\n      // Only remove environment-specific callbacks, preserve audio/user callbacks\\n      else scn.animCbs = scn.animCbs.filter(cb => !cb._isEnv);\\n      // Helper: add an env-tagged callback\\n      const _addEnvCb = (fn) => { fn._isEnv = true; scn.animCbs.push(fn); };\\n\\n      if (type === 'custom_photo' || type === 'custom_video' || type.startsWith('preset_')) {\\n          let mediaUrl = '';\\n          let mediaType = '';\\n          \\n          if (type === 'custom_photo') {\\n              mediaUrl = typeof customMediaDataUrl !== 'undefined' ? customMediaDataUrl : '';\\n              mediaType = 'image';\\n          } else if (type === 'custom_video') {\\n              mediaUrl = typeof customMediaDataUrl !== 'undefined' ? customMediaDataUrl : '';\\n              mediaType = 'video';\\n          } else if (type === 'preset_fireplace') {\\n              mediaUrl = 'https://videos.pexels.com/video-files/1806923/1806923-sd_640_360_24fps.mp4';\\n              mediaType = 'video';\\n          } else if (type === 'preset_river') {\\n              mediaUrl = 'https://videos.pexels.com/video-files/853889/853889-sd_640_360_25fps.mp4';\\n              mediaType = 'video';\\n          } else if (type === 'preset_ocean') {\\n              mediaUrl = 'https://videos.pexels.com/video-files/1448735/1448735-sd_640_360_24fps.mp4';\\n              mediaType = 'video';\\n          }\\n          \\n          if (mediaUrl) {\\n              const bgGeo = new THREE.PlaneGeometry(1, 1);\\n              let bgMat;\\n              let bgTex;\\n              let videoEl = null;\\n              let mediaAspect = 16/9; // default fallback\\n              \\n              const adjustFit = () => {\\n        \n<truncated 3901 bytes>",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 155,
+    "tool": "replace_file_content",
+    "description": "\"Simplify background plane scaling math to cam.fov * Math.PI / 360 to eliminate Three.js version dependencies.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Simplify background plane scaling math to cam.fov * Math.PI / 360 to eliminate Three.js version dependencies.\"",
+      "EndLine": "1175",
+      "Instruction": "\"Replace THREE.MathUtils.degToRad with raw trigonometric calculation.\"",
+      "ReplacementContent": "\"               const updateBg = () => {\\n                   const cam = typeof camera !== 'undefined' ? camera : null;\\n                   if (!cam || !mesh) return;\\n                   \\n                   const dist = 3000; \\n                   const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(cam.quaternion);\\n                   mesh.position.copy(cam.position).addScaledVector(dir, dist);\\n                   mesh.quaternion.copy(cam.quaternion);\\n                   \\n                   const height = 2 * Math.tan(cam.fov * Math.PI / 360) * dist;\\n                   const width = height * cam.aspect;\\n                   mesh.scale.set(width, height, 1);\\n                   \\n                   adjustFit();\\n               };\"",
+      "StartLine": "1161",
+      "TargetContent": "\"               const updateBg = () => {\\n                   const cam = typeof camera !== 'undefined' ? camera : null;\\n                   if (!cam || !mesh) return;\\n                   \\n                   const dist = 3000; \\n                   const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(cam.quaternion);\\n                   mesh.position.copy(cam.position).addScaledVector(dir, dist);\\n                   mesh.quaternion.copy(cam.quaternion);\\n                   \\n                   const height = 2 * Math.tan(THREE.MathUtils.degToRad(cam.fov) / 2) * dist;\\n                   const width = height * cam.aspect;\\n                   mesh.scale.set(width, height, 1);\\n                   \\n                   adjustFit();\\n               };\"",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 159,
+    "tool": "replace_file_content",
+    "description": "\"Simplify background plane math inside updateBg with exact spaces.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Simplify background plane math inside updateBg with exact spaces.\"",
+      "EndLine": "1175",
+      "Instruction": "\"Replace the THREE.MathUtils.degToRad calculation with raw trigonometry calculation using 15 spaces of indentation.\"",
+      "ReplacementContent": "\"               const updateBg = () => {\\n                   const cam = typeof camera !== 'undefined' ? camera : null;\\n                   if (!cam || !mesh) return;\\n                   \\n                   const dist = 3000; \\n                   const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(cam.quaternion);\\n                   mesh.position.copy(cam.position).addScaledVector(dir, dist);\\n                   mesh.quaternion.copy(cam.quaternion);\\n                   \\n                   const height = 2 * Math.tan(cam.fov * Math.PI / 360) * dist;\\n                   const width = height * cam.aspect;\\n                   mesh.scale.set(width, height, 1);\\n                   \\n                   adjustFit();\\n               };\"",
+      "StartLine": "1161",
+      "TargetContent": "\"               const updateBg = () => {\\n                   const cam = typeof camera !== 'undefined' ? camera : null;\\n                   if (!cam || !mesh) return;\\n                   \\n                   const dist = 3000; \\n                   const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(cam.quaternion);\\n                   mesh.position.copy(cam.position).addScaledVector(dir, dist);\\n                   mesh.quaternion.copy(cam.quaternion);\\n                   \\n                   const height = 2 * Math.tan(THREE.MathUtils.degToRad(cam.fov) / 2) * dist;\\n                   const width = height * cam.aspect;\\n                   mesh.scale.set(width, height, 1);\\n                   \\n                   adjustFit();\\n               };\"",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 163,
+    "tool": "replace_file_content",
+    "description": "\"Simplify background plane scaling math inside updateBg with 14 spaces of indentation.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Simplify background plane scaling math inside updateBg with 14 spaces of indentation.\"",
+      "EndLine": "1175",
+      "Instruction": "\"Replace THREE.MathUtils.degToRad with raw trigonometry calculation using 14 spaces of indentation.\"",
+      "ReplacementContent": "\"              const updateBg = () => {\\n                  const cam = typeof camera !== 'undefined' ? camera : null;\\n                  if (!cam || !mesh) return;\\n                  \\n                  const dist = 3000; \\n                  const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(cam.quaternion);\\n                  mesh.position.copy(cam.position).addScaledVector(dir, dist);\\n                  mesh.quaternion.copy(cam.quaternion);\\n                  \\n                  const height = 2 * Math.tan(cam.fov * Math.PI / 360) * dist;\\n                  const width = height * cam.aspect;\\n                  mesh.scale.set(width, height, 1);\\n                  \\n                  adjustFit();\\n              };\"",
+      "StartLine": "1161",
+      "TargetContent": "\"              const updateBg = () => {\\n                  const cam = typeof camera !== 'undefined' ? camera : null;\\n                  if (!cam || !mesh) return;\\n                  \\n                  const dist = 3000; \\n                  const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(cam.quaternion);\\n                  mesh.position.copy(cam.position).addScaledVector(dir, dist);\\n                  mesh.quaternion.copy(cam.quaternion);\\n                  \\n                  const height = 2 * Math.tan(THREE.MathUtils.degToRad(cam.fov) / 2) * dist;\\n                  const width = height * cam.aspect;\\n                  mesh.scale.set(width, height, 1);\\n                  \\n                  adjustFit();\\n              };\"",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 173,
+    "tool": "replace_file_content",
+    "description": "\"Define isEN variable inside setupEvents scope to fix ReferenceError.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Define isEN variable inside setupEvents scope to fix ReferenceError.\"",
+      "EndLine": "1908",
+      "Instruction": "\"Define the local constant isEN at the top of setupEvents.\"",
+      "ReplacementContent": "\"  function setupEvents() {\\n      const isEN = window.currentLang !== 'fr';\\n      // Environment\\n      const mediaInput = document.getElementById('se-custom-media-file');\\n      const mediaContainer = document.getElementById('se-custom-media-container');\\n      const mediaBtnText = document.getElementById('se-custom-media-btn-text');\\n      const mediaStatus = document.getElementById('se-custom-media-status');\"",
+      "StartLine": "1902",
+      "TargetContent": "\"  function setupEvents() {\\n      // Environment\\n      const mediaInput = document.getElementById('se-custom-media-file');\\n      const mediaContainer = document.getElementById('se-custom-media-container');\\n      const mediaBtnText = document.getElementById('se-custom-media-btn-text');\\n      const mediaStatus = document.getElementById('se-custom-media-status');\"",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 177,
+    "tool": "replace_file_content",
+    "description": "\"Recalculate isEN dynamically inside the change listener callbacks.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Recalculate isEN dynamically inside the change listener callbacks.\"",
+      "EndLine": "1955",
+      "Instruction": "\"Update listeners to define isEN dynamically inside each callback function.\"",
+      "ReplacementContent": "\"      document.getElementById('se-env').addEventListener('change', (e) => {\\n          currentEnv = e.target.value;\\n          const isEN = window.currentLang !== 'fr';\\n          \\n          if (currentEnv === 'custom_photo' || currentEnv === 'custom_video') {\\n              mediaContainer.style.display = 'block';\\n              if (currentEnv === 'custom_photo') {\\n                  mediaInput.accept = \\\"image/*\\\";\\n                  mediaBtnText.innerHTML = `📁 ${isEN ? 'Upload Photo' : 'Télécharger Photo'}`;\\n              } else {\\n                  mediaInput.accept = \\\"video/*\\\";\\n                  mediaBtnText.innerHTML = `📁 ${isEN ? 'Upload Video' : 'Télécharger Vidéo'}`;\\n              }\\n              mediaStatus.style.display = 'none';\\n              mediaInput.value = '';\\n          } else {\\n              mediaContainer.style.display = 'none';\\n          }\\n          \\n          buildEnv(currentEnv, scene);\\n      });\\n\\n      if (mediaInput) {\\n          mediaInput.addEventListener('change', (e) => {\\n              const file = e.target.files[0];\\n              if (!file) return;\\n              const isEN = window.currentLang !== 'fr';\\n              \\n              mediaStatus.style.display = 'block';\\n              mediaStatus.style.color = '#38bdf8';\\n              mediaStatus.innerText = isEN ? 'Processing...' : 'Traitement...';\\n              \\n              const reader = new FileReader();\\n              reader.onload = (event) => {\\n                  const isEN = window.currentLang !== 'fr';\\n                  customMediaDataUrl = event.target.result;\\n                  customMediaType = file.type.startsWith('image/') ? 'image' : 'video';\\n                  \\n                  mediaStatus.style.color = '#10b981';\\n                  mediaStatus.innerText = isEN ? '✔️ Loaded successfully!' : '✔️ Chargé avec succès !';\\n                  \\n                  buildEnv(currentEnv, scene);\\n              };\\n              reader.onerror = () => {\\n                  const isEN =\n<truncated 276 bytes>",
+      "StartLine": "1910",
+      "TargetContent": "\"      document.getElementById('se-env').addEventListener('change', (e) => {\\n          currentEnv = e.target.value;\\n          \\n          if (currentEnv === 'custom_photo' || currentEnv === 'custom_video') {\\n              mediaContainer.style.display = 'block';\\n              if (currentEnv === 'custom_photo') {\\n                  mediaInput.accept = \\\"image/*\\\";\\n                  mediaBtnText.innerHTML = `📁 ${isEN ? 'Upload Photo' : 'Télécharger Photo'}`;\\n              } else {\\n                  mediaInput.accept = \\\"video/*\\\";\\n                  mediaBtnText.innerHTML = `📁 ${isEN ? 'Upload Video' : 'Télécharger Vidéo'}`;\\n              }\\n              mediaStatus.style.display = 'none';\\n              mediaInput.value = '';\\n          } else {\\n              mediaContainer.style.display = 'none';\\n          }\\n          \\n          buildEnv(currentEnv, scene);\\n      });\\n\\n      if (mediaInput) {\\n          mediaInput.addEventListener('change', (e) => {\\n              const file = e.target.files[0];\\n              if (!file) return;\\n              \\n              mediaStatus.style.display = 'block';\\n              mediaStatus.style.color = '#38bdf8';\\n              mediaStatus.innerText = isEN ? 'Processing...' : 'Traitement...';\\n              \\n              const reader = new FileReader();\\n              reader.onload = (event) => {\\n                  customMediaDataUrl = event.target.result;\\n                  customMediaType = file.type.startsWith('image/') ? 'image' : 'video';\\n                  \\n                  mediaStatus.style.color = '#10b981';\\n                  mediaStatus.innerText = isEN ? '✔️ Loaded successfully!' : '✔️ Chargé avec succès !';\\n                  \\n                  buildEnv(currentEnv, scene);\\n              };\\n              reader.onerror = () => {\\n                  mediaStatus.style.color = '#ef4444';\\n                  mediaStatus.innerText = isEN ? '❌ Error loading file' : '❌ Erreur de chargement';\\n              };\\n              reader.r\n<truncated 44 bytes>",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 193,
+    "tool": "replace_file_content",
+    "description": "\"Replace buildEnv with self-contained procedural Canvas texture animation loops for presets (Fireplace, River, Ocean).\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Replace buildEnv with self-contained procedural Canvas texture animation loops for presets (Fireplace, River, Ocean).\"",
+      "EndLine": "1180",
+      "Instruction": "\"Rewrite buildEnv to contain drawProceduralBg helper, and construct a THREE.CanvasTexture for presets to avoid CORS errors on local file:// execution.\"",
+      "ReplacementContent": "\"  function buildEnv(type, scn) {\\n      if(!scn) return;\\n      \\n      function drawProceduralBg(canvas, bgType, time) {\\n          const ctx = canvas.getContext('2d');\\n          const w = canvas.width;\\n          const h = canvas.height;\\n          ctx.clearRect(0, 0, w, h);\\n          \\n          if (bgType === 'preset_fireplace') {\\n              // Dark background with warm glow\\n              const grad = ctx.createRadialGradient(w/2, h, 10, w/2, h, w);\\n              grad.addColorStop(0, '#4a1500');\\n              grad.addColorStop(0.5, '#1e0500');\\n              grad.addColorStop(1, '#050200');\\n              ctx.fillStyle = grad;\\n              ctx.fillRect(0, 0, w, h);\\n              \\n              if (!canvas._fireParticles) {\\n                  canvas._fireParticles = [];\\n                  for (let i = 0; i < 50; i++) {\\n                      canvas._fireParticles.push({\\n                          x: w/2 + (Math.random() - 0.5) * w * 0.5,\\n                          y: h + Math.random() * h * 0.5,\\n                          r: 6 + Math.random() * 12,\\n                          vy: 1.5 + Math.random() * 2.5,\\n                          vx: (Math.random() - 0.5) * 0.8,\\n                          life: Math.random()\\n                      });\\n                  }\\n              }\\n              \\n              canvas._fireParticles.forEach(p => {\\n                  p.y -= p.vy;\\n                  p.x += p.vx;\\n                  p.life -= 0.012;\\n                  \\n                  if (p.life <= 0 || p.y < -20) {\\n                      p.x = w/2 + (Math.random() - 0.5) * w * 0.5;\\n                      p.y = h + 10;\\n                      p.r = 6 + Math.random() * 12;\\n                      p.vy = 1.5 + Math.random() * 2.5;\\n                      p.life = 1.0;\\n                  }\\n                  \\n                  const r = p.r * p.life;\\n                  if (r > 0) {\\n                      ctx.beginPath();\\n                      ctx.arc(p.x, p.y, r, 0, Math.PI * 2);\\n                      \\n   \n<truncated 11355 bytes>",
+      "StartLine": "1027",
+      "TargetContent": "\"  function buildEnv(type, scn) {\\n      if(!scn) return;\\n      if (scn._bgVideo) {\\n          try {\\n              scn._bgVideo.pause();\\n              scn._bgVideo.src = \\\"\\\";\\n              scn._bgVideo.load();\\n          } catch(e) {}\\n          scn._bgVideo = null;\\n      }\\n      if (scn.bgPlane) {\\n          try {\\n              if (scn.bgPlane.parent) {\\n                  scn.bgPlane.parent.remove(scn.bgPlane);\\n              } else {\\n                  scn.remove(scn.bgPlane);\\n              }\\n          } catch(e) {}\\n          scn.bgPlane = null;\\n      }\\n      if(scn.envGroup) { scn.remove(scn.envGroup); }\\n      if(bgGroup) { bgGroup = null; } // Reference cleanup\\n      scn.fog = null;\\n      scn.background = null;\\n      const grp = new THREE.Group();\\n      scn.envGroup = grp;\\n      scn.add(grp);\\n      if(!scn.animCbs) scn.animCbs = [];\\n      // Only remove environment-specific callbacks, preserve audio/user callbacks\\n      else scn.animCbs = scn.animCbs.filter(cb => !cb._isEnv);\\n      // Helper: add an env-tagged callback\\n      const _addEnvCb = (fn) => { fn._isEnv = true; scn.animCbs.push(fn); };\\n\\n      if (type === 'custom_photo' || type === 'custom_video' || type.startsWith('preset_')) {\\n          let mediaUrl = '';\\n          let mediaType = '';\\n          \\n          if (type === 'custom_photo') {\\n              mediaUrl = typeof customMediaDataUrl !== 'undefined' ? customMediaDataUrl : '';\\n              mediaType = 'image';\\n          } else if (type === 'custom_video') {\\n              mediaUrl = typeof customMediaDataUrl !== 'undefined' ? customMediaDataUrl : '';\\n              mediaType = 'video';\\n          } else if (type === 'preset_fireplace') {\\n              mediaUrl = 'https://upload.wikimedia.org/wikipedia/commons/f/f2/Kaminfeuer_2.webm';\\n              mediaType = 'video';\\n          } else if (type === 'preset_river') {\\n              mediaUrl = 'https://upload.wikimedia.org/wikipedia/commons/1/18/River_rushing_loop_60fps.webm';\\n              mediaType = 'video';\\n\n<truncated 4556 bytes>",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 283,
+    "tool": "replace_file_content",
+    "description": "\"Change background material depthTest to false so that the background plane does not occlude or hide the 3D models and grid helper.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Change background material depthTest to false so that the background plane does not occlude or hide the 3D models and grid helper.\"",
+      "EndLine": "1312",
+      "Instruction": "\"Change depthTest from true to false in the MeshBasicMaterial instantiation.\"",
+      "ReplacementContent": "\"              bgMat = new THREE.MeshBasicMaterial({\\n                  map: bgTex,\\n                  depthWrite: false,\\n                  depthTest: false,\\n                  transparent: false\\n              });\"",
+      "StartLine": "1304",
+      "TargetContent": "\"              bgMat = new THREE.MeshBasicMaterial({\\n                  map: bgTex,\\n                  depthWrite: false,\\n                  depthTest: true,\\n                  transparent: false\\n              });\"",
+      "TargetFile": "\"c:/Users/andre/OneDrive/Bureau/html cod3 buna ultimul 2model2/js/sketch-extruder.js\"",
+      "toolAction": "\"Updating depthTest to false\"",
+      "toolSummary": "\"Edit background material depthTest in sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 519,
+    "tool": "multi_replace_file_content",
+    "description": "\"Implement the interactive canvas dragging, cursor magnetism, countdown display, hand styles, and export features inside sketch-extruder.js.\"",
+    "args": {
+      "Description": "\"Implement the interactive canvas dragging, cursor magnetism, countdown display, hand styles, and export features inside sketch-extruder.js.\"",
+      "Instruction": "\"Apply time travel, magnetism, countdown math, hand hiding, and standalone export modifications.\"",
+      "ReplacementChunks": "[{\"AllowMultiple\":false,\"EndLine\":1769,\"ReplacementContent\":\"      let draggedHandName = null;\\n      let draggedModel = null;\\n      const dragPlane = new THREE.Plane();\\n      const worldPivot = new THREE.Vector3();\\n      const worldNormal = new THREE.Vector3();\\n      \\n      let isTimeTraveling = false;\\n      let timeTravelStartX = 0;\",\"StartLine\":1764,\"TargetContent\":\"      let draggedHandName = null;\\n      let draggedModel = null;\\n      const dragPlane = new THREE.Plane();\\n      const worldPivot = new THREE.Vector3();\\n      const worldNormal = new THREE.Vector3();\"},{\"AllowMultiple\":false,\"EndLine\":1859,\"ReplacementContent\":\"                      return;\\n                  }\\n              }\\n\\n              const model = models.find(m => m.format === 'clock-ultra');\\n              const p0 = model && model.clockParts && model.clockParts[0];\\n              if (model && p0 && p0.timeTravelEnabled) {\\n                  isTimeTraveling = true;\\n                  draggedModel = model;\\n                  draggedModel._isTimeTraveling = true;\\n                  timeTravelStartX = e.clientX;\\n                  controls.enabled = false;\\n                  return;\\n              }\\n          }\\n      });\",\"StartLine\":1855,\"TargetContent\":\"                      return;\\n                  }\\n              }\\n          }\\n      });\"},{\"AllowMultiple\":false,\"EndLine\":1863,\"ReplacementContent\":\"      window.addEventListener('pointermove', (e) => {\\n          if (isTimeTraveling && draggedModel) {\\n              const dx = e.clientX - timeTravelStartX;\\n              timeTravelStartX = e.clientX;\\n              draggedModel._timeOffsetMinutes = (draggedModel._timeOffsetMinutes || 0) + dx * 0.5;\\n              return;\\n          }\\n          if (!draggedHandName || !draggedModel) return;\",\"StartLine\":1861,\"TargetContent\":\"      window.addEventListener('pointermove', (e) => {\\n          if (!draggedHandName || !draggedModel) return;\"},{\"AllowMultiple\":false,\"EndLine\":1921,\"ReplacementContent\":\"      window.addEventLis\n<truncated 52214 bytes>",
+      "TargetFile": "\"c:/Users/andre/OneDrive/Bureau/html cod3 buna ultimul 2model2/js/sketch-extruder.js\"",
+      "toolAction": "\"Updating sketch-extruder.js with multi-replace\"",
+      "toolSummary": "\"Updating sketch-extruder.js with multi-replace\""
+    }
+  },
+  {
+    "step": 531,
+    "tool": "replace_file_content",
+    "description": "\"Fix syntax errors and duplicate blocks in sketch-extruder.js by replacing the garbled area with the clean, unified standalone sound and panel code.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Fix syntax errors and duplicate blocks in sketch-extruder.js by replacing the garbled area with the clean, unified standalone sound and panel code.\"",
+      "EndLine": "10650",
+      "Instruction": "\"Fix syntax errors in the standalone playTick, playBeep, and control panel setup.\"",
+      "ReplacementContent": "\"      const playTone = (freq, startTime, duration) => {\\n          try {\\n              const ctx = getCuPlaybackContext();\\n              const osc1 = ctx.createOscillator();\\n              const gain1 = ctx.createGain();\\n              osc1.type = 'sine';\\n              osc1.frequency.setValueAtTime(freq, startTime);\\n              gain1.gain.setValueAtTime(0, startTime);\\n              gain1.gain.linearRampToValueAtTime(0.2, startTime + 0.04);\\n              gain1.gain.exponentialRampToValueAtTime(0.0001, startTime + duration - 0.01);\\n              osc1.connect(gain1);\\n              gain1.connect(ctx.destination);\\n              osc1.start(startTime);\\n              osc1.stop(startTime + duration);\\n\\n              const osc2 = ctx.createOscillator();\\n              const gain2 = ctx.createGain();\\n              osc2.type = 'sine';\\n              osc2.frequency.setValueAtTime(freq * 2, startTime);\\n              gain2.gain.setValueAtTime(0, startTime);\\n              gain2.gain.linearRampToValueAtTime(0.08, startTime + 0.03);\\n              gain2.gain.exponentialRampToValueAtTime(0.0001, startTime + duration - 0.01);\\n              osc2.connect(gain2);\\n              gain2.connect(ctx.destination);\\n              osc2.start(startTime);\\n              osc2.stop(startTime + duration);\\n          } catch(e) {}\\n      };\\n\\n      const playWestminsterChime = (hours) => {\\n          try {\\n              const ctx = getCuPlaybackContext();\\n              const now = ctx.currentTime;\\n              const notes = {\\n                  'G3': 196.00,\\n                  'C4': 261.63,\\n                  'D4': 293.66,\\n                  'E4': 329.63\\n              };\\n              const melody = [\\n                  'E4', 'C4', 'D4', 'G3',\\n                  'C4', 'E4', 'D4', 'G3',\\n                  'G3', 'D4', 'E4', 'C4',\\n                  'C4', 'G3', 'D4', 'E4'\\n              ];\\n              let time = now + 0.1;\\n              const noteDuration = 0.5;\\n              const noteGap = 0.6;\\n\\n              melody.f\n<truncated 21665 bytes>",
+      "StartLine": "10506",
+      "TargetContent": "\"      const playTick = () => {\\n          try {\\n              const ctx = getCuPlaybackContext();\\n              const now = ctx.currentTime;\\n              const osc = ctx.createOscillator();\\n              const gain = ctx.createGain();\\n              const isTick = (lastTickedSecond % 2 === 0);\\n              osc.frequency.setValueAtTime(isTick ? 850 : 650, now);\\n              osc.type = 'triangle';\\n              ga      const ui = document.createElement('div');\\n      ui.id = 'cu-control-panel';\\n      ui.style = 'position:fixed;top:20px;right:20px;background:rgba(8,12,28,0.92);backdrop-filter:blur(10px);border:1px solid #06b6d4;border-radius:12px;padding:15px;color:#cbd5e1;font-family:sans-serif;width:240px;box-shadow:0 10px 30px rgba(0,0,0,0.5);z-index:99;display:block;opacity:1;transition:opacity 0.3s ease-in-out;';\\n      const showChrono = sp.chronoEnabled;\\n      ui.innerHTML = `\\n          <div style=\\\"position:relative;font-weight:bold;text-align:center;margin-bottom:15px;font-size:14px;padding-right:20px;color:#22d3ee;\\\">\\n              🕒💎 Clock Ultra\\n              <span id=\\\"cu-ui-close\\\" style=\\\"position:absolute;top:-2px;right:-2px;cursor:pointer;font-size:16px;color:#aaa;transition:color 0.2s;\\\">✕</span>\\n          </div>\\n\\n          <!-- PREMIUM DESIGN PRESETS -->\\n          <div style=\\\"margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);\\\">\\n              <label style=\\\"font-size:11px;color:#94a3b8;display:block;margin-bottom:4px;font-weight:bold;\\\">💎 \\\\${isFR ? 'Thème Prédéfini' : 'Theme Preset'}:</label>\\n              <select id=\\\"cu-theme-preset\\\" style=\\\"width:100%;background:#070a13;color:#e2e8f0;border:1px solid #1e293b;border-radius:6px;padding:5px;font-size:11px;outline:none;\\\">\\n                  <option value=\\\"custom\\\" \\\\${sp.themePreset==='custom'?'selected':''}>Custom</option>\\n                  <option value=\\\"rolex_ocean\\\" \\\\${sp.themePreset==='rolex_ocean'?'selected':''}>Rolex Ocean</option>\\n                  <option value\n<truncated 10759 bytes>",
+      "TargetFile": "\"c:/Users/andre/OneDrive/Bureau/html cod3 buna ultimul 2model2/js/sketch-extruder.js\"",
+      "toolAction": "\"Fixing standalone functions in sketch-extruder.js\"",
+      "toolSummary": "\"Fixing standalone functions in sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 682,
+    "tool": "replace_file_content",
+    "description": "\"Escaping template backticks inside the export HTML generator in sketch-extruder.js to resolve SyntaxError.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Escaping template backticks inside the export HTML generator in sketch-extruder.js to resolve SyntaxError.\"",
+      "EndLine": "10841",
+      "Instruction": "\"Escape backticks in the innerHTML assignment and nested ternary expressions in sketch-extruder.js\"",
+      "ReplacementContent": "\"      ui.innerHTML = \\\\`\\n          <div style=\\\"position:relative;font-weight:bold;text-align:center;margin-bottom:15px;font-size:14px;padding-right:20px;color:#22d3ee;\\\">\\n              🕒💎 Clock Ultra\\n              <span id=\\\"cu-ui-close\\\" style=\\\"position:absolute;top:-2px;right:-2px;cursor:pointer;font-size:16px;color:#aaa;transition:color 0.2s;\\\">✕</span>\\n          </div>\\n\\n          <!-- PREMIUM DESIGN PRESETS -->\\n          <div style=\\\"margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);\\\">\\n              <label style=\\\"font-size:11px;color:#94a3b8;display:block;margin-bottom:4px;font-weight:bold;\\\">💎 \\\\\\\\\\\\${isFR ? 'Thème Prédéfini' : 'Theme Preset'}:</label>\\n              <select id=\\\"cu-theme-preset\\\" style=\\\"width:100%;background:#070a13;color:#e2e8f0;border:1px solid #1e293b;border-radius:6px;padding:5px;font-size:11px;outline:none;\\\">\\n                  <option value=\\\"custom\\\" \\\\\\\\\\\\${sp.themePreset==='custom'?'selected':''}>Custom</option>\\n                  <option value=\\\"rolex_ocean\\\" \\\\\\\\\\\\${sp.themePreset==='rolex_ocean'?'selected':''}>Rolex Ocean</option>\\n                  <option value=\\\"cyber_hud\\\" \\\\\\\\\\\\${sp.themePreset==='cyber_hud'?'selected':''}>Cyber HUD</option>\\n                  <option value=\\\"steampunk_oracle\\\" \\\\\\\\\\\\${sp.themePreset==='steampunk_oracle'?'selected':''}>Steampunk Oracle</option>\\n                  <option value=\\\"zen_liquid\\\" \\\\\\\\\\\\${sp.themePreset==='zen_liquid'?'selected':''}>Zen Liquid</option>\\n              </select>\\n          </div>\\n\\n          <!-- TIME TRAVEL & CURSOR MAGNETISM -->\\n          <div style=\\\"margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);\\\">\\n              <label style=\\\"display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:#cbd5e1;margin-bottom:6px;font-weight:bold;\\\">\\n                  <input type=\\\"checkbox\\\" id=\\\"cu-cb-timetravel\\\" \\\\\\\\\\\\${sp.timeTravelEnabled ? 'checked' : ''} />\\n                  <span>⏳ \\\\\\\\\\\\${isFR \n<truncated 3987 bytes>",
+      "StartLine": "10781",
+      "TargetContent": "\"      ui.innerHTML = `\\n          <div style=\\\"position:relative;font-weight:bold;text-align:center;margin-bottom:15px;font-size:14px;padding-right:20px;color:#22d3ee;\\\">\\n              🕒💎 Clock Ultra\\n              <span id=\\\"cu-ui-close\\\" style=\\\"position:absolute;top:-2px;right:-2px;cursor:pointer;font-size:16px;color:#aaa;transition:color 0.2s;\\\">✕</span>\\n          </div>\\n\\n          <!-- PREMIUM DESIGN PRESETS -->\\n          <div style=\\\"margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);\\\">\\n              <label style=\\\"font-size:11px;color:#94a3b8;display:block;margin-bottom:4px;font-weight:bold;\\\">💎 \\\\${isFR ? 'Thème Prédéfini' : 'Theme Preset'}:</label>\\n              <select id=\\\"cu-theme-preset\\\" style=\\\"width:100%;background:#070a13;color:#e2e8f0;border:1px solid #1e293b;border-radius:6px;padding:5px;font-size:11px;outline:none;\\\">\\n                  <option value=\\\"custom\\\" \\\\${sp.themePreset==='custom'?'selected':''}>Custom</option>\\n                  <option value=\\\"rolex_ocean\\\" \\\\${sp.themePreset==='rolex_ocean'?'selected':''}>Rolex Ocean</option>\\n                  <option value=\\\"cyber_hud\\\" \\\\${sp.themePreset==='cyber_hud'?'selected':''}>Cyber HUD</option>\\n                  <option value=\\\"steampunk_oracle\\\" \\\\${sp.themePreset==='steampunk_oracle'?'selected':''}>Steampunk Oracle</option>\\n                  <option value=\\\"zen_liquid\\\" \\\\${sp.themePreset==='zen_liquid'?'selected':''}>Zen Liquid</option>\\n              </select>\\n          </div>\\n\\n          <!-- TIME TRAVEL & CURSOR MAGNETISM -->\\n          <div style=\\\"margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);\\\">\\n              <label style=\\\"display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:#cbd5e1;margin-bottom:6px;font-weight:bold;\\\">\\n                  <input type=\\\"checkbox\\\" id=\\\"cu-cb-timetravel\\\" \\\\${sp.timeTravelEnabled ? 'checked' : ''} />\\n                  <span>⏳ \\\\${isFR ? 'Voyage dans le Temps' : 'Time T\n<truncated 3847 bytes>",
+      "TargetFile": "\"c:/Users/andre/OneDrive/Bureau/html cod3 buna ultimul 2model2/js/sketch-extruder.js\"",
+      "toolAction": "\"Escaping backticks in sketch-extruder.js\"",
+      "toolSummary": "\"Escape backticks in template\""
+    }
+  },
+  {
+    "step": 760,
+    "tool": "replace_file_content",
+    "description": "\"Implementing the arrow hand style in buildStyledHand in sketch-extruder.js.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Implementing the arrow hand style in buildStyledHand in sketch-extruder.js.\"",
+      "EndLine": "8832",
+      "Instruction": "\"Add the arrow hand style else-if block inside buildStyledHand in sketch-extruder.js\"",
+      "ReplacementContent": "\"          } else if (hStyle === 'neon') {\\n              const outerTube = new THREE.Mesh(new THREE.BoxGeometry(width * 1.8, len, 0.8), makeHandMat(color, true));\\n              outerTube.position.y = len / 2;\\n              hand.add(outerTube);\\n\\n              const innerCore = new THREE.Mesh(new THREE.BoxGeometry(width * 0.6, len * 0.9, 0.4), makeHandMat('#ffffff', false));\\n              innerCore.position.y = len / 2;\\n              hand.add(innerCore);\\n          } else if (hStyle === 'arrow') {\\n              if (partName === 'hand_s') {\\n                  const rod = new THREE.Mesh(new THREE.BoxGeometry(width, len, 0.4), mat);\\n                  rod.position.y = len / 2;\\n                  hand.add(rod);\\n              } else {\\n                  const stem = new THREE.Mesh(new THREE.BoxGeometry(width * 0.7, len * 0.75, 0.4), mat);\\n                  stem.position.y = len * 0.375;\\n                  hand.add(stem);\\n\\n                  const arrowHead = new THREE.Mesh(new THREE.ConeGeometry(width * 2.2, len * 0.35, 4), mat);\\n                  arrowHead.position.y = len * 0.85;\\n                  arrowHead.rotation.y = Math.PI / 4;\\n                  hand.add(arrowHead);\\n              }\\n          }\"",
+      "StartLine": "8823",
+      "TargetContent": "\"          } else if (hStyle === 'neon') {\\n              const outerTube = new THREE.Mesh(new THREE.BoxGeometry(width * 1.8, len, 0.8), makeHandMat(color, true));\\n              outerTube.position.y = len / 2;\\n              hand.add(outerTube);\\n\\n              const innerCore = new THREE.Mesh(new THREE.BoxGeometry(width * 0.6, len * 0.9, 0.4), makeHandMat('#ffffff', false));\\n              innerCore.position.y = len / 2;\\n              hand.add(innerCore);\\n          }\"",
+      "TargetFile": "\"c:/Users/andre/OneDrive/Bureau/html cod3 buna ultimul 2model2/js/sketch-extruder.js\"",
+      "toolAction": "\"Adding arrow hand style to buildStyledHand\"",
+      "toolSummary": "\"Add arrow hand style\""
+    }
+  },
+  {
+    "step": 764,
+    "tool": "replace_file_content",
+    "description": "\"Storing window._cuMouseNDC on pointerdown inside sketch-extruder.js.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Storing window._cuMouseNDC on pointerdown inside sketch-extruder.js.\"",
+      "EndLine": "1780",
+      "Instruction": "\"Add assignment of window._cuMouseNDC inside pointerdown in sketch-extruder.js\"",
+      "ReplacementContent": "\"      renderer.domElement.addEventListener('pointerdown', (e) => {\\n          if(currentMode === 'draw') return;\\n          if(transformControl.dragging) return;\\n          const rect = renderer.domElement.getBoundingClientRect();\\n          mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;\\n          mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;\\n          raycaster.setFromCamera(mouse, camera);\\n          window._cuMouseNDC = { x: mouse.x, y: mouse.y };\"",
+      "StartLine": "1773",
+      "TargetContent": "\"      renderer.domElement.addEventListener('pointerdown', (e) => {\\n          if(currentMode === 'draw') return;\\n          if(transformControl.dragging) return;\\n          const rect = renderer.domElement.getBoundingClientRect();\\n          mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;\\n          mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;\\n          raycaster.setFromCamera(mouse, camera);\"",
+      "TargetFile": "\"c:/Users/andre/OneDrive/Bureau/html cod3 buna ultimul 2model2/js/sketch-extruder.js\"",
+      "toolAction": "\"Adding window._cuMouseNDC on pointerdown\"",
+      "toolSummary": "\"Add window._cuMouseNDC on click\""
+    }
+  },
+  {
+    "step": 768,
+    "tool": "replace_file_content",
+    "description": "\"Tracking and storing window._cuMouseNDC on pointermove inside sketch-extruder.js.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Tracking and storing window._cuMouseNDC on pointermove inside sketch-extruder.js.\"",
+      "EndLine": "1883",
+      "Instruction": "\"Inject window._cuMouseNDC assignment at the beginning of the pointermove handler in sketch-extruder.js\"",
+      "ReplacementContent": "\"      window.addEventListener('pointermove', (e) => {\\n          const rect = renderer.domElement.getBoundingClientRect();\\n          window._cuMouseNDC = {\\n              x: ((e.clientX - rect.left) / rect.width) * 2 - 1,\\n              y: -((e.clientY - rect.top) / rect.height) * 2 + 1\\n          };\\n\\n          if (isTimeTraveling && draggedModel) {\\n              const dx = e.clientX - timeTravelStartX;\\n              timeTravelStartX = e.clientX;\\n              draggedModel._timeOffsetMinutes = (draggedModel._timeOffsetMinutes || 0) + dx * 0.5;\\n              return;\\n          }\"",
+      "StartLine": "1876",
+      "TargetContent": "\"      window.addEventListener('pointermove', (e) => {\\n          if (isTimeTraveling && draggedModel) {\\n              const dx = e.clientX - timeTravelStartX;\\n              timeTravelStartX = e.clientX;\\n              draggedModel._timeOffsetMinutes = (draggedModel._timeOffsetMinutes || 0) + dx * 0.5;\\n              return;\\n          }\"",
+      "TargetFile": "\"c:/Users/andre/OneDrive/Bureau/html cod3 buna ultimul 2model2/js/sketch-extruder.js\"",
+      "toolAction": "\"Adding window._cuMouseNDC to pointermove\"",
+      "toolSummary": "\"Add window._cuMouseNDC to pointermove\""
+    }
+  },
+  {
+    "step": 772,
+    "tool": "replace_file_content",
+    "description": "\"Restricting hand dragging to when Time Travel is active, restricting canvas time travel drag triggers to only when clicking the clock, and setting _isTimeTraveling during hand dragging.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Restricting hand dragging to when Time Travel is active, restricting canvas time travel drag triggers to only when clicking the clock, and setting _isTimeTraveling during hand dragging.\"",
+      "EndLine": "1873",
+      "Instruction": "\"Replace handObj dragging checks and time travel triggers inside pointerdown in sketch-extruder.js\"",
+      "ReplacementContent": "\"              if (handObj) {\\n                  const model = models.find(m => m.format === 'clock-ultra');\\n                  if (model && model.importedMesh) {\\n                      const p0 = model.clockParts && model.clockParts[0];\\n                      if (p0 && (p0.timeTravelEnabled || handObj.name === 'hand_alarm')) {\\n                          draggedHandName = handObj.name;\\n                          draggedModel = model;\\n                          if (draggedHandName !== 'hand_alarm') {\\n                              draggedModel._isTimeTraveling = true;\\n                          }\\n                          controls.enabled = false;\\n                          \\n                          const handsGroup = model.importedMesh.getObjectByName('handsGroup');\\n                          if (handsGroup) {\\n                              handsGroup.getWorldPosition(worldPivot);\\n                          } else {\\n                              model.importedMesh.getWorldPosition(worldPivot);\\n                          }\\n                          \\n                          worldNormal.set(0, 0, 1).applyQuaternion(model.importedMesh.getWorldQuaternion(new THREE.Quaternion())).normalize();\\n                          dragPlane.setFromNormalAndCoplanarPoint(worldNormal, worldPivot);\\n                          if (draggedHandName === 'hand_alarm') {\\n                              model._alarmHandDragging = true;\\n                          }\\n                          return;\\n                      }\\n                  }\\n              }\\n\\n              const model = models.find(m => m.format === 'clock-ultra');\\n              const p0 = model && model.clockParts && model.clockParts[0];\\n              if (model && p0 && p0.timeTravelEnabled) {\\n                  let hitClock = false;\\n                  if (intersects.length > 0) {\\n                      let temp = intersects[0].object;\\n                      while (temp) {\\n                          if (temp === model.meshGroup || temp === model.importedMesh) {\n<truncated 568 bytes>",
+      "StartLine": "1840",
+      "TargetContent": "\"              if (handObj) {\\n                  const model = models.find(m => m.format === 'clock-ultra');\\n                  if (model && model.importedMesh) {\\n                      draggedHandName = handObj.name;\\n                      draggedModel = model;\\n                      controls.enabled = false;\\n                      \\n                      const handsGroup = model.importedMesh.getObjectByName('handsGroup');\\n                      if (handsGroup) {\\n                          handsGroup.getWorldPosition(worldPivot);\\n                      } else {\\n                          model.importedMesh.getWorldPosition(worldPivot);\\n                      }\\n                      \\n                      worldNormal.set(0, 0, 1).applyQuaternion(model.importedMesh.getWorldQuaternion(new THREE.Quaternion())).normalize();\\n                      dragPlane.setFromNormalAndCoplanarPoint(worldNormal, worldPivot);\\n                      if (draggedHandName === 'hand_alarm') {\\n                          model._alarmHandDragging = true;\\n                      }\\n                      return;\\n                  }\\n              }\\n\\n              const model = models.find(m => m.format === 'clock-ultra');\\n              const p0 = model && model.clockParts && model.clockParts[0];\\n              if (model && p0 && p0.timeTravelEnabled) {\\n                  isTimeTraveling = true;\\n                  draggedModel = model;\\n                  draggedModel._isTimeTraveling = true;\\n                  timeTravelStartX = e.clientX;\\n                  controls.enabled = false;\\n                  return;\\n              }\"",
+      "TargetFile": "\"c:/Users/andre/OneDrive/Bureau/html cod3 buna ultimul 2model2/js/sketch-extruder.js\"",
+      "toolAction": "\"Restricting hand and canvas drag events\"",
+      "toolSummary": "\"Restrict time travel dragging\""
+    }
+  },
+  {
+    "step": 778,
+    "tool": "replace_file_content",
+    "description": "\"Resetting _isTimeTraveling in pointerup inside sketch-extruder.js.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Resetting _isTimeTraveling in pointerup inside sketch-extruder.js.\"",
+      "EndLine": "1982",
+      "Instruction": "\"Reset draggedModel._isTimeTraveling inside pointerup in sketch-extruder.js\"",
+      "ReplacementContent": "\"      window.addEventListener('pointerup', () => {\\n          if (isTimeTraveling) {\\n              isTimeTraveling = false;\\n              if (draggedModel) {\\n                  draggedModel._isTimeTraveling = false;\\n              }\\n              draggedModel = null;\\n              controls.enabled = true;\\n          }\\n          if (draggedHandName) {\\n              if (draggedModel) {\\n                  draggedModel._alarmHandDragging = false;\\n                  draggedModel._isTimeTraveling = false;\\n              }\\n              draggedHandName = null;\\n              draggedModel = null;\\n              controls.enabled = true;\\n          }\\n      });\"",
+      "StartLine": "1965",
+      "TargetContent": "\"      window.addEventListener('pointerup', () => {\\n          if (isTimeTraveling) {\\n              isTimeTraveling = false;\\n              if (draggedModel) {\\n                  draggedModel._isTimeTraveling = false;\\n              }\\n              draggedModel = null;\\n              controls.enabled = true;\\n          }\\n          if (draggedHandName) {\\n              if (draggedModel) {\\n                  draggedModel._alarmHandDragging = false;\\n              }\\n              draggedHandName = null;\\n              draggedModel = null;\\n              controls.enabled = true;\\n          }\\n      });\"",
+      "TargetFile": "\"c:/Users/andre/OneDrive/Bureau/html cod3 buna ultimul 2model2/js/sketch-extruder.js\"",
+      "toolAction": "\"Resetting _isTimeTraveling in pointerup\"",
+      "toolSummary": "\"Reset _isTimeTraveling on pointerup\""
+    }
+  },
+  {
+    "step": 784,
+    "tool": "replace_file_content",
+    "description": "\"Implementing robust clockGroup lookup and computing finalAngleS for Cursor Magnetism inside sketch-extruder.js.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Implementing robust clockGroup lookup and computing finalAngleS for Cursor Magnetism inside sketch-extruder.js.\"",
+      "EndLine": "9283",
+      "Instruction": "\"Replace the Cursor Magnetism logic in addClockUltraAnimCb in sketch-extruder.js\"",
+      "ReplacementContent": "\"          // 2. Cursor Magnetism Logic for Seconds Hand\\n          let mousePos2D = null;\\n          let dist = 9999;\\n          let cursorAngle = 0;\\n          const clockGroup = m.runtimeGroup || m.importedMesh || (partsMap.hand_s ? partsMap.hand_s.parent.parent : (partsMap.liquidBeadS ? partsMap.liquidBeadS.parent : null));\\n          if (p0 && p0.cursorMagnetismEnabled && window._cuMouseNDC && camera && clockGroup) {\\n              const rayc = new THREE.Raycaster();\\n              rayc.setFromCamera(window._cuMouseNDC, camera);\\n              const intersection = new THREE.Vector3();\\n              const worldPivot = new THREE.Vector3();\\n              clockGroup.getWorldPosition(worldPivot);\\n              const worldNormal = new THREE.Vector3(0, 0, 1).applyQuaternion(clockGroup.getWorldQuaternion(new THREE.Quaternion())).normalize();\\n              const clockPlane = new THREE.Plane().setFromNormalAndCoplanarPoint(worldNormal, worldPivot);\\n              if (rayc.ray.intersectPlane(clockPlane, intersection)) {\\n                  const clockWorldInv = new THREE.Matrix4().copy(clockGroup.matrixWorld).invert();\\n                  const localPos = intersection.applyMatrix4(clockWorldInv);\\n                  mousePos2D = { x: localPos.x - (p0.pivotX || 0), y: localPos.y - (p0.pivotY || 0) };\\n                  dist = Math.sqrt(mousePos2D.x * mousePos2D.x + mousePos2D.y * mousePos2D.y);\\n                  if (dist > 0) {\\n                      cursorAngle = Math.atan2(mousePos2D.x, mousePos2D.y);\\n                  }\\n              }\\n          }\\n\\n          const angleS = - (sec / 60) * Math.PI * 2;\\n          let targetAngleS = angleS;\\n          if (subDialMode === 'chrono' && chronoEnabled) {\\n              targetAngleS = - (chronoSec / 60) * Math.PI * 2;\\n          }\\n          \\n          let finalAngleS = targetAngleS;\\n          if (p0 && p0.cursorMagnetismEnabled && mousePos2D && dist < 50) {\\n              const strength = (1.0 - (dist / 50)) * 0.45;\\n              const targetX = Math.sin(-targetAng\n<truncated 477 bytes>",
+      "StartLine": "1975",
+      "TargetContent": "\"          // 2. Cursor Magnetism Logic for Seconds Hand\\n          let mousePos2D = null;\\n          let dist = 9999;\\n          let cursorAngle = 0;\\n          if (p0 && p0.cursorMagnetismEnabled && window._cuMouseNDC && camera) {\\n              const rayc = new THREE.Raycaster();\\n              rayc.setFromCamera(window._cuMouseNDC, camera);\\n              const intersection = new THREE.Vector3();\\n              const clockGroup = partsMap.hand_s ? partsMap.hand_s.parent.parent : null;\\n              if (clockGroup) {\\n                  const worldPivot = new THREE.Vector3();\\n                  clockGroup.getWorldPosition(worldPivot);\\n                  const worldNormal = new THREE.Vector3(0, 0, 1).applyQuaternion(clockGroup.getWorldQuaternion(new THREE.Quaternion())).normalize();\\n                  const clockPlane = new THREE.Plane().setFromNormalAndCoplanarPoint(worldNormal, worldPivot);\\n                  if (rayc.ray.intersectPlane(clockPlane, intersection)) {\\n                      const clockWorldInv = new THREE.Matrix4().copy(clockGroup.matrixWorld).invert();\\n                      const localPos = intersection.applyMatrix4(clockWorldInv);\\n                      mousePos2D = { x: localPos.x - (p0.pivotX || 0), y: localPos.y - (p0.pivotY || 0) };\\n                      dist = Math.sqrt(mousePos2D.x * mousePos2D.x + mousePos2D.y * mousePos2D.y);\\n                      if (dist > 0) {\\n                          cursorAngle = Math.atan2(mousePos2D.x, mousePos2D.y);\\n                      }\\n                  }\\n              }\\n          }\\n\\n          const angleS = - (sec / 60) * Math.PI * 2;\\n          let targetAngleS = angleS;\\n          if (subDialMode === 'chrono' && chronoEnabled) {\\n              targetAngleS = - (chronoSec / 60) * Math.PI * 2;\\n          }\\n          \\n          let finalAngleS = targetAngleS;\\n          if (p0 && p0.cursorMagnetismEnabled && mousePos2D && dist < 50) {\\n              const strength = (1.0 - (dist / 50)) * 0.45;\\n              const targetX = Math.sin(-targetAngl\n<truncated 476 bytes>",
+      "TargetFile": "\"c:/Users/andre/OneDrive/Bureau/html cod3 buna ultimul 2model2/js/sketch-extruder.js\"",
+      "toolAction": "\"Updating Cursor Magnetism in anim callback\"",
+      "toolSummary": "\"Update Cursor Magnetism anim callback\""
+    }
+  },
+  {
+    "step": 792,
+    "tool": "replace_file_content",
+    "description": "\"Mapping thetaS to finalAngleS inside sketch-extruder.js.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Mapping thetaS to finalAngleS inside sketch-extruder.js.\"",
+      "EndLine": "9565",
+      "Instruction": "\"Change thetaS to use finalAngleS in sketch-extruder.js\"",
+      "ReplacementContent": "\"          const activeSec = (subDialMode === 'chrono' && chronoEnabled) ? chronoSec : sec;\\n          const thetaS = Math.PI / 2 + finalAngleS;\\n          const thetaM = Math.PI / 2 - (min / 60) * Math.PI * 2;\\n          const thetaH = Math.PI / 2 - (hr / 12) * Math.PI * 2;\"",
+      "StartLine": "9561",
+      "TargetContent": "\"          const activeSec = (subDialMode === 'chrono' && chronoEnabled) ? chronoSec : sec;\\n          const thetaS = Math.PI / 2 - (activeSec / 60) * Math.PI * 2;\\n          const thetaM = Math.PI / 2 - (min / 60) * Math.PI * 2;\\n          const thetaH = Math.PI / 2 - (hr / 12) * Math.PI * 2;\"",
+      "TargetFile": "\"c:/Users/andre/OneDrive/Bureau/html cod3 buna ultimul 2model2/js/sketch-extruder.js\"",
+      "toolAction": "\"Updating thetaS inside animation callback\"",
+      "toolSummary": "\"Update liquid bead S angle\""
+    }
+  },
+  {
+    "step": 798,
+    "tool": "replace_file_content",
+    "description": "\"Constraining time travel pointerdown clicks in exported HTML to the clock runtimeGroup inside sketch-extruder.js.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Constraining time travel pointerdown clicks in exported HTML to the clock runtimeGroup inside sketch-extruder.js.\"",
+      "EndLine": "11192",
+      "Instruction": "\"Escape and update pointerdown inside the exported HTML section of sketch-extruder.js\"",
+      "ReplacementContent": "\"      window.addEventListener('pointerdown', (e) => {\\n          if (!sp.timeTravelEnabled) return;\\n          if (e.target !== renderer.domElement) return;\\n          \\n          const rayc = new THREE.Raycaster();\\n          const mouse2d = new THREE.Vector2();\\n          const rect = renderer.domElement.getBoundingClientRect();\\n          mouse2d.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;\\n          mouse2d.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;\\n          rayc.setFromCamera(mouse2d, camera);\\n          const intersects = rayc.intersectObjects([hasClockUltra.runtimeGroup], true);\\n          if (intersects.length === 0) return;\\n          \\n          isTimeTraveling = true;\\n          timeTravelStartX = e.clientX;\\n          controls.enabled = false;\\n      });\"",
+      "StartLine": "11185",
+      "TargetContent": "\"      window.addEventListener('pointerdown', (e) => {\\n          if (!sp.timeTravelEnabled) return;\\n          if (e.target !== renderer.domElement) return;\\n          isTimeTraveling = true;\\n          timeTravelStartX = e.clientX;\\n          controls.enabled = false;\\n      });\"",
+      "TargetFile": "\"c:/Users/andre/OneDrive/Bureau/html cod3 buna ultimul 2model2/js/sketch-extruder.js\"",
+      "toolAction": "\"Constraining exported pointerdown clicks\"",
+      "toolSummary": "\"Constrain exported pointerdown clicks\""
+    }
+  },
+  {
+    "step": 804,
+    "tool": "replace_file_content",
+    "description": "\"Removing duplicate declaration of rect in pointermove inside sketch-extruder.js.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Removing duplicate declaration of rect in pointermove inside sketch-extruder.js.\"",
+      "EndLine": "1914",
+      "Instruction": "\"Remove duplicate rect declaration inside pointermove in sketch-extruder.js\"",
+      "ReplacementContent": "\"          if (!draggedHandName || !draggedModel) return;\\n          \\n          mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;\\n          mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;\\n          raycaster.setFromCamera(mouse, camera);\"",
+      "StartLine": "1908",
+      "TargetContent": "\"          if (!draggedHandName || !draggedModel) return;\\n          \\n          const rect = renderer.domElement.getBoundingClientRect();\\n          mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;\\n          mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;\\n          raycaster.setFromCamera(mouse, camera);\"",
+      "TargetFile": "\"c:/Users/andre/OneDrive/Bureau/html cod3 buna ultimul 2model2/js/sketch-extruder.js\"",
+      "toolAction": "\"Removing duplicate rect variable in pointermove\"",
+      "toolSummary": "\"Remove duplicate rect variable\""
+    }
+  },
+  {
+    "step": 868,
+    "tool": "replace_file_content",
+    "description": "\"Removing first set of duplicated functions from sketch-extruder.js.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Removing first set of duplicated functions from sketch-extruder.js.\"",
+      "EndLine": "10544",
+      "Instruction": "\"Remove the duplicated playTone, playWestminsterChime, rebuildClockUltraGeo, updateControlPanelUI, and applyThemePreset functions starting at line 10271 in sketch-extruder.js\"",
+      "ReplacementContent": "\"          if (radioAudio) {\\n              radioAudio.volume = stationVol;\\n          }\\n      };\"",
+      "StartLine": "10266",
+      "TargetContent": "\"          if (radioAudio) {\\n              radioAudio.volume = stationVol;\\n          }\\n      };\\n\\n      const playTone = (freq, startTime, duration) => {\\n          try {\\n              const ctx = getCuPlaybackContext();\\n              const osc1 = ctx.createOscillator();\\n              const gain1 = ctx.createGain();\\n              osc1.type = 'sine';\\n              osc1.frequency.setValueAtTime(freq, startTime);\\n              gain1.gain.setValueAtTime(0, startTime);\\n              gain1.gain.linearRampToValueAtTime(0.2, startTime + 0.04);\\n              gain1.gain.exponentialRampToValueAtTime(0.0001, startTime + duration - 0.01);\\n              osc1.connect(gain1);\\n              gain1.connect(ctx.destination);\\n              osc1.start(startTime);\\n              osc1.stop(startTime + duration);\\n\\n              const osc2 = ctx.createOscillator();\\n              const gain2 = ctx.createGain();\\n              osc2.type = 'sine';\\n              osc2.frequency.setValueAtTime(freq * 2, startTime);\\n              gain2.gain.setValueAtTime(0, startTime);\\n              gain2.gain.linearRampToValueAtTime(0.08, startTime + 0.03);\\n              gain2.gain.exponentialRampToValueAtTime(0.0001, startTime + duration - 0.01);\\n              osc2.connect(gain2);\\n              gain2.connect(ctx.destination);\\n              osc2.start(startTime);\\n              osc2.stop(startTime + duration);\\n          } catch(e) {}\\n      };\\n\\n      const playWestminsterChime = (hours) => {\\n          try {\\n              const ctx = getCuPlaybackContext();\\n              const now = ctx.currentTime;\\n              const notes = {\\n                  'G3': 196.00,\\n                  'C4': 261.63,\\n                  'D4': 293.66,\\n                  'E4': 329.63\\n              };\\n              const melody = [\\n                  'E4', 'C4', 'D4', 'G3',\\n                  'C4', 'E4', 'D4', 'G3',\\n                  'G3', 'D4', 'E4', 'C4',\\n                  'C4', 'G3', 'D4', 'E4'\\n              ];\\n              let time = now + 0.1;\\n\n<truncated 9008 bytes>",
+      "TargetFile": "\"c:/Users/andre/OneDrive/Bureau/html cod3 buna ultimul 2model2/js/sketch-extruder.js\"",
+      "toolAction": "\"Deleting duplicate export functions\"",
+      "toolSummary": "\"Delete duplicate export functions\""
+    }
+  },
+  {
+    "step": 912,
+    "tool": "replace_file_content",
+    "description": "\"Remove premature closing brace in clock-ultra export block.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Remove premature closing brace in clock-ultra export block.\"",
+      "EndLine": "10863",
+      "Instruction": "\"Remove the extra closing brace on line 10860.\"",
+      "ReplacementContent": "\"              playWestminsterChime(now.getHours());\\n          };\\n      }\\n      if (showChrono) {\"",
+      "StartLine": "10857",
+      "TargetContent": "\"              playWestminsterChime(now.getHours());\\n          };\\n      }\\n      }\\n      if (showChrono) {\"",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\"",
+      "toolAction": "\"Removing extra closing brace in sketch-extruder.js\"",
+      "toolSummary": "\"Remove extra brace in sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 942,
+    "tool": "replace_file_content",
+    "description": "\"Fix template escaping in exported clock ultra panel to evaluate runtime conditions and translations.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Fix template escaping in exported clock ultra panel to evaluate runtime conditions and translations.\"",
+      "EndLine": "10645",
+      "Instruction": "\"Change triple-escaped sequences to single-escaped ones so the template resolves correctly in the browser.\"",
+      "ReplacementContent": "\"          <!-- PREMIUM DESIGN PRESETS -->\\n          <div style=\\\"margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);\\\">\\n              <label style=\\\"font-size:11px;color:#94a3b8;display:block;margin-bottom:4px;font-weight:bold;\\\">💎 \\\\${isFR ? 'Thème Prédéfini' : 'Theme Preset'}:</label>\\n              <select id=\\\"cu-theme-preset\\\" style=\\\"width:100%;background:#070a13;color:#e2e8f0;border:1px solid #1e293b;border-radius:6px;padding:5px;font-size:11px;outline:none;\\\">\\n                  <option value=\\\"custom\\\" \\\\${sp.themePreset==='custom'?'selected':''}>Custom</option>\\n                  <option value=\\\"rolex_ocean\\\" \\\\${sp.themePreset==='rolex_ocean'?'selected':''}>Rolex Ocean</option>\\n                  <option value=\\\"cyber_hud\\\" \\\\${sp.themePreset==='cyber_hud'?'selected':''}>Cyber HUD</option>\\n                  <option value=\\\"steampunk_oracle\\\" \\\\${sp.themePreset==='steampunk_oracle'?'selected':''}>Steampunk Oracle</option>\\n                  <option value=\\\"zen_liquid\\\" \\\\${sp.themePreset==='zen_liquid'?'selected':''}>Zen Liquid</option>\\n              </select>\\n          </div>\\n\\n          <!-- TIME TRAVEL & CURSOR MAGNETISM -->\\n          <div style=\\\"margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);\\\">\\n              <label style=\\\"display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:#cbd5e1;margin-bottom:6px;font-weight:bold;\\\">\\n                  <input type=\\\"checkbox\\\" id=\\\"cu-cb-timetravel\\\" \\\\${sp.timeTravelEnabled ? 'checked' : ''} />\\n                  <span>⏳ \\\\${isFR ? 'Voyage dans le Temps' : 'Time Travel'}</span>\\n              </label>\\n              <div id=\\\"cu-timetravel-autoreturn-row\\\" style=\\\"display: \\\\${sp.timeTravelEnabled ? 'flex' : 'none'}; align-items:center; gap:6px; margin-left: 18px; margin-bottom: 8px;\\\">\\n                  <input type=\\\"checkbox\\\" id=\\\"cu-cb-timetravel-autoreturn\\\" \\\\${sp.timeTravelAutoReturn ? 'checked' : ''} />\\n                  <span style=\\\"fo\n<truncated 3460 bytes>",
+      "StartLine": "10592",
+      "TargetContent": "\"          <!-- PREMIUM DESIGN PRESETS -->\\n          <div style=\\\"margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);\\\">\\n              <label style=\\\"font-size:11px;color:#94a3b8;display:block;margin-bottom:4px;font-weight:bold;\\\">💎 \\\\\\\\\\\\${isFR ? 'Thème Prédéfini' : 'Theme Preset'}:</label>\\n              <select id=\\\"cu-theme-preset\\\" style=\\\"width:100%;background:#070a13;color:#e2e8f0;border:1px solid #1e293b;border-radius:6px;padding:5px;font-size:11px;outline:none;\\\">\\n                  <option value=\\\"custom\\\" \\\\\\\\\\\\${sp.themePreset==='custom'?'selected':''}>Custom</option>\\n                  <option value=\\\"rolex_ocean\\\" \\\\\\\\\\\\${sp.themePreset==='rolex_ocean'?'selected':''}>Rolex Ocean</option>\\n                  <option value=\\\"cyber_hud\\\" \\\\\\\\\\\\${sp.themePreset==='cyber_hud'?'selected':''}>Cyber HUD</option>\\n                  <option value=\\\"steampunk_oracle\\\" \\\\\\\\\\\\${sp.themePreset==='steampunk_oracle'?'selected':''}>Steampunk Oracle</option>\\n                  <option value=\\\"zen_liquid\\\" \\\\\\\\\\\\${sp.themePreset==='zen_liquid'?'selected':''}>Zen Liquid</option>\\n              </select>\\n          </div>\\n\\n          <!-- TIME TRAVEL & CURSOR MAGNETISM -->\\n          <div style=\\\"margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);\\\">\\n              <label style=\\\"display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:#cbd5e1;margin-bottom:6px;font-weight:bold;\\\">\\n                  <input type=\\\"checkbox\\\" id=\\\"cu-cb-timetravel\\\" \\\\\\\\\\\\${sp.timeTravelEnabled ? 'checked' : ''} />\\n                  <span>⏳ \\\\\\\\\\\\${isFR ? 'Voyage dans le Temps' : 'Time Travel'}</span>\\n              </label>\\n              <div id=\\\"cu-timetravel-autoreturn-row\\\" style=\\\"display: \\\\\\\\\\\\${sp.timeTravelEnabled ? 'flex' : 'none'}; align-items:center; gap:6px; margin-left: 18px; margin-bottom: 8px;\\\">\\n                  <input type=\\\"checkbox\\\" id=\\\"cu-cb-timetravel-autoreturn\\\" \\\\\\\\\\\\${sp.timeTravelAutoReturn ? 'checked' : ''\n<truncated 3592 bytes>",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\"",
+      "toolAction": "\"Fixing Clock Ultra UI template escaping\"",
+      "toolSummary": "\"Fix template escaping in sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 1232,
+    "tool": "replace_file_content",
+    "description": "\"Build weather groups in sketch-extruder.js if weather sync is enabled or if they are specifically selected\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Build weather groups in sketch-extruder.js if weather sync is enabled or if they are specifically selected\"",
+      "EndLine": "9010",
+      "Instruction": "\"Change weather overlay checks to build them if either sp.weatherOverlay matches or weatherWeatherSyncEnabled is true\"",
+      "ReplacementContent": "\"      if (p0.weatherOverlay === 'rain' || p0.weatherWeatherSyncEnabled) {\\n          const rainGroup = new THREE.Group();\\n          rainGroup.name = 'rainGroup';\\n          const rainMat = new THREE.MeshBasicMaterial({\\n              color: 0x38bdf8,\\n              transparent: true,\\n              opacity: 0.6\\n          });\\n          const rainGeo = new THREE.CylinderGeometry(0.1, 0.1, 3.5, 4);\\n          for (let i = 0; i < 40; i++) {\\n              const p = new THREE.Mesh(rainGeo, rainMat);\\n              const ang = Math.random() * Math.PI * 2;\\n              const r = Math.random() * 34;\\n              p.position.set(Math.cos(ang) * r, Math.sin(ang) * r, faceFrontZ + 0.8 + Math.random() * 0.4);\\n              p.rotation.z = -0.1;\\n              p.userData = { speed: 1.5 + Math.random() * 1.5, angle: ang, r: r };\\n              rainGroup.add(p);\\n          }\\n          meshGroup.add(rainGroup);\\n      }\\n      if (p0.weatherOverlay === 'snow' || p0.weatherWeatherSyncEnabled) {\\n          const snowGroup = new THREE.Group();\\n          snowGroup.name = 'snowGroup';\\n          const snowMat = new THREE.MeshBasicMaterial({\\n              color: 0xffffff,\\n              transparent: true,\\n              opacity: 0.8\\n          });\\n          const snowGeo = new THREE.SphereGeometry(0.35, 6, 6);\\n          for (let i = 0; i < 45; i++) {\\n              const p = new THREE.Mesh(snowGeo, snowMat);\\n              const ang = Math.random() * Math.PI * 2;\\n              const r = Math.random() * 34;\\n              p.position.set(Math.cos(ang) * r, Math.sin(ang) * r, faceFrontZ + 0.8 + Math.random() * 0.4);\\n              p.userData = { speed: 0.3 + Math.random() * 0.5, drift: -0.1 + Math.random() * 0.2 };\\n              snowGroup.add(p);\\n          }\\n          meshGroup.add(snowGroup);\\n      }\\n      if (p0.weatherOverlay === 'mist' || p0.weatherWeatherSyncEnabled) {\\n          const mistGroup = new THREE.Group();\\n          mistGroup.name = 'mistGroup';\\n          const mistMat = new THREE.MeshBasicMaterial({\\n \n<truncated 611 bytes>",
+      "StartLine": "8956",
+      "TargetContent": "\"      if (p0.weatherOverlay === 'rain') {\\n          const rainGroup = new THREE.Group();\\n          rainGroup.name = 'rainGroup';\\n          const rainMat = new THREE.MeshBasicMaterial({\\n              color: 0x38bdf8,\\n              transparent: true,\\n              opacity: 0.6\\n          });\\n          const rainGeo = new THREE.CylinderGeometry(0.1, 0.1, 3.5, 4);\\n          for (let i = 0; i < 40; i++) {\\n              const p = new THREE.Mesh(rainGeo, rainMat);\\n              const ang = Math.random() * Math.PI * 2;\\n              const r = Math.random() * 34;\\n              p.position.set(Math.cos(ang) * r, Math.sin(ang) * r, faceFrontZ + 0.8 + Math.random() * 0.4);\\n              p.rotation.z = -0.1;\\n              p.userData = { speed: 1.5 + Math.random() * 1.5, angle: ang, r: r };\\n              rainGroup.add(p);\\n          }\\n          meshGroup.add(rainGroup);\\n      } else if (p0.weatherOverlay === 'snow') {\\n          const snowGroup = new THREE.Group();\\n          snowGroup.name = 'snowGroup';\\n          const snowMat = new THREE.MeshBasicMaterial({\\n              color: 0xffffff,\\n              transparent: true,\\n              opacity: 0.8\\n          });\\n          const snowGeo = new THREE.SphereGeometry(0.35, 6, 6);\\n          for (let i = 0; i < 45; i++) {\\n              const p = new THREE.Mesh(snowGeo, snowMat);\\n              const ang = Math.random() * Math.PI * 2;\\n              const r = Math.random() * 34;\\n              p.position.set(Math.cos(ang) * r, Math.sin(ang) * r, faceFrontZ + 0.8 + Math.random() * 0.4);\\n              p.userData = { speed: 0.3 + Math.random() * 0.5, drift: -0.1 + Math.random() * 0.2 };\\n              snowGroup.add(p);\\n          }\\n          meshGroup.add(snowGroup);\\n      } else if (p0.weatherOverlay === 'mist') {\\n          const mistGroup = new THREE.Group();\\n          mistGroup.name = 'mistGroup';\\n          const mistMat = new THREE.MeshBasicMaterial({\\n              color: 0x94a3b8,\\n              transparent: true,\\n              opacity: 0.15,\\n     \n<truncated 511 bytes>",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\"",
+      "toolAction": "\"Updating weather builder logic\"",
+      "toolSummary": "\"Update weather builder logic in sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 1238,
+    "tool": "replace_file_content",
+    "description": "\"Update addClockUltraAnimCb to handle Pomodoro countdown, web analytics drift simulation, and menu redirection override rotations\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Update addClockUltraAnimCb to handle Pomodoro countdown, web analytics drift simulation, and menu redirection override rotations\"",
+      "EndLine": "9165",
+      "Instruction": "\"Update starting logic of _scUltraAnimCb inside addClockUltraAnimCb in sketch-extruder.js\"",
+      "ReplacementContent": "\"           const angleM_real = - (min / 60) * Math.PI * 2;\\n           const angleH_real = - (hr / 12) * Math.PI * 2;\\n           const angleS_real = - (sec / 60) * Math.PI * 2;\\n\\n           // Pomodoro Countdown Timer\\n           if (p0 && p0.pomodoroTimerEnabled && p0.pomodoroRunning) {\\n               p0.pomodoroTimeRemaining -= dt / 1000;\\n               if (p0.pomodoroTimeRemaining <= 0) {\\n                   p0.pomodoroTimeRemaining = 0;\\n                   p0.pomodoroRunning = false;\\n                   \\n                   try {\\n                       const ctx = getCuPlaybackContext ? getCuPlaybackContext() : (typeof getPlaybackAudioContext === 'function' ? getPlaybackAudioContext() : null);\\n                       if (ctx) {\\n                           const playT = typeof playTone === 'function' ? playTone : null;\\n                           if (playT) {\\n                               const nowTime = ctx.currentTime;\\n                               playT(261.63, nowTime, 0.4);\\n                               playT(329.63, nowTime + 0.3, 0.4);\\n                               playT(392.00, nowTime + 0.6, 0.8);\\n                           }\\n                       }\\n                   } catch(e) {}\\n\\n                   window.dispatchEvent(new CustomEvent('clock-pomodoro-complete', { detail: { duration: p0.pomodoroDuration } }));\\n                   if (window.parent) {\\n                       window.parent.postMessage({ type: 'clock-pomodoro-complete', duration: p0.pomodoroDuration }, '*');\\n                   }\\n                   \\n                   if (window.toast) {\\n                       window.toast(\\\"🍅 Pomodoro focus session completed! Take a break!\\\");\\n                   } else {\\n                       alert(\\\"Pomodoro focus session completed! Take a break!\\\");\\n                   }\\n               }\\n               \\n               const timerDisplay = document.getElementById('cu3-pomodoro-time-display') || document.getElementById('cu-pomodoro-time-display');\\n               if (ti\n<truncated 4641 bytes>",
+      "StartLine": "9128",
+      "TargetContent": "\"           const angleM = - (min / 60) * Math.PI * 2;\\n           const angleH = - (hr / 12) * Math.PI * 2;\\n \\n           if (partsMap.hand_h) partsMap.hand_h.rotation.z = angleH;\\n           if (partsMap.hand_m) partsMap.hand_m.rotation.z = angleM;\\n \\n           const nowMs = performance.now();\\n           if (!m._lastTimeMs) m._lastTimeMs = nowMs;\\n           const dt = Math.min(100, nowMs - m._lastTimeMs);\\n           m._lastTimeMs = nowMs;\\n \\n           const chronoEnabled = p0 && p0.chronoEnabled;\\n           const subDialMode = p0 && p0.subDialMode ? p0.subDialMode : 'chrono';\\n \\n           let chronoSec = 0;\\n           \\n           if (subDialMode === 'chrono' && chronoEnabled) {\\n               if (m.chronoRunning) {\\n                   m.chronoTime = (m.chronoTime || 0) + dt;\\n               }\\n               chronoSec = (m.chronoTime || 0) / 1000;\\n               if (partsMap.hand_s) {\\n                   partsMap.hand_s.rotation.z = - (chronoSec / 60) * Math.PI * 2;\\n               }\\n               if (partsMap.hand_chrono_min) {\\n                   const chronoMin = chronoSec / 60;\\n                   partsMap.hand_chrono_min.rotation.z = - (chronoMin / 30) * Math.PI * 2;\\n               }\\n               if (partsMap.hand_chrono_tenth) {\\n                   const chronoSubSec = (m.chronoTime / 1000) % 60;\\n                   partsMap.hand_chrono_tenth.rotation.z = - (chronoSubSec / 60) * Math.PI * 2;\\n               }\\n               if (partsMap.hand_chrono_sec) {\\n                   partsMap.hand_chrono_sec.rotation.z = - (sec / 60) * Math.PI * 2;\\n               }\\n           } else {\\n               if (partsMap.hand_s) {\\n                   partsMap.hand_s.rotation.z = - (sec / 60) * Math.PI * 2;\\n               }\\n \\n               if (subDialMode === 'battery') {\\n                   const bat = window._clockBatteryLevel !== undefined ? window._clockBatteryLevel : 1.0;\\n                   if (partsMap.hand_chrono_min) {\"",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\"",
+      "toolAction": "\"Updating addClockUltraAnimCb start\"",
+      "toolSummary": "\"Update starting logic of _scUltraAnimCb inside addClockUltraAnimCb in sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 1244,
+    "tool": "replace_file_content",
+    "description": "\"Update addClockUltraAnimCb in sketch-extruder.js to support blue light filters, pomodoro glow, and weather overlays cycling\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Update addClockUltraAnimCb in sketch-extruder.js to support blue light filters, pomodoro glow, and weather overlays cycling\"",
+      "EndLine": "9470",
+      "Instruction": "\"Replace block in sketch-extruder.js to handle weather cycling, night filters, and pomodoro color shifts\"",
+      "ReplacementContent": "\"          if (partsMap.neonBorder && partsMap.neonBorder.material) {\\n              partsMap.neonBorder.material.emissiveIntensity = 1.0 + tickPulse * 1.5;\\n              if (p0 && p0.pomodoroTimerEnabled && p0.pomodoroRunning) {\\n                  partsMap.neonBorder.material.emissive.set('#f97316');\\n              } else if (p0 && p0.blueLightFilterEnabled && (now.getHours() >= 18 || now.getHours() < 6)) {\\n                  partsMap.neonBorder.material.emissive.set('#d97706');\\n              } else {\\n                  partsMap.neonBorder.material.emissive.set(p0.neonBorderColor || '#06b6d4');\\n              }\\n          }\\n          if (partsMap.backlightGlow && partsMap.backlightGlow.material) {\\n              partsMap.backlightGlow.material.opacity = 0.55 + Math.sin(Date.now() * 0.0025) * 0.15 + tickPulse * 0.3;\\n              if (p0 && p0.pomodoroTimerEnabled && p0.pomodoroRunning) {\\n                  partsMap.backlightGlow.material.color.set('#f97316');\\n              } else if (p0 && p0.blueLightFilterEnabled && (now.getHours() >= 18 || now.getHours() < 6)) {\\n                  partsMap.backlightGlow.material.color.set('#d97706');\\n              } else {\\n                  partsMap.backlightGlow.material.color.set(p0.glowColor || '#6366f1');\\n              }\\n          }\\n\\n          if (p0 && p0.dynamicTimeColor && partsMap.faceMesh && partsMap.faceMesh.material) {\\n              const hour24 = now.getHours() + now.getMinutes() / 60;\\n              partsMap.faceMesh.material.color.copy(getDynamicTimeColor(hour24));\\n          } else if (p0 && partsMap.faceMesh && partsMap.faceMesh.material) {\\n              partsMap.faceMesh.material.color.setStyle(p0.faceColor || '#0a0f1d');\\n          }\\n\\n          // Determine active weather type (supporting auto-cycling weather sync)\\n          let activeWeather = p0 ? p0.weatherOverlay : 'none';\\n          if (p0 && p0.weatherWeatherSyncEnabled) {\\n              const cycleSec = 15;\\n              const cycleIdx = Math.floor((Date.now() / 1000) / cycleSec) % 3;\\\n<truncated 2143 bytes>",
+      "StartLine": "9425",
+      "TargetContent": "\"          if (partsMap.neonBorder && partsMap.neonBorder.material) {\\n              partsMap.neonBorder.material.emissiveIntensity = 1.0 + tickPulse * 1.5;\\n          }\\n          if (partsMap.backlightGlow && partsMap.backlightGlow.material) {\\n              partsMap.backlightGlow.material.opacity = 0.55 + Math.sin(Date.now() * 0.0025) * 0.15 + tickPulse * 0.3;\\n          }\\n\\n          if (p0 && p0.dynamicTimeColor && partsMap.faceMesh && partsMap.faceMesh.material) {\\n              const hour24 = now.getHours() + now.getMinutes() / 60;\\n              partsMap.faceMesh.material.color.copy(getDynamicTimeColor(hour24));\\n          } else if (p0 && partsMap.faceMesh && partsMap.faceMesh.material) {\\n              partsMap.faceMesh.material.color.setStyle(p0.faceColor || '#0a0f1d');\\n          }\\n\\n          if (partsMap.weatherRain) {\\n              partsMap.weatherRain.children.forEach(drop => {\\n                  drop.position.y -= drop.userData.speed;\\n                  drop.position.x -= drop.userData.speed * 0.08;\\n                  if (drop.position.y < -36) {\\n                      drop.position.y = 36;\\n                      drop.position.x = (Math.random() - 0.5) * 64;\\n                  }\\n              });\\n          }\\n          if (partsMap.weatherSnow) {\\n              partsMap.weatherSnow.children.forEach(flake => {\\n                  flake.position.y -= flake.userData.speedY;\\n                  flake.userData.phase += 0.02;\\n                  flake.position.x += Math.sin(flake.userData.phase) * 0.08 + flake.userData.speedX;\\n                  if (flake.position.y < -36) {\\n                      flake.position.y = 36;\\n                      flake.position.x = (Math.random() - 0.5) * 64;\\n                  }\\n              });\\n          }\\n          if (partsMap.weatherMist) {\\n              partsMap.weatherMist.children.forEach(plane => {\\n                  plane.position.x += plane.userData.speedX;\\n                  plane.position.y += plane.userData.speedY;\\n                  plane.rotation.z +\n<truncated 245 bytes>",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\"",
+      "toolAction": "\"Updating anim callback weather and lights\"",
+      "toolSummary": "\"Update anim callback weather and lights in sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 1246,
+    "tool": "replace_file_content",
+    "description": "\"Add ASMR soundscape mixer local variables to the exported Clock Ultra scope\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Add ASMR soundscape mixer local variables to the exported Clock Ultra scope\"",
+      "EndLine": "10200",
+      "Instruction": "\"Declare soundscape Rain/Wind/Binaural gain/source variables in sketch-extruder.js\"",
+      "ReplacementContent": "\"      let cuPlaybackCtx = null;\\n      let cuAlarmActive = false, cuAlarmInt = null;\\n      let lastTickedSecond = -1;\\n\\n      // Radio state variables\\n      let radioAudio = null;\\n      let radioStaticNode = null;\\n      let radioStaticGain = null;\\n\\n      // ASMR Soundscape state variables\\n      let soundscapeRainGain = null, soundscapeRainSource = null;\\n      let soundscapeWindGain = null, soundscapeWindSource = null, soundscapeWindFilter = null, soundscapeWindLFO = null;\\n      let soundscapeBinauralGain = null, soundscapeBinauralSourceL = null, soundscapeBinauralSourceR = null;\\n\\n      const radioStations = [\"",
+      "StartLine": "10191",
+      "TargetContent": "\"      let cuPlaybackCtx = null;\\n      let cuAlarmActive = false, cuAlarmInt = null;\\n      let lastTickedSecond = -1;\\n\\n      // Radio state variables\\n      let radioAudio = null;\\n      let radioStaticNode = null;\\n      let radioStaticGain = null;\\n      const radioStations = [\"",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\"",
+      "toolAction": "\"Adding soundscape variables in sketch-extruder\"",
+      "toolSummary": "\"Add soundscape variables in sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 1254,
+    "tool": "replace_file_content",
+    "description": "\"Add ASMR soundscape synth synthesis helper functions to the exported code scope in sketch-extruder.js\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Add ASMR soundscape synth synthesis helper functions to the exported code scope in sketch-extruder.js\"",
+      "EndLine": "10505",
+      "Instruction": "\"Add ASMR soundscape synthesizers below playWestminsterChime inside sketch-extruder.js\"",
+      "ReplacementContent": "\"      };\\n \\n      const initSoundscapeSynth = () => {\\n          if (!sp.soundscapeMixerEnabled) {\\n              stopSoundscapeSynth();\\n              return;\\n          }\\n          try {\\n              const ctx = getCuPlaybackContext();\\n              if (!ctx) return;\\n\\n              const bufferSize = 2 * ctx.sampleRate;\\n              const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);\\n              const output = noiseBuffer.getChannelData(0);\\n              for (let i = 0; i < bufferSize; i++) {\\n                  output[i] = Math.random() * 2 - 1;\\n              }\\n\\n              // RAIN\\n              if (!soundscapeRainGain) {\\n                  soundscapeRainGain = ctx.createGain();\\n                  soundscapeRainGain.gain.setValueAtTime((sp.soundscapeRainVol !== undefined ? sp.soundscapeRainVol : 30) / 100, ctx.currentTime);\\n                  soundscapeRainGain.connect(ctx.destination);\\n\\n                  const rainFilter = ctx.createBiquadFilter();\\n                  rainFilter.type = 'bandpass';\\n                  rainFilter.frequency.setValueAtTime(1000, ctx.currentTime);\\n                  rainFilter.Q.setValueAtTime(1.0, ctx.currentTime);\\n                  rainFilter.connect(soundscapeRainGain);\\n\\n                  soundscapeRainSource = ctx.createBufferSource();\\n                  soundscapeRainSource.buffer = noiseBuffer;\\n                  soundscapeRainSource.loop = true;\\n                  soundscapeRainSource.connect(rainFilter);\\n                  soundscapeRainSource.start(0);\\n              }\\n\\n              // WIND\\n              if (!soundscapeWindGain) {\\n                  soundscapeWindGain = ctx.createGain();\\n                  soundscapeWindGain.gain.setValueAtTime((sp.soundscapeWindVol !== undefined ? sp.soundscapeWindVol : 20) / 100, ctx.currentTime);\\n                  soundscapeWindGain.connect(ctx.destination);\\n\\n                  soundscapeWindFilter = ctx.createBiquadFilter();\\n                  soundscapeWindFilter.type = 'lowpass';\\n       \n<truncated 4425 bytes>",
+      "StartLine": "10503",
+      "TargetContent": "\"      };\"",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\"",
+      "toolAction": "\"Adding ASMR synth helper functions\"",
+      "toolSummary": "\"Add ASMR synth helper functions in sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 1260,
+    "tool": "replace_file_content",
+    "description": "\"Inject the 5 new focus/utility features toggle and inputs into the exported widget HTML panel\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Inject the 5 new focus/utility features toggle and inputs into the exported widget HTML panel\"",
+      "EndLine": "10958",
+      "Instruction": "\"Insert 5 new premium feature toggles and sliders in exported widget panel HTML in sketch-extruder.js\"",
+      "ReplacementContent": "\"          </div>\\n\\n          <!-- ULTRA-PREMIUM EXTRAS -->\\n          <div style=\\\"margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);\\\">\\n              <span style=\\\"font-size:11px;color:#cbd5e1;display:block;margin-bottom:6px;font-weight:bold;\\\">💎 \\\\${isFR ? 'Extras Ultra-Premium' : 'Ultra-Premium Extras'}</span>\\n              \\n              <!-- 3D Website Menu Navigation -->\\n              <label style=\\\"display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:#cbd5e1;margin-bottom:6px;\\\">\\n                  <input type=\\\"checkbox\\\" id=\\\"cu-cb-navmenu\\\" \\\\${sp.navigatorMenuEnabled ? 'checked' : ''} />\\n                  <span>🧭 \\\\${isFR ? 'Menu Redirection Site 3D' : '3D Website Menu Navigation'}</span>\\n              </label>\\n\\n              <!-- Real-Time Web Analytics Simulation -->\\n              <label style=\\\"display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:#cbd5e1;margin-bottom:6px;\\\">\\n                  <input type=\\\"checkbox\\\" id=\\\"cu-cb-analytics\\\" \\\\${sp.analyticsDisplayEnabled ? 'checked' : ''} />\\n                  <span>📊 \\\\${isFR ? 'Simulation Analytique Web' : 'Live Web Analytics Simulation'}</span>\\n              </label>\\n\\n              <!-- Night Blue-Light Filter -->\\n              <label style=\\\"display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:#cbd5e1;margin-bottom:6px;\\\">\\n                  <input type=\\\"checkbox\\\" id=\\\"cu-cb-bluelight\\\" \\\\${sp.blueLightFilterEnabled ? 'checked' : ''} />\\n                  <span>🌙 \\\\${isFR ? 'Filtre Lumière Bleue Nuit' : 'Night Blue-Light Filter'}</span>\\n              </label>\\n\\n              <!-- Weather Cycle Sync -->\\n              <label style=\\\"display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:#cbd5e1;margin-bottom:6px;\\\">\\n                  <input type=\\\"checkbox\\\" id=\\\"cu-cb-weathersync\\\" \\\\${sp.weatherWeatherSyncEnabled ? 'checked' : ''} />\\n                  <span>☁️ \\\\${isFR ? 'Synchro M\n<truncated 4340 bytes>",
+      "StartLine": "10955",
+      "TargetContent": "\"          }\\n \\n          <div style=\\\"margin-bottom:8px;\\\">\"",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\"",
+      "toolAction": "\"Adding markup to exported UI\"",
+      "toolSummary": "\"Add markup to exported control panel in sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 1264,
+    "tool": "replace_file_content",
+    "description": "\"Inject the 5 new focus/utility features toggle and inputs into the exported widget HTML panel\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Inject the 5 new focus/utility features toggle and inputs into the exported widget HTML panel\"",
+      "EndLine": "10958",
+      "Instruction": "\"Insert 5 new premium feature toggles and sliders in exported widget panel HTML in sketch-extruder.js\"",
+      "ReplacementContent": "\"              <button id=\\\"cu-btn-chime-test\\\" style=\\\"width:100%;background:#18122b;color:#d8b4fe;border:1px solid #443c68;border-radius:6px;padding:6px;cursor:pointer;font-size:11px;font-weight:bold;margin-top:4px;\\\">\\\\${isFR ? 'Tester le Carillon' : 'Test Westminster Chime'}</button>\\n          </div>\\n\\n          <!-- ULTRA-PREMIUM EXTRAS -->\\n          <div style=\\\"margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);\\\">\\n              <span style=\\\"font-size:11px;color:#cbd5e1;display:block;margin-bottom:6px;font-weight:bold;\\\">💎 \\\\${isFR ? 'Extras Ultra-Premium' : 'Ultra-Premium Extras'}</span>\\n              \\n              <!-- 3D Website Menu Navigation -->\\n              <label style=\\\"display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:#cbd5e1;margin-bottom:6px;\\\">\\n                  <input type=\\\"checkbox\\\" id=\\\"cu-cb-navmenu\\\" \\\\${sp.navigatorMenuEnabled ? 'checked' : ''} />\\n                  <span>🧭 \\\\${isFR ? 'Menu Redirection Site 3D' : '3D Website Menu Navigation'}</span>\\n              </label>\\n\\n              <!-- Real-Time Web Analytics Simulation -->\\n              <label style=\\\"display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:#cbd5e1;margin-bottom:6px;\\\">\\n                  <input type=\\\"checkbox\\\" id=\\\"cu-cb-analytics\\\" \\\\${sp.analyticsDisplayEnabled ? 'checked' : ''} />\\n                  <span>📊 \\\\${isFR ? 'Simulation Analytique Web' : 'Live Web Analytics Simulation'}</span>\\n              </label>\\n\\n              <!-- Night Blue-Light Filter -->\\n              <label style=\\\"display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:#cbd5e1;margin-bottom:6px;\\\">\\n                  <input type=\\\"checkbox\\\" id=\\\"cu-cb-bluelight\\\" \\\\${sp.blueLightFilterEnabled ? 'checked' : ''} />\\n                  <span>🌙 \\\\${isFR ? 'Filtre Lumière Bleue Nuit' : 'Night Blue-Light Filter'}</span>\\n              </label>\\n\\n              <!-- Weather Cycle Sync -->\\n              <label st\n<truncated 4628 bytes>",
+      "StartLine": "10954",
+      "TargetContent": "\"               <button id=\\\"cu-btn-chime-test\\\" style=\\\"width:100%;background:#18122b;color:#d8b4fe;border:1px solid #443c68;border-radius:6px;padding:6px;cursor:pointer;font-size:11px;font-weight:bold;margin-top:4px;\\\">\\\\${isFR ? 'Tester le Carillon' : 'Test Westminster Chime'}</button>\\n          </div>\\n\\n          <div style=\\\"margin-bottom:8px;\\\">\"",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\"",
+      "toolAction": "\"Injecting markup to exported UI\"",
+      "toolSummary": "\"Inject markup to exported control panel in sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 1270,
+    "tool": "replace_file_content",
+    "description": "\"Fix control panel HTML markup inside the exported widget scope in sketch-extruder.js\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Fix control panel HTML markup inside the exported widget scope in sketch-extruder.js\"",
+      "EndLine": "10967",
+      "Instruction": "\"Replace control panel HTML generation in sketch-extruder.js\"",
+      "ReplacementContent": "\"          <!-- RADIO TUNER SECTION -->\\n          <div style=\\\"margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);\\\">\\n              <label style=\\\"display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:#94a3b8;font-weight:bold;\\\">\\n                  <input type=\\\"checkbox\\\" id=\\\"cu-cb-radio-enabled\\\" \\\\${sp.radioEnabled ? 'checked' : ''} />\\n                  <span>📻 \\\\${isFR ? 'Radio Internet Live' : 'Live Internet Radio'}</span>\\n              </label>\\n              <div id=\\\"cu-radio-controls\\\" style=\\\"display: \\\\${sp.radioEnabled ? 'block' : 'none'}; margin-top:8px;\\\">\\n                  <div style=\\\"display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;\\\">\\n                      <span style=\\\"font-size:10px;color:#94a3b8;\\\">\\\\${isFR ? 'Fréquence' : 'Frequency'}:</span>\\n                      <span id=\\\"cu-radio-freq-val\\\" style=\\\"font-size:10px;color:#22d3ee;font-weight:bold;\\\">\\\\${(sp.radioFrequency || 90.0).toFixed(1)} MHz</span>\\n                  </div>\\n                  <input type=\\\"range\\\" id=\\\"cu-radio-freq-slider\\\" min=\\\"87.5\\\" max=\\\"108.0\\\" step=\\\"0.1\\\" value=\\\"\\\\${sp.radioFrequency || 90.0}\\\" style=\\\"width:100%;accent-color:#22d3ee;cursor:pointer;margin-bottom:8px;\\\" />\\n                  \\n                  <div style=\\\"display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;\\\">\\n                      <span style=\\\"font-size:10px;color:#94a3b8;\\\">\\\\${isFR ? 'Volume' : 'Volume'}:</span>\\n                      <span id=\\\"cu-radio-vol-val\\\" style=\\\"font-size:10px;color:#22d3ee;font-weight:bold;\\\">\\\\${Math.round((sp.radioVolume !== undefined ? sp.radioVolume : 0.5) * 100)}%</span>\\n                  </div>\\n                  <input type=\\\"range\\\" id=\\\"cu-radio-vol-slider\\\" min=\\\"0\\\" max=\\\"1\\\" step=\\\"0.05\\\" value=\\\"\\\\${sp.radioVolume !== undefined ? sp.radioVolume : 0.5}\\\" style=\\\"width:100%;accent-color:#22d3ee;cursor:pointer;\\\" />\\n              </div>\\n          </div>\\n\\n          <!--\n<truncated 7959 bytes>",
+      "StartLine": "10923",
+      "TargetContent": "\"          <!-- RADIO TUNER SECTION -->\\n          <div style=\\\"margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);\\\">\\n              <label style=\\\"display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:#94a3b8;font-weight:bold;\\\">\\n                  <input type=\\\"checkbox\\\" id=\\\"cu-cb-radio-enabled\\\" \\\\${sp.radioEnabled ? 'checked' : ''} />\\n                  <span>📻 \\\\${isFR ? 'Radio Internet Live' : 'Live Internet Radio'}</span>\\n              </label>\\n              <div id=\\\"cu-radio-controls\\\" style=\\\"display: \\\\${sp.radioEnabled ? 'block' : 'none'}; margin-top:8px;\\\">\\n                  <div style=\\\"display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;\\\">\\n                      <span style=\\\"font-size:10px;color:#94a3b8;\\\">\\\\${isFR ? 'Fréquence' : 'Frequency'}:</span>\\n                      <span id=\\\"cu-radio-freq-val\\\" style=\\\"font-size:10px;color:#22d3ee;font-weight:bold;\\\">\\\\${(sp.radioFrequency || 90.0).toFixed(1)} MHz</span>\\n                  </div>\\n                  <input type=\\\"range\\\" id=\\\"cu-radio-freq-slider\\\" min=\\\"87.5\\\" max=\\\"108.0\\\" step=\\\"0.1\\\" value=\\\"\\\\${sp.radioFrequency || 90.0}\\\" style=\\\"width:100%;accent-color:#22d3ee;cursor:pointer;margin-bottom:8px;\\\" />\\n                  <input type=\\\"checkbox\\\" id=\\\"cu-cb-radio-enabled\\\" ${sp.radioEnabled ? 'checked' : ''} />\\n                  <span>📻 ${isFR ? 'Radio Internet Live' : 'Live Internet Radio'}</span>\\n              </label>\\n              <div id=\\\"cu-radio-controls\\\" style=\\\"display: ${sp.radioEnabled ? 'block' : 'none'}; margin-top:8px;\\\">\\n                  <div style=\\\"display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;\\\">\\n                      <span style=\\\"font-size:10px;color:#94a3b8;\\\">${isFR ? 'Fréquence' : 'Frequency'}:</span>\\n                      <span id=\\\"cu-radio-freq-val\\\" style=\\\"font-size:10px;color:#22d3ee;font-weight:bold;\\\">${(sp.radioFrequency || 90.0).toFixed(1)} MHz</span>\\n           \n<truncated 2116 bytes>",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\"",
+      "toolAction": "\"Rebuilding HTML panel section\"",
+      "toolSummary": "\"Rebuild exported HTML panel in sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 1276,
+    "tool": "replace_file_content",
+    "description": "\"Bind the 5 new premium feature inputs in the exported widget control panel\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Bind the 5 new premium feature inputs in the exported widget control panel\"",
+      "EndLine": "11200",
+      "Instruction": "\"Add event bindings for the 5 new premium focus/utility features inside sketch-extruder.js\"",
+      "ReplacementContent": "\"      if (btnChimeTest) {\\n          btnChimeTest.onclick = () => {\\n              getCuPlaybackContext();\\n              const now = new Date();\\n              playWestminsterChime(now.getHours());\\n          };\\n      }\\n\\n      // Bind new premium extras in exported HTML\\n      const cbNavMenu = document.getElementById('cu-cb-navmenu');\\n      if (cbNavMenu) {\\n          cbNavMenu.onchange = (e) => {\\n              sp.navigatorMenuEnabled = e.target.checked;\\n          };\\n      }\\n\\n      const cbAnalytics = document.getElementById('cu-cb-analytics');\\n      if (cbAnalytics) {\\n          cbAnalytics.onchange = (e) => {\\n              sp.analyticsDisplayEnabled = e.target.checked;\\n          };\\n      }\\n\\n      const cbBlueLight = document.getElementById('cu-cb-bluelight');\\n      if (cbBlueLight) {\\n          cbBlueLight.onchange = (e) => {\\n              sp.blueLightFilterEnabled = e.target.checked;\\n          };\\n      }\\n\\n      const cbWeatherSync = document.getElementById('cu-cb-weathersync');\\n      if (cbWeatherSync) {\\n          cbWeatherSync.onchange = (e) => {\\n              sp.weatherWeatherSyncEnabled = e.target.checked;\\n              rebuildClockUltraGeo();\\n          };\\n      }\\n\\n      const cbPomodoro = document.getElementById('cu-cb-pomodoro');\\n      const divPomodoro = document.getElementById('cu-pomodoro-controls');\\n      if (cbPomodoro) {\\n          cbPomodoro.onchange = (e) => {\\n              sp.pomodoroTimerEnabled = e.target.checked;\\n              if (divPomodoro) divPomodoro.style.display = sp.pomodoroTimerEnabled ? 'block' : 'none';\\n              if (!sp.pomodoroTimerEnabled && sp.pomodoroRunning) {\\n                  sp.pomodoroRunning = false;\\n                  const startBtn = document.getElementById('cu-btn-pomodoro-start');\\n                  if (startBtn) startBtn.innerText = isFR ? 'Démarrer' : 'Start';\\n              }\\n          };\\n      }\\n\\n      const inPomodoroDur = document.getElementById('cu-pomodoro-dur');\\n      if (inPomodoroDur) {\\n          inPomodoroDu\n<truncated 2107 bytes>",
+      "StartLine": "11191",
+      "TargetContent": "\"      if (btnChimeTest) {\\n          btnChimeTest.onclick = () => {\\n              getCuPlaybackContext();\\n              const now = new Date();\\n              playWestminsterChime(now.getHours());\\n          };\\n      }\\n      if (showChrono) {\"",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\"",
+      "toolAction": "\"Adding event bindings in sketch-extruder\"",
+      "toolSummary": "\"Add event bindings in sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 1282,
+    "tool": "replace_file_content",
+    "description": "\"Sync the 5 new premium feature input values inside updateControlPanelUI in sketch-extruder.js\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Sync the 5 new premium feature input values inside updateControlPanelUI in sketch-extruder.js\"",
+      "EndLine": "10718",
+      "Instruction": "\"Add state sync code inside updateControlPanelUI in sketch-extruder.js\"",
+      "ReplacementContent": "\"          const configCountdown = document.getElementById('cu-countdown-config');\\n          if (configCountdown) configCountdown.style.display = sp.subDialMode === 'countdown' ? 'block' : 'none';\\n          \\n          const inputCountdown = document.getElementById('cu-countdown-target');\\n          if (inputCountdown) inputCountdown.value = sp.countdownTarget || '';\\n\\n          // Sync the 5 new premium focus/utility features\\n          const cbNavMenu = document.getElementById('cu-cb-navmenu');\\n          if (cbNavMenu) cbNavMenu.checked = !!sp.navigatorMenuEnabled;\\n\\n          const cbAnalytics = document.getElementById('cu-cb-analytics');\\n          if (cbAnalytics) cbAnalytics.checked = !!sp.analyticsDisplayEnabled;\\n\\n          const cbBlueLight = document.getElementById('cu-cb-bluelight');\\n          if (cbBlueLight) cbBlueLight.checked = !!sp.blueLightFilterEnabled;\\n\\n          const cbWeatherSync = document.getElementById('cu-cb-weathersync');\\n          if (cbWeatherSync) cbWeatherSync.checked = !!sp.weatherWeatherSyncEnabled;\\n\\n          const cbPomodoro = document.getElementById('cu-cb-pomodoro');\\n          if (cbPomodoro) cbPomodoro.checked = !!sp.pomodoroTimerEnabled;\\n\\n          const divPomodoro = document.getElementById('cu-pomodoro-controls');\\n          if (divPomodoro) divPomodoro.style.display = sp.pomodoroTimerEnabled ? 'block' : 'none';\\n\\n          const inPomodoroDur = document.getElementById('cu-pomodoro-dur');\\n          if (inPomodoroDur) inPomodoroDur.value = sp.pomodoroDuration || 25;\\n\\n          const cbSoundscape = document.getElementById('cu-cb-soundscape');\\n          if (cbSoundscape) cbSoundscape.checked = !!sp.soundscapeMixerEnabled;\\n\\n          const divSoundscape = document.getElementById('cu-soundscape-controls');\\n          if (divSoundscape) divSoundscape.style.display = sp.soundscapeMixerEnabled ? 'block' : 'none';\\n\\n          const sldRain = document.getElementById('cu-soundscape-rain');\\n          if (sldRain) sldRain.value = sp.soundscapeRainVol !== undefin\n<truncated 426 bytes>",
+      "StartLine": "10713",
+      "TargetContent": "\"          const configCountdown = document.getElementById('cu-countdown-config');\\n          if (configCountdown) configCountdown.style.display = sp.subDialMode === 'countdown' ? 'block' : 'none';\\n          \\n          const inputCountdown = document.getElementById('cu-countdown-target');\\n          if (inputCountdown) inputCountdown.value = sp.countdownTarget || '';\\n      };\"",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\"",
+      "toolAction": "\"Updating updateControlPanelUI\"",
+      "toolSummary": "\"Update state sync in updateControlPanelUI in sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 1288,
+    "tool": "replace_file_content",
+    "description": "\"Add pointer events for Quick Click Navigator Menu to page anchors in sketch-extruder.js\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Add pointer events for Quick Click Navigator Menu to page anchors in sketch-extruder.js\"",
+      "EndLine": "11458",
+      "Instruction": "\"Replace time travel event listeners to also support quick click navigator menu in sketch-extruder.js\"",
+      "ReplacementContent": "\"      let isTimeTraveling = false;\\n      let timeTravelStartX = 0;\\n      let clickStartX = 0;\\n      let clickStartY = 0;\\n      let clickStartTime = 0;\\n\\n      window.addEventListener('pointerdown', (e) => {\\n          if (e.target !== renderer.domElement) return;\\n          clickStartX = e.clientX;\\n          clickStartY = e.clientY;\\n          clickStartTime = Date.now();\\n\\n          if (!sp.timeTravelEnabled) return;\\n          \\n          const rayc = new THREE.Raycaster();\\n          const mouse2d = new THREE.Vector2();\\n          const rect = renderer.domElement.getBoundingClientRect();\\n          mouse2d.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;\\n          mouse2d.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;\\n          rayc.setFromCamera(mouse2d, camera);\\n          const intersects = rayc.intersectObjects([hasClockUltra.runtimeGroup], true);\\n          if (intersects.length === 0) return;\\n          \\n          isTimeTraveling = true;\\n          timeTravelStartX = e.clientX;\\n          controls.enabled = false;\\n      });\\n\\n      window.addEventListener('pointermove', (e) => {\\n          if (isTimeTraveling && hasClockUltra) {\\n              const dx = e.clientX - timeTravelStartX;\\n              timeTravelStartX = e.clientX;\\n              hasClockUltra._timeOffsetMinutes = (hasClockUltra._timeOffsetMinutes || 0) + dx * 0.5;\\n          }\\n      });\\n\\n      window.addEventListener('pointerup', (e) => {\\n          if (isTimeTraveling) {\\n              isTimeTraveling = false;\\n              controls.enabled = true;\\n          }\\n\\n          if (sp.navigatorMenuEnabled && e.target === renderer.domElement) {\\n              const dt = Date.now() - clickStartTime;\\n              const dist = Math.hypot(e.clientX - clickStartX, e.clientY - clickStartY);\\n              if (dt < 350 && dist < 8) {\\n                  const rayc = new THREE.Raycaster();\\n                  const mouse2d = new THREE.Vector2();\\n                  const rect = renderer.domElement.getBoundingClientRect();\\n    \n<truncated 2390 bytes>",
+      "StartLine": "11424",
+      "TargetContent": "\"       let isTimeTraveling = false;\\n       let timeTravelStartX = 0;\\n \\n       window.addEventListener('pointerdown', (e) => {\\n           if (!sp.timeTravelEnabled) return;\\n           if (e.target !== renderer.domElement) return;\\n           \\n           const rayc = new THREE.Raycaster();\\n           const mouse2d = new THREE.Vector2();\\n           const rect = renderer.domElement.getBoundingClientRect();\\n           mouse2d.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;\\n           mouse2d.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;\\n           rayc.setFromCamera(mouse2d, camera);\\n           const intersects = rayc.intersectObjects([hasClockUltra.runtimeGroup], true);\\n           if (intersects.length === 0) return;\\n           \\n           isTimeTraveling = true;\\n           timeTravelStartX = e.clientX;\\n           controls.enabled = false;\\n       });\\n \\n       window.addEventListener('pointermove', (e) => {\\n           if (isTimeTraveling && hasClockUltra) {\\n               const dx = e.clientX - timeTravelStartX;\\n               timeTravelStartX = e.clientX;\\n               hasClockUltra._timeOffsetMinutes = (hasClockUltra._timeOffsetMinutes || 0) + dx * 0.5;\\n           }\\n       });\\n \\n       window.addEventListener('pointerup', () => {\\n           if (isTimeTraveling) {\\n               isTimeTraveling = false;\\n               controls.enabled = true;\\n           }\\n       });\"",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\"",
+      "toolAction": "\"Adding menu click raycast to pointerup\"",
+      "toolSummary": "\"Add menu click raycast to pointer events in sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 1292,
+    "tool": "replace_file_content",
+    "description": "\"Restore the closeBtn click handler in sketch-extruder.js\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Restore the closeBtn click handler in sketch-extruder.js\"",
+      "EndLine": "11410",
+      "Instruction": "\"Fix closeBtn click handler in sketch-extruder.js\"",
+      "ReplacementContent": "\"      const closeBtn = document.getElementById('cu-ui-close');\\n      if (closeBtn) {\\n          closeBtn.onclick = () => {\\n              ui.style.opacity = '0';\\n              setTimeout(() => { \\n                  ui.style.display = 'none'; \\n                  if (typeof toggleBtn !== 'undefined') toggleBtn.style.display = 'flex';\\n              }, 300);\\n          };\\n      }\\n\\n      const hint = document.createElement('div');\"",
+      "StartLine": "11403",
+      "TargetContent": "\"      const closeBtn = document.getElementById('cu-ui-close');\\n      if (closeBtn) {\\n          closeBtn.onclick = () => {\\n      const hint = document.createElement('div');\"",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\"",
+      "toolAction": "\"Restoring closeBtn onclick handler\"",
+      "toolSummary": "\"Restore closeBtn onclick handler in sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 1296,
+    "tool": "replace_file_content",
+    "description": "\"Update pointerup event listener inside sketch-extruder.js to handle Menu Navigator quick click raycasting\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Update pointerup event listener inside sketch-extruder.js to handle Menu Navigator quick click raycasting\"",
+      "EndLine": "11465",
+      "Instruction": "\"Replace window pointerup listener in sketch-extruder.js\"",
+      "ReplacementContent": "\"      window.addEventListener('pointerup', (e) => {\\n          if (isTimeTraveling) {\\n              isTimeTraveling = false;\\n              controls.enabled = true;\\n          }\\n\\n          if (sp.navigatorMenuEnabled && e.target === renderer.domElement) {\\n              const dt = Date.now() - clickStartTime;\\n              const dist = Math.hypot(e.clientX - clickStartX, e.clientY - clickStartY);\\n              if (dt < 350 && dist < 8) {\\n                  const rayc = new THREE.Raycaster();\\n                  const mouse2d = new THREE.Vector2();\\n                  const rect = renderer.domElement.getBoundingClientRect();\\n                  mouse2d.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;\\n                  mouse2d.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;\\n                  rayc.setFromCamera(mouse2d, camera);\\n                  \\n                  const faceMesh = hasClockUltra.runtimeGroup.getObjectByName('faceMesh');\\n                  if (faceMesh) {\\n                      const intersects = rayc.intersectObject(faceMesh);\\n                      if (intersects.length > 0) {\\n                          const localPt = faceMesh.worldToLocal(intersects[0].point.clone());\\n                          const angle = Math.atan2(localPt.x, localPt.y);\\n                          let deg = angle * (180 / Math.PI);\\n                          if (deg < 0) deg += 360;\\n                          let hour = Math.round(deg / 30);\\n                          if (hour === 0) hour = 12;\\n                          \\n                          window._cuNavTargetHour = hour;\\n                          window._cuNavTargetTime = Date.now();\\n                          \\n                          const anchorMap = {\\n                              12: 'home',\\n                              1: 'features',\\n                              2: 'about',\\n                              3: 'about',\\n                              4: 'services',\\n                              5: 'pricing',\\n                              6:\n<truncated 983 bytes>",
+      "StartLine": "11460",
+      "TargetContent": "\"      window.addEventListener('pointerup', () => {\\n          if (isTimeTraveling) {\\n              isTimeTraveling = false;\\n              controls.enabled = true;\\n          }\\n      });\"",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\"",
+      "toolAction": "\"Updating window pointerup listener\"",
+      "toolSummary": "\"Update window pointerup listener in sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 1452,
+    "tool": "multi_replace_file_content",
+    "description": "\"Implement panel dragging, scrollability, mock sections, and redirection toast feedback for the exported standalone HTML widget\"",
+    "args": {
+      "Description": "\"Implement panel dragging, scrollability, mock sections, and redirection toast feedback for the exported standalone HTML widget\"",
+      "Instruction": "\"Inject drag functions, scrolling styles, section HTML templates, and toast UI into the exported code string template\"",
+      "ReplacementChunks": "[{\"AllowMultiple\":false,\"EndLine\":10317,\"ReplacementContent\":\"  const hasClockUltra = config.find(x => x.format === 'clock-ultra');\\n  if (hasClockUltra) {\\n      const sp = hasClockUltra.clockParts[0];\\n      const lang = \\\"${currentLang}\\\" || \\\"en\\\";\\n      const isFR = lang === \\\"fr\\\";\\n\\n      // Standalone Toast function\\n      const toastContainer = document.createElement('div');\\n      toastContainer.style = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(8,12,28,0.95);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid #06b6d4;border-radius:12px;padding:12px 24px;color:#22d3ee;font-family:sans-serif;font-size:14px;font-weight:bold;box-shadow:0 10px 40px rgba(0,0,0,0.6),0 0 20px rgba(6,182,212,0.3);z-index:99999;opacity:0;transition:opacity 0.4s ease-in-out, transform 0.4s ease-in-out;transform:translate(-50%, 20px);pointer-events:none;white-space:nowrap;';\\n      document.body.appendChild(toastContainer);\\n      \\n      let toastTimeout = null;\\n      window.toast = (msg) => {\\n          if (toastTimeout) clearTimeout(toastTimeout);\\n          toastContainer.textContent = msg;\\n          toastContainer.style.display = 'block';\\n          toastContainer.offsetHeight; // Force reflow\\n          toastContainer.style.opacity = '1';\\n          toastContainer.style.transform = 'translate(-50%, 0)';\\n          \\n          toastTimeout = setTimeout(() => {\\n              toastContainer.style.opacity = '0';\\n              toastContainer.style.transform = 'translate(-50%, 20px)';\\n          }, 3500);\\n      };\\n\\n      if (sp.navigatorMenuEnabled) {\\n          const customStyle = document.createElement('style');\\n          customStyle.innerHTML = \\\\`\\n              body {\\n                  margin: 0 !important;\\n                  padding: 0 !important;\\n                  overflow-y: auto !important;\\n                  overflow-x: hidden !important;\\n                  height: auto !important;\\n                  background: #050815 !important;\\n             \n<truncated 15606 bytes>",
+      "TargetFile": "\"c:/Users/andre/OneDrive/Bureau/html cod3 buna ultimul 2model2/js/sketch-extruder.js\"",
+      "toolAction": "\"Modifying sketch-extruder.js\"",
+      "toolSummary": "\"Edit sketch-extruder.js for panel dragging & redirection layout\""
+    }
+  },
+  {
+    "step": 1492,
+    "tool": "multi_replace_file_content",
+    "description": "\"Move the time delta calculation (dt) to the top of the animation callback function so it's defined before the Pomodoro countdown timer uses it\"",
+    "args": {
+      "Description": "\"Move the time delta calculation (dt) to the top of the animation callback function so it's defined before the Pomodoro countdown timer uses it\"",
+      "Instruction": "\"Move dt calculation to the top of m._scUltraAnimCb and remove it from its original position\"",
+      "ReplacementChunks": "[{\"AllowMultiple\":false,\"EndLine\":9110,\"ReplacementContent\":\"      m._scUltraAnimCb = (w) => {\\n          const now = new Date();\\n          const p0 = m.clockParts && m.clockParts[0];\\n\\n          const nowMs = performance.now();\\n          if (!m._lastTimeMs) m._lastTimeMs = nowMs;\\n          const dt = Math.min(100, nowMs - m._lastTimeMs);\\n          m._lastTimeMs = nowMs;\",\"StartLine\":9106,\"TargetContent\":\"      m._scUltraAnimCb = (w) => {\\n          const now = new Date();\\n          const p0 = m.clockParts && m.clockParts[0];\"},{\"AllowMultiple\":false,\"EndLine\":9199,\"ReplacementContent\":\"\",\"StartLine\":9193,\"TargetContent\":\"\\n          const nowMs = performance.now();\\n          if (!m._lastTimeMs) m._lastTimeMs = nowMs;\\n          const dt = Math.min(100, nowMs - m._lastTimeMs);\\n          m._lastTimeMs = nowMs;\"}]",
+      "TargetFile": "\"c:/Users/andre/OneDrive/Bureau/html cod3 buna ultimul 2model2/js/sketch-extruder.js\"",
+      "toolAction": "\"Modifying sketch-extruder.js\"",
+      "toolSummary": "\"Edit sketch-extruder.js to fix Pomodoro freeze\""
+    }
+  },
+  {
+    "step": 1520,
+    "tool": "multi_replace_file_content",
+    "description": "\"Expose audio playback functions globally on window and update the animation callback to use them, preventing ReferenceErrors and enabling clock ticks and focus chimes in the exported widget\"",
+    "args": {
+      "Description": "\"Expose audio playback functions globally on window and update the animation callback to use them, preventing ReferenceErrors and enabling clock ticks and focus chimes in the exported widget\"",
+      "Instruction": "\"Assign audio functions to window in the exported template, and update call sites in the animation callback to use the global window functions\"",
+      "ReplacementChunks": "[{\"AllowMultiple\":false,\"EndLine\":10375,\"ReplacementContent\":\"          if (cuPlaybackCtx && cuPlaybackCtx.state === 'suspended') {\\n              cuPlaybackCtx.resume().catch(() => {});\\n          }\\n          return cuPlaybackCtx;\\n      };\\n      window.getCuPlaybackContext = getCuPlaybackContext;\",\"StartLine\":10365,\"TargetContent\":\"          if (cuPlaybackCtx && cuPlaybackCtx.state === 'suspended') {\\n              cuPlaybackCtx.resume().catch(() => {});\\n          }\\n          return cuPlaybackCtx;\\n      };\"},{\"AllowMultiple\":false,\"EndLine\":10674,\"ReplacementContent\":\"              osc2.start(startTime);\\n              osc2.stop(startTime + duration);\\n          } catch(e) {}\\n      };\\n      window.playTone = playTone;\",\"StartLine\":10665,\"TargetContent\":\"              osc2.start(startTime);\\n              osc2.stop(startTime + duration);\\n          } catch(e) {}\\n      };\"},{\"AllowMultiple\":false,\"EndLine\":10708,\"ReplacementContent\":\"              for (let i = 0; i < strikeCount; i++) {\\n                  playTone(notes['C4'], time, 1.2);\\n                  time += 1.5;\\n              }\\n          } catch(e) {}\\n      };\\n      window.playWestminsterChime = playWestminsterChime;\",\"StartLine\":10700,\"TargetContent\":\"              for (let i = 0; i < strikeCount; i++) {\\n                  playTone(notes['C4'], time, 1.2);\\n                  time += 1.5;\\n              }\\n          } catch(e) {}\\n      };\"},{\"AllowMultiple\":false,\"EndLine\":11070,\"ReplacementContent\":\"              osc.start(now);\\n              osc.stop(now + 0.05);\\n          } catch(e) {}\\n      };\\n      window.playTick = playTick;\",\"StartLine\":11060,\"TargetContent\":\"              osc.start(now);\\n              osc.stop(now + 0.05);\\n          } catch(e) {}\\n      };\"},{\"AllowMultiple\":false,\"EndLine\":9152,\"ReplacementContent\":\"                  try {\\n                      const ctx = window.getCuPlaybackContext ? window.getCuPlaybackContext() : (typeof getCuPlaybackContext === 'function' ? getCuPlaybackContext() : null);\\n               \n<truncated 3148 bytes>",
+      "TargetFile": "\"c:/Users/andre/OneDrive/Bureau/html cod3 buna ultimul 2model2/js/sketch-extruder.js\"",
+      "toolAction": "\"Modifying sketch-extruder.js\"",
+      "toolSummary": "\"Edit sketch-extruder.js for global audio functions\""
+    }
+  },
+  {
+    "step": 1682,
+    "tool": "replace_file_content",
+    "description": "\"Define angleH and angleM inside the exported clock ultra animation callback to prevent ReferenceError when gears are enabled (such as in Steampunk Oracle preset) in the exported HTML.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Define angleH and angleM inside the exported clock ultra animation callback to prevent ReferenceError when gears are enabled (such as in Steampunk Oracle preset) in the exported HTML.\"",
+      "EndLine": "9136",
+      "Instruction": "\"Define angleH and angleM as aliases to angleH_real and angleM_real in addClockUltraAnimCb.\"",
+      "ReplacementContent": "\"          const angleM_real = - (min / 60) * Math.PI * 2;\\n          const angleH_real = - (hr / 12) * Math.PI * 2;\\n          const angleS_real = - (sec / 60) * Math.PI * 2;\\n          const angleH = angleH_real;\\n          const angleM = angleM_real;\"",
+      "StartLine": "9132",
+      "TargetContent": "\"          const angleM_real = - (min / 60) * Math.PI * 2;\\n          const angleH_real = - (hr / 12) * Math.PI * 2;\\n          const angleS_real = - (sec / 60) * Math.PI * 2;\"",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\"",
+      "toolAction": "\"Replacing code in sketch-extruder.js\"",
+      "toolSummary": "\"Replace file content in sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 1736,
+    "tool": "replace_file_content",
+    "description": "\"Add multilingual switcher to the Steampunk Pro exported control panel and sync initial language with active application language.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Add multilingual switcher to the Steampunk Pro exported control panel and sync initial language with active application language.\"",
+      "EndLine": "10285",
+      "Instruction": "\"Replace the Steampunk Pro control panel template and event bindings with the new multilingual implementation.\"",
+      "ReplacementContent": "\"  const hasSteampunkPro = config.find(x => x.format === 'steampunk-chrono-pro');\\n  if (hasSteampunkPro) {\\n      const sp = hasSteampunkPro.clockParts[0];\\n      const lang = \\\"${window.currentLang || 'en'}\\\";\\n      \\n      let stAudioCtx = null, stOsc = null, stGain = null;\\n      let stAlarmActive = false, stAlarmInt = null;\\n\\n      const translations = {\\n          en: { title: \\\"⚙️ Steampunk Pro (Standalone)\\\", chrono_label: \\\"⏱️ Chrono:\\\", start_stop: \\\"Start/Stop\\\", reset: \\\"Reset\\\", alarm: \\\"⏰ Alarm Time:\\\", test_alarm: \\\"Test Alarm Sound\\\", silence: \\\"🔕 Silence\\\", status: \\\"Standalone Mode Active\\\", chrono_running: \\\"Chrono Running...\\\", chrono_stopped: \\\"Chrono Stopped\\\", chrono_reset: \\\"Chrono Reset\\\", adjust_hint: \\\"✨ Click on the clock to adjust settings\\\" },\\n          fr: { title: \\\"⚙️ Steampunk Pro (Autonome)\\\", chrono_label: \\\"⏱️ Chrono:\\\", start_stop: \\\"Démarrer/Stop\\\", reset: \\\"Reset\\\", alarm: \\\"⏰ Alarme:\\\", test_alarm: \\\"Tester Alarme\\\", silence: \\\"🔕 Silencer\\\", status: \\\"Mode Autonome Actif\\\", chrono_running: \\\"Chrono Actif...\\\", chrono_stopped: \\\"Chrono Arrêté\\\", chrono_reset: \\\"Chrono Réinitialisé\\\", adjust_hint: \\\"✨ Cliquez sur l'horloge pour régler\\\" },\\n          ro: { title: \\\"⚙️ Steampunk Pro (Autonom)\\\", chrono_label: \\\"⏱️ Cronometru:\\\", start_stop: \\\"Pornește/Oprește\\\", reset: \\\"Reset\\\", alarm: \\\"⏰ Alarmă:\\\", test_alarm: \\\"Testează Alarma\\\", silence: \\\"🔕 Silențios\\\", status: \\\"Mod Autonom Activ\\\", chrono_running: \\\"Cronometru în desfășurare...\\\", chrono_stopped: \\\"Cronometru oprit\\\", chrono_reset: \\\"Cronometru resetat\\\", adjust_hint: \\\"✨ Faceți click pe ceas pentru a configura\\\" },\\n          de: { title: \\\"⚙️ Steampunk Pro (Eigenständig)\\\", chrono_label: \\\"⏱️ Chrono:\\\", start_stop: \\\"Start/Stopp\\\", reset: \\\"Reset\\\", alarm: \\\"⏰ Alarmzeit:\\\", test_alarm: \\\"Alarmton testen\\\", silence: \\\"🔕 Stummschalten\\\", status: \\\"Eigenständiger Modus Aktiv\\\", chrono_running: \\\"Chrono läuft...\\\", chrono_stopped: \\\"Chrono an\n<truncated 11074 bytes>",
+      "StartLine": "10135",
+      "TargetContent": "\"  const hasSteampunkPro = config.find(x => x.format === 'steampunk-chrono-pro');\\n  if (hasSteampunkPro) {\\n      const sp = hasSteampunkPro.clockParts[0];\\n      const lang = \\\"${currentLang}\\\" || \\\"en\\\";\\n      const isFR = lang === \\\"fr\\\";\\n      \\n      let stAudioCtx = null, stOsc = null, stGain = null;\\n      let stAlarmActive = false, stAlarmInt = null;\\n\\n      const ui = document.createElement('div');\\n      ui.id = 'st-control-panel';\\n      ui.style = 'position:fixed;top:20px;right:20px;background:rgba(10,15,30,0.85);backdrop-filter:blur(10px);border:1px solid #d4af37;border-radius:12px;padding:15px;color:#d4af37;font-family:sans-serif;width:240px;box-shadow:0 10px 30px rgba(0,0,0,0.5);z-index:99;display:block;opacity:1;transition:opacity 0.3s ease-in-out;';\\n      ui.innerHTML = `\\n          <div style=\\\"position:relative;font-weight:bold;text-align:center;margin-bottom:15px;font-size:16px;padding-right:20px;\\\">\\n              ⚙️ Steampunk Pro (${isFR ? 'Autonome' : 'Standalone'})\\n              <span id=\\\"st-ui-close\\\" style=\\\"position:absolute;top:-2px;right:-2px;cursor:pointer;font-size:16px;color:#aaa;transition:color 0.2s;\\\">✕</span>\\n          </div>\\n          \\n          <div style=\\\"margin-bottom:15px;display:${sp.clockType === 'chrono' ? 'block' : 'none'};\\\">\\n              <label style=\\\"font-size:12px;color:#ccc;\\\">⏱️ Chrono:</label>\\n              <div style=\\\"display:flex;gap:5px;margin-top:5px;\\\">\\n                  <button id=\\\"st-btn-c-start\\\" style=\\\"flex:1;background:#d4af37;color:#000;border:none;border-radius:4px;padding:6px;cursor:pointer;font-weight:bold;\\\">${isFR ? 'Démarrer/Stop' : 'Start/Stop'}</button>\\n                  <button id=\\\"st-btn-c-reset\\\" style=\\\"flex:1;background:#444;color:#fff;border:1px solid #d4af37;border-radius:4px;padding:6px;cursor:pointer;\\\">Reset</button>\\n              </div>\\n          </div>\\n          \\n          <div style=\\\"margin-bottom:10px;display:${sp.clockType === 'alarm' ? 'block' : 'none'};\\\">\\n              <label style=\\\"font\n<truncated 6514 bytes>",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\"",
+      "toolAction": "\"Modifying steampunk-chrono-pro block in sketch-extruder.js\"",
+      "toolSummary": "\"Replace file content in sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 1744,
+    "tool": "replace_file_content",
+    "description": "\"Set initial language matching host app language and define translation dictionary in the Clock Ultra exported script.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Set initial language matching host app language and define translation dictionary in the Clock Ultra exported script.\"",
+      "EndLine": "10388",
+      "Instruction": "\"Define the translation dictionary and initialization code at the start of the hasClockUltra block.\"",
+      "ReplacementContent": "\"  const hasClockUltra = config.find(x => x.format === 'clock-ultra');\\n  if (hasClockUltra) {\\n      const sp = hasClockUltra.clockParts[0];\\n      const lang = \\\"${window.currentLang || 'en'}\\\";\\n      \\n      const translations = {\\n          en: {\\n              theme_preset: \\\"Theme Preset\\\",\\n              time_travel: \\\"Time Travel\\\",\\n              auto_return: \\\"Auto Return\\\",\\n              cursor_magnetism: \\\"Cursor Magnetism\\\",\\n              subdial_mode: \\\"Sub-Dial Mode\\\",\\n              chrono: \\\"Chronograph\\\",\\n              battery: \\\"Battery Gauge\\\",\\n              gmt: \\\"GMT Dual Time\\\",\\n              fps: \\\"Rendering FPS\\\",\\n              countdown: \\\"Event Countdown\\\",\\n              target_datetime: \\\"Target Date/Time\\\",\\n              stopwatch: \\\"Chronograph Stopwatch\\\",\\n              start: \\\"Start\\\",\\n              pause: \\\"Pause\\\",\\n              reset: \\\"Reset\\\",\\n              alarm: \\\"Alarm (HH:MM)\\\",\\n              test_alarm: \\\"Test Alarm Sound\\\",\\n              silence: \\\"Silence\\\",\\n              radio: \\\"Live Internet Radio\\\",\\n              frequency: \\\"Frequency\\\",\\n              volume: \\\"Volume\\\",\\n              tick: \\\"Ambient Tick-Tock\\\",\\n              chime: \\\"Westminster Chimes\\\",\\n              test_chime: \\\"Test Westminster Chime\\\",\\n              extras: \\\"Ultra-Premium Extras\\\",\\n              navmenu: \\\"3D Website Menu Navigation\\\",\\n              analytics: \\\"Live Web Analytics Simulation\\\",\\n              bluelight: \\\"Night Blue-Light Filter\\\",\\n              weathersync: \\\"Cyclic Weather Sync\\\",\\n              pomodoro: \\\"Pomodoro Focus Timer\\\",\\n              focus_min: \\\"Focus Minutes\\\",\\n              asmr: \\\"ASMR Ambient Mixer\\\",\\n              rain: \\\"Rain\\\",\\n              wind: \\\"Wind\\\",\\n              beats: \\\"Beats\\\",\\n              ekg: \\\"EKG Waveform Pulse\\\",\\n              status_active: \\\"Ultra Mode Active\\\",\\n              click_hint: \\\"✨ Click on the clock to configure\\\"\\n          },\\n          fr: {\\n              theme_preset: \\\"Thème Pré\n<truncated 10369 bytes>",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\"",
+      "toolAction": "\"Defining Clock Ultra translations in sketch-extruder.js\"",
+      "toolSummary": "\"Replace file content in sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 1748,
+    "tool": "replace_file_content",
+    "description": "\"Define the translations map and default language in Clock Ultra hasClockUltra block.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Define the translations map and default language in Clock Ultra hasClockUltra block.\"",
+      "EndLine": "10371",
+      "Instruction": "\"Replace Clock Ultra default language declaration with the translations dictionary.\"",
+      "ReplacementContent": "\"  const hasClockUltra = config.find(x => x.format === 'clock-ultra');\\n  if (hasClockUltra) {\\n      const sp = hasClockUltra.clockParts[0];\\n      const lang = \\\"${window.currentLang || 'en'}\\\";\\n      \\n      const translations = {\\n          en: {\\n              theme_preset: \\\"Theme Preset\\\",\\n              time_travel: \\\"Time Travel\\\",\\n              auto_return: \\\"Auto Return\\\",\\n              cursor_magnetism: \\\"Cursor Magnetism\\\",\\n              subdial_mode: \\\"Sub-Dial Mode\\\",\\n              chrono: \\\"Chronograph\\\",\\n              battery: \\\"Battery Gauge\\\",\\n              gmt: \\\"GMT Dual Time\\\",\\n              fps: \\\"Rendering FPS\\\",\\n              countdown: \\\"Event Countdown\\\",\\n              target_datetime: \\\"Target Date/Time\\\",\\n              stopwatch: \\\"Chronograph Stopwatch\\\",\\n              start: \\\"Start\\\",\\n              pause: \\\"Pause\\\",\\n              reset: \\\"Reset\\\",\\n              alarm: \\\"Alarm (HH:MM)\\\",\\n              test_alarm: \\\"Test Alarm Sound\\\",\\n              silence: \\\"Silence\\\",\\n              radio: \\\"Live Internet Radio\\\",\\n              frequency: \\\"Frequency\\\",\\n              volume: \\\"Volume\\\",\\n              tick: \\\"Ambient Tick-Tock\\\",\\n              chime: \\\"Westminster Chimes\\\",\\n              test_chime: \\\"Test Westminster Chime\\\",\\n              extras: \\\"Ultra-Premium Extras\\\",\\n              navmenu: \\\"3D Website Menu Navigation\\\",\\n              analytics: \\\"Live Web Analytics Simulation\\\",\\n              bluelight: \\\"Night Blue-Light Filter\\\",\\n              weathersync: \\\"Cyclic Weather Sync\\\",\\n              pomodoro: \\\"Pomodoro Focus Timer\\\",\\n              focus_min: \\\"Focus Minutes\\\",\\n              asmr: \\\"ASMR Ambient Mixer\\\",\\n              rain: \\\"Rain\\\",\\n              wind: \\\"Wind\\\",\\n              beats: \\\"Beats\\\",\\n              ekg: \\\"EKG Waveform Pulse\\\",\\n              status_active: \\\"Ultra Mode Active\\\",\\n              click_hint: \\\"✨ Click on the clock to configure\\\"\\n          },\\n          fr: {\\n              theme_preset: \\\"Thème Pré\n<truncated 9167 bytes>",
+      "StartLine": "10363",
+      "TargetContent": "\"  const hasClockUltra = config.find(x => x.format === 'clock-ultra');\\n  if (hasClockUltra) {\\n      const sp = hasClockUltra.clockParts[0];\\n      const lang = \\\"${currentLang}\\\" || \\\"en\\\";\\n      const isFR = lang === \\\"fr\\\";\\n\\n      // Standalone Toast function\\n      const toastContainer = document.createElement('div');\"",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\"",
+      "toolAction": "\"Replacing hasClockUltra headers in sketch-extruder.js\"",
+      "toolSummary": "\"Replace file content in sketch-extruder.js\""
+    }
+  },
+  {
+    "step": 1768,
+    "tool": "replace_file_content",
+    "description": "\"Replace the Clock Ultra control panel structure and event bindings with the new multilingual implementation in sketch-extruder.js.\"",
+    "args": {
+      "AllowMultiple": "false",
+      "Description": "\"Replace the Clock Ultra control panel structure and event bindings with the new multilingual implementation in sketch-extruder.js.\"",
+      "EndLine": "11866",
+      "Instruction": "\"Replace lines 11387 to 11866 with the new translations-based HTML layout and updated event handler bindings.\"",
+      "ReplacementContent": "\"      const ui = document.createElement('div');\\n      ui.id = 'cu-control-panel';\\n      ui.style = 'position:fixed;top:20px;right:20px;background:rgba(8,12,28,0.92);backdrop-filter:blur(10px);border:1px solid #06b6d4;border-radius:12px;padding:15px;color:#cbd5e1;font-family:sans-serif;width:240px;box-shadow:0 10px 30px rgba(0,0,0,0.5);z-index:99;display:block;opacity:1;transition:opacity 0.3s ease-in-out;max-height:calc(100vh - 40px);overflow-y:auto;scrollbar-width:thin;';\\n      const showChrono = sp.chronoEnabled;\\n      ui.innerHTML = \\\\`\\n          <div id=\\\"cu-hdr\\\" style=\\\"position:relative;font-weight:bold;text-align:center;margin-bottom:15px;font-size:14px;padding-right:20px;color:#22d3ee;cursor:move;user-select:none;\\\">\\n              🕒💎 Clock Ultra\\n              <span id=\\\"cu-ui-close\\\" style=\\\"position:absolute;top:-2px;right:-2px;cursor:pointer;font-size:16px;color:#aaa;transition:color 0.2s;\\\">✕</span>\\n          </div>\\n\\n          <!-- LANGUAGE SELECTOR -->\\n          <div style=\\\"margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);\\\">\\n              <label style=\\\"font-size:11px;color:#94a3b8;display:block;margin-bottom:4px;font-weight:bold;\\\">🌐 Language / Limbă:</label>\\n              <select id=\\\"cu-lang-select\\\" style=\\\"width:100%;background:#070a13;color:#e2e8f0;border:1px solid #1e293b;border-radius:6px;padding:5px;font-size:11px;outline:none;\\\">\\n                  <option value=\\\"en\\\">English</option>\\n                  <option value=\\\"fr\\\">Français</option>\\n                  <option value=\\\"ro\\\">Română</option>\\n                  <option value=\\\"de\\\">Deutsch</option>\\n                  <option value=\\\"es\\\">Español</option>\\n                  <option value=\\\"it\\\">Italiano</option>\\n              </select>\\n          </div>\\n\\n          <!-- PREMIUM DESIGN PRESETS -->\\n          <div style=\\\"margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);\\\">\\n              <label style=\\\"font-size:11px;color:#94a3b8;\n<truncated 31538 bytes>",
+      "StartLine": "11387",
+      "TargetContent": "\"       const ui = document.createElement('div');\\n      ui.id = 'cu-control-panel';\\n      ui.style = 'position:fixed;top:20px;right:20px;background:rgba(8,12,28,0.92);backdrop-filter:blur(10px);border:1px solid #06b6d4;border-radius:12px;padding:15px;color:#cbd5e1;font-family:sans-serif;width:240px;box-shadow:0 10px 30px rgba(0,0,0,0.5);z-index:99;display:block;opacity:1;transition:opacity 0.3s ease-in-out;max-height:calc(100vh - 40px);overflow-y:auto;scrollbar-width:thin;';\\n      const showChrono = sp.chronoEnabled;\\n      ui.innerHTML = \\\\`\\n          <div id=\\\"cu-hdr\\\" style=\\\"position:relative;font-weight:bold;text-align:center;margin-bottom:15px;font-size:14px;padding-right:20px;color:#22d3ee;cursor:move;user-select:none;\\\">\\n              🕒💎 Clock Ultra\\n              <span id=\\\"cu-ui-close\\\" style=\\\"position:absolute;top:-2px;right:-2px;cursor:pointer;font-size:16px;color:#aaa;transition:color 0.2s;\\\">✕</span>\\n          </div>\\n\\n          <!-- PREMIUM DESIGN PRESETS -->\\n          <div style=\\\"margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);\\\">\\n              <label style=\\\"font-size:11px;color:#94a3b8;display:block;margin-bottom:4px;font-weight:bold;\\\">💎 \\\\${isFR ? 'Thème Prédéfini' : 'Theme Preset'}:</label>\\n              <select id=\\\"cu-theme-preset\\\" style=\\\"width:100%;background:#070a13;color:#e2e8f0;border:1px solid #1e293b;border-radius:6px;padding:5px;font-size:11px;outline:none;\\\">\\n                  <option value=\\\"custom\\\" \\\\${sp.themePreset==='custom'?'selected':''}>Custom</option>\\n                  <option value=\\\"rolex_ocean\\\" \\\\${sp.themePreset==='rolex_ocean'?'selected':''}>Rolex Ocean</option>\\n                  <option value=\\\"cyber_hud\\\" \\\\${sp.themePreset==='cyber_hud'?'selected':''}>Cyber HUD</option>\\n                  <option value=\\\"steampunk_oracle\\\" \\\\${sp.themePreset==='steampunk_oracle'?'selected':''}>Steampunk Oracle</option>\\n                  <option value=\\\"zen_liquid\\\" \\\\${sp.themePreset==='zen_liquid'?'selected':''\n<truncated 27729 bytes>",
+      "TargetFile": "\"c:\\\\Users\\\\andre\\\\OneDrive\\\\Bureau\\\\html cod3 buna ultimul 2model2\\\\js\\\\sketch-extruder.js\"",
+      "toolAction": "\"Replacing Clock Ultra panel layout in sketch-extruder.js\"",
+      "toolSummary": "\"Replace file content in sketch-extruder.js\""
+    }
+  }
+]

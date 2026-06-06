@@ -1,0 +1,71 @@
+Created At: 2026-05-31T16:11:41Z
+Completed At: 2026-05-31T16:11:41Z
+File Path: `file:///c:/Users/andre/OneDrive/Bureau/html%20cod3%20buna%20ultimul%202model2/js/sketch-extruder.js`
+Total Lines: 18491
+Total Bytes: 1042814
+Showing lines 11890 to 11950
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+11890:                               p.position.z = p.userData.baseZ + Math.sin(curTime * 0.004 + p.userData.phase) * 0.1;
+11891:                           });
+11892:                       }
+11893: 
+11894:                       // Pulse outer nodes
+11895:                       const pulseTime = Date.now() * 0.003;
+11896:                       for (let i = 0; i < 12; i++) {
+11897:                           const node = sentimentGroup.getObjectByName('sentimentNode_' + i);
+11898:                           if (node) {
+11899:                               const scale = 1.0 + Math.sin(pulseTime + i * 0.5) * 0.15;
+11900:                               node.scale.set(scale, scale, scale);
+11901:                           }
+11902:                       }
+11903:                   }
+11904:               }
+11905:           } catch(sAnimErr) {
+11906:               console.warn('[sentimentRadarAnim error]', sAnimErr);
+11907:           }
+11908: 
+11909:           // 7. Live Weather & Forecast Dial Animations
+11910:           try {
+11911:               const weatherGroup = m.runtimeGroup ? m.runtimeGroup.getObjectByName('weatherGroup') : null;
+11912:               if (weatherGroup) {
+11913:                               bolt.visible = Math.random() < 0.07;
+11914:                           }
+11915:                       }
+11916:                       }
+11917: 
+11918:                       const pulseTime = Date.now() * 0.0035;
+11919:                       for (let i = 0; i < 12; i++) {
+11920:                           
+<truncated 5 bytes>
+ node = weatherGroup.getObjectByName('weatherOuterNode_' + i);
+11921:                           if (node) {
+11922:                               const scale = 1.0 + Math.sin(pulseTime + i * 0.6) * 0.12;
+11923:                               node.scale.set(scale, scale, scale);
+11924:                           }
+11925:                       }
+11926:                   }
+11927:               }
+11928:           } catch(wAnimErr) {
+11929:               console.warn('[weatherDialAnim error]', wAnimErr);
+11930:           }
+11931: 
+11932:           // ── Social & Contact Dial animation ────────────────────────────────
+11933:           try {
+11934:               const socialGroup = meshGroup.getObjectByName('socialGroup');
+11935:               if (socialGroup) {
+11936:                   const scEnabled = p0 && p0.socialContactEnabled;
+11937:                   socialGroup.visible = !!scEnabled;
+11938:                   if (scEnabled) {
+11939:                       const t = Date.now() * 0.0028;
+11940:                       const hub = socialGroup.getObjectByName('socialHub');
+11941:                       if (hub) {
+11942:                           hub.rotation.z += 0.007 * w;
+11943:                           hub.material.opacity = 0.45 + Math.sin(t) * 0.12;
+11944:                       }
+11945:                       for (let i = 0; i < 12; i++) {
+11946:                           const ring = socialGroup.getObjectByName('socialRing_' + i);
+11947:                           if (ring) {
+11948:                               const phase = (ring.userData.phaseOff || 0);
+11949:                               ring.material.opacity = ring.userData.baseOpacity + Math.sin(t + phase) * 0.22;
+11950:                               ring.rotation.z += 0.015 * w;
+The above content does NOT show the entire file contents. If you need to view any lines of the file which were not shown to complete your task, call this tool again to view those lines.

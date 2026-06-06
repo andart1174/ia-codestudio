@@ -1,0 +1,45 @@
+Created At: 2026-05-31T15:41:06Z
+Completed At: 2026-05-31T15:41:06Z
+
+				The command completed successfully.
+				Output:
+				
+js\sketch-extruder.js:10523:          const bhRing = m.runtimeGroup ? 
+m.runtimeGroup.getObjectByName('businessHoursRing') : null;
+js\sketch-extruder.js:10544:          if (p0 && p0.teamPresenceRingEnabled && m.runtimeGroup) {
+js\sketch-extruder.js:10570:                  const dot = m.runtimeGroup.getObjectByName('presenceDot_' + i);
+js\sketch-extruder.js:10752:          const clockGroup = m.runtimeGroup || m.importedMesh || (partsMap.hand_s ? 
+partsMap.hand_s.parent.parent : (partsMap.liquidBeadS ? partsMap.liquidBeadS.parent : null));
+js\sketch-extruder.js:11260:              const astrologyGroup = m.runtimeGroup ? 
+m.runtimeGroup.getObjectByName('astrologyGroup') : null;
+js\sketch-extruder.js:11321:              const worldGlobeGroup = m.runtimeGroup ? 
+m.runtimeGroup.getObjectByName('worldGlobeGroup') : null;
+js\sketch-extruder.js:11387:              const retroGroup = m.runtimeGroup ? 
+m.runtimeGroup.getObjectByName('retroGroup') : null;
+js\sketch-extruder.js:11494:              const roiGroup = m.runtimeGroup ? m.runtimeGroup.getObjectByName('roiGroup') 
+: null;
+js\sketch-extruder.js:11545:              const brandGroup = m.runtimeGroup ? 
+m.runtimeGroup.getObjectByName('brandGroup') : null;
+js\sketch-extruder.js:11609:              const sentimentGroup = m.runtimeGroup ? 
+m.runtimeGroup.getObjectByName('sentimentGroup') : null;
+js\sketch-extruder.js:11690:              const weatherGroup = m.runtimeGroup ? 
+m.runtimeGroup.getObjectByName('weatherGroup') : null;
+js\sketch-extruder.js:12053:                  m.runtimeGroup = group;
+js\sketch-extruder.js:12065:                      if (hasClockUltra) hasClockUltra.runtimeGroup = group;
+js\sketch-extruder.js:12167:                      m.runtimeGroup = avRtGroup;
+js\sketch-extruder.js:15576:          if (m && m.runtimeGroup) {
+js\sketch-extruder.js:15578:              m.runtimeGroup.children.forEach(c => toRemove.push(c));
+js\sketch-extruder.js:15579:              toRemove.forEach(c => m.runtimeGroup.remove(c));
+js\sketch-extruder.js:15582:              m.runtimeGroup.add(newGeo);
+js\sketch-extruder.js:16975:          const intersects = rayc.intersectObjects([hasClockUltra.runtimeGroup], true);
+js\sketch-extruder.js:17011:                  const faceMesh = hasClockUltra.runtimeGroup ? 
+hasClockUltra.runtimeGroup.getObjectByName('faceMesh') : null;
+js\sketch-extruder.js:17436:        if(m.spin && m.runtimeGroup) { m.runtimeGroup.rotation.y += 0.01 * w; }
+js\sketch-extruder.js:17437:        if(m.levitate && m.runtimeGroup) { m.runtimeGroup.position.y = m.pos.y + 
+Math.sin(Date.now() * 0.002) * 10; }
+js\sketch-extruder.js:17438:        if(m.format === 'clock-ultra' && m.runtimeGroup) {
+js\sketch-extruder.js:17442:                    m.runtimeGroup.rotation.x = m.rot.x + cuParallaxX;
+js\sketch-extruder.js:17443:                    m.runtimeGroup.rotation.y = m.rot.y + cuParallaxY;
+
+
+
