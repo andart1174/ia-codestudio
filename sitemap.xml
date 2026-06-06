@@ -1,19 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://ia-codestudio.com/</loc>
-    <lastmod>2026-06-05</lastmod>
+    <loc>https://ia-codestudio.com/?lang=fr</loc>
+    <lastmod>2026-06-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://ia-codestudio.com/IA%20ARCHITECTE%20cea%20bunaultra%20mod111/index.html</loc>
-    <lastmod>2026-06-05</lastmod>
+    <loc>https://ia-codestudio.com/?lang=en</loc>
+    <lastmod>2026-06-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/IA%20ARCHITECTE%20cea%20bunaultra%20mod111/index.html?lang=fr</loc>
+    <lastmod>2026-06-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://ia-codestudio.com/STUDIO%203D%204D%20PRO/index.html</loc>
+    <loc>https://ia-codestudio.com/IA%20ARCHITECTE%20cea%20bunaultra%20mod111/index.html?lang=en</loc>
+    <lastmod>2026-06-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/STUDIO%203D%204D%20PRO/index.html?lang=fr</loc>
+    <lastmod>2026-06-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/STUDIO%203D%204D%20PRO/index.html?lang=en</loc>
     <lastmod>2026-06-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>

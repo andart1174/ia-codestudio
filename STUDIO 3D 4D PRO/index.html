@@ -9,6 +9,9 @@
   <meta name="keywords" content="Studio 3D Pro, Studio 4D, convertisseur vectoriel 3D, DXF to 3D, SVG to 3D, STL to HTML, OBJ WebGL viewer, custom 3D models, code editor, Three.js editor, interactive 3D composer, modelare 3D, extrudeur vectoriel, modeles 3D gratuit" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://ia-codestudio.com/STUDIO%203D%204D%20PRO/index.html" />
+  <link rel="alternate" hreflang="fr" href="https://ia-codestudio.com/STUDIO%203D%204D%20PRO/index.html?lang=fr" />
+  <link rel="alternate" hreflang="en" href="https://ia-codestudio.com/STUDIO%203D%204D%20PRO/index.html?lang=en" />
+  <link rel="alternate" hreflang="x-default" href="https://ia-codestudio.com/STUDIO%203D%204D%20PRO/index.html" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
@@ -509,6 +512,7 @@
     function updateUI(lang) {
       currentLang = lang;
       window.currentLang = lang;
+      localStorage.setItem('hub_lang', lang);
       document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
       
       const t = i18n[lang];
@@ -607,7 +611,19 @@
         CodeCollabLive.init(container, document.getElementById('btn-collab-mode'));
       }
 
-      updateUI('fr');
+      // Check URL parameters or local storage for initial language (SEO optimization)
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlLang = urlParams.get('lang');
+      let startLang = 'fr';
+      if (urlLang && (urlLang === 'en' || urlLang === 'fr')) {
+        startLang = urlLang;
+      } else {
+        const savedLang = localStorage.getItem('hub_lang');
+        if (savedLang && (savedLang === 'en' || savedLang === 'fr')) {
+          startLang = savedLang;
+        }
+      }
+      updateUI(startLang);
     });
 
     // Design Mode Buttons

@@ -25,12 +25,22 @@ function setLanguage(lang) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Load saved language if available, else default to 'fr'
-  const savedLang = localStorage.getItem('hub_lang');
-  if (savedLang && (savedLang === 'en' || savedLang === 'fr')) {
-    currentLang = savedLang;
+  // Check URL parameters for language first (for SEO indexing)
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlLang = urlParams.get('lang');
+  
+  let initialLang = 'fr';
+  if (urlLang && (urlLang === 'en' || urlLang === 'fr')) {
+    initialLang = urlLang;
+    localStorage.setItem('hub_lang', urlLang);
+  } else {
+    const savedLang = localStorage.getItem('hub_lang');
+    if (savedLang && (savedLang === 'en' || savedLang === 'fr')) {
+      initialLang = savedLang;
+    }
   }
   
+  currentLang = initialLang;
   applyTranslations(currentLang);
 
   // Setup event listeners for language toggle
