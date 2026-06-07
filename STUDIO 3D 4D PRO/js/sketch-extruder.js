@@ -1809,6 +1809,16 @@ const SketchExtruder = (() => {
           bgGroup = bGrp;
           grp.add(bGrp);
       }
+      
+      const playAllVideos = () => {
+          document.querySelectorAll('video').forEach(v => {
+              if (v.paused) {
+                  v.play().catch(err => console.warn("Video play failed in parent window:", err));
+              }
+          });
+      };
+      window.addEventListener('mousedown', playAllVideos);
+      window.addEventListener('touchstart', playAllVideos);
   }
 
   function init3D() {
@@ -13238,6 +13248,16 @@ const SketchExtruder = (() => {
               }
           } catch(e) { console.error(e); }
       });
+      
+      const playAllVideos = () => {
+          document.querySelectorAll('video').forEach(v => {
+              if (v.paused) {
+                  v.play().catch(err => console.warn("Video play failed:", err));
+              }
+          });
+      };
+      window.addEventListener('mousedown', playAllVideos);
+      window.addEventListener('touchstart', playAllVideos);
   }
 
   if(THREE.FontLoader) {
@@ -18533,6 +18553,21 @@ const SketchExtruder = (() => {
     config.forEach(m => {
         if(m.spin && m.runtimeGroup) { m.runtimeGroup.rotation.y += 0.01 * w; }
         if(m.levitate && m.runtimeGroup) { m.runtimeGroup.position.y = m.pos.y + Math.sin(Date.now() * 0.002) * 10; }
+        if(m.format === 'video-mesh' && m.runtimeGroup) {
+            if (m._videoElement && m._videoElement.paused) {
+                m._videoElement.play().catch(() => {});
+            }
+            m.runtimeGroup.traverse(child => {
+                if (child.isMesh && child.material) {
+                    if (child.material.map) {
+                        child.material.map.needsUpdate = true;
+                    }
+                    if (child.material.uniforms && child.material.uniforms.tex && child.material.uniforms.tex.value) {
+                        child.material.uniforms.tex.value.needsUpdate = true;
+                    }
+                }
+            });
+        }
         if(m.format === 'clock-ultra' && m.runtimeGroup) {
             const p0 = m.clockParts && m.clockParts[0];
             if (p0) {
