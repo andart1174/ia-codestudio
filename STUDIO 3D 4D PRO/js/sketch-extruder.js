@@ -2623,10 +2623,25 @@ const SketchExtruder = (() => {
         const chroma = document.getElementById('se-v3d-chroma').checked;
         const chromaCol = document.getElementById('se-v3d-chroma-col').value;
         
-        // Create video element
-        const v = document.createElement('video'); v.src = _sceneVideoB64;
-        v.loop = true; v.muted = true; v.playsInline = true; v.play();
+        // Create video element and append to DOM so browser doesn't suspend it
+        const v = document.createElement('video');
+        v.src = _sceneVideoB64;
+        v.loop = true;
+        v.muted = true;
+        v.playsInline = true;
+        v.setAttribute('webkit-playsinline', 'true');
+        v.style.position = 'absolute';
+        v.style.width = '1px';
+        v.style.height = '1px';
+        v.style.opacity = '0';
+        v.style.pointerEvents = 'none';
+        document.body.appendChild(v);
+        v.play().catch(err => console.warn("Video playback failed on add:", err));
+
         const tex = new THREE.VideoTexture(v);
+        tex.minFilter = THREE.LinearFilter;
+        tex.magFilter = THREE.LinearFilter;
+        tex.format = THREE.RGBAFormat;
         
         let geo;
         if(shp==='curved') geo = new THREE.CylinderGeometry(100, 100, 60, 32, 1, true, -Math.PI/4, Math.PI/2);
@@ -2657,7 +2672,8 @@ const SketchExtruder = (() => {
           metalness:0.1, roughness:0.5, opacity:1.0, wireframe:false, preset:'custom', spin:false, mirror:false,
           position: new THREE.Vector3(0,0,0), rotation: new THREE.Euler(0,0,0), groupScale: new THREE.Vector3(1,1,1),
           meshGroup: null, importedMesh: grp,
-          videoShape: shp, videoChroma: chroma, videoChromaCol: chromaCol
+          videoShape: shp, videoChroma: chroma, videoChromaCol: chromaCol,
+          _videoElement: v, _videoTexture: tex
         };
         models.push(newModel); activeModelId = newModel.id; buildModels();
         document.getElementById('btn-mode-3d').click();
@@ -5288,6 +5304,12 @@ const SketchExtruder = (() => {
               v.muted = true;
               v.playsInline = true;
               v.setAttribute('webkit-playsinline', 'true');
+              v.style.position = 'absolute';
+              v.style.width = '1px';
+              v.style.height = '1px';
+              v.style.opacity = '0';
+              v.style.pointerEvents = 'none';
+              document.body.appendChild(v);
               v.play().catch(err => console.warn("Video playback failed:", err));
               m._videoElement = v;
           }
@@ -5298,6 +5320,9 @@ const SketchExtruder = (() => {
               tex.magFilter = THREE.LinearFilter;
               tex.format = THREE.RGBAFormat;
               m._videoTexture = tex;
+          }
+          if (v.paused) {
+              v.play().catch(err => {});
           }
           let geo;
           if(m.videoShape === 'curved') geo = new THREE.CylinderGeometry(100, 100, 60, 32, 1, true, -Math.PI/4, Math.PI/2);
