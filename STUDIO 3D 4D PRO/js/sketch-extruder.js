@@ -5280,9 +5280,25 @@ const SketchExtruder = (() => {
             });
           }
       } else if(m.format === 'video-mesh') {
-          const v = document.createElement('video'); v.src = m.rawText;
-          v.loop = true; v.muted = true; v.playsInline = true; v.play();
-          const tex = new THREE.VideoTexture(v);
+          let v = m._videoElement;
+          if (!v) {
+              v = document.createElement('video');
+              v.src = m.rawText;
+              v.loop = true;
+              v.muted = true;
+              v.playsInline = true;
+              v.setAttribute('webkit-playsinline', 'true');
+              v.play().catch(err => console.warn("Video playback failed:", err));
+              m._videoElement = v;
+          }
+          let tex = m._videoTexture;
+          if (!tex) {
+              tex = new THREE.VideoTexture(v);
+              tex.minFilter = THREE.LinearFilter;
+              tex.magFilter = THREE.LinearFilter;
+              tex.format = THREE.RGBAFormat;
+              m._videoTexture = tex;
+          }
           let geo;
           if(m.videoShape === 'curved') geo = new THREE.CylinderGeometry(100, 100, 60, 32, 1, true, -Math.PI/4, Math.PI/2);
           else if(m.videoShape === 'sphere') geo = new THREE.SphereGeometry(40, 32, 32);
