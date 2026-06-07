@@ -7075,6 +7075,8 @@ const SketchExtruder = (() => {
                   });
               }
           }
+      });
+
       // Steam Exhaust System
       const steamAuraType = m.steamAuraType || 'none';
       const steamColor = m.steamColor || '#dfdfdf';
