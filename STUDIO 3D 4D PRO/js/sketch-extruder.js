@@ -2151,6 +2151,22 @@ const SketchExtruder = (() => {
                       target.position.y = 0;
                   }
                   
+                  if(m.format === 'video-mesh') {
+                      if (m._videoElement && m._videoElement.paused) {
+                          m._videoElement.play().catch(() => {});
+                      }
+                      m.meshGroup.traverse(child => {
+                          if (child.isMesh && child.material) {
+                              if (child.material.map) {
+                                  child.material.map.needsUpdate = true;
+                              }
+                              if (child.material.uniforms && child.material.uniforms.tex && child.material.uniforms.tex.value) {
+                                  child.material.uniforms.tex.value.needsUpdate = true;
+                              }
+                          }
+                      });
+                  }
+                  
                   if(m.format === 'clock-ultra') {
                       const p0 = m.clockParts && m.clockParts[0];
                       if(p0) {
