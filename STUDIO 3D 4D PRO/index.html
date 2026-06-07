@@ -28,7 +28,7 @@
   <meta property="twitter:image" content="https://ia-codestudio.com/logo-ia-codestudio.png">
 
   <!-- Structured Data (JSON-LD) -->
-  <script type="application/ld+json">
+  <script type="application/ld+json" id="ld-json-data">
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -42,6 +42,76 @@
     },
     "description": "Studio complet de création et modélisation 3D/4D avec extrudeur de tracés, filtres volumétriques et export autonome HTML/ZIP."
   }
+  </script>
+  
+  <!-- Programmatic SEO dynamic URL bootstrapper -->
+  <script>
+    (() => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const tool = urlParams.get('tool');
+      if (tool) {
+          const seoData = {
+              'steampunk-chrono': {
+                  title: 'Free Standalone 3D Steampunk Clock Generator | IA Code Studio',
+                  desc: 'Generate, customize, and export a beautiful animated 3D Steampunk clock mechanism with procedural steam exhaust particles.',
+                  keywords: 'Three.js clock, steampunk clock webgl, 3D clock generator, vector extruder HTML',
+                  btnId: 'btn-steampunk-scene'
+              },
+              'webcam-avatar': {
+                  title: 'Free 3D Webcam Avatar Point Cloud Generator | IA Code Studio',
+                  desc: 'Access your webcam to generate a live, interactive 3D point cloud avatar using Three.js and WebGL.',
+                  keywords: '3D webcam avatar, webcam point cloud javascript, webgl camera avatar, interactive 3D',
+                  btnId: 'btn-webcam-scene'
+              },
+              'video-mesh': {
+                  title: 'Free 3D Video Projection & Chroma Key online | IA Code Studio',
+                  desc: 'Upload videos and project them onto interactive 3D curved screens, cylinders, or spheres with chroma key transparency.',
+                  keywords: '3D video mesh, webgl video projection, chroma key javascript, HTML5 video 3D',
+                  btnId: 'btn-video-mode'
+              }
+          };
+
+          const seo = seoData[tool];
+          if (seo) {
+              document.title = seo.title;
+              
+              // Try to update meta tags on DOMContentLoaded
+              document.addEventListener('DOMContentLoaded', () => {
+                  let metaDesc = document.querySelector('meta[name="description"]');
+                  if (metaDesc) metaDesc.setAttribute('content', seo.desc);
+                  let metaKeys = document.querySelector('meta[name="keywords"]');
+                  if (metaKeys) metaKeys.setAttribute('content', seo.keywords);
+                  
+                  // Update JSON-LD
+                  let ldJson = document.getElementById('ld-json-data');
+                  if (ldJson) {
+                      try {
+                          let ld = JSON.parse(ldJson.textContent);
+                          ld.name = seo.title;
+                          ld.description = seo.desc;
+                          ldJson.textContent = JSON.stringify(ld, null, 2);
+                      } catch(e) {}
+                  }
+              });
+
+              // Click the button once modules are initialized
+              window.addEventListener('load', () => {
+                  setTimeout(() => {
+                      const btn = document.getElementById(seo.btnId);
+                      if (btn) {
+                          btn.click();
+                          if (window.toast) {
+                              const welcomeMsg = window.currentLang === 'fr' 
+                                ? `🚀 Module ${seo.title.split(' | ')[0]} activé !` 
+                                : `🚀 Module ${seo.title.split(' | ')[0]} activated!`;
+                              window.toast(welcomeMsg);
+                          }
+                      }
+                  }, 1200);
+              });
+          }
+      }
+    })();
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />

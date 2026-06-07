@@ -42,3 +42,8 @@
   for = "*.html"
   [headers.values]
     Cache-Control = "no-cache, no-store, must-revalidate"
+
+[[redirects]]
+  from = "/tools/:tool"
+  to = "/STUDIO%203D%204D%20PRO/index.html?tool=:tool"
+  status = 200
