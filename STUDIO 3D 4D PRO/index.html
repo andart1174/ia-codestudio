@@ -890,7 +890,7 @@
 
     // 🔐 ANTI-THEFT PROTECTION: Intercept copying, cut and export actions for non-premium users
     document.addEventListener('click', function(e) {
-      const target = e.target.closest('#btn-screenshot, #btn-export-video, #btn-copy-code, #btn-dl-html, #btn-export-zip, #exp-zip, #btn-export-all-formats');
+      const target = e.target.closest('#btn-export, #btn-screenshot, #btn-export-video, #btn-copy-code, #btn-dl-html, #btn-export-zip, #exp-zip, #btn-export-all-formats');
       if (target) {
         if (typeof window.isUserPremium === 'function' && !window.isUserPremium()) {
           e.preventDefault();
