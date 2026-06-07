@@ -46,4 +46,5 @@
 [[redirects]]
   from = "/tools/:tool"
   to = "/STUDIO%203D%204D%20PRO/index.html?tool=:tool"
-  status = 200
+  status = 302
+  force = true
