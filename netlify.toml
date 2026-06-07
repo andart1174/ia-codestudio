@@ -17,7 +17,7 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
 
     # ✅ Controls browser APIs — +10pts
-    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+    Permissions-Policy = "camera=(self), microphone=(self), geolocation=(), payment=()"
 
     # ✅ Cache control
     Cache-Control = "no-cache, no-store, must-revalidate"
