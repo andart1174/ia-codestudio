@@ -779,6 +779,12 @@ window.SteampunkChrono3D = (() => {
     }
 
     function fuseSteampunk() {
+        if (typeof window.isUserPremium === 'function' && !window.isUserPremium()) {
+            if (typeof window.showPaywallModal === 'function') {
+                window.showPaywallModal();
+            }
+            return;
+        }
         if (!clockGroup || Object.keys(parts).length === 0) { setStatus(L().noFuse); return; }
 
         const partEntries = [];
@@ -980,6 +986,12 @@ ${clockworkAnimateCode}
         modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
 
         document.getElementById('sc3-copy-btn').onclick = () => {
+            if (typeof window.isUserPremium === 'function' && !window.isUserPremium()) {
+                if (typeof window.showPaywallModal === 'function') {
+                    window.showPaywallModal();
+                }
+                return;
+            }
             navigator.clipboard.writeText(code).then(() => {
                 document.getElementById('sc3-copy-btn').textContent = '✅ Copied!';
                 setTimeout(() => { const b = document.getElementById('sc3-copy-btn'); if(b) b.textContent = '📋 '+(window.currentLang==='fr'?'Copier Code':'Copy Code'); }, 2000);
@@ -990,6 +1002,12 @@ ${clockworkAnimateCode}
         };
 
         document.getElementById('sc3-dl-btn').onclick = () => {
+            if (typeof window.isUserPremium === 'function' && !window.isUserPremium()) {
+                if (typeof window.showPaywallModal === 'function') {
+                    window.showPaywallModal();
+                }
+                return;
+            }
             const blob = new Blob([code], {type:'text/html'});
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);

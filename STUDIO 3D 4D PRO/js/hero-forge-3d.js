@@ -676,6 +676,12 @@ window.HeroForge3D = (() => {
     }
 
     function fuseHero() {
+        if (typeof window.isUserPremium === 'function' && !window.isUserPremium()) {
+            if (typeof window.showPaywallModal === 'function') {
+                window.showPaywallModal();
+            }
+            return;
+        }
         if (!heroGroup || Object.keys(parts).length === 0) { setStatus(L().noFuse); return; }
 
         var partEntries = [];
@@ -844,6 +850,12 @@ ${gyroAnimateCode}
         modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
 
         document.getElementById('hf3-copy-btn').onclick = () => {
+            if (typeof window.isUserPremium === 'function' && !window.isUserPremium()) {
+                if (typeof window.showPaywallModal === 'function') {
+                    window.showPaywallModal();
+                }
+                return;
+            }
             navigator.clipboard.writeText(code).then(() => {
                 document.getElementById('hf3-copy-btn').textContent = '✅ Copied!';
                 setTimeout(() => { const b = document.getElementById('hf3-copy-btn'); if(b) b.textContent = '📋 '+(window.currentLang==='fr'?'Copier Code':'Copy Code'); }, 2000);
@@ -854,6 +866,12 @@ ${gyroAnimateCode}
         };
 
         document.getElementById('hf3-dl-btn').onclick = () => {
+            if (typeof window.isUserPremium === 'function' && !window.isUserPremium()) {
+                if (typeof window.showPaywallModal === 'function') {
+                    window.showPaywallModal();
+                }
+                return;
+            }
             const blob = new Blob([code], {type:'text/html'});
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);

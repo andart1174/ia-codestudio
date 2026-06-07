@@ -135,6 +135,12 @@ window.VideoTo3D = (() => {
     }
 
     function downloadHologram() {
+        if (typeof window.isUserPremium === 'function' && !window.isUserPremium()) {
+            if (typeof window.showPaywallModal === 'function') {
+                window.showPaywallModal();
+            }
+            return;
+        }
         if (!lastGeneratedCode) return;
         const blob = new Blob([lastGeneratedCode], { type: 'text/html' });
         const a = document.createElement('a');
