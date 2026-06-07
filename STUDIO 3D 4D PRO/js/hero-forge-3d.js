@@ -310,12 +310,12 @@ window.HeroForge3D = (() => {
 
         let id = getHeroModelId();
         if (!id) {
-            id = window.SketchExtruder.addExtraModule('hero-forge', { heroparts, herostyle: selStyle, importedMesh: heroGroup });
+            id = window.SketchExtruder.addExtraModule('hero-forge', { heroparts, herostyle: selStyle, importedMesh: heroGroup, vfxAuraType, vfxColor });
             window._hf3ModelId = id;
             heroGroupAdded = true;
         } else {
             if (window.SketchExtruder && window._hf3UpdateModel) {
-                window._hf3UpdateModel(id, heroparts, selStyle, heroGroup, window._hf3Anim || 'idle');
+                window._hf3UpdateModel(id, heroparts, selStyle, heroGroup, window._hf3Anim || 'idle', vfxAuraType, vfxColor);
             }
         }
     }
@@ -1003,6 +1003,7 @@ ${gyroAnimateCode}
                 c.classList.add('on'); 
                 vfxAuraType = c.dataset.v; 
                 createVfx();
+                syncHeroModel();
             };
         });
 
@@ -1010,6 +1011,7 @@ ${gyroAnimateCode}
             vfxColor = e.target.value;
             if (vfxAuraType !== 'none') {
                 createVfx();
+                syncHeroModel();
             }
         });
 

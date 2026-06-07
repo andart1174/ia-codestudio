@@ -6391,7 +6391,7 @@ const SketchExtruder = (() => {
               case 'shield': geo=new THREE.CylinderGeometry(12, 12, 2, 16); break;
               default: geo=new THREE.BoxGeometry(10,10,10);
           }
-          const mat = new THREE.MeshPhysicalMaterial({
+          let mat = new THREE.MeshPhysicalMaterial({
               color: p.colorHex||'#334155', emissive: p.emissiveHex||'#000000',
               metalness: p.metalness||0, roughness: p.roughness||0.5,
               clearcoat: style==='cyber'||style==='crystal'||p.name==='shield'?1.0:0.0,
@@ -6401,12 +6401,257 @@ const SketchExtruder = (() => {
               flatShading: style==='blocky',
               side: THREE.DoubleSide
           });
+          
+          if (style === 'cyber') {
+              if (p.name === 'weapon') {
+                  geo = new THREE.CylinderGeometry(1.2, 1.2, 8, 8);
+                  mat = new THREE.MeshStandardMaterial({color: 0x475569, metalness: 0.9, roughness: 0.2});
+              } else if (p.name === 'drone') {
+                  geo = new THREE.IcosahedronGeometry(3.5, 0);
+              }
+          }
+          
           const mesh = new THREE.Mesh(geo, mat);
           mesh.castShadow = true; mesh.receiveShadow = true;
           mesh.position.set(p.px||0, p.py||0, p.pz||0);
+          
+          if (style === 'cyber') {
+              if (p.name === 'head') {
+                  const neck = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 3, 10), new THREE.MeshStandardMaterial({color: 0x334155, metalness: 0.9, roughness: 0.1}));
+                  neck.position.set(0, -6, 0);
+                  mesh.add(neck);
+                  
+                  const visor = new THREE.Mesh(new THREE.BoxGeometry(10, 2.5, 2.5), new THREE.MeshBasicMaterial({color: 0x0ea5e9}));
+                  visor.position.set(0, 1.5, 6.5);
+                  mesh.add(visor);
+                  
+                  [-1, 1].forEach(s => {
+                      const ant = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 8, 6), new THREE.MeshStandardMaterial({color: 0x64748b, metalness: 0.9}));
+                      ant.position.set(s * 7.5, 4, -1);
+                      ant.rotation.z = -s * 0.4;
+                      const tip = new THREE.Mesh(new THREE.SphereGeometry(1.2, 8, 8), new THREE.MeshBasicMaterial({color: 0x38bdf8}));
+                      tip.position.set(0, 4, 0);
+                      ant.add(tip);
+                      mesh.add(ant);
+                  });
+              }
+              else if (p.name === 'torso') {
+                  const core = new THREE.Mesh(new THREE.TorusGeometry(3, 1, 8, 16), new THREE.MeshBasicMaterial({color: 0x38bdf8}));
+                  core.position.set(0, 3, 6);
+                  core.rotation.x = Math.PI / 2;
+                  mesh.add(core);
+                  
+                  const innerCore = new THREE.Mesh(new THREE.SphereGeometry(2, 12, 12), new THREE.MeshBasicMaterial({color: 0xffffff}));
+                  innerCore.position.set(0, 3, 5);
+                  mesh.add(innerCore);
+                  
+                  [-1, 1].forEach(s => {
+                      const pauldron = new THREE.Mesh(new THREE.BoxGeometry(7, 5, 10), new THREE.MeshPhysicalMaterial({color: 0x1e293b, metalness: 0.9, roughness: 0.2}));
+                      pauldron.position.set(s * 11, 11, 0);
+                      pauldron.rotation.z = -s * 0.2;
+                      mesh.add(pauldron);
+                  });
+                  
+                  [-1, 1].forEach(s => {
+                      const thr = new THREE.Mesh(new THREE.CylinderGeometry(2, 2.5, 10, 8), new THREE.MeshStandardMaterial({color: 0x475569, metalness: 0.8}));
+                      thr.position.set(s * 5, 2, -7);
+                      thr.rotation.x = 0.4;
+                      const flame = new THREE.Mesh(new THREE.ConeGeometry(1.8, 6, 8), new THREE.MeshBasicMaterial({color: 0xfacc15}));
+                      flame.position.set(0, -7, 0);
+                      flame.rotation.x = Math.PI;
+                      thr.add(flame);
+                      mesh.add(thr);
+                  });
+              }
+              else if (p.name === 'armL' || p.name === 'armR') {
+                  const joint = new THREE.Mesh(new THREE.SphereGeometry(3.5, 12, 12), new THREE.MeshStandardMaterial({color: 0x0f172a, metalness: 0.9}));
+                  joint.position.set(0, 0, 0);
+                  mesh.add(joint);
+                  
+                  const guard = new THREE.Mesh(new THREE.BoxGeometry(6, 8, 6), new THREE.MeshStandardMaterial({color: 0x1e293b, metalness: 0.9}));
+                  guard.position.set(0, 8, 0);
+                  mesh.add(guard);
+              }
+              else if (p.name === 'legL' || p.name === 'legR') {
+                  const joint = new THREE.Mesh(new THREE.SphereGeometry(4, 12, 12), new THREE.MeshStandardMaterial({color: 0x0f172a, metalness: 0.9}));
+                  joint.position.set(0, 0, 0);
+                  mesh.add(joint);
+                  
+                  const foot = new THREE.Mesh(new THREE.BoxGeometry(8, 4, 12), new THREE.MeshStandardMaterial({color: 0x0f172a, metalness: 0.9}));
+                  foot.position.set(0, -14, 2);
+                  mesh.add(foot);
+              }
+              else if (p.name === 'weapon') {
+                  const blade = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 1.0, 24, 8), new THREE.MeshBasicMaterial({color: 0x0ea5e9}));
+                  blade.position.set(0, 15, 0);
+                  mesh.add(blade);
+                  
+                  const guard = new THREE.Mesh(new THREE.BoxGeometry(6, 1.5, 3), new THREE.MeshStandardMaterial({color: 0x1e293b, metalness: 0.9}));
+                  guard.position.set(0, 4, 0);
+                  mesh.add(guard);
+              }
+              else if (p.name === 'shield') {
+                  const ring1 = new THREE.Mesh(new THREE.TorusGeometry(8, 0.8, 8, 24), new THREE.MeshBasicMaterial({color: 0x0ea5e9}));
+                  ring1.rotation.x = Math.PI / 2;
+                  mesh.add(ring1);
+                  
+                  const ring2 = new THREE.Mesh(new THREE.TorusGeometry(12, 0.5, 8, 24), new THREE.MeshBasicMaterial({color: 0x38bdf8}));
+                  ring2.rotation.x = Math.PI / 2;
+                  mesh.add(ring2);
+                  
+                  const emblem = new THREE.Mesh(new THREE.OctahedronGeometry(3), new THREE.MeshBasicMaterial({color: 0xffffff}));
+                  mesh.add(emblem);
+              }
+              else if (p.name === 'drone') {
+                  const ring1 = new THREE.Mesh(new THREE.TorusGeometry(8, 0.6, 8, 24), new THREE.MeshStandardMaterial({color: 0x334155, metalness: 0.9}));
+                  ring1.name = 'gyro_ring1';
+                  mesh.add(ring1);
+                  
+                  const ring2 = new THREE.Mesh(new THREE.TorusGeometry(11, 0.6, 8, 24), new THREE.MeshStandardMaterial({color: 0x475569, metalness: 0.9}));
+                  ring2.name = 'gyro_ring2';
+                  ring2.rotation.x = Math.PI / 2;
+                  mesh.add(ring2);
+                  
+                  const eye = new THREE.Mesh(new THREE.SphereGeometry(1.2, 8, 8), new THREE.MeshBasicMaterial({color: 0xef4444}));
+                  eye.position.set(0, 0, 3.2);
+                  mesh.add(eye);
+              }
+              else if (p.name === 'hoverboard') {
+                  [-1, 1].forEach(s => {
+                      const t = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 8, 8), new THREE.MeshStandardMaterial({color: 0x334155, metalness: 0.9}));
+                      t.position.set(s * 6, -2, -8);
+                      t.rotation.x = Math.PI / 2;
+                      const f = new THREE.Mesh(new THREE.ConeGeometry(1, 4, 8), new THREE.MeshBasicMaterial({color: 0x0ea5e9}));
+                      f.position.set(0, -5, 0);
+                      f.rotation.x = Math.PI;
+                      t.add(f);
+                      mesh.add(t);
+                  });
+                  
+                  [-1, 1].forEach(s => {
+                      const st = new THREE.Mesh(new THREE.TorusGeometry(3, 0.6, 8, 12, Math.PI), new THREE.MeshStandardMaterial({color: 0x64748b}));
+                      st.position.set(0, 1.5, s * 8);
+                      mesh.add(st);
+                  });
+              }
+          }
+          else if (style === 'organic') {
+              if (p.name === 'head') {
+                  [-1, 1].forEach(s => {
+                      const eye = new THREE.Mesh(new THREE.SphereGeometry(1, 8, 8), new THREE.MeshBasicMaterial({color: 0x22c55e}));
+                      eye.position.set(s * 3, 2, 6.5);
+                      mesh.add(eye);
+                  });
+                  
+                  [-1, 1].forEach(s => {
+                      const fang = new THREE.Mesh(new THREE.ConeGeometry(0.8, 4, 4), new THREE.MeshStandardMaterial({color: 0xf3f4f6}));
+                      fang.position.set(s * 2, -3, 6.5);
+                      fang.rotation.x = 0.5;
+                      fang.rotation.z = -s * 0.2;
+                      mesh.add(fang);
+                  });
+                  
+                  [-1, 1].forEach(s => {
+                      const horn = new THREE.Mesh(new THREE.ConeGeometry(1.5, 10, 6), new THREE.MeshStandardMaterial({color: 0x4a1942}));
+                      horn.position.set(s * 4, 10, 0);
+                      horn.rotation.z = s * 0.3;
+                      mesh.add(horn);
+                  });
+              }
+              else if (p.name === 'torso') {
+                  for (let i = 0; i < 5; i++) {
+                      const spike = new THREE.Mesh(new THREE.ConeGeometry(1.5, 6, 6), new THREE.MeshStandardMaterial({color: 0x4a1942}));
+                      spike.position.set(0, 10 - i * 5, -7);
+                      spike.rotation.x = -1.2;
+                      mesh.add(spike);
+                  }
+                  
+                  const core = new THREE.Mesh(new THREE.OctahedronGeometry(2.5), new THREE.MeshBasicMaterial({color: 0xa855f7}));
+                  core.position.set(0, 2, 5.5);
+                  mesh.add(core);
+              }
+              else if (['armL', 'armR', 'legL', 'legR'].includes(p.name)) {
+                  const spike = new THREE.Mesh(new THREE.ConeGeometry(1.2, 5, 4), new THREE.MeshStandardMaterial({color: 0xf3f4f6}));
+                  spike.position.set(0, 0, -2);
+                  spike.rotation.x = -0.8;
+                  mesh.add(spike);
+              }
+          }
+          else if (style === 'crystal') {
+              if (p.name === 'head') {
+                  for (let i = 0; i < 5; i++) {
+                      const shard = new THREE.Mesh(new THREE.OctahedronGeometry(1.5, 0), new THREE.MeshPhysicalMaterial({color: 0x67e8f9, transmission: 0.9, roughness: 0.1}));
+                      const angle = (i / 5) * Math.PI * 2;
+                      shard.position.set(Math.cos(angle) * 5, 11, Math.sin(angle) * 5);
+                      shard.rotation.set(Math.random(), Math.random(), Math.random());
+                      mesh.add(shard);
+                  }
+                  
+                  const eye = new THREE.Mesh(new THREE.SphereGeometry(1.2, 8, 8), new THREE.MeshBasicMaterial({color: 0xa855f7}));
+                  eye.position.set(0, 3, 6.5);
+                  mesh.add(eye);
+              }
+              else if (p.name === 'torso') {
+                  [-1, 1].forEach(s => {
+                      const wing = new THREE.Mesh(new THREE.ConeGeometry(4, 25, 4), new THREE.MeshPhysicalMaterial({color: 0x22d3ee, transmission: 0.8, roughness: 0.1}));
+                      wing.position.set(s * 8, 8, -6);
+                      wing.rotation.set(0.5, 0, -s * 1.2);
+                      mesh.add(wing);
+                  });
+                  
+                  const o = new THREE.Mesh(new THREE.OctahedronGeometry(5), new THREE.MeshBasicMaterial({color: 0x67e8f9}));
+                  o.position.set(0, 4, 0);
+                  mesh.add(o);
+              }
+              else if (['armL', 'armR', 'legL', 'legR'].includes(p.name)) {
+                  const cluster = new THREE.Mesh(new THREE.OctahedronGeometry(3.5, 0), new THREE.MeshPhysicalMaterial({color: 0x06b6d4, transmission: 0.5}));
+                  cluster.position.set(0, 0, 0);
+                  mesh.add(cluster);
+              }
+          }
+          else if (style === 'blocky') {
+              if (p.name === 'head') {
+                  const visor = new THREE.Mesh(new THREE.BoxGeometry(8, 2, 2), new THREE.MeshBasicMaterial({color: 0xfacc15}));
+                  visor.position.set(0, 1.5, 6.5);
+                  mesh.add(visor);
+              }
+              else if (p.name === 'torso') {
+                  const harness = new THREE.Mesh(new THREE.BoxGeometry(10, 10, 2), new THREE.MeshStandardMaterial({color: 0x1e293b}));
+                  harness.position.set(0, 0, -6.5);
+                  mesh.add(harness);
+              }
+          }
+          
           meshGroup.add(mesh);
           partsMap[p.name] = mesh;
       });
+
+      if (m.vfxAuraType && m.vfxAuraType !== 'none') {
+          const count = 120;
+          const geom = new THREE.BufferGeometry();
+          const pos = new Float32Array(count * 3);
+          const vels = [];
+          for (let i = 0; i < count; i++) {
+              pos[i*3] = (Math.random() - 0.5) * 30;
+              pos[i*3+1] = -25 + Math.random() * 70;
+              pos[i*3+2] = (Math.random() - 0.5) * 30;
+              vels.push(new THREE.Vector3((Math.random() - 0.5) * 0.3, 0.4 + Math.random() * 0.8, (Math.random() - 0.5) * 0.3));
+          }
+          geom.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+          const mat = new THREE.PointsMaterial({
+              color: new THREE.Color(m.vfxColor || '#facc15'),
+              size: 3.5,
+              transparent: true,
+              opacity: 0.8,
+              blending: THREE.AdditiveBlending
+          });
+          const vfxPoints = new THREE.Points(geom, mat);
+          vfxPoints.name = 'HFP_vfx';
+          meshGroup.add(vfxPoints);
+          
+          vfxPoints.userData = { vels: vels, posArr: pos, tick: 0 };
+          partsMap.vfxPoints = vfxPoints;
+      }
 
       addHeroAnimCb(m, partsMap);
       return meshGroup;
@@ -6416,8 +6661,8 @@ const SketchExtruder = (() => {
       if (typeof scene === 'undefined' || !scene) return;
       const animState = m.heroAnim || 'idle';
       const sceneCbs = scene.animCbs = scene.animCbs || [];
-      // Remove any existing callback for this specific model to prevent duplicates
       m._hfAnimCb = (w) => {
+          const speedFactor = w || 1;
           const t = Date.now() * 0.001 * (animState === 'fly' ? 2 : animState === 'walk' ? 1.5 : 1);
           if (partsMap.torso) {
               partsMap.torso.position.y = (m.heroparts.find(p=>p.name==='torso')?.py || 15) + (animState === 'fly' ? Math.sin(t)*3 : Math.abs(Math.sin(t*2))*1);
@@ -6471,8 +6716,13 @@ const SketchExtruder = (() => {
               partsMap.drone.position.x = dx + Math.cos(t*1.5) * 20;
               partsMap.drone.position.z = dz + Math.sin(t*1.5) * 20;
               partsMap.drone.position.y = dy + 15 + Math.sin(t*3) * 5;
-              partsMap.drone.rotation.y += 0.05;
-              partsMap.drone.rotation.x += 0.02;
+              partsMap.drone.rotation.y += 0.05 * speedFactor;
+              partsMap.drone.rotation.x += 0.02 * speedFactor;
+              
+              partsMap.drone.traverse(child => {
+                  if (child.name === 'gyro_ring1') child.rotation.y += 0.05 * speedFactor;
+                  if (child.name === 'gyro_ring2') child.rotation.x += 0.03 * speedFactor;
+              });
           }
           if (partsMap.hoverboard) {
               partsMap.hoverboard.position.y = (m.heroparts.find(p=>p.name==='hoverboard')?.py || -25) + (animState === 'fly' ? Math.sin(t)*3 : Math.abs(Math.sin(t*2))*1);
@@ -6482,7 +6732,7 @@ const SketchExtruder = (() => {
           }
           if (partsMap.shield) {
               partsMap.shield.position.y = (m.heroparts.find(p=>p.name==='shield')?.py || 17) + (partsMap.torso ? partsMap.torso.position.y - 15 : 0);
-              partsMap.shield.rotation.y += 0.02;
+              partsMap.shield.rotation.y += 0.02 * speedFactor;
               partsMap.shield.rotation.z = Math.PI / 2;
               if (animState === 'combat') {
                   partsMap.shield.rotation.x = -1.0;
@@ -6493,8 +6743,51 @@ const SketchExtruder = (() => {
                   partsMap.shield.position.z = 4;
               }
           }
+          
+          if (partsMap.vfxPoints) {
+              const pts = partsMap.vfxPoints;
+              pts.userData.tick = (pts.userData.tick || 0) + 1 * speedFactor;
+              const tick = pts.userData.tick;
+              const posArr = pts.geometry.attributes.position.array;
+              const vels = pts.userData.vels;
+              const count = posArr.length / 3;
+              const auraType = m.vfxAuraType;
+              
+              for (let i = 0; i < count; i++) {
+                  if (auraType === 'fire') {
+                      posArr[i*3+1] += vels[i].y * speedFactor;
+                      posArr[i*3] += vels[i].x * speedFactor;
+                      posArr[i*3+2] += vels[i].z * speedFactor;
+                      if (posArr[i*3+1] > 45) {
+                          posArr[i*3] = (Math.random() - 0.5) * 20;
+                          posArr[i*3+1] = -25;
+                          posArr[i*3+2] = (Math.random() - 0.5) * 20;
+                      }
+                  } else if (auraType === 'magic') {
+                      const angle = tick * 0.04 + i * 0.22;
+                      const r = 16 + Math.sin(tick * 0.02 + i) * 3;
+                      posArr[i*3] = Math.cos(angle) * r;
+                      posArr[i*3+2] = Math.sin(angle) * r;
+                      posArr[i*3+1] += 0.45 * speedFactor;
+                      if (posArr[i*3+1] > 45) posArr[i*3+1] = -25;
+                  } else if (auraType === 'matrix') {
+                      posArr[i*3+1] -= 0.7 * speedFactor;
+                      if (posArr[i*3+1] < -25) {
+                          posArr[i*3] = (Math.random() - 0.5) * 28;
+                          posArr[i*3+1] = 45;
+                          posArr[i*3+2] = (Math.random() - 0.5) * 28;
+                      }
+                  } else { // spark
+                      if (Math.random() < 0.08) {
+                          posArr[i*3] = (Math.random() - 0.5) * 26;
+                          posArr[i*3+1] = -25 + Math.random() * 70;
+                          posArr[i*3+2] = (Math.random() - 0.5) * 26;
+                      }
+                  }
+              }
+              pts.geometry.attributes.position.needsUpdate = true;
+          }
       };
-      // To avoid massive duplicates, clear old cb for this model ID
       scene.animCbs = sceneCbs.filter(cb => cb._modelId !== m.id);
       m._hfAnimCb._modelId = m.id;
       scene.animCbs.push(m._hfAnimCb);
@@ -12573,7 +12866,7 @@ const SketchExtruder = (() => {
               sys: m.sys, view: m.view, pulse: m.pulse,
               ultraConfig: m.ultraConfig,
               // Hero Forge
-              heroparts: m.heroparts, herostyle: m.herostyle,
+              heroparts: m.heroparts, herostyle: m.herostyle, heroAnim: m.heroAnim || 'idle', vfxAuraType: m.vfxAuraType || 'none', vfxColor: m.vfxColor || '#facc15',
               // Steampunk Chrono-Engine
               clockParts: m.clockParts, clockStyle: m.clockStyle
           };
@@ -18373,6 +18666,9 @@ const SketchExtruder = (() => {
       } else if(type === 'hero-forge') {
         newModel.heroparts = config.heroparts;
         newModel.herostyle = config.herostyle;
+        newModel.heroAnim = config.heroAnim || 'idle';
+        newModel.vfxAuraType = config.vfxAuraType || 'none';
+        newModel.vfxColor = config.vfxColor || '#facc15';
         newModel.importedMesh = config.importedMesh;
       } else if(type === 'steampunk-chrono') {
         newModel.clockParts = config.clockParts;
@@ -18408,7 +18704,7 @@ const SketchExtruder = (() => {
       models.push(newModel); activeModelId = newModel.id; buildModels();
   }
 
-  function updateHeroForgeModel(modelId, heroparts, herostyle, importedMesh, heroAnim) {
+  function updateHeroForgeModel(modelId, heroparts, herostyle, importedMesh, heroAnim, vfxAuraType, vfxColor) {
       const m = models.find(x => x.id === modelId);
       if (!m) return;
       if (m.format === 'steampunk-chrono' || m.format === 'steampunk-chrono-pro' || m.format === 'clock-ultra') {
@@ -18418,6 +18714,8 @@ const SketchExtruder = (() => {
       m.heroparts = heroparts;
       m.herostyle = herostyle;
       m.heroAnim = heroAnim || 'idle';
+      m.vfxAuraType = vfxAuraType || 'none';
+      m.vfxColor = vfxColor || '#facc15';
       if (importedMesh) m.importedMesh = importedMesh;
       buildModels();
   }
