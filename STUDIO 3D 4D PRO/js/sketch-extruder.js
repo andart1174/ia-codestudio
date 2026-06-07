@@ -3949,11 +3949,30 @@ const SketchExtruder = (() => {
           
           // Use a shared video element if possible, or create one
           let video = document.getElementById('_shared_webcam_v');
+          const startWebcam = () => {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+              navigator.mediaDevices.getUserMedia({video:{width:res,height:res}})
+                .then(s => {
+                  video.srcObject = s;
+                  video.play().catch(err => console.warn("Webcam play failed:", err));
+                })
+                .catch(err => {
+                  console.warn("Webcam getUserMedia failed:", err);
+                });
+            }
+          };
+
           if(!video) {
             video = document.createElement('video'); video.id = '_shared_webcam_v';
             video.autoplay = true; video.playsinline = true; video.style.display = 'none';
+            video.muted = true;
+            video.setAttribute('webkit-playsinline', 'true');
             document.body.appendChild(video);
-            navigator.mediaDevices.getUserMedia({video:{width:res,height:res}}).then(s => video.srcObject = s);
+            startWebcam();
+          } else if (!video.srcObject || (video.srcObject.getVideoTracks && video.srcObject.getVideoTracks().length === 0) || (video.srcObject.getVideoTracks && video.srcObject.getVideoTracks().some(t => t.readyState === 'ended'))) {
+            startWebcam();
+          } else {
+            video.play().catch(e => {});
           }
           const canvas = document.createElement('canvas'); canvas.width = res; canvas.height = res;
           const ctx = canvas.getContext('2d');
@@ -7056,7 +7075,45 @@ const SketchExtruder = (() => {
                   });
               }
           }
-      });
+      // Steam Exhaust System
+      const steamAuraType = m.steamAuraType || 'none';
+      const steamColor = m.steamColor || '#dfdfdf';
+      if (steamAuraType !== 'none') {
+          const steamCount = 100;
+          const steamGeom = new THREE.BufferGeometry();
+          const steamPos = new Float32Array(steamCount * 3);
+          const steamVels = [];
+          const steamLives = [];
+          for (let i = 0; i < steamCount; i++) {
+              const isLeft = (i % 2 === 0);
+              steamPos[i*3] = isLeft ? -45 : 45;
+              steamPos[i*3+1] = 35 + (Math.random() - 0.5) * 4;
+              steamPos[i*3+2] = -5 + (Math.random() - 0.5) * 2;
+              steamVels.push(new THREE.Vector3((isLeft ? -1.0 : 1.0) * (0.8 + Math.random() * 1.5), 1.5 + Math.random() * 2.0, (Math.random() - 0.5) * 0.5));
+              steamLives.push(Math.random() * 100);
+          }
+          steamGeom.setAttribute('position', new THREE.BufferAttribute(steamPos, 3));
+          const steamMat = new THREE.PointsMaterial({
+              color: new THREE.Color(steamColor),
+              size: 4.5,
+              transparent: true,
+              opacity: 0.6,
+              blending: THREE.AdditiveBlending,
+              depthWrite: false
+          });
+          const steamPoints = new THREE.Points(steamGeom, steamMat);
+          steamPoints.name = 'SCP_steam';
+          steamPoints.userData = {
+              vels: steamVels,
+              lives: steamLives,
+              posArr: steamPos,
+              tick: 0,
+              count: steamCount,
+              type: steamAuraType
+          };
+          meshGroup.add(steamPoints);
+          partsMap.steamPoints = steamPoints;
+      }
 
       addSteampunkAnimCb(m, partsMap);
       return meshGroup;
@@ -7099,6 +7156,48 @@ const SketchExtruder = (() => {
               const pistonTime = sec * Math.PI * 3;
               const rod = partsMap.piston.getObjectByName('piston_rod');
               if (rod) rod.position.y = 5 + Math.sin(pistonTime) * 4.5;
+          }
+
+          if (partsMap.steamPoints) {
+              const sp = partsMap.steamPoints;
+              const ud = sp.userData;
+              ud.tick += speed;
+              const posArr = ud.posArr;
+              const vels = ud.vels;
+              const lives = ud.lives;
+              const count = ud.count;
+              const burstActive = (Math.sin(ud.tick * 0.12) > 0.3);
+
+              for (let i = 0; i < count; i++) {
+                  lives[i] -= 1.5 * speed;
+                  const isLeft = (i % 2 === 0);
+
+                  if (lives[i] <= 0) {
+                      lives[i] = 70 + Math.random() * 30;
+                      posArr[i*3] = isLeft ? -45 : 45;
+                      posArr[i*3+1] = 35;
+                      posArr[i*3+2] = -5;
+
+                      let strength = 1.0;
+                      if (ud.type === 'burst') {
+                          strength = burstActive ? 2.5 : 0.2;
+                      } else if (ud.type === 'pulse') {
+                          strength = (Math.sin(ud.tick * 0.3) > 0) ? 2.0 : 0.4;
+                      }
+                      vels[i].set(
+                          (isLeft ? -1.0 : 1.0) * (0.5 + Math.random() * 1.0) * strength,
+                          (1.0 + Math.random() * 1.5) * strength,
+                          (Math.random() - 0.5) * 0.4
+                      );
+                  } else {
+                      posArr[i*3] += vels[i].x * speed;
+                      posArr[i*3+1] += vels[i].y * speed;
+                      posArr[i*3+2] += vels[i].z * speed;
+                      vels[i].x *= Math.pow(0.94, speed);
+                      vels[i].y -= 0.05 * speed;
+                  }
+              }
+              sp.geometry.attributes.position.needsUpdate = true;
           }
       };
       scene.animCbs = sceneCbs.filter(cb => cb._modelId !== m.id);
@@ -12935,7 +13034,8 @@ const SketchExtruder = (() => {
               // Hero Forge
               heroparts: m.heroparts, herostyle: m.herostyle, heroAnim: m.heroAnim || 'idle', vfxAuraType: m.vfxAuraType || 'none', vfxColor: m.vfxColor || '#facc15',
               // Steampunk Chrono-Engine
-              clockParts: m.clockParts, clockStyle: m.clockStyle
+              clockParts: m.clockParts, clockStyle: m.clockStyle,
+              steamAuraType: m.steamAuraType || 'none', steamColor: m.steamColor || '#dfdfdf'
           };
       });
 
@@ -18765,6 +18865,8 @@ const SketchExtruder = (() => {
       } else if(type === 'steampunk-chrono') {
         newModel.clockParts = config.clockParts;
         newModel.clockStyle = config.clockStyle;
+        newModel.steamAuraType = config.steamAuraType || 'none';
+        newModel.steamColor = config.steamColor || '#dfdfdf';
         newModel.importedMesh = config.importedMesh;
       } else if(type === 'steampunk-chrono-pro') {
         newModel.clockParts = config.clockParts;
@@ -18796,12 +18898,14 @@ const SketchExtruder = (() => {
       models.push(newModel); activeModelId = newModel.id; buildModels();
   }
 
-  function updateHeroForgeModel(modelId, heroparts, herostyle, importedMesh, heroAnim, vfxAuraType, vfxColor) {
+  function updateHeroForgeModel(modelId, heroparts, herostyle, importedMesh, heroAnim, vfxAuraType, vfxColor, steamAuraType, steamColor) {
       const m = models.find(x => x.id === modelId);
       if (!m) return;
       if (m.format === 'steampunk-chrono' || m.format === 'steampunk-chrono-pro' || m.format === 'clock-ultra') {
           m.clockParts = heroparts;
           m.clockStyle = herostyle;
+          if (steamAuraType !== undefined) m.steamAuraType = steamAuraType;
+          if (steamColor !== undefined) m.steamColor = steamColor;
       }
       m.heroparts = heroparts;
       m.herostyle = herostyle;

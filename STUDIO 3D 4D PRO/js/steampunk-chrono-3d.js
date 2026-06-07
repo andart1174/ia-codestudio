@@ -340,13 +340,13 @@ window.SteampunkChrono3D = (() => {
 
         let id = getChronoModelId();
         if (!id) {
-            id = window.SketchExtruder.addExtraModule('steampunk-chrono', { clockParts, clockStyle: selStyle, importedMesh: clockGroup });
+            id = window.SketchExtruder.addExtraModule('steampunk-chrono', { clockParts, clockStyle: selStyle, importedMesh: clockGroup, steamAuraType, steamColor });
             window._sc3ModelId = id;
             clockGroupAdded = true;
         } else {
             if (window.SketchExtruder && window._hf3UpdateModel) {
                 // Leverage the existing model updating routine safely
-                window._hf3UpdateModel(id, clockParts, selStyle, clockGroup, 'idle');
+                window._hf3UpdateModel(id, clockParts, selStyle, clockGroup, 'idle', null, null, steamAuraType, steamColor);
             }
         }
     }
