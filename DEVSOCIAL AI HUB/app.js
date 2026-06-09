@@ -717,8 +717,34 @@
     input.value = '';
   };
 
+  function checkPremium() {
+    if (!currentUser) return false;
+    if (currentUser.role === 'Admin') return true;
+    
+    try {
+      const raw = localStorage.getItem('ia_premium_users');
+      const premiumUsers = raw ? JSON.parse(raw) : [];
+      const premiumRec = premiumUsers.find(p => p.email.toLowerCase() === currentUser.email.toLowerCase());
+      if (premiumRec) {
+        if (premiumRec.days === 9999) return true;
+        const expiry = (premiumRec.addedAt || 0) + (premiumRec.days || 0) * 86400000;
+        return expiry > Date.now();
+      }
+    } catch(e) {
+      console.error(e);
+    }
+    return false;
+  }
+
   // 8. FORK CODE MODAL (Wraps in HTML and copies/forks)
   window.openForkCodeModal = function(postId) {
+    if (!checkPremium()) {
+      alert(currentLang === 'fr' ? 
+        "🔒 Copierea și importul codului sunt rezervate membrilor Premium. Vă rugăm să vă conectați sau să vă abonați pe portalul principal!" : 
+        "🔒 Copying and importing code are reserved for Premium members. Please log in or subscribe on the main portal!");
+      return;
+    }
+
     const post = posts.find(p => p.id === postId);
     if (!post) return;
     
