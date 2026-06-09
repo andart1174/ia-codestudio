@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevSocial AI Hub — Developer Community & AI Support</title>
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Three.js and OrbitControls for Live 3D Previews -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">
+          <i class="fa-solid fa-cubes"></i>
+        </div>
+        <div class="brand-text">
+          <h2>DevSocial</h2>
+          <span>AI HUB WORKSPACE</span>
+        </div>
+      </div>
+      
+      <div class="user-profile-card">
+        <div class="user-avatar">
+          <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Admin" alt="Avatar">
+          <span class="status-indicator online"></span>
+        </div>
+        <div class="user-info">
+          <h3>Creator</h3>
+          <span class="user-tag admin-tag">ADMIN Maker</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-item active" data-tab="feed">
+          <i class="fa-solid fa-rectangle-ad"></i>
+          <span class="nav-label" data-en="Social Feed" data-fr="Flux Social">Social Feed</span>
+        </button>
+        <button class="nav-item" data-tab="ai">
+          <i class="fa-solid fa-brain-circuit"></i>
+          <span class="nav-label" data-en="Studio-AI Expert" data-fr="Expert Studio-AI">Studio-AI Expert</span>
+        </button>
+        <button class="nav-item" data-tab="gallery">
+          <i class="fa-solid fa-images"></i>
+          <span class="nav-label" data-en="Featured Gallery" data-fr="Galerie Vedetă">Featured Gallery</span>
+        </button>
+        <button class="nav-item" data-tab="challenges">
+          <i class="fa-solid fa-trophy"></i>
+          <span class="nav-label" data-en="Dev Challenges" data-fr="Défis Dev">Dev Challenges</span>
+        </button>
+        
+        <div style="height: 1px; background: var(--border-glass); margin: 15px 0;"></div>
+        
+        <a href="../index.html" class="nav-item" style="text-decoration: none; border: 1px solid rgba(239, 68, 68, 0.25); background: rgba(239, 68, 68, 0.05); color: #f87171;">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span class="nav-label" data-en="Return to Portal" data-fr="Retour au Portail">Return to Portal</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="lang-selector">
+          <button class="lang-btn active" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="fr">FR</button>
+        </div>
+        <p class="copyright">v1.0 &copy; 2026 IA CodeStudio</p>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="main-content">
+      
+      <!-- HEADER -->
+      <header class="app-header">
+        <div class="search-bar">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="feed-search" placeholder="Search posts, code, tags..." data-en-placeholder="Search posts, code, tags..." data-fr-placeholder="Rechercher publications, code, tags...">
+        </div>
+        
+        <div class="header-actions">
+          <button class="action-btn-new-post" id="btn-trigger-new-post">
+            <i class="fa-solid fa-plus"></i>
+            <span data-en="Share 3D Model" data-fr="Partager Modèle 3D">Share 3D Model</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- VIEW PANELS -->
+      <div class="view-wrapper">
+        
+        <!-- FEED PANEL -->
+        <div class="view-panel active" id="panel-feed">
+          <div class="feed-layout">
+            
+            <div class="feed-posts" id="posts-container">
+              <!-- Rendered via app.js -->
+            </div>
+            
+            <!-- RIGHT SIDE PANEL -->
+            <aside class="feed-sidebar">
+              <div class="sidebar-box challenge-box">
+                <div class="box-header">
+                  <span class="badge challenge-badge"><i class="fa-solid fa-fire"></i> DAILY CHALLENGE</span>
+                </div>
+                <h3 data-en="Procedural Clockwork Wheel" data-fr="Roue Dentée Rétro">Procedural Clockwork Wheel</h3>
+                <p data-en="Create a custom animated gear mesh using Three.js logic and share it with the tag #chrono2026." data-fr="Créez un engrenage animé personnalisé à l'aide de Three.js și îl trimiteți cu hashtagul #chrono2026.">Create a custom animated gear mesh using Three.js logic and share it with the tag #chrono2026.</p>
+                <div class="challenge-stats">
+                  <span><i class="fa-solid fa-users"></i> 42 Joined</span>
+                  <span><i class="fa-solid fa-clock"></i> 5h left</span>
+                </div>
+                <button class="btn-join-challenge" data-en="Submit Entry" data-fr="Participer">Submit Entry</button>
+              </div>
+
+              <div class="sidebar-box active-users-box">
+                <h3 data-en="Active Creators" data-fr="Créateurs Actifs">Active Creators</h3>
+                <div class="creator-list">
+                  <div class="creator-item">
+                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Lucas" alt="User">
+                    <div class="creator-meta">
+                      <h4>Lucas_3D</h4>
+                      <span>Last active 2m ago</span>
+                    </div>
+                    <span class="status-dot green"></span>
+                  </div>
+                  <div class="creator-item">
+                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Emma" alt="User">
+                    <div class="creator-meta">
+                      <h4>EmmaArchitect</h4>
+                      <span>Last active 15m ago</span>
+                    </div>
+                    <span class="status-dot green"></span>
+                  </div>
+                  <div class="creator-item">
+                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Chrono" alt="User">
+                    <div class="creator-meta">
+                      <h4>SteampunkMaker</h4>
+                      <span>Last active 1h ago</span>
+                    </div>
+                    <span class="status-dot orange"></span>
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+          </div>
+        </div>
+
+        <!-- AI CHAT PANEL -->
+        <div class="view-panel" id="panel-ai">
+          <div class="ai-chat-layout">
+            <div class="ai-sidebar">
+              <div class="ai-bot-avatar">
+                <i class="fa-solid fa-robot"></i>
+              </div>
+              <h3>Studio-AI Expert</h3>
+              <p class="bot-status" data-en="Online • English & French" data-fr="En ligne • Anglais & Français">Online • English & French</p>
+              <div class="ai-hints">
+                <h4 data-en="Try asking:" data-fr="Essayez de demander :">Try asking:</h4>
+                <div class="hint-tag" onclick="useHint('How do I activate the Steam Exhaust particles in Steampunk Chrono?')">"How do I activate Steam Exhaust?"</div>
+                <div class="hint-tag" onclick="useHint('Explain the difference between IA ARCHITECTE and STUDIO 3D.')">"IA ARCHITECTE vs STUDIO 3D"</div>
+                <div class="hint-tag" onclick="useHint('Comment calibrer Webcam Avatar en nuage de points ?')">"Webcam Avatar calibration"</div>
+              </div>
+            </div>
+            <div class="ai-chat-main">
+              <div class="chat-messages-container" id="chat-messages">
+                <!-- Message history -->
+              </div>
+              <div class="chat-input-bar">
+                <input type="text" id="chat-user-input" placeholder="Type a message..." data-en-placeholder="Ask Studio-AI a question about the apps..." data-fr-placeholder="Posez une question à Studio-AI sur les applications...">
+                <button id="btn-send-chat"><i class="fa-solid fa-paper-plane"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GALLERY PANEL -->
+        <div class="view-panel" id="panel-gallery">
+          <div class="gallery-header-section">
+            <h2 data-en="Featured Community Designs" data-fr="Citations & Créations de la Communauté">Featured Community Designs</h2>
+            <p data-en="The most liked WebGL models and building scenes generated by our developers." data-fr="Les modèles WebGL et scènes de construction les plus aimés de nos développeurs.">The most liked WebGL models and building scenes generated by our developers.</p>
+          </div>
+          <div class="gallery-grid" id="gallery-container">
+            <!-- Dynamic gallery items -->
+          </div>
+        </div>
+
+        <!-- CHALLENGES PANEL -->
+        <div class="view-panel" id="panel-challenges">
+          <div class="challenges-section">
+            <div class="active-challenge-large">
+              <h2>🔥 Active Challenge: Procedural Clockwork Wheel</h2>
+              <p>Construct the gearwheel or mechanical piston with custom speed properties and publish it using #chrono2026. The community votes on the design. The creator of the top-voted design will win 7 Days of Premium license.</p>
+              <button class="btn-join-challenge" style="width: auto; padding: 12px 30px; font-size: 13px;" data-en="Enter Challenge" data-fr="Rejoindre le défi">Enter Challenge</button>
+            </div>
+            
+            <h3 style="margin: 25px 0 15px;">Past Challenges</h3>
+            <div class="past-challenges-grid">
+              <div class="past-challenge-card">
+                <h4>📐 Infinite Mobius Ribbon</h4>
+                <p>Render a custom math surface mimicking an infinite Mobius strip.</p>
+                <span class="winner-tag">🏆 Winner: MathWizard99</span>
+              </div>
+              <div class="past-challenge-card">
+                <h4>🎭 Live Avatar Mask</h4>
+                <p>Calibrate the custom webcam point-cloud to resemble a futuristic mask.</p>
+                <span class="winner-tag">🏆 Winner: EmmaArchitect</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- SHARE NEW MODEL MODAL -->
+  <div class="modal-overlay" id="modal-new-post">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 data-en="Share a New 3D Scene" data-fr="Partager une Scène 3D">Share a New 3D Scene</h3>
+        <button class="modal-close" id="btn-close-new-post"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label data-en="Title" data-fr="Titre">Title</label>
+          <input type="text" id="post-title-input" placeholder="e.g. Ornate Brass Clockwork" data-en-placeholder="e.g. Ornate Brass Clockwork" data-fr-placeholder="ex: Engrenage en Laiton Poli">
+        </div>
+        <div class="form-group">
+          <label data-en="Description / Caption" data-fr="Description / Légende">Description / Caption</label>
+          <textarea id="post-desc-input" placeholder="Explain your model, add tags..." data-en-placeholder="Explain your model, add tags..." data-fr-placeholder="Expliquez votre modèle, ajoutez des tags..."></textarea>
+        </div>
+        <div class="form-group">
+          <label data-en="Three.js Scene Code" data-fr="Code Scène Three.js">Three.js Scene Code</label>
+          <textarea id="post-code-input" class="code-textarea" placeholder="Paste the generated HTML/JS code here..." data-en-placeholder="Paste the generated HTML/JS code here..." data-fr-placeholder="Collez le code HTML/JS généré ici..."></textarea>
+        </div>
+        <div class="form-group">
+          <label data-en="Select Preset Model (if you don't have code)" data-fr="Modèle Préréglé (si pas de code)">Select Preset Model (if you don't have code)</label>
+          <select id="post-preset-select">
+            <option value="none">-- Use code provided above --</option>
+            <option value="clockwork">Procedural Clockwork (Steampunk)</option>
+            <option value="avatar">Point Cloud Webcam Mesh</option>
+            <option value="torus">Glowing Quantum Fluids Torus</option>
+            <option value="landscape">Wireframe Math Surface</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" id="btn-cancel-new-post" data-en="Cancel" data-fr="Annuler">Cancel</button>
+        <button class="btn-submit" id="btn-submit-new-post" data-en="Publish Post" data-fr="Publier la publication">Publish Post</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORK CODE VIEW MODAL -->
+  <div class="modal-overlay" id="modal-fork-code">
+    <div class="modal-card code-modal-card">
+      <div class="modal-header">
+        <h3 id="fork-modal-title">Source Code View</h3>
+        <button class="modal-close" id="btn-close-fork"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body code-modal-body">
+        <p data-en="Copy this standalone Three.js code or click Fork to load it directly into your local builder." data-fr="Copiez ce code Three.js ou cliquez sur Fork pour le charger directement dans votre éditeur local.">Copy this standalone Three.js code or click Fork to load it directly into your local builder.</p>
+        <div class="code-actions">
+          <button class="code-action-btn" id="btn-copy-fork-code"><i class="fa-solid fa-copy"></i> <span data-en="Copy Code" data-fr="Copier le code">Copy Code</span></button>
+          <button class="code-action-btn primary" id="btn-confirm-fork-action"><i class="fa-solid fa-code-fork"></i> <span data-en="Load in Studio" data-fr="Charger dans Studio">Load in Studio</span></button>
+        </div>
+        <textarea id="fork-code-display" readonly></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="database.js"></script>
+  <script src="ai-expert.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
