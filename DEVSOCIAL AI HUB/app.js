@@ -6,6 +6,7 @@
   let currentLang = 'en';
   let activeTab = 'feed';
   let posts = [];
+  let currentUser = null;
   const renderers = {}; // renderer map for active 3D card canvases
   const animLoops = {};  // animation loop callbacks for active 3D card canvases
 
@@ -110,25 +111,64 @@
 
   // 1. APP INITIALIZATION
   window.addEventListener('load', () => {
-    // Load database
-    posts = window.DevSocialDB.getPosts();
+    // Read session from localStorage
+    const session = localStorage.getItem('genius_session');
+    if (session) {
+      try {
+        currentUser = JSON.parse(session);
+      } catch(e) {
+        console.error("Error parsing genius_session:", e);
+      }
+    }
     
+    // Update user profile card in sidebar
+    updateUserProfileCard();
+
     // Restore saved language preference or default to FR
     const savedLang = localStorage.getItem('hub_lang') || 'fr';
     switchTab('feed');
     switchLanguage(savedLang);
     
-    // Build initial view
-    renderFeed();
-    renderGallery();
     initAIChat();
-
-    // Bind event listeners
     bindEvents();
-    
-    // Start global animation loop
     animateAll();
+
+    // Subscribe to Firebase Firestore real-time post changes
+    window.DevSocialDB.subscribePosts(updatedPosts => {
+      posts = updatedPosts;
+      if (activeTab === 'feed') renderFeed();
+      if (activeTab === 'gallery') renderGallery();
+    });
   });
+
+  function updateUserProfileCard() {
+    const profileCard = document.querySelector('.user-profile-card');
+    if (!profileCard) return;
+
+    if (currentUser) {
+      profileCard.innerHTML = `
+        <div class="user-avatar">
+          <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(currentUser.name)}" alt="Avatar">
+          <span class="status-indicator online"></span>
+        </div>
+        <div class="user-info">
+          <h3>${currentUser.name}</h3>
+          <span class="user-tag ${currentUser.role === 'Admin' ? 'admin-tag' : ''}" style="${currentUser.role !== 'Admin' ? 'background:rgba(99,102,241,0.15);color:#818cf8;border:1px solid rgba(99,102,241,0.3);' : ''}">${currentUser.role === 'Admin' ? 'ADMIN Maker' : 'Premium Maker'}</span>
+        </div>
+      `;
+    } else {
+      profileCard.innerHTML = `
+        <div class="user-avatar">
+          <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Guest" alt="Avatar">
+          <span class="status-indicator offline"></span>
+        </div>
+        <div class="user-info">
+          <h3 data-en="Guest User" data-fr="Invité">Guest User</h3>
+          <span class="user-tag" style="background: rgba(255,255,255,0.05); color: #9ca3af; border: 1px solid var(--border-glass);" data-en="Read Only" data-fr="Lecture Seule">Read Only</span>
+        </div>
+      `;
+    }
+  }
 
   // 2. TAB SWITCHING
   function switchTab(tabId) {
@@ -193,6 +233,13 @@
     postsContainer.innerHTML = '';
     
     posts.forEach(post => {
+      const showDelete = currentUser && (currentUser.role === 'Admin' || currentUser.email === post.userEmail);
+      const deleteButtonHtml = showDelete ? `
+        <button class="btn-delete-post" onclick="deletePost(${post.id})" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: #f87171; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;" title="${currentLang === 'fr' ? 'Supprimer la publication' : 'Delete Post'}">
+          <i class="fa-solid fa-trash" style="font-size: 11px;"></i>
+        </button>
+      ` : '';
+
       const card = document.createElement('div');
       card.className = 'post-card';
       card.dataset.id = post.id;
@@ -221,9 +268,7 @@
           </div>
           <div style="display: flex; align-items: center; gap: 8px;">
             <span class="fork-badge"><i class="fa-solid fa-code"></i> WebGL Ready</span>
-            <button class="btn-delete-post" onclick="deletePost(${post.id})" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: #f87171; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;" title="${currentLang === 'fr' ? 'Supprimer la publication (Admin)' : 'Delete Post (Admin)'}">
-              <i class="fa-solid fa-trash" style="font-size: 11px;"></i>
-            </button>
+            ${deleteButtonHtml}
           </div>
         </div>
         
@@ -469,20 +514,32 @@
 
   // 7. LIKES & COMMENTS ACTIONS
   window.likePost = function(postId) {
-    const count = window.DevSocialDB.likePost(postId);
+    if (!currentUser) {
+      toast(currentLang === 'fr' ? "🔒 Connectez-vous sur le portail pour aimer !" : "🔒 Please log in on the main portal to like!");
+      return;
+    }
+    window.DevSocialDB.likePost(postId);
     const btn = document.querySelector(`.post-card[data-id="${postId}"] .btn-like`);
     if (btn) {
-      btn.querySelector('span').textContent = count;
       btn.classList.add('liked');
       toast(currentLang === 'fr' ? "Aimé !" : "Liked!");
     }
   };
 
   window.deletePost = function(postId) {
-    if (confirm(currentLang === 'fr' ? "Êtes-vous sûr de vouloir supprimer cette publication en tant qu'Administrateur ?" : "Are you sure you want to delete this post as Administrator?")) {
-      posts = window.DevSocialDB.deletePost(postId);
+    if (!currentUser) return;
+    const post = posts.find(p => p.id === postId);
+    if (!post) return;
+    
+    const isAllowed = currentUser.role === 'Admin' || currentUser.email === post.userEmail;
+    if (!isAllowed) {
+      toast(currentLang === 'fr' ? "❌ Non autorisé !" : "❌ Unauthorized!");
+      return;
+    }
+
+    if (confirm(currentLang === 'fr' ? "Êtes-vous sûr de vouloir supprimer această publicație?" : "Are you sure you want to delete this post?")) {
+      window.DevSocialDB.deletePost(postId);
       stopAll3DViews();
-      renderFeed();
       toast(currentLang === 'fr' ? "Publication supprimée !" : "Post deleted successfully!");
     }
   };
@@ -501,36 +558,24 @@
   };
 
   window.submitComment = function(postId) {
+    if (!currentUser) {
+      toast(currentLang === 'fr' ? "🔒 Connectez-vous sur le portail pour commentez !" : "🔒 Please log in on the main portal to comment!");
+      return;
+    }
+
     const input = document.getElementById(`comment-input-${postId}`);
     const text = input.value.trim();
     if (!text) return;
     
     const comment = {
-      user: "Creator",
-      avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Admin",
+      user: currentUser.name,
+      userEmail: currentUser.email,
+      avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(currentUser.name)}`,
       text: text
     };
     
-    const comments = window.DevSocialDB.addComment(postId, comment);
+    window.DevSocialDB.addComment(postId, comment);
     input.value = '';
-    
-    const list = document.getElementById(`comments-list-${postId}`);
-    if (list) {
-      list.innerHTML = comments.map(c => `
-        <div class="comment-item">
-          <img src="${c.avatar}" alt="User">
-          <div class="comment-meta">
-            <h5>${c.user}</h5>
-            <p>${c.text}</p>
-          </div>
-        </div>
-      `).join('');
-      
-      const btn = document.querySelector(`.post-card[data-id="${postId}"] button[onclick^="toggleComments"] span`);
-      if (btn) btn.textContent = currentLang === 'fr' ? `Commentaires (${comments.length})` : `Comments (${comments.length})`;
-      
-      list.scrollTop = list.scrollHeight;
-    }
   };
 
   // 8. FORK CODE MODAL (Wraps in HTML and copies/forks)
@@ -557,6 +602,11 @@
   }
 
   btnSubmitNewPost.onclick = () => {
+    if (!currentUser) {
+      toast(currentLang === 'fr' ? "🔒 Connectez-vous sur le portail pentru a publica !" : "🔒 Please log in on the main portal to publish!");
+      return;
+    }
+
     const title = postTitleInput.value.trim();
     const desc = postDescInput.value.trim();
     let code = postCodeInput.value.trim();
@@ -578,9 +628,10 @@
 
     const newPost = {
       id: Date.now(),
-      user: "Creator",
-      userAvatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Admin",
-      userTag: "ADMIN Maker",
+      user: currentUser.name,
+      userEmail: currentUser.email,
+      userAvatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(currentUser.name)}`,
+      userTag: currentUser.role === 'Admin' ? 'ADMIN Maker' : 'Premium Maker',
       caption: `${desc} #custom3D`,
       likes: 0,
       comments: [],
@@ -589,9 +640,8 @@
       code: code
     };
 
-    posts = window.DevSocialDB.savePost(newPost);
+    window.DevSocialDB.savePost(newPost);
     closeModalNewPost();
-    renderFeed();
     toast(currentLang === 'fr' ? "Modèle partagé !" : "Model shared successfully!");
   };
 

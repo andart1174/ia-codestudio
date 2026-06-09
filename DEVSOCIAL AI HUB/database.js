@@ -137,56 +137,75 @@ function createSurfaceScene(scene) {
     }
   ];
 
-  // 2. Database Helper Methods API
+  // 2. Initialize Firebase using the configuration from the portal
+  const firebaseConfig = {
+    apiKey: "AIzaSyBXJ0LstZF7c3-GI2eDtv6V7vsx0scgXHk",
+    authDomain: "ia-codestudio.firebaseapp.com",
+    projectId: "ia-codestudio",
+    storageBucket: "ia-codestudio.firebasestorage.app",
+    messagingSenderId: "977495027432",
+    appId: "1:977495027432:web:fb93e8ae7712c70df2635d",
+    measurementId: "G-YVNWE5Q6KB"
+  };
+
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  const db = firebase.firestore();
+
+  // 3. Database Helper Methods API - Firebase Firestore implementation
   window.DevSocialDB = {
-    init: function() {
-      if (!localStorage.getItem('devsocial_posts')) {
-        localStorage.setItem('devsocial_posts', JSON.stringify(MOCK_POSTS));
-      }
+    initFirestoreSeed: function() {
+      db.collection('devsocial_posts').limit(1).get().then(snap => {
+        if (snap.empty) {
+          MOCK_POSTS.forEach((post, index) => {
+            // Distribute timestamps to preserve mock order
+            post.createdAt = Date.now() - (index * 3600000);
+            db.collection('devsocial_posts').doc(String(post.id)).set(post)
+              .catch(err => console.error("Error seeding Firestore:", err));
+          });
+        }
+      }).catch(err => {
+        console.warn("Firestore collection devsocial_posts is not initialized or accessible. Please check Firestore Security Rules.", err);
+      });
     },
-    
-    getPosts: function() {
-      this.init();
-      try {
-        return JSON.parse(localStorage.getItem('devsocial_posts'));
-      } catch(e) {
-        return MOCK_POSTS;
-      }
+
+    subscribePosts: function(callback) {
+      this.initFirestoreSeed();
+      return db.collection('devsocial_posts')
+               .orderBy('createdAt', 'desc')
+               .onSnapshot(snapshot => {
+                 const postsList = [];
+                 snapshot.forEach(doc => {
+                   postsList.push(doc.data());
+                 });
+                 callback(postsList);
+               }, error => {
+                 console.error("Firestore subscription error:", error);
+               });
     },
     
     savePost: function(post) {
-      const posts = this.getPosts();
-      posts.unshift(post);
-      localStorage.setItem('devsocial_posts', JSON.stringify(posts));
-      return posts;
+      post.createdAt = Date.now();
+      db.collection('devsocial_posts').doc(String(post.id)).set(post)
+        .catch(err => console.error("Error saving post to Firestore:", err));
     },
     
     likePost: function(postId) {
-      const posts = this.getPosts();
-      const post = posts.find(p => p.id === postId);
-      if (post) {
-        post.likes = (post.likes || 0) + 1;
-        localStorage.setItem('devsocial_posts', JSON.stringify(posts));
-      }
-      return post ? post.likes : 0;
+      db.collection('devsocial_posts').doc(String(postId)).update({
+        likes: firebase.firestore.FieldValue.increment(1)
+      }).catch(err => console.error("Error liking post in Firestore:", err));
     },
     
     addComment: function(postId, comment) {
-      const posts = this.getPosts();
-      const post = posts.find(p => p.id === postId);
-      if (post) {
-        post.comments = post.comments || [];
-        post.comments.push(comment);
-        localStorage.setItem('devsocial_posts', JSON.stringify(posts));
-      }
-      return post ? post.comments : [];
+      db.collection('devsocial_posts').doc(String(postId)).update({
+        comments: firebase.firestore.FieldValue.arrayUnion(comment)
+      }).catch(err => console.error("Error adding comment in Firestore:", err));
     },
     
     deletePost: function(postId) {
-      let posts = this.getPosts();
-      posts = posts.filter(p => p.id !== postId);
-      localStorage.setItem('devsocial_posts', JSON.stringify(posts));
-      return posts;
+      db.collection('devsocial_posts').doc(String(postId)).delete()
+        .catch(err => console.error("Error deleting post from Firestore:", err));
     }
   };
 })();
