@@ -200,6 +200,12 @@ function createSurfaceScene(scene) {
       }).catch(err => console.error("Error liking post in Firestore:", err));
     },
     
+    reportPost: function(postId) {
+      db.collection('devsocial_posts').doc(String(postId)).update({
+        reports: firebase.firestore.FieldValue.increment(1)
+      }).catch(err => console.error("Error reporting post in Firestore:", err));
+    },
+    
     addComment: function(postId, comment) {
       db.collection('devsocial_posts').doc(String(postId)).update({
         comments: firebase.firestore.FieldValue.arrayUnion(comment)
@@ -209,6 +215,51 @@ function createSurfaceScene(scene) {
     deletePost: function(postId) {
       db.collection('devsocial_posts').doc(String(postId)).delete()
         .catch(err => console.error("Error deleting post from Firestore:", err));
+    },
+    
+    subscribeActiveChallenge: function(callback) {
+      db.collection('devsocial_challenges').limit(1).get().then(snap => {
+        if (snap.empty) {
+          const defaultChallenge = {
+            id: "default",
+            title_en: "Procedural Clockwork Wheel",
+            title_fr: "Roue Dentée Rétro",
+            desc_en: "Create a custom animated gear mesh using Three.js logic and share it with the tag #chrono2026.",
+            desc_fr: "Créez un engrenage animé personnalisé avec Three.js et partagez-le avec le hashtag #chrono2026.",
+            expiry: Date.now() + 24 * 3600 * 1000,
+            reward: "7 Days Premium",
+            createdAt: Date.now()
+          };
+          db.collection('devsocial_challenges').doc("default").set(defaultChallenge);
+        }
+      });
+
+      return db.collection('devsocial_challenges')
+               .orderBy('createdAt', 'desc')
+               .limit(1)
+               .onSnapshot(snapshot => {
+                 if (!snapshot.empty) {
+                   let activeChallenge = null;
+                   snapshot.forEach(doc => { activeChallenge = doc.data(); });
+                   callback(activeChallenge);
+                 }
+               }, error => {
+                 console.error("Firestore challenge subscription error:", error);
+               });
+    },
+
+    subscribeGlobalConfig: function(callback) {
+      db.collection('admin_config').doc('global').get().then(doc => {
+        if (!doc.exists) {
+          db.collection('admin_config').doc('global').set({ profanityFilter: false });
+        }
+      });
+
+      return db.collection('admin_config').doc('global').onSnapshot(doc => {
+        if (doc.exists) {
+          callback(doc.data());
+        }
+      }, err => console.error("Config subscription error:", err));
     }
   };
 })();

@@ -63,7 +63,12 @@ const translations = {
     admin_clear_sessions: "Effacer Toutes Sessions",
     admin_export: "Exporter Données",
     admin_logout: "Se Déconnecter",
-    admin_system_log: "Journal Système"
+    admin_system_log: "Journal Système",
+    admin_tab_users: "Utilisateurs",
+    admin_tab_challenges: "Défis / Challenges",
+    admin_tab_feed: "Modération Feed",
+    admin_tab_analytics: "Statistiques",
+    admin_tab_copilot: "Co-pilote AI"
   },
   en: {
     nav_title: "IA CODE STUDIO",
@@ -129,6 +134,11 @@ const translations = {
     admin_clear_sessions: "Clear All Sessions",
     admin_export: "Export Data",
     admin_logout: "Sign Out",
-    admin_system_log: "System Log"
+    admin_system_log: "System Log",
+    admin_tab_users: "Users",
+    admin_tab_challenges: "Challenges",
+    admin_tab_feed: "Feed Moderation",
+    admin_tab_analytics: "Analytics",
+    admin_tab_copilot: "AI Co-pilot"
   }
 };

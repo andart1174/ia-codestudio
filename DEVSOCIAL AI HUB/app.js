@@ -9,6 +9,9 @@
   let currentUser = null;
   const renderers = {}; // renderer map for active 3D card canvases
   const animLoops = {};  // animation loop callbacks for active 3D card canvases
+  
+  let activeChallengeData = null;
+  let globalConfig = { profanityFilter: false };
 
   // DOM Elements
   const navItems = document.querySelectorAll('.nav-menu .nav-item');
@@ -139,7 +142,97 @@
       if (activeTab === 'feed') renderFeed();
       if (activeTab === 'gallery') renderGallery();
     });
+
+    // Subscribe to Active Challenge in real-time
+    window.DevSocialDB.subscribeActiveChallenge(challenge => {
+      activeChallengeData = challenge;
+      renderActiveChallenge(activeChallengeData);
+    });
+
+    // Subscribe to Global Config in real-time
+    window.DevSocialDB.subscribeGlobalConfig(config => {
+      globalConfig = config;
+    });
+
+    // Real-time Banned Status Verification
+    if (currentUser && typeof firebase !== 'undefined') {
+      const db = firebase.firestore();
+      db.collection('users').doc(currentUser.email).onSnapshot(doc => {
+        if (doc.exists && doc.data().banned === true) {
+          alert(currentLang === 'fr' ? "Votre compte a été banni par l'administrateur." : "Your account has been banned by the administrator.");
+          localStorage.removeItem('genius_session');
+          window.location.reload();
+        }
+      });
+    }
   });
+
+  let challengeInterval = null;
+  function renderActiveChallenge(challenge) {
+    if (!challenge) return;
+    
+    const challengeBox = document.querySelector('.challenge-box');
+    if (challengeBox) {
+      const h3 = challengeBox.querySelector('h3');
+      const p = challengeBox.querySelector('p');
+      const timeVal = challengeBox.querySelector('.fa-clock').nextElementSibling;
+      const statsVal = challengeBox.querySelector('.fa-users').nextElementSibling;
+      
+      const title = currentLang === 'fr' ? challenge.title_fr : challenge.title_en;
+      const desc = currentLang === 'fr' ? challenge.desc_fr : challenge.desc_en;
+      
+      if (h3) h3.textContent = title;
+      if (p) p.textContent = desc;
+      
+      if (challengeInterval) clearInterval(challengeInterval);
+      
+      function updateCountdown() {
+        const now = Date.now();
+        const diff = challenge.expiry - now;
+        if (diff <= 0) {
+          timeVal.textContent = currentLang === 'fr' ? 'Expiré' : 'Expired';
+          if (challengeInterval) clearInterval(challengeInterval);
+        } else {
+          const hours = Math.floor(diff / (3600 * 1000));
+          const mins = Math.floor((diff % (3600 * 1000)) / (60 * 1000));
+          const secs = Math.floor((diff % (60 * 1000)) / 1000);
+          timeVal.textContent = currentLang === 'fr' ? `${hours}h ${mins}m restantes` : `${hours}h ${mins}m left`;
+        }
+      }
+      
+      updateCountdown();
+      challengeInterval = setInterval(updateCountdown, 1000);
+      
+      const joinedCount = challenge.joinedCount || 42;
+      statsVal.textContent = currentLang === 'fr' ? `${joinedCount} Participants` : `${joinedCount} Joined`;
+    }
+
+    const activeChallengeLarge = document.querySelector('.active-challenge-large');
+    if (activeChallengeLarge) {
+      const h2 = activeChallengeLarge.querySelector('h2');
+      const p = activeChallengeLarge.querySelector('p');
+      
+      const title = currentLang === 'fr' ? challenge.title_fr : challenge.title_en;
+      const desc = currentLang === 'fr' ? challenge.desc_fr : challenge.desc_en;
+      
+      if (h2) h2.textContent = `🔥 ${currentLang === 'fr' ? 'Défi Actif' : 'Active Challenge'}: ${title}`;
+      if (p) p.textContent = desc + " " + (currentLang === 'fr' ? `Récompense : ${challenge.reward}` : `Reward: ${challenge.reward}`);
+    }
+  }
+
+  function censorText(text) {
+    if (!globalConfig || !globalConfig.profanityFilter) return text;
+    const badWords = [
+      'shit', 'fuck', 'asshole', 'bitch', 'crap', 'bastard', 'cunt', 'dick',
+      'merde', 'putain', 'connard', 'salaud', 'salope', 'cul', 'chier', 'bordel'
+    ];
+    let censored = text;
+    badWords.forEach(word => {
+      const regex = new RegExp(`\\b${word}\\b`, 'gi');
+      censored = censored.replace(regex, '***');
+    });
+    return censored;
+  }
 
   function updateUserProfileCard() {
     const profileCard = document.querySelector('.user-profile-card');
@@ -223,6 +316,10 @@
       }
     });
 
+    if (activeChallengeData) {
+      renderActiveChallenge(activeChallengeData);
+    }
+
     // Re-render feed and gallery to apply dynamic text updates
     if (activeTab === 'feed') renderFeed();
     if (activeTab === 'gallery') renderGallery();
@@ -268,6 +365,9 @@
             </div>
           </div>
           <div style="display: flex; align-items: center; gap: 8px;">
+            <button class="btn-report-post" onclick="reportPost(${post.id})" style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); color: #f87171; font-size: 11px; padding: 4px 8px; border-radius: 6px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.15)'" onmouseout="this.style.background='rgba(239, 68, 68, 0.05)'">
+              🚩 ${currentLang === 'fr' ? 'Signaler' : 'Report'} ${post.reports ? `(${post.reports})` : ''}
+            </button>
             <span class="fork-badge"><i class="fa-solid fa-code"></i> WebGL Ready</span>
             ${deleteButtonHtml}
           </div>
@@ -527,6 +627,15 @@
     }
   };
 
+  window.reportPost = function(postId) {
+    if (!currentUser) {
+      toast(currentLang === 'fr' ? "🔒 Connectez-vous sur le portail pour signaler !" : "🔒 Please log in on the main portal to report!");
+      return;
+    }
+    window.DevSocialDB.reportPost(postId);
+    toast(currentLang === 'fr' ? "Publication signalée. Merci." : "Post reported. Thank you.");
+  };
+
   window.deletePost = function(postId) {
     if (!currentUser) return;
     const post = posts.find(p => p.id === postId);
@@ -568,11 +677,13 @@
     const text = input.value.trim();
     if (!text) return;
     
+    const censoredText = censorText(text);
+    
     const comment = {
       user: currentUser.name,
       userEmail: currentUser.email,
       avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(currentUser.name)}`,
-      text: text
+      text: censoredText
     };
     
     window.DevSocialDB.addComment(postId, comment);
@@ -627,14 +738,16 @@
       code = `// Preset ${preset} custom code loaded`;
     }
 
+    const censoredDesc = censorText(desc);
+
     const newPost = {
       id: Date.now(),
       user: currentUser.name,
       userEmail: currentUser.email,
       userAvatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(currentUser.name)}`,
       userTag: currentUser.role === 'Admin' ? 'ADMIN Maker' : 'Premium Maker',
-      caption_en: `${desc} #custom3D`,
-      caption_fr: `${desc} #custom3D`,
+      caption_en: `${censoredDesc} #custom3D`,
+      caption_fr: `${censoredDesc} #custom3D`,
       likes: 0,
       comments: [],
       preset: preset === 'none' ? 'custom' : preset,

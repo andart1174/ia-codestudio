@@ -51,6 +51,8 @@
     <!-- Firebase SDK (Compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <!-- Chart.js for Admin Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -152,123 +154,281 @@
 
     <!-- ===== ADMIN PANEL MODAL ===== -->
     <div id="modal-admin" class="modal-overlay">
-        <div class="modal-content" style="max-width: 800px;">
-            <button class="modal-close-btn" onclick="closeModal('admin')">×</button>
-            <div style="display:flex; align-items:center; gap:16px; margin-bottom:28px;">
-                <div style="width:52px;height:52px;background:linear-gradient(135deg,#8b5cf6,#06b6d4);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;">⚙️</div>
+        <div class="modal-content admin-dashboard-content" style="max-width: 1000px; width: 90vw; height: 85vh; padding: 0; display: flex; flex-direction: row; overflow: hidden; border-radius: 24px;">
+            
+            <!-- Left Sidebar -->
+            <div class="admin-sidebar" style="width: 240px; background: rgba(15, 23, 42, 0.6); border-right: 1px solid rgba(255, 255, 255, 0.08); padding: 24px; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto;">
                 <div>
-                    <h2 class="modal-title" style="margin-bottom:4px; text-align:left;" data-i18n="admin_title">Panneau Admin</h2>
-                    <p style="color:#94a3b8; font-size:13px;" id="admin-welcome-msg">Bienvenue, Admin</p>
-                </div>
-            </div>
-
-            <!-- Admin Stats -->
-            <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:14px; margin-bottom:24px;">
-                <div class="admin-stat-card" id="stat-users">
-                    <div class="admin-stat-icon">👥</div>
-                    <div class="admin-stat-value" id="stat-users-count">0</div>
-                    <div class="admin-stat-label" data-i18n="admin_stat_users">Utilisateurs</div>
-                </div>
-                <div class="admin-stat-card" style="border-color: rgba(245,158,11,0.2);">
-                    <div class="admin-stat-icon">💎</div>
-                    <div class="admin-stat-value" id="stat-premium-count">0</div>
-                    <div class="admin-stat-label" data-i18n="admin_stat_premium">Membres Premium</div>
-                </div>
-                <div class="admin-stat-card" style="border-color: rgba(16,185,129,0.2);">
-                    <div class="admin-stat-icon">📈</div>
-                    <div class="admin-stat-value" id="stat-today">0</div>
-                    <div class="admin-stat-label" data-i18n="admin_stat_today">Nouveaux (24h)</div>
-                </div>
-            </div>
-
-            <!-- Firebase Status -->
-            <div id="firebase-status-container" style="display:flex; justify-content:space-between; align-items:center; margin-top: -15px; margin-bottom: 20px;">
-                <button onclick="refreshAdminStats()" style="background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); color:#10b981; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; transition: 0.2s;" onmouseover="this.style.background='rgba(16,185,129,0.2)'" onmouseout="this.style.background='rgba(16,185,129,0.1)'">
-                    🔄 Synchroniser Direct
-                </button>
-                <div id="firebase-status" style="font-size: 11px; font-weight: bold; color:#94a3b8;">
-                    Firebase: <span style="color:#cbd5e1">Attente d'ouverture...</span>
-                </div>
-            </div>
-
-            <!-- ===== BASE UTILISATEURS (FULL DATABASE) ===== -->
-            <div style="background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.25); border-radius:16px; padding:18px; margin-bottom:18px;">
-                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <span style="font-size:1.1rem;">👥</span>
-                        <span style="font-weight:800; font-size:14px; color:#3b82f6;">Base d'Utilisateurs Enregistrés</span>
+                    <!-- Title -->
+                    <div style="display:flex; align-items:center; gap:12px; margin-bottom:28px;">
+                        <div style="width:40px;height:40px;background:linear-gradient(135deg,#8b5cf6,#06b6d4);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">⚙️</div>
+                        <div style="text-align: left;">
+                            <h2 style="font-size: 16px; font-weight:800; margin: 0; color: #fff;">Admin Panel</h2>
+                            <p style="color:#94a3b8; font-size:11px; margin: 2px 0 0;" id="admin-welcome-msg">Bienvenue</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Tabs Menu -->
+                    <div class="admin-tab-menu" style="display:flex; flex-direction:column; gap:8px;">
+                        <button class="admin-tab-btn active" data-tab="users" style="display:flex; align-items:center; gap:10px; padding:12px 16px; border:none; background:none; color:#94a3b8; font-size:13px; font-weight:600; text-align:left; border-radius:10px; cursor:pointer; transition:0.2s; width: 100%;">
+                            <span>👥</span> <span data-i18n="admin_tab_users">Users</span>
+                        </button>
+                        <button class="admin-tab-btn" data-tab="challenges" style="display:flex; align-items:center; gap:10px; padding:12px 16px; border:none; background:none; color:#94a3b8; font-size:13px; font-weight:600; text-align:left; border-radius:10px; cursor:pointer; transition:0.2s; width: 100%;">
+                            <span>🔥</span> <span data-i18n="admin_tab_challenges">Challenges</span>
+                        </button>
+                        <button class="admin-tab-btn" data-tab="feed" style="display:flex; align-items:center; gap:10px; padding:12px 16px; border:none; background:none; color:#94a3b8; font-size:13px; font-weight:600; text-align:left; border-radius:10px; cursor:pointer; transition:0.2s; width: 100%;">
+                            <span>🚩</span> <span data-i18n="admin_tab_feed">Moderation</span>
+                        </button>
+                        <button class="admin-tab-btn" data-tab="analytics" style="display:flex; align-items:center; gap:10px; padding:12px 16px; border:none; background:none; color:#94a3b8; font-size:13px; font-weight:600; text-align:left; border-radius:10px; cursor:pointer; transition:0.2s; width: 100%;">
+                            <span>📊</span> <span data-i18n="admin_tab_analytics">Analytics</span>
+                        </button>
+                        <button class="admin-tab-btn" data-tab="copilot" style="display:flex; align-items:center; gap:10px; padding:12px 16px; border:none; background:none; color:#94a3b8; font-size:13px; font-weight:600; text-align:left; border-radius:10px; cursor:pointer; transition:0.2s; width: 100%;">
+                            <span>🤖</span> <span data-i18n="admin_tab_copilot">Co-pilot AI</span>
+                        </button>
                     </div>
                 </div>
-                <div id="admin-all-users-list" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap:10px; max-height:250px; overflow-y:auto; padding-right:5px;">
-                    <div style="text-align:center; color:#64748b; font-size:12px; padding:10px; font-style:italic;" id="no-users-msg">Aucun utilisateur enregistré.</div>
-                </div>
-            </div>
-            <!-- ===== ADMINISTRATION SPLIT ===== -->
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px;">
                 
-                <!-- Premium Management -->
-                <div style="background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.25); border-radius:16px; padding:18px;">
-                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
-                        <span style="font-size:1.1rem;">💎</span>
-                        <span style="font-weight:800; font-size:14px; color:#fbbf24;">Utilisateurs Premium</span>
+                <!-- Sidebar Footer -->
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <div id="firebase-status" style="font-size:10px; font-weight:bold; color:#64748b; text-align:center; margin-bottom:4px;">
+                        Firebase: <span style="color:#cbd5e1">Checking...</span>
                     </div>
-
-                    <!-- Add Premium User Form -->
-                <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
-                    <input type="email" id="premium-user-email" placeholder="email@exemple.com"
-                        style="flex:1; min-width:200px; background:rgba(255,255,255,0.05); border:1px solid rgba(245,158,11,0.3); border-radius:10px; color:#fff; padding:10px 14px; font-size:13px; outline:none; font-family:'Inter',sans-serif;">
-                    <select id="premium-duration" style="background:#0d0c14; border:1px solid rgba(245,158,11,0.3); border-radius:10px; color:#fbbf24; padding:10px 14px; font-size:13px; outline:none; cursor:pointer; font-family:'Inter',sans-serif;">
-                        <option value="30">30 jours</option>
-                        <option value="60">60 jours</option>
-                        <option value="90">90 jours</option>
-                        <option value="365">1 an</option>
-                        <option value="9999">Illimité</option>
-                    </select>
-                    <button onclick="adminAddPremiumUser()" style="background:linear-gradient(135deg,#f59e0b,#d946ef); color:#fff; border:none; padding:10px 18px; border-radius:10px; font-weight:700; cursor:pointer; font-size:13px; white-space:nowrap; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                        ✚ Activer Premium
+                    <button class="admin-sidebar-btn" onclick="refreshAdminStats()" style="display:flex; align-items:center; justify-content:center; gap:8px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:#cbd5e1; padding:8px; border-radius:8px; font-size:11px; cursor:pointer; font-weight:600; transition:0.2s; width: 100%;">
+                        🔄 Sync Direct
+                    </button>
+                    <button class="admin-sidebar-btn" onclick="adminLogout()" style="display:flex; align-items:center; justify-content:center; gap:8px; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.15); color:#f87171; padding:8px; border-radius:8px; font-size:11px; cursor:pointer; font-weight:600; transition:0.2s; width: 100%;">
+                        🚪 Logout
                     </button>
                 </div>
-
-                <!-- Current Premium Users List -->
-                <div id="premium-users-list" style="display:flex; flex-direction:column; gap:8px; max-height:180px; overflow-y:auto;">
-                    <div style="text-align:center; color:#64748b; font-size:12px; padding:10px; font-style:italic;" id="no-premium-msg">Aucun utilisateur premium enregistré.</div>
-                </div>
-                </div>
-
-                <!-- Messages Management -->
-                <div style="background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.25); border-radius:16px; padding:18px;">
-                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
-                        <span style="font-size:1.1rem;">📩</span>
-                        <span style="font-weight:800; font-size:14px; color:#10b981;">Boîte de Réception</span>
-                    </div>
-                    <div id="admin-messages-list" style="display:flex; flex-direction:column; gap:8px; max-height:220px; overflow-y:auto; padding-right:5px;">
-                        <div style="text-align:center; color:#64748b; font-size:12px; padding:10px; font-style:italic;" id="no-messages-msg">Aucun message reçu.</div>
-                    </div>
-                </div>
             </div>
-
-            <!-- Admin Actions -->
-            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; margin-bottom:18px;">
-                <button class="admin-action-btn" onclick="adminClearSessions()" style="background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.2); color:#f87171;">
-                    <span>🗑️</span> <span data-i18n="admin_clear_sessions">Effacer Sessions</span>
-                </button>
-                <button class="admin-action-btn" onclick="adminExportData()" style="background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.2); color:#10b981;">
-                    <span>📤</span> <span data-i18n="admin_export">Exporter Données</span>
-                </button>
-                <button class="admin-action-btn" onclick="adminLogout()" style="background: rgba(100,116,139,0.08); border-color: rgba(100,116,139,0.2); color:#94a3b8;">
-                    <span>🚪</span> <span data-i18n="admin_logout">Se Déconnecter</span>
-                </button>
-            </div>
-
-            <!-- System Log -->
-            <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius:14px; padding:14px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-                    <span style="font-weight:700;font-size:13px;" data-i18n="admin_system_log">Journal Système</span>
-                    <span style="font-size:11px; color:#10b981;">&#9679; LIVE</span>
+            
+            <!-- Right Panel Content Pane -->
+            <div class="admin-panel-body" style="flex: 1; padding: 32px; overflow-y: auto; display: flex; flex-direction: column; background: rgba(2, 6, 23, 0.4); position: relative;">
+                <button class="modal-close-btn" onclick="closeModal('admin')" style="top: 24px; right: 24px;">×</button>
+                
+                <!-- PANELS -->
+                
+                <!-- Panel 1: Users & Access -->
+                <div class="admin-sub-panel active" id="admin-panel-users">
+                    <h3 style="font-size: 20px; font-weight: 800; margin-top: 0; margin-bottom: 20px; color: #fff;">User & Ban Manager</h3>
+                    
+                    <!-- Stats Grid row -->
+                    <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:14px; margin-bottom:24px;">
+                        <div class="admin-stat-card" id="stat-users">
+                            <div class="admin-stat-icon">👥</div>
+                            <div class="admin-stat-value" id="stat-users-count">0</div>
+                            <div class="admin-stat-label">Total Users</div>
+                        </div>
+                        <div class="admin-stat-card" style="border-color: rgba(245,158,11,0.2);">
+                            <div class="admin-stat-icon">💎</div>
+                            <div class="admin-stat-value" id="stat-premium-count">0</div>
+                            <div class="admin-stat-label">Premium Users</div>
+                        </div>
+                        <div class="admin-stat-card" style="border-color: rgba(239,68,68,0.2);">
+                            <div class="admin-stat-icon">🚫</div>
+                            <div class="admin-stat-value" id="stat-banned-count">0</div>
+                            <div class="admin-stat-label">Banned Users</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Add Premium User Form -->
+                    <div style="background: rgba(245,158,11,0.03); border: 1px solid rgba(245,158,11,0.15); border-radius:16px; padding:18px; margin-bottom:20px;">
+                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                            <span style="font-size:1.1rem;">💎</span>
+                            <span style="font-weight:800; font-size:14px; color:#fbbf24;">Grant Premium Access</span>
+                        </div>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                            <input type="email" id="premium-user-email" placeholder="user@example.com"
+                                style="flex:1; min-width:200px; background:rgba(255,255,255,0.05); border:1px solid rgba(245,158,11,0.2); border-radius:10px; color:#fff; padding:10px 14px; font-size:13px; outline:none; font-family:'Inter',sans-serif;">
+                            <select id="premium-duration" style="background:#0d0c14; border:1px solid rgba(245,158,11,0.2); border-radius:10px; color:#fbbf24; padding:10px 14px; font-size:13px; outline:none; cursor:pointer; font-family:'Inter',sans-serif;">
+                                <option value="30">30 Days</option>
+                                <option value="60">60 Days</option>
+                                <option value="90">90 Days</option>
+                                <option value="365">1 Year</option>
+                                <option value="9999">Lifetime</option>
+                            </select>
+                            <button onclick="adminAddPremiumUser()" style="background:linear-gradient(135deg,#f59e0b,#d946ef); color:#fff; border:none; padding:10px 18px; border-radius:10px; font-weight:700; cursor:pointer; font-size:13px; white-space:nowrap; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                                ✚ Grant Premium
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Table View of Users -->
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius:16px; padding:18px; flex: 1; display:flex; flex-direction:column; overflow:hidden;">
+                        <span style="font-weight:800; font-size:14px; color:#3b82f6; margin-bottom:12px; display:block;">Registered Users Directory</span>
+                        <div style="overflow-x:auto; flex:1; max-height: 250px;">
+                            <table style="width:100%; border-collapse:collapse; text-align:left; font-size:13px;">
+                                <thead>
+                                    <tr style="border-bottom:1px solid rgba(255,255,255,0.08); color:#94a3b8;">
+                                        <th style="padding:10px 8px;">Name</th>
+                                        <th style="padding:10px 8px;">Email</th>
+                                        <th style="padding:10px 8px;">Plan</th>
+                                        <th style="padding:10px 8px; text-align:right;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-users-table-body">
+                                    <!-- Rendered dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <div id="admin-log" style="font-family:monospace;font-size:11px;color:#64748b;max-height:100px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;">
-                    <span style="color:#8b5cf6;">[ SYSTEM ] AI Code Studio Admin Panel v3.0 — Prêt.</span>
+                
+                <!-- Panel 2: Daily Challenges -->
+                <div class="admin-sub-panel" id="admin-panel-challenges" style="display:none;">
+                    <h3 style="font-size: 20px; font-weight: 800; margin-top: 0; margin-bottom: 20px; color: #fff;">Daily Challenges Planner</h3>
+                    
+                    <div style="display:grid; grid-template-columns: 1.2fr 1fr; gap:20px; flex: 1;">
+                        <!-- Planner Form -->
+                        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius:16px; padding:20px;">
+                            <span style="font-weight:800; font-size:14px; color:#8b5cf6; margin-bottom:16px; display:block;">Configure New Challenge</span>
+                            
+                            <div class="form-group" style="margin-bottom:12px;">
+                                <label style="font-size:12px; margin-bottom:6px;">Challenge Title (EN)</label>
+                                <input type="text" id="challenge-title-en" placeholder="e.g. Procedural Gearbox" style="padding:8px 12px; font-size:13px;">
+                            </div>
+                            <div class="form-group" style="margin-bottom:12px;">
+                                <label style="font-size:12px; margin-bottom:6px;">Challenge Title (FR)</label>
+                                <input type="text" id="challenge-title-fr" placeholder="ex: Boîte d'Engrenages Procédurale" style="padding:8px 12px; font-size:13px;">
+                            </div>
+                            <div class="form-group" style="margin-bottom:12px;">
+                                <label style="font-size:12px; margin-bottom:6px;">Description (EN)</label>
+                                <textarea id="challenge-desc-en" rows="3" placeholder="Challenge requirements in English..." style="padding:8px 12px; font-size:13px;"></textarea>
+                            </div>
+                            <div class="form-group" style="margin-bottom:12px;">
+                                <label style="font-size:12px; margin-bottom:6px;">Description (FR)</label>
+                                <textarea id="challenge-desc-fr" rows="3" placeholder="Requirements in French..." style="padding:8px 12px; font-size:13px;"></textarea>
+                            </div>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:16px;">
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label style="font-size:12px; margin-bottom:6px;">Expiry Date & Time</label>
+                                    <input type="datetime-local" id="challenge-expiry" style="padding:8px 12px; font-size:13px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color:#fff;">
+                                </div>
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label style="font-size:12px; margin-bottom:6px;">Reward</label>
+                                    <input type="text" id="challenge-reward" placeholder="e.g. 7 Days Premium" style="padding:8px 12px; font-size:13px;">
+                                </div>
+                            </div>
+                            <button onclick="adminPublishChallenge()" class="btn-submit" style="padding:10px; font-size:13px; background:linear-gradient(135deg,#8b5cf6,#06b6d4);">
+                                🚀 Publish Challenge
+                            </button>
+                        </div>
+                        
+                        <!-- Preview Panel -->
+                        <div style="display:flex; flex-direction:column; gap:16px;">
+                            <!-- Active Challenge Card -->
+                            <div style="background: rgba(139,92,246,0.04); border: 1px solid rgba(139,92,246,0.2); border-radius:16px; padding:20px;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                                    <span style="background: #8b5cf6; color: #fff; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 4px;">ACTIVE CHALLENGE</span>
+                                    <span id="active-challenge-timer" style="font-size:12px; color:#10b981; font-weight:700;">Counting down...</span>
+                                </div>
+                                <h4 id="active-challenge-title" style="margin: 0 0 8px; font-size: 16px; color: #fff;">None</h4>
+                                <p id="active-challenge-desc" style="color: #94a3b8; font-size: 13px; line-height: 1.4; margin: 0 0 16px;">No active challenge set.</p>
+                                <div style="display:flex; justify-content:space-between; font-size:12px; color:#64748b;">
+                                    <span>Reward: <strong id="active-challenge-reward" style="color:#fbbf24;">-</strong></span>
+                                    <span>Expires: <span id="active-challenge-expiry-date">-</span></span>
+                                </div>
+                            </div>
+                            
+                            <!-- Past Challenges List -->
+                            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius:16px; padding:20px; flex:1; display:flex; flex-direction:column; overflow:hidden;">
+                                <span style="font-weight:800; font-size:13px; color:#cbd5e1; margin-bottom:10px; display:block;">Challenges Log</span>
+                                <div id="admin-past-challenges-list" style="display:flex; flex-direction:column; gap:8px; overflow-y:auto; flex:1; max-height: 150px;">
+                                    <!-- Rendered dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                
+                <!-- Panel 3: Moderation Feed & Reporting -->
+                <div class="admin-sub-panel" id="admin-panel-feed" style="display:none;">
+                    <h3 style="font-size: 20px; font-weight: 800; margin-top: 0; margin-bottom: 20px; color: #fff;">Live Feed Moderation & Reporting</h3>
+                    
+                    <!-- Profanity Filter Toggle Card -->
+                    <div style="background: rgba(16,185,129,0.03); border: 1px solid rgba(16,185,129,0.2); border-radius: 16px; padding: 16px 20px; display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+                        <div>
+                            <span style="font-weight:800; font-size:14px; color:#10b981; display:block;">Automatic Profanity Filter</span>
+                            <span style="font-size:12px; color:#94a3b8;">Censures bad words (shit, merde, connard, etc.) automatically in posts & comments.</span>
+                        </div>
+                        <label class="switch-toggle" style="position:relative; display:inline-block; width:46px; height:24px; cursor: pointer;">
+                            <input type="checkbox" id="admin-profanity-checkbox" onchange="adminToggleProfanityFilter(this)" style="opacity:0; width:0; height:0;">
+                            <span class="slider-toggle-round" style="position:absolute; cursor:pointer; inset:0; background-color:#334155; border-radius:24px; transition:0.3s;"></span>
+                        </label>
+                    </div>
+                    
+                    <!-- Posts table -->
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius:16px; padding:18px; flex:1; display:flex; flex-direction:column; overflow:hidden;">
+                        <span style="font-weight:800; font-size:14px; color:#f43f5e; margin-bottom:12px; display:block;">Live Social Feed Posts</span>
+                        <div style="overflow-y:auto; flex:1; max-height: 250px;">
+                            <table style="width:100%; border-collapse:collapse; text-align:left; font-size:13px;">
+                                <thead>
+                                    <tr style="border-bottom:1px solid rgba(255,255,255,0.08); color:#94a3b8;">
+                                        <th style="padding:10px 8px;">Creator</th>
+                                        <th style="padding:10px 8px;">Caption Preview</th>
+                                        <th style="padding:10px 8px;">Reports</th>
+                                        <th style="padding:10px 8px; text-align:right;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-feed-table-body">
+                                    <!-- Rendered dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Panel 4: Analytics -->
+                <div class="admin-sub-panel" id="admin-panel-analytics" style="display:none;">
+                    <h3 style="font-size: 20px; font-weight: 800; margin-top: 0; margin-bottom: 20px; color: #fff;">Analytics & Metrics</h3>
+                    
+                    <!-- Stats Charts Grid -->
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:20px;">
+                        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius:16px; padding:15px; text-align:center;">
+                            <span style="font-weight:800; font-size:13px; color:#cbd5e1; display:block; margin-bottom:12px;">User Registrations Growth</span>
+                            <div style="height:150px; position:relative;"><canvas id="chart-registrations" style="width:100%; height:100%;"></canvas></div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius:16px; padding:15px; text-align:center;">
+                            <span style="font-weight:800; font-size:13px; color:#cbd5e1; display:block; margin-bottom:12px;">License Distribution (Free vs Premium)</span>
+                            <div style="height:150px; position:relative;"><canvas id="chart-licenses" style="width:100%; height:100%;"></canvas></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Top 3 Forked / Liked codes -->
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius:16px; padding:18px;">
+                        <span style="font-weight:800; font-size:14px; color:#3b82f6; margin-bottom:12px; display:block;">🔥 Top Popular 3D Models in Feed</span>
+                        <div id="admin-top-forks-list" style="display:flex; flex-direction:column; gap:8px;">
+                            <!-- Rendered dynamically -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Panel 5: AI Co-pilot -->
+                <div class="admin-sub-panel" id="admin-panel-copilot" style="display:none; flex: 1; flex-direction: column; height: 100%;">
+                    <h3 style="font-size: 20px; font-weight: 800; margin-top: 0; margin-bottom: 15px; color: #fff;">Admin-AI Co-pilot</h3>
+                    
+                    <div style="background: rgba(139,92,246,0.05); border: 1px solid rgba(139,92,246,0.2); border-radius:12px; padding:12px 16px; margin-bottom:12px; font-size:11px; color:#c4b5fd; line-height: 1.4;">
+                        💡 <strong>Supported Commands:</strong><br>
+                        • <code>create challenge: [Title] expires [Date YYYY-MM-DD HH:MM] reward [Reward]</code> / <code>creează provocare: [Titlu] expiră [Data]</code><br>
+                        • <code>ban user [Email]</code> / <code>blochează utilizatorul [Email]</code><br>
+                        • <code>unban user [Email]</code> / <code>deblochează utilizatorul [Email]</code><br>
+                        • <code>premium [Email] [Days] days</code> / <code>premium pentru [Email] pe [Days] zile</code>
+                    </div>
+                    
+                    <!-- Chat Console -->
+                    <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); border-radius:16px; padding:15px; flex:1; display:flex; flex-direction:column; overflow:hidden; min-height: 200px;">
+                        <div id="copilot-log-container" style="flex:1; overflow-y:auto; font-family:'JetBrains Mono',monospace; font-size:11px; display:flex; flex-direction:column; gap:6px; padding-bottom:10px; max-height: 200px;">
+                            <div style="color:#8b5cf6;">🤖 Co-pilot: Welcome, André. I am ready to process your admin commands.</div>
+                        </div>
+                        <div style="display:flex; gap:8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top:12px;">
+                            <input type="text" id="copilot-input" placeholder="Enter command or ask a question..." style="flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:#fff; padding:10px 14px; font-size:13px; font-family:'JetBrains Mono',monospace; outline:none;" onkeydown="handleCopilotKey(event)">
+                            <button onclick="submitCopilotCommand()" style="background:#8b5cf6; border:none; color:#fff; padding:10px 16px; border-radius:10px; font-size:13px; cursor:pointer; font-weight:700;">
+                                Run ⚡
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
             </div>
         </div>
     </div>
@@ -594,6 +754,50 @@
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
             }
+            
+            /* Admin Tab Sidebar and Toggle switch styling */
+            .admin-tab-btn {
+                background: none;
+                border: none;
+                outline: none;
+                color: #94a3b8;
+                cursor: pointer;
+                transition: 0.2s;
+            }
+            .admin-tab-btn:hover {
+                background: rgba(255,255,255,0.03);
+                color: #fff;
+            }
+            .admin-tab-btn.active {
+                background: rgba(139, 92, 246, 0.15) !important;
+                color: #c4b5fd !important;
+                border-left: 3px solid #8b5cf6 !important;
+                border-radius: 0 10px 10px 0 !important;
+            }
+            .admin-sidebar-btn:hover {
+                background: rgba(255,255,255,0.08) !important;
+            }
+            /* Toggle Switch */
+            .switch-toggle input:checked + .slider-toggle-round {
+                background-color: #10b981 !important;
+            }
+            .slider-toggle-round {
+                background-color: #334155;
+            }
+            .slider-toggle-round:before {
+                position: absolute;
+                content: "";
+                height: 16px;
+                width: 16px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                border-radius: 50%;
+                transition: 0.3s;
+            }
+            .switch-toggle input:checked + .slider-toggle-round:before {
+                transform: translateX(22px);
+            }
         </style>
         
         <div class="premium-portal-wrap">
@@ -820,12 +1024,10 @@
                     lsU.forEach(u => memU[u.email] = u);
                     uSnap.forEach(d => {
                         let data = d.data();
-                        // Merge fields or use firebase data
                         memU[data.email] = { ...memU[data.email], ...data };
                     });
                     const mergedU = Object.values(memU);
                     localStorage.setItem('ia_users', JSON.stringify(mergedU));
-                    // Upload any that aren't in Firebase
                     for(let u of mergedU) {
                         try { await db.collection('users').doc(u.email).set(u); } catch(e){}
                     }
@@ -844,7 +1046,6 @@
                         let h = m.date + '_' + m.email;
                         if (!hashes.has(h)) { memM.push(m); hashes.add(h); }
                     });
-                    // Sort descending date
                     memM.sort((a,b) => b.date - a.date);
                     localStorage.setItem('ia_messages', JSON.stringify(memM));
                     for(let m of memM) {
@@ -866,10 +1067,10 @@
                         try { await db.collection('premium').doc(p.email).set(p); } catch(e){}
                     }
                     
-                    if (document.getElementById('firebase-status')) document.getElementById('firebase-status').innerHTML = 'Firebase: <span style="color:#10b981">Connecté (Test Mode) ✅</span>';
+                    if (document.getElementById('firebase-status')) document.getElementById('firebase-status').innerHTML = 'Firebase: <span style="color:#10b981">Connected ✅</span>';
                 } catch(e) {
                     console.log("Firebase sync warning:", e);
-                    if (document.getElementById('firebase-status')) document.getElementById('firebase-status').innerHTML = 'Firebase: <span style="color:#ef4444">Erreur Réseau/Permissions ❌</span>';
+                    if (document.getElementById('firebase-status')) document.getElementById('firebase-status').innerHTML = 'Firebase: <span style="color:#ef4444">Error Syncing ❌</span>';
                 }
             }
 
@@ -884,17 +1085,26 @@
                 btn.disabled = true;
                 btn.textContent = '⏳...';
 
-                // Sync first non-blocking
                 syncFirebaseWithLocal().catch(e=>console.log(e));
 
                 setTimeout(async () => {
                     let users = JSON.parse(localStorage.getItem('ia_users') || '[]');
                     const isAdmin = email === 'andart1174@gmail.com';
 
+                    // Check if banned first in firebase
+                    try {
+                        const fbUserDoc = await db.collection('users').doc(email).get();
+                        if (fbUserDoc.exists && fbUserDoc.data().banned === true) {
+                            errBox.textContent = currentLang === 'en' ? "Your account has been banned." : "Votre compte a été banni.";
+                            errBox.style.display = 'block';
+                            btn.disabled = false;
+                            btn.textContent = isRecoveryMode ? "Sauvegarder" : "Connexion";
+                            return;
+                        }
+                    } catch(err) { console.log(err); }
+
                     if (isRecoveryMode) {
                         let userToReset = users.find(u => u.email === email);
-                        
-                        // Absolute admin recognition bypass in recovery
                         if (!userToReset && isAdmin) {
                             userToReset = { email: email, password: password, name: 'Admin', role: 'Admin', createdAt: Date.now() };
                             users.push(userToReset);
@@ -904,7 +1114,6 @@
                             userToReset.password = password;
                             if (isAdmin && userToReset.role !== 'Admin') userToReset.role = 'Admin';
                             
-                            // Save to Firebase & Local
                             try {
                                 await db.collection('users').doc(userToReset.email).set(userToReset);
                             } catch(e) { console.log(e); }
@@ -931,7 +1140,6 @@
                             const finalName = name || email.split('@')[0];
                             const newUser = { email, password, name: finalName, role: isAdmin ? 'Admin' : 'User', createdAt: Date.now() };
                             
-                            // Save to Firebase & Local
                             try {
                                 await db.collection('users').doc(newUser.email).set(newUser);
                             } catch(e) { console.log(e); }
@@ -939,7 +1147,6 @@
                             users.push(newUser);
                             localStorage.setItem('ia_users', JSON.stringify(users));
                             
-                            // Auto login
                             const sessionUser = { email: newUser.email, name: newUser.name, role: newUser.role, loginAt: Date.now() };
                             localStorage.setItem('genius_session', JSON.stringify(sessionUser));
                             errBox.style.display = 'none';
@@ -948,10 +1155,7 @@
                             if(isAdmin) setTimeout(() => openModal('admin'), 300);
                         }
                     } else {
-                        // Login Check
                         let match = users.find(u => u.email === email && u.password === password);
-                        
-                        // Fallback for legacy hardcoded admins
                         if (!match) {
                             const LEGACY_ADMINS = [
                                 { email: 'admin@ia-codestudio.com', password: 'admin2026', name: 'André Admin', role: 'Admin' },
@@ -961,7 +1165,6 @@
                         }
                         
                         if (match) {
-                            // Ensure the hardcoded admin overrides role properly if needed later
                             if (isAdmin && match.role !== 'Admin') {
                                 match.role = 'Admin';
                                 localStorage.setItem('ia_users', JSON.stringify(users));
@@ -980,21 +1183,15 @@
                     }
                     
                     btn.disabled = false;
-                    btn.textContent = isRecoveryMode ? (translations[currentLang].recovery_btn || "Sauvegarder et Connecter") : 
+                    btn.textContent = isRecoveryMode ? (translations[currentLang].recovery_btn || "Sauvegarder") : 
                                       isSignUpMode ? (translations[currentLang].signup_btn || "S'inscrire") : 
                                       (translations[currentLang].login_btn || "Connexion");
                 }, 600);
             }
 
             function adminLog(msg) {
-                const log = document.getElementById('admin-log');
-                if (!log) return;
-                const entry = document.createElement('span');
-                const time = new Date().toLocaleTimeString('fr-FR');
-                entry.textContent = `[ ${time} ] ${msg}`;
-                entry.style.color = '#8b5cf6';
-                log.appendChild(entry);
-                log.scrollTop = log.scrollHeight;
+                console.log("[ADMIN LOG]:", msg);
+                logCopilotMessage(`⚙️ ${msg}`, '#94a3b8');
             }
 
             function getPremiumUsers() {
@@ -1006,89 +1203,6 @@
                 localStorage.setItem('ia_premium_users', JSON.stringify(list));
             }
 
-            function renderPremiumUsersList() {
-                const list = getPremiumUsers();
-                const container = document.getElementById('premium-users-list');
-                const noMsg = document.getElementById('no-premium-msg');
-                if (!container) return;
-
-                // Remove all user rows (keep the no-msg element)
-                Array.from(container.children).forEach(c => {
-                    if (c.id !== 'no-premium-msg') c.remove();
-                });
-
-                if (list.length === 0) {
-                    if (noMsg) noMsg.style.display = 'block';
-                    return;
-                }
-                if (noMsg) noMsg.style.display = 'none';
-
-                list.forEach((u, idx) => {
-                    const now = Date.now();
-                    const expiry = u.addedAt + u.days * 86400000;
-                    const daysLeft = Math.ceil((expiry - now) / 86400000);
-                    const isExpired = daysLeft <= 0 && u.days !== 9999;
-                    const labelDays = u.days === 9999 ? 'Illimité' : (isExpired ? 'Expiré' : daysLeft + ' jours restants');
-                    const colorExpiry = isExpired ? '#f87171' : (u.days === 9999 ? '#06b6d4' : '#10b981');
-
-                    const row = document.createElement('div');
-                    row.style = 'display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.03); border:1px solid rgba(245,158,11,0.12); border-radius:10px; padding:10px 14px; gap:10px;';
-                    row.innerHTML = `
-                        <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:0;">
-                            <span style="font-size:1.1rem;">💎</span>
-                            <div style="min-width:0;">
-                                <div style="font-size:13px; font-weight:600; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${u.email}</div>
-                                <div style="font-size:11px; color:${colorExpiry};">${labelDays}</div>
-                            </div>
-                        </div>
-                        <button onclick="adminRemovePremiumUser(${idx})"
-                            style="background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.25); color:#f87171; padding:6px 12px; border-radius:8px; cursor:pointer; font-size:12px; font-weight:700; white-space:nowrap; transition:all 0.2s; flex-shrink:0;"
-                            onmouseover="this.style.background='rgba(239,68,68,0.2)'" onmouseout="this.style.background='rgba(239,68,68,0.1)'">
-                            ✕ Retirer
-                        </button>
-                    `;
-                    container.appendChild(row);
-                });
-            }
-
-            function renderAdminMessages() {
-                const list = JSON.parse(localStorage.getItem('ia_messages') || '[]');
-                const container = document.getElementById('admin-messages-list');
-                const noMsg = document.getElementById('no-messages-msg');
-                if (!container) return;
-
-                Array.from(container.children).forEach(c => {
-                    if (c.id !== 'no-messages-msg') c.remove();
-                });
-
-                if (list.length === 0) {
-                    if (noMsg) noMsg.style.display = 'block';
-                    return;
-                }
-                if (noMsg) noMsg.style.display = 'none';
-
-                // Sort by date descending
-                list.sort((a,b) => b.date - a.date).forEach((msg, idx) => {
-                    const dateObj = new Date(msg.date);
-                    const formattedDate = dateObj.toLocaleDateString() + ' ' + dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                    
-                    const row = document.createElement('div');
-                    row.style = 'background:rgba(255,255,255,0.03); border:1px solid rgba(16,185,129,0.12); border-radius:10px; padding:12px;';
-                    row.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                            <span style="font-weight:700; font-size:13px; color:#fff;">${msg.name}</span>
-                            <span style="font-size:11px; color:#94a3b8;">${formattedDate}</span>
-                        </div>
-                        <div style="font-size:11px; color:#10b981; margin-bottom:8px;">${msg.email}</div>
-                        <div style="font-size:13px; color:#cbd5e1; line-height:1.4; word-break:break-word; margin-bottom:10px;">
-                            ${msg.message.replace(/</g, "&lt;")}
-                        </div>
-                        <a href="mailto:${msg.email}?subject=RE: IA Code Studio" style="display:inline-block; background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.3); color:#60a5fa; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:700; text-decoration:none;">↩ Répondre par E-mail</a>
-                    `;
-                    container.appendChild(row);
-                });
-            }
-
             async function adminAddPremiumUser() {
                 const emailInput = document.getElementById('premium-user-email');
                 const daysSelect = document.getElementById('premium-duration');
@@ -1096,7 +1210,7 @@
                 const email = emailInput.value.trim().toLowerCase();
                 const days = parseInt(daysSelect.value);
                 if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                    adminLog('⚠️ Email invalide.');
+                    adminLog('⚠️ Email address format invalid.');
                     emailInput.focus();
                     return;
                 }
@@ -1106,10 +1220,10 @@
                 
                 if (existing >= 0) {
                     list[existing] = pData;
-                    adminLog('🔄 Premium mis à jour pour : ' + email + ' (' + (days === 9999 ? 'Illimité' : days + ' jours') + ')');
+                    adminLog('Mis à jour premium pour: ' + email);
                 } else {
                     list.push(pData);
-                    adminLog('✅ Premium activé pour : ' + email + ' (' + (days === 9999 ? 'Illimité' : days + ' jours') + ')');
+                    adminLog('Activé premium pour: ' + email);
                 }
                 
                 try {
@@ -1118,136 +1232,678 @@
 
                 savePremiumUsers(list);
                 emailInput.value = '';
-                renderPremiumUsersList();
-                refreshAdminStats();
-            }
-
-            async function adminRemovePremiumUser(idx) {
-                const list = getPremiumUsers();
-                if (idx < 0 || idx >= list.length) return;
-                const removed = list[idx];
-                list.splice(idx, 1);
-                
-                try {
-                    await db.collection('premium').doc(removed.email).delete();
-                } catch(e) { console.log('Firebase Sync Error', e); }
-
-                savePremiumUsers(list);
-                adminLog('🗑️ Premium retiré pour : ' + removed.email);
-                renderPremiumUsersList();
                 refreshAdminStats();
             }
 
             async function refreshAdminStats() {
-                // Immediate local render
-                _executeRender('init');
-
-                // Background sync
-                if(!window._isSyncingStats) {
-                    window._isSyncingStats = true;
-                    try {
-                        await syncFirebaseWithLocal();
-                        _executeRender('post-sync');
-                        // Refresh premium button after sync
-                        if(typeof checkPremiumPortal === 'function') checkPremiumPortal();
-                    } finally {
-                        window._isSyncingStats = false;
+                try {
+                    const premiumUsers = getPremiumUsers();
+                    const allUsers = JSON.parse(localStorage.getItem('ia_users') || '[]');
+                    
+                    document.getElementById('stat-users-count').textContent = allUsers.length;
+                    const activePremiumCount = premiumUsers.filter(u => {
+                        if (u.days === 9999) return true;
+                        const expiryDate = (u.addedAt || 0) + (u.days || 0) * 86400000;
+                        return expiryDate > Date.now();
+                    }).length;
+                    document.getElementById('stat-premium-count').textContent = activePremiumCount;
+                    
+                    const now = Date.now();
+                    const newUsersToday = allUsers.filter(u => u.createdAt && (now - u.createdAt) < 86400000).length;
+                    
+                    const session = localStorage.getItem('genius_session');
+                    if (session) {
+                        try {
+                            const user = JSON.parse(session);
+                            const welcomeEls = document.querySelectorAll('#admin-welcome-msg');
+                            welcomeEls.forEach(el => el.textContent = `Bienvenue, ${user.name} 👑`);
+                        } catch(e) {}
                     }
-                }
-
-                function _executeRender(label) {
-                    try {
-                        const premiumUsers = getPremiumUsers();
-                        const allUsers = JSON.parse(localStorage.getItem('ia_users') || '[]');
-                        
-                        // Critical fix: Ensure stats update even if empty
-                        document.getElementById('stat-users-count').textContent = allUsers.length;
-                        document.getElementById('stat-premium-count').textContent = premiumUsers.filter(u => {
-                            if (u.days === 9999) return true;
-                            const expiryDate = (u.addedAt || 0) + (u.days || 0) * 86400000;
-                            return expiryDate > Date.now();
-                        }).length;
-                        
-                        const now = Date.now();
-                        const newUsersToday = allUsers.filter(u => u.createdAt && (now - u.createdAt) < 86400000).length;
-                        document.getElementById('stat-today').textContent = newUsersToday;
-
-                        // Identity update
-                        const session = localStorage.getItem('genius_session');
-                        if (session) {
-                            try {
-                                const user = JSON.parse(session);
-                                const welcomeEl = document.getElementById('admin-welcome-msg');
-                                if (welcomeEl) welcomeEl.textContent = `Bienvenue, ${user.name} 👑`;
-                            } catch(e) {}
+                    
+                    renderAllUsersAdmin();
+                    loadChallengesTab();
+                    loadFeedModerationTab();
+                    
+                    // Update global settings checkbox
+                    db.collection('admin_config').doc('global').get().then(doc => {
+                        if (doc.exists) {
+                            const checkbox = document.getElementById('admin-profanity-checkbox');
+                            if (checkbox) checkbox.checked = doc.data().profanityFilter;
                         }
-                        
-                        renderPremiumUsersList();
-                        renderAdminMessages();
-                        renderAllUsersAdmin();
-                        
-                        if(label) console.log(`Render complete: ${label}`);
-                    } catch(e) {
-                         document.getElementById('stat-users-count').textContent = "ERR";
-                         adminLog(`❌ Erreur rendu (${label}): ` + e.toString());
-                    }
+                    });
+                } catch(e) {
+                     console.log(e);
                 }
             }
 
             function renderAllUsersAdmin() {
                 const list = JSON.parse(localStorage.getItem('ia_users') || '[]');
-                const container = document.getElementById('admin-all-users-list');
-                const noMsg = document.getElementById('no-users-msg');
+                const container = document.getElementById('admin-users-table-body');
                 if (!container) return;
-
-                Array.from(container.children).forEach(c => {
-                    if(c.id !== 'no-users-msg') c.remove();
-                });
-
-                if(list.length === 0) {
-                    if(noMsg) noMsg.style.display = 'block';
+                
+                container.innerHTML = '';
+                
+                if (list.length === 0) {
+                    container.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#64748b; padding:20px; font-style:italic;">No users found.</td></tr>`;
                     return;
                 }
-                if(noMsg) noMsg.style.display = 'none';
-
-                // Sort newest first
+                
+                let bannedCount = 0;
+                
                 list.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0)).forEach(u => {
-                    const dateStr = u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'Ancien';
                     const isAdm = u.role === 'Admin';
-                    const badge = isAdm ? `<span style="background:rgba(139,92,246,0.2); color:#c4b5fd; padding:3px 6px; border-radius:6px; font-size:10px; font-weight:700;">Admin</span>` : 
-                                          `<span style="background:rgba(148,163,184,0.1); color:#94a3b8; padding:3px 6px; border-radius:6px; font-size:10px; font-weight:700;">User</span>`;
+                    const isBanned = u.banned === true;
+                    if (isBanned) bannedCount++;
                     
-                    const el = document.createElement('div');
-                    el.style = 'background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:12px; display:flex; flex-direction:column; gap:6px; transition:border-color 0.2s;';
-                    el.onmouseover = () => el.style.borderColor = 'rgba(59,130,246,0.3)';
-                    el.onmouseout = () => el.style.borderColor = 'rgba(255,255,255,0.06)';
+                    const premiumUsers = getPremiumUsers();
+                    const premiumRec = premiumUsers.find(p => p.email.toLowerCase() === u.email.toLowerCase());
+                    let isPremium = false;
+                    let premiumLabel = "Free";
+                    if (premiumRec) {
+                        const expiry = premiumRec.addedAt + premiumRec.days * 86400000;
+                        if (premiumRec.days === 9999 || expiry > Date.now()) {
+                            isPremium = true;
+                            premiumLabel = premiumRec.days === 9999 ? "Premium (Lifetime)" : `Premium (${Math.ceil((expiry - Date.now())/86400000)}d left)`;
+                        }
+                    }
                     
-                    el.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-weight:700; font-size:13px; color:#fff; word-break:break-all;">${u.name}</span>
-                            ${badge}
-                        </div>
-                        <div style="font-size:11px; color:#94a3b8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${u.email}">
-                            ${u.email}
-                        </div>
-                        <div style="font-size:10px; color:#64748b; margin-top:2px;">Inscrit le: ${dateStr}</div>
+                    const roleBadge = isAdm ? `<span style="background:rgba(139,92,246,0.2); color:#c4b5fd; padding:2px 6px; border-radius:4px; font-size:10px; font-weight:700;">Admin</span>` : 
+                                              `<span style="background:rgba(148,163,184,0.1); color:#94a3b8; padding:2px 6px; border-radius:4px; font-size:10px; font-weight:700;">User</span>`;
+                    
+                    const planBadge = isPremium ? `<span style="background:rgba(245,158,11,0.2); color:#fbbf24; padding:2px 6px; border-radius:4px; font-size:10px; font-weight:700;">${premiumLabel}</span>` : 
+                                                 `<span style="background:rgba(148,163,184,0.1); color:#94a3b8; padding:2px 6px; border-radius:4px; font-size:10px; font-weight:700;">Free</span>`;
+                    
+                    const tr = document.createElement('tr');
+                    tr.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+                    
+                    const banButtonText = isBanned ? "Unban" : "Ban";
+                    const banButtonColor = isBanned ? "#10b981" : "#ef4444";
+                    const banButtonBg = isBanned ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)";
+                    const banButtonBorder = isBanned ? "rgba(16,185,129,0.3)" : "rgba(239,68,68,0.3)";
+                    
+                    const premButtonText = isPremium ? "Revoke 💎" : "Grant 💎";
+                    const premButtonColor = isPremium ? "#f87171" : "#fbbf24";
+                    const premButtonBg = isPremium ? "rgba(239,68,68,0.1)" : "rgba(245,158,11,0.1)";
+                    const premButtonBorder = isPremium ? "rgba(239,68,68,0.3)" : "rgba(245,158,11,0.3)";
+                    
+                    tr.innerHTML = `
+                        <td style="padding:10px 8px; font-weight:700; color:#fff;">${u.name}</td>
+                        <td style="padding:10px 8px; color:#cbd5e1;">${u.email}</td>
+                        <td style="padding:10px 8px;">
+                            <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start;">
+                                ${roleBadge}
+                                ${planBadge}
+                            </div>
+                        </td>
+                        <td style="padding:10px 8px; text-align:right;">
+                            <div style="display:flex; gap:6px; justify-content:flex-end;">
+                                <button onclick="adminToggleBan('${u.email}', ${isBanned})" style="background:${banButtonBg}; border:1px solid ${banButtonBorder}; color:${banButtonColor}; padding:4px 8px; border-radius:6px; font-size:11px; cursor:pointer; font-weight:700;">
+                                    ${banButtonText}
+                                </button>
+                                <button onclick="adminTogglePremiumLink('${u.email}', ${isPremium})" style="background:${premButtonBg}; border:1px solid ${premButtonBorder}; color:${premButtonColor}; padding:4px 8px; border-radius:6px; font-size:11px; cursor:pointer; font-weight:700;">
+                                    ${premButtonText}
+                                </button>
+                            </div>
+                        </td>
                     `;
-                    container.appendChild(el);
+                    container.appendChild(tr);
+                });
+                
+                const statBanned = document.getElementById('stat-banned-count');
+                if (statBanned) statBanned.textContent = bannedCount;
+            }
+
+            async function adminToggleBan(email, isCurrentlyBanned) {
+                const action = isCurrentlyBanned ? "unban" : "ban";
+                if (!confirm(`Are you sure you want to ${action} ${email}?`)) return;
+                
+                try {
+                    await db.collection('users').doc(email).update({ banned: !isCurrentlyBanned });
+                    adminLog(`User ${email} has been ${isCurrentlyBanned ? 'unbanned' : 'banned'}`);
+                    
+                    let users = JSON.parse(localStorage.getItem('ia_users') || '[]');
+                    let idx = users.findIndex(u => u.email.toLowerCase() === email.toLowerCase());
+                    if (idx >= 0) {
+                        users[idx].banned = !isCurrentlyBanned;
+                        localStorage.setItem('ia_users', JSON.stringify(users));
+                    }
+                    
+                    refreshAdminStats();
+                } catch(e) {
+                    console.error("Error banning user:", e);
+                    adminLog("❌ Error toggling ban: " + e.message);
+                }
+            }
+            
+            async function adminTogglePremiumLink(email, isCurrentlyPremium) {
+                if (isCurrentlyPremium) {
+                    if (!confirm(`Revoke premium access for ${email}?`)) return;
+                    let list = getPremiumUsers();
+                    let idx = list.findIndex(u => u.email.toLowerCase() === email.toLowerCase());
+                    if (idx >= 0) {
+                        const removed = list[idx];
+                        list.splice(idx, 1);
+                        savePremiumUsers(list);
+                        try {
+                            await db.collection('premium').doc(removed.email).delete();
+                            adminLog(`Premium access revoked for: ${email}`);
+                            refreshAdminStats();
+                        } catch(e) {
+                            console.error(e);
+                        }
+                    }
+                } else {
+                    document.getElementById('premium-user-email').value = email;
+                    document.getElementById('premium-user-email').focus();
+                    adminLog(`Enter duration and click Grant Premium for ${email}`);
+                }
+            }
+
+            async function adminToggleProfanityFilter(checkbox) {
+                const active = checkbox.checked;
+                try {
+                    await db.collection('admin_config').doc('global').set({ profanityFilter: active });
+                    adminLog(`Profanity Filter toggled: ${active ? 'ON' : 'OFF'}`);
+                } catch(e) {
+                    console.error("Error toggling profanity filter:", e);
+                    adminLog("❌ Error: " + e.message);
+                }
+            }
+
+            async function adminPublishChallenge() {
+                const titleEn = document.getElementById('challenge-title-en').value.trim();
+                const titleFr = document.getElementById('challenge-title-fr').value.trim();
+                const descEn = document.getElementById('challenge-desc-en').value.trim();
+                const descFr = document.getElementById('challenge-desc-fr').value.trim();
+                const expiryInput = document.getElementById('challenge-expiry').value;
+                const reward = document.getElementById('challenge-reward').value.trim();
+                
+                if (!titleEn || !titleFr || !descEn || !descFr || !expiryInput || !reward) {
+                    alert("Please fill all fields for the challenge.");
+                    return;
+                }
+                
+                const expiryMs = new Date(expiryInput).getTime();
+                const newChallenge = {
+                    id: String(Date.now()),
+                    title_en: titleEn,
+                    title_fr: titleFr,
+                    desc_en: descEn,
+                    desc_fr: descFr,
+                    expiry: expiryMs,
+                    reward: reward,
+                    createdAt: Date.now()
+                };
+                
+                try {
+                    await db.collection('devsocial_challenges').doc(newChallenge.id).set(newChallenge);
+                    adminLog(`Challenge published: ${titleEn}`);
+                    
+                    document.getElementById('challenge-title-en').value = '';
+                    document.getElementById('challenge-title-fr').value = '';
+                    document.getElementById('challenge-desc-en').value = '';
+                    document.getElementById('challenge-desc-fr').value = '';
+                    document.getElementById('challenge-expiry').value = '';
+                    document.getElementById('challenge-reward').value = '';
+                    
+                    loadChallengesTab();
+                } catch(e) {
+                    console.error("Error publishing challenge:", e);
+                    adminLog("❌ Error: " + e.message);
+                }
+            }
+            
+            let challengeTimerInterval = null;
+            function loadChallengesTab() {
+                db.collection('devsocial_challenges').orderBy('createdAt', 'desc').limit(1).get().then(snap => {
+                    if (!snap.empty) {
+                        let active = snap.docs[0].data();
+                        document.getElementById('active-challenge-title').textContent = currentLang === 'fr' ? active.title_fr : active.title_en;
+                        document.getElementById('active-challenge-desc').textContent = currentLang === 'fr' ? active.desc_fr : active.desc_en;
+                        document.getElementById('active-challenge-reward').textContent = active.reward;
+                        
+                        const expDate = new Date(active.expiry);
+                        document.getElementById('active-challenge-expiry-date').textContent = expDate.toLocaleDateString() + ' ' + expDate.toLocaleTimeString();
+                        
+                        if (challengeTimerInterval) clearInterval(challengeTimerInterval);
+                        
+                        function updateTimer() {
+                            const diff = active.expiry - Date.now();
+                            const timerEl = document.getElementById('active-challenge-timer');
+                            if (!timerEl) return;
+                            if (diff <= 0) {
+                                timerEl.textContent = "EXPIRED";
+                                timerEl.style.color = "#ef4444";
+                                clearInterval(challengeTimerInterval);
+                            } else {
+                                const h = Math.floor(diff / 3600000);
+                                const m = Math.floor((diff % 3600000) / 60000);
+                                const s = Math.floor((diff % 60000) / 1000);
+                                timerEl.textContent = `${h}h ${m}m ${s}s left`;
+                                timerEl.style.color = "#10b981";
+                            }
+                        }
+                        updateTimer();
+                        challengeTimerInterval = setInterval(updateTimer, 1000);
+                    }
+                });
+                
+                db.collection('devsocial_challenges').orderBy('createdAt', 'desc').limit(5).get().then(snap => {
+                    const container = document.getElementById('admin-past-challenges-list');
+                    if (!container) return;
+                    container.innerHTML = '';
+                    snap.forEach(doc => {
+                        const c = doc.data();
+                        const row = document.createElement('div');
+                        row.style = 'background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:10px; padding:10px; font-size:12px; display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;';
+                        row.innerHTML = `
+                            <div>
+                                <span style="font-weight:700; color:#fff;">${currentLang === 'fr' ? c.title_fr : c.title_en}</span>
+                                <div style="font-size:10px; color:#64748b;">Reward: ${c.reward}</div>
+                            </div>
+                            <button onclick="adminDeleteChallenge('${c.id}')" style="background:none; border:none; color:#f87171; cursor:pointer;" title="Delete">✕</button>
+                        `;
+                        container.appendChild(row);
+                    });
+                });
+            }
+            
+            async function adminDeleteChallenge(id) {
+                if (!confirm("Delete this challenge?")) return;
+                try {
+                    await db.collection('devsocial_challenges').doc(id).delete();
+                    adminLog("Challenge deleted.");
+                    loadChallengesTab();
+                } catch(e) {
+                    console.error("Error deleting challenge:", e);
+                }
+            }
+
+            function loadFeedModerationTab() {
+                db.collection('devsocial_posts').orderBy('createdAt', 'desc').get().then(snap => {
+                    const container = document.getElementById('admin-feed-table-body');
+                    if (!container) return;
+                    container.innerHTML = '';
+                    
+                    if (snap.empty) {
+                        container.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#64748b; padding:20px; font-style:italic;">No posts found.</td></tr>`;
+                        return;
+                    }
+                    
+                    snap.forEach(doc => {
+                        const p = doc.data();
+                        const isReported = p.reports && p.reports > 0;
+                        
+                        const tr = document.createElement('tr');
+                        tr.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+                        if (isReported) {
+                            tr.style.background = 'rgba(239,68,68,0.03)';
+                        }
+                        
+                        const reportsVal = isReported ? `<span style="color:#ef4444; font-weight:900;">⚠️ ${p.reports} reports</span>` : `<span style="color:#64748b;">0</span>`;
+                        const captionPreview = p.caption_en || p.caption || p.caption_fr || '';
+                        
+                        tr.innerHTML = `
+                            <td style="padding:10px 8px; font-weight:700; color:#fff;">${p.user}</td>
+                            <td style="padding:10px 8px; color:#cbd5e1; max-width:250px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${captionPreview.replace(/"/g, '&quot;')}">${captionPreview}</td>
+                            <td style="padding:10px 8px;">${reportsVal}</td>
+                            <td style="padding:10px 8px; text-align:right;">
+                                <div style="display:flex; gap:6px; justify-content:flex-end;">
+                                    ${isReported ? `
+                                    <button onclick="adminClearReports('${p.id}')" style="background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); color:#10b981; padding:4px 8px; border-radius:6px; font-size:11px; cursor:pointer; font-weight:700;">
+                                        Clear Flags
+                                    </button>
+                                    ` : ''}
+                                    <button onclick="adminDeletePost('${p.id}')" style="background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:#f87171; padding:4px 8px; border-radius:6px; font-size:11px; cursor:pointer; font-weight:700;">
+                                        Delete
+                                    </button>
+                                </div>
+                            </td>
+                        `;
+                        container.appendChild(tr);
+                    });
+                });
+            }
+            
+            async function adminClearReports(postId) {
+                try {
+                    await db.collection('devsocial_posts').doc(String(postId)).update({ reports: 0 });
+                    adminLog(`Flags cleared for post ${postId}`);
+                    loadFeedModerationTab();
+                } catch(e) {
+                    console.error("Error clearing flags:", e);
+                }
+            }
+            
+            async function adminDeletePost(postId) {
+                if (!confirm("Are you sure you want to delete this post globally?")) return;
+                try {
+                    await db.collection('devsocial_posts').doc(String(postId)).delete();
+                    adminLog(`Post ${postId} deleted globally.`);
+                    loadFeedModerationTab();
+                } catch(e) {
+                    console.error("Error deleting post:", e);
+                }
+            }
+
+            let regChart = null;
+            let licenseChart = null;
+            
+            function renderAnalyticsCharts() {
+                const allUsers = JSON.parse(localStorage.getItem('ia_users') || '[]');
+                const premiumUsers = getPremiumUsers();
+                
+                const regDates = {};
+                const now = Date.now();
+                for (let i = 6; i >= 0; i--) {
+                    const dateStr = new Date(now - i * 24 * 3600 * 1000).toLocaleDateString([], {month: 'short', day: 'numeric'});
+                    regDates[dateStr] = 0;
+                }
+                
+                allUsers.forEach(u => {
+                    if (u.createdAt) {
+                        const dateStr = new Date(u.createdAt).toLocaleDateString([], {month: 'short', day: 'numeric'});
+                        if (regDates[dateStr] !== undefined) {
+                            regDates[dateStr]++;
+                        }
+                    }
+                });
+                
+                const labels = Object.keys(regDates);
+                const regData = Object.values(regDates);
+                
+                const ctxReg = document.getElementById('chart-registrations');
+                if (ctxReg) {
+                    if (regChart) regChart.destroy();
+                    const chartCtx = ctxReg.getContext('2d');
+                    const gradient = chartCtx.createLinearGradient(0, 0, 0, 150);
+                    gradient.addColorStop(0, 'rgba(139, 92, 246, 0.4)');
+                    gradient.addColorStop(1, 'rgba(139, 92, 246, 0)');
+                    
+                    regChart = new Chart(ctxReg, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'New Registrations',
+                                data: regData,
+                                borderColor: '#8b5cf6',
+                                backgroundColor: gradient,
+                                borderWidth: 3,
+                                fill: true,
+                                tension: 0.4,
+                                pointBackgroundColor: '#06b6d4',
+                                pointBorderColor: '#fff',
+                                pointHoverRadius: 6
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { display: false } },
+                            scales: {
+                                x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+                                y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', stepSize: 1 } }
+                            }
+                        }
+                    });
+                }
+                
+                const premiumCount = premiumUsers.filter(u => {
+                    if (u.days === 9999) return true;
+                    const expiry = (u.addedAt || 0) + (u.days || 0) * 86400000;
+                    return expiry > Date.now();
+                }).length;
+                const freeCount = Math.max(0, allUsers.length - premiumCount);
+                
+                const ctxLic = document.getElementById('chart-licenses');
+                if (ctxLic) {
+                    if (licenseChart) licenseChart.destroy();
+                    licenseChart = new Chart(ctxLic, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Free Tier', 'Premium Members'],
+                            datasets: [{
+                                data: [freeCount, premiumCount],
+                                backgroundColor: ['rgba(148, 163, 184, 0.6)', '#fbbf24'],
+                                borderColor: 'rgba(15, 23, 42, 0.8)',
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: { color: '#94a3b8', boxWidth: 12, font: { size: 11 } }
+                                }
+                            },
+                            cutout: '65%'
+                        }
+                    });
+                }
+                
+                db.collection('devsocial_posts').orderBy('likes', 'desc').limit(3).get().then(snap => {
+                    const listContainer = document.getElementById('admin-top-forks-list');
+                    if (!listContainer) return;
+                    listContainer.innerHTML = '';
+                    
+                    if (snap.empty) {
+                        listContainer.innerHTML = `<div style="text-align:center; color:#64748b; font-size:12px; font-style:italic;">No active posts to rank.</div>`;
+                        return;
+                    }
+                    
+                    let rank = 1;
+                    snap.forEach(doc => {
+                        const post = doc.data();
+                        const card = document.createElement('div');
+                        card.style = 'display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.05); border-radius:10px; padding:10px 14px; font-size:13px; margin-bottom: 6px;';
+                        
+                        let rankIcon = rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉';
+                        card.innerHTML = `
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <span style="font-size:1.2rem;">${rankIcon}</span>
+                                <div>
+                                    <span style="font-weight:700; color:#fff;">@${post.user}</span>
+                                    <span style="color:#64748b; font-size:11px; margin-left:6px;">(${post.preset})</span>
+                                </div>
+                            </div>
+                            <div style="color:#fbbf24; font-weight:700; font-size:12px;">❤️ ${post.likes || 0} Likes</div>
+                        `;
+                        listContainer.appendChild(card);
+                        rank++;
+                    });
                 });
             }
 
-            function adminResetPremium() {
-                localStorage.removeItem('ia_premium_sub_date');
-                adminLog('🔄 Premium (session locale) réinitialisé.');
-                refreshAdminStats();
-                checkPremiumPortal();
+            function handleCopilotKey(e) {
+                if (e.key === 'Enter') submitCopilotCommand();
+            }
+            
+            async function submitCopilotCommand() {
+                const inputEl = document.getElementById('copilot-input');
+                const cmd = inputEl.value.trim();
+                if (!cmd) return;
+                
+                inputEl.value = '';
+                logCopilotMessage(`> ${cmd}`, '#cbd5e1');
+                
+                const cmdLower = cmd.toLowerCase();
+                
+                if (cmdLower.startsWith('ban user ') || cmdLower.startsWith('blochează utilizatorul ')) {
+                    const email = cmd.substring(cmdLower.includes('ban user ') ? 9 : 23).trim().toLowerCase();
+                    if (validateEmail(email)) {
+                        try {
+                            await db.collection('users').doc(email).update({ banned: true });
+                            let users = JSON.parse(localStorage.getItem('ia_users') || '[]');
+                            let idx = users.findIndex(u => u.email.toLowerCase() === email);
+                            if (idx >= 0) {
+                                users[idx].banned = true;
+                                localStorage.setItem('ia_users', JSON.stringify(users));
+                            }
+                            logCopilotMessage(`🤖 Co-pilot: Banned user ${email} successfully.`, '#10b981');
+                            refreshAdminStats();
+                        } catch(e) {
+                            logCopilotMessage(`🤖 Co-pilot Error: ${e.message}`, '#ef4444');
+                        }
+                    } else {
+                        logCopilotMessage(`🤖 Co-pilot: Invalid email address.`, '#ef4444');
+                    }
+                }
+                else if (cmdLower.startsWith('unban user ') || cmdLower.startsWith('deblochează utilizatorul ')) {
+                    const email = cmd.substring(cmdLower.includes('unban user ') ? 11 : 25).trim().toLowerCase();
+                    if (validateEmail(email)) {
+                        try {
+                            await db.collection('users').doc(email).update({ banned: false });
+                            let users = JSON.parse(localStorage.getItem('ia_users') || '[]');
+                            let idx = users.findIndex(u => u.email.toLowerCase() === email);
+                            if (idx >= 0) {
+                                users[idx].banned = false;
+                                localStorage.setItem('ia_users', JSON.stringify(users));
+                            }
+                            logCopilotMessage(`🤖 Co-pilot: Unbanned user ${email} successfully.`, '#10b981');
+                            refreshAdminStats();
+                        } catch(e) {
+                            logCopilotMessage(`🤖 Co-pilot Error: ${e.message}`, '#ef4444');
+                        }
+                    } else {
+                        logCopilotMessage(`🤖 Co-pilot: Invalid email address.`, '#ef4444');
+                    }
+                }
+                else if (cmdLower.startsWith('premium ')) {
+                    let email = '';
+                    let days = 30;
+                    
+                    const matchEn = cmd.match(/premium\s+([^\s]+)\s+(\d+)\s+days/i);
+                    const matchRo = cmd.match(/premium\s+pentru\s+([^\s]+)\s+pe\s+(\d+)\s+zile/i);
+                    
+                    if (matchEn) {
+                        email = matchEn[1].toLowerCase();
+                        days = parseInt(matchEn[2]);
+                    } else if (matchRo) {
+                        email = matchRo[1].toLowerCase();
+                        days = parseInt(matchRo[2]);
+                    } else {
+                        const tokens = cmd.split(/\s+/);
+                        tokens.forEach(t => {
+                            if (validateEmail(t)) email = t.toLowerCase();
+                            else if (/^\d+$/.test(t)) days = parseInt(t);
+                        });
+                    }
+                    
+                    if (validateEmail(email)) {
+                        try {
+                            const pData = { email, addedAt: Date.now(), days };
+                            await db.collection('premium').doc(email).set(pData);
+                            
+                            let list = getPremiumUsers();
+                            let existing = list.findIndex(u => u.email.toLowerCase() === email);
+                            if (existing >= 0) list[existing] = pData;
+                            else list.push(pData);
+                            savePremiumUsers(list);
+                            
+                            logCopilotMessage(`🤖 Co-pilot: Granted ${days === 9999 ? 'Lifetime' : days + ' Days'} Premium to ${email}.`, '#10b981');
+                            refreshAdminStats();
+                        } catch(e) {
+                            logCopilotMessage(`🤖 Co-pilot Error: ${e.message}`, '#ef4444');
+                        }
+                    } else {
+                        logCopilotMessage(`🤖 Co-pilot: Could not parse email from command.`, '#ef4444');
+                    }
+                }
+                else if (cmdLower.startsWith('create challenge:') || cmdLower.startsWith('creează provocare:')) {
+                    try {
+                        const content = cmd.substring(cmdLower.includes('create challenge:') ? 17 : 19).trim();
+                        const expIdx = content.toLowerCase().indexOf('expires');
+                        const expIdxRo = content.toLowerCase().indexOf('expiră');
+                        const splitIdx = expIdx >= 0 ? expIdx : expIdxRo;
+                        
+                        if (splitIdx < 0) {
+                            throw new Error("Missing 'expires' / 'expiră' parameter.");
+                        }
+                        
+                        const title = content.substring(0, splitIdx).trim();
+                        const remainder = content.substring(splitIdx + (expIdx >= 0 ? 7 : 6)).trim();
+                        
+                        const rewIdx = remainder.toLowerCase().indexOf('reward');
+                        const rewIdxRo = remainder.toLowerCase().indexOf('premiu');
+                        const rSplitIdx = rewIdx >= 0 ? rewIdx : rewIdxRo;
+                        
+                        let dateStr = '';
+                        let reward = '7 Days Premium';
+                        
+                        if (rSplitIdx >= 0) {
+                            dateStr = remainder.substring(0, rSplitIdx).trim();
+                            reward = remainder.substring(rSplitIdx + (rewIdx >= 0 ? 6 : 6)).trim();
+                        } else {
+                            dateStr = remainder;
+                        }
+                        
+                        const expiryMs = new Date(dateStr).getTime();
+                        if (isNaN(expiryMs)) {
+                            throw new Error(`Invalid date format: "${dateStr}". Use YYYY-MM-DD HH:MM`);
+                        }
+                        
+                        const newC = {
+                            id: String(Date.now()),
+                            title_en: title,
+                            title_fr: title,
+                            desc_en: "Created via AI Co-pilot command.",
+                            desc_fr: "Créé via la commande AI Co-pilot.",
+                            expiry: expiryMs,
+                            reward: reward,
+                            createdAt: Date.now()
+                        };
+                        
+                        await db.collection('devsocial_challenges').doc(newC.id).set(newC);
+                        logCopilotMessage(`🤖 Co-pilot: Published challenge "${title}" successfully.`, '#10b981');
+                        refreshAdminStats();
+                        loadChallengesTab();
+                    } catch(e) {
+                        logCopilotMessage(`🤖 Co-pilot Error: ${e.message}`, '#ef4444');
+                    }
+                }
+                else {
+                    let answer = "🤖 Co-pilot: Command not recognized. Write a valid command or ask about the database statistics.";
+                    if (cmdLower.includes('help') || cmdLower.includes('ajutor')) {
+                        answer = `🤖 Co-pilot Commands:<br>
+                                 • <code>create challenge: [Title] expires [Date] reward [Reward]</code><br>
+                                 • <code>ban user [Email]</code><br>
+                                 • <code>unban user [Email]</code><br>
+                                 • <code>premium [Email] [Days] days</code>`;
+                    } else if (cmdLower.includes('how many users') || cmdLower.includes('câți utilizatori')) {
+                        const count = JSON.parse(localStorage.getItem('ia_users') || '[]').length;
+                        answer = `🤖 Co-pilot: There are currently ${count} registered users.`;
+                    } else if (cmdLower.includes('premium count') || cmdLower.includes('câți premium')) {
+                        const count = getPremiumUsers().length;
+                        answer = `🤖 Co-pilot: There are currently ${count} premium members.`;
+                    } else if (cmdLower.includes('status') || cmdLower.includes('stare')) {
+                        answer = `🤖 Co-pilot: System status is nominal. Firebase is connected.`;
+                    }
+                    logCopilotMessage(answer, '#8b5cf6');
+                }
+            }
+            
+            function logCopilotMessage(msg, color) {
+                const logEl = document.getElementById('copilot-log-container');
+                if (!logEl) return;
+                const entry = document.createElement('div');
+                entry.innerHTML = msg;
+                if (color) entry.style.color = color;
+                logEl.appendChild(entry);
+                logEl.scrollTop = logEl.scrollHeight;
+            }
+            
+            function validateEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
             }
 
             function adminClearSessions() {
-                if (!confirm('Effacer TOUTES les sessions locales ? Cette action est irréversible.')) return;
+                if (!confirm('Clear all local sessions? This cannot be undone.')) return;
                 const keys = Object.keys(localStorage).filter(k => k.startsWith('genius_db_') || k === 'genius_session' || k === 'ia_premium_sub_date' || k === 'ia_premium_users');
                 keys.forEach(k => localStorage.removeItem(k));
-                adminLog('🗑️ Toutes les sessions ont été effacées.');
+                adminLog('All sessions cleared.');
                 refreshAdminStats();
                 setTimeout(() => { closeModal('admin'); authCheck(); }, 1500);
             }
@@ -1260,26 +1916,69 @@
                 const a = document.createElement('a');
                 a.href = url; a.download = 'ia-codestudio-data-export.json';
                 a.click(); URL.revokeObjectURL(url);
-                adminLog('📤 Export JSON téléchargé.');
+                adminLog('Export downloaded.');
             }
 
             function adminLogout() {
                 localStorage.removeItem('genius_session');
                 closeModal('admin');
                 authCheck();
-                adminLog('🚪 Déconnexion effectuée.');
+                adminLog('Signed out.');
             }
+
+            // Tab routing inside Admin Panel
+            document.addEventListener('DOMContentLoaded', () => {
+                const tabBtns = document.querySelectorAll('.admin-tab-btn');
+                tabBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        tabBtns.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        
+                        const tabId = btn.getAttribute('data-tab');
+                        document.querySelectorAll('.admin-sub-panel').forEach(panel => {
+                            panel.style.display = 'none';
+                        });
+                        
+                        const activePanel = document.getElementById(`admin-panel-${tabId}`);
+                        if (activePanel) {
+                            activePanel.style.display = tabId === 'copilot' ? 'flex' : 'block';
+                        }
+                        
+                        if (tabId === 'analytics') {
+                            setTimeout(renderAnalyticsCharts, 100);
+                        }
+                    });
+                });
+            });
 
             // Hook openModal to refresh admin stats when panel opens
             const _origOpenModal = openModal;
             function openModal(id) {
                 _origOpenModal(id);
-                if (id === 'admin') refreshAdminStats();
+                if (id === 'admin') {
+                    refreshAdminStats();
+                }
+            }
+
+            // Real-time Banned Status Verification
+            function verifyBannedStatus() {
+                const session = localStorage.getItem('genius_session');
+                if (session) {
+                    try {
+                        const user = JSON.parse(session);
+                        db.collection('users').doc(user.email).get().then(doc => {
+                            if (doc.exists && doc.data().banned === true) {
+                                alert(currentLang === 'en' ? "Your account has been banned by the administrator." : "Votre compte a été banni par l'administrateur.");
+                                adminLogout();
+                            }
+                        }).catch(e => console.log("Banned verification error:", e));
+                    } catch(e) {}
+                }
             }
 
             document.addEventListener('DOMContentLoaded', () => {
                 authCheck();
-                // Background sync on load if user session exists to keep premium state updated
+                verifyBannedStatus();
                 if (localStorage.getItem('genius_session')) {
                     syncFirebaseWithLocal()
                         .then(() => {
