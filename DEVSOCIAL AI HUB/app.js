@@ -455,6 +455,33 @@
     const container = document.getElementById(containerId);
     if (!container) return;
 
+    // Detect if codeString is a full HTML page
+    const trimmed = (codeString || '').trim();
+    const isHtml = trimmed.toLowerCase().startsWith('<!doctype') || 
+                   trimmed.toLowerCase().startsWith('<html') || 
+                   trimmed.toLowerCase().includes('<script') ||
+                   trimmed.toLowerCase().includes('<body>') ||
+                   trimmed.toLowerCase().includes('<head>');
+
+    if (isHtml) {
+      // Create iframe for HTML code to render exactly what was built in Studio
+      const iframe = document.createElement('iframe');
+      iframe.style.border = 'none';
+      iframe.style.width = '100%';
+      iframe.style.height = '100%';
+      iframe.style.background = 'transparent';
+      iframe.style.borderRadius = '12px';
+      iframe.style.pointerEvents = 'auto'; // allow orbit controls inside the iframe
+      iframe.srcdoc = codeString;
+
+      // Keep viewport-overlay and append iframe
+      const overlay = container.querySelector('.viewport-overlay');
+      container.innerHTML = '';
+      if (overlay) container.appendChild(overlay);
+      container.appendChild(iframe);
+      return;
+    }
+
     // Dimensions
     const w = container.clientWidth || 300;
     const h = container.clientHeight || 200;
