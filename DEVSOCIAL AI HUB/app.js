@@ -256,6 +256,7 @@
 
       const commentsLabel = currentLang === 'fr' ? `Commentaires (${post.comments.length})` : `Comments (${post.comments.length})`;
       const forkLabel = currentLang === 'fr' ? `🔌 Importer` : `🔌 Fork Code`;
+      const captionText = currentLang === 'fr' ? (post.caption_fr || post.caption || post.caption_en || '') : (post.caption_en || post.caption || post.caption_fr || '');
 
       card.innerHTML = `
         <div class="post-header">
@@ -272,7 +273,7 @@
           </div>
         </div>
         
-        <div class="post-caption">${post.caption}</div>
+        <div class="post-caption">${captionText}</div>
         
         <!-- Live Three.js Preview -->
         <div class="post-viewport-container" id="viewport-${post.id}">
@@ -632,7 +633,8 @@
       userEmail: currentUser.email,
       userAvatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(currentUser.name)}`,
       userTag: currentUser.role === 'Admin' ? 'ADMIN Maker' : 'Premium Maker',
-      caption: `${desc} #custom3D`,
+      caption_en: `${desc} #custom3D`,
+      caption_fr: `${desc} #custom3D`,
       likes: 0,
       comments: [],
       preset: preset === 'none' ? 'custom' : preset,

@@ -9,7 +9,8 @@
       user: "EmmaArchitect",
       userAvatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Emma",
       userTag: "Premium Maker",
-      caption: "Check out my new procedural Clockwork mechanism! Fused with brass gears and custom speed scaling. Tagging #steampunk #webgl",
+      caption_en: "Check out my new procedural Clockwork mechanism! Fused with brass gears and custom speed scaling. Tagging #steampunk #webgl",
+      caption_fr: "Découvrez mon nouveau mécanisme d'horlogerie procédural ! Fusionné avec des engrenages en laiton et une échelle de vitesse personnalisée. #steampunk #webgl",
       likes: 38,
       comments: [
         { user: "Lucas_3D", avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Lucas", text: "Incredible teeth meshing details! Is this Three.js CylinderGeometry?" },
@@ -61,7 +62,8 @@ function createChronoScene(scene) {
       user: "Lucas_3D",
       userAvatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Lucas",
       userTag: "Creator",
-      caption: "Futuristic live Webcam point cloud avatar. Made using custom particle buffer geometry in WebGL. #avatar #neuro",
+      caption_en: "Futuristic live Webcam point cloud avatar. Made using custom particle buffer geometry in WebGL. #avatar #neuro",
+      caption_fr: "Avatar futuriste en nuage de points webcam. Conçu avec une géométrie de tampon de particules de webcam en WebGL. #avatar #neuro",
       likes: 24,
       comments: [
         { user: "EmmaArchitect", avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Emma", text: "Wow, how did you parse the camera stream depth so fast?" }
@@ -105,7 +107,8 @@ function createAvatarScene(scene) {
       user: "SteampunkMaker",
       userAvatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Chrono",
       userTag: "Maker",
-      caption: "Rendering a wireframe parametric mountain topography using custom sin/cos displacement maps. #math #surface #threejs",
+      caption_en: "Rendering a wireframe parametric mountain topography using custom sin/cos displacement maps. #math #surface #threejs",
+      caption_fr: "Rendu d'une topographie de montagne paramétrique en fil de fer utilisant des cartes de displacement sin/cos. #math #surface #threejs",
       likes: 19,
       comments: [],
       preset: "landscape",
