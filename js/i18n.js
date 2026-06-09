@@ -68,7 +68,8 @@ const translations = {
     admin_tab_challenges: "Défis / Challenges",
     admin_tab_feed: "Modération Feed",
     admin_tab_analytics: "Statistiques",
-    admin_tab_copilot: "Co-pilote AI"
+    admin_tab_copilot: "Co-pilote AI",
+    admin_tab_messages: "Messages Reçus"
   },
   en: {
     nav_title: "IA CODE STUDIO",
@@ -139,6 +140,7 @@ const translations = {
     admin_tab_challenges: "Challenges",
     admin_tab_feed: "Feed Moderation",
     admin_tab_analytics: "Analytics",
-    admin_tab_copilot: "AI Co-pilot"
+    admin_tab_copilot: "AI Co-pilot",
+    admin_tab_messages: "Received Messages"
   }
 };
