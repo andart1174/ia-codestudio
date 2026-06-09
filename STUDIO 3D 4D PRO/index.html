@@ -348,6 +348,7 @@
       background: #000;
     }
   </style>
+  <link rel="stylesheet" href="js/social.css">
 </head>
 <body>
 
@@ -369,6 +370,7 @@
     <button class="tbtn" id="btn-audio-mode" style="border-color:rgba(16,185,129,0.4);color:#34d399;"> 🎵 <span id="lbl-audio">Audio 3D</span></button>
     <button class="tbtn" id="btn-neural-mode" style="border-color:rgba(6,182,212,0.4);color:#22d3ee;background:linear-gradient(135deg, rgba(6,182,212,0.1), rgba(139,92,246,0.1));"> 🧠 <span id="lbl-neural-mode">Neural Brain</span></button>
     <button class="tbtn" id="btn-collab-mode" style="border-color:rgba(59,130,246,0.4);color:#60a5fa;"> 🧑‍💻 <span id="lbl-collab">Collab Live</span></button>
+    <button class="tbtn" id="btn-social-mode" style="border-color:rgba(249,115,22,0.4);color:#fb923c;background:linear-gradient(135deg, rgba(249,115,22,0.1), rgba(236,72,153,0.1)); transition: all 0.2s;"> 👥 <span id="lbl-social-tab">DevSocial AI</span></button>
     <div style="width:1px; height:20px; background:var(--border); margin:0 8px;"></div>
     
     <button class="tbtn" id="btn-screenshot" style="border-color:rgba(245,158,11,0.4);color:#fbbf24;"> 📸 PNG</button>
@@ -433,7 +435,211 @@
     </aside>
   </main>
 
+  <!-- DevSocial AI Hub Scoped Overlay -->
+  <div id="social-overlay" style="display: none; position: fixed; inset: 52px 0 0 0; z-index: 99; background: radial-gradient(circle at 10% 20%, rgba(15, 23, 42, 0.98) 0%, rgba(3, 7, 18, 1) 90%);">
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">👥</div>
+        <div class="brand-text">
+          <h2>DevSocial</h2>
+          <span>AI HUB</span>
+        </div>
+      </div>
+      
+      <div class="user-profile-card">
+        <div class="user-avatar">
+          <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Admin" alt="Avatar">
+          <span class="status-indicator online"></span>
+        </div>
+        <div class="user-info">
+          <h3>Creator</h3>
+          <span class="user-tag admin-tag">ADMIN Maker</span>
+        </div>
+      </div>
 
+      <nav class="nav-menu">
+        <button class="nav-item active" data-tab="feed">
+          📰 <span class="nav-label" data-en="Social Feed" data-fr="Flux Social">Social Feed</span>
+        </button>
+        <button class="nav-item" data-tab="ai">
+          🧠 <span class="nav-label" data-en="Studio-AI Expert" data-fr="Expert Studio-AI">Studio-AI Expert</span>
+        </button>
+        <button class="nav-item" data-tab="gallery">
+          🖼️ <span class="nav-label" data-en="Featured Gallery" data-fr="Galerie Vedetă">Featured Gallery</span>
+        </button>
+        <button class="nav-item" data-tab="challenges">
+          🏆 <span class="nav-label" data-en="Dev Challenges" data-fr="Défis Dev">Dev Challenges</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p class="copyright">v1.0 &copy; 2026 IA CodeStudio</p>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="main-content">
+      <!-- HEADER -->
+      <header class="app-header">
+        <div class="search-bar">
+          🔍 <input type="text" id="feed-search" placeholder="Search posts..." data-en-placeholder="Search posts..." data-fr-placeholder="Rechercher...">
+        </div>
+        <div class="header-actions">
+          <button class="action-btn-new-post" id="btn-trigger-new-post">
+            ➕ <span data-en="Share 3D Model" data-fr="Partager Modèle 3D">Share 3D Model</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- VIEW PANELS -->
+      <div class="view-wrapper">
+        <!-- FEED PANEL -->
+        <div class="view-panel active" id="panel-feed">
+          <div class="feed-layout">
+            <div class="feed-posts" id="posts-container"></div>
+            <!-- FEED SIDEBAR -->
+            <aside class="feed-sidebar">
+              <div class="sidebar-box challenge-box">
+                <div class="box-header">
+                  <span class="badge challenge-badge">🔥 DAILY CHALLENGE</span>
+                </div>
+                <h3 data-en="Procedural Clockwork Wheel" data-fr="Roue Dentée Rétro">Procedural Clockwork Wheel</h3>
+                <p data-en="Create a custom animated gear mesh using Three.js logic and share it with the tag #chrono2026." data-fr="Créez un engrenage animé personnalisé à l'aide de Three.js et partagez-le avec le tag #chrono2026."></p>
+                <div class="challenge-stats">
+                  <span data-en="👥 42 Joined" data-fr="👥 42 Participants">👥 42 Joined</span>
+                  <span data-en="⏰ 5h left" data-fr="⏰ 5h restantes">⏰ 5h left</span>
+                </div>
+                <button class="btn-join-challenge" data-en="Submit Entry" data-fr="Participer">Submit Entry</button>
+              </div>
+
+              <div class="sidebar-box active-users-box">
+                <h3 data-en="Active Creators" data-fr="Créateurs Actifs">Active Creators</h3>
+                <div class="creator-list">
+                  <div class="creator-item">
+                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Lucas" alt="User">
+                    <div class="creator-meta">
+                      <h4>Lucas_3D</h4>
+                      <span data-en="Last active 2m ago" data-fr="Actif il y a 2m">Last active 2m ago</span>
+                    </div>
+                    <span class="status-dot green"></span>
+                  </div>
+                  <div class="creator-item">
+                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Emma" alt="User">
+                    <div class="creator-meta">
+                      <h4>EmmaArchitect</h4>
+                      <span data-en="Last active 15m ago" data-fr="Actif il y a 15m">Last active 15m ago</span>
+                    </div>
+                    <span class="status-dot green"></span>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <!-- AI CHAT PANEL -->
+        <div class="view-panel" id="panel-ai">
+          <div class="ai-chat-layout">
+            <div class="ai-sidebar">
+              <div class="ai-bot-avatar">🤖</div>
+              <h3>Studio-AI Expert</h3>
+              <p class="bot-status" data-en="Online • English & French" data-fr="En ligne • Anglais & Français">Online</p>
+              <div class="ai-hints">
+                <h4 data-en="Try asking:" data-fr="Essayez de demander :">Try asking:</h4>
+                <div class="hint-tag" onclick="useHint('How do I activate the Steam Exhaust particles in Steampunk Chrono?')">"How do I activate Steam Exhaust?"</div>
+                <div class="hint-tag" onclick="useHint('Explain the difference between IA ARCHITECTE and STUDIO 3D.')">"IA ARCHITECTE vs STUDIO 3D"</div>
+                <div class="hint-tag" onclick="useHint('Comment calibrer Webcam Avatar en nuage de points ?')">"Webcam Avatar calibration"</div>
+              </div>
+            </div>
+            <div class="ai-chat-main">
+              <div class="chat-messages-container" id="chat-messages"></div>
+              <div class="chat-input-bar">
+                <input type="text" id="chat-user-input" placeholder="Ask Studio-AI..." data-en-placeholder="Ask Studio-AI..." data-fr-placeholder="Poser une question...">
+                <button id="btn-send-chat">🚀</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GALLERY PANEL -->
+        <div class="view-panel" id="panel-gallery">
+          <div class="gallery-header-section">
+            <h2 data-en="Featured Community Designs" data-fr="Citations & Créations de la Communauté">Featured Community Designs</h2>
+            <p data-en="The most liked WebGL models and building scenes generated by our developers." data-fr="Les modèles WebGL et scènes architecturales les plus aimés de nos développeurs."></p>
+          </div>
+          <div class="gallery-grid" id="gallery-container"></div>
+        </div>
+
+        <!-- CHALLENGES PANEL -->
+        <div class="view-panel" id="panel-challenges">
+          <div class="challenges-section">
+            <div class="active-challenge-large">
+              <h2 data-en="🔥 Active Challenge: Procedural Clockwork Wheel" data-fr="🔥 Défi Actif : Roue Dentée Rétro">🔥 Active Challenge: Procedural Clockwork Wheel</h2>
+              <p data-en="Construct the gearwheel or mechanical piston with custom speed properties and publish it using #chrono2026. The community votes on the design." data-fr="Construisez la roue dentée ou le piston mécanique avec des propriétés de vitesse personnalisées et publiez-le avec #chrono2026. La communauté vote pour le meilleur design."></p>
+              <button class="btn-join-challenge" style="width: auto; padding: 12px 30px; font-size: 13px;" data-en="Enter Challenge" data-fr="Rejoindre le défi">Enter Challenge</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- SHARE NEW MODEL MODAL -->
+    <div class="modal-overlay" id="modal-new-post">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3 data-en="Share a New 3D Scene" data-fr="Partager une Scène 3D">Share a New 3D Scene</h3>
+          <button class="modal-close" id="btn-close-new-post">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label data-en="Title" data-fr="Titre">Title</label>
+            <input type="text" id="post-title-input" placeholder="Title" data-en-placeholder="Title" data-fr-placeholder="Titre">
+          </div>
+          <div class="form-group">
+            <label data-en="Description" data-fr="Description">Description</label>
+            <textarea id="post-desc-input" placeholder="Description" data-en-placeholder="Description" data-fr-placeholder="Description"></textarea>
+          </div>
+          <div class="form-group">
+            <label data-en="Three.js Scene Code" data-fr="Code Scène Three.js">Three.js Scene Code</label>
+            <textarea id="post-code-input" class="code-textarea" placeholder="Code..." data-en-placeholder="Code..." data-fr-placeholder="Code..."></textarea>
+          </div>
+          <div class="form-group">
+            <label data-en="Select Preset Model" data-fr="Modèle Préréglé">Select Preset Model</label>
+            <select id="post-preset-select">
+              <option value="none">-- Use code --</option>
+              <option value="clockwork">Procedural Clockwork</option>
+              <option value="avatar">Webcam Mesh</option>
+              <option value="torus">Glowing Torus</option>
+              <option value="landscape">Math Surface</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-cancel" id="btn-cancel-new-post" data-en="Cancel" data-fr="Annuler">Cancel</button>
+          <button class="btn-submit" id="btn-submit-new-post" data-en="Publish Post" data-fr="Publier">Publish Post</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORK CODE VIEW MODAL -->
+    <div class="modal-overlay" id="modal-fork-code">
+      <div class="modal-card code-modal-card">
+        <div class="modal-header">
+          <h3 id="fork-modal-title">Source Code View</h3>
+          <button class="modal-close" id="btn-close-fork">×</button>
+        </div>
+        <div class="modal-body code-modal-body">
+          <p data-en="Copy this standalone Three.js code or click Fork to load it directly into your local builder." data-fr="Copiez ce code Three.js ou cliquez sur Fork pour le charger directement dans votre éditeur local."></p>
+          <div class="code-actions">
+            <button class="code-action-btn" id="btn-copy-fork-code">📋 <span data-en="Copy Code" data-fr="Copier le code">Copy Code</span></button>
+            <button class="code-action-btn primary" id="btn-confirm-fork-action">🔌 <span data-en="Load in Studio" data-fr="Charger dans Studio">Load in Studio</span></button>
+          </div>
+          <textarea id="fork-code-display" readonly></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="toast" id="toast"></div>
 
@@ -547,7 +753,8 @@
         videoRec: "🔴 Rec (Stop)",
         videoStart: "🎥 Recording started...",
         videoSaved: "✅ Video saved!",
-        neuralMode: "Neural Brain"
+        neuralMode: "Neural Brain",
+        socialTab: "DevSocial AI"
       },
       fr: {
         title: "Studio 3D/4D Pro — 2D VERS 3D",
@@ -573,7 +780,8 @@
         videoRec: "🔴 Rec (Stop)",
         videoStart: "🎥 Enregistrement en cours...",
         videoSaved: "✅ Vidéo sauvegardée !",
-        neuralMode: "Cerveau Neural"
+        neuralMode: "Cerveau Neural",
+        socialTab: "DevSocial AI"
       }
     };
 
@@ -603,8 +811,11 @@
       const lblCollab = document.getElementById('lbl-collab'); if(lblCollab) lblCollab.textContent = t.collab;
       const lblVideoBtn = document.getElementById('lbl-video-btn'); if(lblVideoBtn) lblVideoBtn.textContent = t.videoBtn;
       const lblNeuralMode = document.getElementById('lbl-neural-mode'); if(lblNeuralMode) lblNeuralMode.textContent = t.neuralMode;
+      const lblSocial = document.getElementById('lbl-social-tab'); if(lblSocial) lblSocial.textContent = t.socialTab;
+      
       if (window.CodeCollabLive) window.CodeCollabLive.refreshLang();
       if (window.IAGuideBot) window.IAGuideBot.refreshLang();
+      if (window.DevSocialApp) window.DevSocialApp.switchLanguage(lang);
     }
 
     function toggleMode(mode) {
@@ -696,12 +907,38 @@
       updateUI(startLang);
     });
 
+    function hideSocial() {
+      const overlay = document.getElementById('social-overlay');
+      if (overlay) {
+        overlay.style.display = 'none';
+        document.getElementById('btn-social-mode').classList.remove('active');
+        if (window.DevSocialApp && typeof window.DevSocialApp.stopAll3DViews === 'function') {
+          window.DevSocialApp.stopAll3DViews();
+        }
+      }
+    }
+    window.hideSocial = hideSocial;
+
+    function showSocial() {
+      const overlay = document.getElementById('social-overlay');
+      if (overlay) {
+        toggleMode('design');
+        overlay.style.display = 'flex';
+        document.getElementById('btn-social-mode').classList.add('active');
+        if (window.DevSocialApp && typeof window.DevSocialApp.initSocial === 'function') {
+          window.DevSocialApp.initSocial();
+        }
+      }
+    }
+    window.showSocial = showSocial;
+
     // Design Mode Buttons
-    document.getElementById('btn-design-mode').addEventListener('click', () => toggleMode('design'));
-    document.getElementById('btn-back-design').addEventListener('click', () => toggleMode('design'));
+    document.getElementById('btn-design-mode').addEventListener('click', () => { toggleMode('design'); hideSocial(); });
+    document.getElementById('btn-back-design').addEventListener('click', () => { toggleMode('design'); hideSocial(); });
 
     // Neural Net Mode Button in topbar
     document.getElementById('btn-neural-mode').addEventListener('click', () => {
+      hideSocial();
       toggleMode('design');
       setTimeout(() => {
         const btn = document.getElementById('btn-neural-scene');
@@ -713,6 +950,17 @@
         }
       }, 150);
     });
+
+    // Hide social when other modes are clicked
+    ['btn-video-mode', 'btn-image-mode', 'btn-audio-mode', 'btn-collab-mode'].forEach(id => {
+      const btn = document.getElementById(id);
+      if (btn) {
+        btn.addEventListener('click', hideSocial);
+      }
+    });
+
+    // DevSocial Mode Button click
+    document.getElementById('btn-social-mode').addEventListener('click', showSocial);
 
     // Capture listener — injected into every preview blob
     const CAPTURE_SCRIPT = `<script>
@@ -914,5 +1162,8 @@
       });
     });
   </script>
+  <script src="js/database.js"></script>
+  <script src="js/ai-expert.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
