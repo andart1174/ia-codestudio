@@ -13,6 +13,14 @@
   let activeChallengeData = null;
   let globalConfig = { profanityFilter: false };
 
+  // DevSocial Studio Multiplayer State
+  let activeRoomId = null;
+  let roomUnsubscribe = null;
+  let peersUnsubscribe = null;
+  let peerId = null;
+  let isUpdatingFromRemote = false;
+  let heartbeatInterval = null;
+
   // DOM Elements
   const navItems = document.querySelectorAll('.nav-menu .nav-item');
   const viewPanels = document.querySelectorAll('.view-panel');
@@ -135,6 +143,7 @@
     initAIChat();
     bindEvents();
     animateAll();
+    initDevSocialStudio();
 
     // Subscribe to Firebase Firestore real-time post changes
     window.DevSocialDB.subscribePosts(updatedPosts => {
@@ -265,6 +274,9 @@
 
   // 2. TAB SWITCHING
   function switchTab(tabId) {
+    if (activeTab === 'studio' && tabId !== 'studio') {
+      leaveMultiplayerRoom();
+    }
     activeTab = tabId;
     
     navItems.forEach(item => {
@@ -907,18 +919,32 @@
       }, 2000);
     };
 
-    // Fork/Load in Studio saves code to localStorage and redirects back to STUDIO 3D PRO editor
+    // Fork/Load in Studio loads directly into local Studio tab
     btnConfirmForkAction.onclick = () => {
       const rawCode = forkCodeDisplay.value;
-      const wrappedHtml = wrapInFullHtml(rawCode, forkModalTitle.textContent);
-      
-      localStorage.setItem('forked_three_code', wrappedHtml);
       modalForkCode.classList.remove('active');
       
-      toast(currentLang === 'fr' ? "🔌 Chargement dans l'éditeur..." : "🔌 Loading into editor...");
-      setTimeout(() => {
-        window.location.href = '../STUDIO 3D 4D PRO/index.html';
-      }, 800);
+      if (!checkPremium()) {
+        alert(currentLang === 'fr' ? 
+          "🔒 Accès Premium requis pentru a utiliza Studio." : 
+          "🔒 Premium access required to use Studio.");
+        return;
+      }
+      
+      // Load code into the studio's textarea
+      const studioTextarea = document.getElementById('studio-code-input');
+      if (studioTextarea) {
+        studioTextarea.value = rawCode;
+        updateEditorGutter();
+      }
+      
+      // Switch tab to studio
+      switchTab('studio');
+      
+      // Run the preview automatically
+      runStudioPreview();
+      
+      toast(currentLang === 'fr' ? "🔌 Chargement dans le Studio..." : "🔌 Loaded in Studio...");
     };
 
     // Join Challenge Button click
@@ -952,6 +978,543 @@
       });
     };
   }
+
+  // DEVSOCIAL STUDIO & MULTIPLAYER HELPER FUNCTIONS
+
+  const defaultThreeJsCode = `// Glowing 3D Quantum Cube Preset
+// Inside the sandbox, 'scene' is available.
+// Create your meshes here, and return an animate callback.
+
+const geometry = new THREE.BoxGeometry(20, 20, 20);
+const material = new THREE.MeshStandardMaterial({
+  color: 0x6366f1,
+  roughness: 0.2,
+  metalness: 0.8,
+  wireframe: false
+});
+const cube = new THREE.Mesh(geometry, material);
+scene.add(cube);
+
+// Add custom lights
+const pointLight = new THREE.PointLight(0x0ea5e9, 2, 100);
+pointLight.position.set(20, 20, 20);
+scene.add(pointLight);
+
+// Return animation loop function
+return function() {
+  cube.rotation.x += 0.01;
+  cube.rotation.y += 0.01;
+};`;
+
+  function getStudioIframeSrcDoc(rawCode) {
+    let htmlContent = "";
+    const trimmed = rawCode.trim();
+    const isFullHtml = trimmed.toLowerCase().startsWith('<!doctype') || 
+                       trimmed.toLowerCase().startsWith('<html') || 
+                       trimmed.toLowerCase().includes('<script') ||
+                       trimmed.toLowerCase().includes('<body>');
+                       
+    if (isFullHtml) {
+      htmlContent = rawCode;
+    } else {
+      htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevSocial Studio Live Preview</title>
+  <style>
+    body { margin: 0; overflow: hidden; background: #000; font-family: sans-serif; }
+    canvas { width: 100vw; height: 100vh; display: block; }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+  <script>
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+    camera.position.set(0, 0, 150);
+    
+    var renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    document.body.appendChild(renderer.domElement);
+    
+    var controls = new THREE.OrbitControls(camera, renderer.domElement);
+    
+    scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+    var dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    dirLight.position.set(10, 20, 20);
+    scene.add(dirLight);
+    
+    var animate = (function() {
+      try {
+        const customFunc = new Function('scene', \`${rawCode.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`);
+        return customFunc(scene);
+      } catch(e) {
+        console.error("User script evaluation error:", e);
+        return null;
+      }
+    })();
+    
+    window.addEventListener('resize', function() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+    
+    var peers = {};
+    
+    window.addEventListener('message', function(event) {
+      if (event.data.type === 'peer_update') {
+        updatePeers(event.data.peers);
+      }
+    });
+
+    function updatePeers(peersList) {
+      var activeIds = {};
+      peersList.forEach(function(peer) {
+        activeIds[peer.id] = true;
+        if (peers[peer.id]) {
+          peers[peer.id].targetPosition.set(peer.x, peer.y, peer.z);
+        } else {
+          var geom = new THREE.SphereGeometry(4, 16, 16);
+          var mat = new THREE.MeshBasicMaterial({ color: 0x0ea5e9, wireframe: true });
+          var mesh = new THREE.Mesh(geom, mat);
+          mesh.position.set(peer.x, peer.y, peer.z);
+          scene.add(mesh);
+          
+          var ringGeom = new THREE.RingGeometry(5, 6, 32);
+          var ringMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, side: THREE.DoubleSide });
+          var ring = new THREE.Mesh(ringGeom, ringMat);
+          ring.rotation.x = Math.PI / 2;
+          mesh.add(ring);
+          
+          peers[peer.id] = {
+            mesh: mesh,
+            targetPosition: new THREE.Vector3(peer.x, peer.y, peer.z)
+          };
+        }
+      });
+      
+      Object.keys(peers).forEach(function(id) {
+        if (!activeIds[id]) {
+          scene.remove(peers[id].mesh);
+          delete peers[id];
+        }
+      });
+    }
+
+    var lastReportTime = 0;
+    function loop() {
+      requestAnimationFrame(loop);
+      controls.update();
+      if (typeof animate === 'function') {
+        try { animate(); } catch(e) {}
+      }
+      
+      Object.keys(peers).forEach(function(id) {
+        var p = peers[id];
+        p.mesh.position.lerp(p.targetPosition, 0.1);
+        p.mesh.rotation.y += 0.02;
+      });
+      
+      renderer.render(scene, camera);
+      
+      var now = Date.now();
+      if (now - lastReportTime > 200) {
+        lastReportTime = now;
+        window.parent.postMessage({
+          type: 'camera_move',
+          position: { x: camera.position.x, y: camera.position.y, z: camera.position.z }
+        }, '*');
+      }
+    }
+    loop();
+  </script>
+</body>
+</html>`;
+    }
+    
+    if (isFullHtml) {
+      const injectedScript = `
+      <!-- INJECTED BY DEVSOCIAL MULTIPLAYER SANDBOX -->
+      <script>
+        (function() {
+          var peers = {};
+          window.addEventListener('message', function(event) {
+            if (event.data.type === 'peer_update') {
+              updatePeers(event.data.peers);
+            }
+          });
+          
+          function updatePeers(peersList) {
+            if (typeof THREE === 'undefined' || typeof scene === 'undefined') return;
+            var activeIds = {};
+            peersList.forEach(function(peer) {
+              activeIds[peer.id] = true;
+              if (peers[peer.id]) {
+                peers[peer.id].targetPosition.set(peer.x, peer.y, peer.z);
+              } else {
+                var geom = new THREE.SphereGeometry(4, 16, 16);
+                var mat = new THREE.MeshBasicMaterial({ color: 0x0ea5e9, wireframe: true });
+                var mesh = new THREE.Mesh(geom, mat);
+                mesh.position.set(peer.x, peer.y, peer.z);
+                scene.add(mesh);
+                
+                var ringGeom = new THREE.RingGeometry(5, 6, 32);
+                var ringMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, side: THREE.DoubleSide });
+                var ring = new THREE.Mesh(ringGeom, ringMat);
+                ring.rotation.x = Math.PI / 2;
+                mesh.add(ring);
+                
+                peers[peer.id] = {
+                  mesh: mesh,
+                  targetPosition: new THREE.Vector3(peer.x, peer.y, peer.z)
+                };
+              }
+            });
+            
+            Object.keys(peers).forEach(function(id) {
+              if (!activeIds[id]) {
+                scene.remove(peers[id].mesh);
+                delete peers[id];
+              }
+            });
+          }
+
+          var lastReportTime = 0;
+          function trackLoop() {
+            requestAnimationFrame(trackLoop);
+            if (typeof THREE !== 'undefined' && typeof camera !== 'undefined') {
+              var now = Date.now();
+              if (now - lastReportTime > 200) {
+                lastReportTime = now;
+                window.parent.postMessage({
+                  type: 'camera_move',
+                  position: { x: camera.position.x, y: camera.position.y, z: camera.position.z }
+                }, '*');
+              }
+            }
+            Object.keys(peers).forEach(function(id) {
+              var p = peers[id];
+              p.mesh.position.lerp(p.targetPosition, 0.1);
+              p.mesh.rotation.y += 0.02;
+            });
+          }
+          trackLoop();
+        })();
+      </script>
+      `;
+      const pos = htmlContent.toLowerCase().lastIndexOf('</body>');
+      if (pos !== -1) {
+        htmlContent = htmlContent.substring(0, pos) + injectedScript + htmlContent.substring(pos);
+      } else {
+        htmlContent = htmlContent + injectedScript;
+      }
+    }
+    return htmlContent;
+  }
+
+  function initDevSocialStudio() {
+    const studioTextarea = document.getElementById('studio-code-input');
+    if (!studioTextarea) return;
+    
+    studioTextarea.value = defaultThreeJsCode;
+    updateEditorGutter();
+    
+    studioTextarea.addEventListener('scroll', () => {
+      const gutter = document.getElementById('editor-gutter');
+      if (gutter) gutter.scrollTop = studioTextarea.scrollTop;
+    });
+
+    studioTextarea.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        const start = studioTextarea.selectionStart;
+        const end = studioTextarea.selectionEnd;
+        studioTextarea.value = studioTextarea.value.substring(0, start) + "  " + studioTextarea.value.substring(end);
+        studioTextarea.selectionStart = studioTextarea.selectionEnd = start + 2;
+        updateEditorGutter();
+      }
+    });
+
+    const btnRun = document.getElementById('btn-studio-run');
+    if (btnRun) {
+      btnRun.onclick = () => {
+        if (!checkPremium()) {
+          alert(currentLang === 'fr' ? "🔒 Accès Premium requis pour coder dans le Studio." : "🔒 Premium access required to code in Studio.");
+          return;
+        }
+        runStudioPreview();
+      };
+    }
+
+    const btnShare = document.getElementById('btn-studio-share');
+    if (btnShare) {
+      btnShare.onclick = () => {
+        if (!currentUser) {
+          toast(currentLang === 'fr' ? "🔒 Connectez-vous sur le portail pour publier !" : "🔒 Please log in on the main portal to publish!");
+          return;
+        }
+        const code = studioTextarea.value;
+        if (!code) {
+          alert(currentLang === 'fr' ? "Le code est vide !" : "Code is empty!");
+          return;
+        }
+        modalNewPost.classList.add('active');
+        document.getElementById('post-code-input').value = code;
+        document.getElementById('post-preset-select').value = 'none';
+        document.getElementById('post-title-input').focus();
+      };
+    }
+
+    let debounceTimer = null;
+    studioTextarea.addEventListener('input', () => {
+      updateEditorGutter();
+      if (isUpdatingFromRemote) return;
+      if (!activeRoomId) return;
+      
+      updateSyncStatusText(currentLang === 'fr' ? 'Enregistrement...' : 'Saving...');
+      
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        if (activeRoomId && typeof firebase !== 'undefined') {
+          const db = firebase.firestore();
+          db.collection('rooms').doc(activeRoomId).update({
+            code: studioTextarea.value,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedBy: currentUser.email
+          }).then(() => {
+            updateSyncStatusText(currentLang === 'fr' ? 'Synchronisé' : 'Synced');
+          }).catch(e => console.error(e));
+        }
+      }, 600);
+    });
+
+    const btnJoin = document.getElementById('btn-studio-join');
+    const roomInput = document.getElementById('studio-room-input');
+    if (btnJoin && roomInput) {
+      btnJoin.onclick = () => {
+        if (!currentUser) {
+          toast(currentLang === 'fr' ? "🔒 Connectez-vous sur le portail pour utiliser le mode multijoueur !" : "🔒 Please log in on the main portal to use multiplayer!");
+          return;
+        }
+        if (!checkPremium()) {
+          alert(currentLang === 'fr' ? "🔒 Accès Premium requis pentru a utiliza Studio." : "🔒 Premium access required to use Studio.");
+          return;
+        }
+        const val = roomInput.value.trim().toLowerCase();
+        if (!val) {
+          alert(currentLang === 'fr' ? "Veuillez entrer un nom de salle valide." : "Please enter a valid room ID.");
+          return;
+        }
+        joinMultiplayerRoom(val);
+      };
+    }
+
+    const btnLeave = document.getElementById('btn-studio-leave');
+    if (btnLeave) {
+      btnLeave.onclick = () => {
+        leaveMultiplayerRoom();
+      };
+    }
+
+    window.addEventListener('beforeunload', () => {
+      if (activeRoomId && peerId && typeof firebase !== 'undefined') {
+        const db = firebase.firestore();
+        db.collection('rooms').doc(activeRoomId).collection('peers').doc(peerId).delete().catch(e => {});
+      }
+    });
+
+    runStudioPreview();
+  }
+
+  function joinMultiplayerRoom(roomId) {
+    if (typeof firebase === 'undefined') return;
+    const db = firebase.firestore();
+    
+    leaveMultiplayerRoom(true);
+    
+    activeRoomId = roomId;
+    peerId = currentUser.email.replace(/[^a-zA-Z0-9]/g, '_') + '_' + Math.random().toString(36).substring(2, 6);
+    
+    toast(currentLang === 'fr' ? `Connexion à la salle: ${activeRoomId}` : `Joining room: ${activeRoomId}`);
+    
+    document.getElementById('studio-room-input').disabled = true;
+    document.getElementById('btn-studio-join').classList.add('hidden');
+    document.getElementById('btn-studio-leave').classList.remove('hidden');
+    document.getElementById('active-peers-container').classList.remove('hidden');
+    
+    updateSyncStatusText(currentLang === 'fr' ? 'Connexion...' : 'Connecting...');
+
+    db.collection('rooms').doc(activeRoomId).collection('peers').doc(peerId).set({
+      name: currentUser.name,
+      email: currentUser.email,
+      avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(currentUser.name)}`,
+      x: 0,
+      y: 0,
+      z: 150,
+      lastActive: firebase.firestore.FieldValue.serverTimestamp()
+    }).catch(e => console.error("Error joining room:", e));
+
+    heartbeatInterval = setInterval(() => {
+      if (activeRoomId && peerId) {
+        db.collection('rooms').doc(activeRoomId).collection('peers').doc(peerId).update({
+          lastActive: firebase.firestore.FieldValue.serverTimestamp()
+        }).catch(e => console.error(e));
+      }
+    }, 5000);
+
+    roomUnsubscribe = db.collection('rooms').doc(activeRoomId).onSnapshot(doc => {
+      if (doc.exists) {
+        const data = doc.data();
+        const studioTextarea = document.getElementById('studio-code-input');
+        if (data.code && data.code !== studioTextarea.value && data.updatedBy !== currentUser.email) {
+          isUpdatingFromRemote = true;
+          const start = studioTextarea.selectionStart;
+          const end = studioTextarea.selectionEnd;
+          
+          studioTextarea.value = data.code;
+          updateEditorGutter();
+          
+          studioTextarea.setSelectionRange(start, end);
+          isUpdatingFromRemote = false;
+          
+          runStudioPreview();
+          updateSyncStatusText(currentLang === 'fr' ? 'Synchronisé' : 'Synced');
+        }
+      } else {
+        const studioTextarea = document.getElementById('studio-code-input');
+        db.collection('rooms').doc(activeRoomId).set({
+          code: studioTextarea.value,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          updatedBy: currentUser.email
+        });
+      }
+    });
+
+    peersUnsubscribe = db.collection('rooms').doc(activeRoomId).collection('peers').onSnapshot(snapshot => {
+      const peersList = [];
+      const now = Date.now();
+      const peerListContainer = document.getElementById('studio-peers-list');
+      peerListContainer.innerHTML = '';
+      
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const id = doc.id;
+        
+        const lastActiveTime = data.lastActive ? data.lastActive.toDate().getTime() : now;
+        if (now - lastActiveTime > 15000) {
+          if (id !== peerId) {
+            db.collection('rooms').doc(activeRoomId).collection('peers').doc(id).delete().catch(e => {});
+          }
+          return;
+        }
+        
+        peersList.push({
+          id: id,
+          name: data.name,
+          avatar: data.avatar,
+          x: data.x || 0,
+          y: data.y || 0,
+          z: data.z || 150
+        });
+        
+        const peerChip = document.createElement('div');
+        peerChip.className = `peer-chip ${id === peerId ? 'self' : ''}`;
+        peerChip.innerHTML = `
+          <img src="${data.avatar}" alt="Avatar">
+          <span>${data.name} ${id === peerId ? '(You)' : ''}</span>
+        `;
+        peerListContainer.appendChild(peerChip);
+      });
+      
+      const iframe = document.getElementById('studio-preview-frame');
+      if (iframe && iframe.contentWindow) {
+        const otherPeers = peersList.filter(p => p.id !== peerId);
+        iframe.contentWindow.postMessage({
+          type: 'peer_update',
+          peers: otherPeers
+        }, '*');
+      }
+    });
+  }
+
+  function leaveMultiplayerRoom(silent = false) {
+    if (roomUnsubscribe) { roomUnsubscribe(); roomUnsubscribe = null; }
+    if (peersUnsubscribe) { peersUnsubscribe(); peersUnsubscribe = null; }
+    if (heartbeatInterval) { clearInterval(heartbeatInterval); heartbeatInterval = null; }
+    
+    if (activeRoomId && peerId && typeof firebase !== 'undefined') {
+      const db = firebase.firestore();
+      db.collection('rooms').doc(activeRoomId).collection('peers').doc(peerId).delete().catch(e => {});
+    }
+    
+    const roomIdWas = activeRoomId;
+    activeRoomId = null;
+    peerId = null;
+    
+    document.getElementById('studio-room-input').disabled = false;
+    document.getElementById('btn-studio-join').classList.remove('hidden');
+    document.getElementById('btn-studio-leave').classList.add('hidden');
+    document.getElementById('active-peers-container').classList.add('hidden');
+    document.getElementById('studio-peers-list').innerHTML = '';
+    
+    updateSyncStatusText(currentLang === 'fr' ? 'Session Locale' : 'Local Session');
+    if (!silent && roomIdWas) {
+      toast(currentLang === 'fr' ? "Chambre quittée" : "Left room");
+    }
+  }
+
+  function updateSyncStatusText(text) {
+    const statusText = document.querySelector('#studio-sync-status .status-text');
+    const statusDot = document.querySelector('#studio-sync-status .status-dot');
+    if (statusText) statusText.textContent = text;
+    
+    if (statusDot) {
+      if (text === 'Synced' || text === 'Synchronisé' || text === 'Local Session' || text === 'Session Locale') {
+        statusDot.className = 'status-dot green';
+      } else if (text === 'Saving...' || text === 'Enregistrement...' || text === 'Connecting...' || text === 'Connexion...') {
+        statusDot.className = 'status-dot orange';
+      } else {
+        statusDot.className = 'status-dot orange';
+      }
+    }
+  }
+
+  function updateEditorGutter() {
+    const textarea = document.getElementById('studio-code-input');
+    const gutter = document.getElementById('editor-gutter');
+    if (!textarea || !gutter) return;
+    const lines = textarea.value.split('\n').length;
+    let gutterHtml = '';
+    for (let i = 1; i <= lines; i++) {
+      gutterHtml += i + '<br>';
+    }
+    gutter.innerHTML = gutterHtml;
+  }
+
+  function runStudioPreview() {
+    const code = document.getElementById('studio-code-input').value;
+    const iframe = document.getElementById('studio-preview-frame');
+    if (iframe) {
+      iframe.srcdoc = getStudioIframeSrcDoc(code);
+    }
+  }
+
+  window.addEventListener('message', (event) => {
+    if (event.data.type === 'camera_move' && activeRoomId && peerId && typeof firebase !== 'undefined') {
+      const pos = event.data.position;
+      const db = firebase.firestore();
+      db.collection('rooms').doc(activeRoomId).collection('peers').doc(peerId).update({
+        x: pos.x,
+        y: pos.y,
+        z: pos.z
+      }).catch(e => {});
+    }
+  });
 
   // Toast helper
   function toast(msg) {

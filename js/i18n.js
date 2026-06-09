@@ -69,7 +69,19 @@ const translations = {
     admin_tab_feed: "Modération Feed",
     admin_tab_analytics: "Statistiques",
     admin_tab_copilot: "Co-pilote AI",
-    admin_tab_messages: "Messages Reçus"
+    admin_tab_messages: "Messages Reçus",
+    admin_tab_studio: "Studio & Code",
+    hub_tab_studio: "DevSocial Studio",
+    multiplayer_join_room: "Rejoindre/Créer une salle",
+    multiplayer_active_users: "Développeurs connectés",
+    multiplayer_room_placeholder: "Nom de la salle...",
+    multiplayer_join_btn: "Rejoindre ⚡",
+    multiplayer_leave_btn: "Quitter",
+    studio_run_btn: "Exécuter ⚡",
+    studio_share_btn: "Publier dans le Feed 🚀",
+    studio_saving: "Enregistrement...",
+    studio_synced: "Synchronisé",
+    studio_premium_error: "Accès Premium requis pour coder dans le Studio."
   },
   en: {
     nav_title: "IA CODE STUDIO",
@@ -141,6 +153,18 @@ const translations = {
     admin_tab_feed: "Feed Moderation",
     admin_tab_analytics: "Analytics",
     admin_tab_copilot: "AI Co-pilot",
-    admin_tab_messages: "Received Messages"
+    admin_tab_messages: "Received Messages",
+    admin_tab_studio: "Studio & Code",
+    hub_tab_studio: "DevSocial Studio",
+    multiplayer_join_room: "Join/Create Room",
+    multiplayer_active_users: "Connected Developers",
+    multiplayer_room_placeholder: "Room name...",
+    multiplayer_join_btn: "Join ⚡",
+    multiplayer_leave_btn: "Leave",
+    studio_run_btn: "Run Preview ⚡",
+    studio_share_btn: "Share to Feed 🚀",
+    studio_saving: "Saving...",
+    studio_synced: "Synced",
+    studio_premium_error: "Premium access required to code in Studio."
   }
 };

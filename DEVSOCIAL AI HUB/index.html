@@ -55,6 +55,10 @@
           <i class="fa-solid fa-brain-circuit"></i>
           <span class="nav-label" data-en="Studio-AI Expert" data-fr="Expert Studio-AI">Studio-AI Expert</span>
         </button>
+        <button class="nav-item" data-tab="studio">
+          <i class="fa-solid fa-laptop-code"></i>
+          <span class="nav-label" data-en="DevSocial Studio" data-fr="DevSocial Studio">DevSocial Studio</span>
+        </button>
         <button class="nav-item" data-tab="gallery">
           <i class="fa-solid fa-images"></i>
           <span class="nav-label" data-en="Featured Gallery" data-fr="Galerie Vedette">Featured Gallery</span>
@@ -218,6 +222,72 @@
                 <h4 data-en="🎭 Live Avatar Mask" data-fr="🎭 Masque Avatar en Direct">🎭 Live Avatar Mask</h4>
                 <p data-en="Calibrate the custom webcam point-cloud to resemble a futuristic mask." data-fr="Calibrez le nuage de points de la webcam pour ressembler à un masque futuriste.">Calibrate the custom webcam point-cloud to resemble a futuristic mask.</p>
                 <span class="winner-tag" data-en="🏆 Winner: EmmaArchitect" data-fr="🏆 Gagnant : EmmaArchitect">🏆 Winner: EmmaArchitect</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DEV STUDIO PANEL -->
+        <div class="view-panel" id="panel-studio">
+          <div class="studio-layout">
+            <!-- Left Side: Code Editor -->
+            <div class="studio-editor-pane">
+              <div class="pane-header">
+                <div class="pane-title">
+                  <i class="fa-solid fa-code"></i>
+                  <span data-en="Source Code Editor" data-fr="Éditeur de Code Source">Source Code Editor</span>
+                </div>
+                <div class="pane-actions">
+                  <button id="btn-studio-run" class="studio-action-btn run-btn">
+                    <i class="fa-solid fa-play"></i>
+                    <span data-en="Run Preview ⚡" data-fr="Exécuter ⚡">Run Preview ⚡</span>
+                  </button>
+                  <button id="btn-studio-share" class="studio-action-btn share-btn">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span data-en="Share to Feed 🚀" data-fr="Publier dans le Feed 🚀">Share to Feed 🚀</span>
+                  </button>
+                </div>
+              </div>
+              <div class="editor-container">
+                <div class="editor-gutter" id="editor-gutter">1</div>
+                <textarea id="studio-code-input" class="studio-textarea" placeholder="Paste or write your Three.js/WebGL code here..."></textarea>
+              </div>
+            </div>
+
+            <!-- Right Side: Preview & Multiplayer Panel -->
+            <div class="studio-preview-pane">
+              <div class="pane-header">
+                <div class="pane-title">
+                  <i class="fa-solid fa-desktop"></i>
+                  <span data-en="Live Interactive Viewport" data-fr="Aperçu Interactif Direct">Live Interactive Viewport</span>
+                </div>
+                <div class="sync-status" id="studio-sync-status">
+                  <span class="status-dot green"></span>
+                  <span class="status-text" data-en="Local Session" data-fr="Session Locale">Local Session</span>
+                </div>
+              </div>
+              
+              <div class="viewport-container">
+                <iframe id="studio-preview-frame" class="preview-frame"></iframe>
+              </div>
+
+              <!-- Multiplayer Control Panel -->
+              <div class="multiplayer-panel">
+                <div class="mp-header">
+                  <i class="fa-solid fa-users-rays"></i>
+                  <span data-en="Multiplayer Co-Coding Sandbox" data-fr="Sandbox Co-Coding Multiplayer">Multiplayer Co-Coding Sandbox</span>
+                </div>
+                <div class="mp-controls">
+                  <input type="text" id="studio-room-input" placeholder="Room ID (e.g. quantum-space)" data-en-placeholder="Room ID (e.g. quantum-space)" data-fr-placeholder="Nom de la salle (ex: quantum-space)">
+                  <button id="btn-studio-join" class="mp-btn join-btn" data-en="Join Room" data-fr="Rejoindre">Join Room</button>
+                  <button id="btn-studio-leave" class="mp-btn leave-btn hidden" data-en="Leave Room" data-fr="Quitter">Leave Room</button>
+                </div>
+                <div class="active-peers-container hidden" id="active-peers-container">
+                  <h4 data-en="Connected Developers" data-fr="Développeurs connectés">Connected Developers</h4>
+                  <div class="peers-list" id="studio-peers-list">
+                    <!-- Dynamic peer items -->
+                  </div>
+                </div>
               </div>
             </div>
           </div>
