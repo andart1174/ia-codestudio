@@ -755,6 +755,19 @@
       }, 800);
     };
 
+    // Join Challenge Button click
+    document.querySelectorAll('.btn-join-challenge').forEach(btn => {
+      btn.onclick = () => {
+        if (!currentUser) {
+          toast(currentLang === 'fr' ? "🔒 Connectez-vous sur le portail pour participer !" : "🔒 Please log in on the main portal to join challenges!");
+          return;
+        }
+        modalNewPost.classList.add('active');
+        postDescInput.value = "#chrono2026 ";
+        postDescInput.focus();
+      };
+    });
+
     // Feed Search Filter
     const searchInput = document.getElementById('feed-search');
     searchInput.oninput = () => {
