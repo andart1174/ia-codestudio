@@ -180,6 +180,13 @@ function createSurfaceScene(scene) {
         localStorage.setItem('devsocial_posts', JSON.stringify(posts));
       }
       return post ? post.comments : [];
+    },
+    
+    deletePost: function(postId) {
+      let posts = this.getPosts();
+      posts = posts.filter(p => p.id !== postId);
+      localStorage.setItem('devsocial_posts', JSON.stringify(posts));
+      return posts;
     }
   };
 })();

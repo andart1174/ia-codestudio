@@ -219,7 +219,12 @@
               <span>${post.userTag}</span>
             </div>
           </div>
-          <span class="fork-badge"><i class="fa-solid fa-code"></i> WebGL Ready</span>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="fork-badge"><i class="fa-solid fa-code"></i> WebGL Ready</span>
+            <button class="btn-delete-post" onclick="deletePost(${post.id})" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: #f87171; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;" title="${currentLang === 'fr' ? 'Supprimer la publication (Admin)' : 'Delete Post (Admin)'}">
+              <i class="fa-solid fa-trash" style="font-size: 11px;"></i>
+            </button>
+          </div>
         </div>
         
         <div class="post-caption">${post.caption}</div>
@@ -470,6 +475,15 @@
       btn.querySelector('span').textContent = count;
       btn.classList.add('liked');
       toast(currentLang === 'fr' ? "Aimé !" : "Liked!");
+    }
+  };
+
+  window.deletePost = function(postId) {
+    if (confirm(currentLang === 'fr' ? "Êtes-vous sûr de vouloir supprimer cette publication en tant qu'Administrateur ?" : "Are you sure you want to delete this post as Administrator?")) {
+      posts = window.DevSocialDB.deletePost(postId);
+      stopAll3DViews();
+      renderFeed();
+      toast(currentLang === 'fr' ? "Publication supprimée !" : "Post deleted successfully!");
     }
   };
 
