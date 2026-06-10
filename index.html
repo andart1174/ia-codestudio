@@ -1047,15 +1047,21 @@
                     const uSnap = await Promise.race([db.collection('users').get(), timeout(4000)]);
                     let lsU = JSON.parse(localStorage.getItem('ia_users') || '[]');
                     let memU = {};
-                    lsU.forEach(u => memU[u.email] = u);
+                    lsU.forEach(u => {
+                        if (u && u.email) memU[u.email] = u;
+                    });
                     uSnap.forEach(d => {
                         let data = d.data();
-                        memU[data.email] = { ...memU[data.email], ...data };
+                        if (data && data.email) {
+                            memU[data.email] = { ...memU[data.email], ...data };
+                        }
                     });
                     const mergedU = Object.values(memU);
                     localStorage.setItem('ia_users', JSON.stringify(mergedU));
                     for(let u of mergedU) {
-                        try { await db.collection('users').doc(u.email).set(u); } catch(e){}
+                        if (u && u.email) {
+                            try { await db.collection('users').doc(u.email).set(u); } catch(e){}
+                        }
                     }
 
                     // Messages Sync - Smart Merge
@@ -1064,33 +1070,45 @@
                     let memM = [];
                     let hashes = new Set();
                     lsM.forEach(m => {
-                        let h = m.date + '_' + m.email;
-                        if (!hashes.has(h)) { memM.push(m); hashes.add(h); }
+                        if (m && m.email && m.date) {
+                            let h = m.date + '_' + m.email;
+                            if (!hashes.has(h)) { memM.push(m); hashes.add(h); }
+                        }
                     });
                     mSnap.forEach(d => {
                         let m = d.data();
-                        let h = m.date + '_' + m.email;
-                        if (!hashes.has(h)) { memM.push(m); hashes.add(h); }
+                        if (m && m.email && m.date) {
+                            let h = m.date + '_' + m.email;
+                            if (!hashes.has(h)) { memM.push(m); hashes.add(h); }
+                        }
                     });
                     memM.sort((a,b) => b.date - a.date);
                     localStorage.setItem('ia_messages', JSON.stringify(memM));
                     for(let m of memM) {
-                         try { await db.collection('messages').doc(m.date + '_' + m.email).set(m); } catch(e){}
+                        if (m && m.email && m.date) {
+                            try { await db.collection('messages').doc(m.date + '_' + m.email).set(m); } catch(e){}
+                        }
                     }
 
                     // Premium - Smart Merge
                     const pSnap = await Promise.race([db.collection('premium').get(), timeout(4000)]);
                     let lsP = JSON.parse(localStorage.getItem('ia_premium_users') || '[]');
                     let memP = {};
-                    lsP.forEach(p => memP[p.email] = p);
+                    lsP.forEach(p => {
+                        if (p && p.email) memP[p.email] = p;
+                    });
                     pSnap.forEach(d => {
                         let m = d.data();
-                        memP[m.email] = { ...memP[m.email], ...m };
+                        if (m && m.email) {
+                            memP[m.email] = { ...memP[m.email], ...m };
+                        }
                     });
                     const mergedP = Object.values(memP);
                     localStorage.setItem('ia_premium_users', JSON.stringify(mergedP));
                     for(let p of mergedP) {
-                        try { await db.collection('premium').doc(p.email).set(p); } catch(e){}
+                        if (p && p.email) {
+                            try { await db.collection('premium').doc(p.email).set(p); } catch(e){}
+                        }
                     }
                     
                     if (document.getElementById('firebase-status')) document.getElementById('firebase-status').innerHTML = 'Firebase: <span style="color:#10b981">Connected ✅</span>';
@@ -1263,11 +1281,12 @@
 
             async function refreshAdminStats() {
                 try {
-                    const premiumUsers = getPremiumUsers();
-                    const allUsers = JSON.parse(localStorage.getItem('ia_users') || '[]');
+                    const premiumUsers = getPremiumUsers().filter(u => u && u.email);
+                    const allUsers = JSON.parse(localStorage.getItem('ia_users') || '[]').filter(u => u && u.email);
                     
                     document.getElementById('stat-users-count').textContent = allUsers.length;
                     const activePremiumCount = premiumUsers.filter(u => {
+                        if (!u || !u.email) return false;
                         if (u.days === 9999) return true;
                         const expiryDate = (u.addedAt || 0) + (u.days || 0) * 86400000;
                         return expiryDate > Date.now();
@@ -1310,24 +1329,27 @@
                 
                 container.innerHTML = '';
                 
-                if (list.length === 0) {
+                // Filtrează elementele corupte sau fără email
+                const validList = list.filter(u => u && u.email);
+                
+                if (validList.length === 0) {
                     container.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#64748b; padding:20px; font-style:italic;">No users found.</td></tr>`;
                     return;
                 }
                 
                 let bannedCount = 0;
                 
-                list.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0)).forEach(u => {
+                validList.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0)).forEach(u => {
                     const isAdm = u.role === 'Admin';
                     const isBanned = u.banned === true;
                     if (isBanned) bannedCount++;
                     
                     const premiumUsers = getPremiumUsers();
-                    const premiumRec = premiumUsers.find(p => p.email.toLowerCase() === u.email.toLowerCase());
+                    const premiumRec = premiumUsers.find(p => p && p.email && p.email.toLowerCase() === u.email.toLowerCase());
                     let isPremium = false;
                     let premiumLabel = "Free";
                     if (premiumRec) {
-                        const expiry = premiumRec.addedAt + premiumRec.days * 86400000;
+                        const expiry = (premiumRec.addedAt || 0) + (premiumRec.days || 0) * 86400000;
                         if (premiumRec.days === 9999 || expiry > Date.now()) {
                             isPremium = true;
                             premiumLabel = premiumRec.days === 9999 ? "Premium (Lifetime)" : `Premium (${Math.ceil((expiry - Date.now())/86400000)}d left)`;
@@ -1353,9 +1375,12 @@
                     const premButtonBg = isPremium ? "rgba(239,68,68,0.1)" : "rgba(245,158,11,0.1)";
                     const premButtonBorder = isPremium ? "rgba(239,68,68,0.3)" : "rgba(245,158,11,0.3)";
                     
+                    const uNameSafe = u.name || "Utilisateur sans nom";
+                    const uEmailSafe = u.email;
+                    
                     tr.innerHTML = `
-                        <td style="padding:10px 8px; font-weight:700; color:#fff;">${u.name}</td>
-                        <td style="padding:10px 8px; color:#cbd5e1;">${u.email}</td>
+                        <td style="padding:10px 8px; font-weight:700; color:#fff;">${uNameSafe}</td>
+                        <td style="padding:10px 8px; color:#cbd5e1;">${uEmailSafe}</td>
                         <td style="padding:10px 8px;">
                             <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start;">
                                 ${roleBadge}
@@ -1364,10 +1389,10 @@
                         </td>
                         <td style="padding:10px 8px; text-align:right;">
                             <div style="display:flex; gap:6px; justify-content:flex-end;">
-                                <button onclick="adminToggleBan('${u.email}', ${isBanned})" style="background:${banButtonBg}; border:1px solid ${banButtonBorder}; color:${banButtonColor}; padding:4px 8px; border-radius:6px; font-size:11px; cursor:pointer; font-weight:700;">
+                                <button onclick="adminToggleBan('${uEmailSafe}', ${isBanned})" style="background:${banButtonBg}; border:1px solid ${banButtonBorder}; color:${banButtonColor}; padding:4px 8px; border-radius:6px; font-size:11px; cursor:pointer; font-weight:700;">
                                     ${banButtonText}
                                 </button>
-                                <button onclick="adminTogglePremiumLink('${u.email}', ${isPremium})" style="background:${premButtonBg}; border:1px solid ${premButtonBorder}; color:${premButtonColor}; padding:4px 8px; border-radius:6px; font-size:11px; cursor:pointer; font-weight:700;">
+                                <button onclick="adminTogglePremiumLink('${uEmailSafe}', ${isPremium})" style="background:${premButtonBg}; border:1px solid ${premButtonBorder}; color:${premButtonColor}; padding:4px 8px; border-radius:6px; font-size:11px; cursor:pointer; font-weight:700;">
                                     ${premButtonText}
                                 </button>
                             </div>
