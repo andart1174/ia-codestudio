@@ -1524,17 +1524,46 @@ function getStudioIframeSrcDoc(rawCode, mode = 'threejs') {
     if (pos !== -1) {
       htmlContent = htmlContent.substring(0, pos) + injectedScript + htmlContent.substring(pos);
     } else {
-      htmlContent = htmlContent + injectedScript;
+htmlContent = htmlContent + injectedScript;
     }
   }
   return htmlContent;
 }
-function initDevSocialStudio() {
+  function initDevSocialStudio() {
     const studioTextarea = document.getElementById('studio-code-input');
     if (!studioTextarea) return;
     
     studioTextarea.value = defaultThreeJsCode;
     updateEditorGutter();
+    
+    const modeSelect = document.getElementById('studio-render-mode');
+    if (modeSelect) {
+      modeSelect.addEventListener('change', () => {
+        // Switch default template code if untouched
+        if (studioTextarea.value === defaultThreeJsCode && modeSelect.value === 'glsl') {
+          studioTextarea.value = defaultGlslShaderCode;
+          updateEditorGutter();
+        } else if (studioTextarea.value === defaultGlslShaderCode && modeSelect.value === 'threejs') {
+          studioTextarea.value = defaultThreeJsCode;
+          updateEditorGutter();
+        }
+        
+        runStudioPreview();
+        
+        // Sync to Firestore if in a room
+        if (activeRoomId && typeof firebase !== 'undefined') {
+          const db = firebase.firestore();
+          db.collection('rooms').doc(activeRoomId).update({
+            mode: modeSelect.value,
+            code: studioTextarea.value,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedBy: currentUser.email
+          }).then(() => {
+            updateSyncStatusText(currentLang === 'fr' ? 'Synchronisé' : 'Synced');
+          }).catch(e => console.error(e));
+        }
+      });
+    }
     
     studioTextarea.addEventListener('scroll', () => {
       const gutter = document.getElementById('editor-gutter');
@@ -1594,8 +1623,10 @@ function initDevSocialStudio() {
       debounceTimer = setTimeout(() => {
         if (activeRoomId && typeof firebase !== 'undefined') {
           const db = firebase.firestore();
+          const modeSelect = document.getElementById('studio-render-mode');
           db.collection('rooms').doc(activeRoomId).update({
             code: studioTextarea.value,
+            mode: modeSelect ? modeSelect.value : 'threejs',
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             updatedBy: currentUser.email
           }).then(() => {
@@ -1684,27 +1715,44 @@ function initDevSocialStudio() {
       if (doc.exists) {
         const data = doc.data();
         const studioTextarea = document.getElementById('studio-code-input');
+        const modeSelect = document.getElementById('studio-render-mode');
+        
+        let needsUpdate = false;
+        
         if (data.code && data.code !== studioTextarea.value && data.updatedBy !== currentUser.email) {
           isUpdatingFromRemote = true;
-          const start = studioTextarea.selectionStart;
-          const end = studioTextarea.selectionEnd;
+          const start = studioTextarea.selectionStart || 0;
+          const end = studioTextarea.selectionEnd || 0;
           
           studioTextarea.value = data.code;
           updateEditorGutter();
           
           studioTextarea.setSelectionRange(start, end);
           isUpdatingFromRemote = false;
-          
-          runStudioPreview();
-          updateSyncStatusText(currentLang === 'fr' ? 'Synchronisé' : 'Synced');
+          needsUpdate = true;
         }
+        
+        if (data.mode && modeSelect && data.mode !== modeSelect.value && data.updatedBy !== currentUser.email) {
+          modeSelect.value = data.mode;
+          needsUpdate = true;
+        }
+        
+        if (needsUpdate) {
+          runStudioPreview();
+        }
+        
+        updateSyncStatusText(currentLang === 'fr' ? 'Synchronisé' : 'Synced');
       } else {
         const studioTextarea = document.getElementById('studio-code-input');
+        const modeSelect = document.getElementById('studio-render-mode');
         db.collection('rooms').doc(activeRoomId).set({
           code: studioTextarea.value,
+          mode: modeSelect ? modeSelect.value : 'threejs',
           updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
           updatedBy: currentUser.email
-        });
+        }).then(() => {
+          updateSyncStatusText(currentLang === 'fr' ? 'Synchronisé' : 'Synced');
+        }).catch(e => console.error(e));
       }
     });
 
@@ -1712,14 +1760,26 @@ function initDevSocialStudio() {
       const peersList = [];
       const now = Date.now();
       const peerListContainer = document.getElementById('studio-peers-list');
-      peerListContainer.innerHTML = '';
+      if (peerListContainer) peerListContainer.innerHTML = '';
       
       snapshot.forEach(doc => {
         const data = doc.data();
         const id = doc.id;
         
-        const lastActiveTime = data.lastActive ? data.lastActive.toDate().getTime() : now;
-        if (now - lastActiveTime > 15000) {
+        let lastActiveTime = now;
+        if (data.lastActive) {
+          if (typeof data.lastActive.toDate === 'function') {
+            lastActiveTime = data.lastActive.toDate().getTime();
+          } else if (data.lastActive instanceof Date) {
+            lastActiveTime = data.lastActive.getTime();
+          } else if (typeof data.lastActive === 'number') {
+            lastActiveTime = data.lastActive;
+          } else if (data.lastActive.seconds) {
+            lastActiveTime = data.lastActive.seconds * 1000;
+          }
+        }
+        
+        if (now - lastActiveTime > 60000) {
           if (id !== peerId) {
             db.collection('rooms').doc(activeRoomId).collection('peers').doc(id).delete().catch(e => {});
           }
@@ -1755,13 +1815,15 @@ function initDevSocialStudio() {
           z: data.z || 150
         });
         
-        const peerChip = document.createElement('div');
-        peerChip.className = `peer-chip ${id === peerId ? 'self' : ''}`;
-        peerChip.innerHTML = `
-          <img src="${data.avatar}" alt="Avatar">
-          <span>${data.name} ${id === peerId ? '(You)' : ''}</span>
-        `;
-        peerListContainer.appendChild(peerChip);
+        if (peerListContainer) {
+          const peerChip = document.createElement('div');
+          peerChip.className = `peer-chip ${id === peerId ? 'self' : ''}`;
+          peerChip.innerHTML = `
+            <img src="${data.avatar}" alt="Avatar">
+            <span>${data.name} ${id === peerId ? '(You)' : ''}</span>
+          `;
+          peerListContainer.appendChild(peerChip);
+        }
       });
       
       const iframe = document.getElementById('studio-preview-frame');
