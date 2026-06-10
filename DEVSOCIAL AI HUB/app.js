@@ -174,6 +174,26 @@
           window.location.reload();
         }
       });
+
+      // Real-time Premium Status Sync for Cross-Device Support
+      db.collection('premium').doc(currentUser.email).onSnapshot(doc => {
+        if (doc.exists) {
+          const pData = doc.data();
+          let lsP = [];
+          try {
+            const raw = localStorage.getItem('ia_premium_users');
+            lsP = raw ? JSON.parse(raw) : [];
+          } catch(e){}
+          const emailLower = currentUser.email.toLowerCase();
+          const index = lsP.findIndex(p => p.email.toLowerCase() === emailLower);
+          if (index !== -1) {
+            lsP[index] = { ...lsP[index], ...pData };
+          } else {
+            lsP.push({ email: currentUser.email, ...pData });
+          }
+          localStorage.setItem('ia_premium_users', JSON.stringify(lsP));
+        }
+      }, err => console.log("Premium sync error:", err));
     }
   });
 
