@@ -22,7 +22,7 @@ window.VoiceSculpture3D = (() => {
           <span id="vs3d-rec-icon" style="width:12px;height:12px;background:#ff4d4d;border-radius:50%;"></span>
           <span id="vs3d-rec-text">${isEN ? 'Record Voice' : 'Enregistrer'}</span>
         </button>
-        <div id="vs3d-status" style="font-size:10px;color:#94a3b8;text-align:center;">${isEN ? 'Press to start recording (3s)' : 'Appuyez pentru a înregistra'}</div>
+        <div id="vs3d-status" style="font-size:10px;color:#94a3b8;text-align:center;">${isEN ? 'Press to start recording (3s)' : 'Appuyez pour enregistrer (3s)'}</div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;">
         <div class="vs3d-row"><span style="font-size:10px;color:#94a3b8;">${isEN ? 'Style' : 'Style'}</span><select id="vs3d-style" style="width:100%;padding:5px;background:#1e293b;border:1px solid #333;border-radius:4px;color:#fff;font-size:10px;"><option value="organic">Organic</option><option value="spiky">Spiky</option><option value="vortex">Vortex</option></select></div>

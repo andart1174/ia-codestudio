@@ -199,8 +199,7 @@ function queryLocalRag(query) {
   const stopwords = new Set([
     'the', 'and', 'for', 'with', 'you', 'this', 'that', 'from', 'have', 'are', 'was', 'were', 'been',
     'der', 'die', 'das', 'und', 'ist', 'mit', 'von', 'eine', 'einer',
-    'une', 'des', 'les', 'dans', 'pour', 'avec', 'dans', 'cette', 'sont',
-    'este', 'sunt', 'din', 'prin', 'pentru', 'care', 'aceasta', 'acest'
+    'une', 'des', 'les', 'dans', 'pour', 'avec', 'dans', 'cette', 'sont'
   ]);
   const queryWords = query.toLowerCase()
     .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, ' ')
@@ -1196,8 +1195,7 @@ function injectTutorToMonaco() {
     function matchLocalRag(query) {
       const stopwords = new Set([
         'the', 'and', 'for', 'with', 'you', 'this', 'that', 'from', 'have', 'are', 'was', 'were', 'been',
-        'une', 'des', 'les', 'dans', 'pour', 'avec', 'dans', 'cette', 'sont',
-        'este', 'sunt', 'din', 'prin', 'pentru', 'care', 'aceasta', 'acest'
+        'une', 'des', 'les', 'dans', 'pour', 'avec', 'dans', 'cette', 'sont'
       ]);
       const queryWords = query.toLowerCase()
         .replace(/[.,\\/#!$%\\^&\\*;:{}=\\-_\`~()?]/g, ' ')

@@ -16,11 +16,11 @@
     },
     fr: {
       title: "🎭 Swarm de Personas",
-      desc: "Simulez un groupe de clients virtuels qui visitent votre page. Ils analysent votre code și vorbesc live în chat.",
+      desc: "Simulez un groupe de clients virtuels qui visitent votre page. Ils analysent votre code et discutent en direct.",
       feedTitle: "💬 Log Chat Session Utilisateurs",
       scoreTitle: "Score d'Usabilité du Swarm",
       generateBtn: "👥 Simuler des Sessions Utilisateurs",
-      liveTyping: "Feedback live lors de l'écriture",
+      liveTyping: "Feedback en direct lors de la saisie",
       rating: "Note",
       statusOk: "🟢 Le groupe de discussion est très satisfait.",
       statusWarn: "🟡 Le groupe a des remarques. Lisez le chat.",
@@ -109,7 +109,7 @@
       PERSONAS.sarah.score = 95;
       if (Math.random() > 0.4 || !isTypingTrigger) {
         addChatMessage('sarah', isFr 
-          ? "Wow, degradeurile și efectele de sticlă blurată arată super bine! Are un vibe foarte estetic! 🧊✨"
+          ? "Wow, les dégradés et les effets de verre dépoli sont superbes ! C'est très esthétique ! 🧊✨"
           : "Wow, the gradients and glassmorphism styling look absolutely gorgeous! Very aesthetic vibe! 🧊✨"
         );
       }
@@ -117,7 +117,7 @@
       PERSONAS.sarah.score = 55;
       if (Math.random() > 0.6 || !isTypingTrigger) {
         addChatMessage('sarah', isFr
-          ? "Hmm, layoutul mi se pare cam simplu și plictisitor. Ar merge niște culori neon sau animații fluide. 😴"
+          ? "Hmm, la mise en page me semble un peu simple et ennuyeuse. Des couleurs néon ou des animations fluides seraient bienvenues. 😴"
           : "Hmm, the design looks a bit flat and plain. Could use some modern neon gradients or fluid animations. 😴"
         );
       }
@@ -129,7 +129,7 @@
       PERSONAS.alex.score = 90;
       if (Math.random() > 0.5 || !isTypingTrigger) {
         addChatMessage('alex', isFr
-          ? "Excelent, folosești tag-uri semantice HTML5. Codul este curat și ușor de structurat de browser! 💻"
+          ? "Excellent, vous utilisez des balises sémantiques HTML5. Le code est propre et facile à structurer pour le navigateur ! 💻"
           : "Great job using semantic HTML5 layout tags. Clean AST structure, easy for SEO crawlers! 💻"
         );
       }
@@ -137,7 +137,7 @@
       PERSONAS.alex.score = 45;
       if (Math.random() > 0.5 || !isTypingTrigger) {
         addChatMessage('alex', isFr
-          ? "De ce folosești taguri generic-div pretutindeni? Folosește structuri semantice precum <header> și <main>."
+          ? "Pourquoi utiliser des balises div génériques partout ? Utilisez des structures sémantiques comme <header> et <main>."
           : "Please avoid using generic <div> wrappers for everything. Use semantic structures like <header> or <main>."
         );
       }
@@ -149,7 +149,7 @@
       PERSONAS.robert.score = 88;
       if (Math.random() > 0.6 || !isTypingTrigger) {
         addChatMessage('robert', isFr
-          ? "Bun, avem butoane clare de tip Call-to-Action. Utilizatorii au unde să dea click pentru conversii! 📈"
+          ? "Bon, nous avons des boutons d'appel à l'action (CTA) clairs. Les utilisateurs savent où cliquer ! 📈"
           : "Excellent, we have clear Call-to-Action buttons. The page is ready to convert traffic into leads! 📈"
         );
       }
@@ -157,7 +157,7 @@
       PERSONAS.robert.score = 30;
       if (Math.random() > 0.4 || !isTypingTrigger) {
         addChatMessage('robert', isFr
-          ? "Unde sunt butoanele sau formularele? Cum cumpără cineva de aici sau cum se înregistrează? 💸"
+          ? "Où sont les boutons ou les formulaires ? Comment quelqu'un achète-t-il ou s'enregistre-t-il d'ici ? 💸"
           : "There are no buttons, signups, or forms. How is a customer supposed to convert on this page? 💸"
         );
       }
@@ -169,7 +169,7 @@
       PERSONAS.martha.score = 40;
       if (Math.random() > 0.5 || !isTypingTrigger) {
         addChatMessage('martha', isFr
-          ? "Scrisul este extrem de mic! Îmi obosesc ochii citind. Vă rog faceți fontul mai mare și lizibil. 👵"
+          ? "Le texte est trop petit ! Mes yeux fatiguent à la lecture. Veuillez agrandir la police pour la rendre lisible. 👵"
           : "The font size is tiny! I can't read a thing. Please make the text bigger and scale nicely. 👵"
         );
       }
@@ -177,7 +177,7 @@
       PERSONAS.martha.score = 80;
       if (Math.random() > 0.7 || !isTypingTrigger) {
         addChatMessage('martha', isFr
-          ? "Textul este aerisit și destul de ușor de citit. Aspectul este ordonat."
+          ? "Le texte est aéré et assez facile à lire. L'aspect est ordonné."
           : "The text spacing looks comfortable and clean. Highly readable layout."
         );
       }
@@ -188,7 +188,7 @@
     if (PERSONAS.chloe.score > 70) {
       if (Math.random() > 0.6 || !isTypingTrigger) {
         addChatMessage('chloe', isFr
-          ? "Pagina se încarcă super repede și arată foarte profesionist. Aș petrece timp aici! 👍"
+          ? "La page se charge très rapidement et semble très professionnelle. J'adorerais y passer du temps ! 👍"
           : "The page loads incredibly fast and looks very professional. I'd definitely browse this site! 👍"
         );
       }
@@ -326,7 +326,7 @@
       feed.innerHTML = '';
       if (CHAT_HISTORY.length === 0) {
         addChatMessage('alex', gl() === 'fr' 
-          ? "Am intrat în sesiune. Scrie niște cod în Monaco și noi îl vom testa live! 🚀" 
+          ? "Session démarrée. Écrivez du code dans Monaco et nous le testerons en direct ! 🚀" 
           : "Logged in. Type some HTML code in Monaco and we will analyze it in real time! 🚀"
         );
       } else {

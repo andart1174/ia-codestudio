@@ -185,6 +185,7 @@
               </div>
               <div class="chat-input-bar">
                 <input type="text" id="chat-user-input" placeholder="Type a message..." data-en-placeholder="Ask Studio-AI a question about the apps..." data-fr-placeholder="Posez une question à Studio-AI sur les applications...">
+                <button id="btn-chat-mic" style="background: none; border: none; color: #a855f7; cursor: pointer; font-size: 16px; padding: 10px; margin-right: 5px; transition: color 0.3s;"><i class="fa-solid fa-microphone"></i></button>
                 <button id="btn-send-chat"><i class="fa-solid fa-paper-plane"></i></button>
               </div>
             </div>
@@ -261,14 +262,22 @@
                   <i class="fa-solid fa-desktop"></i>
                   <span data-en="Live Interactive Viewport" data-fr="Aperçu Interactif Direct">Live Interactive Viewport</span>
                 </div>
+                <div style="margin-left: auto; margin-right: 15px; display: flex; align-items: center; gap: 8px;">
+                  <label for="studio-render-mode" style="font-size: 11px; font-weight: 700; color: #cbd5e1;" data-en="Mode:" data-fr="Mode:">Mode:</label>
+                  <select id="studio-render-mode" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 4px 8px; color: #fff; font-size: 11px; outline: none; cursor: pointer;">
+                    <option value="threejs">Three.js 3D</option>
+                    <option value="glsl">GLSL Fragment Shader</option>
+                  </select>
+                </div>
                 <div class="sync-status" id="studio-sync-status">
                   <span class="status-dot green"></span>
                   <span class="status-text" data-en="Local Session" data-fr="Session Locale">Local Session</span>
                 </div>
               </div>
               
-              <div class="viewport-container">
+              <div class="viewport-container" style="position: relative;">
                 <iframe id="studio-preview-frame" class="preview-frame"></iframe>
+                <div id="viewport-reactions-layer" style="position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 10;"></div>
               </div>
 
               <!-- Multiplayer Control Panel -->
@@ -281,6 +290,13 @@
                   <input type="text" id="studio-room-input" placeholder="Room ID (e.g. quantum-space)" data-en-placeholder="Room ID (e.g. quantum-space)" data-fr-placeholder="Nom de la salle (ex: quantum-space)">
                   <button id="btn-studio-join" class="mp-btn join-btn" data-en="Join Room" data-fr="Rejoindre">Join Room</button>
                   <button id="btn-studio-leave" class="mp-btn leave-btn hidden" data-en="Leave Room" data-fr="Quitter">Leave Room</button>
+                </div>
+                <div id="mp-reactions-bar" class="mp-reactions-bar hidden" style="margin-top: 10px; display: flex; gap: 8px; justify-content: center; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255,255,255,0.05); padding: 8px; border-radius: 8px;">
+                  <button class="reaction-btn" data-emoji="🔥" style="background: none; border: none; font-size: 18px; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">🔥</button>
+                  <button class="reaction-btn" data-emoji="🎉" style="background: none; border: none; font-size: 18px; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">🎉</button>
+                  <button class="reaction-btn" data-emoji="👏" style="background: none; border: none; font-size: 18px; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">👏</button>
+                  <button class="reaction-btn" data-emoji="🚀" style="background: none; border: none; font-size: 18px; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">🚀</button>
+                  <button class="reaction-btn" data-emoji="❤️" style="background: none; border: none; font-size: 18px; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">❤️</button>
                 </div>
                 <div class="active-peers-container hidden" id="active-peers-container">
                   <h4 data-en="Connected Developers" data-fr="Développeurs connectés">Connected Developers</h4>

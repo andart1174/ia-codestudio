@@ -20,6 +20,7 @@
   let peerId = null;
   let isUpdatingFromRemote = false;
   let heartbeatInterval = null;
+  let lastReactionTimes = {};
 
   // DOM Elements
   const navItems = document.querySelectorAll('.nav-menu .nav-item');
@@ -686,7 +687,7 @@
       return;
     }
 
-    if (confirm(currentLang === 'fr' ? "Êtes-vous sûr de vouloir supprimer această publicație?" : "Are you sure you want to delete this post?")) {
+    if (confirm(currentLang === 'fr' ? "Êtes-vous sûr de vouloir supprimer cette publication ?" : "Are you sure you want to delete this post?")) {
       window.DevSocialDB.deletePost(postId);
       stopAll3DViews();
       toast(currentLang === 'fr' ? "Publication supprimée !" : "Post deleted successfully!");
@@ -752,7 +753,7 @@
   window.openForkCodeModal = function(postId) {
     if (!checkPremium()) {
       alert(currentLang === 'fr' ? 
-        "🔒 Copierea și importul codului sunt rezervate membrilor Premium. Vă rugăm să vă conectați sau să vă abonați pe portalul principal!" : 
+        "🔒 La copie et l'importation de code sont réservées aux membres Premium. Veuillez vous connecter ou vous abonner sur le portail principal !" : 
         "🔒 Copying and importing code are reserved for Premium members. Please log in or subscribe on the main portal!");
       return;
     }
@@ -780,7 +781,7 @@
 
   btnSubmitNewPost.onclick = () => {
     if (!currentUser) {
-      toast(currentLang === 'fr' ? "🔒 Connectez-vous sur le portail pentru a publica !" : "🔒 Please log in on the main portal to publish!");
+      toast(currentLang === 'fr' ? "🔒 Connectez-vous sur le portail pour publier !" : "🔒 Please log in on the main portal to publish!");
       return;
     }
 
@@ -830,6 +831,88 @@
     chatMessages.innerHTML = '';
     const botMsg = window.StudioAI.getWelcomeMessage(currentLang);
     appendChatMessage('bot', botMsg);
+    
+    // Bind click delegation for Apply Code buttons
+    chatMessages.addEventListener('click', (e) => {
+      const btn = e.target.closest('.apply-code-btn');
+      if (btn) {
+        if (!checkPremium()) {
+          alert(currentLang === 'fr' ? 
+            "🔒 Accès Premium requis pour charger du code dans le Studio." : 
+            "🔒 Premium access required to load code into the Studio.");
+          return;
+        }
+        const code = btn.getAttribute('data-code');
+        const studioTextarea = document.getElementById('studio-code-input');
+        if (studioTextarea) {
+          studioTextarea.value = code;
+          updateEditorGutter();
+          switchTab('studio');
+          runStudioPreview();
+          toast(currentLang === 'fr' ? "Code appliqué au Studio !" : "Code applied to Studio!");
+        }
+      }
+    });
+
+    // Voice Co-Pilot Speech Recognition Setup
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      
+      let isRecording = false;
+      const btnMic = document.getElementById('btn-chat-mic');
+      
+      if (btnMic) {
+        btnMic.onclick = () => {
+          if (!checkPremium()) {
+            alert(currentLang === 'fr' ? 
+              "🔒 La saisie vocale Co-Pilot est réservée aux membres Premium." : 
+              "🔒 Voice Co-Pilot input is reserved for Premium members.");
+            return;
+          }
+          if (isRecording) {
+            recognition.stop();
+          } else {
+            recognition.lang = currentLang === 'fr' ? 'fr-FR' : 'en-US';
+            recognition.start();
+          }
+        };
+      }
+      
+      recognition.onstart = () => {
+        isRecording = true;
+        if (btnMic) btnMic.classList.add('recording');
+        toast(currentLang === 'fr' ? "🎙️ Écoute en cours..." : "🎙️ Listening...");
+      };
+      
+      recognition.onend = () => {
+        isRecording = false;
+        if (btnMic) btnMic.classList.remove('recording');
+      };
+      
+      recognition.onerror = (event) => {
+        console.error("Speech recognition error", event.error);
+        isRecording = false;
+        if (btnMic) btnMic.classList.remove('recording');
+      };
+      
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        const inputField = document.getElementById('chat-user-input');
+        if (inputField) {
+          inputField.value = (inputField.value + " " + transcript).trim();
+          inputField.focus();
+        }
+      };
+    } else {
+      const btnMic = document.getElementById('btn-chat-mic');
+      if (btnMic) {
+        btnMic.style.opacity = '0.3';
+        btnMic.title = "Speech Recognition not supported in this browser";
+      }
+    }
   }
 
   function appendChatMessage(sender, text) {
@@ -858,8 +941,14 @@
       .replace(/`(.*?)`/g, '<code>$1</code>');
       
     if (formatted.includes('```')) {
-      formatted = formatted.replace(/```javascript([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-      formatted = formatted.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+      formatted = formatted.replace(/```(?:javascript)?([\s\S]*?)```/g, (match, code) => {
+        const escapedCode = code.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        const applyText = currentLang === 'fr' ? "Appliquer à l'Éditeur" : "Apply to Editor";
+        return `<div class="code-block-wrapper">
+          <pre><code>${code}</code></pre>
+          <button class="apply-code-btn" data-code="${escapedCode}"><i class="fa-solid fa-arrow-right-to-bracket"></i> ${applyText}</button>
+        </div>`;
+      });
     }
     
     return formatted.replace(/\n/g, '<br>');
@@ -926,7 +1015,7 @@
       
       if (!checkPremium()) {
         alert(currentLang === 'fr' ? 
-          "🔒 Accès Premium requis pentru a utiliza Studio." : 
+          "🔒 Accès Premium requis pour utiliser le Studio." : 
           "🔒 Premium access required to use Studio.");
         return;
       }
@@ -1006,18 +1095,163 @@ return function() {
   cube.rotation.y += 0.01;
 };`;
 
-  function getStudioIframeSrcDoc(rawCode) {
-    let htmlContent = "";
-    const trimmed = rawCode.trim();
-    const isFullHtml = trimmed.toLowerCase().startsWith('<!doctype') || 
-                       trimmed.toLowerCase().startsWith('<html') || 
-                       trimmed.toLowerCase().includes('<script') ||
-                       trimmed.toLowerCase().includes('<body>');
-                       
-    if (isFullHtml) {
-      htmlContent = rawCode;
-    } else {
-      htmlContent = `<!DOCTYPE html>
+  const defaultGlslShaderCode = `// Glowing Plasma WebGL Shader
+// u_time, u_resolution, and u_mouse are provided.
+
+precision mediump float;
+uniform float u_time;
+uniform vec2 u_resolution;
+uniform vec2 u_mouse;
+
+void main() {
+  vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+  vec2 mouse = u_mouse.xy / u_resolution.xy;
+  
+  float dist = distance(uv, mouse);
+  float colorVal = sin(uv.x * 10.0 + u_time) * cos(uv.y * 10.0 + u_time);
+  
+  vec3 color = vec3(0.5 + 0.5 * sin(u_time + uv.xyx + vec3(0.0, 2.0, 4.0)));
+  color += vec3(0.1 / (dist + 0.1));
+  
+  gl_FragColor = vec4(color * (colorVal * 0.3 + 0.7), 1.0);
+}`;
+
+  function getGlslIframeSrcDoc(fragmentShaderSource) {
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GLSL Shader Sandbox</title>
+  <style>
+    body { margin: 0; overflow: hidden; background: #000; }
+    canvas { width: 100vw; height: 100vh; display: block; }
+  </style>
+</head>
+<body>
+  <canvas id="glcanvas"></canvas>
+  <script>
+    const canvas = document.getElementById('glcanvas');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    if (!gl) {
+      alert('WebGL not supported');
+    }
+
+    const vsSource = \`
+      attribute vec2 position;
+      void main() {
+        gl_Position = vec4(position, 0.0, 1.0);
+      }
+    \`;
+
+    const fsSource = \`${fragmentShaderSource.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\\$/g, '\\\\$')}\`;
+
+    function createShader(gl, type, source) {
+      const shader = gl.createShader(type);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        console.error('Shader compile error:', gl.getShaderInfoLog(shader));
+        gl.deleteShader(shader);
+        return null;
+      }
+      return shader;
+    }
+
+    const vs = createShader(gl, gl.VERTEX_SHADER, vsSource);
+    const fs = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
+
+    const program = gl.createProgram();
+    gl.attachShader(program, vs);
+    gl.attachShader(program, fs);
+    gl.linkProgram(program);
+
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      console.error('Program link error:', gl.getProgramInfoLog(program));
+    }
+
+    gl.useProgram(program);
+
+    const positionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    const positions = [
+      -1.0, -1.0,
+       1.0, -1.0,
+      -1.0,  1.0,
+      -1.0,  1.0,
+       1.0, -1.0,
+       1.0,  1.0,
+    ];
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+
+    const positionAttributeLocation = gl.getAttribLocation(program, 'position');
+    gl.enableVertexAttribArray(positionAttributeLocation);
+    gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+
+    const timeLocation = gl.getUniformLocation(program, 'u_time');
+    const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
+    const mouseLocation = gl.getUniformLocation(program, 'u_mouse');
+
+    let mouseX = 0;
+    let mouseY = 0;
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = canvas.height - e.clientY;
+    });
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    let lastReportTime = 0;
+    function render(time) {
+      time *= 0.001;
+      
+      gl.uniform1f(timeLocation, time);
+      gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+      gl.uniform2f(mouseLocation, mouseX, mouseY);
+
+      gl.clearColor(0, 0, 0, 1);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+      requestAnimationFrame(render);
+
+      var now = Date.now();
+      if (now - lastReportTime > 200) {
+        lastReportTime = now;
+        window.parent.postMessage({
+          type: 'camera_move',
+          position: { x: mouseX, y: mouseY, z: 0 }
+        }, '*');
+      }
+    }
+    requestAnimationFrame(render);
+  </script>
+</body>
+</html>`;
+}
+
+function getStudioIframeSrcDoc(rawCode, mode = 'threejs') {
+  if (mode === 'glsl') {
+    return getGlslIframeSrcDoc(rawCode);
+  }
+
+  let htmlContent = "";
+  const trimmed = rawCode.trim();
+  const isFullHtml = trimmed.toLowerCase().startsWith('<!doctype') || 
+                     trimmed.toLowerCase().startsWith('<html') || 
+                     trimmed.toLowerCase().includes('<script') ||
+                     trimmed.toLowerCase().includes('<body>');
+                     
+  if (isFullHtml) {
+    htmlContent = rawCode;
+  } else {
+    htmlContent = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -1050,7 +1284,7 @@ return function() {
     
     var animate = (function() {
       try {
-        const customFunc = new Function('scene', \`${rawCode.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`);
+        const customFunc = new Function('scene', \`${rawCode.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\\$/g, '\\\\$')}\`);
         return customFunc(scene);
       } catch(e) {
         console.error("User script evaluation error:", e);
@@ -1069,8 +1303,36 @@ return function() {
     window.addEventListener('message', function(event) {
       if (event.data.type === 'peer_update') {
         updatePeers(event.data.peers);
+      } else if (event.data.type === 'peer_reaction') {
+        triggerPeerReaction(event.data.peerId, event.data.emoji);
       }
     });
+
+    function toScreenPosition(obj, camera) {
+      var vector = new THREE.Vector3();
+      obj.updateMatrixWorld();
+      vector.setFromMatrixPosition(obj.matrixWorld);
+      vector.project(camera);
+      return {
+        x: (vector.x * 0.5 + 0.5) * window.innerWidth,
+        y: (-(vector.y * 0.5) + 0.5) * window.innerHeight
+      };
+    }
+
+    function triggerPeerReaction(peerId, emoji) {
+      var p = peers[peerId];
+      if (!p) return;
+      if (p.reactionEl) p.reactionEl.remove();
+      var el = document.createElement('div');
+      el.textContent = emoji;
+      el.style.position = 'absolute';
+      el.style.fontSize = '24px';
+      el.style.pointerEvents = 'none';
+      el.style.zIndex = '9999';
+      document.body.appendChild(el);
+      p.reactionEl = el;
+      p.reactionOffset = 0;
+    }
 
     function updatePeers(peersList) {
       var activeIds = {};
@@ -1100,6 +1362,7 @@ return function() {
       
       Object.keys(peers).forEach(function(id) {
         if (!activeIds[id]) {
+          if (peers[id].reactionEl) peers[id].reactionEl.remove();
           scene.remove(peers[id].mesh);
           delete peers[id];
         }
@@ -1118,6 +1381,17 @@ return function() {
         var p = peers[id];
         p.mesh.position.lerp(p.targetPosition, 0.1);
         p.mesh.rotation.y += 0.02;
+        
+        if (p.reactionEl) {
+          var pos = toScreenPosition(p.mesh, camera);
+          p.reactionEl.style.left = (pos.x - 12) + 'px';
+          p.reactionOffset += 1.5;
+          p.reactionEl.style.top = (pos.y - 20 - p.reactionOffset) + 'px';
+          if (p.reactionOffset > 100) {
+            p.reactionEl.remove();
+            p.reactionEl = null;
+          }
+        }
       });
       
       renderer.render(scene, camera);
@@ -1135,89 +1409,127 @@ return function() {
   </script>
 </body>
 </html>`;
-    }
-    
-    if (isFullHtml) {
-      const injectedScript = `
-      <!-- INJECTED BY DEVSOCIAL MULTIPLAYER SANDBOX -->
-      <script>
-        (function() {
-          var peers = {};
-          window.addEventListener('message', function(event) {
-            if (event.data.type === 'peer_update') {
-              updatePeers(event.data.peers);
+  }
+  
+  if (isFullHtml) {
+    const injectedScript = `
+    <!-- INJECTED BY DEVSOCIAL MULTIPLAYER SANDBOX -->
+    <script>
+      (function() {
+        var peers = {};
+        window.addEventListener('message', function(event) {
+          if (event.data.type === 'peer_update') {
+            updatePeers(event.data.peers);
+          } else if (event.data.type === 'peer_reaction') {
+            triggerPeerReaction(event.data.peerId, event.data.emoji);
+          }
+        });
+        
+        function toScreenPosition(obj, camera) {
+          var vector = new THREE.Vector3();
+          obj.updateMatrixWorld();
+          vector.setFromMatrixPosition(obj.matrixWorld);
+          vector.project(camera);
+          return {
+            x: (vector.x * 0.5 + 0.5) * window.innerWidth,
+            y: (-(vector.y * 0.5) + 0.5) * window.innerHeight
+          };
+        }
+
+        function triggerPeerReaction(peerId, emoji) {
+          var p = peers[peerId];
+          if (!p) return;
+          if (p.reactionEl) p.reactionEl.remove();
+          var el = document.createElement('div');
+          el.textContent = emoji;
+          el.style.position = 'absolute';
+          el.style.fontSize = '24px';
+          el.style.pointerEvents = 'none';
+          el.style.zIndex = '9999';
+          document.body.appendChild(el);
+          p.reactionEl = el;
+          p.reactionOffset = 0;
+        }
+
+        function updatePeers(peersList) {
+          if (typeof THREE === 'undefined' || typeof scene === 'undefined') return;
+          var activeIds = {};
+          peersList.forEach(function(peer) {
+            activeIds[peer.id] = true;
+            if (peers[peer.id]) {
+              peers[peer.id].targetPosition.set(peer.x, peer.y, peer.z);
+            } else {
+              var geom = new THREE.SphereGeometry(4, 16, 16);
+              var mat = new THREE.MeshBasicMaterial({ color: 0x0ea5e9, wireframe: true });
+              var mesh = new THREE.Mesh(geom, mat);
+              mesh.position.set(peer.x, peer.y, peer.z);
+              scene.add(mesh);
+              
+              var ringGeom = new THREE.RingGeometry(5, 6, 32);
+              var ringMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, side: THREE.DoubleSide });
+              var ring = new THREE.Mesh(ringGeom, ringMat);
+              ring.rotation.x = Math.PI / 2;
+              mesh.add(ring);
+              
+              peers[peer.id] = {
+                mesh: mesh,
+                targetPosition: new THREE.Vector3(peer.x, peer.y, peer.z)
+              };
             }
           });
           
-          function updatePeers(peersList) {
-            if (typeof THREE === 'undefined' || typeof scene === 'undefined') return;
-            var activeIds = {};
-            peersList.forEach(function(peer) {
-              activeIds[peer.id] = true;
-              if (peers[peer.id]) {
-                peers[peer.id].targetPosition.set(peer.x, peer.y, peer.z);
-              } else {
-                var geom = new THREE.SphereGeometry(4, 16, 16);
-                var mat = new THREE.MeshBasicMaterial({ color: 0x0ea5e9, wireframe: true });
-                var mesh = new THREE.Mesh(geom, mat);
-                mesh.position.set(peer.x, peer.y, peer.z);
-                scene.add(mesh);
-                
-                var ringGeom = new THREE.RingGeometry(5, 6, 32);
-                var ringMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, side: THREE.DoubleSide });
-                var ring = new THREE.Mesh(ringGeom, ringMat);
-                ring.rotation.x = Math.PI / 2;
-                mesh.add(ring);
-                
-                peers[peer.id] = {
-                  mesh: mesh,
-                  targetPosition: new THREE.Vector3(peer.x, peer.y, peer.z)
-                };
-              }
-            });
-            
-            Object.keys(peers).forEach(function(id) {
-              if (!activeIds[id]) {
-                scene.remove(peers[id].mesh);
-                delete peers[id];
-              }
-            });
-          }
+          Object.keys(peers).forEach(function(id) {
+            if (!activeIds[id]) {
+              if (peers[id].reactionEl) peers[id].reactionEl.remove();
+              scene.remove(peers[id].mesh);
+              delete peers[id];
+            }
+          });
+        }
 
-          var lastReportTime = 0;
-          function trackLoop() {
-            requestAnimationFrame(trackLoop);
-            if (typeof THREE !== 'undefined' && typeof camera !== 'undefined') {
-              var now = Date.now();
-              if (now - lastReportTime > 200) {
-                lastReportTime = now;
-                window.parent.postMessage({
-                  type: 'camera_move',
-                  position: { x: camera.position.x, y: camera.position.y, z: camera.position.z }
-                }, '*');
+        var lastReportTime = 0;
+        function trackLoop() {
+          requestAnimationFrame(trackLoop);
+          if (typeof THREE !== 'undefined' && typeof camera !== 'undefined') {
+            var now = Date.now();
+            if (now - lastReportTime > 200) {
+              lastReportTime = now;
+              window.parent.postMessage({
+                type: 'camera_move',
+                position: { x: camera.position.x, y: camera.position.y, z: camera.position.z }
+              }, '*');
+            }
+          }
+          Object.keys(peers).forEach(function(id) {
+            var p = peers[id];
+            p.mesh.position.lerp(p.targetPosition, 0.1);
+            p.mesh.rotation.y += 0.02;
+            if (p.reactionEl) {
+              var pos = toScreenPosition(p.mesh, camera);
+              p.reactionEl.style.left = (pos.x - 12) + 'px';
+              p.reactionOffset += 1.5;
+              p.reactionEl.style.top = (pos.y - 20 - p.reactionOffset) + 'px';
+              if (p.reactionOffset > 100) {
+                p.reactionEl.remove();
+                p.reactionEl = null;
               }
             }
-            Object.keys(peers).forEach(function(id) {
-              var p = peers[id];
-              p.mesh.position.lerp(p.targetPosition, 0.1);
-              p.mesh.rotation.y += 0.02;
-            });
-          }
-          trackLoop();
-        })();
-      </script>
-      `;
-      const pos = htmlContent.toLowerCase().lastIndexOf('</body>');
-      if (pos !== -1) {
-        htmlContent = htmlContent.substring(0, pos) + injectedScript + htmlContent.substring(pos);
-      } else {
-        htmlContent = htmlContent + injectedScript;
-      }
+          });
+        }
+        trackLoop();
+      })();
+    </script>
+    `;
+    const pos = htmlContent.toLowerCase().lastIndexOf('</body>');
+    if (pos !== -1) {
+      htmlContent = htmlContent.substring(0, pos) + injectedScript + htmlContent.substring(pos);
+    } else {
+      htmlContent = htmlContent + injectedScript;
     }
-    return htmlContent;
   }
-
-  function initDevSocialStudio() {
+  return htmlContent;
+}
+function initDevSocialStudio() {
     const studioTextarea = document.getElementById('studio-code-input');
     if (!studioTextarea) return;
     
@@ -1302,7 +1614,7 @@ return function() {
           return;
         }
         if (!checkPremium()) {
-          alert(currentLang === 'fr' ? "🔒 Accès Premium requis pentru a utiliza Studio." : "🔒 Premium access required to use Studio.");
+          alert(currentLang === 'fr' ? "🔒 Accès Premium requis pour utiliser le Studio." : "🔒 Premium access required to use Studio.");
           return;
         }
         const val = roomInput.value.trim().toLowerCase();
@@ -1346,6 +1658,7 @@ return function() {
     document.getElementById('btn-studio-join').classList.add('hidden');
     document.getElementById('btn-studio-leave').classList.remove('hidden');
     document.getElementById('active-peers-container').classList.remove('hidden');
+    document.getElementById('mp-reactions-bar').classList.remove('hidden');
     
     updateSyncStatusText(currentLang === 'fr' ? 'Connexion...' : 'Connecting...');
 
@@ -1412,6 +1725,26 @@ return function() {
           }
           return;
         }
+
+        // Listen for new reaction
+        const rx = data.reaction;
+        if (rx && rx.timestamp) {
+          if (id !== peerId) {
+            const lastTime = lastReactionTimes[id] || 0;
+            if (rx.timestamp > lastTime && (now - rx.timestamp) < 3000) {
+              lastReactionTimes[id] = rx.timestamp;
+              showFloatingEmoji(rx.emoji, false, data.name);
+              const iframe = document.getElementById('studio-preview-frame');
+              if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                  type: 'peer_reaction',
+                  peerId: id,
+                  emoji: rx.emoji
+                }, '*');
+              }
+            }
+          }
+        }
         
         peersList.push({
           id: id,
@@ -1461,6 +1794,7 @@ return function() {
     document.getElementById('btn-studio-leave').classList.add('hidden');
     document.getElementById('active-peers-container').classList.add('hidden');
     document.getElementById('studio-peers-list').innerHTML = '';
+    document.getElementById('mp-reactions-bar').classList.add('hidden');
     
     updateSyncStatusText(currentLang === 'fr' ? 'Session Locale' : 'Local Session');
     if (!silent && roomIdWas) {
@@ -1498,10 +1832,50 @@ return function() {
 
   function runStudioPreview() {
     const code = document.getElementById('studio-code-input').value;
+    const modeSelect = document.getElementById('studio-render-mode');
+    const mode = modeSelect ? modeSelect.value : 'threejs';
     const iframe = document.getElementById('studio-preview-frame');
     if (iframe) {
-      iframe.srcdoc = getStudioIframeSrcDoc(code);
+      iframe.srcdoc = getStudioIframeSrcDoc(code, mode);
     }
+  }
+
+  function sendReaction(emoji) {
+    if (activeRoomId && peerId && typeof firebase !== 'undefined') {
+      const db = firebase.firestore();
+      db.collection('rooms').doc(activeRoomId).collection('peers').doc(peerId).update({
+        reaction: {
+          emoji: emoji,
+          timestamp: Date.now()
+        }
+      }).then(() => {
+        showFloatingEmoji(emoji, true);
+      }).catch(e => console.error("Error sending reaction:", e));
+    }
+  }
+
+  function showFloatingEmoji(emoji, isLocal, peerName = '') {
+    const layer = document.getElementById('viewport-reactions-layer');
+    if (!layer) return;
+    
+    const el = document.createElement('div');
+    el.className = 'floating-emoji';
+    
+    if (isLocal) {
+      el.textContent = emoji;
+      el.style.left = '50%';
+      el.style.bottom = '10px';
+      el.style.transform = 'translateX(-50%)';
+    } else {
+      el.innerHTML = `<span style="font-size: 10px; background: rgba(0,0,0,0.65); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 2px 6px; border-radius: 4px; margin-right: 6px; font-weight: 700; white-space: nowrap; vertical-align: middle;">\${peerName}</span>\${emoji}`;
+      el.style.left = (30 + Math.random() * 40) + '%';
+      el.style.bottom = '10px';
+    }
+    
+    layer.appendChild(el);
+    setTimeout(() => {
+      el.remove();
+    }, 2500);
   }
 
   window.addEventListener('message', (event) => {

@@ -644,7 +644,7 @@
       resumeMotion: '▶️ Relancer le mouvement',
       addNode: '➕ Ajouter un Nœud Aléatoire',
       exportHdr: '📦 Exportation Standalone',
-      exportDesc: 'Exportez ce dégradé Mesh interactif sans aucune dépendance externe, parfait pentru fundal complet.',
+      exportDesc: 'Exportez ce dégradé Mesh interactif sans aucune dépendance externe, parfait pour un arrière-plan complet.',
       exportBtn: '📋 Copier le Composant Web Autonome',
       copied: '📋 Code du composant copié dans le presse-papiers !',
       optCyber: 'Aurore Cyberpunk',

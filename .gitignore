@@ -9,3 +9,6 @@ test.txt
 txt.txt
 IA ARCHITECTE40_backup/
 
+
+# Local Netlify folder
+.netlify

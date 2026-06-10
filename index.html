@@ -7,7 +7,7 @@
     
     <!-- SEO and Meta tags -->
     <meta name="description" content="Découvrez nos deux plateformes phares propulsées par l'IA. Conception structurelle avancée et génération intelligente dans un seul écosystème.">
-    <meta name="keywords" content="IA Code Studio, IA Architecte, Studio 3D, Studio 4D Pro, extrudeur vectoriel, convertisseur SVG 3D, convertisseur DXF 3D, modélisation 3D web, generator cod HTML, Stripe premium, programare asistata de IA, WebGL Three.js, creare 3D autonoma, dezvoltare web IA, AI Code Studio">
+    <meta name="keywords" content="IA Code Studio, IA Architecte, Studio 3D, Studio 4D Pro, extrudeur vectoriel, convertisseur SVG 3D, convertisseur DXF 3D, modélisation 3D web, générateur de code HTML, Stripe premium, programmation assistée par IA, WebGL Three.js, création 3D autonome, développement web IA, AI Code Studio">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://ia-codestudio.com/">
     <link rel="alternate" hreflang="fr" href="https://ia-codestudio.com/?lang=fr">
@@ -412,10 +412,10 @@
                     
                     <div style="background: rgba(139,92,246,0.05); border: 1px solid rgba(139,92,246,0.2); border-radius:12px; padding:12px 16px; margin-bottom:12px; font-size:11px; color:#c4b5fd; line-height: 1.4;">
                         💡 <strong>Supported Commands:</strong><br>
-                        • <code>create challenge: [Title] expires [Date YYYY-MM-DD HH:MM] reward [Reward]</code> / <code>creează provocare: [Titlu] expiră [Data]</code><br>
-                        • <code>ban user [Email]</code> / <code>blochează utilizatorul [Email]</code><br>
-                        • <code>unban user [Email]</code> / <code>deblochează utilizatorul [Email]</code><br>
-                        • <code>premium [Email] [Days] days</code> / <code>premium pentru [Email] pe [Days] zile</code>
+                        • <code>create challenge: [Title] expires [Date YYYY-MM-DD HH:MM] reward [Reward]</code><br>
+                        • <code>ban user [Email]</code><br>
+                        • <code>unban user [Email]</code><br>
+                        • <code>premium [Email] [Days] days</code>
                     </div>
                     
                     <!-- Chat Console -->
@@ -873,9 +873,7 @@
                 btn.innerText = '💎 Devenir Premium ($30/mo)';
             }
             function triggerPremiumPortal() {
-                window.open('https://buy.stripe.com/bJecN6bfUfbbaax36qbfO02', '_blank');
-                // Simulare plata completa pe front-end
-                if (confirm("TEST MODE: Simulăm finalizarea plății pe Stripe? Apasă OK dacă ai 'plătit' pentru a porni abonamentul.")) {
+                if (confirm(currentLang === 'en' ? "TEST MODE: Simulate Stripe payment completion? Press OK if you paid to start your subscription." : "MODE TEST : Simuler la finalisation du paiement Stripe ? Appuyez sur OK si vous avez 'payé' pour démarrer l'abonnement.")) {
                     localStorage.setItem('ia_premium_sub_date', Date.now().toString());
                     window.location.reload();
                 }
@@ -1941,14 +1939,10 @@
                     let days = 30;
                     
                     const matchEn = cmd.match(/premium\s+([^\s]+)\s+(\d+)\s+days/i);
-                    const matchRo = cmd.match(/premium\s+pentru\s+([^\s]+)\s+pe\s+(\d+)\s+zile/i);
                     
                     if (matchEn) {
                         email = matchEn[1].toLowerCase();
                         days = parseInt(matchEn[2]);
-                    } else if (matchRo) {
-                        email = matchRo[1].toLowerCase();
-                        days = parseInt(matchRo[2]);
                     } else {
                         const tokens = cmd.split(/\s+/);
                         tokens.forEach(t => {
@@ -1977,9 +1971,9 @@
                         logCopilotMessage(`🤖 Co-pilot: Could not parse email from command.`, '#ef4444');
                     }
                 }
-                else if (cmdLower.startsWith('create challenge:') || cmdLower.startsWith('creează provocare:')) {
+                else if (cmdLower.startsWith('create challenge:')) {
                     try {
-                        const content = cmd.substring(cmdLower.includes('create challenge:') ? 17 : 19).trim();
+                        const content = cmd.substring(17).trim();
                         const expIdx = content.toLowerCase().indexOf('expires');
                         const expIdxRo = content.toLowerCase().indexOf('expiră');
                         const splitIdx = expIdx >= 0 ? expIdx : expIdxRo;
@@ -2031,19 +2025,19 @@
                 }
                 else {
                     let answer = "🤖 Co-pilot: Command not recognized. Write a valid command or ask about the database statistics.";
-                    if (cmdLower.includes('help') || cmdLower.includes('ajutor')) {
+                    if (cmdLower.includes('help')) {
                         answer = `🤖 Co-pilot Commands:<br>
                                  • <code>create challenge: [Title] expires [Date] reward [Reward]</code><br>
                                  • <code>ban user [Email]</code><br>
                                  • <code>unban user [Email]</code><br>
                                  • <code>premium [Email] [Days] days</code>`;
-                    } else if (cmdLower.includes('how many users') || cmdLower.includes('câți utilizatori')) {
+                    } else if (cmdLower.includes('how many users')) {
                         const count = JSON.parse(localStorage.getItem('ia_users') || '[]').length;
                         answer = `🤖 Co-pilot: There are currently ${count} registered users.`;
-                    } else if (cmdLower.includes('premium count') || cmdLower.includes('câți premium')) {
+                    } else if (cmdLower.includes('premium count')) {
                         const count = getPremiumUsers().length;
                         answer = `🤖 Co-pilot: There are currently ${count} premium members.`;
-                    } else if (cmdLower.includes('status') || cmdLower.includes('stare')) {
+                    } else if (cmdLower.includes('status')) {
                         answer = `🤖 Co-pilot: System status is nominal. Firebase is connected.`;
                     }
                     logCopilotMessage(answer, '#8b5cf6');

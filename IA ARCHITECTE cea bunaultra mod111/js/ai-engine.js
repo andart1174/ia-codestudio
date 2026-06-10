@@ -607,7 +607,7 @@ ${html}`;
         // --- 2. POSITIVE MATCHING ---
         // Page Type Keywords (EN & FR)
         const keys = {
-          'services': ['services', 'expertise', 'what we do', 'servicii', 'prestations'],
+          'services': ['services', 'expertise', 'what we do', 'prestations'],
           'contact': ['contact', 'get in touch', 'map', 'nous contacter', 'formulaire'],
           'about': ['about', 'vision', 'mission', 'history', 'à propos', 'equipe'],
           'gallery': ['gallery', 'portfolio', 'projects', 'images', 'view', 'galerie', 'projets']

@@ -11620,12 +11620,12 @@ const SketchExtruder = (() => {
           if (p0 && p0.historyTimelineEnabled && m._isTimeTraveling) {
               const currentHourInt = Math.round(hr) === 0 ? 12 : Math.round(hr);
               const companyMilestones = [
-                  { hour: 12, year: "2016", title: { en: "Company Founded", fr: "Fondation de l'entreprise", ro: "Fondarea Companiei" } },
-                  { hour: 2,  year: "2018", title: { en: "First Major Release", fr: "Première Sortie Majeure", ro: "Prima Lansare Majoră" } },
-                  { hour: 4,  year: "2020", title: { en: "Global Expansion", fr: "Expansion Globale", ro: "Expansiune Globală" } },
-                  { hour: 6,  year: "2022", title: { en: "Series A Funding", fr: "Financement de Série A", ro: "Finanțare Seria A" } },
-                  { hour: 8,  year: "2024", title: { en: "AI & Neural Integration", fr: "Intégration de l'IA", ro: "Integrare AI & Rețele Neurale" } },
-                  { hour: 10, year: "2026", title: { en: "Clock Ultra Engine", fr: "Moteur Clock Ultra", ro: "Motorul Clock Ultra" } }
+                  { hour: 12, year: "2016", title: { en: "Company Founded", fr: "Fondation de l'entreprise" } },
+                  { hour: 2,  year: "2018", title: { en: "First Major Release", fr: "Première Sortie Majeure" } },
+                  { hour: 4,  year: "2020", title: { en: "Global Expansion", fr: "Expansion Globale" } },
+                  { hour: 6,  year: "2022", title: { en: "Series A Funding", fr: "Financement de Série A" } },
+                  { hour: 8,  year: "2024", title: { en: "AI & Neural Integration", fr: "Intégration de l'IA" } },
+                  { hour: 10, year: "2026", title: { en: "Clock Ultra Engine", fr: "Moteur Clock Ultra" } }
               ];
               const milestone = companyMilestones.find(ms => ms.hour === currentHourInt);
               if (milestone) {
@@ -13382,7 +13382,6 @@ const SketchExtruder = (() => {
       const translations = {
           en: { title: "⚙️ Steampunk Pro (Standalone)", chrono_label: "⏱️ Chrono:", start_stop: "Start/Stop", reset: "Reset", alarm: "⏰ Alarm Time:", test_alarm: "Test Alarm Sound", silence: "🔕 Silence", status: "Standalone Mode Active", chrono_running: "Chrono Running...", chrono_stopped: "Chrono Stopped", chrono_reset: "Chrono Reset", adjust_hint: "✨ Click on the clock to adjust settings" },
           fr: { title: "⚙️ Steampunk Pro (Autonome)", chrono_label: "⏱️ Chrono:", start_stop: "Démarrer/Stop", reset: "Reset", alarm: "⏰ Alarme:", test_alarm: "Tester Alarme", silence: "🔕 Silencer", status: "Mode Autonome Actif", chrono_running: "Chrono Actif...", chrono_stopped: "Chrono Arrêté", chrono_reset: "Chrono Réinitialisé", adjust_hint: "✨ Cliquez sur l\\'horloge pour régler" },
-          ro: { title: "⚙️ Steampunk Pro (Autonom)", chrono_label: "⏱️ Cronometru:", start_stop: "Pornește/Oprește", reset: "Reset", alarm: "⏰ Alarmă:", test_alarm: "Testează Alarma", silence: "🔕 Silențios", status: "Mod Autonom Activ", chrono_running: "Cronometru în desfășurare...", chrono_stopped: "Cronometru oprit", chrono_reset: "Cronometru resetat", adjust_hint: "✨ Faceți click pe ceas pentru a configura" },
           de: { title: "⚙️ Steampunk Pro (Eigenständig)", chrono_label: "⏱️ Chrono:", start_stop: "Start/Stopp", reset: "Reset", alarm: "⏰ Alarmzeit:", test_alarm: "Alarmton testen", silence: "🔕 Stummschalten", status: "Eigenständiger Modus Aktiv", chrono_running: "Chrono läuft...", chrono_stopped: "Chrono angehalten", chrono_reset: "Chrono zurückgesetzt", adjust_hint: "Anklicken zum Einstellen" },
           es: { title: "⚙️ Steampunk Pro (Autónomo)", chrono_label: "⏱️ Crono:", start_stop: "Iniciar/Detener", reset: "Reset", alarm: "⏰ Alarma:", test_alarm: "Probar Alarma", silence: "🔕 Silenciar", status: "Modo Autónomo Activo", chrono_running: "Cronómetro en marcha...", chrono_stopped: "Cronómetro detenido", chrono_reset: "Cronómetro restablecido", adjust_hint: "✨ Clic en el reloj para configurar" },
           it: { title: "⚙️ Steampunk Pro (Autonomo)", chrono_label: "⏱️ Cronometro:", start_stop: "Avvia/Arresta", reset: "Reset", alarm: "⏰ Sveglia:", test_alarm: "Prova Suono Sveglia", silence: "🔕 Silenzia", status: "Modalità Autonoma Attiva", chrono_running: "Cronometro in funzione...", chrono_stopped: "Cronometro arrestato", chrono_reset: "Cronometro ripristinato", adjust_hint: "✨ Clicca sul quadrante per impostare" }
@@ -13745,71 +13744,6 @@ const SketchExtruder = (() => {
             brand_carousel: "Carrousel Créatif & Marques",
             sentiment_radar: "Radar de Sentiment A/B",
             weather_dial: "Météo en Direct & Prévisions"
-          },
-          ro: {
-              theme_preset: "Temă Predefinită",
-              time_travel: "Călătorie în Timp",
-              auto_return: "Revenire Auto",
-              cursor_magnetism: "Magnetism Cursor",
-              subdial_mode: "Mod Cadran Secundar",
-              chrono: "Cronograf",
-              battery: "Nivel Baterie",
-              gmt: "Fus Orar GMT",
-              fps: "FPS / Performanță",
-              countdown: "Numărătoare Inversă",
-              target_datetime: "Dată/Oră Țintă",
-              stopwatch: "Cronometru Cronograf",
-              start: "Pornește",
-              pause: "Pauză",
-              reset: "Resetează",
-              alarm: "Alarmă",
-              test_alarm: "Testează Alarma",
-              silence: "Silențios",
-              radio: "Radio Internet Live",
-              frequency: "Frecvență",
-              volume: "Volum",
-              tick: "Tic-Tac Ambient",
-              chime: "Clopote Westminster",
-              test_chime: "Testează Clopotele",
-              extras: "Funcții Extra Ultra-Premium",
-              navmenu: "Navigare Meniu Site 3D",
-              analytics: "Simulare Analize Live",
-              bluelight: "Filtru Lumière Bleue Nuit",
-              weathersync: "Sincronizare Meteo",
-              pomodoro: "Temporizator Pomodoro",
-              focus_min: "Minute Focus",
-              asmr: "Mixer Ambiental ASMR",
-              rain: "Ploaie",
-              wind: "Vânt",
-              beats: "Bătăi",
-              ekg: "Impuls EKG",
-              status_active: "Mod Ultra Activ",
-              click_hint: "💬 Faceți click pe ceas pentru a configura",
-              section_toast: "Navigare la secțiunea: ",
-              dial_click_toast: "🕐 Ora {hour} apăsată — atribuiți o secțiune în setări",
-            clocktobook: "Rezervare Programări prin Ceas",
-            teammembers: "Membri Echipă pe Oră",
-            businesshours: "Program de Lucru Vizual (Business Hours)",
-            book_toast: "Deschidere interval programare: ",
-            history_timeline: "Istoric Interactiv & Jaloane",
-            team_presence: "Inel Prezență Echipă la Distanță",
-            kpi_dashboard: "Panel KPI & Financiar 3D",
-            security_radar: "Radar Securitate & Status Server",
-            audio_visualizer: "Vizualizator Audio 3D",
-            future_roadmap: "Roadmap Viitor & Obiective",
-            financial_ticker: "Cadran Financiar & Live Ticker",
-            financial_asset_label: "Activ Financiar:",
-            financial_currency_label: "Valută:",
-            celestial_tracker: "Cadran Astronomic & Orbită",
-            celestial_stars_label: "Afișează Stelele pe Fundal",
-            astrological_biorhythm: "Cadran Astrologic & Bioritm",
-            birthdate: "Data nașterii:",
-            world_globe: "Fusuri Orare ale Globului",
-            retro_arcade: "Jocul Vieții Retro Arcade",
-            campaign_roi: "ROI Campanii & Heatmap",
-            brand_carousel: "Carusel Creativ & Branduri",
-            sentiment_radar: "Radar Sentiment A/B",
-            weather_dial: "Prognoză & Météo Live"
           },
           de: {
               theme_preset: "Design-Vorlage",
@@ -14314,20 +14248,6 @@ const SketchExtruder = (() => {
                   10: "La galaxie d'Andromède fonce vers nous à 110 kilomètres par seconde.",
                   11: "La ceinture d'Orion contient trois étoiles supergéantes : Alnitak, Alnilam et Mintaka."
               },
-              ro: {
-                  12: "Soarele se află în cel mai înalt punct de pe cer. Iluminarea la zenit este maximă.",
-                  1: "Aldebaran, Ochiul Taurului, strălucește intens pe bolta cerească.",
-                  2: "Pământul călătorește cu 29,78 km/s prin galaxia Calea Lactee.",
-                  3: "Luna își finalizează orbita în jurul Pământului la fiecare 27,3 zile.",
-                  4: "Radiația solară are nevoie de exact 8 minute și 20 de secunde pentru a ajunge la Pământ.",
-                  5: "Venus, Luceafărul de Dimineață, este cel mai strălucitor obiect natural după Lună.",
-                  6: "Zorii se apropie. Dispersia luminii în atmosferă afișează raze portocalii vii.",
-                  7: "Sirius, cea mai strălucitoare stea de pe cerul nopții, strălucește la o magnitudine de -1,46.",
-                  8: "Atracția gravitațională a Lunii creează mareele oceanice de două ori pe zi.",
-                  9: "Sistemul nostru solar orbitează în jurul centrului Căii Lactee o dată la 230 de milioane de ani.",
-                  10: "Galaxia Andromeda se îndreaptă spre noi cu o viteză de 110 kilometri pe secundă.",
-                  11: "Centura lui Orion conține trei stele supergigante: Alnitak, Alnilam și Mintaka."
-              },
               de: {
                   12: "Die Sonne steht am höchsten Punkt. Die Zenitbeleuchtung ist maximal.",
                   1: "Aldebaran, das Auge des Stiers, leuchtet hell am Himmelszelt.",
@@ -14638,7 +14558,6 @@ const SketchExtruder = (() => {
                   title: {
                       en: '🏠 Welcome Home',
                       fr: '🏠 Bienvenue à la Maison',
-                      ro: '🏠 Bun Venit Acasă',
                       de: '🏠 Willkommen',
                       es: '🏠 Bienvenido a Inicio',
                       it: '🏠 Benvenuto a Casa'
@@ -14646,7 +14565,6 @@ const SketchExtruder = (() => {
                   desc: {
                       en: 'Click hours on the 3D clock dial to navigate smooth-scrolling sections! You can also drag the clock to see it in full interactive 3D.',
                       fr: 'Cliquez sur les heures du cadran 3D pour naviguer de manière fluide ! Vous pouvez également faire tourner le cadran en 3D.',
-                      ro: 'Faceți click pe orele de pe cadranul 3D pentru a naviga prin secțiuni cu derulare lină! De asemenea, puteți trage ceasul pentru a-l vedea în 3D interactiv.',
                       de: 'Klicken Sie auf die Stunden des 3D-Zifferblatts, um durch die Abschnitte zu scrollen! Sie können die Uhr auch ziehen, um sie in 3D zu betrachten.',
                       es: '¡Haga clic en las horas del reloj 3D para navegar por las secciones! También puede arrastrar el reloj para verlo en 3D interactivo.',
                       it: 'Fai clic sulle ore del quadrante 3D per navigare nelle sezioni! Puoi anche trascinare l\\'orologio per vederlo in 3D interattivo.'
@@ -14657,7 +14575,6 @@ const SketchExtruder = (() => {
                   title: {
                       en: '✨ Core Features',
                       fr: '✨ Fonctionnalités Clés',
-                      ro: '✨ Caracteristici Principale',
                       de: '✨ Kernfunktionen',
                       es: '✨ Características Clave',
                       it: '✨ Caratteristiche Principali'
@@ -14665,7 +14582,6 @@ const SketchExtruder = (() => {
                   desc: {
                       en: 'Experience the next generation of modular 3D widgets. Seamlessly integrated into host websites with beautiful neon lighting, glassmorphic panels, and offline support.',
                       fr: 'Découvrez la nouvelle génération de widgets 3D modulaires. Parfaitement intégrés avec des effets néon, des panneaux glassmorphes et un fonctionnement hors ligne.',
-                      ro: 'Experimentați următoarea generație de widget-uri 3D modulare. Integrate perfect în site-urile gazdă, cu iluminare neon superbă, panouri glassmorfice și suport offline.',
                       de: 'Erleben Sie die nächste Generation modularer 3D-Widgets. Nahtlos in Host-Websites integriert, mit Neonbeleuchtung, Glassmorphismus-Panels und Offline-Support.',
                       es: 'Experimente la próxima generación de widgets 3D modulares. Integrados sin problemas en sitios web con iluminación de neón y paneles de vidrio.',
                       it: 'Sperimenta la prossima generazione di widget 3D moduli. Integrati perfettamente nei siti web con illuminazione al neon e pannelli in vetro.'
@@ -14676,7 +14592,6 @@ const SketchExtruder = (() => {
                   title: {
                       en: '🧭 About Our Tech',
                       fr: '🧭 À propos de notre Technologie',
-                      ro: '🧭 Despre Tehnologia Noastră',
                       de: '🧭 Über unsere Technologie',
                       es: '🧭 Sobre Nuestra Tecnología',
                       it: '🧭 Informazioni sulla Tecnologia'
@@ -14684,7 +14599,6 @@ const SketchExtruder = (() => {
                   desc: {
                       en: 'Synthesizing Audio-ASMR waves, real-time battery monitoring, custom DXF rendering, and Orbit controls directly within an optimized WebGL context.',
                       fr: 'Synthèse d\\'ondes Audio-ASMR, surveillance de batterie en temps réel, rendu de fichiers DXF personnalisés et contrôles Orbit dans un contexte WebGL optimisé.',
-                      ro: 'Sinteză de unde Audio-ASMR, monitorizarea bateriei în timp real, redare DXF personalizată și controale Orbit direct într-un context WebGL optimizat.',
                       de: 'Synthese von Audio-ASMR-Wellen, Echtzeit-Batterieüberwachung, benutzerdefiniertes DXF-Rendering und Orbit-Steuerung in einem optimierten WebGL-Kontext.',
                       es: 'Síntesis de ondas de Audio-ASMR, monitoreo de batería en tiempo real, renderizado de archivos DXF y controles Orbit en un contexto WebGL optimizado.',
                       it: 'Sintesi di onde Audio-ASMR, monitoraggio della batteria in tempo reale, rendering di file DXF e controlli Orbit in un contesto WebGL ottimizzato.'
@@ -14695,7 +14609,6 @@ const SketchExtruder = (() => {
                   title: {
                       en: '💼 Professional Services',
                       fr: '💼 Services Professionnels',
-                      ro: '💼 Servicii Profesionale',
                       de: '💼 Professionelle Dienstleistungen',
                       es: '💼 Servicios Profesionales',
                       it: '💼 Servizi Professionali'
@@ -14703,7 +14616,6 @@ const SketchExtruder = (() => {
                   desc: {
                       en: 'We provide state-of-the-art 3D visualizations, interactive interfaces, responsive design tools, and custom branding integrations for premium web apps.',
                       fr: 'Nous fournissons des visualisations 3D de pointe, des interfaces interactives, des outils de design réactifs et des intégrations de marque personnalisées.',
-                      ro: 'Oferim vizualizări 3D de ultimă generație, interfețe interactive, instrumente de design adaptiv și integrări de brand personalizate pentru aplicații web premium.',
                       de: 'Wir bieten modernste 3D-Visualisierungen, interaktive Schnittstellen, reaktionsschnelle Design-Tools und kundenspezifische Markenintegrationen für Premium-Web-Apps.',
                       es: 'Ofrecemos visualizaciones 3D de última generación, interfaces interactivas, herramientas de diseño adaptativo e integración de marca para aplicaciones web premium.',
                       it: 'Offriamo visualizzazioni 3D all\\'avanguardia, interfacce interattive, strumenti di design reattivo e integrazioni di branding personalizzate per app web premium.'
@@ -14714,7 +14626,6 @@ const SketchExtruder = (() => {
                   title: {
                       en: '💳 Flexible Pricing Plans',
                       fr: '💳 Formules de Tarification',
-                      ro: '💳 Planuri de Tarife Flexibile',
                       de: '💳 Flexible Preispläne',
                       es: '💳 Planes de Precios Flexibles',
                       it: '💳 Piani de Tariffe Flessibili'
@@ -14722,7 +14633,6 @@ const SketchExtruder = (() => {
                   desc: {
                       en: 'Select the tier that fits your workspace. Enjoy full access to advanced simulation dashboards, collaboration networks, and custom silhouette shapes.',
                       fr: 'Choisissez la formule adaptée à votre espace. Bénéficiez d\\'un accès complet aux tableaux de bord de simulation avancés et aux silhouettes personnalisées.',
-                      ro: 'Selectați nivelul care se potrivește spațiului dvs. de lucru. Bucurați-vă de acces complet la panouri de simulare avansate, rețele de colaborare și forme personalizate.',
                       de: 'Wählen Sie die Stufe, die zu Ihrem Arbeitsbereich passt. Genießen Sie vollen Zugriff auf erweiterte Simulations-Dashboards und benutzerdefinierte Formen.',
                       es: 'Seleccione el nivel que se adapte a su espacio de trabajo. Disfrute de acceso completo a paneles de simulación avanzados y formas personalizadas.',
                       it: 'Seleziona il livello adatto al tuo spazio di lavoro. Goditi l\\'accesso completo a dashboard di simulazione avanzate e forme personalizzate.'
@@ -14733,7 +14643,6 @@ const SketchExtruder = (() => {
                   title: {
                       en: '🎨 Creative Portfolio',
                       fr: '🎨 Portfolio Créatif',
-                      ro: '🎨 Portofoliu Creativ',
                       de: '🎨 Kreatives Portfolio',
                       es: '🎨 Portafolio Creativo',
                       it: '🎨 Portfolio Creativo'
@@ -14741,7 +14650,6 @@ const SketchExtruder = (() => {
                   desc: {
                       en: 'A curated gallery of responsive holographic models, parametric mathematical surfaces, timeline rivers, and procedural landscape simulations.',
                       fr: 'Une galerie de modèles holographiques réactifs, de surfaces mathématiques paramétriques et de simulations de paysages provoquées.',
-                      ro: 'O galerie selectată de modele holografice adaptive, suprafețe matematice parametrice, râuri cronologice și simulări procedurale de peisaje.',
                       de: 'Eine kuratierte Galerie reaktionsschneller holografischer Modelle, parametrischer mathematischer Oberflächen und prozeduraler Landschaftssimulationen.',
                       es: 'Una galería seleccionada de modelos holográficos adaptativos, superficies matemáticas paramétricas y simulaciones de paisajes procedimentales.',
                       it: 'Una galleria curata di modelli olografici reattivi, superfici matematiche parametriche e simulazioni di paesaggi procedurali.'
@@ -14752,7 +14660,6 @@ const SketchExtruder = (() => {
                   title: {
                       en: '💬 Client Feedback',
                       fr: '💬 Témoignages Clients',
-                      ro: '💬 Feedback-ul Clienților',
                       de: '💬 Kundenfeedback',
                       es: '💬 Testimonios de Clientes',
                       it: '💬 Opinioni dei Clienti'
@@ -14760,7 +14667,6 @@ const SketchExtruder = (() => {
                   desc: {
                       en: '"The integration of the 3D Clock Ultra on our homepage has increased visitor engagement time significantly. The ASMR ambient background is unique!"',
                       fr: '"L\\'intégration de la Clock Ultra 3D sur notre page d\\'accueil a augmenté le temps d\\'engagement des visiteurs de manière significative. L\\'ASMR ambiant est unique !"',
-                      ro: '"Integrarea ceasului 3D Clock Ultra pe pagina noastră de pornire a crescut semnificativ timpul de implicare a vizitatorilor. Fundalul ambiental ASMR este unic!"',
                       de: '"Die Integration der 3D Clock Ultra auf unserer Homepage hat die Verweildauer der Besucher deutlich erhöht. Der ASMR-Hintergrund ist einzigartig!"',
                       es: '"La integración de 3D Clock Ultra en nuestra página de inicio ha aumentado significativamente el tiempo de participación de los visitantes. ¡El ASMR ambiental es único!"',
                       it: '"L\\'integrazione del 3D Clock Ultra sulla nostra homepage ha aumentato notevolmente il tempo di permanenza dei visitatori. Il sottofondo ASMR è unico!"'
@@ -14771,7 +14677,6 @@ const SketchExtruder = (() => {
                   title: {
                       en: '❓ Frequent Questions',
                       fr: '❓ Questions Fréquentes',
-                      ro: '❓ Întrebări Frecvente',
                       de: '❓ Häufige Fragen',
                       es: '❓ Preguntas Frecuentes',
                       it: '❓ Domande Frequenti'
@@ -14779,7 +14684,6 @@ const SketchExtruder = (() => {
                   desc: {
                       en: 'Does it work offline? Yes. Are assets loaded from external CDN? Only library dependencies. Can I change colors? Yes, fully customizable in the control panel.',
                       fr: 'Fonctionne-t-il hors ligne ? Oui. Les ressources sont-elles chargées depuis un CDN externe ? Uniquement les bibliothèques. Puis-je changer les couleurs ? Oui, via le panneau.',
-                      ro: 'Funcționează offline? Da. Sunt resursele încărcate de pe un CDN extern? Doar bibliotecile necesare. Pot schimba culorile? Da, complet personalizabile în panou.',
                       de: 'Funktioniert es offline? Ja. Werden Ressourcen von externen CDNs geladen? Nur Bibliotheken. Kann ich die Farben ändern? Ja, im Bedienfeld anpassbar.',
                       es: '¿Funciona sin conexión? Sí. ¿Se cargan los recursos desde un CDN externo? Solo las bibliotecas. ¿Puedo cambiar los colores? Sí, en el panel.',
                       it: 'Funziona offline? Sì. Le risorse sono caricate da CDN esterni? Solo le librerie. Posso cambiare i colori? Sì, nel pannello di controllo.'
@@ -14790,7 +14694,6 @@ const SketchExtruder = (() => {
                   title: {
                       en: '✉️ Contact & Support',
                       fr: '✉️ Contact & Support',
-                      ro: '✉️ Contact și Suport',
                       de: '✉️ Kontakt & Support',
                       es: '✉️ Contacto y Soporte',
                       it: '✉️ Contatti e Supporto'
@@ -14798,7 +14701,6 @@ const SketchExtruder = (() => {
                   desc: {
                       en: 'Get in touch for custom 3D integrations or licensing queries. Our development team is ready to assist you in launching interactive landing pages.',
                       fr: 'Contactez-nous pour des intégrations 3D sur mesure ou des demandes de licence. Notre équipe de développement est prête à vous aider.',
-                      ro: 'Contactați-ne pentru integrări 3D personalizate sau întrebări privind licențierea. Echipa noastră este gata să vă ajute să lansați pagini interactive.',
                       de: 'Kontaktieren Sie uns für kundenspezifische 3D-Integrationen oder Lizenzanfragen. Unser Entwicklerteam steht Ihnen gerne zur Verfügung.',
                       es: 'Contáctenos para integraciones 3D personalizadas o consultas de licencia. Nuestro equipo de desarrollo está listo para ayudarle.',
                       it: 'Contattaci per integrazioni 3D personalizzate o domande sulle licenze. Il nostro team di sviluppo è pronto ad aiutarti.'
@@ -14809,7 +14711,6 @@ const SketchExtruder = (() => {
                   title: {
                       en: '⚓ Footer & Copyright',
                       fr: '⚓ Pied de page',
-                      ro: '⚓ Footer și Drepturi de Autor',
                       de: '⚓ Fußzeile & Urheberrecht',
                       es: '⚓ Pie de Página y Derechos de Autor',
                       it: '⚓ Piè di Pagina e Copyright'
@@ -14817,7 +14718,6 @@ const SketchExtruder = (() => {
                   desc: {
                       en: 'Clock Ultra Standalone Widget © 2026. All rights reserved. Powered by Three.js WebGL Engine.',
                       fr: 'Widget Autonome Clock Ultra © 2026. Tous droits réservés. Motorisé par le moteur WebGL Three.js.',
-                      ro: 'Widget autonom Clock Ultra © 2026. Toate drepturile rezervate. Creat cu motorul WebGL Three.js.',
                       de: 'Clock Ultra Eigenständiges Widget © 2026. Alle Rechte vorbehalten. Unterstützt von der Three.js WebGL Engine.',
                       es: 'Widget Autónomo Clock Ultra © 2026. Todos los derechos reservados. Desarrollado con el motor WebGL Three.js.',
                       it: 'Widget autonomo Clock Ultra © 2026. Tutti i diritti riservati. Sviluppato con il motore WebGL Three.js.'
@@ -14849,7 +14749,7 @@ const SketchExtruder = (() => {
               document.getElementById('nav-section-tag').textContent = 'SECTION: #' + anchor.toUpperCase();
               document.getElementById('nav-section-title').innerHTML = sec.title[curLang] || sec.title.en;
               document.getElementById('nav-section-desc').innerHTML = sec.desc[curLang] || sec.desc.en;
-              const hourNames = { en: 'Hour', fr: 'Heure', ro: 'Ora', de: 'Stunde', es: 'Hora', it: 'Ora' };
+              const hourNames = { en: 'Hour', fr: 'Heure', de: 'Stunde', es: 'Hora', it: 'Ora' };
               document.getElementById('nav-hour-text').textContent = (hourNames[curLang] || 'Hour') + ' ' + hour + ' → #' + anchor;
               _navOverlay.classList.add('active');
           };
@@ -14952,12 +14852,12 @@ const SketchExtruder = (() => {
                   document.getElementById('history-section-desc').textContent = typeof milestone.desc === 'object' ? (milestone.desc[curLang] || milestone.desc.en) : milestone.desc;
               } else {
                   const companyMilestones = [
-                      { hour: 12, year: "2016", title: { en: "Company Founded", fr: "Fondation de l'entreprise", ro: "Fondarea Companiei" }, desc: { en: "Started with a small group of visionary designers in a tiny studio.", fr: "Débuté avec un petit groupe de designers visionnaires dans un petit studio.", ro: "Am început cu un grup mic de designeri vizionari într-un studio mic." } },
-                      { hour: 2,  year: "2018", title: { en: "First Major Release", fr: "Première Sortie Majeure", ro: "Prima Lansare Majoră" }, desc: { en: "Released our custom 3D web rendering engine v1.0, enabling interactive site features.", fr: "Sortie de notre moteur de rendu web 3D v1.0, activant des fonctions interactives.", ro: "Am lansat motorul nostru de randare web 3D v1.0, activând funcții interactive." } },
-                      { hour: 4,  year: "2020", title: { en: "Global Expansion", fr: "Expansion Globale", ro: "Expansiune Globale" }, desc: { en: "Opened remote branches in London, Paris, and Tokyo to serve international clients.", fr: "Ouverture de bureaux à Londres, Paris et Tokyo pour servir nos clients internationaux.", ro: "Am deschis filiale în Londra, Paris și Tokyo pentru a servi clienții internaționali." } },
-                      { hour: 6,  year: "2022", title: { en: "Series A Funding", fr: "Financement de Série A", ro: "Finanțare Seria A" }, desc: { en: "Raised $10M in Series A funding to expand our interactive spatial web solutions.", fr: "Levée de 10 M$ en Série A pour étendre nos solutions de web spatial interactif.", ro: "Am atras o finanțare de 10M$ de tip Seria A pentru extinderea soluțiilor de web spatial." } },
-                      { hour: 8,  year: "2024", title: { en: "AI & Neural Integration", fr: "Intégration de l'IA", ro: "Integrare AI & Rețele Neurale" }, desc: { en: "Added AI generative modeling helpers directly inside our 3D composer interface.", fr: "Ajout d'assistants génératifs d'IA directement dans notre compositeur 3D.", ro: "Am integrat asistenți IA generativi direct în interfața compozitorului nostru 3D." } },
-                      { hour: 10, year: "2026", title: { en: "Clock Ultra Engine", fr: "Moteur Clock Ultra", ro: "Motorul Clock Ultra" }, desc: { en: "Released the Clock Ultra Engine - the ultimate high-fidelity custom widget for websites.", fr: "Sortie du Clock Ultra Engine - l'ultime widget personnalisé haute fidélité pour sites web.", ro: "Am lansat Clock Ultra Engine - cel mai avansat widget personalizat de înaltă fidelitate pentru site-uri web." } }
+                      { hour: 12, year: "2016", title: { en: "Company Founded", fr: "Fondation de l'entreprise" }, desc: { en: "Started with a small group of visionary designers in a tiny studio.", fr: "Débuté avec un petit groupe de designers visionnaires dans un petit studio." } },
+                      { hour: 2,  year: "2018", title: { en: "First Major Release", fr: "Première Sortie Majeure" }, desc: { en: "Released our custom 3D web rendering engine v1.0, enabling interactive site features.", fr: "Sortie de notre moteur de rendu web 3D v1.0, activant des fonctions interactives." } },
+                      { hour: 4,  year: "2020", title: { en: "Global Expansion", fr: "Expansion Globale" }, desc: { en: "Opened remote branches in London, Paris, and Tokyo to serve international clients.", fr: "Ouverture de bureaux à Londres, Paris et Tokyo pour servir nos clients internationaux." } },
+                      { hour: 6,  year: "2022", title: { en: "Series A Funding", fr: "Financement de Série A" }, desc: { en: "Raised $10M in Series A funding to expand our interactive spatial web solutions.", fr: "Levée de 10 M$ en Série A pour étendre nos solutions de web spatial interactif." } },
+                      { hour: 8,  year: "2024", title: { en: "AI & Neural Integration", fr: "Intégration de l'IA" }, desc: { en: "Added AI generative modeling helpers directly inside our 3D composer interface.", fr: "Ajout d'assistants génératifs d'IA directement dans notre compositeur 3D." } },
+                      { hour: 10, year: "2026", title: { en: "Clock Ultra Engine", fr: "Moteur Clock Ultra" }, desc: { en: "Released the Clock Ultra Engine - the ultimate high-fidelity custom widget for websites.", fr: "Sortie du Clock Ultra Engine - l'ultime widget personnalisé haute fidélité pour sites web." } }
                   ];
                   const m = companyMilestones.find(x => x.hour === hour);
                   if (m) {
@@ -14965,11 +14865,10 @@ const SketchExtruder = (() => {
                       document.getElementById('history-section-title').textContent = m.title[curLang] || m.title.en;
                       document.getElementById('history-section-desc').textContent = m.desc[curLang] || m.desc.en;
                   } else {
-                      const titlesNo = { en: "⏳ Progress & Growth", fr: "⏳ Progrès & Croissance", ro: "⏳ Progres & Dezvoltare" };
+                      const titlesNo = { en: "⏳ Progress & Growth", fr: "⏳ Progrès & Croissance" };
                       const descNo = { 
                           en: "Every tick of the clock represents our ongoing commitment to innovation and engineering excellence.",
                           fr: "Chaque tic-tac représente notre engagement continu envers l'innovation et l'excellence technique.",
-                          ro: "Fiecare secundă reprezintă angajamentul nostru continuu pentru inovare și excelență tehnică."
                       };
                       document.getElementById('history-year-tag').textContent = 'HISTORY';
                       document.getElementById('history-section-title').textContent = titlesNo[curLang] || titlesNo.en;
@@ -15027,12 +14926,12 @@ const SketchExtruder = (() => {
           });
           
           const kpiData = [
-              { hour: 12, month: { en: "January", fr: "Janvier", ro: "Ianuarie" }, title: { en: "Launch Performance", fr: "Performance de Lancement", ro: "Performanța de Lansare" }, desc: { en: "Q1 kickoff: Revenue reached $1.2M with a user growth of +15% MoM.", fr: "Lancement du Q1: Revenus à 1,2 M$ avec +15% de croissance.", ro: "Start Q1: Veniturile au atins 1.2M$ cu o creștere lunară de +15%." } },
-              { hour: 2, month: { en: "February", fr: "Février", ro: "Februarie" }, title: { en: "Product Optimization", fr: "Optimisation de Produit", ro: "Optimizare Produs" }, desc: { en: "Platform updates reduced churn. Revenue increased to $1.5M (+25%).", fr: "Mises à jour: Churn réduit. Revenu à 1,5 M$ (+25%).", ro: "Optimizările au redus churn-ul. Venitul a crescut la 1.5M$ (+25%)." } },
-              { hour: 4, month: { en: "March", fr: "Mars", ro: "Martie" }, title: { en: "Marketing Expansion", fr: "Expansion Marketing", ro: "Campanii de Marketing" }, desc: { en: "Ad campaigns brought 50k new users. Revenue reached $1.8M (+20%).", fr: "Campagnes pub: 50k nouveaux users. Revenu de 1,8 M$.", ro: "Campaniile publicitare au adus 50k utilizatori noi. Venit: 1.8M$." } },
-              { hour: 6, month: { en: "April", fr: "Avril", ro: "Aprilie" }, title: { en: "Enterprise Adoption", fr: "Adoption Entreprise", ro: "Adopție Clienți Enterprise" }, desc: { en: "Signed 5 new Fortune 500 contracts. Revenue hit $2.1M (+18%).", fr: "5 nouveaux contrats Fortune 500. Revenu de 2,1 M$.", ro: "S-au semnat 5 noi contracte Fortune 500. Venituri de 2.1M$." } },
-              { hour: 8, month: { en: "May", fr: "Mai", ro: "Mai" }, title: { en: "Partnership Network", fr: "Réseau de Partenariats", ro: "Rețeaua de Parteneri" }, desc: { en: "Integrations with major SaaS providers live. Revenue reached $2.4M.", fr: "Intégrations SaaS en ligne. Revenu de 2,4 M$.", ro: "Integrările cu marii furnizori SaaS sunt live. Venit de 2.4M$." } },
-              { hour: 10, month: { en: "June", fr: "Juin", ro: "Iunie" }, title: { en: "Mid-Year Records", fr: "Records de Mi-Année", ro: "Record de Mijloc de An" }, desc: { en: "Mid-year review: record $3.0M monthly revenue and +30% user growth.", fr: "Bilan mi-année: record de 3,0 M$ et +30% de croissance.", ro: "Bilanțul de mijloc de an: record de 3.0M$ și creștere de +30%." } }
+              { hour: 12, month: { en: "January", fr: "Janvier" }, title: { en: "Launch Performance", fr: "Performance de Lancement" }, desc: { en: "Q1 kickoff: Revenue reached $1.2M with a user growth of +15% MoM.", fr: "Lancement du Q1: Revenus à 1,2 M$ avec +15% de croissance." } },
+              { hour: 2, month: { en: "February", fr: "Février" }, title: { en: "Product Optimization", fr: "Optimisation de Produit" }, desc: { en: "Platform updates reduced churn. Revenue increased to $1.5M (+25%).", fr: "Mises à jour: Churn réduit. Revenu à 1,5 M$ (+25%)." } },
+              { hour: 4, month: { en: "March", fr: "Mars" }, title: { en: "Marketing Expansion", fr: "Expansion Marketing" }, desc: { en: "Ad campaigns brought 50k new users. Revenue reached $1.8M (+20%).", fr: "Campagnes pub: 50k nouveaux users. Revenu de 1,8 M$." } },
+              { hour: 6, month: { en: "April", fr: "Avril" }, title: { en: "Enterprise Adoption", fr: "Adoption Entreprise" }, desc: { en: "Signed 5 new Fortune 500 contracts. Revenue hit $2.1M (+18%).", fr: "5 nouveaux contrats Fortune 500. Revenu de 2,1 M$." } },
+              { hour: 8, month: { en: "May", fr: "Mai" }, title: { en: "Partnership Network", fr: "Réseau de Partenariats" }, desc: { en: "Integrations with major SaaS providers live. Revenue reached $2.4M.", fr: "Intégrations SaaS en ligne. Revenu de 2,4 M$." } },
+              { hour: 10, month: { en: "June", fr: "Juin" }, title: { en: "Mid-Year Records", fr: "Records de Mi-Année" }, desc: { en: "Mid-year review: record $3.0M monthly revenue and +30% user growth.", fr: "Bilan mi-année: record de 3,0 M$ et +30% de croissance." } }
           ];
           
           window._showKpiStats = function(hour) {
@@ -15049,11 +14948,10 @@ const SketchExtruder = (() => {
                       document.getElementById('kpi-section-title').textContent = typeof data.title === 'object' ? (data.title[curLang] || data.title.en) : data.title;
                       document.getElementById('kpi-section-desc').textContent = typeof data.desc === 'object' ? (data.desc[curLang] || data.desc.en) : data.desc;
                   } else {
-                      const defaultTitle = { en: "📈 Steady Performance", fr: "📈 Performance Stable", ro: "📈 Performanță Stabilă" };
+                      const defaultTitle = { en: "📈 Steady Performance", fr: "📈 Performance Stable" };
                       const defaultDesc = { 
                           en: "Operating at optimal capacity with stable growth margins and sustained monthly conversion rates.",
                           fr: "Fonctionnement à capacité optimale avec des marges stables et des taux soutenus.",
-                          ro: "Funcționăm la capacitate optimă, cu marje de creștere stabile și rate de conversie susținute."
                       };
                       document.getElementById('kpi-month-tag').textContent = 'KPI';
                       document.getElementById('kpi-section-title').textContent = defaultTitle[curLang] || defaultTitle.en;
@@ -15111,12 +15009,12 @@ const SketchExtruder = (() => {
           });
           
           const radarData = [
-              { hour: 12, region: "us-east", title: { en: "US East (Virginia)", fr: "USA Est (Virginie)", ro: "SUA Est (Virginia)" }, desc: { en: "Uptime: 99.98% | Latency: 24ms. Operational and secure. All backup nodes active.", fr: "Uptime: 99.98% | Latence: 24ms. Opérationnel. Nœuds de secours actifs.", ro: "Uptime: 99.98% | Latență: 24ms. Operațional. Toate nodurile de rezervă sunt active." } },
-              { hour: 2, region: "eu-central", title: { en: "Europe Central (Frankfurt)", fr: "Europe Centrale (Francfort)", ro: "Europa Centrală (Frankfurt)" }, desc: { en: "Uptime: 99.95% | Latency: 38ms. Secure and fully functional. Load balancing online.", fr: "Uptime: 99.95% | Latence: 38ms. Sécurisé. Load-balancing actif.", ro: "Uptime: 99.95% | Latență: 38ms. Securizat și complet funcțional. Distribuiție de sarcină activă." } },
-              { hour: 4, region: "ap-southeast", title: { en: "Asia Pacific (Singapore)", fr: "Asie Pacifique (Singapour)", ro: "Asia Pacific (Singapore)" }, desc: { en: "Uptime: 99.92% | Latency: 75ms. WARNING: High payload detected. Scaling operations initiated.", fr: "Uptime: 99.92% | Latence: 75ms. ALERTE: Charge élevée. Auto-scaling lancé.", ro: "Uptime: 99.92% | Latență: 75ms. ATENȚIE: Sarcina ridicată detectată. Auto-scalarea a fost inițiată." } },
-              { hour: 6, region: "ap-southeast-2", title: { en: "Australia (Sydney)", fr: "Australie (Sydney)", ro: "Australia (Sydney)" }, desc: { en: "Uptime: 99.99% | Latency: 42ms. Secure. Performance optimization verified.", fr: "Uptime: 99.99% | Latence: 42ms. Sécurisé. Performances optimisées.", ro: "Uptime: 99.99% | Latență: 42ms. Securizat. Performanțe verificate." } },
-              { hour: 8, region: "sa-east", title: { en: "South America (São Paulo)", fr: "Amérique du Sud (São Paulo)", ro: "America de Sud (São Paulo)" }, desc: { en: "Uptime: 99.85% | Latency: 120ms. Secure. Connectivity normal. Primary databases synchronized.", fr: "Uptime: 99.85% | Latence: 120ms. Sécurisé. Connexion normale.", ro: "Uptime: 99.85% | Latență: 120ms. Securizat. Conectivitate normală. Baze de date sincronizate." } },
-              { hour: 10, region: "af-south", title: { en: "Africa (Cape Town)", fr: "Afrique (Le Cap)", ro: "Africa (Cape Town)" }, desc: { en: "Uptime: 99.70% | Latency: 190ms. CRITICAL: Minor DDoS attack successfully mitigated by cloud shield.", fr: "Uptime: 99.70% | Latence: 190ms. DDoS mineure mitigée avec succès.", ro: "Uptime: 99.70% | Latență: 190ms. CRITIC: Atac DDoS minor neutralizat cu succes de scutul cloud." } }
+              { hour: 12, region: "us-east", title: { en: "US East (Virginia)", fr: "USA Est (Virginie)" }, desc: { en: "Uptime: 99.98% | Latency: 24ms. Operational and secure. All backup nodes active.", fr: "Uptime: 99.98% | Latence: 24ms. Opérationnel. Nœuds de secours actifs." } },
+              { hour: 2, region: "eu-central", title: { en: "Europe Central (Frankfurt)", fr: "Europe Centrale (Francfort)" }, desc: { en: "Uptime: 99.95% | Latency: 38ms. Secure and fully functional. Load balancing online.", fr: "Uptime: 99.95% | Latence: 38ms. Sécurisé. Load-balancing actif." } },
+              { hour: 4, region: "ap-southeast", title: { en: "Asia Pacific (Singapore)", fr: "Asie Pacifique (Singapour)" }, desc: { en: "Uptime: 99.92% | Latency: 75ms. WARNING: High payload detected. Scaling operations initiated.", fr: "Uptime: 99.92% | Latence: 75ms. ALERTE: Charge élevée. Auto-scaling lancé." } },
+              { hour: 6, region: "ap-southeast-2", title: { en: "Australia (Sydney)", fr: "Australie (Sydney)" }, desc: { en: "Uptime: 99.99% | Latency: 42ms. Secure. Performance optimization verified.", fr: "Uptime: 99.99% | Latence: 42ms. Sécurisé. Performances optimisées." } },
+              { hour: 8, region: "sa-east", title: { en: "South America (São Paulo)", fr: "Amérique du Sud (São Paulo)" }, desc: { en: "Uptime: 99.85% | Latency: 120ms. Secure. Connectivity normal. Primary databases synchronized.", fr: "Uptime: 99.85% | Latence: 120ms. Sécurisé. Connexion normale." } },
+              { hour: 10, region: "af-south", title: { en: "Africa (Cape Town)", fr: "Afrique (Le Cap)" }, desc: { en: "Uptime: 99.70% | Latency: 190ms. CRITICAL: Minor DDoS attack successfully mitigated by cloud shield.", fr: "Uptime: 99.70% | Latence: 190ms. DDoS mineure mitigée avec succès." } }
           ];
           
           window._showRadarStatus = function(hour) {
@@ -15133,11 +15031,10 @@ const SketchExtruder = (() => {
                       document.getElementById('radar-section-title').textContent = typeof data.title === 'object' ? (data.title[curLang] || data.title.en) : data.title;
                       document.getElementById('radar-section-desc').textContent = typeof data.desc === 'object' ? (data.desc[curLang] || data.desc.en) : data.desc;
                   } else {
-                      const defaultTitle = { en: "🟢 Node Status: Active", fr: "🟢 Statut Nœud: Actif", ro: "🟢 Nod Status: Activ" };
+                      const defaultTitle = { en: "🟢 Node Status: Active", fr: "🟢 Statut Nœud: Actif" };
                       const defaultDesc = { 
                           en: "Health status: 100%. Encryption protocol TLS 1.3 active. Zero threats detected.",
                           fr: "Santé globale: 100%. Protocole de chiffrement TLS 1.3 actif. Aucune menace.",
-                          ro: "Starea de funcționare: 100%. Protocol de criptare TLS 1.3 activ. Nicio amenințare detectată."
                       };
                       document.getElementById('radar-region-tag').textContent = 'GLOBAL NODE';
                       document.getElementById('radar-section-title').textContent = defaultTitle[curLang] || defaultTitle.en;
@@ -15196,9 +15093,9 @@ const SketchExtruder = (() => {
           });
           
           const rmData = [
-              { hour: 12, target: "Year 2027", modelIdx: 0, title: { en: "AI Spatial Web v2.0", fr: "Web Spatial IA v2.0", ro: "Platforma Spatial Web v2.0" }, desc: { en: "Deployment of generative AI model loaders for interactive 3D site builders.", fr: "Déploiement d'assistants génératifs 3D intégrés.", ro: "Lansarea asistenților IA generativi direct în constructorul de pagini 3D." } },
-              { hour: 6, target: "Year 2028", modelIdx: 1, title: { en: "Eco-Friendly Headquarters", fr: "Siège Social Éco", ro: "Sediul Central Inteligent" }, desc: { en: "Moving operations to our newly constructed smart zero-carbon technology tower.", fr: "Déménagement de nos équipes dans notre nouvelle tour intelligente zéro carbone.", ro: "Mutarea întregii activități în noul turn inteligent cu emisii de carbon zero." } },
-              { hour: 10, target: "Year 2029", modelIdx: 2, title: { en: "Global Decentralized Mesh", fr: "Réseau Décentralisé Global", ro: "Rețea Globală Decentralizată" }, desc: { en: "Deployment of a global edge CDN mesh ensuring zero latency for spatial assets.", fr: "Création d'un réseau CDN décentralisé mondial à latence zéro.", ro: "Implementarea unei rețele globale CDN mesh care garantează latență zero." } }
+              { hour: 12, target: "Year 2027", modelIdx: 0, title: { en: "AI Spatial Web v2.0", fr: "Web Spatial IA v2.0" }, desc: { en: "Deployment of generative AI model loaders for interactive 3D site builders.", fr: "Déploiement d'assistants génératifs 3D intégrés." } },
+              { hour: 6, target: "Year 2028", modelIdx: 1, title: { en: "Eco-Friendly Headquarters", fr: "Siège Social Éco" }, desc: { en: "Moving operations to our newly constructed smart zero-carbon technology tower.", fr: "Déménagement de nos équipes dans notre nouvelle tour intelligente zéro carbone." } },
+              { hour: 10, target: "Year 2029", modelIdx: 2, title: { en: "Global Decentralized Mesh", fr: "Réseau Décentralisé Global" }, desc: { en: "Deployment of a global edge CDN mesh ensuring zero latency for spatial assets.", fr: "Création d'un réseau CDN décentralisé mondial à latence zéro." } }
           ];
           
           window._showRoadmapMilestone = function(hour) {
@@ -15220,9 +15117,9 @@ const SketchExtruder = (() => {
                       hasClockUltra._activeRoadmapIdx = data.modelIdx;
                   } else {
                       const fallbacks = [
-                          { target: "FUTURE ROADMAP", modelIdx: 0, title: { en: "🚀 Next Frontier", fr: "🚀 Prochaine Frontière", ro: "🚀 Noua Frontieră" }, desc: { en: "Exploring advanced physical rendering techniques and web-GPU shaders.", fr: "Exploration des shaders WebGPU avancés.", ro: "Explorarea tehnicilor avansate de randare fizică și WebGPU." } },
-                          { target: "FUTURE ROADMAP", modelIdx: 1, title: { en: "🏢 Global Presence", fr: "🏢 Bureaux Globaux", ro: "🏢 Prezență Globală" }, desc: { en: "Expansion to new tech hubs worldwide.", fr: "Ouverture de hubs mondiaux.", ro: "Extinderea în noi hub-uri tehnologice din întreaga lume." } },
-                          { target: "FUTURE ROADMAP", modelIdx: 2, title: { en: "🌍 Edge Computing", fr: "🌍 Cloud Décentralisé", ro: "🌍 Rețea Globală" }, desc: { en: "Scaling decentralized infrastructure.", fr: "Infrastructures décentralisées.", ro: "Scalarea infrastructurii cloud descentralizate." } }
+                          { target: "FUTURE ROADMAP", modelIdx: 0, title: { en: "🚀 Next Frontier", fr: "🚀 Prochaine Frontière" }, desc: { en: "Exploring advanced physical rendering techniques and web-GPU shaders.", fr: "Exploration des shaders WebGPU avancés." } },
+                          { target: "FUTURE ROADMAP", modelIdx: 1, title: { en: "🏢 Global Presence", fr: "🏢 Bureaux Globaux" }, desc: { en: "Expansion to new tech hubs worldwide.", fr: "Ouverture de hubs mondiaux." } },
+                          { target: "FUTURE ROADMAP", modelIdx: 2, title: { en: "🌍 Edge Computing", fr: "🌍 Cloud Décentralisé" }, desc: { en: "Scaling decentralized infrastructure.", fr: "Infrastructures décentralisées." } }
                       ];
                       const idx = Math.floor(Math.random() * 3);
                       const dataFall = fallbacks[idx];
@@ -16179,43 +16076,42 @@ const SketchExtruder = (() => {
               const curLang = (document.getElementById('cu-lang-select') && document.getElementById('cu-lang-select').value) || (window.currentLang) || lang;
               
               const hourMap24 = {
-                  12: { time: "12:00 - 13:00", name: { en: "Lunch Slot", ro: "Interval Prânz", fr: "Déjeuner" } },
-                  1: { time: "13:00 - 14:00", name: { en: "Early Afternoon Slot", ro: "Interval Amiază", fr: "Début d'Après-midi" } },
-                  2: { time: "14:00 - 15:00", name: { en: "Afternoon Session", ro: "Sesiune După-amiază", fr: "Session Après-midi" } },
-                  3: { time: "15:00 - 16:00", name: { en: "Creative Design", ro: "Design Creativ", fr: "Design Créatif" } },
-                  4: { time: "16:00 - 17:00", name: { en: "Technical Consultation", ro: "Consultație Tehnică", fr: "Consultation Technique" } },
-                  5: { time: "17:00 - 18:00", name: { en: "Late Afternoon Session", ro: "Sesiune Târzie", fr: "Session Fin d'Après-midi" } },
-                  6: { time: "18:00 - 19:00", name: { en: "Evening Evaluation", ro: "Evaluare de Seară", fr: "Évaluation en Soirée" } },
-                  7: { time: "19:00 - 20:00", name: { en: "Late Review", ro: "Revizuire Târzie", fr: "Revue Tardive" } },
-                  8: { time: "20:00 - 21:00", name: { en: "Night Session", ro: "Sesiune de Noapte", fr: "Session de Nuit" } },
-                  9: { time: "09:00 - 10:00", name: { en: "Morning Starter", ro: "Start de Dimineață", fr: "Démarrage Matinal" } },
-                  10: { time: "10:00 - 11:00", name: { en: "Business Consultation", ro: "Consultație Business", fr: "Consultation Business" } },
-                  11: { time: "11:00 - 12:00", name: { en: "Tech Overview", ro: "Revizuire Tehnică", fr: "Aperçu Technique" } }
+                  12: { time: "12:00 - 13:00", name: { en: "Lunch Slot", fr: "Déjeuner" } },
+                  1: { time: "13:00 - 14:00", name: { en: "Early Afternoon Slot", fr: "Début d'Après-midi" } },
+                  2: { time: "14:00 - 15:00", name: { en: "Afternoon Session", fr: "Session Après-midi" } },
+                  3: { time: "15:00 - 16:00", name: { en: "Creative Design", fr: "Design Créatif" } },
+                  4: { time: "16:00 - 17:00", name: { en: "Technical Consultation", fr: "Consultation Technique" } },
+                  5: { time: "17:00 - 18:00", name: { en: "Late Afternoon Session", fr: "Session Fin d'Après-midi" } },
+                  6: { time: "18:00 - 19:00", name: { en: "Evening Evaluation", fr: "Évaluation en Soirée" } },
+                  7: { time: "19:00 - 20:00", name: { en: "Late Review", fr: "Revue Tardive" } },
+                  8: { time: "20:00 - 21:00", name: { en: "Night Session", fr: "Session de Nuit" } },
+                  9: { time: "09:00 - 10:00", name: { en: "Morning Starter", fr: "Démarrage Matinal" } },
+                  10: { time: "10:00 - 11:00", name: { en: "Business Consultation", fr: "Consultation Business" } },
+                  11: { time: "11:00 - 12:00", name: { en: "Tech Overview", fr: "Aperçu Technique" } }
               };
               
-              const slot = hourMap24[hour] || { time: hour + ":00 - " + (hour+1) + ":00", name: { en: "General Slot", ro: "Interval General", fr: "Créneau Général" } };
+              const slot = hourMap24[hour] || { time: hour + ":00 - " + (hour+1) + ":00", name: { en: "General Slot", fr: "Créneau Général" } };
               
               const titles = {
                   en: "📅 Book Time Slot",
                   fr: "📅 Réserver un Créneau",
-                  ro: "📅 Rezervă Interval Orar",
                   de: "📅 Termin buchen",
                   es: "📅 Reservar Horario",
                   it: "📅 Prenota Orario"
               };
               
-              const statusFree = { en: "🟢 FREE / DISPONIBIL", ro: "🟢 DISPONIBIL", fr: "🟢 DISPONIBLE", de: "🟢 FREI", es: "🟢 DISPONIBLE", it: "🟢 DISPONIBILE" };
-              const statusBooked = { en: "🔴 BOOKED / REZERVAT", ro: "🔴 REZERVAT", fr: "🔴 RÉSERVÉ", de: "🔴 GEBUCHT", es: "🔴 RESERVADO", it: "🔴 PRENOTATO" };
+              const statusFree = { en: "🟢 FREE / DISPONIBIL", fr: "🟢 DISPONIBLE", de: "🟢 FREI", es: "🟢 DISPONIBLE", it: "🟢 DISPONIBILE" };
+              const statusBooked = { en: "🔴 BOOKED / REZERVAT", fr: "🔴 RÉSERVÉ", de: "🔴 GEBUCHT", es: "🔴 RESERVADO", it: "🔴 PRENOTATO" };
               
-              const lblName = { en: "Your Name", ro: "Numele Tău", fr: "Votre Nom", de: "Ihr Name", es: "Su Nombre", it: "Il tuo Nome" };
-              const lblContact = { en: "Email or Phone", ro: "Email sau Telefon", fr: "Email ou Téléphone", de: "E-Mail oder Telefon", es: "Correo o Teléfono", it: "Email o Telefono" };
-              const lblService = { en: "Requested Service", ro: "Serviciu Solicitat", fr: "Service Demandé", de: "Gewünschter Dienst", es: "Servicio Solicitado", it: "Servizio Richiesto" };
-              const btnSubmit = { en: "Confirm Appointment", ro: "Confirmă Rezervarea", fr: "Confirmer le RDV", de: "Termin bestätigen", es: "Confirmar Reserva", it: "Conferma Prenotazione" };
+              const lblName = { en: "Your Name", fr: "Votre Nom", de: "Ihr Name", es: "Su Nombre", it: "Il tuo Nome" };
+              const lblContact = { en: "Email or Phone", fr: "Email ou Téléphone", de: "E-Mail oder Telefon", es: "Correo o Teléfono", it: "Email o Telefono" };
+              const lblService = { en: "Requested Service", fr: "Service Demandé", de: "Gewünschter Dienst", es: "Servicio Solicitado", it: "Servizio Richiesto" };
+              const btnSubmit = { en: "Confirm Appointment", fr: "Confirmer le RDV", de: "Termin bestätigen", es: "Confirmar Reserva", it: "Conferma Prenotazione" };
               
-              const lblDetClient = { en: "Client:", ro: "Client:", fr: "Client:", de: "Kunde:", es: "Cliente:", it: "Cliente:" };
-              const lblDetContact = { en: "Contact:", ro: "Contact:", fr: "Contact:", de: "Kontakt:", es: "Contacto:", it: "Contatto:" };
-              const lblDetService = { en: "Service:", ro: "Serviciu:", fr: "Service:", de: "Dienst:", es: "Servicio:", it: "Servizio:" };
-              const btnCancel = { en: "Cancel Appointment", ro: "Anulează Rezervarea", fr: "Annuler le RDV", de: "Termin stornieren", es: "Cancelar Reserva", it: "Annulla Prenotazione" };
+              const lblDetClient = { en: "Client:", fr: "Client:", de: "Kunde:", es: "Cliente:", it: "Cliente:" };
+              const lblDetContact = { en: "Contact:", fr: "Contact:", de: "Kontakt:", es: "Contacto:", it: "Contatto:" };
+              const lblDetService = { en: "Service:", fr: "Service:", de: "Dienst:", es: "Servicio:", it: "Servizio:" };
+              const btnCancel = { en: "Cancel Appointment", fr: "Annuler le RDV", de: "Termin stornieren", es: "Cancelar Reserva", it: "Annulla Prenotazione" };
               
               document.getElementById('book-title').textContent = titles[curLang] || titles.en;
               document.getElementById('book-time-range').innerHTML = "<strong>" + (slot.name[curLang] || slot.name.en) + "</strong><br/>⏱️ " + slot.time;
@@ -16261,7 +16157,7 @@ const SketchExtruder = (() => {
                   const serviceVal = document.getElementById('book-select-service').value;
                   
                   if (!clientName || !clientContact) {
-                      const alertMsg = { en: "Please fill in all required fields.", ro: "Vă rugăm să completați toate câmpiile obligatorii." };
+                      const alertMsg = { en: "Please fill in all required fields." };
                       alert(alertMsg[curLang] || alertMsg.en);
                       return;
                   }
@@ -16284,7 +16180,7 @@ const SketchExtruder = (() => {
                   } catch(e) {}
                   
                   if (window.toast) {
-                      const toastSuccess = { en: "Appointment confirmed successfully!", ro: "Rezervare confirmată cu succes!" };
+                      const toastSuccess = { en: "Appointment confirmed successfully!" };
                       window.toast((toastSuccess[curLang] || toastSuccess.en) + " 📅 " + slot.time);
                   }
                   
@@ -16303,7 +16199,7 @@ const SketchExtruder = (() => {
                   window._showBookSection(hour);
                   
                   if (window.toast) {
-                      const toastCancel = { en: "Appointment cancelled.", ro: "Rezervarea a fost anulată." };
+                      const toastCancel = { en: "Appointment cancelled." };
                       window.toast(toastCancel[curLang] || toastCancel.en);
                   }
                   
@@ -17461,10 +17357,10 @@ const SketchExtruder = (() => {
                       el.innerHTML = isChronoRunning ? '⏸️ Pause' : (prefix + translations[langVal]['start']);
                   } else if (el.id === 'cu-btn-pomodoro-start') {
                       const isPomodoroRunning = sp && sp.pomodoroRunning;
-                      el.innerHTML = isPomodoroRunning ? (isFR ? 'Arrêter' : isRO ? 'Oprește' : isDE ? 'Stoppen' : isES ? 'Detener' : isIT ? 'Arresta' : 'Stop') : (isFR ? 'Démarrer' : isRO ? 'Pornește' : isDE ? 'Starten' : isES ? 'Iniciar' : isIT ? 'Avvia' : 'Start');
+                      el.innerHTML = isPomodoroRunning ? (isFR ? 'Arrêter' : isDE ? 'Stoppen' : isES ? 'Detener' : isIT ? 'Arresta' : 'Stop') : (isFR ? 'Démarrer' : isRO ? 'Pornește' : isDE ? 'Starten' : isES ? 'Iniciar' : isIT ? 'Avvia' : 'Start');
                   } else if (el.id === 'cu-btn-a-test') {
                       const isAlarmActive = !!window._cuAlarmActive;
-                      el.innerText = isAlarmActive ? (isFR ? '🔕 Silencer' : isRO ? '🔕 Silențios' : isDE ? '🔕 Stumm' : isES ? '🔕 Silenciar' : isIT ? '🔕 Silenzia' : '🔕 Silence') : (translations[langVal]['test_alarm']);
+                      el.innerText = isAlarmActive ? (isFR ? '🔕 Silencer' : isDE ? '🔕 Stumm' : isES ? '🔕 Silenciar' : isIT ? '🔕 Silenzia' : '🔕 Silence') : (translations[langVal]['test_alarm']);
                   } else {
                       el.innerHTML = prefix + translations[langVal][key];
                   }
@@ -18392,27 +18288,27 @@ const SketchExtruder = (() => {
           window._showTeamMember = function(hour) {
               const curLang = (document.getElementById('cu-lang-select') && document.getElementById('cu-lang-select').value) || (window.currentLang) || lang;
               const teamData = {
-                  12: { name: "Alice Smith", role: { en: "Chief Executive Officer", fr: "Directrice Générale", ro: "Director General" }, email: "alice.smith@clockultra.com", bg: "linear-gradient(135deg, #3b82f6, #8b5cf6)", bio: { en: "Visionary leader driving innovation and digital expansion globally.", fr: "Leader visionnaire menant l'innovation et l'expansion numérique mondiale.", ro: "Lider vizionar care conduce inovația și expansiunea digitală la nivel global." } },
-                  1: { name: "Bob Jones", role: { en: "Technical Director", fr: "Directeur Technique", ro: "Director Tehnic" }, email: "bob.jones@clockultra.com", bg: "linear-gradient(135deg, #10b981, #3b82f6)", bio: { en: "Full-stack wizard orchestrating secure, high-performance cloud architectures.", fr: "Magicien full-stack orchestrant des architectures cloud sécurisées et performantes.", ro: "Magician full-stack care orchestrează arhicturi cloud securizate și performante." } },
-                  2: { name: "Charlie Brown", role: { en: "Lead Product Designer", fr: "Designer de Produit Principal", ro: "Designer de Produs Principal" }, email: "charlie.brown@clockultra.com", bg: "linear-gradient(135deg, #f59e0b, #ec4899)", bio: { en: "Crafting beautiful, user-centric interfaces with passion and visual poetry.", fr: "Création d'interfaces magnifiques et centrées sur l'utilisateur avec passion.", ro: "Crearea de interfețe superbe, centrate pe utilizator, cu pasiune și poezie vizuală." } },
-                  3: { name: "Diana Prince", role: { en: "Senior Project Manager", fr: "Chef de Projet Senior", ro: "Manager de Proiect Senior" }, email: "diana.prince@clockultra.com", bg: "linear-gradient(135deg, #ec4899, #8b5cf6)", bio: { en: "Ensuring flawless execution and perfect delivery of complex solutions.", fr: "Assurer une exécution sans faille et une livraison parfaite des projets.", ro: "Asigurarea unei execuții impecabile și livrarea perfectă a soluțiilor complexe." } },
-                  4: { name: "Ethan Hunt", role: { en: "Security Operations", fr: "Opérations de Sécurité", ro: "Operațiuni de Securitate" }, email: "ethan.hunt@clockultra.com", bg: "linear-gradient(135deg, #ef4444, #f59e0b)", bio: { en: "Protecting user data and guaranteeing maximum application integrity.", fr: "Protection des données utilisateurs et garantie d'intégrité maximale.", ro: "Protejarea datelor utilizatorilor și garantarea integrității maxime a aplicației." } },
-                  5: { name: "Fiona Gallagher", role: { en: "Lead Frontend Dev", fr: "Développeuse Frontend Principale", ro: "Dezvoltator Frontend Principal" }, email: "fiona.g@clockultra.com", bg: "linear-gradient(135deg, #06b6d4, #3b82f6)", bio: { en: "Transforming design prototypes into rich, interactive 3D realities.", fr: "Transformer les prototypes en réalités 3D interactives et riches.", ro: "Transformarea prototipurilor de design în realități 3D interactive bogate." } },
-                  6: { name: "George Clark", role: { en: "Cloud & Devops", fr: "Infrastructure & DevOps", ro: "Cloud & DevOps" }, email: "george.c@clockultra.com", bg: "linear-gradient(135deg, #6366f1, #a855f7)", bio: { en: "Scaling server capacity and guaranteeing 99.9% application uptime.", fr: "Dimensionnement des serveurs et garantie d'un temps de disponibilité de 99,9%.", ro: "Scalarea capacității serverelor și garantarea unui uptime de 99.9%." } },
-                  7: { name: "Hannah Abbott", role: { en: "QA Lead Engineer", fr: "Responsable Assurance Qualité", ro: "Inginer Coordonator QA" }, email: "hannah.a@clockultra.com", bg: "linear-gradient(135deg, #14b8a6, #10b981)", bio: { en: "Meticulously testing every edge case to ensure perfection.", fr: "Tester méticuleusement chaque cas limite pour garantir la perfection.", ro: "Testarea meticuloasă a fiecărui caz limită pentru a asigura perfecțiunea." } },
-                  8: { name: "Ian Malcolm", role: { en: "Data Scientist", fr: "Scientifique des Données", ro: "Data Scientist" }, email: "ian.m@clockultra.com", bg: "linear-gradient(135deg, #a855f7, #ec4899)", bio: { en: "Analyzing user metrics to dynamically improve application performance.", fr: "Analyse des métriques pour améliorer dynamiquement les performances.", ro: "Analizarea metricilor utilizatorilor pentru a îmbunătăți dinamic performanța." } },
-                  9: { name: "Julia Roberts", role: { en: "Marketing Director", fr: "Directrice Marketing", ro: "Director de Marketing" }, email: "julia.r@clockultra.com", bg: "linear-gradient(135deg, #f43f5e, #f59e0b)", bio: { en: "Connecting our premium products with millions of users worldwide.", fr: "Connecter nos produits haut de gamme avec des millions d'utilisateurs.", ro: "Conectarea produselor noastre premium cu milioane de utilizatori din întreaga lume." } },
-                  10: { name: "Kevin Bacon", role: { en: "Customer Experience", fr: "Directeur Expérience Client", ro: "Director Experiență Clienți" }, email: "kevin.b@clockultra.com", bg: "linear-gradient(135deg, #06b6d4, #14b8a6)", bio: { en: "Dedicated to solving customer issues with empathy and speed.", fr: "Dédié à résoudre les problèmes des clients avec empathie et rapidité.", ro: "Dedicat rezolvării problemelor clienților cu empatie și rapiditate." } },
-                  11: { name: "Laura Croft", role: { en: "Mobile Platforms Dev", fr: "Développeuse Plateformes Mobiles", ro: "Dezvoltator Platforme Mobile" }, email: "laura.c@clockultra.com", bg: "linear-gradient(135deg, #8b5cf6, #3b82f6)", bio: { en: "Optimizing responsive graphics for flawless smartphone experiences.", fr: "Optimisation des graphismes pour des expériences mobiles fluides.", ro: "Optimizarea graficii responsive pentru experiențe mobile impecabile." } }
+                  12: { name: "Alice Smith", role: { en: "Chief Executive Officer", fr: "Directrice Générale" }, email: "alice.smith@clockultra.com", bg: "linear-gradient(135deg, #3b82f6, #8b5cf6)", bio: { en: "Visionary leader driving innovation and digital expansion globally.", fr: "Leader visionnaire menant l'innovation et l'expansion numérique mondiale." } },
+                  1: { name: "Bob Jones", role: { en: "Technical Director", fr: "Directeur Technique" }, email: "bob.jones@clockultra.com", bg: "linear-gradient(135deg, #10b981, #3b82f6)", bio: { en: "Full-stack wizard orchestrating secure, high-performance cloud architectures.", fr: "Magicien full-stack orchestrant des architectures cloud sécurisées et performantes." } },
+                  2: { name: "Charlie Brown", role: { en: "Lead Product Designer", fr: "Designer de Produit Principal" }, email: "charlie.brown@clockultra.com", bg: "linear-gradient(135deg, #f59e0b, #ec4899)", bio: { en: "Crafting beautiful, user-centric interfaces with passion and visual poetry.", fr: "Création d'interfaces magnifiques et centrées sur l'utilisateur avec passion." } },
+                  3: { name: "Diana Prince", role: { en: "Senior Project Manager", fr: "Chef de Projet Senior" }, email: "diana.prince@clockultra.com", bg: "linear-gradient(135deg, #ec4899, #8b5cf6)", bio: { en: "Ensuring flawless execution and perfect delivery of complex solutions.", fr: "Assurer une exécution sans faille et une livraison parfaite des projets." } },
+                  4: { name: "Ethan Hunt", role: { en: "Security Operations", fr: "Opérations de Sécurité" }, email: "ethan.hunt@clockultra.com", bg: "linear-gradient(135deg, #ef4444, #f59e0b)", bio: { en: "Protecting user data and guaranteeing maximum application integrity.", fr: "Protection des données utilisateurs et garantie d'intégrité maximale." } },
+                  5: { name: "Fiona Gallagher", role: { en: "Lead Frontend Dev", fr: "Développeuse Frontend Principale" }, email: "fiona.g@clockultra.com", bg: "linear-gradient(135deg, #06b6d4, #3b82f6)", bio: { en: "Transforming design prototypes into rich, interactive 3D realities.", fr: "Transformer les prototypes en réalités 3D interactives et riches." } },
+                  6: { name: "George Clark", role: { en: "Cloud & Devops", fr: "Infrastructure & DevOps" }, email: "george.c@clockultra.com", bg: "linear-gradient(135deg, #6366f1, #a855f7)", bio: { en: "Scaling server capacity and guaranteeing 99.9% application uptime.", fr: "Dimensionnement des serveurs et garantie d'un temps de disponibilité de 99,9%." } },
+                  7: { name: "Hannah Abbott", role: { en: "QA Lead Engineer", fr: "Responsable Assurance Qualité" }, email: "hannah.a@clockultra.com", bg: "linear-gradient(135deg, #14b8a6, #10b981)", bio: { en: "Meticulously testing every edge case to ensure perfection.", fr: "Tester méticuleusement chaque cas limite pour garantir la perfection." } },
+                  8: { name: "Ian Malcolm", role: { en: "Data Scientist", fr: "Scientifique des Données" }, email: "ian.m@clockultra.com", bg: "linear-gradient(135deg, #a855f7, #ec4899)", bio: { en: "Analyzing user metrics to dynamically improve application performance.", fr: "Analyse des métriques pour améliorer dynamiquement les performances." } },
+                  9: { name: "Julia Roberts", role: { en: "Marketing Director", fr: "Directrice Marketing" }, email: "julia.r@clockultra.com", bg: "linear-gradient(135deg, #f43f5e, #f59e0b)", bio: { en: "Connecting our premium products with millions of users worldwide.", fr: "Connecter nos produits haut de gamme avec des millions d'utilisateurs." } },
+                  10: { name: "Kevin Bacon", role: { en: "Customer Experience", fr: "Directeur Expérience Client" }, email: "kevin.b@clockultra.com", bg: "linear-gradient(135deg, #06b6d4, #14b8a6)", bio: { en: "Dedicated to solving customer issues with empathy and speed.", fr: "Dédié à résoudre les problèmes des clients avec empathie et rapidité." } },
+                  11: { name: "Laura Croft", role: { en: "Mobile Platforms Dev", fr: "Développeuse Plateformes Mobiles" }, email: "laura.c@clockultra.com", bg: "linear-gradient(135deg, #8b5cf6, #3b82f6)", bio: { en: "Optimizing responsive graphics for flawless smartphone experiences.", fr: "Optimisation des graphismes pour des expériences mobiles fluides." } }
               };
               const customMember = sp.teamHourTexts && sp.teamHourTexts.find(function(item) { return item.hour === hour; });
               const member = (customMember && customMember.name) ? {
                   name: customMember.name,
-                  role: { en: customMember.role || "", fr: customMember.role || "", ro: customMember.role || "" },
+                  role: { en: customMember.role || "", fr: customMember.role || "" },
                   email: customMember.email || (teamData[hour] ? teamData[hour].email : 'member.' + hour + '@clockultra.com'),
                   bg: teamData[hour] ? teamData[hour].bg : "linear-gradient(135deg, #3b82f6, #8b5cf6)",
-                  bio: { en: customMember.bio || "", fr: customMember.bio || "", ro: customMember.bio || "" }
-              } : (teamData[hour] || { name: "Team Member " + hour, role: { en: "Contributor", fr: "Contributeur", ro: "Contribuitor" }, email: "team@clockultra.com", bg: "linear-gradient(135deg, #8b5cf6, #3b82f6)", bio: { en: "Dedicated specialist.", fr: "Spécialiste dévoué.", ro: "Specialist dedicat." } });
+                  bio: { en: customMember.bio || "", fr: customMember.bio || "" }
+              } : (teamData[hour] || { name: "Team Member " + hour, role: { en: "Contributor", fr: "Contributeur" }, email: "team@clockultra.com", bg: "linear-gradient(135deg, #8b5cf6, #3b82f6)", bio: { en: "Dedicated specialist.", fr: "Spécialiste dévoué." } });
               const initials = member.name.split(' ').map(n => n[0]).join('');
               const avatar = document.getElementById('team-member-avatar');
               avatar.textContent = initials;
@@ -18424,7 +18320,7 @@ const SketchExtruder = (() => {
               document.getElementById('team-member-email').textContent = member.email;
               
               const btnContact = document.getElementById('btn-team-contact');
-              const contactTexts = { en: "✉️ Send Message", fr: "✉️ Envoyer un Message", ro: "✉️ Trimite Mesaj" };
+              const contactTexts = { en: "✉️ Send Message", fr: "✉️ Envoyer un Message" };
               btnContact.textContent = contactTexts[curLang] || contactTexts.en;
               btnContact.onclick = function() {
                   window.location.href = "mailto:" + member.email + "?subject=Clock%20Ultra%20Inquiry";
@@ -19159,43 +19055,42 @@ function ensureEditorBookModal() {
         const curLang = (document.getElementById('cu-lang-select') && document.getElementById('cu-lang-select').value) || (window.currentLang) || 'en';
         
         const hourMap24 = {
-            12: { time: "12:00 - 13:00", name: { en: "Lunch Slot", ro: "Interval Prânz", fr: "Déjeuner" } },
-            1: { time: "13:00 - 14:00", name: { en: "Early Afternoon Slot", ro: "Interval Amiază", fr: "Début d'Après-midi" } },
-            2: { time: "14:00 - 15:00", name: { en: "Afternoon Session", ro: "Sesiune După-amiază", fr: "Session Après-midi" } },
-            3: { time: "15:00 - 16:00", name: { en: "Creative Design", ro: "Design Creativ", fr: "Design Créatif" } },
-            4: { time: "16:00 - 17:00", name: { en: "Technical Consultation", ro: "Consultație Tehnică", fr: "Consultation Technique" } },
-            5: { time: "17:00 - 18:00", name: { en: "Late Afternoon Session", ro: "Sesiune Târzie", fr: "Session Fin d'Après-midi" } },
-            6: { time: "18:00 - 19:00", name: { en: "Evening Evaluation", ro: "Evaluare de Seară", fr: "Évaluation en Soirée" } },
-            7: { time: "19:00 - 20:00", name: { en: "Late Review", ro: "Revizuire Târzie", fr: "Revue Tardive" } },
-            8: { time: "20:00 - 21:00", name: { en: "Night Session", ro: "Sesiune de Noapte", fr: "Session de Nuit" } },
-            9: { time: "09:00 - 10:00", name: { en: "Morning Starter", ro: "Start de Dimineață", fr: "Démarrage Matinal" } },
-            10: { time: "10:00 - 11:00", name: { en: "Business Consultation", ro: "Consultație Business", fr: "Consultation Business" } },
-            11: { time: "11:00 - 12:00", name: { en: "Tech Overview", ro: "Revizuire Tehnică", fr: "Aperçu Technique" } }
+            12: { time: "12:00 - 13:00", name: { en: "Lunch Slot", fr: "Déjeuner" } },
+            1: { time: "13:00 - 14:00", name: { en: "Early Afternoon Slot", fr: "Début d'Après-midi" } },
+            2: { time: "14:00 - 15:00", name: { en: "Afternoon Session", fr: "Session Après-midi" } },
+            3: { time: "15:00 - 16:00", name: { en: "Creative Design", fr: "Design Créatif" } },
+            4: { time: "16:00 - 17:00", name: { en: "Technical Consultation", fr: "Consultation Technique" } },
+            5: { time: "17:00 - 18:00", name: { en: "Late Afternoon Session", fr: "Session Fin d'Après-midi" } },
+            6: { time: "18:00 - 19:00", name: { en: "Evening Evaluation", fr: "Évaluation en Soirée" } },
+            7: { time: "19:00 - 20:00", name: { en: "Late Review", fr: "Revue Tardive" } },
+            8: { time: "20:00 - 21:00", name: { en: "Night Session", fr: "Session de Nuit" } },
+            9: { time: "09:00 - 10:00", name: { en: "Morning Starter", fr: "Démarrage Matinal" } },
+            10: { time: "10:00 - 11:00", name: { en: "Business Consultation", fr: "Consultation Business" } },
+            11: { time: "11:00 - 12:00", name: { en: "Tech Overview", fr: "Aperçu Technique" } }
         };
         
-        const slot = hourMap24[hour] || { time: hour + ":00 - " + (hour+1) + ":00", name: { en: "General Slot", ro: "Interval General", fr: "Créneau Général" } };
+        const slot = hourMap24[hour] || { time: hour + ":00 - " + (hour+1) + ":00", name: { en: "General Slot", fr: "Créneau Général" } };
         
         const titles = {
             en: "📅 Book Time Slot",
             fr: "📅 Réserver un Créneau",
-            ro: "📅 Rezervă Interval Orar",
             de: "📅 Termin buchen",
             es: "📅 Reservar Horario",
             it: "📅 Prenota Orario"
         };
         
-        const statusFree = { en: "🟢 FREE / DISPONIBIL", ro: "🟢 DISPONIBIL", fr: "🟢 DISPONIBLE", de: "🟢 FREI", es: "🟢 DISPONIBLE", it: "🟢 DISPONIBILE" };
-        const statusBooked = { en: "🔴 BOOKED / REZERVAT", ro: "🔴 REZERVAT", fr: "🔴 RÉSERVÉ", de: "🔴 GEBUCHT", es: "🔴 RESERVADO", it: "🔴 PRENOTATO" };
+        const statusFree = { en: "🟢 FREE / DISPONIBIL", fr: "🟢 DISPONIBLE", de: "🟢 FREI", es: "🟢 DISPONIBLE", it: "🟢 DISPONIBILE" };
+        const statusBooked = { en: "🔴 BOOKED / REZERVAT", fr: "🔴 RÉSERVÉ", de: "🔴 GEBUCHT", es: "🔴 RESERVADO", it: "🔴 PRENOTATO" };
         
-        const lblName = { en: "Your Name", ro: "Numele Tău", fr: "Votre Nom", de: "Ihr Name", es: "Su Nombre", it: "Il tuo Nome" };
-        const lblContact = { en: "Email or Phone", ro: "Email sau Telefon", fr: "Email ou Téléphone", de: "E-Mail oder Telefon", es: "Correo o Teléfono", it: "Email o Telefono" };
-        const lblService = { en: "Requested Service", ro: "Serviciu Solicitat", fr: "Service Demandé", de: "Gewünschter Dienst", es: "Servicio Solicitado", it: "Servizio Richiesto" };
-        const btnSubmit = { en: "Confirm Appointment", ro: "Confirmă Rezervarea", fr: "Confirmer le RDV", de: "Termin bestätigen", es: "Confirmar Reserva", it: "Conferma Prenotazione" };
+        const lblName = { en: "Your Name", fr: "Votre Nom", de: "Ihr Name", es: "Su Nombre", it: "Il tuo Nome" };
+        const lblContact = { en: "Email or Phone", fr: "Email ou Téléphone", de: "E-Mail oder Telefon", es: "Correo o Teléfono", it: "Email o Telefono" };
+        const lblService = { en: "Requested Service", fr: "Service Demandé", de: "Gewünschter Dienst", es: "Servicio Solicitado", it: "Servizio Richiesto" };
+        const btnSubmit = { en: "Confirm Appointment", fr: "Confirmer le RDV", de: "Termin bestätigen", es: "Confirmar Reserva", it: "Conferma Prenotazione" };
         
-        const lblDetClient = { en: "Client:", ro: "Client:", fr: "Client:", de: "Kunde:", es: "Cliente:", it: "Cliente:" };
-        const lblDetContact = { en: "Contact:", ro: "Contact:", fr: "Contact:", de: "Kontakt:", es: "Contacto:", it: "Contatto:" };
-        const lblDetService = { en: "Service:", ro: "Serviciu:", fr: "Service:", de: "Dienst:", es: "Servicio:", it: "Servizio:" };
-        const btnCancel = { en: "Cancel Appointment", ro: "Anulează Rezervarea", fr: "Annuler le RDV", de: "Termin stornieren", es: "Cancelar Reserva", it: "Annulla Prenotazione" };
+        const lblDetClient = { en: "Client:", fr: "Client:", de: "Kunde:", es: "Cliente:", it: "Cliente:" };
+        const lblDetContact = { en: "Contact:", fr: "Contact:", de: "Kontakt:", es: "Contacto:", it: "Contatto:" };
+        const lblDetService = { en: "Service:", fr: "Service:", de: "Dienst:", es: "Servicio:", it: "Servizio:" };
+        const btnCancel = { en: "Cancel Appointment", fr: "Annuler le RDV", de: "Termin stornieren", es: "Cancelar Reserva", it: "Annulla Prenotazione" };
         
         document.getElementById('book-title').textContent = titles[curLang] || titles.en;
         document.getElementById('book-time-range').innerHTML = "<strong>" + (slot.name[curLang] || slot.name.en) + "</strong><br/>⏱️ " + slot.time;
@@ -19241,7 +19136,7 @@ function ensureEditorBookModal() {
             const serviceVal = document.getElementById('book-select-service').value;
             
             if (!clientName || !clientContact) {
-                const alertMsg = { en: "Please fill in all required fields.", ro: "Vă rugăm să completați toate câmpiile obligatorii." };
+                const alertMsg = { en: "Please fill in all required fields." };
                 alert(alertMsg[curLang] || alertMsg.en);
                 return;
             }
@@ -19264,7 +19159,7 @@ function ensureEditorBookModal() {
             } catch(e) {}
             
             if (window.toast) {
-                const toastSuccess = { en: "Appointment confirmed successfully!", ro: "Rezervare confirmată cu succes!" };
+                const toastSuccess = { en: "Appointment confirmed successfully!" };
                 window.toast((toastSuccess[curLang] || toastSuccess.en) + " 📅 " + slot.time);
             }
             
@@ -19283,7 +19178,7 @@ function ensureEditorBookModal() {
             window._showBookSection(hour);
             
             if (window.toast) {
-                const toastCancel = { en: "Appointment cancelled.", ro: "Rezervarea a fost anulată." };
+                const toastCancel = { en: "Appointment cancelled." };
                 window.toast(toastCancel[curLang] || toastCancel.en);
             }
             
@@ -19415,16 +19310,16 @@ function ensureEditorNavModal() {
     });
     
     const sectionsData = [
-        { id: 'home', title: { en: '🏠 Welcome Home', fr: '🏠 Bienvenue', ro: '🏠 Bun Venit Acasă' }, desc: { en: 'Click hours on the clock dial to navigate!', ro: 'Faceți click pe orele de pe cadran pentru a naviga!' } },
-        { id: 'features', title: { en: '✨ Core Features', fr: '✨ Fonctionnalités Clés', ro: '✨ Caracteristici Principale' }, desc: { en: 'Experience responsive WebGL.', ro: 'Experimentați WebGL.' } },
-        { id: 'about', title: { en: '🧭 About Our Tech', fr: '🧭 Notre Technologie', ro: '🧭 Despre Tehnologia Noastră' }, desc: { en: 'Optimized Three.js runtime.', ro: 'Runtime optimizat Three.js.' } },
-        { id: 'services', title: { en: '💼 Professional Services', fr: '💼 Services Professionnels', ro: '💼 Servicii Profesionale' }, desc: { en: '3D solutions.', ro: 'Soluții 3D.' } },
-        { id: 'pricing', title: { en: '💳 Flexible Pricing Plans', fr: '💳 Formules de Tarification', ro: '💳 Planuri de Tarife Flexibile' }, desc: { en: 'Select the tier.', ro: 'Selectați nivelul.' } },
-        { id: 'portfolio', title: { en: '🎨 Creative Portfolio', fr: '🎨 Portfolio Créatif', ro: '🎨 Portofoliu Creativ' }, desc: { en: 'Our works.', ro: 'Lucrările noastre.' } },
-        { id: 'testimonials', title: { en: '💬 Client Feedback', fr: '💬 Témoignages Clients', ro: '💬 Feedback-ul Clienților' }, desc: { en: 'Client testimonials.', ro: 'Mărturiile clienților.' } },
-        { id: 'faq', title: { en: '❓ Frequent Questions', fr: '❓ Questions Fréquentes', ro: '❓ Întrebări Frecvente' }, desc: { en: 'Answers.', ro: 'Răspunsuri.' } },
-        { id: 'contact', title: { en: '✉️ Contact & Support', fr: '✉️ Contact & Support', ro: '✉️ Contact și Suport' }, desc: { en: 'Get in touch.', ro: 'Contactați-ne.' } },
-        { id: 'footer', title: { en: '⚓ Footer & Copyright', fr: '⚓ Pied de page', ro: '⚓ Footer și Drepturi' }, desc: { en: 'All rights reserved.', ro: 'Toate drepturile rezervate.' } }
+        { id: 'home', title: { en: '🏠 Welcome Home', fr: '🏠 Bienvenue' }, desc: { en: 'Click hours on the clock dial to navigate!' } },
+        { id: 'features', title: { en: '✨ Core Features', fr: '✨ Fonctionnalités Clés' }, desc: { en: 'Experience responsive WebGL.' } },
+        { id: 'about', title: { en: '🧭 About Our Tech', fr: '🧭 Notre Technologie' }, desc: { en: 'Optimized Three.js runtime.' } },
+        { id: 'services', title: { en: '💼 Professional Services', fr: '💼 Services Professionnels' }, desc: { en: '3D solutions.' } },
+        { id: 'pricing', title: { en: '💳 Flexible Pricing Plans', fr: '💳 Formules de Tarification' }, desc: { en: 'Select the tier.' } },
+        { id: 'portfolio', title: { en: '🎨 Creative Portfolio', fr: '🎨 Portfolio Créatif' }, desc: { en: 'Our works.' } },
+        { id: 'testimonials', title: { en: '💬 Client Feedback', fr: '💬 Témoignages Clients' }, desc: { en: 'Client testimonials.' } },
+        { id: 'faq', title: { en: '❓ Frequent Questions', fr: '❓ Questions Fréquentes' }, desc: { en: 'Answers.' } },
+        { id: 'contact', title: { en: '✉️ Contact & Support', fr: '✉️ Contact & Support' }, desc: { en: 'Get in touch.' } },
+        { id: 'footer', title: { en: '⚓ Footer & Copyright', fr: '⚓ Pied de page' }, desc: { en: 'All rights reserved.' } }
     ];
     
     window._showNavSection = function(anchor, hour) {
@@ -19433,7 +19328,7 @@ function ensureEditorNavModal() {
         document.getElementById('nav-section-tag').textContent = 'SECTION: #' + anchor.toUpperCase();
         document.getElementById('nav-section-title').innerHTML = sec.title[curLang] || sec.title.en;
         document.getElementById('nav-section-desc').innerHTML = sec.desc[curLang] || sec.desc.en;
-        const hourNames = { en: 'Hour', fr: 'Heure', ro: 'Ora', de: 'Stunde', es: 'Hora', it: 'Ora' };
+        const hourNames = { en: 'Hour', fr: 'Heure', de: 'Stunde', es: 'Hora', it: 'Ora' };
         document.getElementById('nav-hour-text').textContent = (hourNames[curLang] || 'Hour') + ' ' + hour + ' → #' + anchor;
         _navOverlay.classList.add('active');
     };

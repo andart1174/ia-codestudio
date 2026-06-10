@@ -14,7 +14,7 @@ var t_i18n = {
         done: 'Translations applied to code!',
         langs: { 
                  en:'🇬🇧 English', es:'🇪🇸 Spanish', fr:'🇫🇷 French', de:'🇩🇪 German', it:'🇮🇹 Italian', pt:'🇵🇹 Portuguese',
-                 ro:'🇷🇴 Romanian', nl:'🇳🇱 Dutch', pl:'🇵🇱 Polish', ru:'🇷🇺 Russian',
+                 nl:'🇳🇱 Dutch', pl:'🇵🇱 Polish', ru:'🇷🇺 Russian',
                  ar:'🇸🇦 Arabic', zh:'🇨🇳 Chinese', ja:'🇯🇵 Japanese', ko:'🇰🇷 Korean',
                  hi:'🇮🇳 Hindi', tr:'🇹🇷 Turkish', vi:'🇻🇳 Vietnamese', th:'🇹🇭 Thai',
                  sv:'🇸🇪 Swedish', el:'🇬🇷 Greek', cs:'🇨🇿 Czech', hu:'🇭🇺 Hungarian', uk:'🇺🇦 Ukrainian'
@@ -29,7 +29,7 @@ var t_i18n = {
         done: 'Traductions appliquées au code !',
         langs: { 
                  en:'🇬🇧 Anglais', es:'🇪🇸 Espagnol', fr:'🇫🇷 Français', de:'🇩🇪 Allemand', it:'🇮🇹 Italien', pt:'🇵🇹 Portugais',
-                 ro:'🇷🇴 Roumain', nl:'🇳🇱 Néerlandais', pl:'🇵🇱 Polonais', ru:'🇷🇺 Russe',
+                 nl:'🇳🇱 Néerlandais', pl:'🇵🇱 Polonais', ru:'🇷🇺 Russe',
                  ar:'🇸🇦 Arabe', zh:'🇨🇳 Chinois', ja:'🇯🇵 Japonais', ko:'🇰🇷 Coréen',
                  hi:'🇮🇳 Hindi', tr:'🇹🇷 Turc', vi:'🇻🇳 Vietnamien', th:'🇹🇭 Thaï',
                  sv:'🇸🇪 Suédois', el:'🇬🇷 Grec', cs:'🇨🇿 Tchèque', hu:'🇭🇺 Hongrois', uk:'🇺🇦 Ukrainien'
