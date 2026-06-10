@@ -1774,6 +1774,10 @@ htmlContent = htmlContent + injectedScript;
           updateSyncStatusText(currentLang === 'fr' ? 'Synchronisé' : 'Synced');
         }).catch(e => console.error(e));
       }
+    }, err => {
+      console.error("Firestore room subscription error:", err);
+      updateSyncStatusText(currentLang === 'fr' ? 'Erreur de Connexion' : 'Connection Error');
+      toast(currentLang === 'fr' ? "Erreur de connexion Firestore" : "Firestore connection error");
     });
 
     peersUnsubscribe = db.collection('rooms').doc(activeRoomId).collection('peers').onSnapshot(snapshot => {
@@ -1854,6 +1858,8 @@ htmlContent = htmlContent + injectedScript;
           peers: otherPeers
         }, '*');
       }
+    }, err => {
+      console.error("Firestore peers subscription error:", err);
     });
   }
 
