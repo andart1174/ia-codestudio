@@ -21,6 +21,8 @@
   let isUpdatingFromRemote = false;
   let heartbeatInterval = null;
   let lastReactionTimes = {};
+  let lastProcessedRunTrigger = null;
+  let hasLoadedInitialPreview = false;
 
   // DOM Elements
   const navItems = document.querySelectorAll('.nav-menu .nav-item');
@@ -1609,6 +1611,19 @@ htmlContent = htmlContent + injectedScript;
           return;
         }
         runStudioPreview();
+        
+        // Sincronizează rularea preview-ului în Firestore
+        if (activeRoomId && typeof firebase !== 'undefined') {
+          const db = firebase.firestore();
+          const modeSelect = document.getElementById('studio-render-mode');
+          db.collection('rooms').doc(activeRoomId).update({
+            code: studioTextarea.value,
+            mode: modeSelect ? modeSelect.value : 'threejs',
+            runTrigger: Date.now(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedBy: currentUser.email
+          }).catch(e => console.error("Error updating runTrigger:", e));
+        }
       };
     }
 
@@ -1737,7 +1752,8 @@ htmlContent = htmlContent + injectedScript;
         const studioTextarea = document.getElementById('studio-code-input');
         const modeSelect = document.getElementById('studio-render-mode');
         
-        let needsUpdate = false;
+        let codeUpdated = false;
+        let modeUpdated = false;
         
         if (data.code && data.code !== studioTextarea.value && data.updatedBy !== currentUser.email) {
           isUpdatingFromRemote = true;
@@ -1749,16 +1765,23 @@ htmlContent = htmlContent + injectedScript;
           
           studioTextarea.setSelectionRange(start, end);
           isUpdatingFromRemote = false;
-          needsUpdate = true;
+          codeUpdated = true;
         }
         
         if (data.mode && modeSelect && data.mode !== modeSelect.value && data.updatedBy !== currentUser.email) {
           modeSelect.value = data.mode;
-          needsUpdate = true;
+          modeUpdated = true;
         }
         
-        if (needsUpdate) {
+        const hasNewRunTrigger = data.runTrigger && data.runTrigger !== lastProcessedRunTrigger && data.updatedBy !== currentUser.email;
+        if (hasNewRunTrigger) {
+          lastProcessedRunTrigger = data.runTrigger;
+        }
+        
+        // Rulăm preview-ul doar la prima încărcare, când se schimbă modul de randare, sau când celălalt partener apasă pe "Run Preview"
+        if (!hasLoadedInitialPreview || modeUpdated || hasNewRunTrigger) {
           runStudioPreview();
+          hasLoadedInitialPreview = true;
         }
         
         updateSyncStatusText(currentLang === 'fr' ? 'Synchronisé' : 'Synced');
@@ -1876,6 +1899,8 @@ htmlContent = htmlContent + injectedScript;
     const roomIdWas = activeRoomId;
     activeRoomId = null;
     peerId = null;
+    hasLoadedInitialPreview = false;
+    lastProcessedRunTrigger = null;
     
     document.getElementById('studio-room-input').disabled = false;
     document.getElementById('btn-studio-join').classList.remove('hidden');
