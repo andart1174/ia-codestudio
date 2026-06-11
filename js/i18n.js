@@ -85,17 +85,7 @@ const translations = {
     studio_share_btn: "Publier dans le Feed 🚀",
     studio_saving: "Enregistrement...",
     studio_synced: "Synchronisé",
-    studio_premium_error: "Accès Premium requis pour coder dans le Studio.",
-    gallery_title: "Galerie de Créations 3D",
-    gallery_subtitle: "Découvrez des exemples de projets interactifs générés directement par notre intelligence artificielle.",
-    gal1_title: "Horloge Steampunk 3D",
-    gal1_desc: "Une horloge 3D animée complexe avec engrenages physiques en mouvement et jets de vapeur procéduraux.",
-    gal2_title: "Plan de Maison 3D",
-    gal2_desc: "Extrusion 3D instantanée à partir de dessins 2D, avec textures réalistes de bois, brique et béton.",
-    gal3_title: "Avatar Webcam 3D",
-    gal3_desc: "Rendu 3D de votre visage en temps réel sous forme de nuage de points dynamique en captant la caméra web.",
-    gal4_title: "Visualiseur Audio 3D",
-    gal4_desc: "Spectromètre audio WebGL réagissant aux fréquences sonores pour déformer des ondes tridimensionnelles."
+    studio_premium_error: "Accès Premium requis pour coder dans le Studio."
   },
   en: {
     nav_title: "IA CODE STUDIO",
@@ -183,16 +173,6 @@ const translations = {
     studio_share_btn: "Share to Feed 🚀",
     studio_saving: "Saving...",
     studio_synced: "Synced",
-    studio_premium_error: "Premium access required to code in Studio.",
-    gallery_title: "Public 3D Creation Gallery",
-    gallery_subtitle: "Explore interactive project examples generated directly by our advanced AI developer engine.",
-    gal1_title: "3D Steampunk Clock",
-    gal1_desc: "An intricate animated 3D clock featuring physics-based moving gears and procedural steam particle exhausts.",
-    gal2_title: "3D House Floor Plan",
-    gal2_desc: "Instant 3D wall and roof extrusion from 2D vector plans, featuring realistic wood, brick, and concrete textures.",
-    gal3_title: "3D Webcam Point-Cloud",
-    gal3_desc: "Real-time 3D face mesh tracking rendered as a dynamic point-cloud stream from your local webcam video.",
-    gal4_title: "3D Audio Visualizer",
-    gal4_desc: "Interactive WebGL audio spectrometer reacting to live music frequencies and animating 3D circular waves."
+    studio_premium_error: "Premium access required to code in Studio."
   }
 };
