@@ -529,7 +529,7 @@
                         <span>↓</span>
                     </button>
                     <div class="faq-answer">
-                        <p data-i18n="faq3_a">IA Code Studio offre un accès gratuit pour concevoir, personnaliser et prévisualiser vos applications en temps réel. Pour copier directement le code source, exporter des fichiers ZIP ou effectuer des déploiements cloud en un clic, vous pouvez souscrire à notre abonnement Premium ($30/mois) sécurisé via Stripe.</p>
+                        <p data-i18n="faq3_a">IA Code Studio offre un accès gratuit pour concevoir, personnaliser et prévisualiser vos applications en temps réel. Pour copier directement le code source, exporter des fichiers ZIP ou effectuer des déploiements cloud en un clic, vous pouvez souscrire à notre abonnement Premium ($10/mois) sécurisé via Stripe.</p>
                     </div>
                 </div>
                 <div class="faq-item">
@@ -830,7 +830,7 @@
         
         <div class="premium-portal-wrap">
             <button class="premium-portal-btn" id="portal-premium-btn" onclick="triggerPremiumPortal()">
-                💎 Devenir Premium ($30/mo)
+                💎 Devenir Premium ($10/mo)
             </button>
         </div>
 
@@ -843,7 +843,7 @@
                 const session = localStorage.getItem('genius_session');
                 if (!session) {
                     btn.classList.remove('active-sub');
-                    btn.innerText = '💎 Devenir Premium ($30/mo)';
+                    btn.innerText = '💎 Devenir Premium ($10/mo)';
                     return;
                 }
                 
@@ -883,7 +883,7 @@
 
                 // Not premium
                 btn.classList.remove('active-sub');
-                btn.innerText = '💎 Devenir Premium ($30/mo)';
+                btn.innerText = '💎 Devenir Premium ($10/mo)';
             }
             function triggerPremiumPortal() {
                 if (confirm(currentLang === 'en' ? "TEST MODE: Simulate Stripe payment completion? Press OK if you paid to start your subscription." : "MODE TEST : Simuler la finalisation du paiement Stripe ? Appuyez sur OK si vous avez 'payé' pour démarrer l'abonnement.")) {

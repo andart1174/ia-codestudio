@@ -77,7 +77,7 @@
       document.body.appendChild(modal);
 
       document.getElementById('paywall-go-btn').onclick = function () {
-        window.open('https://buy.stripe.com/bJecN6bfUfbbaax36qbfO02', '_blank');
+        window.open('https://buy.stripe.com/bJecN61Fk3staax7mGbfO03', '_blank');
       };
 
       document.getElementById('paywall-close-btn').onclick = function () {
@@ -94,12 +94,12 @@
     if (lang === 'fr') {
       titleEl.textContent = '🔒 Fonctionnalité Premium';
       descEl.innerHTML = 'La copie, l\'exportation de code et le déploiement cloud sont réservés aux membres premium de <strong>IA Code Studio</strong>.';
-      goBtn.textContent = '💎 Devenir Premium ($30/mois)';
+      goBtn.textContent = '💎 Devenir Premium ($10/mois)';
       closeBtn.textContent = 'Fermer';
     } else {
       titleEl.textContent = '🔒 Premium Feature';
       descEl.innerHTML = 'Copying, exporting code, and cloud deployment are reserved for premium members of <strong>IA Code Studio</strong>.';
-      goBtn.textContent = '💎 Go Premium ($30/month)';
+      goBtn.textContent = '💎 Go Premium ($10/month)';
       closeBtn.textContent = 'Close';
     }
 
