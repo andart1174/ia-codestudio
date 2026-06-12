@@ -1653,30 +1653,13 @@ htmlContent = htmlContent + injectedScript;
         const val = studioTextarea.value.trim();
         const isGlsl = modeSelect.value === 'glsl';
         
-        // Switch default template code if untouched
+        // Switch default template code ONLY if untouched
         if (studioTextarea.value === defaultThreeJsCode && isGlsl) {
           studioTextarea.value = defaultGlslShaderCode;
           updateEditorGutter();
         } else if (studioTextarea.value === defaultGlslShaderCode && !isGlsl) {
           studioTextarea.value = defaultThreeJsCode;
           updateEditorGutter();
-        } else {
-          // If the user switching mode has mismatched code, ask if they want to load the template
-          if (isGlsl && !val.includes('void main') && !val.includes('gl_FragColor')) {
-            if (confirm(currentLang === 'fr'
-              ? "⚠️ Le code actuel n'est pas un Fragment Shader GLSL. Voulez-vous charger le modèle GLSL par défaut ?"
-              : "⚠️ Your current code is not a GLSL Fragment Shader. Would you like to load the default GLSL template?")) {
-              studioTextarea.value = defaultGlslShaderCode;
-              updateEditorGutter();
-            }
-          } else if (!isGlsl && (val.includes('void main') || val.includes('precision '))) {
-            if (confirm(currentLang === 'fr'
-              ? "⚠️ Le code actuel semble être du GLSL. Voulez-vous charger le modèle Three.js par défaut ?"
-              : "⚠️ Your current code looks like GLSL. Would you like to load the default Three.js template?")) {
-              studioTextarea.value = defaultThreeJsCode;
-              updateEditorGutter();
-            }
-          }
         }
         
         runStudioPreview();
