@@ -2447,6 +2447,7 @@ htmlContent = htmlContent + injectedScript;
   }
 
   let myQueueId = null;
+  let battleQueueHeartbeatInterval = null;
 
   function enterMatchmakingQueue() {
     isQueued = true;
@@ -2479,10 +2480,21 @@ htmlContent = htmlContent + injectedScript;
       timestamp: Date.now()
     }).catch(e => console.error(e));
 
+    // Periodic heartbeat to keep queue item alive and clean
+    if (battleQueueHeartbeatInterval) clearInterval(battleQueueHeartbeatInterval);
+    battleQueueHeartbeatInterval = setInterval(() => {
+      if (isQueued && myQueueId) {
+        db.collection('rooms').doc('battle_lobby').collection('queue').doc(myQueueId).update({
+          timestamp: Date.now()
+        }).catch(e => {});
+      }
+    }, 5000);
+
     battleQueueUnsubscribe = db.collection('rooms').doc('battle_lobby').collection('queue').orderBy('timestamp', 'asc')
       .onSnapshot(snapshot => {
         let allWaiting = [];
         let myDoc = null;
+        const now = Date.now();
         
         snapshot.forEach(doc => {
           const d = doc.data();
@@ -2490,7 +2502,13 @@ htmlContent = htmlContent + injectedScript;
             myDoc = d;
           }
           if (d.status === 'waiting') {
-            allWaiting.push(d);
+            // Stale entries are older than 18 seconds (roughly 3 missed heartbeats)
+            if (now - d.timestamp < 18000) {
+              allWaiting.push(d);
+            } else {
+              // Gracefully delete stale queue document
+              db.collection('rooms').doc('battle_lobby').collection('queue').doc(doc.id).delete().catch(e => {});
+            }
           }
         });
 
@@ -2545,6 +2563,11 @@ htmlContent = htmlContent + injectedScript;
     if (queueStatus) {
       queueStatus.textContent = currentLang === 'fr' ? 'Inactif' : 'Idle';
       queueStatus.style.color = 'var(--text-muted)';
+    }
+
+    if (battleQueueHeartbeatInterval) {
+      clearInterval(battleQueueHeartbeatInterval);
+      battleQueueHeartbeatInterval = null;
     }
 
     if (battleQueueUnsubscribe) {
