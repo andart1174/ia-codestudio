@@ -2446,6 +2446,8 @@ htmlContent = htmlContent + injectedScript;
     if (btnVote2) btnVote2.addEventListener('click', () => submitBattleVote(2));
   }
 
+  let myQueueId = null;
+
   function enterMatchmakingQueue() {
     isQueued = true;
     const queueBtn = document.getElementById('btn-join-battle-queue');
@@ -2465,7 +2467,10 @@ htmlContent = htmlContent + injectedScript;
     const myName = currentUser.name;
     const myAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(currentUser.name)}`;
 
-    db.collection('battle_queue').doc(myEmail).set({
+    myQueueId = myEmail.replace(/[^a-zA-Z0-9]/g, '_') + '_' + Math.random().toString(36).substring(2, 6);
+
+    db.collection('rooms').doc('battle_lobby').collection('queue').doc(myQueueId).set({
+      id: myQueueId,
       email: myEmail,
       name: myName,
       avatar: myAvatar,
@@ -2474,14 +2479,14 @@ htmlContent = htmlContent + injectedScript;
       timestamp: Date.now()
     }).catch(e => console.error(e));
 
-    battleQueueUnsubscribe = db.collection('battle_queue').orderBy('timestamp', 'asc')
+    battleQueueUnsubscribe = db.collection('rooms').doc('battle_lobby').collection('queue').orderBy('timestamp', 'asc')
       .onSnapshot(snapshot => {
         let allWaiting = [];
         let myDoc = null;
         
         snapshot.forEach(doc => {
           const d = doc.data();
-          if (d.email === myEmail) {
+          if (d.id === myQueueId) {
             myDoc = d;
           }
           if (d.status === 'waiting') {
@@ -2498,14 +2503,14 @@ htmlContent = htmlContent + injectedScript;
           const p1 = allWaiting[0];
           const p2 = allWaiting[1];
           
-          if (p1.email === myEmail || p2.email === myEmail) {
-            if (p1.email === myEmail) {
+          if (p1.id === myQueueId || p2.id === myQueueId) {
+            if (p1.id === myQueueId) {
               const sessionId = 'battle_' + Math.random().toString(36).substring(2, 11);
               const duration = 300000;
               const startTime = Date.now();
               const endTime = startTime + duration;
 
-              db.collection('battle_sessions').doc(sessionId).set({
+              db.collection('rooms').doc('battle_lobby').collection('sessions').doc(sessionId).set({
                 id: sessionId,
                 player1: { email: p1.email, name: p1.name, avatar: p1.avatar, code: defaultThreeJSCode() },
                 player2: { email: p2.email, name: p2.name, avatar: p2.avatar, code: defaultThreeJSCode() },
@@ -2518,8 +2523,8 @@ htmlContent = htmlContent + injectedScript;
                 endTime: endTime
               }).then(() => {
                 const batch = db.batch();
-                batch.update(db.collection('battle_queue').doc(p1.email), { status: 'matched', sessionId: sessionId });
-                batch.update(db.collection('battle_queue').doc(p2.email), { status: 'matched', sessionId: sessionId });
+                batch.update(db.collection('rooms').doc('battle_lobby').collection('queue').doc(p1.id), { status: 'matched', sessionId: sessionId });
+                batch.update(db.collection('rooms').doc('battle_lobby').collection('queue').doc(p2.id), { status: 'matched', sessionId: sessionId });
                 return batch.commit();
               }).catch(e => console.error("Match session init failed:", e));
             }
@@ -2547,9 +2552,9 @@ htmlContent = htmlContent + injectedScript;
       battleQueueUnsubscribe = null;
     }
 
-    if (currentUser && typeof firebase !== 'undefined') {
+    if (myQueueId && typeof firebase !== 'undefined') {
       const db = firebase.firestore();
-      db.collection('battle_queue').doc(currentUser.email).delete().catch(e => {});
+      db.collection('rooms').doc('battle_lobby').collection('queue').doc(myQueueId).delete().catch(e => {});
     }
   }
 
@@ -2558,9 +2563,9 @@ htmlContent = htmlContent + injectedScript;
       battleQueueUnsubscribe();
       battleQueueUnsubscribe = null;
     }
-    if (currentUser && typeof firebase !== 'undefined') {
+    if (myQueueId && typeof firebase !== 'undefined') {
       const db = firebase.firestore();
-      db.collection('battle_queue').doc(currentUser.email).delete().catch(e => {});
+      db.collection('rooms').doc('battle_lobby').collection('queue').doc(myQueueId).delete().catch(e => {});
     }
     joinBattleArena(sessionId);
   }
@@ -2577,7 +2582,7 @@ htmlContent = htmlContent + injectedScript;
 
     const db = firebase.firestore();
     
-    battleSessionUnsubscribe = db.collection('battle_sessions').doc(sessionId).onSnapshot(doc => {
+    battleSessionUnsubscribe = db.collection('rooms').doc('battle_lobby').collection('sessions').doc(sessionId).onSnapshot(doc => {
       if (!doc.exists) return;
       const data = doc.data();
       
@@ -2647,7 +2652,7 @@ htmlContent = htmlContent + injectedScript;
       battleCodeSyncInterval = setInterval(() => {
         if (!activeBattleSessionId || !currentPlayerKey) return;
         const currentCode = document.getElementById('studio-code-input').value;
-        db.collection('battle_sessions').doc(activeBattleSessionId).update({
+        db.collection('rooms').doc('battle_lobby').collection('sessions').doc(activeBattleSessionId).update({
           [`${currentPlayerKey}.code`]: currentCode
         }).catch(e => {});
       }, 3000);
@@ -2679,7 +2684,7 @@ htmlContent = htmlContent + injectedScript;
         
         if (currentPlayerKey === 'player1') {
           const db = firebase.firestore();
-          db.collection('battle_sessions').doc(sessionId).update({
+          db.collection('rooms').doc('battle_lobby').collection('sessions').doc(sessionId).update({
             status: 'finished'
           }).catch(e => {});
         }
@@ -2694,7 +2699,7 @@ htmlContent = htmlContent + injectedScript;
     const voteKey = `votes${playerNum}`;
     const voteListKey = `votesList${playerNum}`;
     
-    db.collection('battle_sessions').doc(activeBattleSessionId).update({
+    db.collection('rooms').doc('battle_lobby').collection('sessions').doc(activeBattleSessionId).update({
       [voteKey]: firebase.firestore.FieldValue.increment(1),
       [voteListKey]: firebase.firestore.FieldValue.arrayUnion(currentUser.email)
     }).then(() => {
