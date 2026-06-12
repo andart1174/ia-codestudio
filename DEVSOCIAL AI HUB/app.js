@@ -1177,12 +1177,21 @@ void main() {
 
     const fsSource = \`${fragmentShaderSource.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\\$/g, '\\\\$')}\`;
 
+    function showShaderError(message) {
+      const div = document.createElement('div');
+      div.style.cssText = 'position:absolute;top:10px;left:10px;right:10px;background:rgba(239,68,68,0.95);color:#fff;padding:12px;border-radius:6px;font-family:monospace;font-size:12px;white-space:pre-wrap;z-index:9999;border:1px solid #ef4444;box-shadow:0 10px 15px rgba(0,0,0,0.5);';
+      div.textContent = '❌ GLSL Shader Compilation Error:\n\n' + message;
+      document.body.appendChild(div);
+    }
+
     function createShader(gl, type, source) {
       const shader = gl.createShader(type);
       gl.shaderSource(shader, source);
       gl.compileShader(shader);
       if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.error('Shader compile error:', gl.getShaderInfoLog(shader));
+        const log = gl.getShaderInfoLog(shader);
+        console.error('Shader compile error:', log);
+        showShaderError(log);
         gl.deleteShader(shader);
         return null;
       }
@@ -1192,13 +1201,19 @@ void main() {
     const vs = createShader(gl, gl.VERTEX_SHADER, vsSource);
     const fs = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
 
+    if (!vs || !fs) {
+      throw new Error('Shader compilation failed');
+    }
+
     const program = gl.createProgram();
     gl.attachShader(program, vs);
     gl.attachShader(program, fs);
     gl.linkProgram(program);
 
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      console.error('Program link error:', gl.getProgramInfoLog(program));
+      const log = gl.getProgramInfoLog(program);
+      console.error('Program link error:', log);
+      showShaderError(log);
     }
 
     gl.useProgram(program);
@@ -1313,12 +1328,20 @@ function getStudioIframeSrcDoc(rawCode, mode = 'threejs') {
     dirLight.position.set(10, 20, 20);
     scene.add(dirLight);
     
+    function showThreeError(message) {
+      const div = document.createElement('div');
+      div.style.cssText = 'position:absolute;top:10px;left:10px;right:10px;background:rgba(239,68,68,0.95);color:#fff;padding:12px;border-radius:6px;font-family:monospace;font-size:12px;white-space:pre-wrap;z-index:9999;border:1px solid #ef4444;box-shadow:0 10px 15px rgba(0,0,0,0.5);';
+      div.textContent = '❌ JS Evaluation Error:\n\n' + message;
+      document.body.appendChild(div);
+    }
+
     var animate = (function() {
       try {
         const customFunc = new Function('scene', \`${rawCode.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\\$/g, '\\\\$')}\`);
         return customFunc(scene);
       } catch(e) {
         console.error("User script evaluation error:", e);
+        showThreeError(e.message);
         return null;
       }
     })();
@@ -1608,13 +1631,33 @@ htmlContent = htmlContent + injectedScript;
     const modeSelect = document.getElementById('studio-render-mode');
     if (modeSelect) {
       modeSelect.addEventListener('change', () => {
+        const val = studioTextarea.value.trim();
+        const isGlsl = modeSelect.value === 'glsl';
+        
         // Switch default template code if untouched
-        if (studioTextarea.value === defaultThreeJsCode && modeSelect.value === 'glsl') {
+        if (studioTextarea.value === defaultThreeJsCode && isGlsl) {
           studioTextarea.value = defaultGlslShaderCode;
           updateEditorGutter();
-        } else if (studioTextarea.value === defaultGlslShaderCode && modeSelect.value === 'threejs') {
+        } else if (studioTextarea.value === defaultGlslShaderCode && !isGlsl) {
           studioTextarea.value = defaultThreeJsCode;
           updateEditorGutter();
+        } else {
+          // If the user switching mode has mismatched code, ask if they want to load the template
+          if (isGlsl && !val.includes('void main') && !val.includes('gl_FragColor')) {
+            if (confirm(currentLang === 'fr'
+              ? "⚠️ Le code actuel n'est pas un Fragment Shader GLSL. Voulez-vous charger le modèle GLSL par défaut ?"
+              : "⚠️ Your current code is not a GLSL Fragment Shader. Would you like to load the default GLSL template?")) {
+              studioTextarea.value = defaultGlslShaderCode;
+              updateEditorGutter();
+            }
+          } else if (!isGlsl && (val.includes('void main') || val.includes('precision '))) {
+            if (confirm(currentLang === 'fr'
+              ? "⚠️ Le code actuel semble être du GLSL. Voulez-vous charger le modèle Three.js par défaut ?"
+              : "⚠️ Your current code looks like GLSL. Would you like to load the default Three.js template?")) {
+              studioTextarea.value = defaultThreeJsCode;
+              updateEditorGutter();
+            }
+          }
         }
         
         runStudioPreview();
@@ -2423,135 +2466,132 @@ htmlContent = htmlContent + injectedScript;
     const snippets = {
       'glowing-torus': `// Glowing Torus Preset
 // A rotating neon torus knot with physical reflectivity.
-(function(scene) {
-  var geom = new THREE.TorusKnotGeometry(12, 3.5, 120, 16);
-  var mat = new THREE.MeshPhysicalMaterial({
-    color: 0x0ea5e9,
-    emissive: 0x0284c7,
-    roughness: 0.08,
-    metalness: 0.9,
-    clearcoat: 1.0,
-    clearcoatRoughness: 0.1
-  });
-  var knot = new THREE.Mesh(geom, mat);
-  scene.add(knot);
-  
-  var light = new THREE.PointLight(0x0ea5e9, 2.5, 120);
-  light.position.set(20, 20, 20);
-  scene.add(light);
-  
-  return function() {
-    knot.rotation.x += 0.01;
-    knot.rotation.y += 0.015;
-  };
-})`,
+var geom = new THREE.TorusKnotGeometry(12, 3.5, 120, 16);
+var mat = new THREE.MeshPhysicalMaterial({
+  color: 0x0ea5e9,
+  emissive: 0x0284c7,
+  roughness: 0.08,
+  metalness: 0.9,
+  clearcoat: 1.0,
+  clearcoatRoughness: 0.1
+});
+var knot = new THREE.Mesh(geom, mat);
+scene.add(knot);
+
+var light = new THREE.PointLight(0x0ea5e9, 2.5, 120);
+light.position.set(20, 20, 20);
+scene.add(light);
+
+return function() {
+  knot.rotation.x += 0.01;
+  knot.rotation.y += 0.015;
+};`,
       'clockwork-gears': `// Clockwork Gears Preset
 // Animated steampunk gearwheel with mechanical axle.
-(function(scene) {
-  var gearGroup = new THREE.Group();
-  scene.add(gearGroup);
-  
-  var gearM = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.8, roughness: 0.2 });
-  var axleM = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.9 });
-  
-  var baseGear = new THREE.Mesh(new THREE.CylinderGeometry(15, 15, 2.5, 32), gearM);
-  baseGear.rotation.x = Math.PI / 2;
-  gearGroup.add(baseGear);
-  
-  var axle = new THREE.Mesh(new THREE.CylinderGeometry(2.5, 2.5, 9, 16), axleM);
-  axle.rotation.x = Math.PI / 2;
-  gearGroup.add(axle);
-  
-  for (var i = 0; i < 16; i++) {
-    var angle = (i / 16) * Math.PI * 2;
-    var tooth = new THREE.Mesh(new THREE.BoxGeometry(3, 2.5, 4.5), gearM);
-    tooth.position.set(Math.cos(angle) * 15, Math.sin(angle) * 15, 0);
-    tooth.rotation.z = angle;
-    gearGroup.add(tooth);
-  }
-  
-  return function() {
-    gearGroup.rotation.z += 0.012;
-  };
-})`,
+var gearGroup = new THREE.Group();
+scene.add(gearGroup);
+
+var gearM = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.8, roughness: 0.2 });
+var axleM = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.9 });
+
+var baseGear = new THREE.Mesh(new THREE.CylinderGeometry(15, 15, 2.5, 32), gearM);
+baseGear.rotation.x = Math.PI / 2;
+gearGroup.add(baseGear);
+
+var axle = new THREE.Mesh(new THREE.CylinderGeometry(2.5, 2.5, 9, 16), axleM);
+axle.rotation.x = Math.PI / 2;
+gearGroup.add(axle);
+
+for (var i = 0; i < 16; i++) {
+  var angle = (i / 16) * Math.PI * 2;
+  var tooth = new THREE.Mesh(new THREE.BoxGeometry(3, 2.5, 4.5), gearM);
+  tooth.position.set(Math.cos(angle) * 15, Math.sin(angle) * 15, 0);
+  tooth.rotation.z = angle;
+  gearGroup.add(tooth);
+}
+
+return function() {
+  gearGroup.rotation.z += 0.012;
+};`,
       'particle-matrix': `// Particle Matrix Preset
 // Dynamic wave matrix of particles simulating cybernetic flow.
-(function(scene) {
-  var count = 2000;
-  var geom = new THREE.BufferGeometry();
-  var positions = new Float32Array(count * 3);
-  
+var count = 2000;
+var geom = new THREE.BufferGeometry();
+var positions = new Float32Array(count * 3);
+
+for (var i = 0; i < count; i++) {
+  var x = (Math.random() - 0.5) * 160;
+  var y = (Math.random() - 0.5) * 160;
+  var z = (Math.random() - 0.5) * 160;
+  positions[i * 3] = x;
+  positions[i * 3 + 1] = y;
+  positions[i * 3 + 2] = z;
+}
+
+geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+var mat = new THREE.PointsMaterial({ color: 0x38bdf8, size: 1.6, transparent: true, opacity: 0.8 });
+var points = new THREE.Points(geom, mat);
+scene.add(points);
+
+return function() {
+  var posAttr = points.geometry.attributes.position;
+  var time = Date.now() * 0.0012;
   for (var i = 0; i < count; i++) {
-    var x = (Math.random() - 0.5) * 160;
-    var y = (Math.random() - 0.5) * 160;
-    var z = (Math.random() - 0.5) * 160;
-    positions[i * 3] = x;
-    positions[i * 3 + 1] = y;
-    positions[i * 3 + 2] = z;
+    var x = posAttr.getX(i);
+    var z = posAttr.getZ(i);
+    var newY = Math.sin(x * 0.06 + time) * 8 + Math.cos(z * 0.06 + time) * 8;
+    posAttr.setY(i, newY);
   }
-  
-  geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  var mat = new THREE.PointsMaterial({ color: 0x38bdf8, size: 1.6, transparent: true, opacity: 0.8 });
-  var points = new THREE.Points(geom, mat);
-  scene.add(points);
-  
-  return function() {
-    var posAttr = points.geometry.attributes.position;
-    var time = Date.now() * 0.0012;
-    for (var i = 0; i < count; i++) {
-      var x = posAttr.getX(i);
-      var z = posAttr.getZ(i);
-      var newY = Math.sin(x * 0.06 + time) * 8 + Math.cos(z * 0.06 + time) * 8;
-      posAttr.setY(i, newY);
-    }
-    posAttr.needsUpdate = true;
-    points.rotation.y += 0.0015;
-  };
-})`,
+  posAttr.needsUpdate = true;
+  points.rotation.y += 0.0015;
+};`,
       'plasma-shader': `// GLSL Plasma Field Preset
 // A highly-performant interactive plasma shader material.
-(function(scene) {
-  var vertexShader = \`
-    varying vec2 vUv;
-    void main() {
-      vUv = uv;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    }
-  \`;
-  
-  var fragmentShader = \`
-    uniform float time;
-    varying vec2 vUv;
-    void main() {
-      vec2 p = -1.0 + 2.0 * vUv;
-      float len = length(p);
-      vec2 uv = vUv + (p/len)*cos(len*12.0-time*3.5)*0.03;
-      vec3 col = vec3(0.5 + 0.5*cos(time+uv.xyx+vec3(0.0,2.0,4.0)));
-      gl_FragColor = vec4(col, 1.0);
-    }
-  \`;
-  
-  var uniforms = { time: { value: 0 } };
-  var mat = new THREE.ShaderMaterial({
-    vertexShader: vertexShader,
-    fragmentShader: fragmentShader,
-    uniforms: uniforms,
-    side: THREE.DoubleSide
-  });
-  
-  var mesh = new THREE.Mesh(new THREE.PlaneGeometry(120, 120), mat);
-  scene.add(mesh);
-  
-  return function() {
-    uniforms.time.value = Date.now() * 0.0012;
-  };
-})`
+var vertexShader = \`
+  varying vec2 vUv;
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+\`;
+
+var fragmentShader = \`
+  uniform float time;
+  varying vec2 vUv;
+  void main() {
+    vec2 p = -1.0 + 2.0 * vUv;
+    float len = length(p);
+    vec2 uv = vUv + (p/len)*cos(len*12.0-time*3.5)*0.03;
+    vec3 col = vec3(0.5 + 0.5*cos(time+uv.xyx+vec3(0.0,2.0,4.0)));
+    gl_FragColor = vec4(col, 1.0);
+  }
+\`;
+
+var uniforms = { time: { value: 0 } };
+var mat = new THREE.ShaderMaterial({
+  vertexShader: vertexShader,
+  fragmentShader: fragmentShader,
+  uniforms: uniforms,
+  side: THREE.DoubleSide
+});
+
+var mesh = new THREE.Mesh(new THREE.PlaneGeometry(120, 120), mat);
+scene.add(mesh);
+
+return function() {
+  uniforms.time.value = Date.now() * 0.0012;
+};`
     };
 
     cards.forEach(card => {
       card.addEventListener('click', () => {
         const preset = card.dataset.preset;
         if (snippets[preset] && editor) {
+          // Force render mode select to 'threejs' since these presets are designed for Three.js 3D rendering
+          const modeSelect = document.getElementById('studio-render-mode');
+          if (modeSelect) {
+            modeSelect.value = 'threejs';
+          }
           editor.value = snippets[preset];
           toast(currentLang === 'fr' ? "Préfabriqué injecté ! Exécution du rendu..." : "Prefab injected! Running render...");
           if (runBtn) runBtn.click();
