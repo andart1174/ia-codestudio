@@ -1180,7 +1180,7 @@ void main() {
     function showShaderError(message) {
       const div = document.createElement('div');
       div.style.cssText = 'position:absolute;top:10px;left:10px;right:10px;background:rgba(239,68,68,0.95);color:#fff;padding:12px;border-radius:6px;font-family:monospace;font-size:12px;white-space:pre-wrap;z-index:9999;border:1px solid #ef4444;box-shadow:0 10px 15px rgba(0,0,0,0.5);';
-      div.textContent = '❌ GLSL Shader Compilation Error:\n\n' + message;
+      div.textContent = '❌ GLSL Shader Compilation Error:\\n\\n' + message;
       document.body.appendChild(div);
     }
 
@@ -1331,7 +1331,7 @@ function getStudioIframeSrcDoc(rawCode, mode = 'threejs') {
     function showThreeError(message) {
       const div = document.createElement('div');
       div.style.cssText = 'position:absolute;top:10px;left:10px;right:10px;background:rgba(239,68,68,0.95);color:#fff;padding:12px;border-radius:6px;font-family:monospace;font-size:12px;white-space:pre-wrap;z-index:9999;border:1px solid #ef4444;box-shadow:0 10px 15px rgba(0,0,0,0.5);';
-      div.textContent = '❌ JS Evaluation Error:\n\n' + message;
+      div.textContent = '❌ JS Evaluation Error:\\n\\n' + message;
       document.body.appendChild(div);
     }
 
