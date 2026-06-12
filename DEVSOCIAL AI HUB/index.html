@@ -308,11 +308,9 @@
                   <i class="fa-solid fa-desktop"></i>
                   <span data-en="Live Interactive Viewport" data-fr="Aperçu Interactif Direct">Live Interactive Viewport</span>
                 </div>
-                <div style="margin-left: auto; margin-right: 15px; display: flex; align-items: center; gap: 8px;">
-                  <label for="studio-render-mode" style="font-size: 11px; font-weight: 700; color: #cbd5e1;" data-en="Mode:" data-fr="Mode:">Mode:</label>
-                  <select id="studio-render-mode" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 4px 8px; color: #fff; font-size: 11px; outline: none; cursor: pointer;">
-                    <option value="threejs">Three.js 3D</option>
-                    <option value="glsl">GLSL Fragment Shader</option>
+                <div style="display: none;">
+                  <select id="studio-render-mode">
+                    <option value="threejs" selected>Three.js 3D</option>
                   </select>
                 </div>
                 <div class="sync-status" id="studio-sync-status">

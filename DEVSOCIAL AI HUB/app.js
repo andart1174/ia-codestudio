@@ -1349,27 +1349,6 @@ function getStudioIframeSrcDoc(rawCode, mode = 'threejs') {
     return rawCode;
   }
 
-  const hasVoidMain = rawCode.includes('void main') || rawCode.includes('gl_FragColor');
-
-  if (mode === 'glsl') {
-    if (!hasVoidMain) {
-      return getMismatchedModeHtml(
-        currentLang === 'fr' 
-          ? "Ce viewport est configuré pour un <b>Fragment Shader GLSL</b>, mais votre code ressemble à du JavaScript Three.js. Veuillez changer le sélecteur Mode en haut à <b>Three.js 3D</b>."
-          : "This viewport is configured for a <b>GLSL Fragment Shader</b>, but your code looks like Three.js JavaScript. Please change the Mode dropdown above to <b>Three.js 3D</b>."
-      );
-    }
-    return getGlslIframeSrcDoc(rawCode);
-  }
-
-  if (hasVoidMain) {
-    return getMismatchedModeHtml(
-      currentLang === 'fr'
-        ? "Ce viewport est configuré pour <b>Three.js 3D</b>, mais votre code ressemble à un Fragment Shader GLSL. Veuillez changer le sélecteur Mode en haut à <b>GLSL Fragment Shader</b>."
-        : "This viewport is configured for <b>Three.js 3D</b>, but your code looks like a GLSL Fragment Shader. Please change the Mode dropdown above to <b>GLSL Fragment Shader</b>."
-    );
-  }
-
   let htmlContent = "";
   if (false) {
     htmlContent = rawCode;
