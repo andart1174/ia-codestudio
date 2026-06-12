@@ -87,11 +87,7 @@
           <i class="fa-solid fa-trophy"></i>
           <span class="nav-label" data-en="Dev Challenges" data-fr="Défis Dev">Dev Challenges</span>
         </button>
-        <button class="nav-item" data-tab="battles">
-          <i class="fa-solid fa-bolt"></i>
-          <span class="nav-label" data-en="Shader Battles" data-fr="Batailles de Shadere">Shader Battles</span>
-        </button>
-        
+
         <div style="height: 1px; background: var(--border-glass); margin: 15px 0;"></div>
         
         <a href="../index.html" class="nav-item" style="text-decoration: none; border: 1px solid rgba(239, 68, 68, 0.25); background: rgba(239, 68, 68, 0.05); color: #f87171;">
@@ -254,54 +250,6 @@
                 <h4 data-en="🎭 Live Avatar Mask" data-fr="🎭 Masque Avatar en Direct">🎭 Live Avatar Mask</h4>
                 <p data-en="Calibrate the custom webcam point-cloud to resemble a futuristic mask." data-fr="Calibrez le nuage de points de la webcam pour ressembler à un masque futuriste.">Calibrate the custom webcam point-cloud to resemble a futuristic mask.</p>
                 <span class="winner-tag" data-en="🏆 Winner: EmmaArchitect" data-fr="🏆 Gagnant : EmmaArchitect">🏆 Winner: EmmaArchitect</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- BATTLES PANEL -->
-        <div class="view-panel" id="panel-battles">
-          <div class="battle-arena">
-            <div class="battle-setup" id="battle-lobby">
-              <h2 data-en="⚡ Shader Battle Arena ⚡" data-fr="⚡ Arène de Bataille de Shadere ⚡">⚡ Shader Battle Arena ⚡</h2>
-              <p data-en="Join the matchmaking queue to duel another creator live! Create the best 3D scene/shader in 5 minutes. Spectators vote for the winner." data-fr="Rejoignez la file de matchmaking pour affronter un autre créateur en direct ! Créez le meilleur shader 3D en 5 minutes. Les spectateurs votent pour le gagnant.">Join the matchmaking queue to duel another creator live! Create the best 3D scene/shader in 5 minutes. Spectators vote for the winner.</p>
-              <div class="battle-queue-status" id="battle-queue-status" data-en="Idle" data-fr="Inactif">Idle</div>
-              <button class="battle-btn" id="btn-join-battle-queue" data-en="Enter Matchmaking" data-fr="Entrer en Matchmaking">Enter Matchmaking</button>
-            </div>
-            
-            <div class="battle-splitscreen hidden" id="battle-arena-stage">
-              <!-- Player 1 Pane -->
-              <div class="duelist-pane" id="duelist-pane-1">
-                <div class="duelist-header">
-                  <div class="duelist-user">
-                    <img id="duelist-avatar-1" src="https://api.dicebear.com/7.x/bottts/svg?seed=P1" alt="Avatar">
-                    <h4 id="duelist-name-1">Player 1</h4>
-                  </div>
-                  <span class="badge" style="background:rgba(99,102,241,0.2);color:#818cf8;" id="duelist-votes-1">0 votes</span>
-                </div>
-                <div class="duelist-viewport">
-                  <iframe id="duelist-frame-1" class="preview-frame" style="width:100%;height:100%;border:none;"></iframe>
-                </div>
-                <button class="duelist-vote-btn" id="btn-vote-1">
-                  <i class="fa-solid fa-thumbs-up"></i> <span data-en="Vote Player 1" data-fr="Voter Joueur 1">Vote Player 1</span>
-                </button>
-              </div>
-
-              <!-- Player 2 Pane -->
-              <div class="duelist-pane" id="duelist-pane-2">
-                <div class="duelist-header">
-                  <div class="duelist-user">
-                    <img id="duelist-avatar-2" src="https://api.dicebear.com/7.x/bottts/svg?seed=P2" alt="Avatar">
-                    <h4 id="duelist-name-2">Player 2</h4>
-                  </div>
-                  <span class="badge" style="background:rgba(236,72,153,0.2);color:#f472b6;" id="duelist-votes-2">0 votes</span>
-                </div>
-                <div class="duelist-viewport">
-                  <iframe id="duelist-frame-2" class="preview-frame" style="width:100%;height:100%;border:none;"></iframe>
-                </div>
-                <button class="duelist-vote-btn" id="btn-vote-2">
-                  <i class="fa-solid fa-thumbs-up"></i> <span data-en="Vote Player 2" data-fr="Voter Joueur 2">Vote Player 2</span>
-                </button>
               </div>
             </div>
           </div>
