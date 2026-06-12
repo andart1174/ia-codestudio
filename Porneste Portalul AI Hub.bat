@@ -13,7 +13,7 @@ cd ..
 where python >nul 2>nul
 if %errorlevel% equ 0 (
     echo [INFO] Folosesc Python pentru a porni serverul...
-    start http://localhost:8000/site%%20web%%20ia/index.html
+    start http://localhost:8000/site%%20web%%20ia%%20ultimul%%20model/index.html
     python -m http.server 8000
     exit /b
 )
@@ -21,7 +21,7 @@ if %errorlevel% equ 0 (
 where npx >nul 2>nul
 if %errorlevel% equ 0 (
     echo [INFO] Folosesc Node npx pentru a porni serverul...
-    start http://localhost:8080/site%%20web%%20ia/index.html
+    start http://localhost:8080/site%%20web%%20ia%%20ultimul%%20model/index.html
     cmd /c "npx http-server -p 8080 -c-1"
     exit /b
 )
