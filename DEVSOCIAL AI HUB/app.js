@@ -2562,7 +2562,7 @@ var fragmentShader = \`
     vec2 p = -1.0 + 2.0 * vUv;
     float len = length(p);
     vec2 uv = vUv + (p/len)*cos(len*12.0-time*3.5)*0.03;
-    vec3 col = vec3(0.5 + 0.5*cos(time+uv.xyx+vec3(0.0,2.0,4.0)));
+    vec3 col = vec3(0.5) + vec3(0.5) * cos(vec3(time) + uv.xyx + vec3(0.0, 2.0, 4.0));
     gl_FragColor = vec4(col, 1.0);
   }
 \`;
@@ -2587,12 +2587,15 @@ return function() {
       card.addEventListener('click', () => {
         const preset = card.dataset.preset;
         if (snippets[preset] && editor) {
+          editor.value = snippets[preset];
+          
           // Force render mode select to 'threejs' since these presets are designed for Three.js 3D rendering
           const modeSelect = document.getElementById('studio-render-mode');
           if (modeSelect) {
             modeSelect.value = 'threejs';
+            modeSelect.dispatchEvent(new Event('change'));
           }
-          editor.value = snippets[preset];
+          
           toast(currentLang === 'fr' ? "Préfabriqué injecté ! Exécution du rendu..." : "Prefab injected! Running render...");
           if (runBtn) runBtn.click();
         }
