@@ -1297,12 +1297,48 @@ void main() {
 </html>`;
 }
 
-function getStudioIframeSrcDoc(rawCode, mode = 'threejs') {
-  if (mode === 'glsl') {
-    return getGlslIframeSrcDoc(rawCode);
-  }
+function getMismatchedModeHtml(message) {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mismatched Mode</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #050815;
+      font-family: system-ui, -apple-system, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: #94a3b8;
+    }
+    .card {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 24px;
+      border-radius: 12px;
+      text-align: center;
+      max-width: 80%;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
+    }
+    .icon { font-size: 32px; margin-bottom: 12px; }
+    .title { color: #f8fafc; font-weight: 700; font-size: 16px; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">⚠️</div>
+    <div class="title">${currentLang === 'fr' ? 'Mode de Code Incompatible' : 'Mismatched Code Mode'}</div>
+    <div style="line-height:1.5; font-size:13px;">${message}</div>
+  </div>
+</body>
+</html>`;
+}
 
-  let htmlContent = "";
+function getStudioIframeSrcDoc(rawCode, mode = 'threejs') {
   const trimmed = rawCode.trim();
   const isFullHtml = trimmed.toLowerCase().startsWith('<!doctype') || 
                      trimmed.toLowerCase().startsWith('<html') || 
@@ -1310,6 +1346,32 @@ function getStudioIframeSrcDoc(rawCode, mode = 'threejs') {
                      trimmed.toLowerCase().includes('<body>');
                      
   if (isFullHtml) {
+    return rawCode;
+  }
+
+  const hasVoidMain = rawCode.includes('void main') || rawCode.includes('gl_FragColor');
+
+  if (mode === 'glsl') {
+    if (!hasVoidMain) {
+      return getMismatchedModeHtml(
+        currentLang === 'fr' 
+          ? "Ce viewport est configuré pour un <b>Fragment Shader GLSL</b>, mais votre code ressemble à du JavaScript Three.js. Veuillez changer le sélecteur Mode en haut à <b>Three.js 3D</b>."
+          : "This viewport is configured for a <b>GLSL Fragment Shader</b>, but your code looks like Three.js JavaScript. Please change the Mode dropdown above to <b>Three.js 3D</b>."
+      );
+    }
+    return getGlslIframeSrcDoc(rawCode);
+  }
+
+  if (hasVoidMain) {
+    return getMismatchedModeHtml(
+      currentLang === 'fr'
+        ? "Ce viewport est configuré pour <b>Three.js 3D</b>, mais votre code ressemble à un Fragment Shader GLSL. Veuillez changer le sélecteur Mode en haut à <b>GLSL Fragment Shader</b>."
+        : "This viewport is configured for <b>Three.js 3D</b>, but your code looks like a GLSL Fragment Shader. Please change the Mode dropdown above to <b>GLSL Fragment Shader</b>."
+    );
+  }
+
+  let htmlContent = "";
+  if (false) {
     htmlContent = rawCode;
   } else {
     htmlContent = `<!DOCTYPE html>
