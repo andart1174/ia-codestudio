@@ -87,6 +87,10 @@
           <i class="fa-solid fa-trophy"></i>
           <span class="nav-label" data-en="Dev Challenges" data-fr="Défis Dev">Dev Challenges</span>
         </button>
+        <button class="nav-item" data-tab="battles">
+          <i class="fa-solid fa-bolt"></i>
+          <span class="nav-label" data-en="Shader Battles" data-fr="Batailles de Shadere">Shader Battles</span>
+        </button>
         
         <div style="height: 1px; background: var(--border-glass); margin: 15px 0;"></div>
         
@@ -147,6 +151,13 @@
                   <span><i class="fa-solid fa-clock"></i> <span data-en="5h left" data-fr="5h restantes">5h left</span></span>
                 </div>
                 <button class="btn-join-challenge" data-en="Submit Entry" data-fr="Participer">Submit Entry</button>
+              </div>
+
+              <div class="sidebar-box leaderboard-box">
+                <h3 data-en="Reputation Leaderboard" data-fr="Classement de Réputation">Reputation Leaderboard</h3>
+                <div class="leaderboard-list" id="reputation-leaderboard">
+                  <!-- Rendered dynamically via app.js -->
+                </div>
               </div>
 
               <div class="sidebar-box active-users-box">
@@ -248,9 +259,80 @@
           </div>
         </div>
 
+        <!-- BATTLES PANEL -->
+        <div class="view-panel" id="panel-battles">
+          <div class="battle-arena">
+            <div class="battle-setup" id="battle-lobby">
+              <h2 data-en="⚡ Shader Battle Arena ⚡" data-fr="⚡ Arène de Bataille de Shadere ⚡">⚡ Shader Battle Arena ⚡</h2>
+              <p data-en="Join the matchmaking queue to duel another creator live! Create the best 3D scene/shader in 5 minutes. Spectators vote for the winner." data-fr="Rejoignez la file de matchmaking pour affronter un autre créateur en direct ! Créez le meilleur shader 3D en 5 minutes. Les spectateurs votent pour le gagnant.">Join the matchmaking queue to duel another creator live! Create the best 3D scene/shader in 5 minutes. Spectators vote for the winner.</p>
+              <div class="battle-queue-status" id="battle-queue-status" data-en="Idle" data-fr="Inactif">Idle</div>
+              <button class="battle-btn" id="btn-join-battle-queue" data-en="Enter Matchmaking" data-fr="Entrer en Matchmaking">Enter Matchmaking</button>
+            </div>
+            
+            <div class="battle-splitscreen hidden" id="battle-arena-stage">
+              <!-- Player 1 Pane -->
+              <div class="duelist-pane" id="duelist-pane-1">
+                <div class="duelist-header">
+                  <div class="duelist-user">
+                    <img id="duelist-avatar-1" src="https://api.dicebear.com/7.x/bottts/svg?seed=P1" alt="Avatar">
+                    <h4 id="duelist-name-1">Player 1</h4>
+                  </div>
+                  <span class="badge" style="background:rgba(99,102,241,0.2);color:#818cf8;" id="duelist-votes-1">0 votes</span>
+                </div>
+                <div class="duelist-viewport">
+                  <iframe id="duelist-frame-1" class="preview-frame" style="width:100%;height:100%;border:none;"></iframe>
+                </div>
+                <button class="duelist-vote-btn" id="btn-vote-1">
+                  <i class="fa-solid fa-thumbs-up"></i> <span data-en="Vote Player 1" data-fr="Voter Joueur 1">Vote Player 1</span>
+                </button>
+              </div>
+
+              <!-- Player 2 Pane -->
+              <div class="duelist-pane" id="duelist-pane-2">
+                <div class="duelist-header">
+                  <div class="duelist-user">
+                    <img id="duelist-avatar-2" src="https://api.dicebear.com/7.x/bottts/svg?seed=P2" alt="Avatar">
+                    <h4 id="duelist-name-2">Player 2</h4>
+                  </div>
+                  <span class="badge" style="background:rgba(236,72,153,0.2);color:#f472b6;" id="duelist-votes-2">0 votes</span>
+                </div>
+                <div class="duelist-viewport">
+                  <iframe id="duelist-frame-2" class="preview-frame" style="width:100%;height:100%;border:none;"></iframe>
+                </div>
+                <button class="duelist-vote-btn" id="btn-vote-2">
+                  <i class="fa-solid fa-thumbs-up"></i> <span data-en="Vote Player 2" data-fr="Voter Joueur 2">Vote Player 2</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- DEV STUDIO PANEL -->
         <div class="view-panel" id="panel-studio">
           <div class="studio-layout">
+            <!-- Left Side: AI Prefabs -->
+            <div class="prefabs-pane" id="studio-prefabs-pane">
+              <h3 data-en="⚙️ AI Prefabs" data-fr="⚙️ Préfabriqués IA">⚙️ AI Prefabs</h3>
+              <p style="font-size:10px;color:var(--text-muted);margin-bottom:12px;" data-en="Click to inject code snippets into your editor." data-fr="Cliquez pour injecter des morceaux de code dans l'éditeur.">Click to inject code snippets into your editor.</p>
+              
+              <div class="prefab-card" data-preset="glowing-torus">
+                <h4 data-en="Glowing Torus" data-fr="Tore Lumineux">Glowing Torus</h4>
+                <p data-en="A rotating neon torus knot with physical reflectivity." data-fr="Un nœud torique néon rotatif avec réflectivité physique.">A rotating neon torus knot with physical reflectivity.</p>
+              </div>
+              <div class="prefab-card" data-preset="clockwork-gears">
+                <h4 data-en="Clockwork Gears" data-fr="Engrenages Rétro">Clockwork Gears</h4>
+                <p data-en="Animated steampunk gearwheel with mechanical axle." data-fr="Roue d'engrenage animée steampunk avec axe.">Animated steampunk gearwheel with mechanical axle.</p>
+              </div>
+              <div class="prefab-card" data-preset="particle-matrix">
+                <h4 data-en="Particle Matrix" data-fr="Matrice Particules">Particle Matrix</h4>
+                <p data-en="Dynamic wave matrix of particles simulating cybernetic flow." data-fr="Vague de particules simulant un flux cybernétique.">Dynamic wave matrix of particles simulating cybernetic flow.</p>
+              </div>
+              <div class="prefab-card" data-preset="plasma-shader">
+                <h4 data-en="GLSL Plasma Field" data-fr="Champ de Plasma GLSL">GLSL Plasma Field</h4>
+                <p data-en="A highly-performant interactive plasma shader." data-fr="Un shader de plasma interactif haute performance.">A highly-performant interactive plasma shader.</p>
+              </div>
+            </div>
+
             <!-- Left Side: Code Editor -->
             <div class="studio-editor-pane">
               <div class="pane-header">
@@ -310,6 +392,7 @@
                   <input type="text" id="studio-room-input" placeholder="Room ID (e.g. quantum-space)" data-en-placeholder="Room ID (e.g. quantum-space)" data-fr-placeholder="Nom de la salle (ex: quantum-space)">
                   <button id="btn-studio-join" class="mp-btn join-btn" data-en="Join Room" data-fr="Rejoindre">Join Room</button>
                   <button id="btn-studio-leave" class="mp-btn leave-btn hidden" data-en="Leave Room" data-fr="Quitter">Leave Room</button>
+                  <button id="btn-voice-toggle" class="mp-btn voice-btn hidden" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; font-weight: 700; margin-left: 8px;" data-en="🎙️ Join Voice" data-fr="🎙️ Parler direct">🎙️ Join Voice</button>
                 </div>
                 <div id="mp-reactions-bar" class="mp-reactions-bar hidden" style="margin-top: 10px; display: flex; gap: 8px; justify-content: center; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255,255,255,0.05); padding: 8px; border-radius: 8px;">
                   <button class="reaction-btn" data-emoji="🔥" style="background: none; border: none; font-size: 18px; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">🔥</button>

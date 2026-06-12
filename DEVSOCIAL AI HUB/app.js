@@ -147,12 +147,22 @@
     bindEvents();
     animateAll();
     initDevSocialStudio();
+    
+    // Initialize DEVSOCIAL advanced modules
+    if (typeof initVoiceChat === 'function') initVoiceChat();
+    if (typeof initShaderBattles === 'function') initShaderBattles();
+    if (typeof initPrefabs === 'function') initPrefabs();
+    if (typeof initLeaderboard === 'function') initLeaderboard();
+    if (typeof syncLocalUserReputationAndLeaderboard === 'function') syncLocalUserReputationAndLeaderboard();
 
     // Subscribe to Firebase Firestore real-time post changes
     window.DevSocialDB.subscribePosts(updatedPosts => {
       posts = updatedPosts;
       if (activeTab === 'feed') renderFeed();
       if (activeTab === 'gallery') renderGallery();
+      if (typeof syncLocalUserReputationAndLeaderboard === 'function') {
+        syncLocalUserReputationAndLeaderboard();
+      }
     });
 
     // Subscribe to Active Challenge in real-time
@@ -1322,6 +1332,29 @@ function getStudioIframeSrcDoc(rawCode, mode = 'threejs') {
     
     var peers = {};
     
+    var raycaster = new THREE.Raycaster();
+    var mouse = new THREE.Vector2();
+    var plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+    var lastPointerReport = 0;
+
+    window.addEventListener('mousemove', function(event) {
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      
+      raycaster.setFromCamera(mouse, camera);
+      var intersection = new THREE.Vector3();
+      raycaster.ray.intersectPlane(plane, intersection);
+      
+      var now = Date.now();
+      if (now - lastPointerReport > 120) {
+        lastPointerReport = now;
+        window.parent.postMessage({
+          type: 'pointer_move',
+          position: { x: intersection.x, y: intersection.y, z: intersection.z }
+        }, '*');
+      }
+    });
+
     window.addEventListener('message', function(event) {
       if (event.data.type === 'peer_update') {
         updatePeers(event.data.peers);
@@ -1362,6 +1395,7 @@ function getStudioIframeSrcDoc(rawCode, mode = 'threejs') {
         activeIds[peer.id] = true;
         if (peers[peer.id]) {
           peers[peer.id].targetPosition.set(peer.x, peer.y, peer.z);
+          peers[peer.id].targetPointer.set(peer.px || 0, peer.py || 0, peer.pz || 0);
         } else {
           var geom = new THREE.SphereGeometry(4, 16, 16);
           var mat = new THREE.MeshBasicMaterial({ color: 0x0ea5e9, wireframe: true });
@@ -1375,9 +1409,18 @@ function getStudioIframeSrcDoc(rawCode, mode = 'threejs') {
           ring.rotation.x = Math.PI / 2;
           mesh.add(ring);
           
+          // Glow Laser Pointer Cone
+          var pointerGeom = new THREE.ConeGeometry(1.5, 6, 8);
+          pointerGeom.rotateX(Math.PI / 2);
+          var pointerMat = new THREE.MeshBasicMaterial({ color: 0xef4444 });
+          var pointerMesh = new THREE.Mesh(pointerGeom, pointerMat);
+          scene.add(pointerMesh);
+          
           peers[peer.id] = {
             mesh: mesh,
-            targetPosition: new THREE.Vector3(peer.x, peer.y, peer.z)
+            pointerMesh: pointerMesh,
+            targetPosition: new THREE.Vector3(peer.x, peer.y, peer.z),
+            targetPointer: new THREE.Vector3(peer.px || 0, peer.py || 0, peer.pz || 0)
           };
         }
       });
@@ -1386,6 +1429,7 @@ function getStudioIframeSrcDoc(rawCode, mode = 'threejs') {
         if (!activeIds[id]) {
           if (peers[id].reactionEl) peers[id].reactionEl.remove();
           scene.remove(peers[id].mesh);
+          if (peers[id].pointerMesh) scene.remove(peers[id].pointerMesh);
           delete peers[id];
         }
       });
@@ -1404,6 +1448,10 @@ function getStudioIframeSrcDoc(rawCode, mode = 'threejs') {
         p.mesh.position.lerp(p.targetPosition, 0.1);
         p.mesh.rotation.y += 0.02;
         
+        if (p.pointerMesh) {
+          p.pointerMesh.position.lerp(p.targetPointer, 0.2);
+        }
+
         if (p.reactionEl) {
           var pos = toScreenPosition(p.mesh, camera);
           p.reactionEl.style.left = (pos.x - 12) + 'px';
@@ -1725,18 +1773,56 @@ htmlContent = htmlContent + injectedScript;
     document.getElementById('btn-studio-leave').classList.remove('hidden');
     document.getElementById('active-peers-container').classList.remove('hidden');
     document.getElementById('mp-reactions-bar').classList.remove('hidden');
+    const voiceBtn = document.getElementById('btn-voice-toggle');
+    if (voiceBtn) {
+      voiceBtn.classList.remove('hidden');
+      voiceBtn.classList.remove('voice-active');
+      voiceBtn.textContent = currentLang === 'fr' ? '🎙️ Parler direct' : '🎙️ Join Voice';
+    }
     
     updateSyncStatusText(currentLang === 'fr' ? 'Connexion...' : 'Connecting...');
 
-    db.collection('rooms').doc(activeRoomId).collection('peers').doc(peerId).set({
-      name: currentUser.name,
-      email: currentUser.email,
-      avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(currentUser.name)}`,
-      x: 0,
-      y: 0,
-      z: 150,
-      lastActive: firebase.firestore.FieldValue.serverTimestamp()
-    }).catch(e => console.error("Error joining room:", e));
+    // Fetch active user profile for multiplayer badge/reputation representation
+    let localRep = 0;
+    let localBadge = '🧑‍💻';
+    db.collection('users').doc(currentUser.email).get().then(doc => {
+      if (doc.exists) {
+        localRep = doc.data().reputation || 0;
+        localBadge = doc.data().badge || '🧑‍💻';
+      }
+      db.collection('rooms').doc(activeRoomId).collection('peers').doc(peerId).set({
+        name: currentUser.name,
+        email: currentUser.email,
+        avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(currentUser.name)}`,
+        x: 0,
+        y: 0,
+        z: 150,
+        px: null,
+        py: null,
+        pz: null,
+        speaking: false,
+        reputation: localRep,
+        badge: localBadge,
+        lastActive: firebase.firestore.FieldValue.serverTimestamp()
+      }).catch(e => console.error("Error joining room:", e));
+    }).catch(err => {
+      // Fallback if user profile doesn't exist yet
+      db.collection('rooms').doc(activeRoomId).collection('peers').doc(peerId).set({
+        name: currentUser.name,
+        email: currentUser.email,
+        avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(currentUser.name)}`,
+        x: 0,
+        y: 0,
+        z: 150,
+        px: null,
+        py: null,
+        pz: null,
+        speaking: false,
+        reputation: 0,
+        badge: '🧑‍💻',
+        lastActive: firebase.firestore.FieldValue.serverTimestamp()
+      }).catch(e => console.error("Error joining room fallback:", e));
+    });
 
     heartbeatInterval = setInterval(() => {
       if (activeRoomId && peerId) {
@@ -1859,15 +1945,31 @@ htmlContent = htmlContent + injectedScript;
           avatar: data.avatar,
           x: data.x || 0,
           y: data.y || 0,
-          z: data.z || 150
+          z: data.z || 150,
+          px: typeof data.px !== 'undefined' ? data.px : null,
+          py: typeof data.py !== 'undefined' ? data.py : null,
+          pz: typeof data.pz !== 'undefined' ? data.pz : null,
+          speaking: data.speaking || false,
+          reputation: data.reputation || 0,
+          badge: data.badge || ''
         });
         
         if (peerListContainer) {
           const peerChip = document.createElement('div');
-          peerChip.className = `peer-chip ${id === peerId ? 'self' : ''}`;
+          peerChip.className = `peer-chip \${id === peerId ? 'self' : ''} \${data.speaking ? 'speaking' : ''}`;
+          
+          let badgeHtml = '';
+          if (data.badge) {
+            let badgeClass = 'collab';
+            if (data.badge.includes('🏆') || data.badge.toLowerCase().includes('champ')) badgeClass = 'champ';
+            else if (data.badge.includes('🔥') || data.badge.toLowerCase().includes('shader')) badgeClass = 'shader';
+            badgeHtml = `<span class="badge-pill \${badgeClass}">\${data.badge}</span>`;
+          }
+          
+          const rep = data.reputation || 0;
           peerChip.innerHTML = `
-            <img src="${data.avatar}" alt="Avatar">
-            <span>${data.name} ${id === peerId ? '(You)' : ''}</span>
+            <img src="\${data.avatar}" alt="Avatar">
+            <span>\${data.name} \${badgeHtml} <small style="opacity:0.6;margin-left:4px;">(\${rep} Rep)</small> \${id === peerId ? (currentLang === 'fr' ? '(Vous)' : '(You)') : ''}</span>
           `;
           peerListContainer.appendChild(peerChip);
         }
@@ -1908,6 +2010,15 @@ htmlContent = htmlContent + injectedScript;
     document.getElementById('active-peers-container').classList.add('hidden');
     document.getElementById('studio-peers-list').innerHTML = '';
     document.getElementById('mp-reactions-bar').classList.add('hidden');
+    const voiceBtn = document.getElementById('btn-voice-toggle');
+    if (voiceBtn) {
+      voiceBtn.classList.add('hidden');
+      voiceBtn.classList.remove('voice-active');
+      voiceBtn.textContent = currentLang === 'fr' ? '🎙️ Parler direct' : '🎙️ Join Voice';
+    }
+    if (typeof stopVoiceChat === 'function') {
+      stopVoiceChat();
+    }
     
     updateSyncStatusText(currentLang === 'fr' ? 'Session Locale' : 'Local Session');
     if (!silent && roomIdWas) {
@@ -1992,6 +2103,7 @@ htmlContent = htmlContent + injectedScript;
   }
 
   window.addEventListener('message', (event) => {
+    if (!event.data) return;
     if (event.data.type === 'camera_move' && activeRoomId && peerId && typeof firebase !== 'undefined') {
       const pos = event.data.position;
       const db = firebase.firestore();
@@ -1999,6 +2111,14 @@ htmlContent = htmlContent + injectedScript;
         x: pos.x,
         y: pos.y,
         z: pos.z
+      }).catch(e => {});
+    } else if (event.data.type === 'pointer_move' && activeRoomId && peerId && typeof firebase !== 'undefined') {
+      const pos = event.data.position;
+      const db = firebase.firestore();
+      db.collection('rooms').doc(activeRoomId).collection('peers').doc(peerId).update({
+        px: pos.x,
+        py: pos.y,
+        pz: pos.z
       }).catch(e => {});
     }
   });
@@ -2018,5 +2138,925 @@ htmlContent = htmlContent + injectedScript;
     setTimeout(() => t.remove(), 2500);
   }
   window.toast = toast;
+
+  // ==========================================
+  // DEVSOCIAL AI HUB - ADVANCED FUNCTIONS
+  // ==========================================
+
+  // --- 1. WebRTC Voice Chat ---
+  let localAudioStream = null;
+  let peerConnections = {};
+  let voiceSignalsUnsubscribe = null;
+  let voiceActive = false;
+  let audioContext = null;
+  let analyser = null;
+  let voiceLevelInterval = null;
+
+  function initVoiceChat() {
+    const voiceBtn = document.getElementById('btn-voice-toggle');
+    if (!voiceBtn) return;
+
+    voiceBtn.addEventListener('click', () => {
+      if (!activeRoomId || !peerId) {
+        toast(currentLang === 'fr' ? "Rejoignez une salle d'abord !" : "Join a room first!");
+        return;
+      }
+      if (voiceActive) {
+        stopVoiceChat();
+      } else {
+        startVoiceChat();
+      }
+    });
+  }
+
+  function startVoiceChat() {
+    voiceActive = true;
+    const voiceBtn = document.getElementById('btn-voice-toggle');
+    if (voiceBtn) {
+      voiceBtn.classList.add('voice-active');
+      voiceBtn.textContent = currentLang === 'fr' ? '🎙️ Connecté' : '🎙️ Connected';
+    }
+    toast(currentLang === 'fr' ? "Connexion au canal vocal..." : "Connecting to voice channel...");
+
+    const db = firebase.firestore();
+    
+    db.collection('rooms').doc(activeRoomId).collection('peers').doc(peerId).update({
+      inVoice: true,
+      speaking: false
+    }).catch(e => {});
+
+    navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(stream => {
+      localAudioStream = stream;
+      
+      try {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const source = audioContext.createMediaStreamSource(stream);
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 256;
+        source.connect(analyser);
+        
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+        let wasSpeaking = false;
+        
+        voiceLevelInterval = setInterval(() => {
+          if (!voiceActive) return;
+          analyser.getByteFrequencyData(dataArray);
+          let sum = 0;
+          for (let i = 0; i < dataArray.length; i++) {
+            sum += dataArray[i];
+          }
+          const average = sum / dataArray.length;
+          const isSpeakingNow = average > 12;
+          
+          if (isSpeakingNow !== wasSpeaking) {
+            wasSpeaking = isSpeakingNow;
+            db.collection('rooms').doc(activeRoomId).collection('peers').doc(peerId).update({
+              speaking: isSpeakingNow
+            }).catch(e => {});
+          }
+        }, 150);
+      } catch(e) {
+        console.warn("AudioContext error, falling back to basic join", e);
+      }
+
+      setupVoiceSignaling();
+    }).catch(err => {
+      console.warn("Microphone access denied or failed, running simulated mode", err);
+      toast(currentLang === 'fr' ? "Audio simulé (Micro non autorisé)" : "Simulated Audio (Mic not allowed)");
+      
+      let wasSpeaking = false;
+      voiceLevelInterval = setInterval(() => {
+        if (!voiceActive) return;
+        if (Math.random() < 0.15) {
+          const isSpeakingNow = !wasSpeaking;
+          wasSpeaking = isSpeakingNow;
+          db.collection('rooms').doc(activeRoomId).collection('peers').doc(peerId).update({
+            speaking: isSpeakingNow
+          }).catch(e => {});
+        }
+      }, 1000);
+    });
+  }
+
+  function setupVoiceSignaling() {
+    if (typeof firebase === 'undefined' || !activeRoomId || !peerId) return;
+    const db = firebase.firestore();
+
+    voiceSignalsUnsubscribe = db.collection('rooms').doc(activeRoomId).collection('voice_signals')
+      .onSnapshot(snapshot => {
+        snapshot.docChanges().forEach(change => {
+          const data = change.doc.data();
+          if (change.type === 'added' || change.type === 'modified') {
+            if (data.to === peerId) {
+              handleVoiceSignal(change.doc.id, data);
+            }
+          }
+        });
+      });
+      
+    db.collection('rooms').doc(activeRoomId).collection('peers').get().then(snap => {
+      snap.forEach(doc => {
+        const otherId = doc.id;
+        const otherData = doc.data();
+        if (otherId !== peerId && otherData.inVoice) {
+          initiateCallWith(otherId);
+        }
+      });
+    });
+  }
+
+  function initiateCallWith(otherId) {
+    if (peerConnections[otherId]) return;
+    
+    const db = firebase.firestore();
+    const pc = createPeerConnection(otherId);
+    peerConnections[otherId] = pc;
+    
+    if (localAudioStream) {
+      localAudioStream.getTracks().forEach(track => {
+        pc.addTrack(track, localAudioStream);
+      });
+    }
+    
+    pc.createOffer().then(offer => {
+      return pc.setLocalDescription(offer);
+    }).then(() => {
+      db.collection('rooms').doc(activeRoomId).collection('voice_signals').doc(peerId + '_to_' + otherId).set({
+        from: peerId,
+        to: otherId,
+        type: 'offer',
+        sdp: pc.localDescription.sdp,
+        timestamp: Date.now()
+      });
+    }).catch(e => console.error("Error creating RTC offer:", e));
+  }
+
+  function handleVoiceSignal(signalId, data) {
+    const otherId = data.from;
+    const db = firebase.firestore();
+    
+    if (data.type === 'offer') {
+      let pc = peerConnections[otherId];
+      if (!pc) {
+        pc = createPeerConnection(otherId);
+        peerConnections[otherId] = pc;
+        if (localAudioStream) {
+          localAudioStream.getTracks().forEach(track => {
+            pc.addTrack(track, localAudioStream);
+          });
+        }
+      }
+      
+      pc.setRemoteDescription(new RTCSessionDescription({ type: 'offer', sdp: data.sdp }))
+        .then(() => pc.createAnswer())
+        .then(answer => pc.setLocalDescription(answer))
+        .then(() => {
+          db.collection('rooms').doc(activeRoomId).collection('voice_signals').doc(peerId + '_to_' + otherId).set({
+            from: peerId,
+            to: otherId,
+            type: 'answer',
+            sdp: pc.localDescription.sdp,
+            timestamp: Date.now()
+          });
+          db.collection('rooms').doc(activeRoomId).collection('voice_signals').doc(signalId).delete().catch(e => {});
+        }).catch(e => console.error("Error responding to offer:", e));
+        
+    } else if (data.type === 'answer') {
+      const pc = peerConnections[otherId];
+      if (pc) {
+        pc.setRemoteDescription(new RTCSessionDescription({ type: 'answer', sdp: data.sdp }))
+          .then(() => {
+            db.collection('rooms').doc(activeRoomId).collection('voice_signals').doc(signalId).delete().catch(e => {});
+          }).catch(e => console.error("Error setting answer description:", e));
+      }
+    } else if (data.type === 'candidate') {
+      const pc = peerConnections[otherId];
+      if (pc) {
+        pc.addIceCandidate(new RTCIceCandidate(data.candidate)).catch(e => {});
+      }
+    }
+  }
+
+  function createPeerConnection(otherId) {
+    const config = {
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls: 'stun:stun1.l.google.com:19302' }
+      ]
+    };
+    
+    const pc = new RTCPeerConnection(config);
+    const db = firebase.firestore();
+    
+    pc.onicecandidate = event => {
+      if (event.candidate) {
+        db.collection('rooms').doc(activeRoomId).collection('voice_signals').add({
+          from: peerId,
+          to: otherId,
+          type: 'candidate',
+          candidate: event.candidate.toJSON(),
+          timestamp: Date.now()
+        });
+      }
+    };
+    
+    pc.ontrack = event => {
+      let remoteAudio = document.getElementById('audio_peer_' + otherId);
+      if (!remoteAudio) {
+        remoteAudio = document.createElement('audio');
+        remoteAudio.id = 'audio_peer_' + otherId;
+        remoteAudio.autoplay = true;
+        document.body.appendChild(remoteAudio);
+      }
+      remoteAudio.srcObject = event.streams[0];
+    };
+    
+    return pc;
+  }
+
+  function stopVoiceChat() {
+    voiceActive = false;
+    const voiceBtn = document.getElementById('btn-voice-toggle');
+    if (voiceBtn) {
+      voiceBtn.classList.remove('voice-active');
+      voiceBtn.textContent = currentLang === 'fr' ? '🎙️ Parler direct' : '🎙️ Join Voice';
+    }
+    
+    if (voiceSignalsUnsubscribe) {
+      voiceSignalsUnsubscribe();
+      voiceSignalsUnsubscribe = null;
+    }
+    
+    if (voiceLevelInterval) {
+      clearInterval(voiceLevelInterval);
+      voiceLevelInterval = null;
+    }
+    
+    if (localAudioStream) {
+      localAudioStream.getTracks().forEach(track => track.stop());
+      localAudioStream = null;
+    }
+    
+    Object.keys(peerConnections).forEach(id => {
+      peerConnections[id].close();
+      const audioEl = document.getElementById('audio_peer_' + id);
+      if (audioEl) audioEl.remove();
+    });
+    peerConnections = {};
+    
+    if (activeRoomId && peerId && typeof firebase !== 'undefined') {
+      const db = firebase.firestore();
+      db.collection('rooms').doc(activeRoomId).collection('peers').doc(peerId).update({
+        inVoice: false,
+        speaking: false
+      }).catch(e => {});
+    }
+  }
+
+  // --- 2. Shader Battles Arena ---
+  let activeBattleSessionId = null;
+  let battleSessionUnsubscribe = null;
+  let battleQueueUnsubscribe = null;
+  let battleTimerInterval = null;
+  let isQueued = false;
+  let currentPlayerKey = null;
+  let isDuelist = false;
+  let battleCodeSyncInterval = null;
+
+  function initShaderBattles() {
+    const queueBtn = document.getElementById('btn-join-battle-queue');
+    if (!queueBtn) return;
+
+    queueBtn.addEventListener('click', () => {
+      if (!currentUser) {
+        toast(currentLang === 'fr' ? "Veuillez vous connecter d'abord !" : "Please log in first!");
+        return;
+      }
+      if (isQueued) {
+        leaveMatchmakingQueue();
+      } else {
+        enterMatchmakingQueue();
+      }
+    });
+
+    const btnVote1 = document.getElementById('btn-vote-1');
+    const btnVote2 = document.getElementById('btn-vote-2');
+
+    if (btnVote1) btnVote1.addEventListener('click', () => submitBattleVote(1));
+    if (btnVote2) btnVote2.addEventListener('click', () => submitBattleVote(2));
+  }
+
+  function enterMatchmakingQueue() {
+    isQueued = true;
+    const queueBtn = document.getElementById('btn-join-battle-queue');
+    const queueStatus = document.getElementById('battle-queue-status');
+    
+    if (queueBtn) {
+      queueBtn.textContent = currentLang === 'fr' ? 'Annuler le Matchmaking' : 'Cancel Matchmaking';
+      queueBtn.style.background = 'linear-gradient(135deg, #ef4444, #b91c1c)';
+    }
+    if (queueStatus) {
+      queueStatus.textContent = currentLang === 'fr' ? "Recherche d'un adversaire..." : "Searching for opponent...";
+      queueStatus.style.color = '#38bdf8';
+    }
+
+    const db = firebase.firestore();
+    const myEmail = currentUser.email;
+    const myName = currentUser.name;
+    const myAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(currentUser.name)}`;
+
+    db.collection('battle_queue').doc(myEmail).set({
+      email: myEmail,
+      name: myName,
+      avatar: myAvatar,
+      status: 'waiting',
+      sessionId: null,
+      timestamp: Date.now()
+    }).catch(e => console.error(e));
+
+    battleQueueUnsubscribe = db.collection('battle_queue').orderBy('timestamp', 'asc')
+      .onSnapshot(snapshot => {
+        let allWaiting = [];
+        let myDoc = null;
+        
+        snapshot.forEach(doc => {
+          const d = doc.data();
+          if (d.email === myEmail) {
+            myDoc = d;
+          }
+          if (d.status === 'waiting') {
+            allWaiting.push(d);
+          }
+        });
+
+        if (myDoc && myDoc.status === 'matched' && myDoc.sessionId) {
+          cleanupQueueAndStartSession(myDoc.sessionId);
+          return;
+        }
+
+        if (allWaiting.length >= 2) {
+          const p1 = allWaiting[0];
+          const p2 = allWaiting[1];
+          
+          if (p1.email === myEmail || p2.email === myEmail) {
+            if (p1.email === myEmail) {
+              const sessionId = 'battle_' + Math.random().toString(36).substring(2, 11);
+              const duration = 300000;
+              const startTime = Date.now();
+              const endTime = startTime + duration;
+
+              db.collection('battle_sessions').doc(sessionId).set({
+                id: sessionId,
+                player1: { email: p1.email, name: p1.name, avatar: p1.avatar, code: defaultThreeJSCode() },
+                player2: { email: p2.email, name: p2.name, avatar: p2.avatar, code: defaultThreeJSCode() },
+                votes1: 0,
+                votes2: 0,
+                votesList1: [],
+                votesList2: [],
+                status: 'active',
+                startTime: startTime,
+                endTime: endTime
+              }).then(() => {
+                const batch = db.batch();
+                batch.update(db.collection('battle_queue').doc(p1.email), { status: 'matched', sessionId: sessionId });
+                batch.update(db.collection('battle_queue').doc(p2.email), { status: 'matched', sessionId: sessionId });
+                return batch.commit();
+              }).catch(e => console.error("Match session init failed:", e));
+            }
+          }
+        }
+      });
+  }
+
+  function leaveMatchmakingQueue() {
+    isQueued = false;
+    const queueBtn = document.getElementById('btn-join-battle-queue');
+    const queueStatus = document.getElementById('battle-queue-status');
+    
+    if (queueBtn) {
+      queueBtn.textContent = currentLang === 'fr' ? 'Entrer en Matchmaking' : 'Enter Matchmaking';
+      queueBtn.style.background = 'linear-gradient(135deg, var(--color-primary), #4f46e5)';
+    }
+    if (queueStatus) {
+      queueStatus.textContent = currentLang === 'fr' ? 'Inactif' : 'Idle';
+      queueStatus.style.color = 'var(--text-muted)';
+    }
+
+    if (battleQueueUnsubscribe) {
+      battleQueueUnsubscribe();
+      battleQueueUnsubscribe = null;
+    }
+
+    if (currentUser && typeof firebase !== 'undefined') {
+      const db = firebase.firestore();
+      db.collection('battle_queue').doc(currentUser.email).delete().catch(e => {});
+    }
+  }
+
+  function cleanupQueueAndStartSession(sessionId) {
+    if (battleQueueUnsubscribe) {
+      battleQueueUnsubscribe();
+      battleQueueUnsubscribe = null;
+    }
+    if (currentUser && typeof firebase !== 'undefined') {
+      const db = firebase.firestore();
+      db.collection('battle_queue').doc(currentUser.email).delete().catch(e => {});
+    }
+    joinBattleArena(sessionId);
+  }
+
+  function joinBattleArena(sessionId) {
+    activeBattleSessionId = sessionId;
+    toast(currentLang === 'fr' ? "Match trouvé ! Rejoindre l'arène..." : "Match Found! Joining Arena...");
+    
+    const lobby = document.getElementById('battle-lobby');
+    const stage = document.getElementById('battle-arena-stage');
+    
+    if (lobby) lobby.classList.add('hidden');
+    if (stage) stage.classList.remove('hidden');
+
+    const db = firebase.firestore();
+    
+    battleSessionUnsubscribe = db.collection('battle_sessions').doc(sessionId).onSnapshot(doc => {
+      if (!doc.exists) return;
+      const data = doc.data();
+      
+      if (data.status === 'finished') {
+        endBattleSession(data);
+        return;
+      }
+      
+      isDuelist = (currentUser.email === data.player1.email || currentUser.email === data.player2.email);
+      if (isDuelist) {
+        currentPlayerKey = (currentUser.email === data.player1.email) ? 'player1' : 'player2';
+      } else {
+        currentPlayerKey = null;
+      }
+
+      document.getElementById('duelist-name-1').textContent = data.player1.name;
+      document.getElementById('duelist-avatar-1').src = data.player1.avatar;
+      document.getElementById('duelist-votes-1').textContent = `${data.votes1 || 0} ${currentLang === 'fr' ? 'votes' : 'votes'}`;
+      
+      document.getElementById('duelist-name-2').textContent = data.player2.name;
+      document.getElementById('duelist-avatar-2').src = data.player2.avatar;
+      document.getElementById('duelist-votes-2').textContent = `${data.votes2 || 0} ${currentLang === 'fr' ? 'votes' : 'votes'}`;
+
+      const f1 = document.getElementById('duelist-frame-1');
+      const f2 = document.getElementById('duelist-frame-2');
+      
+      if (f1 && f1.srcdoc !== getStudioIframeSrcDoc(data.player1.code)) {
+        f1.srcdoc = getStudioIframeSrcDoc(data.player1.code);
+      }
+      if (f2 && f2.srcdoc !== getStudioIframeSrcDoc(data.player2.code)) {
+        f2.srcdoc = getStudioIframeSrcDoc(data.player2.code);
+      }
+
+      const btnVote1 = document.getElementById('btn-vote-1');
+      const btnVote2 = document.getElementById('btn-vote-2');
+      
+      if (btnVote1 && btnVote2) {
+        if (data.votesList1 && data.votesList1.includes(currentUser.email)) {
+          btnVote1.classList.add('voted');
+          btnVote1.disabled = true;
+          btnVote2.disabled = true;
+        } else if (data.votesList2 && data.votesList2.includes(currentUser.email)) {
+          btnVote2.classList.add('voted');
+          btnVote2.disabled = true;
+          btnVote1.disabled = true;
+        } else {
+          btnVote1.classList.remove('voted');
+          btnVote2.classList.remove('voted');
+          btnVote1.disabled = false;
+          btnVote2.disabled = false;
+        }
+        
+        if (isDuelist) {
+          btnVote1.disabled = true;
+          btnVote2.disabled = true;
+          btnVote1.style.opacity = '0.5';
+          btnVote2.style.opacity = '0.5';
+        }
+      }
+
+      updateBattleTimer(data.endTime, sessionId);
+    });
+
+    if (isDuelist) {
+      toast(currentLang === 'fr' ? "Bataille active! Écrivez du code Three.js dans l'éditeur de l'onglet Studio." : "Battle Active! Write Three.js code in the Studio tab's editor.");
+      
+      battleCodeSyncInterval = setInterval(() => {
+        if (!activeBattleSessionId || !currentPlayerKey) return;
+        const currentCode = document.getElementById('studio-code-input').value;
+        db.collection('battle_sessions').doc(activeBattleSessionId).update({
+          [`${currentPlayerKey}.code`]: currentCode
+        }).catch(e => {});
+      }, 3000);
+    }
+  }
+
+  function updateBattleTimer(endTime, sessionId) {
+    if (battleTimerInterval) clearInterval(battleTimerInterval);
+    
+    let timerEl = document.getElementById('battle-timer');
+    if (!timerEl) {
+      timerEl = document.createElement('div');
+      timerEl.id = 'battle-timer';
+      timerEl.style.cssText = 'text-align: center; font-size: 18px; font-weight: 800; color: #f43f5e; margin-bottom: 15px; text-shadow: 0 0 10px rgba(244,63,94,0.3); letter-spacing: 0.05em; font-family: monospace;';
+      const stage = document.getElementById('battle-arena-stage');
+      if (stage) stage.prepend(timerEl);
+    }
+
+    battleTimerInterval = setInterval(() => {
+      const remaining = Math.max(0, endTime - Date.now());
+      const mins = Math.floor(remaining / 60000);
+      const secs = Math.floor((remaining % 60000) / 1000);
+      
+      timerEl.textContent = `${currentLang === 'fr' ? 'TEMPS RESTANT' : 'TIME REMAINING'} : ${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+      
+      if (remaining <= 0) {
+        clearInterval(battleTimerInterval);
+        battleTimerInterval = null;
+        
+        if (currentPlayerKey === 'player1') {
+          const db = firebase.firestore();
+          db.collection('battle_sessions').doc(sessionId).update({
+            status: 'finished'
+          }).catch(e => {});
+        }
+      }
+    }, 1000);
+  }
+
+  function submitBattleVote(playerNum) {
+    if (!activeBattleSessionId || !currentUser) return;
+    const db = firebase.firestore();
+    
+    const voteKey = `votes${playerNum}`;
+    const voteListKey = `votesList${playerNum}`;
+    
+    db.collection('battle_sessions').doc(activeBattleSessionId).update({
+      [voteKey]: firebase.firestore.FieldValue.increment(1),
+      [voteListKey]: firebase.firestore.FieldValue.arrayUnion(currentUser.email)
+    }).then(() => {
+      toast(currentLang === 'fr' ? 'Vote pris en compte !' : 'Vote submitted successfully!');
+    }).catch(e => console.error("Error submitting vote:", e));
+  }
+
+  function endBattleSession(sessionData) {
+    if (battleSessionUnsubscribe) { battleSessionUnsubscribe(); battleSessionUnsubscribe = null; }
+    if (battleTimerInterval) { clearInterval(battleTimerInterval); battleTimerInterval = null; }
+    if (battleCodeSyncInterval) { clearInterval(battleCodeSyncInterval); battleCodeSyncInterval = null; }
+
+    const v1 = sessionData.votes1 || 0;
+    const v2 = sessionData.votes2 || 0;
+    
+    let winner = null;
+    let title = '';
+    let msg = '';
+    
+    if (v1 > v2) {
+      winner = sessionData.player1;
+    } else if (v2 > v1) {
+      winner = sessionData.player2;
+    }
+    
+    const db = firebase.firestore();
+    const isMeP1 = (currentUser.email === sessionData.player1.email);
+    const isMeP2 = (currentUser.email === sessionData.player2.email);
+
+    if (winner) {
+      title = currentLang === 'fr' ? `🏆 ${winner.name} GAGNE !` : `🏆 ${winner.name} WINS!`;
+      msg = `${winner.name} ${currentLang === 'fr' ? 'remporte le duel' : 'won the duel'} (${Math.max(v1, v2)} vs ${Math.min(v1, v2)}).`;
+      
+      if (winner.email === currentUser.email) {
+        db.collection('users').doc(currentUser.email).set({
+          reputation: firebase.firestore.FieldValue.increment(50),
+          badge: '🏆'
+        }, { merge: true }).then(() => syncLocalUserReputationAndLeaderboard());
+      } else if (isMeP1 || isMeP2) {
+        db.collection('users').doc(currentUser.email).set({
+          reputation: firebase.firestore.FieldValue.increment(15)
+        }, { merge: true }).then(() => syncLocalUserReputationAndLeaderboard());
+      }
+    } else {
+      title = currentLang === 'fr' ? '⚡ ÉGALITÉ !' : '⚡ IT\'S A TIE!';
+      msg = `${currentLang === 'fr' ? 'Égalité parfaite avec' : 'Tie match with'} ${v1} votes.`;
+      
+      if (isMeP1 || isMeP2) {
+        db.collection('users').doc(currentUser.email).set({
+          reputation: firebase.firestore.FieldValue.increment(25)
+        }, { merge: true }).then(() => syncLocalUserReputationAndLeaderboard());
+      }
+    }
+
+    let timerEl = document.getElementById('battle-timer');
+    if (timerEl) {
+      timerEl.innerHTML = `<span style="color:#22c55e;">${title}</span><br><span style="font-size:12px;color:var(--text-muted);font-weight:normal;">${msg}</span>`;
+    }
+
+    const queueBtn = document.getElementById('btn-join-battle-queue');
+    if (queueBtn) {
+      queueBtn.textContent = currentLang === 'fr' ? 'Retourner au Lobby' : 'Return to Lobby';
+      queueBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+      
+      const returnLobbyHandler = () => {
+        const lobby = document.getElementById('battle-lobby');
+        const stage = document.getElementById('battle-arena-stage');
+        if (lobby) lobby.classList.remove('hidden');
+        if (stage) stage.classList.add('hidden');
+        
+        isQueued = false;
+        queueBtn.textContent = currentLang === 'fr' ? 'Entrer en Matchmaking' : 'Enter Matchmaking';
+        queueBtn.style.background = 'linear-gradient(135deg, var(--color-primary), #4f46e5)';
+        document.getElementById('battle-queue-status').textContent = currentLang === 'fr' ? 'Inactif' : 'Idle';
+        document.getElementById('battle-queue-status').style.color = 'var(--text-muted)';
+        
+        if (timerEl) timerEl.remove();
+        clonedBtn.removeEventListener('click', returnLobbyHandler);
+        
+        const originalBtn = queueBtn.cloneNode(true);
+        clonedBtn.parentNode.replaceChild(originalBtn, clonedBtn);
+        originalBtn.addEventListener('click', () => {
+          if (isQueued) leaveMatchmakingQueue();
+          else enterMatchmakingQueue();
+        });
+      };
+      
+      const clonedBtn = queueBtn.cloneNode(true);
+      queueBtn.parentNode.replaceChild(clonedBtn, queueBtn);
+      clonedBtn.addEventListener('click', returnLobbyHandler);
+    }
+    
+    activeBattleSessionId = null;
+  }
+
+  function defaultThreeJSCode() {
+    return `// Starter scene
+function initScene(scene) {
+  var mesh = new THREE.Mesh(new THREE.TorusGeometry(12, 4, 16, 100), new THREE.MeshNormalMaterial());
+  scene.add(mesh);
+  return function() {
+    mesh.rotation.x += 0.01;
+    mesh.rotation.y += 0.02;
+  };
+}`;
+  }
+
+  // --- 3. AI Prefabs Snippets Injection ---
+  function initPrefabs() {
+    const cards = document.querySelectorAll('.prefab-card');
+    const editor = document.getElementById('studio-code-input');
+    const runBtn = document.getElementById('btn-studio-run');
+    
+    const snippets = {
+      'glowing-torus': `// Glowing Torus Preset
+// A rotating neon torus knot with physical reflectivity.
+(function(scene) {
+  var geom = new THREE.TorusKnotGeometry(12, 3.5, 120, 16);
+  var mat = new THREE.MeshPhysicalMaterial({
+    color: 0x0ea5e9,
+    emissive: 0x0284c7,
+    roughness: 0.08,
+    metalness: 0.9,
+    clearcoat: 1.0,
+    clearcoatRoughness: 0.1
+  });
+  var knot = new THREE.Mesh(geom, mat);
+  scene.add(knot);
+  
+  var light = new THREE.PointLight(0x0ea5e9, 2.5, 120);
+  light.position.set(20, 20, 20);
+  scene.add(light);
+  
+  return function() {
+    knot.rotation.x += 0.01;
+    knot.rotation.y += 0.015;
+  };
+})`,
+      'clockwork-gears': `// Clockwork Gears Preset
+// Animated steampunk gearwheel with mechanical axle.
+(function(scene) {
+  var gearGroup = new THREE.Group();
+  scene.add(gearGroup);
+  
+  var gearM = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.8, roughness: 0.2 });
+  var axleM = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.9 });
+  
+  var baseGear = new THREE.Mesh(new THREE.CylinderGeometry(15, 15, 2.5, 32), gearM);
+  baseGear.rotation.x = Math.PI / 2;
+  gearGroup.add(baseGear);
+  
+  var axle = new THREE.Mesh(new THREE.CylinderGeometry(2.5, 2.5, 9, 16), axleM);
+  axle.rotation.x = Math.PI / 2;
+  gearGroup.add(axle);
+  
+  for (var i = 0; i < 16; i++) {
+    var angle = (i / 16) * Math.PI * 2;
+    var tooth = new THREE.Mesh(new THREE.BoxGeometry(3, 2.5, 4.5), gearM);
+    tooth.position.set(Math.cos(angle) * 15, Math.sin(angle) * 15, 0);
+    tooth.rotation.z = angle;
+    gearGroup.add(tooth);
+  }
+  
+  return function() {
+    gearGroup.rotation.z += 0.012;
+  };
+})`,
+      'particle-matrix': `// Particle Matrix Preset
+// Dynamic wave matrix of particles simulating cybernetic flow.
+(function(scene) {
+  var count = 2000;
+  var geom = new THREE.BufferGeometry();
+  var positions = new Float32Array(count * 3);
+  
+  for (var i = 0; i < count; i++) {
+    var x = (Math.random() - 0.5) * 160;
+    var y = (Math.random() - 0.5) * 160;
+    var z = (Math.random() - 0.5) * 160;
+    positions[i * 3] = x;
+    positions[i * 3 + 1] = y;
+    positions[i * 3 + 2] = z;
+  }
+  
+  geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  var mat = new THREE.PointsMaterial({ color: 0x38bdf8, size: 1.6, transparent: true, opacity: 0.8 });
+  var points = new THREE.Points(geom, mat);
+  scene.add(points);
+  
+  return function() {
+    var posAttr = points.geometry.attributes.position;
+    var time = Date.now() * 0.0012;
+    for (var i = 0; i < count; i++) {
+      var x = posAttr.getX(i);
+      var z = posAttr.getZ(i);
+      var newY = Math.sin(x * 0.06 + time) * 8 + Math.cos(z * 0.06 + time) * 8;
+      posAttr.setY(i, newY);
+    }
+    posAttr.needsUpdate = true;
+    points.rotation.y += 0.0015;
+  };
+})`,
+      'plasma-shader': `// GLSL Plasma Field Preset
+// A highly-performant interactive plasma shader material.
+(function(scene) {
+  var vertexShader = \`
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  \`;
+  
+  var fragmentShader = \`
+    uniform float time;
+    varying vec2 vUv;
+    void main() {
+      vec2 p = -1.0 + 2.0 * vUv;
+      float len = length(p);
+      vec2 uv = vUv + (p/len)*cos(len*12.0-time*3.5)*0.03;
+      vec3 col = vec3(0.5 + 0.5*cos(time+uv.xyx+vec3(0.0,2.0,4.0)));
+      gl_FragColor = vec4(col, 1.0);
+    }
+  \`;
+  
+  var uniforms = { time: { value: 0 } };
+  var mat = new THREE.ShaderMaterial({
+    vertexShader: vertexShader,
+    fragmentShader: fragmentShader,
+    uniforms: uniforms,
+    side: THREE.DoubleSide
+  });
+  
+  var mesh = new THREE.Mesh(new THREE.PlaneGeometry(120, 120), mat);
+  scene.add(mesh);
+  
+  return function() {
+    uniforms.time.value = Date.now() * 0.0012;
+  };
+})`
+    };
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        const preset = card.dataset.preset;
+        if (snippets[preset] && editor) {
+          editor.value = snippets[preset];
+          toast(currentLang === 'fr' ? "Préfabriqué injecté ! Exécution du rendu..." : "Prefab injected! Running render...");
+          if (runBtn) runBtn.click();
+        }
+      });
+    });
+  }
+
+  // --- 4. Gamification, Badges, and Leaderboard ---
+  function initLeaderboard() {
+    if (typeof firebase === 'undefined') return;
+    const db = firebase.firestore();
+    const leaderboardContainer = document.getElementById('reputation-leaderboard');
+    if (!leaderboardContainer) return;
+
+    db.collection('users').orderBy('reputation', 'desc').limit(5)
+      .onSnapshot(snapshot => {
+        if (snapshot.empty) {
+          seedMockLeaderboard();
+          return;
+        }
+
+        leaderboardContainer.innerHTML = '';
+        let rank = 1;
+        snapshot.forEach(doc => {
+          const u = doc.data();
+          const item = document.createElement('div');
+          item.className = 'leaderboard-item';
+          
+          let badgeHtml = '';
+          if (u.badge) {
+            let badgeClass = 'collab';
+            if (u.badge.includes('🏆') || u.badge.toLowerCase().includes('champ')) badgeClass = 'champ';
+            else if (u.badge.includes('🔥') || u.badge.toLowerCase().includes('shader')) badgeClass = 'shader';
+            badgeHtml = `<span class="badge-pill \${badgeClass}">\${u.badge}</span>`;
+          }
+
+          item.innerHTML = `
+            <span class="leaderboard-rank">#\${rank}</span>
+            <img src="\${u.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + u.name}" alt="\${u.name}">
+            <span class="leaderboard-name">\${u.name} \${badgeHtml}</span>
+            <span class="leaderboard-score">\${u.reputation || 0} XP</span>
+          `;
+          leaderboardContainer.appendChild(item);
+          rank++;
+        });
+      }, err => console.error("Error fetching leaderboard:", err));
+  }
+
+  function seedMockLeaderboard() {
+    const db = firebase.firestore();
+    const mockUsers = [
+      { name: "EmmaArchitect", avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Emma", reputation: 240, badge: "🏆" },
+      { name: "Lucas_3D", avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Lucas", reputation: 180, badge: "🔥" },
+      { name: "SteampunkMaker", avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Chrono", reputation: 90, badge: "🧑‍💻" }
+    ];
+
+    mockUsers.forEach(u => {
+      db.collection('users').doc(u.name.toLowerCase() + '@example.com').set(u).catch(e => {});
+    });
+
+    if (currentUser) {
+      db.collection('users').doc(currentUser.email).set({
+        name: currentUser.name,
+        avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=\${encodeURIComponent(currentUser.name)}`,
+        reputation: 35,
+        badge: "🧑‍💻"
+      }).catch(e => {});
+    }
+  }
+
+  function syncLocalUserReputationAndLeaderboard() {
+    if (!currentUser || typeof firebase === 'undefined') return;
+    const db = firebase.firestore();
+    
+    db.collection('devsocial_posts').get().then(snap => {
+      let postsCount = 0;
+      let likesCount = 0;
+      
+      snap.forEach(doc => {
+        const p = doc.data();
+        if (p.user === currentUser.name) {
+          postsCount++;
+          likesCount += (p.likes || 0);
+        }
+      });
+      
+      db.collection('users').doc(currentUser.email).get().then(doc => {
+        let battleRep = 0;
+        let earnedBadge = '🧑‍💻';
+        if (doc.exists) {
+          const d = doc.data();
+          battleRep = d.battleReputation || 0;
+          earnedBadge = d.badge || '🧑‍💻';
+        }
+        
+        let totalRep = (postsCount * 12) + (likesCount * 6) + battleRep;
+        
+        if (totalRep > 120) earnedBadge = '🏆';
+        else if (totalRep > 60) earnedBadge = '🔥';
+        
+        db.collection('users').doc(currentUser.email).set({
+          name: currentUser.name,
+          email: currentUser.email,
+          avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=\${encodeURIComponent(currentUser.name)}`,
+          reputation: totalRep,
+          badge: earnedBadge
+        }, { merge: true }).catch(e => {});
+        
+        if (activeRoomId && peerId) {
+          db.collection('rooms').doc(activeRoomId).collection('peers').doc(peerId).update({
+            reputation: totalRep,
+            badge: earnedBadge
+          }).catch(e => {});
+        }
+      });
+    });
+  }
 
 })();
