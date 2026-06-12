@@ -1956,20 +1956,20 @@ htmlContent = htmlContent + injectedScript;
         
         if (peerListContainer) {
           const peerChip = document.createElement('div');
-          peerChip.className = `peer-chip \${id === peerId ? 'self' : ''} \${data.speaking ? 'speaking' : ''}`;
+          peerChip.className = `peer-chip ${id === peerId ? 'self' : ''} ${data.speaking ? 'speaking' : ''}`;
           
           let badgeHtml = '';
           if (data.badge) {
             let badgeClass = 'collab';
             if (data.badge.includes('🏆') || data.badge.toLowerCase().includes('champ')) badgeClass = 'champ';
             else if (data.badge.includes('🔥') || data.badge.toLowerCase().includes('shader')) badgeClass = 'shader';
-            badgeHtml = `<span class="badge-pill \${badgeClass}">\${data.badge}</span>`;
+            badgeHtml = `<span class="badge-pill ${badgeClass}">${data.badge}</span>`;
           }
           
           const rep = data.reputation || 0;
           peerChip.innerHTML = `
-            <img src="\${data.avatar}" alt="Avatar">
-            <span>\${data.name} \${badgeHtml} <small style="opacity:0.6;margin-left:4px;">(\${rep} Rep)</small> \${id === peerId ? (currentLang === 'fr' ? '(Vous)' : '(You)') : ''}</span>
+            <img src="${data.avatar}" alt="Avatar">
+            <span>${data.name} ${badgeHtml} <small style="opacity:0.6;margin-left:4px;">(${rep} Rep)</small> ${id === peerId ? (currentLang === 'fr' ? '(Vous)' : '(You)') : ''}</span>
           `;
           peerListContainer.appendChild(peerChip);
         }
@@ -2091,7 +2091,7 @@ htmlContent = htmlContent + injectedScript;
       el.style.bottom = '10px';
       el.style.transform = 'translateX(-50%)';
     } else {
-      el.innerHTML = `<span style="font-size: 10px; background: rgba(0,0,0,0.65); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 2px 6px; border-radius: 4px; margin-right: 6px; font-weight: 700; white-space: nowrap; vertical-align: middle;">\${peerName}</span>\${emoji}`;
+      el.innerHTML = `<span style="font-size: 10px; background: rgba(0,0,0,0.65); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 2px 6px; border-radius: 4px; margin-right: 6px; font-weight: 700; white-space: nowrap; vertical-align: middle;">${peerName}</span>${emoji}`;
       el.style.left = (30 + Math.random() * 40) + '%';
       el.style.bottom = '10px';
     }
@@ -2974,14 +2974,14 @@ function initScene(scene) {
             let badgeClass = 'collab';
             if (u.badge.includes('🏆') || u.badge.toLowerCase().includes('champ')) badgeClass = 'champ';
             else if (u.badge.includes('🔥') || u.badge.toLowerCase().includes('shader')) badgeClass = 'shader';
-            badgeHtml = `<span class="badge-pill \${badgeClass}">\${u.badge}</span>`;
+            badgeHtml = `<span class="badge-pill ${badgeClass}">${u.badge}</span>`;
           }
 
           item.innerHTML = `
-            <span class="leaderboard-rank">#\${rank}</span>
-            <img src="\${u.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + u.name}" alt="\${u.name}">
-            <span class="leaderboard-name">\${u.name} \${badgeHtml}</span>
-            <span class="leaderboard-score">\${u.reputation || 0} XP</span>
+            <span class="leaderboard-rank">#${rank}</span>
+            <img src="${u.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + u.name}" alt="${u.name}">
+            <span class="leaderboard-name">${u.name} ${badgeHtml}</span>
+            <span class="leaderboard-score">${u.reputation || 0} XP</span>
           `;
           leaderboardContainer.appendChild(item);
           rank++;
@@ -3004,7 +3004,7 @@ function initScene(scene) {
     if (currentUser) {
       db.collection('users').doc(currentUser.email).set({
         name: currentUser.name,
-        avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=\${encodeURIComponent(currentUser.name)}`,
+        avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(currentUser.name)}`,
         reputation: 35,
         badge: "🧑‍💻"
       }).catch(e => {});
@@ -3044,7 +3044,7 @@ function initScene(scene) {
         db.collection('users').doc(currentUser.email).set({
           name: currentUser.name,
           email: currentUser.email,
-          avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=\${encodeURIComponent(currentUser.name)}`,
+          avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(currentUser.name)}`,
           reputation: totalRep,
           badge: earnedBadge
         }, { merge: true }).catch(e => {});
