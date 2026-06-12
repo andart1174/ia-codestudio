@@ -567,7 +567,11 @@
       animCb = drawTorus(scene);
     } else {
       try {
-        const customFunc = new Function('scene', codeString + '\nreturn createChronoScene(scene);');
+        const customFunc = new Function('scene', codeString + `
+          if (typeof createChronoScene === 'function') return createChronoScene(scene);
+          if (typeof createAvatarScene === 'function') return createAvatarScene(scene);
+          if (typeof createSurfaceScene === 'function') return createSurfaceScene(scene);
+        `);
         animCb = customFunc(scene);
       } catch (e) {
         console.error("Error running code preset:", e);
@@ -1126,7 +1130,7 @@ return function() {
   cube.rotation.y += 0.01;
 };`;
 
-  const defaultGlslShaderCode = `// Glowing Plasma WebGL Shader
+  const defaultGlslShaderCode = `// Cybernetic Wave Grid Shader
 // u_time, u_resolution, and u_mouse are provided.
 
 precision mediump float;
@@ -1135,16 +1139,27 @@ uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 
 void main() {
-  vec2 uv = gl_FragCoord.xy / u_resolution.xy;
-  vec2 mouse = u_mouse.xy / u_resolution.xy;
+  vec2 uv = (gl_FragCoord.xy * 2.0 - u_resolution.xy) / min(u_resolution.x, u_resolution.y);
+  vec2 mouse = (u_mouse.xy * 2.0 - u_resolution.xy) / min(u_resolution.x, u_resolution.y);
   
-  float dist = distance(uv, mouse);
-  float colorVal = sin(uv.x * 10.0 + u_time) * cos(uv.y * 10.0 + u_time);
+  // Create grid lines
+  vec2 grid = abs(sin(uv * 10.0 + vec2(u_time * 0.5)));
+  float line = smoothstep(0.95, 1.0, max(grid.x, grid.y));
   
-  vec3 color = vec3(0.5 + 0.5 * sin(u_time + uv.xyx + vec3(0.0, 2.0, 4.0)));
-  color += vec3(0.1 / (dist + 0.1));
+  // Interactive glowing spot
+  float dist = length(uv - mouse);
+  float glow = 0.08 / (dist + 0.08);
   
-  gl_FragColor = vec4(color * (colorVal * 0.3 + 0.7), 1.0);
+  // Wave pattern
+  float wave = sin(uv.x * 3.0 + u_time) * cos(uv.y * 3.0 + u_time);
+  
+  // Combine colors
+  vec3 baseColor = vec3(0.1, 0.4, 0.9) * (wave * 0.5 + 0.5);
+  vec3 glowColor = vec3(0.0, 0.8, 1.0) * glow;
+  vec3 gridColor = vec3(0.5, 0.0, 0.8) * line;
+  
+  vec3 finalColor = baseColor + glowColor + gridColor;
+  gl_FragColor = vec4(finalColor, 1.0);
 }`;
 
   function getGlslIframeSrcDoc(fragmentShaderSource) {
@@ -1337,7 +1352,11 @@ function getStudioIframeSrcDoc(rawCode, mode = 'threejs') {
 
     var animate = (function() {
       try {
-        const customFunc = new Function('scene', \`${rawCode.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\\$/g, '\\\\$')}\`);
+        const customFunc = new Function('scene', \`${rawCode.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\\$/g, '\\\\$')}
+          if (typeof createChronoScene === 'function') return createChronoScene(scene);
+          if (typeof createAvatarScene === 'function') return createAvatarScene(scene);
+          if (typeof createSurfaceScene === 'function') return createSurfaceScene(scene);
+        \`);
         return customFunc(scene);
       } catch(e) {
         console.error("User script evaluation error:", e);
@@ -2544,42 +2563,6 @@ return function() {
   }
   posAttr.needsUpdate = true;
   points.rotation.y += 0.0015;
-};`,
-      'plasma-shader': `// GLSL Plasma Field Preset
-// A highly-performant interactive plasma shader material.
-var vertexShader = \`
-  varying vec2 vUv;
-  void main() {
-    vUv = uv;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  }
-\`;
-
-var fragmentShader = \`
-  uniform float time;
-  varying vec2 vUv;
-  void main() {
-    vec2 p = -1.0 + 2.0 * vUv;
-    float len = length(p);
-    vec2 uv = vUv + (p/len)*cos(len*12.0-time*3.5)*0.03;
-    vec3 col = vec3(0.5) + vec3(0.5) * cos(vec3(time) + uv.xyx + vec3(0.0, 2.0, 4.0));
-    gl_FragColor = vec4(col, 1.0);
-  }
-\`;
-
-var uniforms = { time: { value: 0 } };
-var mat = new THREE.ShaderMaterial({
-  vertexShader: vertexShader,
-  fragmentShader: fragmentShader,
-  uniforms: uniforms,
-  side: THREE.DoubleSide
-});
-
-var mesh = new THREE.Mesh(new THREE.PlaneGeometry(120, 120), mat);
-scene.add(mesh);
-
-return function() {
-  uniforms.time.value = Date.now() * 0.0012;
 };`
     };
 

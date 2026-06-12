@@ -19,43 +19,41 @@
       preset: "clockwork",
       hasThree: true,
       code: `// Steampunk Clockwork Preset Code
-function createChronoScene(scene) {
-  var chrono = new THREE.Group();
-  scene.add(chrono);
-  
-  var mat = new THREE.MeshPhysicalMaterial({color: 0xd4af37, metalness: 0.9, roughness: 0.2, clearcoat: 1.0});
-  var axleMat = new THREE.MeshStandardMaterial({color: 0x3a3d40, metalness: 0.8});
-  
-  // Center main dial ring
-  var dial = new THREE.Mesh(new THREE.TorusGeometry(32, 1.0, 8, 32), mat);
-  chrono.add(dial);
-  
-  // 64T Driving Gear
-  var gearG = new THREE.CylinderGeometry(20, 20, 2.5, 32);
-  var gear = new THREE.Mesh(gearG, mat);
-  gear.position.set(0, 0, -2);
-  gear.rotation.x = Math.PI/2;
-  chrono.add(gear);
-  
-  var axle = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 4, 8), axleMat);
-  gear.add(axle);
-  
-  // Adding indicator hands
-  var hand = new THREE.Mesh(new THREE.BoxGeometry(0.8, 22, 0.8), mat);
-  hand.position.y = 9;
-  var handGroup = new THREE.Group();
-  handGroup.add(hand);
-  handGroup.position.z = 2;
-  chrono.add(handGroup);
-  
-  // Register anim loop
-  var tick = 0;
-  return function() {
-    tick += 0.015;
-    gear.rotation.y = tick;
-    handGroup.rotation.z = -tick * 4;
-  };
-}`
+var chrono = new THREE.Group();
+scene.add(chrono);
+
+var mat = new THREE.MeshPhysicalMaterial({color: 0xd4af37, metalness: 0.9, roughness: 0.2, clearcoat: 1.0});
+var axleMat = new THREE.MeshStandardMaterial({color: 0x3a3d40, metalness: 0.8});
+
+// Center main dial ring
+var dial = new THREE.Mesh(new THREE.TorusGeometry(32, 1.0, 8, 32), mat);
+chrono.add(dial);
+
+// 64T Driving Gear
+var gearG = new THREE.CylinderGeometry(20, 20, 2.5, 32);
+var gear = new THREE.Mesh(gearG, mat);
+gear.position.set(0, 0, -2);
+gear.rotation.x = Math.PI/2;
+chrono.add(gear);
+
+var axle = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 4, 8), axleMat);
+gear.add(axle);
+
+// Adding indicator hands
+var hand = new THREE.Mesh(new THREE.BoxGeometry(0.8, 22, 0.8), mat);
+hand.position.y = 9;
+var handGroup = new THREE.Group();
+handGroup.add(hand);
+handGroup.position.z = 2;
+chrono.add(handGroup);
+
+// Register anim loop
+var tick = 0;
+return function() {
+  tick += 0.015;
+  gear.rotation.y = tick;
+  handGroup.rotation.z = -tick * 4;
+};`
     },
     {
       id: 2,
@@ -71,36 +69,34 @@ function createChronoScene(scene) {
       preset: "avatar",
       hasThree: true,
       code: `// Live Webcam Avatar Point Cloud Simulation Code
-function createAvatarScene(scene) {
-  var count = 3000;
-  var geom = new THREE.BufferGeometry();
-  var pos = new Float32Array(count * 3);
+var count = 3000;
+var geom = new THREE.BufferGeometry();
+var pos = new Float32Array(count * 3);
+
+for (var i = 0; i < count; i++) {
+  var theta = Math.random() * Math.PI * 2;
+  var phi = Math.acos((Math.random() * 2) - 1);
+  var r = 30 + Math.random() * 40; // noise sphere
   
-  for (var i = 0; i < count; i++) {
-    var theta = Math.random() * Math.PI * 2;
-    var phi = Math.acos((Math.random() * 2) - 1);
-    var r = 30 + Math.random() * 40; // noise sphere
-    
-    // Custom face point cloud mapping
-    if (Math.sin(theta) > 0 && Math.sin(phi) > 0) {
-      r = 30 + (Math.sin(theta*10)*Math.cos(phi*10))*3;
-    }
-    
-    pos[i*3] = r * Math.sin(phi) * Math.cos(theta);
-    pos[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
-    pos[i*3+2] = r * Math.cos(phi);
+  // Custom face point cloud mapping
+  if (Math.sin(theta) > 0 && Math.sin(phi) > 0) {
+    r = 30 + (Math.sin(theta*10)*Math.cos(phi*10))*3;
   }
   
-  geom.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  var mat = new THREE.PointsMaterial({color: 0x0ea5e9, size: 2.0, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending});
-  var points = new THREE.Points(geom, mat);
-  scene.add(points);
-  
-  return function() {
-    points.rotation.y += 0.005;
-    points.rotation.x = Math.sin(Date.now() * 0.0005) * 0.2;
-  };
-}`
+  pos[i*3] = r * Math.sin(phi) * Math.cos(theta);
+  pos[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+  pos[i*3+2] = r * Math.cos(phi);
+}
+
+geom.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+var mat = new THREE.PointsMaterial({color: 0x0ea5e9, size: 2.0, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending});
+var points = new THREE.Points(geom, mat);
+scene.add(points);
+
+return function() {
+  points.rotation.y += 0.005;
+  points.rotation.x = Math.sin(Date.now() * 0.0005) * 0.2;
+};`
     },
     {
       id: 3,
@@ -114,29 +110,27 @@ function createAvatarScene(scene) {
       preset: "landscape",
       hasThree: true,
       code: `// Wireframe Parametric Surface Code
-function createSurfaceScene(scene) {
-  var size = 60;
-  var geom = new THREE.PlaneGeometry(160, 160, size, size);
-  var pos = geom.attributes.position.array;
-  
-  for (var i = 0; i < pos.length; i += 3) {
-    var x = pos[i];
-    var y = pos[i+1];
-    // Sin/cos displace height
-    var d = Math.sqrt(x*x + y*y);
-    pos[i+2] = Math.sin(d * 0.12 - Math.PI/2) * 15 + Math.cos(x * 0.05) * Math.sin(y * 0.05) * 8;
-  }
-  
-  geom.computeVertexNormals();
-  var mat = new THREE.MeshBasicMaterial({color: 0x6366f1, wireframe: true, transparent: true, opacity: 0.4});
-  var mesh = new THREE.Mesh(geom, mat);
-  mesh.rotation.x = -Math.PI / 3;
-  scene.add(mesh);
-  
-  return function() {
-    mesh.rotation.z += 0.003;
-  };
-}`
+var size = 60;
+var geom = new THREE.PlaneGeometry(160, 160, size, size);
+var pos = geom.attributes.position.array;
+
+for (var i = 0; i < pos.length; i += 3) {
+  var x = pos[i];
+  var y = pos[i+1];
+  // Sin/cos displace height
+  var d = Math.sqrt(x*x + y*y);
+  pos[i+2] = Math.sin(d * 0.12 - Math.PI/2) * 15 + Math.cos(x * 0.05) * Math.sin(y * 0.05) * 8;
+}
+
+geom.computeVertexNormals();
+var mat = new THREE.MeshBasicMaterial({color: 0x6366f1, wireframe: true, transparent: true, opacity: 0.4});
+var mesh = new THREE.Mesh(geom, mat);
+mesh.rotation.x = -Math.PI / 3;
+scene.add(mesh);
+
+return function() {
+  mesh.rotation.z += 0.003;
+};`
     }
   ];
 
@@ -166,6 +160,13 @@ function createSurfaceScene(scene) {
             post.createdAt = Date.now() - (index * 3600000);
             db.collection('devsocial_posts').doc(String(post.id)).set(post)
               .catch(err => console.error("Error seeding Firestore:", err));
+          });
+        } else {
+          // Force-update the mock posts' code to ensure they are the unwrapped versions
+          MOCK_POSTS.forEach(post => {
+            db.collection('devsocial_posts').doc(String(post.id)).update({
+              code: post.code
+            }).catch(err => console.warn("Could not auto-update mock post code:", err));
           });
         }
       }).catch(err => {
