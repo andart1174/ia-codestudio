@@ -132,7 +132,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
   <!-- DevSocial Database -->
-  <script src="../DEVSOCIAL AI HUB/database.js"></script>
+  <script src="../DEVSOCIAL%20AI%20HUB/database.js"></script>
   
   <style>
     :root {
@@ -505,7 +505,7 @@
     <button class="tbtn" id="btn-copy-code"> <span id="lbl-copy">Copy</span></button>
     <button class="tbtn green" id="btn-dl-html"> <span id="lbl-dl">HTML</span></button>
     <button class="tbtn purple" id="btn-export-zip"> <span id="lbl-zip">ZIP Pack</span></button>
-    <button class="tbtn purple" id="btn-publish-feed"> 🚀 <span id="lbl-publish">Publish</span></button>
+    <button class="tbtn purple" id="btn-publish-feed"> <i class="fa-solid fa-share-nodes"></i> <span id="lbl-publish">Share Scene</span></button>
     
     <div class="lang-toggle">
       <button class="lang-btn active" data-lang="en">EN</button>
@@ -677,8 +677,8 @@
         videoSaved: "✅ Video saved!",
         neuralMode: "Neural Brain",
         socialTab: "DevSocial AI",
-        publish: "Publish Feed",
-        publishTitle: "Publish to Community Feed",
+        publish: "Share Scene",
+        publishTitle: "Share Scene to Community Feed",
         publishDesc: "Share your 3D creation with the developer community! It will appear on the DevSocial Feed.",
         nicknameLabel: "Your Nickname",
         descEnLabel: "Description (English)",
@@ -716,8 +716,8 @@
         videoSaved: "✅ Vidéo sauvegardée !",
         neuralMode: "Cerveau Neural",
         socialTab: "DevSocial AI",
-        publish: "Publier Feed",
-        publishTitle: "Publier sur le Feed",
+        publish: "Partager Scène",
+        publishTitle: "Partager la Scène sur le Feed",
         publishDesc: "Partagez votre création 3D avec la communauté ! Elle apparaîtra sur le fil d'actualité DevSocial.",
         nicknameLabel: "Votre Pseudo",
         descEnLabel: "Description (Anglais)",
@@ -1073,6 +1073,15 @@
     const modalShare = document.getElementById('modal-share-post');
     
     document.getElementById('btn-publish-feed').addEventListener('click', () => {
+      // Check if session exists (user must be logged in to post)
+      const session = localStorage.getItem('genius_session');
+      if (!session) {
+        alert(currentLang === 'fr' 
+          ? "🔒 Veuillez vous connecter sur le portail principal (ia-codestudio.com) pour partager votre scène !" 
+          : "🔒 Please log in on the main portal (ia-codestudio.com) to share your scene!");
+        return;
+      }
+
       // Check if code is available
       if (window.SketchExtruder && typeof window.SketchExtruder.exportScene === 'function') {
         window.SketchExtruder.exportScene();
@@ -1083,6 +1092,14 @@
         return;
       }
       
+      // Auto-prefill nickname
+      try {
+        const user = JSON.parse(session);
+        if (user && user.name) {
+          document.getElementById('publish-nickname').value = user.name;
+        }
+      } catch(e){}
+
       // Open modal
       modalPublish.classList.add('active');
     });
@@ -1134,12 +1151,22 @@
       }
       const code = document.getElementById('code-editor').value;
 
+      // Retrieve session to get email and roles
+      const session = localStorage.getItem('genius_session');
+      let sessionUser = {};
+      if (session) {
+        try {
+          sessionUser = JSON.parse(session);
+        } catch(e){}
+      }
+
       const postId = Date.now();
       const post = {
         id: postId,
         user: nickname,
+        userEmail: sessionUser.email || "anonymous@example.com",
         userAvatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(nickname)}`,
-        userTag: "Creator",
+        userTag: sessionUser.role === 'Admin' ? 'ADMIN Maker' : 'Premium Maker',
         caption_en: descEn || "Check out this 3D animation I coded in Studio 3D Pro!",
         caption_fr: descFr || "Découvrez cette animation 3D que j'ai codée dans Studio 3D Pro !",
         likes: 0,
