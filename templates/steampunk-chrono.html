@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Steampunk Clockwork Template | IA Code Studio Open Source Templates</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #0d0905;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    #canvas-container {
+      width: 100vw;
+      height: 100vh;
+      display: block;
+    }
+    .info-hud {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(43, 29, 14, 0.75);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      border-radius: 8px;
+      padding: 15px 20px;
+      color: #fef3c7;
+      pointer-events: none;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    }
+    .info-hud h1 {
+      margin: 0 0 5px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fbbf24;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .info-hud p {
+      margin: 0;
+      font-size: 11px;
+      color: #d97706;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+
+  <div id="canvas-container"></div>
+
+  <div class="info-hud">
+    <h1>Steampunk Clockwork 3D</h1>
+    <p>Procedural gears & steam exhaust particles.</p>
+  </div>
+
+  <script>
+    // 1. Initial Scene Setup
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x0d0905, 0.003);
+
+    const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 15, 60);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.2;
+    document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+    // 2. Controls
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
+    // 3. Lighting (Warm copper hues & retro golden glow)
+    scene.add(new THREE.AmbientLight(0xffffff, 0.1));
+
+    const keyLight = new THREE.PointLight(0xfbbf24, 2, 100);
+    keyLight.position.set(20, 20, 20);
+    scene.add(keyLight);
+
+    const fillLight = new THREE.PointLight(0xd97706, 1.5, 80);
+    fillLight.position.set(-20, 10, -10);
+    scene.add(fillLight);
+
+    const rimLight = new THREE.DirectionalLight(0xffedd5, 0.8);
+    rimLight.position.set(0, -20, 10);
+    scene.add(rimLight);
+
+    // 4. Materials
+    const brassMaterial = new THREE.MeshPhysicalMaterial({
+      color: 0xd4af37,
+      metalness: 0.9,
+      roughness: 0.15,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.1
+    });
+
+    const copperMaterial = new THREE.MeshPhysicalMaterial({
+      color: 0xb87333,
+      metalness: 0.95,
+      roughness: 0.25,
+      clearcoat: 0.5
+    });
+
+    const ironMaterial = new THREE.MeshStandardMaterial({
+      color: 0x2e2f30,
+      metalness: 0.8,
+      roughness: 0.4
+    });
+
+    // 5. Build Gears Group
+    const chronoGroup = new THREE.Group();
+    scene.add(chronoGroup);
+
+    // Main Outer Dial Frame
+    const dialFrame = new THREE.Mesh(new THREE.TorusGeometry(22, 1.2, 12, 48), copperMaterial);
+    chronoGroup.add(dialFrame);
+
+    // Helper: Create Cogwheel
+    function createGear(radius, thickness, teethCount, material) {
+      const gear = new THREE.Group();
+      
+      // Center cylinder
+      const core = new THREE.Mesh(new THREE.CylinderGeometry(radius - 1.5, radius - 1.5, thickness, 32), material);
+      core.rotation.x = Math.PI / 2;
+      gear.add(core);
+      
+      // Central axle hole
+      const axle = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, thickness + 0.5, 12), ironMaterial);
+      axle.rotation.x = Math.PI / 2;
+      gear.add(axle);
+
+      // Cogs / Teeth
+      const toothGeo = new THREE.BoxGeometry(1.2, thickness, 2.5);
+      for (let i = 0; i < teethCount; i++) {
+        const tooth = new THREE.Mesh(toothGeo, material);
+        const angle = (i / teethCount) * Math.PI * 2;
+        tooth.position.set(Math.cos(angle) * (radius - 0.5), Math.sin(angle) * (radius - 0.5), 0);
+        tooth.rotation.z = angle;
+        gear.add(tooth);
+      }
+      return gear;
+    }
+
+    // Centered Big Gear
+    const gearCenter = createGear(14, 1.5, 30, brassMaterial);
+    chronoGroup.add(gearCenter);
+
+    // Left Gear (Interlocked)
+    const gearLeft = createGear(8, 1.5, 18, copperMaterial);
+    gearLeft.position.set(-21.5, 0, -0.2);
+    chronoGroup.add(gearLeft);
+
+    // Right Gear (Interlocked)
+    const gearRight = createGear(6, 1.5, 14, brassMaterial);
+    gearRight.position.set(19.5, 3, 0.2);
+    chronoGroup.add(gearRight);
+
+    // Clock Hands Group
+    const handGroup = new THREE.Group();
+    handGroup.position.z = 1.2;
+    chronoGroup.add(handGroup);
+
+    const hourHand = new THREE.Mesh(new THREE.BoxGeometry(0.6, 12, 0.4), ironMaterial);
+    hourHand.position.y = 5;
+    const hourGroup = new THREE.Group();
+    hourGroup.add(hourHand);
+    handGroup.add(hourGroup);
+
+    const minuteHand = new THREE.Mesh(new THREE.BoxGeometry(0.4, 18, 0.3), copperMaterial);
+    minuteHand.position.y = 8;
+    const minuteGroup = new THREE.Group();
+    minuteGroup.add(minuteHand);
+    handGroup.add(minuteGroup);
+
+    // 6. Steam Particle System
+    const particleCount = 200;
+    const particleGeometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(particleCount * 3);
+    const velocities = [];
+
+    for (let i = 0; i < particleCount; i++) {
+      // Spawn around the left gear center
+      positions[i * 3] = -21.5 + (Math.random() - 0.5) * 2;
+      positions[i * 3 + 1] = 0 + (Math.random() - 0.5) * 2;
+      positions[i * 3 + 2] = 1;
+      
+      velocities.push({
+        x: (Math.random() - 0.5) * 2,
+        y: 5 + Math.random() * 8, // float upwards
+        z: (Math.random() - 0.5) * 1,
+        life: Math.random()
+      });
+    }
+
+    particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const particleMaterial = new THREE.PointsMaterial({
+      color: 0xdfcbb5,
+      size: 0.8,
+      transparent: true,
+      opacity: 0.3,
+      blending: THREE.AdditiveBlending
+    });
+
+    const steamCloud = new THREE.Points(particleGeometry, particleMaterial);
+    scene.add(steamCloud);
+
+    // 7. Animation Loop
+    let time = 0;
+    function animate() {
+      requestAnimationFrame(animate);
+      time += 0.01;
+
+      // Rotate Gears (Interlocking gear speeds inversely proportional to radius)
+      gearCenter.rotation.z = time * 0.5;
+      gearLeft.rotation.z = -time * (14 / 8) * 0.5;
+      gearRight.rotation.z = -time * (14 / 6) * 0.5;
+
+      // Rotate Clock Hands
+      hourGroup.rotation.z = -time * 0.1;
+      minuteGroup.rotation.z = -time * 1.2;
+
+      // Animate Steam Particles
+      const posArr = steamCloud.geometry.attributes.position.array;
+      for (let i = 0; i < particleCount; i++) {
+        const idx = i * 3;
+        
+        // Apply velocity
+        posArr[idx] += velocities[i].x * 0.02;
+        posArr[idx + 1] += velocities[i].y * 0.02;
+        posArr[idx + 2] += velocities[i].z * 0.02;
+
+        // Life decrease
+        velocities[i].life -= 0.005;
+
+        // Reset particle if dead
+        if (velocities[i].life <= 0 || posArr[idx + 1] > 30) {
+          posArr[idx] = -21.5 + (Math.random() - 0.5) * 1.5;
+          posArr[idx + 1] = 0;
+          posArr[idx + 2] = 0.5 + (Math.random() - 0.5) * 0.5;
+          velocities[i].y = 6 + Math.random() * 8;
+          velocities[i].x = (Math.random() - 0.5) * 2;
+          velocities[i].life = 1.0;
+        }
+      }
+      steamCloud.geometry.attributes.position.needsUpdate = true;
+
+      // Subtle chassis swing
+      chronoGroup.rotation.y = Math.sin(time * 0.5) * 0.15;
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>

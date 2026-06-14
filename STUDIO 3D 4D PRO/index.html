@@ -115,6 +115,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -126,6 +127,12 @@
   <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
   <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';</script>
+  
+  <!-- Firebase SDK (Compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+  <!-- DevSocial Database -->
+  <script src="../DEVSOCIAL AI HUB/database.js"></script>
   
   <style>
     :root {
@@ -347,6 +354,128 @@
       z-index: 9999 !important;
       background: #000;
     }
+
+    /* MODAL OVERLAY & CARD STYLING */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal-card {
+      background: linear-gradient(145deg, #0d1225, #080e1e);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 500px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      animation: modal-zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      flex-direction: column;
+    }
+    @keyframes modal-zoom {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .modal-header h3 {
+      font-size: 15px;
+      font-weight: 700;
+      background: linear-gradient(90deg, #a5b4fc, #34d399);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-2);
+      font-size: 18px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .modal-close:hover {
+      color: var(--danger);
+    }
+    .modal-body {
+      padding: 20px;
+    }
+    .modal-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-2);
+    }
+    .form-group input, .form-group textarea {
+      width: 100%;
+      background: var(--bg-deep);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-1);
+      padding: 10px 12px;
+      font-size: 13px;
+    }
+    .form-group input:focus, .form-group textarea:focus {
+      border-color: var(--border-glow);
+      box-shadow: var(--glow);
+    }
+    
+    /* Social buttons */
+    .social-btn-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 15px;
+    }
+    .social-btn-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      color: var(--text-1);
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .social-btn-item:hover {
+      background: var(--bg-hover);
+      border-color: var(--border-glow);
+      box-shadow: var(--glow);
+      transform: translateY(-2px);
+    }
   </style>
 </head>
 <body>
@@ -376,6 +505,7 @@
     <button class="tbtn" id="btn-copy-code"> <span id="lbl-copy">Copy</span></button>
     <button class="tbtn green" id="btn-dl-html"> <span id="lbl-dl">HTML</span></button>
     <button class="tbtn purple" id="btn-export-zip"> <span id="lbl-zip">ZIP Pack</span></button>
+    <button class="tbtn purple" id="btn-publish-feed"> 🚀 <span id="lbl-publish">Publish</span></button>
     
     <div class="lang-toggle">
       <button class="lang-btn active" data-lang="en">EN</button>
@@ -546,7 +676,19 @@
         videoStart: "🎥 Recording started...",
         videoSaved: "✅ Video saved!",
         neuralMode: "Neural Brain",
-        socialTab: "DevSocial AI"
+        socialTab: "DevSocial AI",
+        publish: "Publish Feed",
+        publishTitle: "Publish to Community Feed",
+        publishDesc: "Share your 3D creation with the developer community! It will appear on the DevSocial Feed.",
+        nicknameLabel: "Your Nickname",
+        descEnLabel: "Description (English)",
+        descFrLabel: "Description (French)",
+        publishBtn: "Publish Now 🚀",
+        cancelBtn: "Cancel",
+        shareTitle: "Share this 3D Creation",
+        shareDesc: "Spread the word! Copy the link or share directly to social media:",
+        btnCopy: "Copy",
+        publishedToast: "🚀 Scene published to Community Feed!"
       },
       fr: {
         title: "Studio 3D/4D Pro — 2D VERS 3D",
@@ -573,7 +715,19 @@
         videoStart: "🎥 Enregistrement en cours...",
         videoSaved: "✅ Vidéo sauvegardée !",
         neuralMode: "Cerveau Neural",
-        socialTab: "DevSocial AI"
+        socialTab: "DevSocial AI",
+        publish: "Publier Feed",
+        publishTitle: "Publier sur le Feed",
+        publishDesc: "Partagez votre création 3D avec la communauté ! Elle apparaîtra sur le fil d'actualité DevSocial.",
+        nicknameLabel: "Votre Pseudo",
+        descEnLabel: "Description (Anglais)",
+        descFrLabel: "Description (Français)",
+        publishBtn: "Publier maintenant 🚀",
+        cancelBtn: "Annuler",
+        shareTitle: "Partager cette création 3D",
+        shareDesc: "Partagez la nouvelle ! Copiez le lien ou partagez directement sur les réseaux sociaux :",
+        btnCopy: "Copier",
+        publishedToast: "🚀 Scène publiée sur le Feed Communautaire !"
       }
     };
 
@@ -604,6 +758,19 @@
       const lblVideoBtn = document.getElementById('lbl-video-btn'); if(lblVideoBtn) lblVideoBtn.textContent = t.videoBtn;
       const lblNeuralMode = document.getElementById('lbl-neural-mode'); if(lblNeuralMode) lblNeuralMode.textContent = t.neuralMode;
       const lblSocial = document.getElementById('lbl-social-tab'); if(lblSocial) lblSocial.textContent = t.socialTab;
+
+      // New Publish & Share overlays translations
+      const lblPublishBtn = document.getElementById('lbl-publish'); if (lblPublishBtn) lblPublishBtn.textContent = t.publish;
+      const lblPublishTitle = document.getElementById('lbl-publish-title'); if (lblPublishTitle) lblPublishTitle.textContent = t.publishTitle;
+      const lblPublishDesc = document.getElementById('lbl-publish-desc'); if (lblPublishDesc) lblPublishDesc.textContent = t.publishDesc;
+      const lblNicknameLabel = document.getElementById('lbl-nickname-label'); if (lblNicknameLabel) lblNicknameLabel.textContent = t.nicknameLabel;
+      const lblDescEnLabel = document.getElementById('lbl-desc-en-label'); if (lblDescEnLabel) lblDescEnLabel.textContent = t.descEnLabel;
+      const lblDescFrLabel = document.getElementById('lbl-desc-fr-label'); if (lblDescFrLabel) lblDescFrLabel.textContent = t.descFrLabel;
+      const btnCancelPublish = document.getElementById('btn-cancel-publish'); if (btnCancelPublish) btnCancelPublish.textContent = t.cancelBtn;
+      const btnSubmitPublish = document.getElementById('btn-submit-publish'); if (btnSubmitPublish) btnSubmitPublish.textContent = t.publishBtn;
+      const lblShareTitle = document.getElementById('lbl-share-title'); if (lblShareTitle) lblShareTitle.textContent = t.shareTitle;
+      const lblShareDesc = document.getElementById('lbl-share-desc'); if (lblShareDesc) lblShareDesc.textContent = t.shareDesc;
+      const btnCopyShareLink = document.getElementById('btn-copy-share-link'); if (btnCopyShareLink) btnCopyShareLink.innerHTML = `<i class="fa-solid fa-copy"></i> ` + t.btnCopy;
       
       if (window.CodeCollabLive) window.CodeCollabLive.refreshLang();
       if (window.IAGuideBot) window.IAGuideBot.refreshLang();
@@ -901,6 +1068,127 @@
       URL.revokeObjectURL(url);
     });
 
+    // 🚀 Publish to Feed Logic
+    const modalPublish = document.getElementById('modal-publish-feed');
+    const modalShare = document.getElementById('modal-share-post');
+    
+    document.getElementById('btn-publish-feed').addEventListener('click', () => {
+      // Check if code is available
+      if (window.SketchExtruder && typeof window.SketchExtruder.exportScene === 'function') {
+        window.SketchExtruder.exportScene();
+      }
+      const code = document.getElementById('code-editor').value;
+      if (!code) {
+        toast(currentLang === 'fr' ? '❌ Code vide. Veuillez d\'abord générer une scène !' : '❌ Code is empty. Please generate a scene first!');
+        return;
+      }
+      
+      // Open modal
+      modalPublish.classList.add('active');
+    });
+
+    // Close buttons
+    document.getElementById('btn-close-publish').addEventListener('click', () => {
+      modalPublish.classList.remove('active');
+    });
+    document.getElementById('btn-cancel-publish').addEventListener('click', () => {
+      modalPublish.classList.remove('active');
+    });
+    document.getElementById('btn-close-share').addEventListener('click', () => {
+      modalShare.classList.remove('active');
+    });
+
+    // Close on overlay click
+    modalPublish.addEventListener('click', (e) => {
+      if (e.target === modalPublish) modalPublish.classList.remove('active');
+    });
+    modalShare.addEventListener('click', (e) => {
+      if (e.target === modalShare) modalShare.classList.remove('active');
+    });
+
+    // Copy link button
+    document.getElementById('btn-copy-share-link').addEventListener('click', () => {
+      const input = document.getElementById('share-link-input');
+      navigator.clipboard.writeText(input.value);
+      const btn = document.getElementById('btn-copy-share-link');
+      const origText = btn.innerHTML;
+      btn.innerHTML = `<i class="fa-solid fa-check"></i> ` + (currentLang === 'fr' ? 'Copié !' : 'Copied!');
+      setTimeout(() => {
+        btn.innerHTML = origText;
+      }, 2000);
+    });
+
+    // Submit publish
+    document.getElementById('btn-submit-publish').addEventListener('click', () => {
+      const nickname = document.getElementById('publish-nickname').value.trim();
+      const descEn = document.getElementById('publish-desc-en').value.trim();
+      const descFr = document.getElementById('publish-desc-fr').value.trim();
+      
+      if (!nickname) {
+        alert(currentLang === 'fr' ? 'Veuillez saisir votre pseudo !' : 'Please enter your nickname!');
+        return;
+      }
+
+      if (window.SketchExtruder && typeof window.SketchExtruder.exportScene === 'function') {
+        window.SketchExtruder.exportScene();
+      }
+      const code = document.getElementById('code-editor').value;
+
+      const postId = Date.now();
+      const post = {
+        id: postId,
+        user: nickname,
+        userAvatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(nickname)}`,
+        userTag: "Creator",
+        caption_en: descEn || "Check out this 3D animation I coded in Studio 3D Pro!",
+        caption_fr: descFr || "Découvrez cette animation 3D que j'ai codée dans Studio 3D Pro !",
+        likes: 0,
+        comments: [],
+        preset: "none",
+        hasThree: true,
+        code: code,
+        createdAt: postId
+      };
+
+      // Save using DevSocialDB
+      if (window.DevSocialDB && typeof window.DevSocialDB.savePost === 'function') {
+        window.DevSocialDB.savePost(post);
+        toast(i18n[currentLang].publishedToast);
+        
+        // Hide publish modal
+        modalPublish.classList.remove('active');
+        
+        // Reset fields
+        document.getElementById('publish-nickname').value = '';
+        document.getElementById('publish-desc-en').value = '';
+        document.getElementById('publish-desc-fr').value = '';
+        
+        // Show share modal
+        const shareUrl = `https://ia-codestudio.com/DEVSOCIAL%20AI%20HUB/index.html?post=${postId}`;
+        document.getElementById('share-link-input').value = shareUrl;
+        
+        const shareCaption = currentLang === 'fr' 
+          ? (post.caption_fr || post.caption_en)
+          : (post.caption_en || post.caption_fr);
+          
+        const tweetText = currentLang === 'fr'
+          ? `Regardez cette animation 3D que j'ai codée avec l'IA sur IA Code Studio ! ${shareCaption}`
+          : `Check out this 3D animation I coded using AI on IA Code Studio! ${shareCaption}`;
+        
+        const redditTitle = currentLang === 'fr'
+          ? `Animation 3D codée avec l'IA sur IA Code Studio`
+          : `Cool 3D animation coded using AI on IA Code Studio`;
+
+        document.getElementById('share-twitter-btn').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}`;
+        document.getElementById('share-reddit-btn').href = `https://www.reddit.com/submit?title=${encodeURIComponent(redditTitle)}&url=${encodeURIComponent(shareUrl)}`;
+        document.getElementById('share-facebook-btn').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+        
+        modalShare.classList.add('active');
+      } else {
+        alert(currentLang === 'fr' ? 'Erreur : Base de données DevSocial indisponible !' : 'Error: DevSocial database is unavailable!');
+      }
+    });
+
     document.querySelectorAll('.lang-btn').forEach(b => {
       b.addEventListener('click', () => updateUI(b.dataset.lang));
     });
@@ -934,5 +1222,70 @@
       });
     });
   </script>
+  <!-- PUBLISH TO COMMUNITY FEED MODAL -->
+  <div class="modal-overlay" id="modal-publish-feed">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="lbl-publish-title">Publish to Community Feed</h3>
+        <button class="modal-close" id="btn-close-publish"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <p id="lbl-publish-desc" style="font-size:12px; color:var(--text-2); margin-bottom:15px; line-height:1.5;">Share your 3D creation with the developer community! It will appear on the DevSocial Feed.</p>
+        <div class="form-group">
+          <label id="lbl-nickname-label">Your Nickname</label>
+          <input type="text" id="publish-nickname" placeholder="e.g. MasterCoder">
+        </div>
+        <div class="form-group">
+          <label id="lbl-desc-en-label">Description / Caption (English)</label>
+          <textarea id="publish-desc-en" placeholder="Explain your model in English..." style="height:60px; resize:none;"></textarea>
+        </div>
+        <div class="form-group">
+          <label id="lbl-desc-fr-label">Description / Caption (French)</label>
+          <textarea id="publish-desc-fr" placeholder="Expliquez votre modèle en Français..." style="height:60px; resize:none;"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="tbtn" id="btn-cancel-publish">Cancel</button>
+        <button class="tbtn green" id="btn-submit-publish">Publish Now 🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHARE SOCIAL MODAL (STUDIO) -->
+  <div class="modal-overlay" id="modal-share-post">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="lbl-share-title">Share this 3D Creation</h3>
+        <button class="modal-close" id="btn-close-share"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body" style="padding: 20px;">
+        <p id="lbl-share-desc" style="font-size:12px; color:var(--text-2); line-height:1.5;">Spread the word! Copy the link or share directly to social media:</p>
+        
+        <!-- URL Copy Box -->
+        <div style="display: flex; gap: 8px; margin: 15px 0 20px;">
+          <input type="text" id="share-link-input" readonly style="flex: 1; padding: 10px 14px; background: var(--bg-deep); border: 1px solid var(--border); border-radius: var(--radius-sm); color: #fff; font-size: 13px;">
+          <button class="tbtn green" id="btn-copy-share-link" style="margin: 0; padding: 10px 16px; font-size: 13px; display: flex; align-items: center; gap: 6px;">
+             Copy
+          </button>
+        </div>
+
+        <!-- Social Buttons Grid -->
+        <div class="social-btn-grid">
+          <a href="#" id="share-twitter-btn" target="_blank" class="social-btn-item">
+            <i class="fa-brands fa-x-twitter" style="font-size: 24px; color: #fff;"></i>
+            <span>Twitter / X</span>
+          </a>
+          <a href="#" id="share-reddit-btn" target="_blank" class="social-btn-item">
+            <i class="fa-brands fa-reddit" style="font-size: 24px; color: #ff4500;"></i>
+            <span>Reddit</span>
+          </a>
+          <a href="#" id="share-facebook-btn" target="_blank" class="social-btn-item">
+            <i class="fa-brands fa-facebook" style="font-size: 24px; color: #1877f2;"></i>
+            <span>Facebook</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

@@ -1699,3 +1699,23 @@ body {
   font-weight: 700;
   color: var(--color-accent);
 }
+
+/* --- Glowing Deep-Link Post Highlight --- */
+@keyframes postGlowPulse {
+  0% {
+    box-shadow: 0 0 0 0px rgba(168, 85, 247, 0.7), 0 0 0 0px rgba(6, 182, 212, 0.7);
+    border-color: #a855f7;
+  }
+  50% {
+    box-shadow: 0 0 20px 4px rgba(168, 85, 247, 0.4), 0 0 20px 4px rgba(6, 182, 212, 0.4);
+    border-color: #06b6d4;
+  }
+  100% {
+    box-shadow: 0 0 0 0px rgba(168, 85, 247, 0), 0 0 0 0px rgba(6, 182, 212, 0);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+.post-card.glowing-post {
+  animation: postGlowPulse 2s ease-in-out infinite;
+  border-width: 1px;
+}

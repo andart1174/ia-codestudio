@@ -35,6 +35,19 @@
 
 ---
 
+## 📂 Open Source 3D Templates
+
+We provide clean, self-contained, open-source 3D WebGL starter templates in the [templates/](file:///c:/Users/andre/OneDrive/Bureau/site%20web%20ia%20ultimul%20model/templates/) directory. They require no bundler or complicated build steps—just double-click the HTML files to run them in your browser:
+
+*   **[threejs-basic-scene.html](file:///c:/Users/andre/OneDrive/Bureau/site%20web%20ia%20ultimul%20model/templates/threejs-basic-scene.html)**: Clean starter template featuring standard lighting, OrbitControls, and a metallic rotating torus knot.
+*   **[steampunk-chrono.html](file:///c:/Users/andre/OneDrive/Bureau/site%20web%20ia%20ultimul%20model/templates/steampunk-chrono.html)**: Interactive 3D mechanical clock with rotating interlocking gears and animated steam particles.
+*   **[webcam-avatar.html](file:///c:/Users/andre/OneDrive/Bureau/site%20web%20ia%20ultimul%20model/templates/webcam-avatar.html)**: WebGL point-cloud avatar that maps the camera stream brightness to 3D node depths, with an automatic simulated grid wave fallback.
+*   **[video-mesh-projection.html](file:///c:/Users/andre/OneDrive/Bureau/site%20web%20ia%20ultimul%20model/templates/video-mesh-projection.html)**: Projects drag-and-drop or loaded local video files onto an interactive 3D curved cinema screen with real-time backglow illumination.
+
+You can customize these templates further using our AI Copilot on the live [IA Code Studio Portal](https://ia-codestudio.com).
+
+---
+
 ## 🛠️ Technology Stack
 
 *   **Frontend:** Vanilla HTML5, CSS3 (Glassmorphism & animations), JavaScript (ES6+).

@@ -6,6 +6,7 @@
   let currentLang = 'en';
   let activeTab = 'feed';
   let posts = [];
+  let checkDeepLinkOnce = false;
   let currentUser = null;
   const renderers = {}; // renderer map for active 3D card canvases
   const animLoops = {};  // animation loop callbacks for active 3D card canvases
@@ -50,6 +51,15 @@
   const btnConfirmForkAction = document.getElementById('btn-confirm-fork-action');
   const forkCodeDisplay = document.getElementById('fork-code-display');
   const forkModalTitle = document.getElementById('fork-modal-title');
+
+  // Share Modal Elements
+  const modalSharePost = document.getElementById('modal-share-post');
+  const btnCloseShare = document.getElementById('btn-close-share');
+  const shareLinkInput = document.getElementById('share-link-input');
+  const btnCopyShareLink = document.getElementById('btn-copy-share-link');
+  const shareTwitterBtn = document.getElementById('share-twitter-btn');
+  const shareRedditBtn = document.getElementById('share-reddit-btn');
+  const shareFacebookBtn = document.getElementById('share-facebook-btn');
 
   // AI Elements
   const chatMessages = document.getElementById('chat-messages');
@@ -161,6 +171,25 @@
       if (activeTab === 'gallery') renderGallery();
       if (typeof syncLocalUserReputationAndLeaderboard === 'function') {
         syncLocalUserReputationAndLeaderboard();
+      }
+
+      // Deep-link check to scroll to post
+      if (!checkDeepLinkOnce && posts.length > 0) {
+        checkDeepLinkOnce = true;
+        const urlParams = new URLSearchParams(window.location.search);
+        const targetPostId = urlParams.get('post') || urlParams.get('view');
+        if (targetPostId) {
+          setTimeout(() => {
+            const card = document.querySelector(`.post-card[data-id="${targetPostId}"]`);
+            if (card) {
+              card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              card.classList.add('glowing-post');
+              setTimeout(() => {
+                card.classList.remove('glowing-post');
+              }, 4000);
+            }
+          }, 800);
+        }
       }
     });
 
@@ -431,6 +460,9 @@
             </button>
             <button class="btn-post-action" onclick="toggleComments(${post.id})">
               <i class="fa-solid fa-comment"></i> <span>${commentsLabel}</span>
+            </button>
+            <button class="btn-post-action btn-share" onclick="openShareModal(${post.id})">
+              <i class="fa-solid fa-share-nodes"></i> <span>${currentLang === 'fr' ? 'Partager' : 'Share'}</span>
             </button>
           </div>
           <button class="btn-fork-code" onclick="openForkCodeModal(${post.id})">
@@ -801,6 +833,41 @@
     modalForkCode.classList.add('active');
   };
 
+  window.openShareModal = function(postId) {
+    const post = posts.find(p => p.id === postId);
+    if (!post) return;
+
+    const url = `https://ia-codestudio.com/DEVSOCIAL%20AI%20HUB/index.html?post=${postId}`;
+    if (shareLinkInput) shareLinkInput.value = url;
+
+    const caption = currentLang === 'fr' 
+      ? (post.caption_fr || post.caption || post.caption_en || '')
+      : (post.caption_en || post.caption || post.caption_fr || '');
+    
+    // Social text templates
+    const tweetText = currentLang === 'fr'
+      ? `Regardez cette animation 3D que j'ai codée avec l'IA sur IA Code Studio ! ${caption}`
+      : `Check out this 3D animation I coded using AI on IA Code Studio! ${caption}`;
+    
+    const redditTitle = currentLang === 'fr'
+      ? `Animation 3D codée avec l'IA sur IA Code Studio`
+      : `Cool 3D animation coded using AI on IA Code Studio`;
+
+    if (shareTwitterBtn) {
+      shareTwitterBtn.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(url)}`;
+    }
+    if (shareRedditBtn) {
+      shareRedditBtn.href = `https://www.reddit.com/submit?title=${encodeURIComponent(redditTitle)}&url=${encodeURIComponent(url)}`;
+    }
+    if (shareFacebookBtn) {
+      shareFacebookBtn.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+    }
+
+    if (modalSharePost) {
+      modalSharePost.classList.add('active');
+    }
+  };
+
   // 9. NEW POST FORM CONTROLLER
   btnTriggerNewPost.onclick = () => modalNewPost.classList.add('active');
   btnCloseNewPost.onclick = () => closeModalNewPost();
@@ -1030,6 +1097,29 @@
     modalForkCode.onclick = (e) => {
       if (e.target === modalForkCode) modalForkCode.classList.remove('active');
     };
+
+    // Share modal actions
+    if (btnCloseShare) {
+      btnCloseShare.onclick = () => modalSharePost.classList.remove('active');
+    }
+    if (modalSharePost) {
+      modalSharePost.onclick = (e) => {
+        if (e.target === modalSharePost) modalSharePost.classList.remove('active');
+      };
+    }
+    if (btnCopyShareLink && shareLinkInput) {
+      btnCopyShareLink.onclick = () => {
+        navigator.clipboard.writeText(shareLinkInput.value);
+        const copyLabel = btnCopyShareLink.querySelector('span');
+        if (copyLabel) {
+          const origText = copyLabel.textContent;
+          copyLabel.textContent = currentLang === 'fr' ? 'Copié !' : 'Copied!';
+          setTimeout(() => {
+            copyLabel.textContent = origText;
+          }, 2000);
+        }
+      };
+    }
 
     // Copy action wraps raw Three.js snippet in full HTML page so it works in external viewers
     btnCopyForkCode.onclick = () => {

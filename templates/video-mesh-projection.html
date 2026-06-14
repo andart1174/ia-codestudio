@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Curved Video Mesh Projection | IA Code Studio Open Source Templates</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #030308;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #fff;
+    }
+    #canvas-container {
+      width: 100vw;
+      height: 100vh;
+      display: block;
+    }
+    .info-hud {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(10, 10, 24, 0.8);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 8px;
+      padding: 15px 20px;
+      color: #e9d5ff;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+      z-index: 100;
+    }
+    .info-hud h1 {
+      margin: 0 0 5px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #a855f7;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .info-hud p {
+      margin: 0 0 10px;
+      font-size: 11px;
+      color: #c084fc;
+    }
+    .upload-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #a855f7, #6366f1);
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(168, 85, 247, 0.3);
+      transition: all 0.2s;
+    }
+    .upload-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 15px rgba(168, 85, 247, 0.5);
+    }
+    #file-input {
+      display: none;
+    }
+    #video-element {
+      display: none;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+
+  <div id="canvas-container"></div>
+  <video id="video-element" autoplay loop muted playsinline></video>
+
+  <div class="info-hud">
+    <h1>3D Video Mesh Projection</h1>
+    <p>Project media onto a curved 3D cinema screen.</p>
+    <label class="upload-btn" for="file-input">Select local Video</label>
+    <input type="file" id="file-input" accept="video/*">
+  </div>
+
+  <script>
+    // 1. Initial Scene Setup
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x030308, 0.005);
+
+    const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 5, 45);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+    // Orbit Controls
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
+    // Lights
+    scene.add(new THREE.AmbientLight(0xffffff, 0.05));
+
+    // Dynamic screen glow lighting
+    const screenGlowLight = new THREE.PointLight(0xa855f7, 2, 80);
+    screenGlowLight.position.set(0, 0, -5);
+    scene.add(screenGlowLight);
+
+    const keyLight = new THREE.DirectionalLight(0x6366f1, 0.8);
+    keyLight.position.set(15, 30, 20);
+    scene.add(keyLight);
+
+    // 2. Setup video texture and fallbacks
+    const video = document.getElementById('video-element');
+    let videoTexture = null;
+    let fallbackCanvas = null;
+    let fallbackCtx = null;
+    let isVideoPlaying = false;
+
+    // Setup fallback animated canvas texture
+    fallbackCanvas = document.createElement('canvas');
+    fallbackCanvas.width = 512;
+    fallbackCanvas.height = 256;
+    fallbackCtx = fallbackCanvas.getContext('2d');
+    
+    // Draw initial test grid pattern
+    const canvasTexture = new THREE.CanvasTexture(fallbackCanvas);
+
+    // 3. Cinema screen mesh (Curved cylinder geometry)
+    // CylinderGeometry params: radiusTop, radiusBottom, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength
+    const screenGeo = new THREE.CylinderGeometry(24, 24, 13.5, 48, 1, true, Math.PI * 0.75, Math.PI * 0.5);
+    
+    // Create material mapping the active texture
+    const screenMat = new THREE.MeshPhysicalMaterial({
+      map: canvasTexture,
+      side: THREE.DoubleSide,
+      roughness: 0.2,
+      metalness: 0.1,
+      emissiveMap: canvasTexture,
+      emissiveIntensity: 0.9,
+      emissive: 0xffffff
+    });
+
+    const screenMesh = new THREE.Mesh(screenGeo, screenMat);
+    // Rotate to face camera
+    screenMesh.rotation.y = Math.PI; 
+    scene.add(screenMesh);
+
+    // Create a metallic screen base stand
+    const baseGeo = new THREE.CylinderGeometry(2, 4, 1.5, 16);
+    const baseMat = new THREE.MeshStandardMaterial({ color: 0x1f1f2e, metalness: 0.9, roughness: 0.3 });
+    const baseMesh = new THREE.Mesh(baseGeo, baseMat);
+    baseMesh.position.set(0, -9.5, 0);
+    scene.add(baseMesh);
+
+    const pillarGeo = new THREE.CylinderGeometry(0.5, 0.5, 4, 12);
+    const pillarMesh = new THREE.Mesh(pillarGeo, baseMat);
+    pillarMesh.position.set(0, -7.5, 0);
+    scene.add(pillarMesh);
+
+    // 4. File input upload handler
+    const fileInput = document.getElementById('file-input');
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const fileUrl = URL.createObjectURL(file);
+        
+        // Load into video element
+        video.src = fileUrl;
+        video.load();
+        video.play()
+          .then(() => {
+            // Create WebGL video texture on play success
+            videoTexture = new THREE.VideoTexture(video);
+            videoTexture.minFilter = THREE.LinearFilter;
+            videoTexture.magFilter = THREE.LinearFilter;
+            videoTexture.format = THREE.RGBAFormat;
+
+            // Apply texture to screen material
+            screenMat.map = videoTexture;
+            screenMat.emissiveMap = videoTexture;
+            screenMat.needsUpdate = true;
+            isVideoPlaying = true;
+          })
+          .catch(err => {
+            console.error("Video playback error: ", err);
+          });
+      }
+    });
+
+    // 5. Draw animated procedural fallback canvas patterns
+    function drawFallbackPattern(time) {
+      if (!fallbackCtx) return;
+      
+      const ctx = fallbackCtx;
+      const w = fallbackCanvas.width;
+      const h = fallbackCanvas.height;
+
+      // Dark sci-fi backgrid
+      ctx.fillStyle = '#060613';
+      ctx.fillRect(0, 0, w, h);
+
+      // Neon grid lines
+      ctx.strokeStyle = 'rgba(139, 92, 246, 0.15)';
+      ctx.lineWidth = 1.5;
+      
+      const gridSpacing = 32;
+      for (let x = 0; x < w; x += gridSpacing) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
+        ctx.stroke();
+      }
+      for (let y = 0; y < h; y += gridSpacing) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+
+      // Draw mathematical digital matrix particles
+      ctx.fillStyle = '#a855f7';
+      const particleRows = 8;
+      const particleCols = 16;
+      for (let r = 0; r < particleRows; r++) {
+        for (let c = 0; c < particleCols; c++) {
+          const x = (c + 0.5) * (w / particleCols);
+          const y = (r + 0.5) * (h / particleRows);
+          const radius = Math.sin(time * 3 + c * 0.5 + r) * 4 + 5;
+          
+          if (radius > 1) {
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.fillStyle = `hsla(${(time * 40 + c * 10) % 360}, 80%, 65%, ${Math.max(0.1, radius/9)})`;
+            ctx.fill();
+          }
+        }
+      }
+
+      // Draw glow border
+      ctx.strokeStyle = 'rgba(99, 102, 241, 0.4)';
+      ctx.lineWidth = 8;
+      ctx.strokeRect(0, 0, w, h);
+
+      canvasTexture.needsUpdate = true;
+    }
+
+    // 6. Animation loop
+    let time = 0;
+    function animate() {
+      requestAnimationFrame(animate);
+      time += 0.01;
+
+      // Update fallback graphics if no video uploaded
+      if (!isVideoPlaying) {
+        drawFallbackPattern(time);
+        screenGlowLight.color.setHSL((time * 0.1) % 1.0, 0.8, 0.5);
+      } else {
+        // HSL shifts base screen backglow based on time
+        screenGlowLight.color.setHSL((time * 0.05) % 1.0, 0.9, 0.6);
+      }
+
+      // Smooth rotate screen stand swing
+      screenMesh.rotation.y = Math.PI + Math.sin(time * 0.3) * 0.12;
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Handle Window Resizing
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
