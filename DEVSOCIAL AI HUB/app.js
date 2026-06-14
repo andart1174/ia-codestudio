@@ -18,9 +18,14 @@
   
   if (isEmbed) {
     document.documentElement.classList.add('embed-mode');
-    document.addEventListener('DOMContentLoaded', () => {
-      document.body.classList.add('embed-mode');
-    });
+    const addBodyClass = () => {
+      if (document.body) {
+        document.body.classList.add('embed-mode');
+      } else {
+        setTimeout(addBodyClass, 5);
+      }
+    };
+    addBodyClass();
   }
   
   let activeChallengeData = null;
