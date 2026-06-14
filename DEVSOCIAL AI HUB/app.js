@@ -10,6 +10,18 @@
   let currentUser = null;
   const renderers = {}; // renderer map for active 3D card canvases
   const animLoops = {};  // animation loop callbacks for active 3D card canvases
+
+  // Parse URL parameters for deep-linking and embedding
+  const urlParams = new URLSearchParams(window.location.search);
+  const isEmbed = urlParams.get('embed') === 'true';
+  const targetPostId = urlParams.get('post') || urlParams.get('view');
+  
+  if (isEmbed) {
+    document.documentElement.classList.add('embed-mode');
+    document.addEventListener('DOMContentLoaded', () => {
+      document.body.classList.add('embed-mode');
+    });
+  }
   
   let activeChallengeData = null;
   let globalConfig = { profanityFilter: false };
@@ -402,7 +414,12 @@
   function renderFeed() {
     postsContainer.innerHTML = '';
     
-    posts.forEach(post => {
+    let postsToRender = posts;
+    if (isEmbed && targetPostId) {
+      postsToRender = posts.filter(p => String(p.id) === String(targetPostId));
+    }
+    
+    postsToRender.forEach(post => {
       const showDelete = currentUser && (currentUser.role === 'Admin' || currentUser.email === post.userEmail);
       const deleteButtonHtml = showDelete ? `
         <button class="btn-delete-post" onclick="deletePost(${post.id})" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: #f87171; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;" title="${currentLang === 'fr' ? 'Supprimer la publication' : 'Delete Post'}">
@@ -531,6 +548,23 @@
     const container = document.getElementById(containerId);
     if (!container) return;
 
+    // Helper to append watermark if in embed mode
+    function checkAndAppendWatermark() {
+      if (isEmbed && !isGallery) {
+        // Remove existing to avoid duplicates
+        const existingWatermark = container.querySelector('.embed-watermark');
+        if (existingWatermark) existingWatermark.remove();
+
+        const watermark = document.createElement('a');
+        const baseOrigin = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1') ? window.location.origin : 'https://ia-codestudio.com';
+        watermark.href = `${baseOrigin}/DEVSOCIAL%20AI%20HUB/index.html?post=${postId}`;
+        watermark.target = '_blank';
+        watermark.className = 'embed-watermark';
+        watermark.innerHTML = `✨ Powered by IA Code Studio`;
+        container.appendChild(watermark);
+      }
+    }
+
     // Detect if codeString is a full HTML page
     const trimmed = (codeString || '').trim();
     const isHtml = trimmed.toLowerCase().startsWith('<!doctype') || 
@@ -555,6 +589,7 @@
       container.innerHTML = '';
       if (overlay) container.appendChild(overlay);
       container.appendChild(iframe);
+      checkAndAppendWatermark();
       return;
     }
 
@@ -619,6 +654,8 @@
       renderer,
       animCb
     };
+
+    checkAndAppendWatermark();
   }
 
   function animateAll() {
@@ -837,8 +874,14 @@
     const post = posts.find(p => p.id === postId);
     if (!post) return;
 
-    const url = `https://ia-codestudio.com/DEVSOCIAL%20AI%20HUB/index.html?post=${postId}`;
+    const baseOrigin = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1') ? window.location.origin : 'https://ia-codestudio.com';
+    const url = `${baseOrigin}/DEVSOCIAL%20AI%20HUB/index.html?post=${postId}`;
     if (shareLinkInput) shareLinkInput.value = url;
+
+    const embedUrl = `${url}&embed=true`;
+    const embedCode = `<iframe src="${embedUrl}" width="100%" height="450" style="border:none; border-radius:12px; box-shadow: 0 4px 30px rgba(0,0,0,0.35);"></iframe>`;
+    const embedCodeInput = document.getElementById('embed-code-input');
+    if (embedCodeInput) embedCodeInput.value = embedCode;
 
     const caption = currentLang === 'fr' 
       ? (post.caption_fr || post.caption || post.caption_en || '')
@@ -1111,6 +1154,22 @@
       btnCopyShareLink.onclick = () => {
         navigator.clipboard.writeText(shareLinkInput.value);
         const copyLabel = btnCopyShareLink.querySelector('span');
+        if (copyLabel) {
+          const origText = copyLabel.textContent;
+          copyLabel.textContent = currentLang === 'fr' ? 'Copié !' : 'Copied!';
+          setTimeout(() => {
+            copyLabel.textContent = origText;
+          }, 2000);
+        }
+      };
+    }
+
+    const btnCopyEmbedCode = document.getElementById('btn-copy-embed-code');
+    const embedCodeInput = document.getElementById('embed-code-input');
+    if (btnCopyEmbedCode && embedCodeInput) {
+      btnCopyEmbedCode.onclick = () => {
+        navigator.clipboard.writeText(embedCodeInput.value);
+        const copyLabel = btnCopyEmbedCode.querySelector('span');
         if (copyLabel) {
           const origText = copyLabel.textContent;
           copyLabel.textContent = currentLang === 'fr' ? 'Copié !' : 'Copied!';

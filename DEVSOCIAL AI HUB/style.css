@@ -1719,3 +1719,100 @@ body {
   animation: postGlowPulse 2s ease-in-out infinite;
   border-width: 1px;
 }
+
+/* --- Embed Viewport Widget Mode --- */
+html.embed-mode body,
+body.embed-mode {
+  background: transparent !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+body.embed-mode .sidebar,
+body.embed-mode .app-header,
+body.embed-mode .feed-sidebar,
+body.embed-mode .post-header,
+body.embed-mode .post-caption,
+body.embed-mode .post-actions,
+body.embed-mode .post-comments-section,
+body.embed-mode .viewport-overlay {
+  display: none !important;
+}
+
+body.embed-mode .main-content {
+  margin-left: 0 !important;
+  padding: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  overflow: hidden !important;
+}
+
+body.embed-mode .app-container {
+  background: transparent !important;
+}
+
+body.embed-mode .view-wrapper,
+body.embed-mode .view-panel,
+body.embed-mode .feed-layout,
+body.embed-mode .feed-posts,
+body.embed-mode .post-card {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+body.embed-mode .post-viewport-container {
+  width: 100vw !important;
+  height: 100vh !important;
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  background: #000 !important;
+}
+
+body.embed-mode .post-canvas {
+  width: 100vw !important;
+  height: 100vh !important;
+}
+
+/* Watermark styles */
+.embed-watermark {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #f1f5f9;
+  padding: 6px 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none !important;
+  border-radius: 20px;
+  backdrop-filter: blur(8px);
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s ease;
+  pointer-events: auto;
+}
+
+.embed-watermark:hover {
+  background: rgba(15, 23, 42, 0.95);
+  border-color: rgba(99, 102, 241, 0.6);
+  transform: translateY(-1px);
+  color: #818cf8;
+}

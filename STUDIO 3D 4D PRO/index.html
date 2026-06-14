@@ -505,6 +505,9 @@
     <button class="tbtn" id="btn-copy-code"> <span id="lbl-copy">Copy</span></button>
     <button class="tbtn green" id="btn-dl-html"> <span id="lbl-dl">HTML</span></button>
     <button class="tbtn purple" id="btn-export-zip"> <span id="lbl-zip">ZIP Pack</span></button>
+    <button class="tbtn" id="btn-export-gist" style="border-color:rgba(244,63,94,0.4);color:#fb7185;">
+      <i class="fa-brands fa-github"></i> <span id="lbl-gist">GitHub Gist</span>
+    </button>
     <button class="tbtn purple" id="btn-publish-feed"> <i class="fa-solid fa-share-nodes"></i> <span id="lbl-publish">Share Scene</span></button>
     
     <div class="lang-toggle">
@@ -612,6 +615,15 @@
           </button>
         </div>
 
+        <!-- Embed Code Box -->
+        <p id="lbl-embed-title" style="font-size:12px; color:var(--text-2); line-height:1.5; margin-top: 15px;">Embed this 3D widget on your website:</p>
+        <div style="display: flex; gap: 8px; margin: 10px 0 20px;">
+          <input type="text" id="embed-code-input" readonly style="flex: 1; padding: 10px 14px; background: var(--bg-deep); border: 1px solid var(--border); border-radius: var(--radius-sm); color: #fff; font-size: 13px;">
+          <button class="tbtn green" id="btn-copy-embed-code" style="margin: 0; padding: 10px 16px; font-size: 13px; display: flex; align-items: center; gap: 6px;">
+             Copy
+          </button>
+        </div>
+
         <!-- Social Buttons Grid -->
         <div class="social-btn-grid">
           <a href="#" id="share-twitter-btn" target="_blank" class="social-btn-item">
@@ -627,6 +639,32 @@
             <span>Facebook</span>
           </a>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GITHUB TOKEN MODAL -->
+  <div class="modal-overlay" id="modal-github-token">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="lbl-gist-title">Export to GitHub Gist</h3>
+        <button class="modal-close" id="btn-close-gist-modal"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <p id="lbl-gist-desc" style="font-size:12px; color:var(--text-2); margin-bottom:15px; line-height:1.5;">
+          Enter your GitHub Personal Access Token (PAT) with 'gist' scope to publish this code directly to your GitHub Gists.
+        </p>
+        <div class="form-group">
+          <label id="lbl-token-label">GitHub Access Token (PAT)</label>
+          <input type="password" id="gist-token-input" placeholder="github_pat_..." style="padding: 10px 14px; background: var(--bg-deep); border: 1px solid var(--border); border-radius: var(--radius-sm); color: #fff; width: 100%; box-sizing: border-box;">
+        </div>
+        <p style="font-size: 10px; color: var(--text-3); margin-top: 10px; line-height:1.4;">
+          Your token is stored locally in your browser's <code>localStorage</code> and never sent to our servers.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="tbtn" id="btn-cancel-gist-modal">Cancel</button>
+        <button class="tbtn green" id="btn-save-gist-modal">Save & Export 🚀</button>
       </div>
     </div>
   </div>
@@ -754,7 +792,19 @@
         shareTitle: "Share this 3D Creation",
         shareDesc: "Spread the word! Copy the link or share directly to social media:",
         btnCopy: "Copy",
-        publishedToast: "🚀 Scene published to Community Feed!"
+        publishedToast: "🚀 Scene published to Community Feed!",
+        embedTitle: "Embed this 3D widget on your website:",
+        copiedEmbed: "✅ Embed code copied!",
+        gistBtn: "GitHub Gist",
+        gistTitle: "Export to GitHub Gist",
+        gistDesc: "Enter your GitHub Personal Access Token (PAT) with 'gist' scope to publish this code directly to your GitHub Gists.",
+        gistTokenPlaceholder: "github_pat_...",
+        gistSave: "Save & Export 🚀",
+        gistCancel: "Cancel",
+        gistSuccess: "🚀 Code exported to GitHub Gist! Opening in a new tab...",
+        gistError: "❌ Failed to export to GitHub Gist. Please verify your token and network connection.",
+        gistTokenSaved: "✅ GitHub token saved successfully!",
+        tokenLabel: "GitHub Access Token (PAT)"
       },
       fr: {
         title: "Studio 3D/4D Pro — 2D VERS 3D",
@@ -793,7 +843,19 @@
         shareTitle: "Partager cette création 3D",
         shareDesc: "Partagez la nouvelle ! Copiez le lien ou partagez directement sur les réseaux sociaux :",
         btnCopy: "Copier",
-        publishedToast: "🚀 Scène publiée sur le Feed Communautaire !"
+        publishedToast: "🚀 Scène publiée sur le Feed Communautaire !",
+        embedTitle: "Intégrer ce widget 3D sur votre site web :",
+        copiedEmbed: "✅ Code d'intégration copié !",
+        gistBtn: "GitHub Gist",
+        gistTitle: "Exporter vers GitHub Gist",
+        gistDesc: "Entrez votre jeton d'accès personnel GitHub (PAT) avec la portée 'gist' pour publier ce code directement dans vos Gists GitHub.",
+        gistTokenPlaceholder: "github_pat_...",
+        gistSave: "Sauvegarder & Exporter 🚀",
+        gistCancel: "Annuler",
+        gistSuccess: "🚀 Code exporté vers GitHub Gist ! Ouverture dans un nouvel onglet...",
+        gistError: "❌ Échec de l'exportation vers GitHub Gist. Veuillez vérifier votre jeton et votre connexion réseau.",
+        gistTokenSaved: "✅ Jeton GitHub sauvegardé avec succès !",
+        tokenLabel: "Jeton d'accès GitHub (PAT)"
       }
     };
 
@@ -837,6 +899,14 @@
       const lblShareTitle = document.getElementById('lbl-share-title'); if (lblShareTitle) lblShareTitle.textContent = t.shareTitle;
       const lblShareDesc = document.getElementById('lbl-share-desc'); if (lblShareDesc) lblShareDesc.textContent = t.shareDesc;
       const btnCopyShareLink = document.getElementById('btn-copy-share-link'); if (btnCopyShareLink) btnCopyShareLink.innerHTML = `<i class="fa-solid fa-copy"></i> ` + t.btnCopy;
+      const lblEmbedTitle = document.getElementById('lbl-embed-title'); if (lblEmbedTitle) lblEmbedTitle.textContent = t.embedTitle;
+      const btnCopyEmbedCode = document.getElementById('btn-copy-embed-code'); if (btnCopyEmbedCode) btnCopyEmbedCode.innerHTML = `<i class="fa-solid fa-copy"></i> ` + t.btnCopy;
+      const lblGist = document.getElementById('lbl-gist'); if (lblGist) lblGist.textContent = t.gistBtn;
+      const lblGistTitle = document.getElementById('lbl-gist-title'); if (lblGistTitle) lblGistTitle.textContent = t.gistTitle;
+      const lblGistDesc = document.getElementById('lbl-gist-desc'); if (lblGistDesc) lblGistDesc.textContent = t.gistDesc;
+      const lblTokenLabel = document.getElementById('lbl-token-label'); if (lblTokenLabel) lblTokenLabel.textContent = t.tokenLabel;
+      const btnCancelGistModal = document.getElementById('btn-cancel-gist-modal'); if (btnCancelGistModal) btnCancelGistModal.textContent = t.gistCancel;
+      const btnSaveGistModal = document.getElementById('btn-save-gist-modal'); if (btnSaveGistModal) btnSaveGistModal.textContent = t.gistSave;
       
       if (window.CodeCollabLive) window.CodeCollabLive.refreshLang();
       if (window.IAGuideBot) window.IAGuideBot.refreshLang();
@@ -1201,6 +1271,18 @@
       }, 2000);
     });
 
+    // Copy embed code button
+    document.getElementById('btn-copy-embed-code').addEventListener('click', () => {
+      const input = document.getElementById('embed-code-input');
+      navigator.clipboard.writeText(input.value);
+      const btn = document.getElementById('btn-copy-embed-code');
+      const origText = btn.innerHTML;
+      btn.innerHTML = `<i class="fa-solid fa-check"></i> ` + (currentLang === 'fr' ? 'Copié !' : 'Copied!');
+      setTimeout(() => {
+        btn.innerHTML = origText;
+      }, 2000);
+    });
+
     // Submit publish
     document.getElementById('btn-submit-publish').addEventListener('click', () => {
       const nickname = document.getElementById('publish-nickname').value.trim();
@@ -1257,8 +1339,13 @@
         document.getElementById('publish-desc-fr').value = '';
         
         // Show share modal
-        const shareUrl = `https://ia-codestudio.com/DEVSOCIAL%20AI%20HUB/index.html?post=${postId}`;
+        const baseOrigin = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1') ? window.location.origin : 'https://ia-codestudio.com';
+        const shareUrl = `${baseOrigin}/DEVSOCIAL%20AI%20HUB/index.html?post=${postId}`;
         document.getElementById('share-link-input').value = shareUrl;
+
+        const embedUrl = `${baseOrigin}/DEVSOCIAL%20AI%20HUB/index.html?post=${postId}&embed=true`;
+        const embedCode = `<iframe src="${embedUrl}" width="100%" height="450" style="border:none; border-radius:12px; box-shadow: 0 4px 30px rgba(0,0,0,0.35);"></iframe>`;
+        document.getElementById('embed-code-input').value = embedCode;
         
         const shareCaption = currentLang === 'fr' 
           ? (post.caption_fr || post.caption_en)
@@ -1282,6 +1369,113 @@
       }
     });
 
+    // --- GitHub Gist Export Feature ---
+    const modalGist = document.getElementById('modal-github-token');
+
+    document.getElementById('btn-export-gist').addEventListener('click', () => {
+      // Force user to be premium
+      if (typeof window.isUserPremium === 'function' && !window.isUserPremium()) {
+        if (typeof window.showPaywallModal === 'function') {
+          window.showPaywallModal();
+        }
+        return;
+      }
+
+      // Check if code is available
+      if (window.SketchExtruder && typeof window.SketchExtruder.exportScene === 'function') {
+        window.SketchExtruder.exportScene();
+      }
+      const code = document.getElementById('code-editor').value;
+      if (!code) {
+        toast(currentLang === 'fr' ? "❌ Code vide. Veuillez d'abord générer une scène !" : "❌ Code is empty. Please generate a scene first!");
+        return;
+      }
+
+      // Check if token exists
+      const token = localStorage.getItem('github_token');
+      if (!token) {
+        document.getElementById('gist-token-input').value = '';
+        modalGist.classList.add('active');
+      } else {
+        exportToGist(token, code);
+      }
+    });
+
+    document.getElementById('btn-close-gist-modal').addEventListener('click', () => {
+      modalGist.classList.remove('active');
+    });
+    document.getElementById('btn-cancel-gist-modal').addEventListener('click', () => {
+      modalGist.classList.remove('active');
+    });
+
+    modalGist.addEventListener('click', (e) => {
+      if (e.target === modalGist) modalGist.classList.remove('active');
+    });
+
+    document.getElementById('btn-save-gist-modal').addEventListener('click', () => {
+      const tokenInput = document.getElementById('gist-token-input').value.trim();
+      if (!tokenInput) {
+        alert(currentLang === 'fr' ? 'Veuillez saisir votre jeton GitHub !' : 'Please enter your GitHub token!');
+        return;
+      }
+      localStorage.setItem('github_token', tokenInput);
+      toast(i18n[currentLang].gistTokenSaved);
+      modalGist.classList.remove('active');
+      
+      const code = document.getElementById('code-editor').value;
+      exportToGist(tokenInput, code);
+    });
+
+    function exportToGist(token, code) {
+      toast(currentLang === 'fr' ? "📤 Exportation en cours vers GitHub..." : "📤 Exporting to GitHub...");
+      
+      const payload = {
+        description: "3D Hologram Scene exported from IA Code Studio",
+        public: true,
+        files: {
+          "export-3d-hologram.html": {
+            "content": code
+          }
+        }
+      };
+
+      fetch('https://api.github.com/gists', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/vnd.github+json',
+          'Authorization': `Bearer ${token}`,
+          'X-GitHub-Api-Version': '2022-11-28',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Unauthorized or network issue');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.html_url) {
+          toast(i18n[currentLang].gistSuccess);
+          setTimeout(() => {
+            window.open(data.html_url, '_blank');
+          }, 1500);
+        } else {
+          throw new Error('Invalid response');
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        toast(i18n[currentLang].gistError);
+        // Clear token since it's likely invalid or expired
+        localStorage.removeItem('github_token');
+        setTimeout(() => {
+          modalGist.classList.add('active');
+        }, 1500);
+      });
+    }
+
     document.querySelectorAll('.lang-btn').forEach(b => {
       b.addEventListener('click', () => updateUI(b.dataset.lang));
     });
@@ -1291,7 +1485,7 @@
 
     // 🔐 ANTI-THEFT PROTECTION: Intercept copying, cut and export actions for non-premium users
     document.addEventListener('click', function(e) {
-      const target = e.target.closest('#btn-export, #btn-screenshot, #btn-export-video, #btn-copy-code, #btn-dl-html, #btn-export-zip, #exp-zip, #btn-export-all-formats, #v3d-btn-download, #sc3-fuse, #sc3-copy-btn, #sc3-dl-btn, #hf3-fuse, #hf3-copy-btn, #hf3-dl-btn');
+      const target = e.target.closest('#btn-export, #btn-export-gist, #btn-screenshot, #btn-export-video, #btn-copy-code, #btn-dl-html, #btn-export-zip, #exp-zip, #btn-export-all-formats, #v3d-btn-download, #sc3-fuse, #sc3-copy-btn, #sc3-dl-btn, #hf3-fuse, #hf3-copy-btn, #hf3-dl-btn');
       if (target) {
         if (typeof window.isUserPremium === 'function' && !window.isUserPremium()) {
           e.preventDefault();
