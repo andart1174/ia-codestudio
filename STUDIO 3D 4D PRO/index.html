@@ -1485,7 +1485,7 @@
 
     // 🔐 ANTI-THEFT PROTECTION: Intercept copying, cut and export actions for non-premium users
     document.addEventListener('click', function(e) {
-      const target = e.target.closest('#btn-export, #btn-export-gist, #btn-screenshot, #btn-export-video, #btn-copy-code, #btn-dl-html, #btn-export-zip, #exp-zip, #btn-export-all-formats, #v3d-btn-download, #sc3-fuse, #sc3-copy-btn, #sc3-dl-btn, #hf3-fuse, #hf3-copy-btn, #hf3-dl-btn');
+      const target = e.target.closest('#btn-export, #btn-export-gist, #btn-publish-feed, #btn-screenshot, #btn-export-video, #btn-copy-code, #btn-dl-html, #btn-export-zip, #exp-zip, #btn-export-all-formats, #v3d-btn-download, #sc3-fuse, #sc3-copy-btn, #sc3-dl-btn, #hf3-fuse, #hf3-copy-btn, #hf3-dl-btn');
       if (target) {
         if (typeof window.isUserPremium === 'function' && !window.isUserPremium()) {
           e.preventDefault();

@@ -876,6 +876,13 @@
   };
 
   window.openShareModal = function(postId) {
+    if (!checkPremium()) {
+      alert(currentLang === 'fr' 
+        ? "🔒 Le partage et l'intégration de créations 3D sont réservés aux membres Premium. Veuillez vous connecter ou vous abonner sur le portail principal !" 
+        : "🔒 Sharing and embedding 3D creations are reserved for Premium members. Please log in or subscribe on the main portal!");
+      return;
+    }
+
     const post = posts.find(p => p.id === postId);
     if (!post) return;
 
