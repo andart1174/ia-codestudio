@@ -565,6 +565,72 @@
 
   <div class="toast" id="toast"></div>
 
+  <!-- PUBLISH TO COMMUNITY FEED MODAL -->
+  <div class="modal-overlay" id="modal-publish-feed">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="lbl-publish-title">Publish to Community Feed</h3>
+        <button class="modal-close" id="btn-close-publish"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <p id="lbl-publish-desc" style="font-size:12px; color:var(--text-2); margin-bottom:15px; line-height:1.5;">Share your 3D creation with the developer community! It will appear on the DevSocial Feed.</p>
+        <div class="form-group">
+          <label id="lbl-nickname-label">Your Nickname</label>
+          <input type="text" id="publish-nickname" placeholder="e.g. MasterCoder">
+        </div>
+        <div class="form-group">
+          <label id="lbl-desc-en-label">Description / Caption (English)</label>
+          <textarea id="publish-desc-en" placeholder="Explain your model in English..." style="height:60px; resize:none;"></textarea>
+        </div>
+        <div class="form-group">
+          <label id="lbl-desc-fr-label">Description / Caption (French)</label>
+          <textarea id="publish-desc-fr" placeholder="Expliquez votre modèle en Français..." style="height:60px; resize:none;"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="tbtn" id="btn-cancel-publish">Cancel</button>
+        <button class="tbtn green" id="btn-submit-publish">Publish Now 🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHARE SOCIAL MODAL (STUDIO) -->
+  <div class="modal-overlay" id="modal-share-post">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="lbl-share-title">Share this 3D Creation</h3>
+        <button class="modal-close" id="btn-close-share"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body" style="padding: 20px;">
+        <p id="lbl-share-desc" style="font-size:12px; color:var(--text-2); line-height:1.5;">Spread the word! Copy the link or share directly to social media:</p>
+        
+        <!-- URL Copy Box -->
+        <div style="display: flex; gap: 8px; margin: 15px 0 20px;">
+          <input type="text" id="share-link-input" readonly style="flex: 1; padding: 10px 14px; background: var(--bg-deep); border: 1px solid var(--border); border-radius: var(--radius-sm); color: #fff; font-size: 13px;">
+          <button class="tbtn green" id="btn-copy-share-link" style="margin: 0; padding: 10px 16px; font-size: 13px; display: flex; align-items: center; gap: 6px;">
+             Copy
+          </button>
+        </div>
+
+        <!-- Social Buttons Grid -->
+        <div class="social-btn-grid">
+          <a href="#" id="share-twitter-btn" target="_blank" class="social-btn-item">
+            <i class="fa-brands fa-x-twitter" style="font-size: 24px; color: #fff;"></i>
+            <span>Twitter / X</span>
+          </a>
+          <a href="#" id="share-reddit-btn" target="_blank" class="social-btn-item">
+            <i class="fa-brands fa-reddit" style="font-size: 24px; color: #ff4500;"></i>
+            <span>Reddit</span>
+          </a>
+          <a href="#" id="share-facebook-btn" target="_blank" class="social-btn-item">
+            <i class="fa-brands fa-facebook" style="font-size: 24px; color: #1877f2;"></i>
+            <span>Facebook</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Copied Modules -->
   <script src="js/dxf-to-3d.js"></script>
   <script src="js/svg-extruder.js"></script>
@@ -1249,70 +1315,5 @@
       });
     });
   </script>
-  <!-- PUBLISH TO COMMUNITY FEED MODAL -->
-  <div class="modal-overlay" id="modal-publish-feed">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3 id="lbl-publish-title">Publish to Community Feed</h3>
-        <button class="modal-close" id="btn-close-publish"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="modal-body">
-        <p id="lbl-publish-desc" style="font-size:12px; color:var(--text-2); margin-bottom:15px; line-height:1.5;">Share your 3D creation with the developer community! It will appear on the DevSocial Feed.</p>
-        <div class="form-group">
-          <label id="lbl-nickname-label">Your Nickname</label>
-          <input type="text" id="publish-nickname" placeholder="e.g. MasterCoder">
-        </div>
-        <div class="form-group">
-          <label id="lbl-desc-en-label">Description / Caption (English)</label>
-          <textarea id="publish-desc-en" placeholder="Explain your model in English..." style="height:60px; resize:none;"></textarea>
-        </div>
-        <div class="form-group">
-          <label id="lbl-desc-fr-label">Description / Caption (French)</label>
-          <textarea id="publish-desc-fr" placeholder="Expliquez votre modèle en Français..." style="height:60px; resize:none;"></textarea>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="tbtn" id="btn-cancel-publish">Cancel</button>
-        <button class="tbtn green" id="btn-submit-publish">Publish Now 🚀</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SHARE SOCIAL MODAL (STUDIO) -->
-  <div class="modal-overlay" id="modal-share-post">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3 id="lbl-share-title">Share this 3D Creation</h3>
-        <button class="modal-close" id="btn-close-share"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="modal-body" style="padding: 20px;">
-        <p id="lbl-share-desc" style="font-size:12px; color:var(--text-2); line-height:1.5;">Spread the word! Copy the link or share directly to social media:</p>
-        
-        <!-- URL Copy Box -->
-        <div style="display: flex; gap: 8px; margin: 15px 0 20px;">
-          <input type="text" id="share-link-input" readonly style="flex: 1; padding: 10px 14px; background: var(--bg-deep); border: 1px solid var(--border); border-radius: var(--radius-sm); color: #fff; font-size: 13px;">
-          <button class="tbtn green" id="btn-copy-share-link" style="margin: 0; padding: 10px 16px; font-size: 13px; display: flex; align-items: center; gap: 6px;">
-             Copy
-          </button>
-        </div>
-
-        <!-- Social Buttons Grid -->
-        <div class="social-btn-grid">
-          <a href="#" id="share-twitter-btn" target="_blank" class="social-btn-item">
-            <i class="fa-brands fa-x-twitter" style="font-size: 24px; color: #fff;"></i>
-            <span>Twitter / X</span>
-          </a>
-          <a href="#" id="share-reddit-btn" target="_blank" class="social-btn-item">
-            <i class="fa-brands fa-reddit" style="font-size: 24px; color: #ff4500;"></i>
-            <span>Reddit</span>
-          </a>
-          <a href="#" id="share-facebook-btn" target="_blank" class="social-btn-item">
-            <i class="fa-brands fa-facebook" style="font-size: 24px; color: #1877f2;"></i>
-            <span>Facebook</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
 </body>
 </html>
