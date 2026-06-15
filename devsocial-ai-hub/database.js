@@ -221,7 +221,43 @@ return function() {
   let challengeListeners = [];
   let configListeners = [];
 
-  function notifyPostListeners() {
+  // Compression/Decompression utilities (using native browser APIs)
+  async function compressString(str) {
+    if (typeof CompressionStream === 'undefined') return str;
+    try {
+      const stream = new Response(str).body.pipeThrough(new CompressionStream('gzip'));
+      const buffer = await new Response(stream).arrayBuffer();
+      let binary = '';
+      const bytes = new Uint8Array(buffer);
+      const len = bytes.byteLength;
+      for (let i = 0; i < len; i += 32000) {
+        binary += String.fromCharCode.apply(null, bytes.subarray(i, i + 32000));
+      }
+      return btoa(binary);
+    } catch (e) {
+      console.warn("Gzip compression failed:", e);
+      return str;
+    }
+  }
+
+  async function decompressString(base64) {
+    if (typeof DecompressionStream === 'undefined') return base64;
+    try {
+      const binaryString = atob(base64);
+      const len = binaryString.length;
+      const bytes = new Uint8Array(len);
+      for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      const stream = new Response(bytes).body.pipeThrough(new DecompressionStream('gzip'));
+      return await new Response(stream).text();
+    } catch (e) {
+      console.warn("Gzip decompression failed:", e);
+      return base64;
+    }
+  }
+
+  async function notifyPostListeners() {
     let posts = [];
     try {
       posts = JSON.parse(localStorage.getItem('devsocial_posts') || '[]');
@@ -232,6 +268,27 @@ return function() {
       posts = [...MOCK_POSTS];
       localStorage.setItem('devsocial_posts', JSON.stringify(posts));
     }
+    
+    // Decompress posts before invoking listeners
+    const promises = [];
+    posts.forEach(post => {
+      if (post.compressedCode && !post.code) {
+        promises.push(
+          decompressString(post.compressedCode)
+            .then(decompressed => {
+              post.code = decompressed;
+            })
+            .catch(err => {
+              console.error("Decompression failed for local post in notifier", post.id, err);
+            })
+        );
+      }
+    });
+    
+    if (promises.length > 0) {
+      await Promise.all(promises);
+    }
+    
     posts.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
     postListeners.forEach(cb => {
       try { cb(posts); } catch(e){}
@@ -277,11 +334,27 @@ return function() {
       if (useFirestore && db) {
         return db.collection('devsocial_posts')
                  .orderBy('createdAt', 'desc')
-                 .onSnapshot(snapshot => {
+                 .onSnapshot(async snapshot => {
                    const postsList = [];
+                   const promises = [];
                    snapshot.forEach(doc => {
-                     postsList.push(doc.data());
+                     const post = doc.data();
+                     postsList.push(post);
+                     if (post.compressedCode && !post.code) {
+                       promises.push(
+                         decompressString(post.compressedCode)
+                           .then(decompressed => {
+                             post.code = decompressed;
+                           })
+                           .catch(err => {
+                             console.error("Decompression failed for post", post.id, err);
+                           })
+                       );
+                     }
                    });
+                   if (promises.length > 0) {
+                     await Promise.all(promises);
+                   }
                    callback(postsList);
                  }, error => {
                    console.error("Firestore subscription error. Falling back to LocalStorage:", error);
@@ -298,33 +371,93 @@ return function() {
           posts = [...MOCK_POSTS];
           localStorage.setItem('devsocial_posts', JSON.stringify(posts));
         }
-        posts.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-        callback(posts);
+        
+        // Decompress local posts asynchronously
+        const promises = [];
+        posts.forEach(post => {
+          if (post.compressedCode && !post.code) {
+            promises.push(
+              decompressString(post.compressedCode)
+                .then(decompressed => {
+                  post.code = decompressed;
+                })
+                .catch(err => {
+                  console.error("Decompression failed for local post", post.id, err);
+                })
+            );
+          }
+        });
+        
+        const runCallback = () => {
+          posts.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+          callback(posts);
+        };
+        
+        if (promises.length > 0) {
+          Promise.all(promises).then(runCallback);
+        } else {
+          runCallback();
+        }
+        
         return () => {
           postListeners = postListeners.filter(c => c !== callback);
         };
       }
     },
     
-    savePost: function(post) {
+    savePost: async function(post) {
       post.createdAt = Date.now();
-      if (useFirestore && db) {
+      
+      const hasCompression = typeof CompressionStream !== 'undefined' && typeof DecompressionStream !== 'undefined';
+      if (hasCompression && post.code && post.code.length > 20000) {
+        try {
+          console.log("Compressing post code...", post.code.length, "chars");
+          const compressed = await compressString(post.code);
+          console.log("Compressed to", compressed.length, "chars");
+          post.compressedCode = compressed;
+          post.code = ""; // Clear uncompressed code to save space
+        } catch (e) {
+          console.error("Compression failed, saving raw code:", e);
+        }
+      }
+
+      // Check final post size
+      const postStr = JSON.stringify(post);
+      const isTooLargeForFirestore = postStr.length > 1000000; // ~1MB
+      
+      if (isTooLargeForFirestore) {
+        const sizeInMb = (postStr.length / (1024 * 1024)).toFixed(2);
+        alert(window.isFR || (typeof currentLang !== 'undefined' && currentLang === 'fr')
+          ? `⚠️ Scène trop volumineuse (${sizeInMb} Mo) ! Elle dépasse la limite de 1 Mo pour le partage en ligne.\nElle sera sauvegardée uniquement dans votre stockage local de navigateur.`
+          : `⚠️ Scene too large (${sizeInMb} MB)! It exceeds the 1 MB database limit for online sharing.\nIt will only be saved to your local browser storage.`);
+      }
+
+      if (useFirestore && db && !isTooLargeForFirestore) {
         db.collection('devsocial_posts').doc(String(post.id)).set(post)
           .catch(err => {
             console.error("Error saving post to Firestore, saving to LocalStorage instead:", err);
-            let posts = [];
-            try { posts = JSON.parse(localStorage.getItem('devsocial_posts') || '[]'); } catch (e) {}
-            posts = posts.filter(p => String(p.id) !== String(post.id));
-            posts.push(post);
-            localStorage.setItem('devsocial_posts', JSON.stringify(posts));
-            notifyPostListeners();
+            saveToLocal(post);
           });
       } else {
+        saveToLocal(post);
+      }
+
+      function saveToLocal(p) {
         let posts = [];
         try { posts = JSON.parse(localStorage.getItem('devsocial_posts') || '[]'); } catch (e) {}
-        posts = posts.filter(p => String(p.id) !== String(post.id));
-        posts.push(post);
-        localStorage.setItem('devsocial_posts', JSON.stringify(posts));
+        posts = posts.filter(item => String(item.id) !== String(p.id));
+        posts.push(p);
+        try {
+          localStorage.setItem('devsocial_posts', JSON.stringify(posts));
+        } catch (e) {
+          if (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+            alert(window.isFR || (typeof currentLang !== 'undefined' && currentLang === 'fr')
+              ? "⚠️ Espace local insuffisant ! Le modèle est trop volumineux pour votre navigateur."
+              : "⚠️ Local storage quota exceeded! The model is too large for your browser.");
+          } else {
+            console.error("LocalStorage save error:", e);
+          }
+        }
         notifyPostListeners();
       }
     },
