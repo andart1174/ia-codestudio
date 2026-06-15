@@ -47,11 +47,9 @@
   from = "/devsocial%20ai%20hub/*"
   to = "/DEVSOCIAL%20AI%20HUB/:splat"
   status = 301
-  force = true
 
 [[redirects]]
   from = "/devsocial ai hub/*"
   to = "/DEVSOCIAL%20AI%20HUB/:splat"
   status = 301
-  force = true
 
