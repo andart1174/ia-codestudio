@@ -687,7 +687,7 @@
         
         <!-- URL Copy Box -->
         <div style="display: flex; gap: 8px; margin: 15px 0 20px;">
-          <input type="text" id="share-link-input" readonly style="flex: 1; padding: 10px 14px; background: var(--bg-deep); border: 1px solid var(--border); border-radius: var(--radius-sm); color: #fff; font-size: 13px;">
+          <input type="text" id="share-link-input" readonly onclick="this.select()" style="flex: 1; padding: 10px 14px; background: var(--bg-deep); border: 1px solid var(--border); border-radius: var(--radius-sm); color: #fff; font-size: 13px;">
           <button class="tbtn green" id="btn-copy-share-link" style="margin: 0; padding: 10px 16px; font-size: 13px; display: flex; align-items: center; gap: 6px;">
              Copy
           </button>
@@ -696,7 +696,7 @@
         <!-- Embed Code Box -->
         <p id="lbl-embed-title" style="font-size:12px; color:var(--text-2); line-height:1.5; margin-top: 15px;">Embed this 3D widget on your website:</p>
         <div style="display: flex; gap: 8px; margin: 10px 0 20px;">
-          <input type="text" id="embed-code-input" readonly style="flex: 1; padding: 10px 14px; background: var(--bg-deep); border: 1px solid var(--border); border-radius: var(--radius-sm); color: #fff; font-size: 13px;">
+          <input type="text" id="embed-code-input" readonly onclick="this.select()" style="flex: 1; padding: 10px 14px; background: var(--bg-deep); border: 1px solid var(--border); border-radius: var(--radius-sm); color: #fff; font-size: 13px;">
           <button class="tbtn green" id="btn-copy-embed-code" style="margin: 0; padding: 10px 16px; font-size: 13px; display: flex; align-items: center; gap: 6px;">
              Copy
           </button>
@@ -952,6 +952,33 @@
     };
 
     let currentLang = 'fr';
+
+    // Helper for robust clipboard copying with fallback
+    function copyTextToClipboard(text) {
+      if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+        return navigator.clipboard.writeText(text);
+      } else {
+        return new Promise((resolve, reject) => {
+          try {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+            textArea.style.opacity = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            const successful = document.execCommand('copy');
+            document.body.removeChild(textArea);
+            if (successful) resolve();
+            else reject(new Error("Copy command failed"));
+          } catch (err) {
+            reject(err);
+          }
+        });
+      }
+    }
 
     function updateUI(lang) {
       currentLang = lang;
@@ -1282,8 +1309,11 @@
       }
       const code = document.getElementById('code-editor').value;
       if (!code) return;
-      navigator.clipboard.writeText(code);
-      toast(i18n[currentLang].copied);
+      copyTextToClipboard(code).then(() => {
+        toast(i18n[currentLang].copied);
+      }).catch(err => {
+        console.error("Failed to copy code:", err);
+      });
     });
 
     document.getElementById('btn-dl-html').addEventListener('click', () => {
@@ -1459,25 +1489,31 @@
     // Copy link button
     document.getElementById('btn-copy-share-link').addEventListener('click', () => {
       const input = document.getElementById('share-link-input');
-      navigator.clipboard.writeText(input.value);
-      const btn = document.getElementById('btn-copy-share-link');
-      const origText = btn.innerHTML;
-      btn.innerHTML = `<i class="fa-solid fa-check"></i> ` + (currentLang === 'fr' ? 'Copié !' : 'Copied!');
-      setTimeout(() => {
-        btn.innerHTML = origText;
-      }, 2000);
+      copyTextToClipboard(input.value).then(() => {
+        const btn = document.getElementById('btn-copy-share-link');
+        const origText = btn.innerHTML;
+        btn.innerHTML = `<i class="fa-solid fa-check"></i> ` + (currentLang === 'fr' ? 'Copié !' : 'Copied!');
+        setTimeout(() => {
+          btn.innerHTML = origText;
+        }, 2000);
+      }).catch(err => {
+        console.error("Failed to copy link:", err);
+      });
     });
 
     // Copy embed code button
     document.getElementById('btn-copy-embed-code').addEventListener('click', () => {
       const input = document.getElementById('embed-code-input');
-      navigator.clipboard.writeText(input.value);
-      const btn = document.getElementById('btn-copy-embed-code');
-      const origText = btn.innerHTML;
-      btn.innerHTML = `<i class="fa-solid fa-check"></i> ` + (currentLang === 'fr' ? 'Copié !' : 'Copied!');
-      setTimeout(() => {
-        btn.innerHTML = origText;
-      }, 2000);
+      copyTextToClipboard(input.value).then(() => {
+        const btn = document.getElementById('btn-copy-embed-code');
+        const origText = btn.innerHTML;
+        btn.innerHTML = `<i class="fa-solid fa-check"></i> ` + (currentLang === 'fr' ? 'Copié !' : 'Copied!');
+        setTimeout(() => {
+          btn.innerHTML = origText;
+        }, 2000);
+      }).catch(err => {
+        console.error("Failed to copy embed code:", err);
+      });
     });
 
     // Submit publish

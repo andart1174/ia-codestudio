@@ -420,7 +420,7 @@
     postsContainer.innerHTML = '';
     
     let postsToRender = posts;
-    if (isEmbed && targetPostId) {
+    if (targetPostId) {
       postsToRender = posts.filter(p => String(p.id) === String(targetPostId));
     } else {
       // Exclude unlisted posts from the public feed
@@ -1177,17 +1177,47 @@
         if (e.target === modalSharePost) modalSharePost.classList.remove('active');
       };
     }
+    // Helper for robust clipboard copying with fallback
+    function copyTextToClipboard(text) {
+      if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+        return navigator.clipboard.writeText(text);
+      } else {
+        return new Promise((resolve, reject) => {
+          try {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+            textArea.style.opacity = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            const successful = document.execCommand('copy');
+            document.body.removeChild(textArea);
+            if (successful) resolve();
+            else reject(new Error("Copy command failed"));
+          } catch (err) {
+            reject(err);
+          }
+        });
+      }
+    }
+
     if (btnCopyShareLink && shareLinkInput) {
       btnCopyShareLink.onclick = () => {
-        navigator.clipboard.writeText(shareLinkInput.value);
-        const copyLabel = btnCopyShareLink.querySelector('span');
-        if (copyLabel) {
-          const origText = copyLabel.textContent;
-          copyLabel.textContent = currentLang === 'fr' ? 'Copié !' : 'Copied!';
-          setTimeout(() => {
-            copyLabel.textContent = origText;
-          }, 2000);
-        }
+        copyTextToClipboard(shareLinkInput.value).then(() => {
+          const copyLabel = btnCopyShareLink.querySelector('span');
+          if (copyLabel) {
+            const origText = copyLabel.textContent;
+            copyLabel.textContent = currentLang === 'fr' ? 'Copié !' : 'Copied!';
+            setTimeout(() => {
+              copyLabel.textContent = origText;
+            }, 2000);
+          }
+        }).catch(err => {
+          console.error("Failed to copy:", err);
+        });
       };
     }
 
@@ -1195,15 +1225,18 @@
     const embedCodeInput = document.getElementById('embed-code-input');
     if (btnCopyEmbedCode && embedCodeInput) {
       btnCopyEmbedCode.onclick = () => {
-        navigator.clipboard.writeText(embedCodeInput.value);
-        const copyLabel = btnCopyEmbedCode.querySelector('span');
-        if (copyLabel) {
-          const origText = copyLabel.textContent;
-          copyLabel.textContent = currentLang === 'fr' ? 'Copié !' : 'Copied!';
-          setTimeout(() => {
-            copyLabel.textContent = origText;
-          }, 2000);
-        }
+        copyTextToClipboard(embedCodeInput.value).then(() => {
+          const copyLabel = btnCopyEmbedCode.querySelector('span');
+          if (copyLabel) {
+            const origText = copyLabel.textContent;
+            copyLabel.textContent = currentLang === 'fr' ? 'Copié !' : 'Copied!';
+            setTimeout(() => {
+              copyLabel.textContent = origText;
+            }, 2000);
+          }
+        }).catch(err => {
+          console.error("Failed to copy:", err);
+        });
       };
     }
 
