@@ -1179,28 +1179,33 @@
     }
     // Helper for robust clipboard copying with fallback
     function copyTextToClipboard(text) {
+      function fallbackCopy(resolve, reject) {
+        try {
+          const textArea = document.createElement("textarea");
+          textArea.value = text;
+          textArea.style.top = "0";
+          textArea.style.left = "0";
+          textArea.style.position = "fixed";
+          textArea.style.opacity = "0";
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          const successful = document.execCommand('copy');
+          document.body.removeChild(textArea);
+          if (successful) resolve();
+          else reject(new Error("Copy command failed"));
+        } catch (err) {
+          reject(err);
+        }
+      }
+
       if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
-        return navigator.clipboard.writeText(text);
-      } else {
-        return new Promise((resolve, reject) => {
-          try {
-            const textArea = document.createElement("textarea");
-            textArea.value = text;
-            textArea.style.top = "0";
-            textArea.style.left = "0";
-            textArea.style.position = "fixed";
-            textArea.style.opacity = "0";
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            const successful = document.execCommand('copy');
-            document.body.removeChild(textArea);
-            if (successful) resolve();
-            else reject(new Error("Copy command failed"));
-          } catch (err) {
-            reject(err);
-          }
+        return navigator.clipboard.writeText(text).catch(err => {
+          console.warn("navigator.clipboard.writeText failed, trying fallback:", err);
+          return new Promise(fallbackCopy);
         });
+      } else {
+        return new Promise(fallbackCopy);
       }
     }
 

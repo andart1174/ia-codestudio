@@ -134,7 +134,7 @@ return function() {
     }
   ];
 
-  // 2. Initialize Firebase using the configuration from the portal
+  // 2. Initialize Firebase using the configuration from the portal with robust LocalStorage fallback
   const firebaseConfig = {
     apiKey: "AIzaSyBXJ0LstZF7c3-GI2eDtv6V7vsx0scgXHk",
     authDomain: "ia-codestudio.firebaseapp.com",
@@ -145,83 +145,335 @@ return function() {
     measurementId: "G-YVNWE5Q6KB"
   };
 
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  }
-  const db = firebase.firestore();
+  let useFirestore = false;
+  let db = null;
 
-  // 3. Database Helper Methods API - Firebase Firestore implementation
+  if (typeof window.firebase === 'undefined') {
+    console.warn("Firebase SDK was not loaded (blocked by adblocker?). Setting up mock Firebase & LocalStorage fallback.");
+    window.firebase = {
+      apps: [],
+      initializeApp: function() {
+        return { name: '[MockApp]' };
+      },
+      firestore: function() {
+        const mockQuery = {
+          limit: function() { return this; },
+          orderBy: function() { return this; },
+          where: function() { return this; },
+          get: function() {
+            return Promise.resolve({
+              empty: true,
+              size: 0,
+              docs: [],
+              forEach: function() {}
+            });
+          },
+          doc: function() {
+            return {
+              get: function() {
+                return Promise.resolve({
+                  exists: false,
+                  data: function() { return {}; }
+                });
+              },
+              set: function() { return Promise.resolve(); },
+              update: function() { return Promise.resolve(); },
+              delete: function() { return Promise.resolve(); },
+              onSnapshot: function(callback) {
+                // Return dummy unsubscribe function
+                return function() {};
+              }
+            };
+          },
+          onSnapshot: function(callback) {
+            // Return dummy unsubscribe function
+            return function() {};
+          }
+        };
+
+        return {
+          collection: function() {
+            return mockQuery;
+          }
+        };
+      }
+    };
+    window.firebase.firestore.FieldValue = {
+      increment: function(n) { return n; },
+      arrayUnion: function(val) { return [val]; },
+      serverTimestamp: function() { return new Date(); }
+    };
+  } else {
+    try {
+      if (!window.firebase.apps.length) {
+        window.firebase.initializeApp(firebaseConfig);
+      }
+      db = window.firebase.firestore();
+      useFirestore = true;
+      console.log("Firebase/Firestore initialized successfully.");
+    } catch (e) {
+      console.warn("Firebase initialization failed, falling back to LocalStorage:", e);
+    }
+  }
+
+  // List of subscribers for local storage updates
+  let postListeners = [];
+  let challengeListeners = [];
+  let configListeners = [];
+
+  function notifyPostListeners() {
+    let posts = [];
+    try {
+      posts = JSON.parse(localStorage.getItem('devsocial_posts') || '[]');
+    } catch (e) {
+      console.error("Error parsing posts from localstorage:", e);
+    }
+    if (posts.length === 0) {
+      posts = [...MOCK_POSTS];
+      localStorage.setItem('devsocial_posts', JSON.stringify(posts));
+    }
+    posts.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    postListeners.forEach(cb => {
+      try { cb(posts); } catch(e){}
+    });
+  }
+
+  // 3. Database Helper Methods API - Unified Firebase Firestore & LocalStorage implementation
   window.DevSocialDB = {
     initFirestoreSeed: function() {
-      db.collection('devsocial_posts').limit(1).get().then(snap => {
-        if (snap.empty) {
-          MOCK_POSTS.forEach((post, index) => {
-            // Distribute timestamps to preserve mock order
-            post.createdAt = Date.now() - (index * 3600000);
-            db.collection('devsocial_posts').doc(String(post.id)).set(post)
-              .catch(err => console.error("Error seeding Firestore:", err));
-          });
-        } else {
-          // Force-update the mock posts' code to ensure they are the unwrapped versions
-          MOCK_POSTS.forEach(post => {
-            db.collection('devsocial_posts').doc(String(post.id)).update({
-              code: post.code
-            }).catch(err => console.warn("Could not auto-update mock post code:", err));
-          });
+      if (useFirestore && db) {
+        db.collection('devsocial_posts').limit(1).get().then(snap => {
+          if (snap.empty) {
+            MOCK_POSTS.forEach((post, index) => {
+              post.createdAt = Date.now() - (index * 3600000);
+              db.collection('devsocial_posts').doc(String(post.id)).set(post)
+                .catch(err => console.error("Error seeding Firestore:", err));
+            });
+          } else {
+            MOCK_POSTS.forEach(post => {
+              db.collection('devsocial_posts').doc(String(post.id)).update({
+                code: post.code
+              }).catch(err => console.warn("Could not auto-update mock post code:", err));
+            });
+          }
+        }).catch(err => {
+          console.warn("Firestore collection devsocial_posts is not initialized or accessible. Using LocalStorage fallback.", err);
+          useFirestore = false;
+        });
+      } else {
+        let posts = [];
+        try {
+          posts = JSON.parse(localStorage.getItem('devsocial_posts') || '[]');
+        } catch (e) {}
+        if (posts.length === 0) {
+          posts = [...MOCK_POSTS];
+          localStorage.setItem('devsocial_posts', JSON.stringify(posts));
         }
-      }).catch(err => {
-        console.warn("Firestore collection devsocial_posts is not initialized or accessible. Please check Firestore Security Rules.", err);
-      });
+      }
     },
 
     subscribePosts: function(callback) {
       this.initFirestoreSeed();
-      return db.collection('devsocial_posts')
-               .orderBy('createdAt', 'desc')
-               .onSnapshot(snapshot => {
-                 const postsList = [];
-                 snapshot.forEach(doc => {
-                   postsList.push(doc.data());
+      if (useFirestore && db) {
+        return db.collection('devsocial_posts')
+                 .orderBy('createdAt', 'desc')
+                 .onSnapshot(snapshot => {
+                   const postsList = [];
+                   snapshot.forEach(doc => {
+                     postsList.push(doc.data());
+                   });
+                   callback(postsList);
+                 }, error => {
+                   console.error("Firestore subscription error. Falling back to LocalStorage:", error);
+                   useFirestore = false;
+                   this.subscribePosts(callback);
                  });
-                 callback(postsList);
-               }, error => {
-                 console.error("Firestore subscription error:", error);
-               });
+      } else {
+        postListeners.push(callback);
+        let posts = [];
+        try {
+          posts = JSON.parse(localStorage.getItem('devsocial_posts') || '[]');
+        } catch (e) {}
+        if (posts.length === 0) {
+          posts = [...MOCK_POSTS];
+          localStorage.setItem('devsocial_posts', JSON.stringify(posts));
+        }
+        posts.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        callback(posts);
+        return () => {
+          postListeners = postListeners.filter(c => c !== callback);
+        };
+      }
     },
     
     savePost: function(post) {
       post.createdAt = Date.now();
-      db.collection('devsocial_posts').doc(String(post.id)).set(post)
-        .catch(err => console.error("Error saving post to Firestore:", err));
+      if (useFirestore && db) {
+        db.collection('devsocial_posts').doc(String(post.id)).set(post)
+          .catch(err => {
+            console.error("Error saving post to Firestore, saving to LocalStorage instead:", err);
+            let posts = [];
+            try { posts = JSON.parse(localStorage.getItem('devsocial_posts') || '[]'); } catch (e) {}
+            posts = posts.filter(p => String(p.id) !== String(post.id));
+            posts.push(post);
+            localStorage.setItem('devsocial_posts', JSON.stringify(posts));
+            notifyPostListeners();
+          });
+      } else {
+        let posts = [];
+        try { posts = JSON.parse(localStorage.getItem('devsocial_posts') || '[]'); } catch (e) {}
+        posts = posts.filter(p => String(p.id) !== String(post.id));
+        posts.push(post);
+        localStorage.setItem('devsocial_posts', JSON.stringify(posts));
+        notifyPostListeners();
+      }
     },
     
     likePost: function(postId) {
-      db.collection('devsocial_posts').doc(String(postId)).update({
-        likes: firebase.firestore.FieldValue.increment(1)
-      }).catch(err => console.error("Error liking post in Firestore:", err));
+      if (useFirestore && db) {
+        db.collection('devsocial_posts').doc(String(postId)).update({
+          likes: firebase.firestore.FieldValue.increment(1)
+        }).catch(err => {
+          console.error("Error liking post in Firestore, falling back to LocalStorage:", err);
+          let posts = [];
+          try { posts = JSON.parse(localStorage.getItem('devsocial_posts') || '[]'); } catch (e) {}
+          posts = posts.map(p => {
+            if (String(p.id) === String(postId)) p.likes = (p.likes || 0) + 1;
+            return p;
+          });
+          localStorage.setItem('devsocial_posts', JSON.stringify(posts));
+          notifyPostListeners();
+        });
+      } else {
+        let posts = [];
+        try { posts = JSON.parse(localStorage.getItem('devsocial_posts') || '[]'); } catch (e) {}
+        posts = posts.map(p => {
+          if (String(p.id) === String(postId)) p.likes = (p.likes || 0) + 1;
+          return p;
+        });
+        localStorage.setItem('devsocial_posts', JSON.stringify(posts));
+        notifyPostListeners();
+      }
     },
     
     reportPost: function(postId) {
-      db.collection('devsocial_posts').doc(String(postId)).update({
-        reports: firebase.firestore.FieldValue.increment(1)
-      }).catch(err => console.error("Error reporting post in Firestore:", err));
+      if (useFirestore && db) {
+        db.collection('devsocial_posts').doc(String(postId)).update({
+          reports: firebase.firestore.FieldValue.increment(1)
+        }).catch(err => {
+          console.error("Error reporting post in Firestore, falling back to LocalStorage:", err);
+          let posts = [];
+          try { posts = JSON.parse(localStorage.getItem('devsocial_posts') || '[]'); } catch (e) {}
+          posts = posts.map(p => {
+            if (String(p.id) === String(postId)) p.reports = (p.reports || 0) + 1;
+            return p;
+          });
+          localStorage.setItem('devsocial_posts', JSON.stringify(posts));
+          notifyPostListeners();
+        });
+      } else {
+        let posts = [];
+        try { posts = JSON.parse(localStorage.getItem('devsocial_posts') || '[]'); } catch (e) {}
+        posts = posts.map(p => {
+          if (String(p.id) === String(postId)) p.reports = (p.reports || 0) + 1;
+          return p;
+        });
+        localStorage.setItem('devsocial_posts', JSON.stringify(posts));
+        notifyPostListeners();
+      }
     },
     
     addComment: function(postId, comment) {
-      db.collection('devsocial_posts').doc(String(postId)).update({
-        comments: firebase.firestore.FieldValue.arrayUnion(comment)
-      }).catch(err => console.error("Error adding comment in Firestore:", err));
+      if (useFirestore && db) {
+        db.collection('devsocial_posts').doc(String(postId)).update({
+          comments: firebase.firestore.FieldValue.arrayUnion(comment)
+        }).catch(err => {
+          console.error("Error adding comment in Firestore, falling back to LocalStorage:", err);
+          let posts = [];
+          try { posts = JSON.parse(localStorage.getItem('devsocial_posts') || '[]'); } catch (e) {}
+          posts = posts.map(p => {
+            if (String(p.id) === String(postId)) {
+              if (!p.comments) p.comments = [];
+              p.comments.push(comment);
+            }
+            return p;
+          });
+          localStorage.setItem('devsocial_posts', JSON.stringify(posts));
+          notifyPostListeners();
+        });
+      } else {
+        let posts = [];
+        try { posts = JSON.parse(localStorage.getItem('devsocial_posts') || '[]'); } catch (e) {}
+        posts = posts.map(p => {
+          if (String(p.id) === String(postId)) {
+            if (!p.comments) p.comments = [];
+            p.comments.push(comment);
+          }
+          return p;
+        });
+        localStorage.setItem('devsocial_posts', JSON.stringify(posts));
+        notifyPostListeners();
+      }
     },
     
     deletePost: function(postId) {
-      db.collection('devsocial_posts').doc(String(postId)).delete()
-        .catch(err => console.error("Error deleting post from Firestore:", err));
+      if (useFirestore && db) {
+        db.collection('devsocial_posts').doc(String(postId)).delete()
+          .catch(err => {
+            console.error("Error deleting post from Firestore, falling back to LocalStorage:", err);
+            let posts = [];
+            try { posts = JSON.parse(localStorage.getItem('devsocial_posts') || '[]'); } catch (e) {}
+            posts = posts.filter(p => String(p.id) !== String(postId));
+            localStorage.setItem('devsocial_posts', JSON.stringify(posts));
+            notifyPostListeners();
+          });
+      } else {
+        let posts = [];
+        try { posts = JSON.parse(localStorage.getItem('devsocial_posts') || '[]'); } catch (e) {}
+        posts = posts.filter(p => String(p.id) !== String(postId));
+        localStorage.setItem('devsocial_posts', JSON.stringify(posts));
+        notifyPostListeners();
+      }
     },
     
     subscribeActiveChallenge: function(callback) {
-      db.collection('devsocial_challenges').limit(1).get().then(snap => {
-        if (snap.empty) {
-          const defaultChallenge = {
+      if (useFirestore && db) {
+        db.collection('devsocial_challenges').limit(1).get().then(snap => {
+          if (snap.empty) {
+            const defaultChallenge = {
+              id: "default",
+              title_en: "Procedural Clockwork Wheel",
+              title_fr: "Roue Dentée Rétro",
+              desc_en: "Create a custom animated gear mesh using Three.js logic and share it with the tag #chrono2026.",
+              desc_fr: "Créez un engrenage animé personnalisé avec Three.js et partagez-le avec le hashtag #chrono2026.",
+              expiry: Date.now() + 24 * 3600 * 1000,
+              reward: "7 Days Premium",
+              createdAt: Date.now()
+            };
+            db.collection('devsocial_challenges').doc("default").set(defaultChallenge);
+          }
+        });
+
+        return db.collection('devsocial_challenges')
+                 .orderBy('createdAt', 'desc')
+                 .limit(1)
+                 .onSnapshot(snapshot => {
+                   if (!snapshot.empty) {
+                     let activeChallenge = null;
+                     snapshot.forEach(doc => { activeChallenge = doc.data(); });
+                     callback(activeChallenge);
+                   }
+                 }, error => {
+                   console.error("Firestore challenge subscription error. Falling back to LocalStorage:", error);
+                   useFirestore = false;
+                   this.subscribeActiveChallenge(callback);
+                 });
+      } else {
+        challengeListeners.push(callback);
+        let challenge = null;
+        try { challenge = JSON.parse(localStorage.getItem('devsocial_active_challenge') || 'null'); } catch(e){}
+        if (!challenge) {
+          challenge = {
             id: "default",
             title_en: "Procedural Clockwork Wheel",
             title_fr: "Roue Dentée Rétro",
@@ -231,36 +483,45 @@ return function() {
             reward: "7 Days Premium",
             createdAt: Date.now()
           };
-          db.collection('devsocial_challenges').doc("default").set(defaultChallenge);
+          localStorage.setItem('devsocial_active_challenge', JSON.stringify(challenge));
         }
-      });
-
-      return db.collection('devsocial_challenges')
-               .orderBy('createdAt', 'desc')
-               .limit(1)
-               .onSnapshot(snapshot => {
-                 if (!snapshot.empty) {
-                   let activeChallenge = null;
-                   snapshot.forEach(doc => { activeChallenge = doc.data(); });
-                   callback(activeChallenge);
-                 }
-               }, error => {
-                 console.error("Firestore challenge subscription error:", error);
-               });
+        callback(challenge);
+        return () => {
+          challengeListeners = challengeListeners.filter(c => c !== callback);
+        };
+      }
     },
 
     subscribeGlobalConfig: function(callback) {
-      db.collection('admin_config').doc('global').get().then(doc => {
-        if (!doc.exists) {
-          db.collection('admin_config').doc('global').set({ profanityFilter: false });
-        }
-      });
+      if (useFirestore && db) {
+        db.collection('admin_config').doc('global').get().then(doc => {
+          if (!doc.exists) {
+            db.collection('admin_config').doc('global').set({ profanityFilter: false });
+          }
+        });
 
-      return db.collection('admin_config').doc('global').onSnapshot(doc => {
-        if (doc.exists) {
-          callback(doc.data());
+        return db.collection('admin_config').doc('global').onSnapshot(doc => {
+          if (doc.exists) {
+            callback(doc.data());
+          }
+        }, err => {
+          console.error("Config subscription error. Falling back to LocalStorage:", err);
+          useFirestore = false;
+          this.subscribeGlobalConfig(callback);
+        });
+      } else {
+        configListeners.push(callback);
+        let config = null;
+        try { config = JSON.parse(localStorage.getItem('devsocial_global_config') || 'null'); } catch(e){}
+        if (!config) {
+          config = { profanityFilter: false };
+          localStorage.setItem('devsocial_global_config', JSON.stringify(config));
         }
-      }, err => console.error("Config subscription error:", err));
+        callback(config);
+        return () => {
+          configListeners = configListeners.filter(c => c !== callback);
+        };
+      }
     }
   };
 })();
