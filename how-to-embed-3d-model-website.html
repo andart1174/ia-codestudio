@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Embed Interactive 3D Models on Your Website (Wix, WordPress, HTML) | IA Code Studio</title>
+  <meta name="description" content="Learn how to embed interactive 3D Three.js models on your WordPress, Wix, or custom HTML website using the free 3D embed code generator from IA Code Studio.">
+  <meta name="keywords" content="embed 3d model website, how to embed 3d model, Threejs iframe widget, WordPress 3d viewer, Wix 3d model embed, 3d model embed code generator, free WebGL widget, HTML 3D embed">
+  
+  <!-- OpenGraph Card -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ia-codestudio.com/how-to-embed-3d-model-website.html">
+  <meta property="og:title" content="How to Embed Interactive 3D Models on Your Website">
+  <meta property="og:description" content="Create, export, and embed stunning responsive 3D WebGL models on any website in seconds.">
+  <meta property="og:image" content="https://ia-codestudio.com/logo-ia-codestudio.webp">
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --bg-card: rgba(17, 24, 39, 0.7);
+      --border-glass: rgba(255, 255, 255, 0.08);
+      --color-primary: #6366f1;
+      --color-accent: #ec4899;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --glow-glow: 0 0 30px rgba(99, 102, 241, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 0%, #0f172a 0%, var(--bg-dark) 100%);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 20px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-glass);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .brand h1 {
+      font-size: 20px;
+      font-weight: 700;
+      background: linear-gradient(to right, #fff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-btn {
+      padding: 10px 20px;
+      background: linear-gradient(135deg, var(--color-primary), #4f46e5);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 60px auto;
+      padding: 0 24px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      color: #a5b4fc;
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    h2.main-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      background: linear-gradient(to right, #ffffff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 18px;
+      max-width: 700px;
+      margin: 0 auto 36px;
+    }
+
+    .guide-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: 16px;
+      padding: 40px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      margin-bottom: 40px;
+    }
+
+    h3 {
+      font-size: 24px;
+      margin-bottom: 16px;
+      color: #fff;
+    }
+
+    p {
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      font-size: 15px;
+    }
+
+    ol {
+      margin-left: 20px;
+      margin-bottom: 24px;
+      color: var(--text-muted);
+    }
+
+    ol li {
+      margin-bottom: 12px;
+      padding-left: 8px;
+    }
+
+    ol li strong {
+      color: #fff;
+    }
+
+    .code-block {
+      background: #090d16;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-family: monospace;
+      color: #38bdf8;
+      overflow-x: auto;
+      margin-bottom: 24px;
+      font-size: 13px;
+    }
+
+    .alert {
+      background: rgba(236, 72, 153, 0.05);
+      border: 1px solid rgba(236, 72, 153, 0.2);
+      border-radius: 8px;
+      padding: 16px 20px;
+      color: #f472b6;
+      font-size: 14px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .alert i {
+      font-size: 18px;
+    }
+
+    .cta-container {
+      text-align: center;
+      margin-top: 60px;
+      padding: 40px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(236, 72, 153, 0.05));
+      border: 1px solid var(--border-glass);
+      border-radius: 20px;
+    }
+
+    .cta-container h4 {
+      font-size: 28px;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 24px;
+    }
+
+    .btn-sec {
+      padding: 12px 24px;
+      border: 1px solid var(--border-glass);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-sec:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    footer {
+      border-top: 1px solid var(--border-glass);
+      padding: 40px 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 100px;
+    }
+  </style>
+
+  <!-- JSON-LD Structured Data Schema for Google -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Embed Interactive 3D Three.js Models on Any Website",
+    "description": "A step-by-step guide to embedding responsive 3D WebGL widgets on Wix, WordPress, Shopify, or custom HTML sites.",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "name": "Build your 3D Scene",
+        "text": "Open IA Code Studio, generate or write your Three.js/WebGL scene, compile it, and verify the graphics look correct."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Click Share",
+        "text": "Click the 'Share Scene' button in the toolbar. Enter your nickname and caption, then publish to the feed."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Copy the Embed Code",
+        "text": "Locate the 'Embed this 3D widget' text box in the Share modal and copy the generated iframe HTML code snippet."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Insert into Website",
+        "text": "Paste the copied HTML iframe code into the HTML/Custom Embed box of your WordPress post, Wix editor, or Shopify page."
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="brand">
+      <div class="brand-logo"><i class="fa-solid fa-cubes"></i></div>
+      <h1>IA Code Studio</h1>
+    </a>
+    <a href="STUDIO 3D 4D PRO/index.html" class="nav-btn">Start Coder 🚀</a>
+  </header>
+
+  <main>
+    <div class="hero">
+      <span class="badge"><i class="fa-solid fa-code"></i> Developer Tutorial</span>
+      <h2 class="main-title">How to Embed Interactive 3D Models on Your Website</h2>
+      <p class="subtitle">A step-by-step guide to embedding responsive WebGL Three.js scenes on Wix, WordPress, Squarespace, or custom HTML pages in seconds—no complex libraries required.</p>
+    </div>
+
+    <div class="guide-card">
+      <h3>Why Embed 3D Web Widgets?</h3>
+      <p>Adding interactive 3D elements to your homepage or landing page dramatically increases user session durations, conversion rates, and brand memorability. Instead of using static screenshots, WebGL lets your visitors rotate, zoom, and interact with your 3D models live on their screens.</p>
+      
+      <div class="alert">
+        <i class="fa-solid fa-circle-info"></i>
+        <span><strong>Pro Tip:</strong> Widgets built on IA Code Studio automatically scale to fit mobile, tablet, and desktop screens natively.</span>
+      </div>
+    </div>
+
+    <div class="guide-card">
+      <h3>Step-by-Step Embedding Guide</h3>
+      <ol>
+        <li><strong>Create or Edit your Scene:</strong> Visit the <a href="STUDIO 3D 4D PRO/index.html" style="color:var(--color-primary);text-decoration:none;font-weight:600;">3D Studio Pro</a> and prompt the AI to code a 3D structure, or write custom Three.js code inside the editor.</li>
+        <li><strong>Publish to Feed:</strong> Click the <strong>Share Scene</strong> button in the top toolbar. Enter a title and description, then click publish.</li>
+        <li><strong>Copy the Embed Snippet:</strong> Once published, copy the HTML iframe code generated under the header <em>"Embed this 3D widget on your website"</em>.</li>
+        <li><strong>Paste the Code:</strong> Go to your website administration panel (e.g. WordPress, Wix, or Shopify editor), add an "HTML Code" or "Embed Widget" block, and paste the code directly inside it.</li>
+      </ol>
+
+      <p style="margin-bottom: 10px;">The copied code will look similar to this:</p>
+      <div class="code-block">
+&lt;iframe src="https://ia-codestudio.com/DEVSOCIAL%20AI%20HUB/index.html?post=YOUR_POST_ID&amp;embed=true" width="100%" height="450" style="border:none; border-radius:12px; box-shadow: 0 4px 30px rgba(0,0,0,0.35);"&gt;&lt;/iframe&gt;
+      </div>
+    </div>
+
+    <div class="guide-card">
+      <h3>Platform Integrations</h3>
+      
+      <h4 style="color:#fff; margin-bottom:10px; font-size:16px;">WordPress:</h4>
+      <p>Inside the Gutenberg editor, add a <strong>Custom HTML</strong> block and paste your iframe code inside. Preview or update your page to see your live 3D element rendering instantly.</p>
+
+      <h4 style="color:#fff; margin-bottom:10px; font-size:16px;">Wix:</h4>
+      <p>Open the editor, click <strong>Add (+)</strong> &gt; <strong>Embed Code</strong> &gt; <strong>Embed HTML</strong>. Paste the iframe code, resize the container block to your preference, and hit publish.</p>
+
+      <h4 style="color:#fff; margin-bottom:10px; font-size:16px;">Custom HTML / React / Next.js:</h4>
+      <p>Paste the iframe code directly inside your JSX or HTML body. Feel free to modify the width, height, or CSS styles inline to customize the viewport margins.</p>
+    </div>
+
+    <div class="cta-container">
+      <h4>Ready to generate your first 3D Widget?</h4>
+      <p>Use our AI-assisted 3D builder to prototype, refine, and compile animations in real time.</p>
+      <div class="btn-group">
+        <a href="STUDIO 3D 4D PRO/index.html" class="nav-btn">Launch 3D Studio</a>
+        <a href="DEVSOCIAL AI HUB/index.html" class="btn-sec">Explore Feed</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>v1.0 &copy; 2026 IA Code Studio. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
