@@ -422,6 +422,9 @@
     let postsToRender = posts;
     if (isEmbed && targetPostId) {
       postsToRender = posts.filter(p => String(p.id) === String(targetPostId));
+    } else {
+      // Exclude unlisted posts from the public feed
+      postsToRender = posts.filter(p => p.unlisted !== true);
     }
 
     if (isEmbed && postsToRender.length === 0) {
@@ -527,8 +530,8 @@
   function renderGallery() {
     galleryContainer.innerHTML = '';
     
-    // Sort posts by popularity (likes)
-    const sorted = [...posts].sort((a, b) => b.likes - a.likes);
+    // Sort posts by popularity (likes) and exclude unlisted
+    const sorted = [...posts].filter(p => p.unlisted !== true).sort((a, b) => b.likes - a.likes);
     
     sorted.forEach(post => {
       const item = document.createElement('div');

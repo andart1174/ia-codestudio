@@ -476,6 +476,51 @@
       box-shadow: var(--glow);
       transform: translateY(-2px);
     }
+    .share-triage-card {
+      max-width: 480px !important;
+    }
+    .triage-body {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 20px !important;
+    }
+    .triage-option-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+    }
+    .triage-option-card:hover {
+      background: rgba(99, 102, 241, 0.08);
+      border-color: var(--border-glow);
+      transform: translateY(-2px);
+      box-shadow: var(--glow);
+    }
+    .triage-option-card .option-icon {
+      font-size: 24px;
+      color: #818cf8;
+      width: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .triage-option-card .option-info h4 {
+      margin-bottom: 4px;
+      font-size: 14px;
+      color: #fff;
+    }
+    .triage-option-card .option-info p {
+      font-size: 11.5px;
+      color: var(--text-2);
+      line-height: 1.4;
+    }
   </style>
 </head>
 <body>
@@ -593,6 +638,39 @@
       <div class="modal-footer">
         <button class="tbtn" id="btn-cancel-publish">Cancel</button>
         <button class="tbtn green" id="btn-submit-publish">Publish Now 🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHARE TRIAGE MODAL -->
+  <div class="modal-overlay" id="modal-share-triage">
+    <div class="modal-card share-triage-card">
+      <div class="modal-header">
+        <h3 id="lbl-triage-title">Share & Export Scene</h3>
+        <button class="modal-close" id="btn-close-triage"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body triage-body">
+        <div class="triage-option-card" id="opt-triage-feed">
+          <div class="option-icon"><i class="fa-solid fa-users"></i></div>
+          <div class="option-info">
+            <h4 id="lbl-triage-opt1-title">Publish to Community Feed</h4>
+            <p id="lbl-triage-opt1-desc">Publish publicly on the DevSocial Feed to show off your creation and earn reputation XP.</p>
+          </div>
+        </div>
+        <div class="triage-option-card" id="opt-triage-direct">
+          <div class="option-icon"><i class="fa-solid fa-link"></i></div>
+          <div class="option-info">
+            <h4 id="lbl-triage-opt2-title">Direct Social Share & Embed</h4>
+            <p id="lbl-triage-opt2-desc">Instantly get share links and iframe embed code snippets without posting to the public feed (unlisted).</p>
+          </div>
+        </div>
+        <div class="triage-option-card" id="opt-triage-gist">
+          <div class="option-icon"><i class="fa-brands fa-github"></i></div>
+          <div class="option-info">
+            <h4 id="lbl-triage-opt3-title">Export to GitHub Gist</h4>
+            <p id="lbl-triage-opt3-desc">Save the raw Three.js code as a Gist directly under your personal GitHub profile.</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -804,7 +882,14 @@
         gistSuccess: "🚀 Code exported to GitHub Gist! Opening in a new tab...",
         gistError: "❌ Failed to export to GitHub Gist. Please verify your token and network connection.",
         gistTokenSaved: "✅ GitHub token saved successfully!",
-        tokenLabel: "GitHub Access Token (PAT)"
+        tokenLabel: "GitHub Access Token (PAT)",
+        triageTitle: "Share & Export 3D Scene",
+        triageOpt1Title: "🚀 Publish to Community Feed",
+        triageOpt1Desc: "Share your creation with the developer community, get likes/comments, and climb the reputation leaderboard.",
+        triageOpt2Title: "🌐 Direct Social Share & Embed",
+        triageOpt2Desc: "Instantly generate your social sharing links and iframe embed code snippets without public listing (unlisted).",
+        triageOpt3Title: "💾 Export to GitHub Gist",
+        triageOpt3Desc: "Save the raw, standalone Three.js code as a Gist directly under your personal GitHub profile."
       },
       fr: {
         title: "Studio 3D/4D Pro — 2D VERS 3D",
@@ -855,7 +940,14 @@
         gistSuccess: "🚀 Code exporté vers GitHub Gist ! Ouverture dans un nouvel onglet...",
         gistError: "❌ Échec de l'exportation vers GitHub Gist. Veuillez vérifier votre jeton et votre connexion réseau.",
         gistTokenSaved: "✅ Jeton GitHub sauvegardé avec succès !",
-        tokenLabel: "Jeton d'accès GitHub (PAT)"
+        tokenLabel: "Jeton d'accès GitHub (PAT)",
+        triageTitle: "Partager & Exporter la Scène 3D",
+        triageOpt1Title: "🚀 Publier sur le Feed Communautaire",
+        triageOpt1Desc: "Partagez publiquement avec la communauté des développeurs, recevez des likes/commentaires et progressez au classement.",
+        triageOpt2Title: "🌐 Partage Direct & Intégration",
+        triageOpt2Desc: "Générez instantanément vos liens de partage social et codes d'intégration iframe sans publication publique (nelisté).",
+        triageOpt3Title: "💾 Exporter vers GitHub Gist",
+        triageOpt3Desc: "Sauvegardez le code Three.js brut autonome sous forme de Gist directement sur votre profil GitHub personnel."
       }
     };
 
@@ -907,6 +999,14 @@
       const lblTokenLabel = document.getElementById('lbl-token-label'); if (lblTokenLabel) lblTokenLabel.textContent = t.tokenLabel;
       const btnCancelGistModal = document.getElementById('btn-cancel-gist-modal'); if (btnCancelGistModal) btnCancelGistModal.textContent = t.gistCancel;
       const btnSaveGistModal = document.getElementById('btn-save-gist-modal'); if (btnSaveGistModal) btnSaveGistModal.textContent = t.gistSave;
+
+      const lblTriageTitle = document.getElementById('lbl-triage-title'); if (lblTriageTitle) lblTriageTitle.textContent = t.triageTitle;
+      const lblTriageOpt1Title = document.getElementById('lbl-triage-opt1-title'); if (lblTriageOpt1Title) lblTriageOpt1Title.textContent = t.triageOpt1Title;
+      const lblTriageOpt1Desc = document.getElementById('lbl-triage-opt1-desc'); if (lblTriageOpt1Desc) lblTriageOpt1Desc.textContent = t.triageOpt1Desc;
+      const lblTriageOpt2Title = document.getElementById('lbl-triage-opt2-title'); if (lblTriageOpt2Title) lblTriageOpt2Title.textContent = t.triageOpt2Title;
+      const lblTriageOpt2Desc = document.getElementById('lbl-triage-opt2-desc'); if (lblTriageOpt2Desc) lblTriageOpt2Desc.textContent = t.triageOpt2Desc;
+      const lblTriageOpt3Title = document.getElementById('lbl-triage-opt3-title'); if (lblTriageOpt3Title) lblTriageOpt3Title.textContent = t.triageOpt3Title;
+      const lblTriageOpt3Desc = document.getElementById('lbl-triage-opt3-desc'); if (lblTriageOpt3Desc) lblTriageOpt3Desc.textContent = t.triageOpt3Desc;
       
       if (window.CodeCollabLive) window.CodeCollabLive.refreshLang();
       if (window.IAGuideBot) window.IAGuideBot.refreshLang();
@@ -1207,9 +1307,10 @@
     // 🚀 Publish to Feed Logic
     const modalPublish = document.getElementById('modal-publish-feed');
     const modalShare = document.getElementById('modal-share-post');
+    const modalTriage = document.getElementById('modal-share-triage');
     
     document.getElementById('btn-publish-feed').addEventListener('click', () => {
-      // Check if session exists (user must be logged in to post)
+      // Check if session exists (user must be logged in to share)
       const session = localStorage.getItem('genius_session');
       if (!session) {
         alert(currentLang === 'fr' 
@@ -1227,8 +1328,24 @@
         toast(currentLang === 'fr' ? '❌ Code vide. Veuillez d\'abord générer une scène !' : '❌ Code is empty. Please generate a scene first!');
         return;
       }
+
+      // Open Triage Modal first
+      modalTriage.classList.add('active');
+    });
+
+    // Close triage modal
+    document.getElementById('btn-close-triage').addEventListener('click', () => {
+      modalTriage.classList.remove('active');
+    });
+    modalTriage.addEventListener('click', (e) => {
+      if (e.target === modalTriage) modalTriage.classList.remove('active');
+    });
+
+    // Triage Option 1: Publish to Community Feed
+    document.getElementById('opt-triage-feed').addEventListener('click', () => {
+      modalTriage.classList.remove('active');
       
-      // Auto-prefill nickname
+      const session = localStorage.getItem('genius_session');
       try {
         const user = JSON.parse(session);
         if (user && user.name) {
@@ -1236,9 +1353,89 @@
         }
       } catch(e){}
 
-      // Open modal
       modalPublish.classList.add('active');
     });
+
+    // Triage Option 2: Direct Social Share & Embed (Unlisted)
+    document.getElementById('opt-triage-direct').addEventListener('click', () => {
+      shareUnlisted();
+    });
+
+    // Triage Option 3: Export to GitHub Gist
+    document.getElementById('opt-triage-gist').addEventListener('click', () => {
+      modalTriage.classList.remove('active');
+      document.getElementById('btn-export-gist').click();
+    });
+
+    function shareUnlisted() {
+      if (window.SketchExtruder && typeof window.SketchExtruder.exportScene === 'function') {
+        window.SketchExtruder.exportScene();
+      }
+      const code = document.getElementById('code-editor').value;
+      if (!code) {
+        toast(currentLang === 'fr' ? "❌ Code vide. Veuillez d'abord générer une scène !" : "❌ Code is empty. Please generate a scene first!");
+        return;
+      }
+
+      // Retrieve session to get email and roles
+      const session = localStorage.getItem('genius_session');
+      let sessionUser = {};
+      if (session) {
+        try {
+          sessionUser = JSON.parse(session);
+        } catch(e){}
+      }
+
+      const nickname = sessionUser.name || (currentLang === 'fr' ? "Créateur" : "Creator");
+      const postId = Date.now();
+      const post = {
+        id: postId,
+        user: nickname,
+        userEmail: sessionUser.email || "anonymous@example.com",
+        userAvatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(nickname)}`,
+        userTag: sessionUser.role === 'Admin' ? 'ADMIN Maker' : 'Premium Maker',
+        caption_en: "Shared 3D scene (direct link)",
+        caption_fr: "Scène 3D partagée (lien direct)",
+        likes: 0,
+        comments: [],
+        preset: "none",
+        hasThree: true,
+        code: code,
+        createdAt: postId,
+        unlisted: true // 🔒 Exclude from public feed
+      };
+
+      // Save using DevSocialDB
+      if (window.DevSocialDB && typeof window.DevSocialDB.savePost === 'function') {
+        window.DevSocialDB.savePost(post);
+        toast(currentLang === 'fr' ? "✅ Prêt pour le partage !" : "✅ Ready for sharing!");
+        
+        modalTriage.classList.remove('active');
+        
+        // Populate share modal
+        const baseOrigin = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1') ? window.location.origin : 'https://ia-codestudio.com';
+        const shareUrl = `${baseOrigin}/devsocial-ai-hub/index.html?post=${postId}`;
+        document.getElementById('share-link-input').value = shareUrl;
+
+        const embedUrl = `${baseOrigin}/devsocial-ai-hub/index.html?post=${postId}&embed=true`;
+        const embedCode = `<iframe src="${embedUrl}" width="100%" height="450" style="border:none; border-radius:12px; box-shadow: 0 4px 30px rgba(0,0,0,0.35);"></iframe>`;
+        document.getElementById('embed-code-input').value = embedCode;
+        
+        const shareCaption = currentLang === 'fr' 
+          ? "Découvrez cette animation 3D !"
+          : "Check out this 3D animation!";
+          
+        const tweetText = currentLang === 'fr'
+          ? `Regardez cette animation 3D que j'ai codée avec l'IA sur IA Code Studio ! ${shareCaption}`
+          : `Check out this 3D animation I coded with AI on IA Code Studio! ${shareCaption}`;
+          
+        document.getElementById('share-twitter-btn').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}`;
+        document.getElementById('share-reddit-btn').href = `https://reddit.com/submit?title=${encodeURIComponent(shareCaption)}&url=${encodeURIComponent(shareUrl)}`;
+        document.getElementById('share-facebook-btn').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+
+        modalShare.classList.add('active');
+      }
+    }
 
     // Close buttons
     document.getElementById('btn-close-publish').addEventListener('click', () => {
