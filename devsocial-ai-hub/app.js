@@ -423,6 +423,18 @@
     if (isEmbed && targetPostId) {
       postsToRender = posts.filter(p => String(p.id) === String(targetPostId));
     }
+
+    if (isEmbed && postsToRender.length === 0) {
+      const errorDiv = document.createElement('div');
+      errorDiv.style.cssText = 'display:flex; flex-direction:column; align-items:center; justify-content:center; width:100vw; height:100vh; color:#fff; font-family:"Outfit", sans-serif; font-size:16px; background:#050815; z-index:9999;';
+      errorDiv.innerHTML = `
+        <span style="font-size:32px; margin-bottom:12px;">🔍</span>
+        <strong style="color:#fff;">3D Widget Not Found</strong>
+        <p style="font-size:13px; color:rgba(255,255,255,0.5); margin-top:6px;">This post may have been deleted or moved.</p>
+      `;
+      postsContainer.appendChild(errorDiv);
+      return;
+    }
     
     postsToRender.forEach(post => {
       const showDelete = currentUser && (currentUser.role === 'Admin' || currentUser.email === post.userEmail);
