@@ -531,6 +531,10 @@
   </div>
 
   <header class="topbar">
+    <a href="../index.html" class="tbtn" id="btn-return-portal" style="text-decoration: none; border-color: rgba(239, 68, 68, 0.4); color: #f87171; background: rgba(239, 68, 68, 0.05); display: inline-flex; align-items: center; gap: 6px; margin-right: 10px; flex-shrink: 0;">
+      <i class="fa-solid fa-arrow-left"></i>
+      <span id="lbl-return-portal">Return to Portal</span>
+    </a>
     <a class="brand" href="#">
       <div class="brand-icon"></div>
       <div class="brand-name" id="lbl-title">Studio 3D/4D — 2D TO 3D</div>
@@ -889,7 +893,8 @@
         triageOpt2Title: "🌐 Direct Social Share & Embed",
         triageOpt2Desc: "Instantly generate your social sharing links and iframe embed code snippets without public listing (unlisted).",
         triageOpt3Title: "💾 Export to GitHub Gist",
-        triageOpt3Desc: "Save the raw, standalone Three.js code as a Gist directly under your personal GitHub profile."
+        triageOpt3Desc: "Save the raw, standalone Three.js code as a Gist directly under your personal GitHub profile.",
+        returnPortal: "Return to Portal"
       },
       fr: {
         title: "Studio 3D/4D Pro — 2D VERS 3D",
@@ -947,7 +952,8 @@
         triageOpt2Title: "🌐 Partage Direct & Intégration",
         triageOpt2Desc: "Générez instantanément vos liens de partage social et codes d'intégration iframe sans publication publique (nelisté).",
         triageOpt3Title: "💾 Exporter vers GitHub Gist",
-        triageOpt3Desc: "Sauvegardez le code Three.js brut autonome sous forme de Gist directement sur votre profil GitHub personnel."
+        triageOpt3Desc: "Sauvegardez le code Three.js brut autonome sous forme de Gist directement sur votre profil GitHub personnel.",
+        returnPortal: "Retour au Portail"
       }
     };
 
@@ -988,6 +994,7 @@
       
       const t = i18n[lang];
       document.getElementById('lbl-title').textContent = t.title;
+      const lblReturnPortal = document.getElementById('lbl-return-portal'); if (lblReturnPortal) lblReturnPortal.textContent = t.returnPortal;
       document.getElementById('lbl-design').textContent = t.design;
       document.getElementById('lbl-video').textContent = t.video;
       document.getElementById('lbl-back').textContent = t.back;
