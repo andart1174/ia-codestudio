@@ -7,8 +7,7 @@
     # ✅ Forces HTTPS for 1 year — +20pts
     Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
 
-    # ✅ Prevents clickjacking — +15pts
-    X-Frame-Options = "SAMEORIGIN"
+    # ✅ Allow embedding on external sites (removed X-Frame-Options SAMEORIGIN)
 
     # ✅ Prevents MIME sniffing — +10pts
     X-Content-Type-Options = "nosniff"
@@ -42,4 +41,17 @@
   for = "*.html"
   [headers.values]
     Cache-Control = "no-cache, no-store, must-revalidate"
+
+# Redirect lowercase DevSocial URL to uppercase folder to prevent 404
+[[redirects]]
+  from = "/devsocial%20ai%20hub/*"
+  to = "/DEVSOCIAL%20AI%20HUB/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/devsocial ai hub/*"
+  to = "/DEVSOCIAL%20AI%20HUB/:splat"
+  status = 301
+  force = true
 
