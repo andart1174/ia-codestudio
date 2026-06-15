@@ -562,7 +562,7 @@
 
         const watermark = document.createElement('a');
         const baseOrigin = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1') ? window.location.origin : 'https://ia-codestudio.com';
-        watermark.href = `${baseOrigin}/DEVSOCIAL%20AI%20HUB/index.html?post=${postId}`;
+        watermark.href = `${baseOrigin}/devsocial-ai-hub/index.html?post=${postId}`;
         watermark.target = '_blank';
         watermark.className = 'embed-watermark';
         watermark.innerHTML = `✨ Powered by IA Code Studio`;
@@ -887,7 +887,7 @@
     if (!post) return;
 
     const baseOrigin = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1') ? window.location.origin : 'https://ia-codestudio.com';
-    const url = `${baseOrigin}/DEVSOCIAL%20AI%20HUB/index.html?post=${postId}`;
+    const url = `${baseOrigin}/devsocial-ai-hub/index.html?post=${postId}`;
     if (shareLinkInput) shareLinkInput.value = url;
 
     const embedUrl = `${url}&embed=true`;

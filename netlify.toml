@@ -42,14 +42,46 @@
   [headers.values]
     Cache-Control = "no-cache, no-store, must-revalidate"
 
-# Redirect lowercase DevSocial URL to uppercase folder to prevent 404
+# Redirect old DevSocial URL (with spaces, encoded, or uppercase) to lowercase hyphenated path
 [[redirects]]
   from = "/devsocial%20ai%20hub/*"
-  to = "/DEVSOCIAL%20AI%20HUB/:splat"
+  to = "/devsocial-ai-hub/:splat"
   status = 301
 
 [[redirects]]
   from = "/devsocial ai hub/*"
-  to = "/DEVSOCIAL%20AI%20HUB/:splat"
+  to = "/devsocial-ai-hub/:splat"
   status = 301
+
+[[redirects]]
+  from = "/DEVSOCIAL%20AI%20HUB/*"
+  to = "/devsocial-ai-hub/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/DEVSOCIAL AI HUB/*"
+  to = "/devsocial-ai-hub/:splat"
+  status = 301
+
+# Redirect old Studio 3D URL (with spaces, encoded, or uppercase) to lowercase hyphenated path
+[[redirects]]
+  from = "/studio%203d%204d%20pro/*"
+  to = "/studio-3d-4d-pro/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/studio 3d 4d pro/*"
+  to = "/studio-3d-4d-pro/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/STUDIO%203D%204D%20PRO/*"
+  to = "/studio-3d-4d-pro/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/STUDIO 3D 4D PRO/*"
+  to = "/studio-3d-4d-pro/:splat"
+  status = 301
+
 
