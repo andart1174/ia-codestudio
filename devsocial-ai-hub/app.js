@@ -1895,6 +1895,31 @@ htmlContent = htmlContent + injectedScript;
   }
   return htmlContent;
 }
+
+  async function updateRoomDocument(fields) {
+    if (!activeRoomId || typeof firebase === 'undefined') return;
+    const db = firebase.firestore();
+    
+    // If code is present and is large, compress it!
+    if (fields.code && fields.code.length > 20000 && window.DevSocialDB && typeof window.DevSocialDB._compress === 'function') {
+      try {
+        console.log("Compressing room code...", fields.code.length, "chars");
+        const compressed = await window.DevSocialDB._compress(fields.code);
+        console.log("Compressed room code to", compressed.length, "chars");
+        fields.compressedCode = compressed;
+        fields.code = ""; // Clear uncompressed code
+      } catch (e) {
+        console.error("Room code compression failed:", e);
+      }
+    }
+    
+    fields.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+    fields.updatedBy = currentUser.email;
+    
+    return db.collection('rooms').doc(activeRoomId).set(fields, { merge: true })
+      .catch(e => console.error("Error updating room doc:", e));
+  }
+
   function initDevSocialStudio() {
     const studioTextarea = document.getElementById('studio-code-input');
     if (!studioTextarea) return;
@@ -1921,15 +1946,12 @@ htmlContent = htmlContent + injectedScript;
         
         // Sync to Firestore if in a room
         if (activeRoomId && typeof firebase !== 'undefined') {
-          const db = firebase.firestore();
-          db.collection('rooms').doc(activeRoomId).update({
+          updateRoomDocument({
             mode: modeSelect.value,
-            code: studioTextarea.value,
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            updatedBy: currentUser.email
+            code: studioTextarea.value
           }).then(() => {
             updateSyncStatusText(currentLang === 'fr' ? 'Synchronisé' : 'Synced');
-          }).catch(e => console.error(e));
+          });
         }
       });
     }
@@ -1961,15 +1983,12 @@ htmlContent = htmlContent + injectedScript;
         
         // Sincronizează rularea preview-ului în Firestore
         if (activeRoomId && typeof firebase !== 'undefined') {
-          const db = firebase.firestore();
           const modeSelect = document.getElementById('studio-render-mode');
-          db.collection('rooms').doc(activeRoomId).update({
+          updateRoomDocument({
             code: studioTextarea.value,
             mode: modeSelect ? modeSelect.value : 'threejs',
-            runTrigger: Date.now(),
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            updatedBy: currentUser.email
-          }).catch(e => console.error("Error updating runTrigger:", e));
+            runTrigger: Date.now()
+          });
         }
       };
     }
@@ -2004,16 +2023,13 @@ htmlContent = htmlContent + injectedScript;
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(() => {
         if (activeRoomId && typeof firebase !== 'undefined') {
-          const db = firebase.firestore();
           const modeSelect = document.getElementById('studio-render-mode');
-          db.collection('rooms').doc(activeRoomId).update({
+          updateRoomDocument({
             code: studioTextarea.value,
-            mode: modeSelect ? modeSelect.value : 'threejs',
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            updatedBy: currentUser.email
+            mode: modeSelect ? modeSelect.value : 'threejs'
           }).then(() => {
             updateSyncStatusText(currentLang === 'fr' ? 'Synchronisé' : 'Synced');
-          }).catch(e => console.error(e));
+          });
         }
       }, 600);
     });
@@ -2131,21 +2147,46 @@ htmlContent = htmlContent + injectedScript;
       }
     }, 5000);
 
-    roomUnsubscribe = db.collection('rooms').doc(activeRoomId).onSnapshot(doc => {
+    roomUnsubscribe = db.collection('rooms').doc(activeRoomId).onSnapshot(async doc => {
       if (doc.exists) {
         const data = doc.data();
         const studioTextarea = document.getElementById('studio-code-input');
         const modeSelect = document.getElementById('studio-render-mode');
         
+        let databaseCode = data.code || '';
+        if (data.compressedCode && !data.code) {
+          if (window.DevSocialDB && typeof window.DevSocialDB._decompress === 'function') {
+            try {
+              databaseCode = await window.DevSocialDB._decompress(data.compressedCode);
+            } catch (e) {
+              console.error("Room code decompression failed:", e);
+            }
+          }
+        }
+
         let codeUpdated = false;
         let modeUpdated = false;
         
-        if (data.code && data.code !== studioTextarea.value && data.updatedBy !== currentUser.email) {
+        const isDatabaseCodeDefault = !databaseCode || 
+                                       databaseCode.trim() === defaultThreeJsCode.trim() || 
+                                       databaseCode.trim() === defaultGlslShaderCode.trim();
+        
+        const isLocalCodeCustom = studioTextarea.value.trim() !== defaultThreeJsCode.trim() && 
+                                  studioTextarea.value.trim() !== defaultGlslShaderCode.trim() &&
+                                  studioTextarea.value.trim() !== "";
+
+        if (isDatabaseCodeDefault && isLocalCodeCustom && data.updatedBy !== currentUser.email) {
+          // Upload local custom code to database instead of overwriting it
+          updateRoomDocument({
+            code: studioTextarea.value,
+            mode: modeSelect ? modeSelect.value : 'threejs'
+          });
+        } else if (databaseCode && databaseCode !== studioTextarea.value && data.updatedBy !== currentUser.email) {
           isUpdatingFromRemote = true;
           const start = studioTextarea.selectionStart || 0;
           const end = studioTextarea.selectionEnd || 0;
           
-          studioTextarea.value = data.code;
+          studioTextarea.value = databaseCode;
           updateEditorGutter();
           
           studioTextarea.setSelectionRange(start, end);
@@ -2173,14 +2214,12 @@ htmlContent = htmlContent + injectedScript;
       } else {
         const studioTextarea = document.getElementById('studio-code-input');
         const modeSelect = document.getElementById('studio-render-mode');
-        db.collection('rooms').doc(activeRoomId).set({
+        updateRoomDocument({
           code: studioTextarea.value,
-          mode: modeSelect ? modeSelect.value : 'threejs',
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-          updatedBy: currentUser.email
+          mode: modeSelect ? modeSelect.value : 'threejs'
         }).then(() => {
           updateSyncStatusText(currentLang === 'fr' ? 'Synchronisé' : 'Synced');
-        }).catch(e => console.error(e));
+        });
       }
     }, err => {
       console.error("Firestore room subscription error:", err);

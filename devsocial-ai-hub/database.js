@@ -655,6 +655,9 @@ return function() {
           configListeners = configListeners.filter(c => c !== callback);
         };
       }
-    }
+    },
+    
+    _compress: compressString,
+    _decompress: decompressString
   };
 })();
