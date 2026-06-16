@@ -1449,8 +1449,18 @@
 
       // Save using DevSocialDB
       if (window.DevSocialDB && typeof window.DevSocialDB.savePost === 'function') {
-        window.DevSocialDB.savePost(post);
-        toast(currentLang === 'fr' ? "✅ Prêt pour le partage !" : "✅ Ready for sharing!");
+        window.lastFirestoreError = null;
+        window.lastFirebaseInitError = null;
+        window.DevSocialDB.savePost(post).then((success) => {
+          if (!success) {
+            const errMsg = window.lastFirestoreError || window.lastFirebaseInitError || "Unknown connection error";
+            alert(currentLang === 'fr' 
+              ? `⚠️ Enregistré LOCALEMENT car la synchronisation en ligne a échoué.\nDétails: ${errMsg}`
+              : `⚠️ Saved LOCALLY because online sync failed.\nDetails: ${errMsg}`);
+          } else {
+            toast(currentLang === 'fr' ? "✅ Prêt pour le partage !" : "✅ Ready for sharing!");
+          }
+        });
         
         modalTriage.classList.remove('active');
         
@@ -1572,8 +1582,18 @@
 
       // Save using DevSocialDB
       if (window.DevSocialDB && typeof window.DevSocialDB.savePost === 'function') {
-        window.DevSocialDB.savePost(post);
-        toast(i18n[currentLang].publishedToast);
+        window.lastFirestoreError = null;
+        window.lastFirebaseInitError = null;
+        window.DevSocialDB.savePost(post).then((success) => {
+          if (!success) {
+            const errMsg = window.lastFirestoreError || window.lastFirebaseInitError || "Unknown connection error";
+            alert(currentLang === 'fr' 
+              ? `⚠️ Enregistré LOCALEMENT car la synchronisation en ligne a échoué.\nDétails: ${errMsg}`
+              : `⚠️ Saved LOCALLY because online sync failed.\nDetails: ${errMsg}`);
+          } else {
+            toast(i18n[currentLang].publishedToast);
+          }
+        });
         
         // Hide publish modal
         modalPublish.classList.remove('active');

@@ -150,6 +150,7 @@ return function() {
 
   if (typeof window.firebase === 'undefined') {
     console.warn("Firebase SDK was not loaded (blocked by adblocker?). Setting up mock Firebase & LocalStorage fallback.");
+    window.lastFirebaseInitError = "Firebase SDK was not loaded (check adblocker or internet connection)";
     window.firebase = {
       apps: [],
       initializeApp: function() {
@@ -213,6 +214,7 @@ return function() {
       console.log("Firebase/Firestore initialized successfully.");
     } catch (e) {
       console.warn("Firebase initialization failed, falling back to LocalStorage:", e);
+      window.lastFirebaseInitError = e.message || String(e);
     }
   }
 
@@ -461,19 +463,12 @@ return function() {
       
       if (isTooLargeForFirestore) {
         const sizeInMb = (postStr.length / (1024 * 1024)).toFixed(2);
+        const limitMsgEn = `Scene too large (${sizeInMb} MB)! It exceeds the 1 MB database limit for online sharing.`;
+        const limitMsgFr = `Scène trop volumineuse (${sizeInMb} Mo) ! Elle dépasse la limite de 1 Mo pour le partage en ligne.`;
+        window.lastFirestoreError = window.isFR || (typeof currentLang !== 'undefined' && currentLang === 'fr') ? limitMsgFr : limitMsgEn;
         alert(window.isFR || (typeof currentLang !== 'undefined' && currentLang === 'fr')
-          ? `⚠️ Scène trop volumineuse (${sizeInMb} Mo) ! Elle dépasse la limite de 1 Mo pour le partage en ligne.\nElle sera sauvegardée uniquement dans votre stockage local de navigateur.`
-          : `⚠️ Scene too large (${sizeInMb} MB)! It exceeds the 1 MB database limit for online sharing.\nIt will only be saved to your local browser storage.`);
-      }
-
-      if (useFirestore && db && !isTooLargeForFirestore) {
-        db.collection('devsocial_posts').doc(String(post.id)).set(post)
-          .catch(err => {
-            console.error("Error saving post to Firestore, saving to LocalStorage instead:", err);
-            saveToLocal(post);
-          });
-      } else {
-        saveToLocal(post);
+          ? `⚠️ ${limitMsgFr}\nElle sera sauvegardée uniquement dans votre stockage local de navigateur.`
+          : `⚠️ ${limitMsgEn}\nIt will only be saved to your local browser storage.`);
       }
 
       function saveToLocal(p) {
@@ -493,6 +488,23 @@ return function() {
           }
         }
         notifyPostListeners();
+      }
+
+      if (useFirestore && db && !isTooLargeForFirestore) {
+        return db.collection('devsocial_posts').doc(String(post.id)).set(post)
+          .then(() => {
+            console.log("Post synced online successfully.");
+            return true;
+          })
+          .catch(err => {
+            console.error("Error saving post to Firestore, saving to LocalStorage instead:", err);
+            window.lastFirestoreError = err.message || String(err);
+            saveToLocal(post);
+            return false;
+          });
+      } else {
+        saveToLocal(post);
+        return false;
       }
     },
     

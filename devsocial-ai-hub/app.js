@@ -1020,9 +1020,19 @@
       code: code
     };
 
-    window.DevSocialDB.savePost(newPost);
+    window.lastFirestoreError = null;
+    window.lastFirebaseInitError = null;
+    window.DevSocialDB.savePost(newPost).then((success) => {
+      if (!success) {
+        const errMsg = window.lastFirestoreError || window.lastFirebaseInitError || "Unknown connection error";
+        alert(currentLang === 'fr' 
+          ? `⚠️ Enregistré LOCALEMENT car la synchronisation en ligne a échoué.\nDétails: ${errMsg}`
+          : `⚠️ Saved LOCALLY because online sync failed.\nDetails: ${errMsg}`);
+      } else {
+        toast(currentLang === 'fr' ? "Modèle partagé !" : "Model shared successfully!");
+      }
+    });
     closeModalNewPost();
-    toast(currentLang === 'fr' ? "Modèle partagé !" : "Model shared successfully!");
   };
 
   // 10. AI CHAT CONTROLLER

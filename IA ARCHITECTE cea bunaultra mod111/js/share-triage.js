@@ -172,12 +172,23 @@
         };
 
         if (window.DevSocialDB && typeof window.DevSocialDB.savePost === 'function') {
-          window.DevSocialDB.savePost(post);
-          if (window.showToast) {
-            window.showToast(window.lang === 'fr' ? "🎉 Application publiée sur le feed !" : "🎉 App published to feed!");
-          } else {
-            alert(window.lang === 'fr' ? "🎉 Application publiée sur le feed !" : "🎉 App published to feed!");
-          }
+          window.lastFirestoreError = null;
+          window.lastFirebaseInitError = null;
+
+          window.DevSocialDB.savePost(post).then((success) => {
+            if (success) {
+              if (window.showToast) {
+                window.showToast(window.lang === 'fr' ? "🎉 Application publiée sur le feed !" : "🎉 App published to feed!");
+              } else {
+                alert(window.lang === 'fr' ? "🎉 Application publiée sur le feed !" : "🎉 App published to feed!");
+              }
+            } else {
+              const errMsg = window.lastFirestoreError || window.lastFirebaseInitError || "Unknown connection error";
+              alert(window.lang === 'fr'
+                ? `⚠️ Enregistré LOCALEMENT car la synchronisation en ligne a échoué.\nDétails: ${errMsg}`
+                : `⚠️ Saved LOCALLY because online sync failed.\nDetails: ${errMsg}`);
+            }
+          });
           
           modalPublish.style.display = 'none';
           
@@ -227,11 +238,21 @@
         };
 
         if (window.DevSocialDB && typeof window.DevSocialDB.savePost === 'function') {
-          window.DevSocialDB.savePost(post);
-          
-          if (window.showToast) {
-            window.showToast(window.lang === 'fr' ? "✅ Prêt pour le partage !" : "✅ Ready for sharing!");
-          }
+          window.lastFirestoreError = null;
+          window.lastFirebaseInitError = null;
+
+          window.DevSocialDB.savePost(post).then((success) => {
+            if (!success) {
+              const errMsg = window.lastFirestoreError || window.lastFirebaseInitError || "Unknown connection error";
+              alert(window.lang === 'fr'
+                ? `⚠️ Enregistré LOCALEMENT car la synchronisation en ligne a échoué.\nDétails: ${errMsg}`
+                : `⚠️ Saved LOCALLY because online sync failed.\nDetails: ${errMsg}`);
+            } else {
+              if (window.showToast) {
+                window.showToast(window.lang === 'fr' ? "✅ Prêt pour le partage !" : "✅ Ready for sharing!");
+              }
+            }
+          });
           
           modalTriage.style.display = 'none';
           
