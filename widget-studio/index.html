@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        window.onerror = function(message, source, lineno, colno, error) {
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = 'position:fixed; top:0; left:0; width:100%; background:#ef4444; color:#fff; padding:20px; z-index:999999; font-family:monospace; font-size:14px; box-shadow:0 4px 10px rgba(0,0,0,0.5); text-align:left;';
+            errorDiv.innerHTML = '<b>[JavaScript Error]:</b> ' + message + ' <br><i>File: ' + source + ' : Line ' + lineno + '</i>' + (error ? '<pre style="margin-top:10px; font-size:12px; background:rgba(0,0,0,0.2); padding:10px; border-radius:6px; overflow-x:auto;">' + error.stack + '</pre>' : '');
+            document.body.appendChild(errorDiv);
+            return false;
+        };
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="nav_title">AI AD & WIDGET STUDIO</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Glowing Background -->
+    <div class="aura-container">
+        <div class="aura-orb orb-1"></div>
+        <div class="aura-orb orb-2"></div>
+        <div class="aura-orb orb-3"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-icon">🔮</span>
+            <span class="logo-text">AI AD & WIDGET STUDIO</span>
+        </div>
+        <div class="nav-controls">
+            <div class="lang-toggle">
+                <button class="lang-btn active" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="fr">FR</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Workspace -->
+    <main class="workspace">
+        
+        <!-- 1. LEFT COLUMN: Configuration Controls -->
+        <section class="controls-panel">
+            <div class="panel-header">
+                <h2 data-i18n="config_title">Widget settings</h2>
+                <p data-i18n="config_subtitle">Customize your interactive ad widget in real-time</p>
+            </div>
+
+            <div class="control-group">
+                <label data-i18n="label_template">Choose Template</label>
+                <div class="template-selector">
+                    <div class="template-card active" data-template="hologram">
+                        <span class="template-icon">🔮</span>
+                        <div class="template-info">
+                            <h4 data-i18n="tpl_holo_title">3D Hologram Card</h4>
+                            <p data-i18n="tpl_holo_desc">Tilting 3D card with floating mesh & particles</p>
+                        </div>
+                    </div>
+                    <div class="template-card" data-template="particles">
+                        <span class="template-icon">✨</span>
+                        <div class="template-info">
+                            <h4 data-i18n="tpl_part_title">Particle Field Banner</h4>
+                            <p data-i18n="tpl_part_desc">Swarming particles reacting to cursor interaction</p>
+                        </div>
+                    </div>
+                    <div class="template-card" data-template="cyberpunk">
+                        <span class="template-icon">⚡</span>
+                        <div class="template-info">
+                            <h4 data-i18n="tpl_cyber_title">Cyberpunk Glitch</h4>
+                            <p data-i18n="tpl_cyber_desc">Neon frame with animated glitch text & grid</p>
+                        </div>
+                    </div>
+                    <div class="template-card" data-template="steampunk">
+                        <span class="template-icon">⚙️</span>
+                        <div class="template-info">
+                            <h4 data-i18n="tpl_steam_title">Steampunk Chrono</h4>
+                            <p data-i18n="tpl_steam_desc">Animated 3D gear clock showing local time</p>
+                        </div>
+                    </div>
+                    <div class="template-card" data-template="game">
+                        <span class="template-icon">🎮</span>
+                        <div class="template-info">
+                            <h4 data-i18n="tpl_game_title">Retro Game Ad</h4>
+                            <p data-i18n="tpl_game_desc">Interactive Space Shooter banner with CTA popup</p>
+                        </div>
+                    </div>
+                    <div class="template-card" data-template="liquid">
+                        <span class="template-icon">🌊</span>
+                        <div class="template-info">
+                            <h4 data-i18n="tpl_liquid_title">Liquid Wave Grid</h4>
+                            <p data-i18n="tpl_liquid_desc">Interactive ripple grid responding to mouse moves</p>
+                        </div>
+                    </div>
+                    <div class="template-card" data-template="matrix">
+                        <span class="template-icon">📟</span>
+                        <div class="template-info">
+                            <h4 data-i18n="tpl_matrix_title">Matrix Code Rain</h4>
+                            <p data-i18n="tpl_matrix_desc">Falling digital rain with custom characters</p>
+                        </div>
+                    </div>
+                    <div class="template-card" data-template="audio">
+                        <span class="template-icon">🎵</span>
+                        <div class="template-info">
+                            <h4 data-i18n="tpl_audio_title">3D Audio Visualizer</h4>
+                            <p data-i18n="tpl_audio_desc">3D particles deforming to microphone inputs</p>
+                        </div>
+                    </div>
+                    <div class="template-card" data-template="scratch">
+                        <span class="template-icon">🪙</span>
+                        <div class="template-info">
+                            <h4 data-i18n="tpl_scratch_title">Scratch Card Reveal</h4>
+                            <p data-i18n="tpl_scratch_desc">Interactive scratch-off layer that rewards user with promo reveal & confetti</p>
+                        </div>
+                    </div>
+                    <div class="template-card" data-template="textExploder">
+                        <span class="template-icon">💥</span>
+                        <div class="template-info">
+                            <h4 data-i18n="tpl_text_title">Particle Text Exploder</h4>
+                            <p data-i18n="tpl_text_desc">Headline letters assembled by interactive particles that explode on hover</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Inputs -->
+            <div class="control-section">
+                <h3 data-i18n="sec_content">Content</h3>
+                <div class="control-group">
+                    <label for="input-title" data-i18n="label_title">Headline / Title</label>
+                    <input type="text" id="input-title" value="FUTURE IS NOW">
+                </div>
+                <div class="control-group" id="group-desc">
+                    <label for="input-desc" data-i18n="label_desc">Description / Subtitle</label>
+                    <input type="text" id="input-desc" value="Build premium 3D websites with AI assistance. Free access today.">
+                </div>
+                <div class="control-group">
+                    <label for="input-btn" data-i18n="label_btn">Button Text</label>
+                    <input type="text" id="input-btn" value="Try For Free">
+                </div>
+                <div class="control-group">
+                    <label for="input-url" data-i18n="label_url">Button Action URL</label>
+                    <input type="text" id="input-url" value="https://ia-codestudio.com">
+                </div>
+            </div>
+
+            <!-- Design Sliders and Color Pickers -->
+            <div class="control-section">
+                <h3 data-i18n="sec_design">Design & Visuals</h3>
+                <div class="color-pickers-row">
+                    <div class="control-group flex-1">
+                        <label for="input-color-primary" data-i18n="label_color_primary">Primary Color</label>
+                        <div class="color-picker-wrapper">
+                            <input type="color" id="input-color-primary" value="#06b6d4">
+                            <span class="color-value">#06b6d4</span>
+                        </div>
+                    </div>
+                    <div class="control-group flex-1">
+                        <label for="input-color-accent" data-i18n="label_color_accent">Accent Color</label>
+                        <div class="color-picker-wrapper">
+                            <input type="color" id="input-color-accent" value="#8b5cf6">
+                            <span class="color-value">#8b5cf6</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group" id="group-bg-opacity">
+                    <label for="input-bg-opacity" data-i18n="label_opacity">Glass Background Opacity</label>
+                    <div class="slider-wrapper">
+                        <input type="range" id="input-bg-opacity" min="0" max="100" value="5">
+                        <span class="slider-value">5%</span>
+                    </div>
+                </div>
+                <div class="control-group switch-group" id="group-glow">
+                    <label for="input-glow" data-i18n="label_glow">Neon Border Glow</label>
+                    <input type="checkbox" id="input-glow" checked>
+                </div>
+            </div>
+
+            <!-- 3D Hologram Specific Settings -->
+            <div class="control-section" id="section-3d-settings">
+                <h3 data-i18n="sec_3d">3D Settings</h3>
+                <div class="control-group">
+                    <label for="input-shape" data-i18n="label_shape">Floating 3D Shape</label>
+                    <select id="input-shape">
+                        <option value="torus" data-i18n="shape_torus">Rotating Torus</option>
+                        <option value="knot" data-i18n="shape_knot">Torus Knot</option>
+                        <option value="cube" data-i18n="shape_cube">Spinning Cube</option>
+                        <option value="octahedron" data-i18n="shape_octa">Octahedron</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="input-speed" data-i18n="label_speed">3D Rotation Speed</label>
+                    <div class="slider-wrapper">
+                        <input type="range" id="input-speed" min="1" max="10" value="4">
+                        <span class="slider-value">x4</span>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="input-particles" data-i18n="label_particles">Particle Density</label>
+                    <div class="slider-wrapper">
+                        <input type="range" id="input-particles" min="0" max="200" value="100">
+                        <span class="slider-value">100</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Steampunk Settings -->
+            <div class="control-section" id="section-steampunk-settings" style="display:none;">
+                <h3 data-i18n="sec_steampunk">Steampunk Clock Settings</h3>
+                <div class="control-group">
+                    <label for="input-steam-theme" data-i18n="label_steam_theme">Metal Theme</label>
+                    <select id="input-steam-theme">
+                        <option value="bronze" data-i18n="theme_bronze">Vintage Bronze</option>
+                        <option value="gold" data-i18n="theme_gold">Polished Gold</option>
+                        <option value="steel" data-i18n="theme_steel">Industrial Steel</option>
+                    </select>
+                </div>
+                <div class="control-group switch-group">
+                    <label for="input-steam-particles" data-i18n="label_steam_particles">Rising Steam Particles</label>
+                    <input type="checkbox" id="input-steam-particles" checked>
+                </div>
+                <div class="control-group">
+                    <label for="input-steam-speed" data-i18n="label_steam_speed">Gears Spin Speed</label>
+                    <div class="slider-wrapper">
+                        <input type="range" id="input-steam-speed" min="1" max="10" value="3">
+                        <span class="slider-value">x3</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Settings -->
+            <div class="control-section" id="section-game-settings" style="display:none;">
+                <h3 data-i18n="sec_game">Retro Game Settings</h3>
+                <div class="control-group">
+                    <label for="input-game-difficulty" data-i18n="label_difficulty">Game Difficulty</label>
+                    <select id="input-game-difficulty">
+                        <option value="easy" data-i18n="diff_easy">Easy</option>
+                        <option value="normal" data-i18n="diff_normal">Normal</option>
+                        <option value="hard" data-i18n="diff_hard">Hard</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="input-game-ship-color" data-i18n="label_ship_color">Spaceship Color</label>
+                    <div class="color-picker-wrapper">
+                        <input type="color" id="input-game-ship-color" value="#10b981">
+                        <span class="color-value">#10B981</span>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="input-game-target" data-i18n="label_game_target">Highscore CTA Threshold</label>
+                    <div class="slider-wrapper">
+                        <input type="range" id="input-game-target" min="5" max="50" value="15">
+                        <span class="slider-value">15 pts</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Liquid settings -->
+            <div class="control-section" id="section-liquid-settings" style="display:none;">
+                <h3 data-i18n="sec_liquid">Liquid Grid Settings</h3>
+                <div class="control-group">
+                    <label for="input-liquid-res" data-i18n="label_liquid_res">Grid Resolution</label>
+                    <select id="input-liquid-res">
+                        <option value="low" data-i18n="res_low">Low Performance</option>
+                        <option value="med" data-i18n="res_med">Standard Grid</option>
+                        <option value="high" data-i18n="res_high">Ultra High Resolution</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="input-liquid-frequency" data-i18n="label_liquid_freq">Wave Spring Elasticity</label>
+                    <div class="slider-wrapper">
+                        <input type="range" id="input-liquid-frequency" min="10" max="90" value="45">
+                        <span class="slider-value">45%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Matrix settings -->
+            <div class="control-section" id="section-matrix-settings" style="display:none;">
+                <h3 data-i18n="sec_matrix">Matrix Rain Settings</h3>
+                <div class="control-group">
+                    <label for="input-matrix-chars" data-i18n="label_matrix_chars">Rain Character Set</label>
+                    <select id="input-matrix-chars">
+                        <option value="binary">Binary (01)</option>
+                        <option value="hex">Hexadecimal (0-F)</option>
+                        <option value="matrix">Matrix Code (Original Japanese)</option>
+                        <option value="custom" data-i18n="chars_custom">Custom Text</option>
+                    </select>
+                </div>
+                <div class="control-group" id="group-matrix-custom-text" style="display:none;">
+                    <label for="input-matrix-custom" data-i18n="label_matrix_custom">Enter Custom Letters</label>
+                    <input type="text" id="input-matrix-custom" value="IACODE">
+                </div>
+                <div class="control-group">
+                    <label for="input-matrix-size" data-i18n="label_matrix_size">Rain Column Font Size</label>
+                    <div class="slider-wrapper">
+                        <input type="range" id="input-matrix-size" min="8" max="32" value="14">
+                        <span class="slider-value">14px</span>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="input-matrix-speed" data-i18n="label_matrix_speed">Rain Speed</label>
+                    <div class="slider-wrapper">
+                        <input type="range" id="input-matrix-speed" min="1" max="10" value="5">
+                        <span class="slider-value">x5</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audio settings -->
+            <div class="control-section" id="section-audio-settings" style="display:none;">
+                <h3 data-i18n="sec_audio">Audio Visualizer Settings</h3>
+                <div class="control-group switch-group">
+                    <label for="input-audio-mic" data-i18n="label_audio_mic">Enable Live Microphone input</label>
+                    <input type="checkbox" id="input-audio-mic" checked>
+                </div>
+                <div class="control-group">
+                    <label for="input-audio-type" data-i18n="label_audio_type">Visualizer Shape</label>
+                    <select id="input-audio-type">
+                        <option value="sphere" data-i18n="audio_sphere">3D Dynamic Sphere</option>
+                        <option value="ring" data-i18n="audio_ring">Equalizer Ring</option>
+                        <option value="wave" data-i18n="audio_wave">Symmetric Wave Grid</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="input-audio-sensitivity" data-i18n="label_sensitivity">Audio Sensitivity</label>
+                    <div class="slider-wrapper">
+                        <input type="range" id="input-audio-sensitivity" min="1" max="10" value="5">
+                        <span class="slider-value">x5</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scratch Card Settings -->
+            <div class="control-section" id="section-scratch-settings" style="display:none;">
+                <h3 data-i18n="sec_scratch">Scratch Card Settings</h3>
+                <div class="control-group">
+                    <label for="input-scratch-brush" data-i18n="label_scratch_brush">Scratch Brush Size</label>
+                    <div class="slider-wrapper">
+                        <input type="range" id="input-scratch-brush" min="15" max="60" value="30">
+                        <span class="slider-value">30px</span>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="input-scratch-color" data-i18n="label_scratch_color">Scratch Surface Color</label>
+                    <div class="color-picker-wrapper">
+                        <input type="color" id="input-scratch-color" value="#a1a1aa">
+                        <span class="color-value">#a1a1aa</span>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="input-scratch-threshold" data-i18n="label_scratch_threshold">Reveal Threshold</label>
+                    <div class="slider-wrapper">
+                        <input type="range" id="input-scratch-threshold" min="20" max="80" value="50">
+                        <span class="slider-value">50%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Particle Text Settings -->
+            <div class="control-section" id="section-text-settings" style="display:none;">
+                <h3 data-i18n="sec_text_exp">Particle Text Settings</h3>
+                <div class="control-group">
+                    <label for="input-text-density" data-i18n="label_text_density">Particle Density</label>
+                    <div class="slider-wrapper">
+                        <input type="range" id="input-text-density" min="150" max="800" value="400">
+                        <span class="slider-value">400</span>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="input-text-radius" data-i18n="label_text_radius">Interaction Radius</label>
+                    <div class="slider-wrapper">
+                        <input type="range" id="input-text-radius" min="40" max="150" value="80">
+                        <span class="slider-value">80px</span>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="input-text-force" data-i18n="label_text_force">Explode Force</label>
+                    <div class="slider-wrapper">
+                        <input type="range" id="input-text-force" min="2" max="15" value="6">
+                        <span class="slider-value">x6</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Referral Badge Settings -->
+            <div class="control-section">
+                <h3 data-i18n="sec_marketing">Growth & Referral</h3>
+                <div class="control-group switch-group">
+                    <div class="badge-label-info">
+                        <label for="input-badge" data-i18n="label_badge">Include Support Watermark</label>
+                        <p class="small-desc" data-i18n="badge_desc">Add "Powered by IA Code Studio" link to widgets. Spread the word and build backlink authority!</p>
+                    </div>
+                    <input type="checkbox" id="input-badge" checked>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. MIDDLE COLUMN: Live Preview Viewport -->
+        <section class="preview-panel">
+            <div class="panel-header">
+                <h2 data-i18n="preview_title">Live Preview</h2>
+                <p data-i18n="preview_subtitle">Test animations, cursor effects and button click events</p>
+            </div>
+            
+            <div class="preview-container">
+                <div class="responsive-toolbar">
+                    <button class="resp-btn active" data-width="100%" data-height="100%">🖥️ <span data-i18n="resp_full">Full Width</span></button>
+                    <button class="resp-btn" data-width="400px" data-height="600px">📱 <span data-i18n="resp_card">Card</span></button>
+                    <button class="resp-btn" data-width="728px" data-height="90px">↔️ <span data-i18n="resp_banner">Leaderboard</span></button>
+                </div>
+                <div class="iframe-wrapper">
+                    <iframe id="preview-iframe" title="Interactive Ad Widget Preview"></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. RIGHT COLUMN: Integration Code -->
+        <section class="code-panel">
+            <div class="panel-header">
+                <h2 data-i18n="code_title">Integration Code</h2>
+                <p data-i18n="code_subtitle">Copy this self-contained HTML directly into your web project</p>
+            </div>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>HTML / CSS / JS</span>
+                    <button class="copy-btn" id="btn-copy-code">
+                        <span class="copy-icon">📋</span>
+                        <span class="copy-text" data-i18n="btn_copy">Copy Code</span>
+                    </button>
+                </div>
+                <textarea id="code-output" readonly></textarea>
+            </div>
+
+            <div class="code-actions">
+                <button class="action-btn download-btn" id="btn-download-html">
+                    <span>📥</span> <span data-i18n="btn_download">Download HTML File</span>
+                </button>
+                <div class="integration-guide">
+                    <h4 data-i18n="guide_title">How to Integrate:</h4>
+                    <ol>
+                        <li data-i18n="guide_step1">Copy the generated code above.</li>
+                        <li data-i18n="guide_step2">Paste it inside the <code>&lt;body&gt;</code> of your website where you want the banner to appear.</li>
+                        <li data-i18n="guide_step3">For iframe embedding, download the HTML file, host it, and link it.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
