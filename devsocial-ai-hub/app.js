@@ -540,15 +540,18 @@
       const typeLabel = post.preset === 'clockwork' ? 'Clockwork 3D' : post.preset === 'avatar' ? 'Webcam 3D' : 'Mesh 3D';
       const forkLabel = currentLang === 'fr' ? 'Importer' : 'Fork';
 
+      const captionText = post.caption_en || post.caption || post.caption_fr || '';
+      const truncatedCaption = captionText.length > 80 ? captionText.substring(0, 80) + '...' : captionText;
+
       item.innerHTML = `
         <div class="gallery-3d-preview" id="gallery-viewport-${post.id}"></div>
         <div class="gallery-meta">
           <h4>@${post.user} - ${typeLabel}</h4>
-          <p>${post.caption.substring(0, 80)}...</p>
+          <p>${truncatedCaption}</p>
           <div class="gallery-footer-actions">
             <div class="gallery-stats-group">
               <span><i class="fa-solid fa-heart"></i> ${post.likes}</span>
-              <span><i class="fa-solid fa-comment"></i> ${post.comments.length}</span>
+              <span><i class="fa-solid fa-comment"></i> ${(post.comments || []).length}</span>
             </div>
             <button class="btn-fork-code" style="padding: 6px 12px; font-size: 10.5px;" onclick="openForkCodeModal(${post.id})">
               ${forkLabel}
@@ -1308,9 +1311,10 @@
         const id = parseInt(card.dataset.id);
         const post = posts.find(p => p.id === id);
         if (post) {
+          const captionText = post.caption_en || post.caption || post.caption_fr || '';
           const match = post.user.toLowerCase().includes(query) || 
-                        post.caption.toLowerCase().includes(query) ||
-                        post.preset.toLowerCase().includes(query);
+                        captionText.toLowerCase().includes(query) ||
+                        (post.preset || '').toLowerCase().includes(query);
           card.style.display = match ? 'block' : 'none';
         }
       });

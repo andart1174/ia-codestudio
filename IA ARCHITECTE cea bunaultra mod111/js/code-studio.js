@@ -1121,7 +1121,27 @@ function sanitizeStandalone(html) {
   // 3. Remove Blueprint/Inspect data attributes
   clean = clean.replace(/ data-src-line="\d+"/gi, '');
   
-  // 4. Inject a safety check for Three.js initialization
+  // 4. Inject Three.js CDN script if THREE is used but Three.js library is not imported
+  if (clean.includes('THREE.') && !clean.includes('three.min.js') && !clean.includes('three.js')) {
+    const threeCDN = '\n    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>';
+    if (clean.includes('</head>')) {
+      clean = clean.replace('</head>', threeCDN + '\n</head>');
+    } else {
+      clean = threeCDN + '\n' + clean;
+    }
+  }
+
+  // 5. Inject OrbitControls CDN script if OrbitControls is used but OrbitControls library is not imported
+  if (clean.includes('OrbitControls') && !clean.includes('OrbitControls.js')) {
+    const controlsCDN = '\n    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>';
+    if (clean.includes('</head>')) {
+      clean = clean.replace('</head>', controlsCDN + '\n</head>');
+    } else {
+      clean = controlsCDN + '\n' + clean;
+    }
+  }
+
+  // 6. Inject a safety check for Three.js initialization
   if (clean.includes('THREE.')) {
     const safety = `\n<script>
     // IA Architecte Standalone 3D Safety
@@ -1134,6 +1154,7 @@ function sanitizeStandalone(html) {
 
   return clean;
 }
+window.sanitizeStandalone = sanitizeStandalone;
 
 function wireTopbar(){
   document.getElementById('btn-format').addEventListener('click',()=>editor?.getAction('editor.action.formatDocument')?.run());

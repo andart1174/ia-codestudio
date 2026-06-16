@@ -352,10 +352,41 @@ return function() {
                        );
                      }
                    });
-                   if (promises.length > 0) {
-                     await Promise.all(promises);
+
+                   // Merge local posts (e.g. from local storage) that are not in Firestore
+                   let localPosts = [];
+                   try {
+                     localPosts = JSON.parse(localStorage.getItem('devsocial_posts') || '[]');
+                   } catch (e) {}
+
+                   const firestoreIds = new Set(postsList.map(p => String(p.id)));
+                   const mergedList = [...postsList];
+                   const localPromises = [];
+
+                   localPosts.forEach(post => {
+                     if (!firestoreIds.has(String(post.id))) {
+                       mergedList.push(post);
+                       if (post.compressedCode && !post.code) {
+                         localPromises.push(
+                           decompressString(post.compressedCode)
+                             .then(decompressed => {
+                               post.code = decompressed;
+                             })
+                             .catch(err => {
+                               console.error("Decompression failed for local post", post.id, err);
+                             })
+                         );
+                       }
+                     }
+                   });
+
+                   if (promises.length > 0 || localPromises.length > 0) {
+                     await Promise.all([...promises, ...localPromises]);
                    }
-                   callback(postsList);
+
+                   // Sort merged list by createdAt desc
+                   mergedList.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                   callback(mergedList);
                  }, error => {
                    console.error("Firestore subscription error. Falling back to LocalStorage:", error);
                    useFirestore = false;
