@@ -165,8 +165,8 @@
           caption_fr: descFr || "Découvrez cette application web que j'ai créée sur IA Code Studio !",
           likes: 0,
           comments: [],
-          preset: "none",
-          hasThree: false, // HTML/CSS/JS App preview
+          preset: "custom",
+          hasThree: true, // HTML/CSS/JS App preview
           code: sanitizedCode,
           createdAt: postId
         };
@@ -219,8 +219,8 @@
           caption_fr: "Application Web (Lien Direct)",
           likes: 0,
           comments: [],
-          preset: "none",
-          hasThree: false,
+          preset: "custom",
+          hasThree: true,
           code: sanitizedCode,
           createdAt: postId,
           unlisted: true // 🔒 Exclude from public feed
