@@ -225,13 +225,15 @@ return function() {
   async function compressString(str) {
     if (typeof CompressionStream === 'undefined') return str;
     try {
-      const stream = new Response(str).body.pipeThrough(new CompressionStream('gzip'));
+      const encoder = new TextEncoder();
+      const bytes = encoder.encode(str);
+      const stream = new Blob([bytes]).stream().pipeThrough(new CompressionStream('gzip'));
       const buffer = await new Response(stream).arrayBuffer();
       let binary = '';
-      const bytes = new Uint8Array(buffer);
-      const len = bytes.byteLength;
+      const compressedBytes = new Uint8Array(buffer);
+      const len = compressedBytes.byteLength;
       for (let i = 0; i < len; i += 32000) {
-        binary += String.fromCharCode.apply(null, bytes.subarray(i, i + 32000));
+        binary += String.fromCharCode.apply(null, compressedBytes.subarray(i, i + 32000));
       }
       return btoa(binary);
     } catch (e) {
@@ -249,8 +251,9 @@ return function() {
       for (let i = 0; i < len; i++) {
         bytes[i] = binaryString.charCodeAt(i);
       }
-      const stream = new Response(bytes).body.pipeThrough(new DecompressionStream('gzip'));
-      return await new Response(stream).text();
+      const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+      const buffer = await new Response(stream).arrayBuffer();
+      return new TextDecoder().decode(buffer);
     } catch (e) {
       console.warn("Gzip decompression failed:", e);
       return base64;
