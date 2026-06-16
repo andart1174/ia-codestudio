@@ -1021,7 +1021,6 @@
     };
 
     window.lastFirestoreError = null;
-    window.lastFirebaseInitError = null;
     window.DevSocialDB.savePost(newPost).then((success) => {
       if (!success) {
         const errMsg = window.lastFirestoreError || window.lastFirebaseInitError || "Unknown connection error";

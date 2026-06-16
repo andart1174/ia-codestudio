@@ -503,6 +503,9 @@ return function() {
             return false;
           });
       } else {
+        if (!window.lastFirestoreError) {
+          window.lastFirestoreError = window.lastFirebaseInitError || "Database initialization or connection failed (fallback to local)";
+        }
         saveToLocal(post);
         return false;
       }

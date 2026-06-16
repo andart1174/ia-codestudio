@@ -173,7 +173,6 @@
 
         if (window.DevSocialDB && typeof window.DevSocialDB.savePost === 'function') {
           window.lastFirestoreError = null;
-          window.lastFirebaseInitError = null;
 
           window.DevSocialDB.savePost(post).then((success) => {
             if (success) {
@@ -239,7 +238,6 @@
 
         if (window.DevSocialDB && typeof window.DevSocialDB.savePost === 'function') {
           window.lastFirestoreError = null;
-          window.lastFirebaseInitError = null;
 
           window.DevSocialDB.savePost(post).then((success) => {
             if (!success) {
