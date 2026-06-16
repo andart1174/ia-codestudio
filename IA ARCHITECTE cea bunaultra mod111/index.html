@@ -27,6 +27,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <script src="js/three.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
@@ -578,6 +579,9 @@
           Scale: <span id="scale-val">100</span>%
         </div>
         <button class="run-btn" id="btn-run">▶ <span id="lbl-run">Run</span></button>
+        <button class="share-btn" id="btn-publish-feed" style="padding:4px 10px; background:rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.22); color:#a78bfa; border-radius:6px; cursor:pointer; font-size:11px; font-weight:700; font-family:var(--font); transition:all .2s; white-space:nowrap;" onmouseover="this.style.background='rgba(139,92,246,0.2)'" onmouseout="this.style.background='rgba(139,92,246,0.1)'">
+          <i class="fa-solid fa-share-nodes"></i> <span id="lbl-publish" data-en="Share Scene" data-fr="Partager la Scène">Share Scene</span>
+        </button>
       </div>
       <div class="preview-viewport">
         <div class="preview-frame-wrap" id="preview-frame-wrap">
@@ -1128,5 +1132,245 @@
   <script src="js/space-devops.js"></script>
   <!-- 🎴 Voxel 3D Asset Forge -->
   <script src="js/voxel-extruder.js"></script>
+  <!-- STYLE FOR SHARE TRIAGE MODALS -->
+  <style>
+    .share-triage-card {
+      max-width: 480px !important;
+    }
+    .triage-body {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 20px !important;
+    }
+    .triage-option-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+    }
+    .triage-option-card:hover {
+      background: rgba(139, 92, 246, 0.08);
+      border-color: rgba(139, 92, 246, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+    }
+    .triage-option-card .option-icon {
+      font-size: 24px;
+      color: #a78bfa;
+      width: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .triage-option-card .option-info h4 {
+      margin-bottom: 4px;
+      font-size: 14px;
+      color: #fff;
+      font-weight: 700;
+    }
+    .triage-option-card .option-info p {
+      font-size: 11.5px;
+      color: var(--muted);
+      line-height: 1.4;
+      margin: 0;
+    }
+    .social-btn-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .social-btn-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .social-btn-item:hover {
+      background: var(--bg-hover);
+      border-color: rgba(139, 92, 246, 0.4);
+      box-shadow: 0 0 15px rgba(139, 92, 246, 0.15);
+      transform: translateY(-2px);
+    }
+    .social-btn-item span {
+      font-size: 11px;
+      color: var(--text);
+    }
+    .tbtn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+    }
+    .tbtn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .tbtn.green {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.3);
+      color: var(--green);
+    }
+    .tbtn.green:hover {
+      background: rgba(16, 185, 129, 0.2);
+    }
+  </style>
+
+  <!-- SHARE TRIAGE MODAL -->
+  <div class="modal-overlay" id="modal-share-triage" style="display:none">
+    <div class="modal-box share-triage-card">
+      <div class="modal-hdr">
+        <h3 id="lbl-triage-title" data-en="Share & Export App" data-fr="Partager & Exporter l'Application">Share & Export App</h3>
+        <button class="modal-close" id="btn-close-triage">✕</button>
+      </div>
+      <div class="modal-body triage-body">
+        <div class="triage-option-card" id="opt-triage-feed">
+          <div class="option-icon"><i class="fa-solid fa-users"></i></div>
+          <div class="option-info">
+            <h4 id="lbl-triage-opt1-title" data-en="🚀 Publish to Community Feed" data-fr="🚀 Publier sur le Feed Communautaire">🚀 Publish to Community Feed</h4>
+            <p id="lbl-triage-opt1-desc" data-en="Share your web app with the developer community, get likes/comments, and climb the reputation leaderboard." data-fr="Partagez publiquement avec la communauté des développeurs, recevez des likes/commentaires et progressez au classement.">Share your web app with the developer community, get likes/comments, and climb the reputation leaderboard.</p>
+          </div>
+        </div>
+        <div class="triage-option-card" id="opt-triage-direct">
+          <div class="option-icon"><i class="fa-solid fa-link"></i></div>
+          <div class="option-info">
+            <h4 id="lbl-triage-opt2-title" data-en="🌐 Direct Social Share & Embed" data-fr="🌐 Partage Direct & Intégration">🌐 Direct Social Share & Embed</h4>
+            <p id="lbl-triage-opt2-desc" data-en="Instantly generate your social sharing links and iframe embed code snippets without public listing (unlisted)." data-fr="Générez instantanément vos liens de partage social et codes d'intégration iframe sans publication publique (nelisté).">Instantly generate your social sharing links and iframe embed code snippets without public listing (unlisted).</p>
+          </div>
+        </div>
+        <div class="triage-option-card" id="opt-triage-gist">
+          <div class="option-icon"><i class="fa-brands fa-github"></i></div>
+          <div class="option-info">
+            <h4 id="lbl-triage-opt3-title" data-en="💾 Export to GitHub Gist" data-fr="💾 Exporter vers GitHub Gist">💾 Export to GitHub Gist</h4>
+            <p id="lbl-triage-opt3-desc" data-en="Save the raw HTML/CSS/JS code as a Gist directly under your personal GitHub profile." data-fr="Sauvegardez le code HTML/CSS/JS brut sous forme de Gist directement sur votre profil GitHub personnel.">Save the raw HTML/CSS/JS code as a Gist directly under your personal GitHub profile.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PUBLISH TO COMMUNITY FEED MODAL -->
+  <div class="modal-overlay" id="modal-publish-feed" style="display:none">
+    <div class="modal-box">
+      <div class="modal-hdr">
+        <h3 id="lbl-publish-title" data-en="Publish to Community Feed" data-fr="Publier sur le Feed Communautaire">Publish to Community Feed</h3>
+        <button class="modal-close" id="btn-close-publish">✕</button>
+      </div>
+      <div class="modal-body">
+        <p id="lbl-publish-desc" style="font-size:12px; color:var(--muted); margin-bottom:15px; line-height:1.5;" data-en="Share your web app with the developer community! It will appear on the DevSocial Feed." data-fr="Partagez votre application web avec la communauté ! Elle apparaîtra sur le feed DevSocial.">Share your web app with the developer community! It will appear on the DevSocial Feed.</p>
+        <div style="display:flex; flex-direction:column; gap:12px; font-size:11px;">
+          <div style="display:flex; flex-direction:column; gap:4px;">
+            <label id="lbl-nickname-label" style="color:var(--muted); font-weight:600;" data-en="Your Nickname" data-fr="Votre Pseudo">Your Nickname</label>
+            <input type="text" id="publish-nickname" placeholder="e.g. MasterCoder" data-en="e.g. MasterCoder" data-fr="ex: ProCodeur" style="background:#0f172a; border:1px solid #334155; color:#fff; padding:8px; border-radius:6px; outline:none; font-size:11px;">
+          </div>
+          <div style="display:flex; flex-direction:column; gap:4px;">
+            <label id="lbl-desc-en-label" style="color:var(--muted); font-weight:600;" data-en="Description / Caption (English)" data-fr="Description (Anglais)">Description / Caption (English)</label>
+            <textarea id="publish-desc-en" placeholder="Explain your app in English..." data-en="Explain your app in English..." data-fr="Expliquez votre application en anglais..." style="background:#0f172a; border:1px solid #334155; color:#fff; padding:8px; border-radius:6px; outline:none; height:50px; font-size:11px; resize:none; font-family:sans-serif;"></textarea>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:4px;">
+            <label id="lbl-desc-fr-label" style="color:var(--muted); font-weight:600;" data-en="Description / Caption (French)" data-fr="Description (Français)">Description / Caption (French)</label>
+            <textarea id="publish-desc-fr" placeholder="Expliquez votre application en Français..." data-en="Explain your app in French..." data-fr="Expliquez votre application en français..." style="background:#0f172a; border:1px solid #334155; color:#fff; padding:8px; border-radius:6px; outline:none; height:50px; font-size:11px; resize:none; font-family:sans-serif;"></textarea>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex; gap:8px; padding: 15px 20px; border-top:1px solid var(--border); justify-content:flex-end; background:rgba(0,0,0,0.1);">
+        <button class="tbtn" id="btn-cancel-publish" data-en="Cancel" data-fr="Annuler">Cancel</button>
+        <button class="tbtn green" id="btn-submit-publish" data-en="Publish Now 🚀" data-fr="Publier Maintenant 🚀">Publish Now 🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHARE SOCIAL MODAL -->
+  <div class="modal-overlay" id="modal-share-post" style="display:none">
+    <div class="modal-box">
+      <div class="modal-hdr">
+        <h3 id="lbl-share-title" data-en="Share this Web Application" data-fr="Partager cette Application Web">Share this Web Application</h3>
+        <button class="modal-close" id="btn-close-share">✕</button>
+      </div>
+      <div class="modal-body" style="padding: 20px;">
+        <p id="lbl-share-desc" style="font-size:12px; color:var(--muted); line-height:1.5;" data-en="Spread the word! Copy the link or share directly to social media:" data-fr="Partagez le lien ou publiez directement sur les réseaux sociaux :">Spread the word! Copy the link or share directly to social media:</p>
+        
+        <!-- URL Copy Box -->
+        <div style="display: flex; gap: 8px; margin: 15px 0 20px;">
+          <input type="text" id="share-link-input" readonly onclick="this.select()" style="flex: 1; padding: 10px 14px; background:#0f172a; border: 1px solid #334155; border-radius:6px; color: #fff; font-size: 13px;">
+          <button class="tbtn green" id="btn-copy-share-link" style="margin: 0;" data-en="Copy" data-fr="Copier">
+             Copy
+          </button>
+        </div>
+
+        <!-- Embed Code Box -->
+        <p id="lbl-embed-title" style="font-size:12px; color:var(--muted); line-height:1.5; margin-top: 15px;" data-en="Embed this widget on your website:" data-fr="Intégrer ce widget sur votre site web :">Embed this widget on your website:</p>
+        <div style="display: flex; gap: 8px; margin: 10px 0 20px;">
+          <input type="text" id="embed-code-input" readonly onclick="this.select()" style="flex: 1; padding: 10px 14px; background:#0f172a; border: 1px solid #334155; border-radius:6px; color: #fff; font-size: 13px;">
+          <button class="tbtn green" id="btn-copy-embed-code" style="margin: 0;" data-en="Copy" data-fr="Copier">
+             Copy
+          </button>
+        </div>
+
+        <!-- Social Buttons Grid -->
+        <div class="social-btn-grid">
+          <a href="#" id="share-twitter-btn" target="_blank" class="social-btn-item">
+            <i class="fa-brands fa-x-twitter" style="font-size: 24px; color: #fff;"></i>
+            <span data-en="Twitter / X" data-fr="Twitter / X">Twitter / X</span>
+          </a>
+          <a href="#" id="share-reddit-btn" target="_blank" class="social-btn-item">
+            <i class="fa-brands fa-reddit" style="font-size: 24px; color: #ff4500;"></i>
+            <span data-en="Reddit" data-fr="Reddit">Reddit</span>
+          </a>
+          <a href="#" id="share-facebook-btn" target="_blank" class="social-btn-item">
+            <i class="fa-brands fa-facebook" style="font-size: 24px; color: #1877f2;"></i>
+            <span data-en="Facebook" data-fr="Facebook">Facebook</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GITHUB TOKEN MODAL -->
+  <div class="modal-overlay" id="modal-github-token" style="display:none">
+    <div class="modal-box">
+      <div class="modal-hdr">
+        <h3 id="lbl-gist-title" data-en="Export to GitHub Gist" data-fr="Exporter vers GitHub Gist">Export to GitHub Gist</h3>
+        <button class="modal-close" id="btn-close-gist-modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <p id="lbl-gist-desc" style="font-size:12px; color:var(--muted); margin-bottom:15px; line-height:1.5;" data-en="Enter your GitHub Personal Access Token (PAT) with 'gist' scope to publish this code directly to your GitHub Gists." data-fr="Entrez votre jeton d'accès personnel GitHub (PAT) avec la portée 'gist' pour publier ce code directement sur vos Gists GitHub.">
+          Enter your GitHub Personal Access Token (PAT) with 'gist' scope to publish this code directly to your GitHub Gists.
+        </p>
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <label id="lbl-token-label" style="color:var(--muted); font-weight:600;" data-en="GitHub Access Token (PAT)" data-fr="Jeton d'accès GitHub (PAT)">GitHub Access Token (PAT)</label>
+          <input type="password" id="gist-token-input" placeholder="github_pat_..." style="padding: 10px 14px; background:#0f172a; border: 1px solid #334155; border-radius:6px; color: #fff; width: 100%; box-sizing: border-box;">
+        </div>
+        <p style="font-size: 10px; color:var(--muted); margin-top: 10px; line-height:1.4;" data-en="Your token is stored locally in your browser's localStorage and never sent to our servers." data-fr="Votre jeton est stocké localement dans le localStorage de votre navigateur et n'est jamais envoyé à nos serveurs.">
+          Your token is stored locally in your browser's <code>localStorage</code> and never sent to our servers.
+        </p>
+      </div>
+      <div style="display:flex; gap:8px; padding: 15px 20px; border-top:1px solid var(--border); justify-content:flex-end; background:rgba(0,0,0,0.1);">
+        <button class="tbtn" id="btn-cancel-gist-modal" data-en="Cancel" data-fr="Annuler">Cancel</button>
+        <button class="tbtn green" id="btn-save-gist-modal" data-en="Save & Export 🚀" data-fr="Sauvegarder & Exporter 🚀">Save & Export 🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/share-triage.js"></script>
 </body>
 </html>
