@@ -181,6 +181,27 @@
               } else {
                 alert(window.lang === 'fr' ? "🎉 Application publiée sur le feed !" : "🎉 App published to feed!");
               }
+
+              // Show share modal with link and embed code immediately after successful publish
+              const baseOrigin = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1') ? window.location.origin : 'https://ia-codestudio.com';
+              const shareUrl = `${baseOrigin}/devsocial-ai-hub/index.html?post=${postId}`;
+              document.getElementById('share-link-input').value = shareUrl;
+
+              const embedUrl = `${baseOrigin}/devsocial-ai-hub/index.html?post=${postId}&embed=true`;
+              const embedCode = `<iframe src="${embedUrl}" width="100%" height="450" style="border:none; border-radius:12px; box-shadow: 0 4px 30px rgba(0,0,0,0.35);"></iframe>`;
+              document.getElementById('embed-code-input').value = embedCode;
+              
+              const currentLang = window.lang || 'en';
+              const shareCaption = currentLang === 'fr' ? "Découvrez cette application web !" : "Check out this web application!";
+              const tweetText = currentLang === 'fr'
+                ? `Regardez cette application web que j'ai codée avec l'IA sur IA Code Studio ! ${shareCaption}`
+                : `Check out this web application I coded with AI on IA Code Studio! ${shareCaption}`;
+                
+              document.getElementById('share-twitter-btn').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}`;
+              document.getElementById('share-reddit-btn').href = `https://reddit.com/submit?title=${encodeURIComponent(shareCaption)}&url=${encodeURIComponent(shareUrl)}`;
+              document.getElementById('share-facebook-btn').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+
+              modalShare.style.display = 'flex';
             } else {
               const errMsg = window.lastFirestoreError || window.lastFirebaseInitError || "Unknown connection error";
               alert(window.lang === 'fr'
