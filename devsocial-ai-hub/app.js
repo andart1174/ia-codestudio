@@ -11,6 +11,20 @@
   const renderers = {}; // renderer map for active 3D card canvases
   const animLoops = {};  // animation loop callbacks for active 3D card canvases
 
+  // IntersectionObserver to optimize offscreen WebGL rendering
+  let viewportObserver = null;
+  if (typeof IntersectionObserver !== 'undefined') {
+    viewportObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const containerId = entry.target.id;
+        const loop = animLoops[containerId];
+        if (loop) {
+          loop.visible = entry.isIntersecting;
+        }
+      });
+    }, { threshold: 0.05 });
+  }
+
   // Parse URL parameters for deep-linking and embedding
   const urlParams = new URLSearchParams(window.location.search);
   const isEmbed = urlParams.get('embed') === 'true';
@@ -381,6 +395,11 @@
         r.dispose();
       }
       delete renderers[id];
+      
+      const container = document.getElementById(id);
+      if (container && viewportObserver) {
+        viewportObserver.unobserve(container);
+      }
       delete animLoops[id];
     });
   }
@@ -675,8 +694,13 @@
       camera,
       controls,
       renderer,
-      animCb
+      animCb,
+      visible: true
     };
+
+    if (viewportObserver) {
+      viewportObserver.observe(container);
+    }
 
     checkAndAppendWatermark();
   }
@@ -686,7 +710,7 @@
     
     Object.keys(animLoops).forEach(id => {
       const loop = animLoops[id];
-      if (loop) {
+      if (loop && loop.visible !== false) {
         loop.controls.update();
         if (typeof loop.animCb === 'function') {
           loop.animCb();

@@ -581,21 +581,22 @@ return function() {
     },
     
     deletePost: function(postId) {
+      // Always delete from LocalStorage first to ensure local consistency
+      let posts = [];
+      try { posts = JSON.parse(localStorage.getItem('devsocial_posts') || '[]'); } catch (e) {}
+      posts = posts.filter(p => String(p.id) !== String(postId));
+      localStorage.setItem('devsocial_posts', JSON.stringify(posts));
+
       if (useFirestore && db) {
         db.collection('devsocial_posts').doc(String(postId)).delete()
+          .then(() => {
+            notifyPostListeners();
+          })
           .catch(err => {
-            console.error("Error deleting post from Firestore, falling back to LocalStorage:", err);
-            let posts = [];
-            try { posts = JSON.parse(localStorage.getItem('devsocial_posts') || '[]'); } catch (e) {}
-            posts = posts.filter(p => String(p.id) !== String(postId));
-            localStorage.setItem('devsocial_posts', JSON.stringify(posts));
+            console.error("Error deleting post from Firestore:", err);
             notifyPostListeners();
           });
       } else {
-        let posts = [];
-        try { posts = JSON.parse(localStorage.getItem('devsocial_posts') || '[]'); } catch (e) {}
-        posts = posts.filter(p => String(p.id) !== String(postId));
-        localStorage.setItem('devsocial_posts', JSON.stringify(posts));
         notifyPostListeners();
       }
     },
