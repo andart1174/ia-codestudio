@@ -649,8 +649,20 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+  <script>
+    // Temporarily bypass AMD define loaders (like Monaco's vs/loader) to prevent UMD script hijacking
+    window._tempDefine = window.define;
+    window.define = undefined;
+  </script>
   <!-- DevSocial Database (with bundled Firebase SDK) -->
   <script src="../devsocial-ai-hub/database.js?v=601"></script>
+  <script>
+    // Restore AMD define loader for Monaco Editor
+    if (window._tempDefine) {
+      window.define = window._tempDefine;
+      delete window._tempDefine;
+    }
+  </script>
 
   <script src="js/premium-lock.js"></script>
   <script src="js/genius-core.js"></script>
