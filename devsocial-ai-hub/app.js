@@ -2401,24 +2401,63 @@ htmlContent = htmlContent + injectedScript;
     }, 2500);
   }
 
+  // Throttle state for multiplayer coordinates sync
+  let lastCameraSentTime = 0;
+  let lastPointerSentTime = 0;
+  let cameraThrottleTimeout = null;
+  let pointerThrottleTimeout = null;
+  const THROTTLE_MS = 200; // 5 updates per second max
+
+  function sendCameraUpdate(pos) {
+    if (!activeRoomId || !peerId || typeof firebase === 'undefined') return;
+    const db = firebase.firestore();
+    db.collection('rooms').doc(activeRoomId).collection('peers').doc(peerId).update({
+      x: pos.x,
+      y: pos.y,
+      z: pos.z
+    }).catch(e => {});
+  }
+
+  function sendPointerUpdate(pos) {
+    if (!activeRoomId || !peerId || typeof firebase === 'undefined') return;
+    const db = firebase.firestore();
+    db.collection('rooms').doc(activeRoomId).collection('peers').doc(peerId).update({
+      px: pos.x,
+      py: pos.y,
+      pz: pos.z
+    }).catch(e => {});
+  }
+
   window.addEventListener('message', (event) => {
     if (!event.data) return;
     if (event.data.type === 'camera_move' && activeRoomId && peerId && typeof firebase !== 'undefined') {
       const pos = event.data.position;
-      const db = firebase.firestore();
-      db.collection('rooms').doc(activeRoomId).collection('peers').doc(peerId).update({
-        x: pos.x,
-        y: pos.y,
-        z: pos.z
-      }).catch(e => {});
+      const now = Date.now();
+      
+      if (now - lastCameraSentTime >= THROTTLE_MS) {
+        lastCameraSentTime = now;
+        sendCameraUpdate(pos);
+      } else {
+        clearTimeout(cameraThrottleTimeout);
+        cameraThrottleTimeout = setTimeout(() => {
+          lastCameraSentTime = Date.now();
+          sendCameraUpdate(pos);
+        }, THROTTLE_MS - (now - lastCameraSentTime));
+      }
     } else if (event.data.type === 'pointer_move' && activeRoomId && peerId && typeof firebase !== 'undefined') {
       const pos = event.data.position;
-      const db = firebase.firestore();
-      db.collection('rooms').doc(activeRoomId).collection('peers').doc(peerId).update({
-        px: pos.x,
-        py: pos.y,
-        pz: pos.z
-      }).catch(e => {});
+      const now = Date.now();
+      
+      if (now - lastPointerSentTime >= THROTTLE_MS) {
+        lastPointerSentTime = now;
+        sendPointerUpdate(pos);
+      } else {
+        clearTimeout(pointerThrottleTimeout);
+        pointerThrottleTimeout = setTimeout(() => {
+          lastPointerSentTime = Date.now();
+          sendPointerUpdate(pos);
+        }, THROTTLE_MS - (now - lastPointerSentTime));
+      }
     }
   });
 
