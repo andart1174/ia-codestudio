@@ -1900,6 +1900,16 @@ htmlContent = htmlContent + injectedScript;
     if (!activeRoomId || typeof firebase === 'undefined') return;
     const db = firebase.firestore();
     
+    // Intercept updates where code size > 250,000 characters to protect room document and performance
+    if (fields.code && fields.code.length > 250000) {
+      if (currentLang === 'fr') {
+        alert("⚠️ Le code est trop volumineux pour être synchronisé en multijoueur (>250 Ko). Veuillez de préférence réduire sa taille ou utiliser la Session Locale pour travailler sur ce projet complexe.");
+      } else {
+        alert("⚠️ The code is too large to be synchronized in multiplayer mode (>250 KB). Please reduce its size or use a Local Session to work on this complex project.");
+      }
+      return Promise.reject("Code size exceeds 250 KB limit for multiplayer");
+    }
+    
     // If code is present and is large, compress it!
     if (fields.code && fields.code.length > 20000 && window.DevSocialDB && typeof window.DevSocialDB._compress === 'function') {
       try {
@@ -2075,6 +2085,23 @@ htmlContent = htmlContent + injectedScript;
   function joinMultiplayerRoom(roomId) {
     if (typeof firebase === 'undefined') return;
     const db = firebase.firestore();
+    
+    // Check if the current editor code is too large (>250 KB) before connecting to avoid crashing browsers
+    const studioTextarea = document.getElementById('studio-code-input');
+    if (studioTextarea && studioTextarea.value.length > 250000) {
+      if (currentLang === 'fr') {
+        alert("⚠️ Le code actuel de votre éditeur dépasse la limite de 250 Ko autorisée pour le mode multijoueur. Pour éviter de bloquer votre navigateur et celui des autres utilisateurs, l'éditeur a été réinitialisé au modèle par défaut.");
+      } else {
+        alert("⚠️ The current code in your editor exceeds the 250 KB limit allowed for multiplayer mode. To prevent freezing your browser and other users' browsers, the editor has been reset to the default template.");
+      }
+      studioTextarea.value = defaultThreeJsCode;
+      const modeSelect = document.getElementById('studio-render-mode');
+      if (modeSelect) {
+        modeSelect.value = 'threejs';
+      }
+      updateEditorGutter();
+      runStudioPreview();
+    }
     
     leaveMultiplayerRoom(true);
     
