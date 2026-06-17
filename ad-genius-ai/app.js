@@ -1050,7 +1050,7 @@ function showPremiumModal() {
                     : 'Copying, exporting code, and cloud deployment are reserved for premium members of <b>IA Code Studio</b>.'
                 }
             </p>
-            <a href="https://ia-codestudio.com" target="_blank" class="ag-btn-upgrade">
+            <a href="https://buy.stripe.com/bJecN61Fk3staax7mGbfO03" target="_blank" class="ag-btn-upgrade">
                 💎 ${isFr ? 'DEVENIR PREMIUM ($10/MOIS)' : 'BECOME PREMIUM ($10/MONTH)'}
             </a>
             <button class="ag-btn-close" onclick="document.getElementById('adgenius-premium-modal').style.display='none'">
