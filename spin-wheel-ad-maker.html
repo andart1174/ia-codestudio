@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Créer une Roue de la Fortune en ligne | Spin Wheel Generator</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" id="meta-description" content="Générateur de roue de la fortune interactif avec l'IA. Créez des jeux promotionnels pour capter des leads, distribuer des codes promos et amuser vos visiteurs.">
+    <meta name="keywords" content="spin wheel generator free, lucky wheel maker, generateur de roue de la fortune, creer roue de la fortune en ligne, interactive spin wheel, coupon wheel generator, lucky spin wheel html5">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://ia-codestudio.com/spin-wheel-ad-maker.html">
+    <link rel="alternate" hreflang="fr" href="https://ia-codestudio.com/spin-wheel-ad-maker.html?lang=fr">
+    <link rel="alternate" hreflang="en" href="https://ia-codestudio.com/spin-wheel-ad-maker.html?lang=en">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ia-codestudio.com/spin-wheel-ad-maker.html">
+    <meta property="og:title" id="og-title" content="Créer une Roue de la Fortune en ligne | Spin Wheel Generator">
+    <meta property="og:description" id="og-desc" content="Générateur de roue de la fortune interactif avec l'IA. Créez des jeux promotionnels pour capter des leads, distribuer des codes promos et amuser vos visiteurs.">
+    <meta property="og:image" content="https://ia-codestudio.com/logo-ia-codestudio.webp">
+
+    <!-- Fonts & CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        
+        .hero-section {
+            text-align: center;
+            padding: 6rem 1rem 4rem;
+        }
+
+        .badge-category {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #c084fc;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .gradient-heading {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 30%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.6;
+        }
+
+        .cta-btn-wrapper {
+            margin-bottom: 4rem;
+        }
+
+        .cta-gradient-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #fff;
+            background: linear-gradient(135deg, var(--aura-violet), var(--aura-cyan));
+            padding: 1.2rem 2.8rem;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cta-gradient-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(6, 182, 212, 0.6);
+            background: linear-gradient(135deg, var(--aura-magenta), var(--aura-cyan));
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255,255,255,0.15);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 2.2rem;
+            margin-bottom: 1.2rem;
+            display: inline-block;
+        }
+
+        .feature-card h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+            color: #fff;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .faq-section {
+            margin: 5rem 0;
+        }
+
+        .faq-title {
+            text-align: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            margin-bottom: 3rem;
+            background: linear-gradient(90deg, #fff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .faq-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 1.8rem;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .faq-header:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .faq-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+            color: var(--aura-cyan);
+        }
+
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+            padding: 0 1.8rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .faq-item.active .faq-content {
+            padding: 0 1.8rem 1.5rem;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+            color: var(--aura-magenta);
+        }
+
+        @media (max-width: 768px) {
+            .gradient-heading { font-size: 2.4rem; }
+            .hero-desc { font-size: 1.1rem; }
+            .container { padding: 2rem 1rem; }
+        }
+    </style>
+
+    <script type="application/ld+json" id="faq-schema"></script>
+</head>
+<body>
+
+    <div class="aura-container">
+        <div class="aura-orb orb-1"></div>
+        <div class="aura-orb orb-2"></div>
+        <div class="aura-orb orb-3"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="navbar-spacer"></div>
+        <div class="navbar-center">
+            <a href="index.html" style="text-decoration: none;">
+                <div class="logo">
+                    <img src="logo-ia-codestudio.webp" alt="IA Code Studio Logo" class="logo-img">IA CODE STUDIO
+                </div>
+            </a>
+        </div>
+        <div class="lang-toggle-container" style="display: flex; align-items: center; justify-content: flex-end;">
+            <div class="lang-toggle">
+                <button class="lang-btn active" data-lang="fr" id="btn-fr">FR</button>
+                <button class="lang-btn" data-lang="en" id="btn-en">EN</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero-section">
+            <span class="badge-category" data-i18n="badge_text">AD-GENIUS AI PRO Studio</span>
+            <h1 class="gradient-heading" id="hero-heading" data-i18n="hero_title">Générateur de Roue de la Fortune IA</h1>
+            <p class="hero-desc" id="hero-paragraph" data-i18n="hero_desc">Créez des roues de la fortune publicitaires animées et interactives en HTML5. Captez des adresses e-mail, distribuez des codes promo et engagez vos visiteurs de façon ludique.</p>
+            
+            <div class="cta-btn-wrapper">
+                <a href="ad-genius-ai/index.html" class="cta-gradient-btn" id="cta-button" data-i18n="cta_text">
+                    Lancer le Studio Roue de la Fortune ⚡
+                </a>
+            </div>
+        </section>
+
+        <section class="features-grid">
+            <div class="feature-card">
+                <span class="feature-icon">🎡</span>
+                <h3 data-i18n="feat1_title">Tranches Personnalisées</h3>
+                <p data-i18n="feat1_desc">Définissez le texte, les couleurs et les gains de chaque segment de la roue. Ajoutez vos propres icônes ou logos pour renforcer l'image de marque.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🎯</span>
+                <h3 data-i18n="feat2_title">Algorithme de Probabilités</h3>
+                <p data-i18n="feat2_desc">Contrôlez les chances d'atterrir sur chaque lot. Définissez des probabilités nulles pour les gros lots et plus élevées pour les coupons.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🔌</span>
+                <h3 data-i18n="feat3_title">Collecte de Leads</h3>
+                <p data-i18n="feat3_desc">Configurez un formulaire de capture d'e-mails avant que l'utilisateur puisse lancer la roue. Générez des prospects hautement qualifiés.</p>
+            </div>
+        </section>
+
+        <section class="faq-section">
+            <h2 class="faq-title" data-i18n="faq_main_title">Questions Fréquentes</h2>
+            <div class="faq-container" id="faq-list">
+                <div class="faq-item">
+                    <button class="faq-header" onclick="toggleFaqItem(this)">
+                        <span data-i18n="faq1_q">Qu'est-ce qu'un générateur de roue de la fortune IA ?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <p data-i18n="faq1_a">C'est une application en ligne qui permet de créer des jeux interactifs sous forme de roue à tourner. L'IA facilite le paramétrage visuel et fonctionnel pour s'adapter à toutes vos campagnes marketing.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-header" onclick="toggleFaqItem(this)">
+                        <span data-i18n="faq2_q">Comment puis-je intégrer la roue de la fortune sur mon site ?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <p data-i18n="faq2_a">Une fois personnalisée dans AD-GENIUS AI PRO, copiez le code iframe d'intégration fourni et insérez-le dans le code source ou le module HTML personnalisé de WordPress, Wix, Shopify, etc.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-header" onclick="toggleFaqItem(this)">
+                        <span data-i18n="faq3_q">Est-il possible de modifier les probabilités de la roue ?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <p data-i18n="faq3_a">Oui. L'interface d'administration vous permet d'affecter un pourcentage de chance ou un poids à chaque tranche, assurant une parfaite gestion de la distribution de vos offres.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-header" onclick="toggleFaqItem(this)">
+                        <span data-i18n="faq4_q">Est-ce que la roue de la fortune s'adapte sur mobile ?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <p data-i18n="faq4_a">Oui. Elle est développée avec des bibliothèques de rendu mobile-first de haute performance. Elle s'adapte à tous les types d'écrans et propose des animations tactiles fluides.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-header" onclick="toggleFaqItem(this)">
+                        <span data-i18n="faq5_q">Puis-je l'utiliser pour capturer des prospects ou des emails ?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <p data-i18n="faq5_a">Tout à fait. C'est l'un des meilleurs cas d'usage marketing. Vous pouvez imposer la saisie d'un email valide avant de lancer la rotation, et synchroniser ou exporter vos leads.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p data-i18n="footer_text">© 2026 IA CODE STUDIO. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        const localTranslations = {
+            fr: {
+                badge_text: "AD-GENIUS AI PRO Studio",
+                hero_title: "Générateur de Roue de la Fortune IA",
+                hero_desc: "Créez des roues de la fortune publicitaires animées et interactives en HTML5. Captez des adresses e-mail, distribuez des codes promo et engagez vos visiteurs de façon ludique.",
+                cta_text: "Lancer le Studio Roue de la Fortune ⚡",
+                feat1_title: "Tranches Personnalisées",
+                feat1_desc: "Définissez le texte, les couleurs et les gains de chaque segment de la roue. Ajoutez vos propres icônes ou logos pour renforcer l'image de marque.",
+                feat2_title: "Algorithme de Probabilités",
+                feat2_desc: "Contrôlez les chances d'atterrir sur chaque lot. Définissez des probabilités nulles pour les gros lots et plus élevées pour les coupons.",
+                feat3_title: "Collecte de Leads",
+                feat3_desc: "Configurez un formulaire de capture d'e-mails avant que l'utilisateur puisse lancer la roue. Générez des prospects hautement qualifiés.",
+                faq_main_title: "Questions Fréquentes",
+                faq1_q: "Qu'est-ce qu'un générateur de roue de la fortune IA ?",
+                faq1_a: "C'est une application en ligne qui permet de créer des jeux interactifs sous forme de roue à tourner. L'IA facilite le paramétrage visuel et fonctionnel pour s'adapter à toutes vos campagnes marketing.",
+                faq2_q: "Comment puis-je intégrer la roue de la fortune sur mon site ?",
+                faq2_a: "Une fois personnalisée dans AD-GENIUS AI PRO, copiez le code iframe d'intégration fourni et insérez-le dans le code source ou le module HTML personnalisé de WordPress, Wix, Shopify, etc.",
+                faq3_q: "Est-il possible de modifier les probabilités de la roue ?",
+                faq3_a: "Oui. L'interface d'administration vous permet d'affecter un pourcentage de chance ou un poids à chaque tranche, assurant une parfaite gestion de la distribution de vos offres.",
+                faq4_q: "Est-ce que la roue de la fortune s'adapte sur mobile ?",
+                faq4_a: "Oui. Elle est développée avec des bibliothèques de rendu mobile-first de haute performance. Elle s'adapte à tous les types d'écrans et propose des animations tactiles fluides.",
+                faq5_q: "Puis-je l'utiliser pour capturer des prospects ou des emails ?",
+                faq5_a: "Tout à fait. C'est l'un des meilleurs cas d'usage marketing. Vous pouvez imposer la saisie d'un email valide avant de lancer la rotation, et synchroniser ou exporter vos leads.",
+                footer_text: "© 2026 IA CODE STUDIO. Tous droits réservés."
+            },
+            en: {
+                badge_text: "AD-GENIUS AI PRO Studio",
+                hero_title: "Spin Wheel Ad Maker",
+                hero_desc: "Create beautiful, conversion-optimized spin wheel popups and lucky wheel ads in HTML5. Collect leads, award custom discounts, and gamify user engagement.",
+                cta_text: "Launch Spin Wheel Studio ⚡",
+                feat1_title: "Custom Slices",
+                feat1_desc: "Configure slice text, segments, custom colors, and graphics. Put your brand logos at the center to maximize visibility.",
+                feat2_title: "Advanced Probability",
+                feat2_desc: "Set individual segment weight parameters. Adjust how often special discount rewards and grand prizes are distributed.",
+                feat3_title: "Lead Generation",
+                feat3_desc: "Prompt users to submit their email addresses before spinning. Automatically grow your email marketing subscriber list.",
+                faq_main_title: "Frequently Asked Questions",
+                faq1_q: "What is an AI spin wheel generator?",
+                faq1_a: "It is an online application designed to build promotional luck wheels. AI integration simplifies visual changes and event hooks for quick deployment.",
+                faq2_q: "How can I embed the spin wheel on my website?",
+                faq2_a: "Once customized in AD-GENIUS, copy the HTML iframe embed code snippet and insert it into any custom HTML block on Wix, WordPress, Shopify, or custom pages.",
+                faq3_q: "Can I customize the wheel slices and rewards?",
+                faq3_a: "Yes! You can edit segment names, values, colors, and assign custom probabilities to dictate the spin outcomes.",
+                faq4_q: "Does the spin wheel support mobile responsiveness?",
+                faq4_a: "Yes, it is built mobile-first. It handles dynamic resizing perfectly and supports touch drag-to-spin animations on all iOS and Android screens.",
+                faq5_q: "Can I integrate this with email marketing or lead generation?",
+                faq5_a: "Yes, you can enable a gateway form to capture lead names and emails prior to the spin, facilitating list growth.",
+                footer_text: "© 2026 IA CODE STUDIO. All rights reserved."
+            }
+        };
+
+        const pageTitles = {
+            fr: "Créer une Roue de la Fortune en ligne | Spin Wheel Generator - IA Code Studio",
+            en: "Free Spin Wheel Generator Online | Lucky Wheel Maker - IA Code Studio"
+        };
+
+        const pageMetaDescriptions = {
+            fr: "Générateur de roue de la fortune interactif avec l'IA. Créez des jeux promotionnels pour capter des leads, distribuer des codes promos et amuser vos visiteurs.",
+            en: "Create engaging interactive lucky wheels and promo spinner games with AI. Capture leads, distribute coupons, and boost your sales easily."
+        };
+
+        function setLanguage(lang) {
+            const translation = localTranslations[lang];
+            if (!translation) return;
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translation[key]) {
+                    el.textContent = translation[key];
+                }
+            });
+
+            document.title = pageTitles[lang];
+            const metaDescEl = document.getElementById('meta-description');
+            if (metaDescEl) metaDescEl.setAttribute('content', pageMetaDescriptions[lang]);
+
+            const ogTitle = document.getElementById('og-title');
+            if (ogTitle) ogTitle.setAttribute('content', pageTitles[lang]);
+            const ogDesc = document.getElementById('og-desc');
+            if (ogDesc) ogDesc.setAttribute('content', pageMetaDescriptions[lang]);
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            if (lang === 'fr') document.getElementById('btn-fr').classList.add('active');
+            else document.getElementById('btn-en').classList.add('active');
+
+            localStorage.setItem('hub_lang', lang);
+            updateFAQSchema(lang);
+        }
+
+        function toggleFaqItem(button) {
+            const item = button.parentElement;
+            const content = item.querySelector('.faq-content');
+            
+            document.querySelectorAll('.faq-item').forEach(otherItem => {
+                if (otherItem !== item && otherItem.classList.contains('active')) {
+                    otherItem.classList.remove('active');
+                    otherItem.querySelector('.faq-content').style.maxHeight = null;
+                }
+            });
+
+            item.classList.toggle('active');
+            if (item.classList.contains('active')) {
+                content.style.maxHeight = content.scrollHeight + "px";
+            } else {
+                content.style.maxHeight = null;
+            }
+        }
+
+        function updateFAQSchema(lang) {
+            const trans = localTranslations[lang];
+            const schema = {
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": trans.faq1_q,
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": trans.faq1_a
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": trans.faq2_q,
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": trans.faq2_a
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": trans.faq3_q,
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": trans.faq3_a
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": trans.faq4_q,
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": trans.faq4_a
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": trans.faq5_q,
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": trans.faq5_a
+                        }
+                    }
+                ]
+            };
+
+            const scriptEl = document.getElementById('faq-schema');
+            if (scriptEl) {
+                scriptEl.textContent = JSON.stringify(schema, null, 2);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlLang = urlParams.get('lang');
+            
+            let initialLang = 'fr';
+            if (urlLang === 'en' || urlLang === 'fr') {
+                initialLang = urlLang;
+            } else {
+                const savedLang = localStorage.getItem('hub_lang');
+                if (savedLang === 'en' || savedLang === 'fr') {
+                    initialLang = savedLang;
+                }
+            }
+            
+            setLanguage(initialLang);
+
+            document.getElementById('btn-fr').addEventListener('click', () => setLanguage('fr'));
+            document.getElementById('btn-en').addEventListener('click', () => setLanguage('en'));
+        });
+    </script>
+</body>
+</html>

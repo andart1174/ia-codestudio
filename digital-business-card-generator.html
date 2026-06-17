@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Générateur de Carte de Visite Virtuelle | vCard Maker en ligne</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" id="meta-description" content="Générateur de carte de visite numérique (vCard) avec l'IA. Créez des cartes de visite virtuelles élégantes et interactives avec QR code pour mobile.">
+    <meta name="keywords" content="digital business card generator, vCard maker online, generateur carte de visite virtuelle, creer vCard en ligne, contactless business card maker, NFC business card template, mobile business card creator">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://ia-codestudio.com/digital-business-card-generator.html">
+    <link rel="alternate" hreflang="fr" href="https://ia-codestudio.com/digital-business-card-generator.html?lang=fr">
+    <link rel="alternate" hreflang="en" href="https://ia-codestudio.com/digital-business-card-generator.html?lang=en">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ia-codestudio.com/digital-business-card-generator.html">
+    <meta property="og:title" id="og-title" content="Générateur de Carte de Visite Virtuelle | vCard Maker en ligne">
+    <meta property="og:description" id="og-desc" content="Générateur de carte de visite numérique (vCard) avec l'IA. Créez des cartes de visite virtuelles élégantes et interactives avec QR code pour mobile.">
+    <meta property="og:image" content="https://ia-codestudio.com/logo-ia-codestudio.webp">
+
+    <!-- Fonts & CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        
+        .hero-section {
+            text-align: center;
+            padding: 6rem 1rem 4rem;
+        }
+
+        .badge-category {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #c084fc;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .gradient-heading {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 30%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.6;
+        }
+
+        .cta-btn-wrapper {
+            margin-bottom: 4rem;
+        }
+
+        .cta-gradient-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #fff;
+            background: linear-gradient(135deg, var(--aura-violet), var(--aura-cyan));
+            padding: 1.2rem 2.8rem;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cta-gradient-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(6, 182, 212, 0.6);
+            background: linear-gradient(135deg, var(--aura-magenta), var(--aura-cyan));
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255,255,255,0.15);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 2.2rem;
+            margin-bottom: 1.2rem;
+            display: inline-block;
+        }
+
+        .feature-card h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+            color: #fff;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .faq-section {
+            margin: 5rem 0;
+        }
+
+        .faq-title {
+            text-align: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            margin-bottom: 3rem;
+            background: linear-gradient(90deg, #fff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .faq-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 1.8rem;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .faq-header:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .faq-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+            color: var(--aura-cyan);
+        }
+
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+            padding: 0 1.8rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .faq-item.active .faq-content {
+            padding: 0 1.8rem 1.5rem;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+            color: var(--aura-magenta);
+        }
+
+        @media (max-width: 768px) {
+            .gradient-heading { font-size: 2.4rem; }
+            .hero-desc { font-size: 1.1rem; }
+            .container { padding: 2rem 1rem; }
+        }
+    </style>
+
+    <script type="application/ld+json" id="faq-schema"></script>
+</head>
+<body>
+
+    <div class="aura-container">
+        <div class="aura-orb orb-1"></div>
+        <div class="aura-orb orb-2"></div>
+        <div class="aura-orb orb-3"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="navbar-spacer"></div>
+        <div class="navbar-center">
+            <a href="index.html" style="text-decoration: none;">
+                <div class="logo">
+                    <img src="logo-ia-codestudio.webp" alt="IA Code Studio Logo" class="logo-img">IA CODE STUDIO
+                </div>
+            </a>
+        </div>
+        <div class="lang-toggle-container" style="display: flex; align-items: center; justify-content: flex-end;">
+            <div class="lang-toggle">
+                <button class="lang-btn active" data-lang="fr" id="btn-fr">FR</button>
+                <button class="lang-btn" data-lang="en" id="btn-en">EN</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero-section">
+            <span class="badge-category" data-i18n="badge_text">AD-GENIUS AI PRO Studio</span>
+            <h1 class="gradient-heading" id="hero-heading" data-i18n="hero_title">Générateur de Carte de Visite Virtuelle</h1>
+            <p class="hero-desc" id="hero-paragraph" data-i18n="hero_desc">Créez des cartes de visite numériques interactives et sans contact (vCards) avec l'IA. Générez vos coordonnées et un code QR pour mobile en un clin d'œil.</p>
+            
+            <div class="cta-btn-wrapper">
+                <a href="ad-genius-ai/index.html" class="cta-gradient-btn" id="cta-button" data-i18n="cta_text">
+                    Lancer le Studio de Cartes Virtuelles ⚡
+                </a>
+            </div>
+        </section>
+
+        <section class="features-grid">
+            <div class="feature-card">
+                <span class="feature-icon">📇</span>
+                <h3 data-i18n="feat1_title">Design Professionnel</h3>
+                <p data-i18n="feat1_desc">Concevez des pages mobiles élégantes contenant votre biographie, poste, liens vers vos réseaux sociaux et boutons d'appel directs.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🔗</span>
+                <h3 data-i18n="feat2_title">Export QR Code</h3>
+                <p data-i18n="feat2_desc">Générez automatiquement un code QR de contact dynamique pour permettre à vos interlocuteurs de scanner et sauvegarder vos détails instantanément.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">📁</span>
+                <h3 data-i18n="feat3_title">Fichier vCard standard</h3>
+                <p data-i18n="feat3_desc">Permettez le téléchargement direct d'un fichier .vcf compatible avec le répertoire de contacts d'iOS (iPhone) et Android en un seul clic.</p>
+            </div>
+        </section>
+
+        <section class="faq-section">
+            <h2 class="faq-title" data-i18n="faq_main_title">Questions Fréquentes</h2>
+            <div class="faq-container" id="faq-list">
+                <div class="faq-item">
+                    <button class="faq-header" onclick="toggleFaqItem(this)">
+                        <span data-i18n="faq1_q">Qu'est-ce qu'un générateur de carte de visite virtuelle ?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <p data-i18n="faq1_a">C'est un outil qui crée une page de profil optimisée pour mobile, hébergeant vos informations de contact. Il remplace la carte de visite papier traditionnelle par un lien ou un QR code.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-header" onclick="toggleFaqItem(this)">
+                        <span data-i18n="faq2_q">Comment puis-je partager ma carte de visite virtuelle ?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <p data-i18n="faq2_a">Vous pouvez la partager via son code QR personnalisé (idéal en réunion physique ou en fond d'écran), par SMS, par e-mail ou en intégrant son lien sur vos profils réseaux sociaux.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-header" onclick="toggleFaqItem(this)">
+                        <span data-i18n="faq3_q">Puis-je ajouter un QR code sur ma vCard numérique ?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <p data-i18n="faq3_a">Oui. Le module Smart vCard d'AD-GENIUS génère automatiquement un QR code haute définition pour chaque profil créé, prêt à être téléchargé ou scanné en direct.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-header" onclick="toggleFaqItem(this)">
+                        <span data-i18n="faq4_q">Est-ce qu'elle permet d'enregistrer directement les contacts ?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <p data-i18n="faq4_a">Tout à fait. La carte numérique inclut un bouton d'export vCard standard (.vcf) qui, lorsqu'il est cliqué, ouvre directement l'application contacts du téléphone pour enregistrer vos coordonnées.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-header" onclick="toggleFaqItem(this)">
+                        <span data-i18n="faq5_q">Faut-il installer une application pour ouvrir ma carte de visite ?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <p data-i18n="faq5_a">Non, aucune application n'est nécessaire. Votre carte de visite virtuelle est une page web responsive standard accessible depuis n'importe quel navigateur mobile (Safari, Chrome, etc.).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p data-i18n="footer_text">© 2026 IA CODE STUDIO. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        const localTranslations = {
+            fr: {
+                badge_text: "AD-GENIUS AI PRO Studio",
+                hero_title: "Générateur de Carte de Visite Virtuelle",
+                hero_desc: "Créez des cartes de visite numériques interactives et sans contact (vCards) avec l'IA. Générez vos coordonnées et un code QR pour mobile en un clin d'œil.",
+                cta_text: "Lancer le Studio de Cartes Virtuelles ⚡",
+                feat1_title: "Design Professionnel",
+                feat1_desc: "Concevez des pages mobiles élégantes contenant votre biographie, poste, liens vers vos réseaux sociaux et boutons d'appel directs.",
+                feat2_title: "Export QR Code",
+                feat2_desc: "Générez automatiquement un code QR de contact dynamique pour permettre à vos interlocuteurs de scanner et sauvegarder vos détails instantanément.",
+                feat3_title: "Fichier vCard standard",
+                feat3_desc: "Permettez le téléchargement direct d'un fichier .vcf compatible avec le répertoire de contacts d'iOS (iPhone) et Android en un seul clic.",
+                faq_main_title: "Questions Fréquentes",
+                faq1_q: "Qu'est-ce qu'un générateur de carte de visite virtuelle ?",
+                faq1_a: "C'est un outil qui crée une page de profil optimisée pour mobile, hébergeant vos informations de contact. Il remplace la carte de visite papier traditionnelle par un lien ou un QR code.",
+                faq2_q: "Comment puis-je partager ma carte de visite virtuelle ?",
+                faq2_a: "Vous pouvez la partager via son code QR personnalisé (idéal en réunion physique ou en fond d'écran), par SMS, par e-mail ou en intégrant son lien sur vos profils réseaux sociaux.",
+                faq3_q: "Puis-je ajouter un QR code sur ma vCard numérique ?",
+                faq3_a: "Oui. Le module Smart vCard d'AD-GENIUS génère automatiquement un QR code haute définition pour chaque profil créé, prêt à être téléchargé ou scanné en direct.",
+                faq4_q: "Est-ce qu'elle permet d'enregistrer directement les contacts ?",
+                faq4_a: "Tout à fait. La carte numérique inclut un bouton d'export vCard standard (.vcf) qui, lorsqu'il est cliqué, ouvre directement l'application contacts du téléphone pour enregistrer vos coordonnées.",
+                faq5_q: "Faut-il installer une application pour ouvrir ma carte de visite ?",
+                faq5_a: "Non, aucune application n'est nécessaire. Votre carte de visite virtuelle est une page web responsive standard accessible depuis n'importe quel navigateur mobile (Safari, Chrome, etc.).",
+                footer_text: "© 2026 IA CODE STUDIO. Tous droits réservés."
+            },
+            en: {
+                badge_text: "AD-GENIUS AI PRO Studio",
+                hero_title: "Digital Business Card Generator",
+                hero_desc: "Create elegant interactive digital business cards and contactless vCards with AI. Design responsive layouts and QR codes for quick mobile access.",
+                cta_text: "Launch vCard Studio ⚡",
+                feat1_title: "Professional Design",
+                feat1_desc: "Build modern mobile landing pages containing your bio, role, social profiles, phone numbers, and call actions.",
+                feat2_title: "QR Code Export",
+                feat2_desc: "Automatically output a customized dynamic contact QR code. Let colleagues scan to view your details instantly.",
+                feat3_title: "Standard vCard Output",
+                feat3_desc: "Enable visitors to download a standard .vcf file, allowing 1-click addition to iOS or Android address books.",
+                faq_main_title: "Frequently Asked Questions",
+                faq1_q: "What is a digital business card generator?",
+                faq1_a: "It is an online design engine focused on mobile-first contact pages. It exchanges standard paper business cards for a simple URL link or QR code scan.",
+                faq2_q: "How do I share my digital business card?",
+                faq2_a: "Share it instantly using its dedicated contact QR code (great for wallpapers or meetings), send via SMS, email, or post on your social accounts.",
+                faq3_q: "Can I embed a QR code on my digital vCard?",
+                faq3_a: "Yes! The Smart vCard studio in AD-GENIUS generates high-resolution QR codes dynamically for all profiles, ready to save or display.",
+                faq4_q: "Does it support direct saving to phone contacts?",
+                faq4_a: "Yes, it contains a dedicated export button triggering a standard .vcf download. Tapping it opens the phone's native address book automatically.",
+                faq5_q: "Do I need an app to open a digital business card?",
+                faq5_a: "No, no installations are required. The vCard page is a standard responsive HTML5 web document accessible inside Safari, Chrome, and others.",
+                footer_text: "© 2026 IA CODE STUDIO. All rights reserved."
+            }
+        };
+
+        const pageTitles = {
+            fr: "Générateur de Carte de Visite Virtuelle | vCard Maker en ligne - IA Code Studio",
+            en: "Digital Business Card Generator | vCard Maker Online - IA Code Studio"
+        };
+
+        const pageMetaDescriptions = {
+            fr: "Générateur de carte de visite numérique (vCard) avec l'IA. Créez des cartes de visite virtuelles élégantes et interactives avec QR code pour mobile.",
+            en: "Create digital business cards and contactless vCards with AI. Design elegant interactive landing pages for your business contacts with integrated QR codes."
+        };
+
+        function setLanguage(lang) {
+            const translation = localTranslations[lang];
+            if (!translation) return;
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translation[key]) {
+                    el.textContent = translation[key];
+                }
+            });
+
+            document.title = pageTitles[lang];
+            const metaDescEl = document.getElementById('meta-description');
+            if (metaDescEl) metaDescEl.setAttribute('content', pageMetaDescriptions[lang]);
+
+            const ogTitle = document.getElementById('og-title');
+            if (ogTitle) ogTitle.setAttribute('content', pageTitles[lang]);
+            const ogDesc = document.getElementById('og-desc');
+            if (ogDesc) ogDesc.setAttribute('content', pageMetaDescriptions[lang]);
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            if (lang === 'fr') document.getElementById('btn-fr').classList.add('active');
+            else document.getElementById('btn-en').classList.add('active');
+
+            localStorage.setItem('hub_lang', lang);
+            updateFAQSchema(lang);
+        }
+
+        function toggleFaqItem(button) {
+            const item = button.parentElement;
+            const content = item.querySelector('.faq-content');
+            
+            document.querySelectorAll('.faq-item').forEach(otherItem => {
+                if (otherItem !== item && otherItem.classList.contains('active')) {
+                    otherItem.classList.remove('active');
+                    otherItem.querySelector('.faq-content').style.maxHeight = null;
+                }
+            });
+
+            item.classList.toggle('active');
+            if (item.classList.contains('active')) {
+                content.style.maxHeight = content.scrollHeight + "px";
+            } else {
+                content.style.maxHeight = null;
+            }
+        }
+
+        function updateFAQSchema(lang) {
+            const trans = localTranslations[lang];
+            const schema = {
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": trans.faq1_q,
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": trans.faq1_a
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": trans.faq2_q,
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": trans.faq2_a
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": trans.faq3_q,
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": trans.faq3_a
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": trans.faq4_q,
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": trans.faq4_a
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": trans.faq5_q,
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": trans.faq5_a
+                        }
+                    }
+                ]
+            };
+
+            const scriptEl = document.getElementById('faq-schema');
+            if (scriptEl) {
+                scriptEl.textContent = JSON.stringify(schema, null, 2);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlLang = urlParams.get('lang');
+            
+            let initialLang = 'fr';
+            if (urlLang === 'en' || urlLang === 'fr') {
+                initialLang = urlLang;
+            } else {
+                const savedLang = localStorage.getItem('hub_lang');
+                if (savedLang === 'en' || savedLang === 'fr') {
+                    initialLang = savedLang;
+                }
+            }
+            
+            setLanguage(initialLang);
+
+            document.getElementById('btn-fr').addEventListener('click', () => setLanguage('fr'));
+            document.getElementById('btn-en').addEventListener('click', () => setLanguage('en'));
+        });
+    </script>
+</body>
+</html>

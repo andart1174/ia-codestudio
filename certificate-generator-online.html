@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Générateur de Certificat en ligne | Certificate Maker Gratuit</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" id="meta-description" content="Générateur de certificats professionnels en ligne. Créez des diplômes de formation, des récompenses d'entreprise et des certificats de réussite avec l'IA.">
+    <meta name="keywords" content="certificate generator online, AI certificate maker, generateur de certificat en ligne, creer certificat en ligne, custom certificate creator, award certificate template, HTML5 certificate designer">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://ia-codestudio.com/certificate-generator-online.html">
+    <link rel="alternate" hreflang="fr" href="https://ia-codestudio.com/certificate-generator-online.html?lang=fr">
+    <link rel="alternate" hreflang="en" href="https://ia-codestudio.com/certificate-generator-online.html?lang=en">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ia-codestudio.com/certificate-generator-online.html">
+    <meta property="og:title" id="og-title" content="Générateur de Certificat en ligne | Certificate Maker Gratuit">
+    <meta property="og:description" id="og-desc" content="Générateur de certificats professionnels en ligne. Créez des diplômes de formation, des récompenses d'entreprise et des certificats de réussite avec l'IA.">
+    <meta property="og:image" content="https://ia-codestudio.com/logo-ia-codestudio.webp">
+
+    <!-- Fonts & CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        
+        .hero-section {
+            text-align: center;
+            padding: 6rem 1rem 4rem;
+        }
+
+        .badge-category {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #c084fc;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .gradient-heading {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 30%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.6;
+        }
+
+        .cta-btn-wrapper {
+            margin-bottom: 4rem;
+        }
+
+        .cta-gradient-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #fff;
+            background: linear-gradient(135deg, var(--aura-violet), var(--aura-cyan));
+            padding: 1.2rem 2.8rem;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cta-gradient-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(6, 182, 212, 0.6);
+            background: linear-gradient(135deg, var(--aura-magenta), var(--aura-cyan));
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255,255,255,0.15);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 2.2rem;
+            margin-bottom: 1.2rem;
+            display: inline-block;
+        }
+
+        .feature-card h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+            color: #fff;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .faq-section {
+            margin: 5rem 0;
+        }
+
+        .faq-title {
+            text-align: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            margin-bottom: 3rem;
+            background: linear-gradient(90deg, #fff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .faq-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 1.8rem;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .faq-header:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .faq-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+            color: var(--aura-cyan);
+        }
+
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+            padding: 0 1.8rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .faq-item.active .faq-content {
+            padding: 0 1.8rem 1.5rem;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+            color: var(--aura-magenta);
+        }
+
+        @media (max-width: 768px) {
+            .gradient-heading { font-size: 2.4rem; }
+            .hero-desc { font-size: 1.1rem; }
+            .container { padding: 2rem 1rem; }
+        }
+    </style>
+
+    <script type="application/ld+json" id="faq-schema"></script>
+</head>
+<body>
+
+    <div class="aura-container">
+        <div class="aura-orb orb-1"></div>
+        <div class="aura-orb orb-2"></div>
+        <div class="aura-orb orb-3"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="navbar-spacer"></div>
+        <div class="navbar-center">
+            <a href="index.html" style="text-decoration: none;">
+                <div class="logo">
+                    <img src="logo-ia-codestudio.webp" alt="IA Code Studio Logo" class="logo-img">IA CODE STUDIO
+                </div>
+            </a>
+        </div>
+        <div class="lang-toggle-container" style="display: flex; align-items: center; justify-content: flex-end;">
+            <div class="lang-toggle">
+                <button class="lang-btn active" data-lang="fr" id="btn-fr">FR</button>
+                <button class="lang-btn" data-lang="en" id="btn-en">EN</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero-section">
+            <span class="badge-category" data-i18n="badge_text">AD-GENIUS AI PRO Studio</span>
+            <h1 class="gradient-heading" id="hero-heading" data-i18n="hero_title">Générateur de Certificat en ligne</h1>
+            <p class="hero-desc" id="hero-paragraph" data-i18n="hero_desc">Créez des certificats de formation, diplômes de réussite et récompenses d'entreprise personnalisés avec l'aide de l'intelligence artificielle. Rapide, élégant et professionnel.</p>
+            
+            <div class="cta-btn-wrapper">
+                <a href="ad-genius-ai/index.html" class="cta-gradient-btn" id="cta-button" data-i18n="cta_text">
+                    Lancer le Studio de Certificats ⚡
+                </a>
+            </div>
+        </section>
+
+        <section class="features-grid">
+            <div class="feature-card">
+                <span class="feature-icon">📜</span>
+                <h3 data-i18n="feat1_title">Modèles Prêts à l'Emploi</h3>
+                <p data-i18n="feat1_desc">Choisissez parmi des designs classiques, corporatifs ou modernes. L'IA génère les marges, bordures et sceaux parfaits en quelques clics.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">✍️</span>
+                <h3 data-i18n="feat2_title">Typographies Élégantes</h3>
+                <p data-i18n="feat2_desc">Utilisez des styles d'écriture cursifs ou calligraphiques de haute qualité pour les noms des lauréats et des signatures réalistes.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">💾</span>
+                <h3 data-i18n="feat3_title">Exports Haute Résolution</h3>
+                <p data-i18n="feat3_desc">Téléchargez vos diplômes finaux au format PNG haute définition ou code HTML5 vectoriel pour les envoyer ou les imprimer proprement.</p>
+            </div>
+        </section>
+
+        <section class="faq-section">
+            <h2 class="faq-title" data-i18n="faq_main_title">Questions Fréquentes</h2>
+            <div class="faq-container" id="faq-list">
+                <div class="faq-item">
+                    <button class="faq-header" onclick="toggleFaqItem(this)">
+                        <span data-i18n="faq1_q">Qu'est-ce qu'un générateur de certificat en ligne ?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <p data-i18n="faq1_a">C'est une plateforme d'édition qui permet de concevoir des certificats de distinction ou des diplômes d'études. L'IA s'occupe de la mise en page esthétique et des alignements de textes.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-header" onclick="toggleFaqItem(this)">
+                        <span data-i18n="faq2_q">Comment personnaliser mon modèle de certificat ?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <p data-i18n="faq2_a">Dans AD-GENIUS, vous pouvez modifier dynamiquement les titres, les noms, ajouter des logos d'entreprise, modifier la couleur des sceaux et insérer des zones de signature numérique.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-header" onclick="toggleFaqItem(this)">
+                        <span data-i18n="faq3_q">Puis-je exporter mes certificats ?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <p data-i18n="faq3_a">Oui. L'application propose des exports en image haute définition, adaptés à l'impression. Les abonnés Premium de IA Code Studio disposent de droits d'exportation illimités.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-header" onclick="toggleFaqItem(this)">
+                        <span data-i18n="faq4_q">Est-il possible de générer des certificats en masse ?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <p data-i18n="faq4_a">Le studio AD-GENIUS permet de cloner vos modèles ou de modifier les champs de texte en quelques secondes pour créer des séries de diplômes pour toute une classe ou entreprise.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-header" onclick="toggleFaqItem(this)">
+                        <span data-i18n="faq5_q">Les certificats sont-ils adaptables sur mobile ?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <p data-i18n="faq5_a">Oui. L'éditeur visuel s'exécute de façon fluide sur les navigateurs mobiles, vous permettant de faire des corrections rapides ou de générer un diplôme depuis votre smartphone.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p data-i18n="footer_text">© 2026 IA CODE STUDIO. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        const localTranslations = {
+            fr: {
+                badge_text: "AD-GENIUS AI PRO Studio",
+                hero_title: "Générateur de Certificat en ligne",
+                hero_desc: "Créez des certificats de formation, diplômes de réussite et récompenses d'entreprise personnalisés avec l'aide de l'intelligence artificielle. Rapide, élégant et professionnel.",
+                cta_text: "Lancer le Studio de Certificats ⚡",
+                feat1_title: "Modèles Prêts à l'Emploi",
+                feat1_desc: "Choisissez parmi des designs classiques, corporatifs ou modernes. L'IA génère les marges, bordures et sceaux parfaits en quelques clics.",
+                feat2_title: "Typographies Élégantes",
+                feat2_desc: "Utilisez des styles d'écriture cursifs ou calligraphiques de haute qualité pour les noms des lauréats et des signatures réalistes.",
+                feat3_title: "Exports Haute Résolution",
+                feat3_desc: "Téléchargez vos diplômes finaux au format PNG haute définition ou code HTML5 vectoriel pour les envoyer ou les imprimer proprement.",
+                faq_main_title: "Questions Fréquentes",
+                faq1_q: "Qu'est-ce qu'un générateur de certificat en ligne ?",
+                faq1_a: "C'est une plateforme d'édition qui permet de concevoir des certificats de distinction ou des diplômes d'études. L'IA s'occupe de la mise en page esthétique et des alignements de textes.",
+                faq2_q: "Comment personnaliser mon modèle de certificat ?",
+                faq2_a: "Dans AD-GENIUS, vous pouvez modifier dynamiquement les titres, les noms, ajouter des logos d'entreprise, modifier la couleur des sceaux et insérer des zones de signature numérique.",
+                faq3_q: "Puis-je exporter mes certificats ?",
+                faq3_a: "Oui. L'application propose des exports en image haute définition, adaptés à l'impression. Les abonnés Premium de IA Code Studio disposent de droits d'exportation illimités.",
+                faq4_q: "Est-il possible de générer des certificats en masse ?",
+                faq4_a: "Le studio AD-GENIUS permet de cloner vos modèles ou de modifier les champs de texte en quelques secondes pour créer des séries de diplômes pour toute une classe ou entreprise.",
+                faq5_q: "Les certificats sont-ils adaptables sur mobile ?",
+                faq5_a: "Oui. L'éditeur visuel s'exécute de façon fluide sur les navigateurs mobiles, vous permettant de faire des corrections rapides ou de générer un diplôme depuis votre smartphone.",
+                footer_text: "© 2026 IA CODE STUDIO. Tous droits réservés."
+            },
+            en: {
+                badge_text: "AD-GENIUS AI PRO Studio",
+                hero_title: "Certificate Generator Online",
+                hero_desc: "Design premium customized training diplomas, corporate appreciation awards, and school course certificates in minutes with AI.",
+                cta_text: "Launch Certificate Studio ⚡",
+                feat1_title: "Ready Templates",
+                feat1_desc: "Choose from professional classic, corporate, or sleek modern layouts. AI generates optimal margins, borders, and emblems.",
+                feat2_title: "Elegant Calligraphy",
+                feat2_desc: "Utilize premium hand-written cursives and signature fonts to personalize awardee names and organization headers.",
+                feat3_title: "High-Res Exports",
+                feat3_desc: "Download print-ready high-resolution PNG image formats or save your certificates as fully customizable vector HTML5 code.",
+                faq_main_title: "Frequently Asked Questions",
+                faq1_q: "What is an online certificate generator?",
+                faq1_a: "It is an online design workspace built specifically to construct award diplomas. AI assistance automates alignments, font styling, and asset positioning.",
+                faq2_q: "How can I personalize the certificate template?",
+                faq2_a: "Using the AD-GENIUS interface, you can freely edit text values, change award dates, upload corporate logos, and adjust seal styles.",
+                faq3_q: "Can I export certificates in PDF or image format?",
+                faq3_a: "Yes! You can export as high-resolution images perfect for printing. Full access to raw exports is unlocked for Premium members of IA Code Studio.",
+                faq4_q: "Is there support for bulk certificate generation?",
+                faq4_a: "AD-GENIUS allows quick cloning and field-updating, making it simple to generate dozens of customized certificates sequentially for teams or classes.",
+                faq5_q: "Does it work well on mobile browsers?",
+                faq5_a: "Yes, the editor is responsive and mobile-friendly, permitting fast modifications and certificate exports directly from your phone.",
+                footer_text: "© 2026 IA CODE STUDIO. All rights reserved."
+            }
+        };
+
+        const pageTitles = {
+            fr: "Générateur de Certificat en ligne | Certificate Maker Gratuit - IA Code Studio",
+            en: "Certificate Generator Online | Free AI Certificate Maker - IA Code Studio"
+        };
+
+        const pageMetaDescriptions = {
+            fr: "Générateur de certificats professionnels en ligne. Créez des diplômes de formation, des récompenses d'entreprise et des certificats de réussite avec l'IA.",
+            en: "Professional certificate generator online. Create customized training diplomas, corporate award certificates, and achievements in minutes with AI."
+        };
+
+        function setLanguage(lang) {
+            const translation = localTranslations[lang];
+            if (!translation) return;
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translation[key]) {
+                    el.textContent = translation[key];
+                }
+            });
+
+            document.title = pageTitles[lang];
+            const metaDescEl = document.getElementById('meta-description');
+            if (metaDescEl) metaDescEl.setAttribute('content', pageMetaDescriptions[lang]);
+
+            const ogTitle = document.getElementById('og-title');
+            if (ogTitle) ogTitle.setAttribute('content', pageTitles[lang]);
+            const ogDesc = document.getElementById('og-desc');
+            if (ogDesc) ogDesc.setAttribute('content', pageMetaDescriptions[lang]);
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            if (lang === 'fr') document.getElementById('btn-fr').classList.add('active');
+            else document.getElementById('btn-en').classList.add('active');
+
+            localStorage.setItem('hub_lang', lang);
+            updateFAQSchema(lang);
+        }
+
+        function toggleFaqItem(button) {
+            const item = button.parentElement;
+            const content = item.querySelector('.faq-content');
+            
+            document.querySelectorAll('.faq-item').forEach(otherItem => {
+                if (otherItem !== item && otherItem.classList.contains('active')) {
+                    otherItem.classList.remove('active');
+                    otherItem.querySelector('.faq-content').style.maxHeight = null;
+                }
+            });
+
+            item.classList.toggle('active');
+            if (item.classList.contains('active')) {
+                content.style.maxHeight = content.scrollHeight + "px";
+            } else {
+                content.style.maxHeight = null;
+            }
+        }
+
+        function updateFAQSchema(lang) {
+            const trans = localTranslations[lang];
+            const schema = {
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": trans.faq1_q,
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": trans.faq1_a
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": trans.faq2_q,
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": trans.faq2_a
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": trans.faq3_q,
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": trans.faq3_a
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": trans.faq4_q,
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": trans.faq4_a
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": trans.faq5_q,
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": trans.faq5_a
+                        }
+                    }
+                ]
+            };
+
+            const scriptEl = document.getElementById('faq-schema');
+            if (scriptEl) {
+                scriptEl.textContent = JSON.stringify(schema, null, 2);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlLang = urlParams.get('lang');
+            
+            let initialLang = 'fr';
+            if (urlLang === 'en' || urlLang === 'fr') {
+                initialLang = urlLang;
+            } else {
+                const savedLang = localStorage.getItem('hub_lang');
+                if (savedLang === 'en' || savedLang === 'fr') {
+                    initialLang = savedLang;
+                }
+            }
+            
+            setLanguage(initialLang);
+
+            document.getElementById('btn-fr').addEventListener('click', () => setLanguage('fr'));
+            document.getElementById('btn-en').addEventListener('click', () => setLanguage('en'));
+        });
+    </script>
+</body>
+</html>
