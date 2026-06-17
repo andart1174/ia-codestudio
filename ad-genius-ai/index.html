@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AD-GENIUS AI — Pro Ad & Conversion Studio</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Glowing Background Orbs -->
+    <div class="aura-container">
+        <div class="aura-orb orb-1"></div>
+        <div class="aura-orb orb-2"></div>
+        <div class="aura-orb orb-3"></div>
+    </div>
+
+    <!-- Header Navbar -->
+    <header class="navbar">
+        <div style="display:flex; align-items:center; gap:20px;">
+            <div class="logo">
+                <span class="logo-icon">⚡</span>
+                <span class="logo-text">AD-GENIUS <span class="badge-pro">AI PRO</span></span>
+            </div>
+            <button id="btn-back-dashboard" class="btn-secondary" style="display:none; padding:6px 14px; font-size:12px; font-weight:700; border-radius:6px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:#fff; cursor:pointer;">
+                ⬅️ <span data-i18n="btn_back">Back to Studios</span>
+            </button>
+        </div>
+        <div class="nav-controls">
+            <div class="lang-toggle">
+                <button class="lang-btn active" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="fr">FR</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- App Container -->
+    
+    <!-- App Container -->
+    <div class="app-container">
+        
+        <!-- Welcome Grid -->
+        <div id="dashboard-grid-view" class="dashboard-grid-view">
+            <div class="dash-card-item" onclick="activateWorkspace('core-ad-genius')" style="--card-color: #3b82f6; border: 1px solid #3b82f625; background: linear-gradient(135deg, #3b82f615 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <div class="card-item-icon">⚡</div>
+                <div class="card-item-content">
+                    <h4>AD-GENIUS AI Banner Builder</h4>
+                    <p>Create conversion-optimized popups, sticky headers, and slide-in ads.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" onclick="activateWorkspace('pricing-table')" style="--card-color: #10b981; border: 1px solid #10b98125; background: linear-gradient(135deg, #10b98115 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <div class="card-item-icon">💰</div>
+                <div class="card-item-content">
+                    <h4>Pricing Table Studio</h4>
+                    <p>Generate high-converting interactive HTML pricing plans.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" onclick="activateWorkspace('certificate-studio')" style="--card-color: #ffd700; border: 1px solid #ffd70025; background: linear-gradient(135deg, #ffd70015 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <div class="card-item-icon">📜</div>
+                <div class="card-item-content">
+                    <h4>Certificate Studio Pro</h4>
+                    <p>Create and export professional certificates.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" onclick="activateWorkspace('greeting-card')" style="--card-color: #ff69b4; border: 1px solid #ff69b425; background: linear-gradient(135deg, #ff69b415 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <div class="card-item-icon">✉️</div>
+                <div class="card-item-content">
+                    <h4>Greeting Card Studio</h4>
+                    <p>Design animated holiday & greeting cards.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" onclick="activateWorkspace('digital-book')" style="--card-color: #8b5cf6; border: 1px solid #8b5cf625; background: linear-gradient(135deg, #8b5cf615 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <div class="card-item-icon">📖</div>
+                <div class="card-item-content">
+                    <h4>Book Studio</h4>
+                    <p>Create interactive 3D digital flipping books.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" onclick="activateWorkspace('magazine-cover')" style="--card-color: #ef4444; border: 1px solid #ef444425; background: linear-gradient(135deg, #ef444415 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <div class="card-item-icon">📰</div>
+                <div class="card-item-content">
+                    <h4>Magazine Cover</h4>
+                    <p>Design stylish magazine cover mockups.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" onclick="activateWorkspace('digital-menu')" style="--card-color: #f97316; border: 1px solid #f9731625; background: linear-gradient(135deg, #f9731615 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <div class="card-item-icon">🍽️</div>
+                <div class="card-item-content">
+                    <h4>Digital Menu Pro</h4>
+                    <p>Create interactive menus for restaurants.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" onclick="activateWorkspace('smart-vcard')" style="--card-color: #06b6d4; border: 1px solid #06b6d425; background: linear-gradient(135deg, #06b6d415 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <div class="card-item-icon">📇</div>
+                <div class="card-item-content">
+                    <h4>Smart vCard 3.0</h4>
+                    <p>Generate responsive digital business cards.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" onclick="activateWorkspace('biolink-hub')" style="--card-color: #84cc16; border: 1px solid #84cc1625; background: linear-gradient(135deg, #84cc1615 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <div class="card-item-icon">🔗</div>
+                <div class="card-item-content">
+                    <h4>BioLink Hub Pro</h4>
+                    <p>Create link-in-bio portals for social media.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" onclick="activateWorkspace('smart-signage')" style="--card-color: #0ea5e9; border: 1px solid #0ea5e925; background: linear-gradient(135deg, #0ea5e915 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <div class="card-item-icon">📺</div>
+                <div class="card-item-content">
+                    <h4>Smart Signage Pro</h4>
+                    <p>Design dynamic digital signage slideshows.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" onclick="activateWorkspace('localized-ad')" style="--card-color: #a855f7; border: 1px solid #a855f725; background: linear-gradient(135deg, #a855f715 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <div class="card-item-icon">🎯</div>
+                <div class="card-item-content">
+                    <h4>Dynamic Contextual Studio</h4>
+                    <p>Create localized and contextual banner ads.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" onclick="activateWorkspace('spin-wheel')" style="--card-color: #f59e0b; border: 1px solid #f59e0b25; background: linear-gradient(135deg, #f59e0b15 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <div class="card-item-icon">🎡</div>
+                <div class="card-item-content">
+                    <h4>Spin Wheel Fortune</h4>
+                    <p>Interactive lucky spin wheels to capture leads.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" onclick="activateWorkspace('infinite-zoom')" style="--card-color: #6366f1; border: 1px solid #6366f125; background: linear-gradient(135deg, #6366f115 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <div class="card-item-icon">🌀</div>
+                <div class="card-item-content">
+                    <h4>Infinite Zoom Portal</h4>
+                    <p>Generate infinite zooming canvas animations.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" onclick="activateWorkspace('gravity-sandbox')" style="--card-color: #ec4899; border: 1px solid #ec489925; background: linear-gradient(135deg, #ec489915 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <div class="card-item-icon">⚛️</div>
+                <div class="card-item-content">
+                    <h4>Gravity Sandbox</h4>
+                    <p>Physics-based interactive advertising banner.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" onclick="activateWorkspace('ar-business-card')" style="--card-color: #10b981; border: 1px solid #10b98125; background: linear-gradient(135deg, #10b98115 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <div class="card-item-icon">🕶️</div>
+                <div class="card-item-content">
+                    <h4>AR Biz Card</h4>
+                    <p>WebAR business card layout with 3D elements.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" onclick="activateWorkspace('playable-ad-builder')" style="--card-color: #d946ef; border: 1px solid #d946ef25; background: linear-gradient(135deg, #d946ef15 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <div class="card-item-icon">🎮</div>
+                <div class="card-item-content">
+                    <h4>Playable Ad Builder</h4>
+                    <p>Build interactive mini-game playable ads.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" onclick="activateWorkspace('kinetic-typography')" style="--card-color: #f59e0b; border: 1px solid #f59e0b25; background: linear-gradient(135deg, #f59e0b15 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <div class="card-item-icon">✍️</div>
+                <div class="card-item-content">
+                    <h4>Kinetic Typography</h4>
+                    <p>Generate text layouts that react to motion.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" onclick="activateWorkspace('mockup-master')" style="--card-color: #8b5cf6; border: 1px solid #8b5cf625; background: linear-gradient(135deg, #8b5cf615 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <div class="card-item-icon">📦</div>
+                <div class="card-item-content">
+                    <h4>Mockup Master Pro</h4>
+                    <p>3D product mockups with interactive settings.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" onclick="activateWorkspace('brand-ad')" style="--card-color: #ef4444; border: 1px solid #ef444425; background: linear-gradient(135deg, #ef444415 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <div class="card-item-icon">🏷️</div>
+                <div class="card-item-content">
+                    <h4>Brand Ad Studio V2</h4>
+                    <p>Create high-end interactive brand advertisements.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" onclick="activateWorkspace('showroom-3d')" style="--card-color: #a855f7; border: 1px solid #a855f725; background: linear-gradient(135deg, #a855f715 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <div class="card-item-icon">🔮</div>
+                <div class="card-item-content">
+                    <h4 data-i18n="card_sr_title">3D Product Showroom</h4>
+                    <p data-i18n="card_sr_desc">Create interactive 3D product banners with custom labels.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" onclick="activateWorkspace('scratch-card')" style="--card-color: #ffd700; border: 1px solid #ffd70025; background: linear-gradient(135deg, #ffd70015 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <div class="card-item-icon">🎟️</div>
+                <div class="card-item-content">
+                    <h4 data-i18n="card_sc_title">Scratch Card Studio</h4>
+                    <p data-i18n="card_sc_desc">Design gamified scratch-off cards to reveal promotions.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Core Banner Builder Workspace -->
+        <div id="core-ad-genius-workspace" class="workspace" style="display:none; flex:1; width:100%; height:100%; grid-template-columns: 360px 1fr 350px; gap: 24px;">
+            <!-- COLUMN 1: Settings & Copywriting Controls -->
+        <aside class="panel controls-panel">
+            <div class="panel-header">
+                <h2 data-i18n="panel_settings_title">Ad Configuration</h2>
+                <p data-i18n="panel_settings_subtitle">Create conversion-optimized ads</p>
+            </div>
+            
+            <div class="panel-body">
+                <!-- Section 1: Ad Format -->
+                <div class="control-section">
+                    <h3 data-i18n="sec_format">1. Ad Format</h3>
+                    <div class="control-group">
+                        <label for="select-format" data-i18n="label_format">Select Layout Type</label>
+                        <select id="select-format">
+                            <option value="exit_intent" data-i18n="opt_exit_intent">Exit-Intent Popup</option>
+                            <option value="sticky_bar" data-i18n="opt_sticky_bar">Sticky Header Bar</option>
+                            <option value="slide_in" data-i18n="opt_slide_in">Corner Slide-in Card</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Section 2: AI Copywriter -->
+                <div class="control-section">
+                    <h3 data-i18n="sec_ai_copywriter">2. AI Copywriter (AIDA/PAS)</h3>
+                    <div class="control-group">
+                        <label for="select-industry" data-i18n="label_industry">Business Category</label>
+                        <select id="select-industry">
+                            <option value="ecommerce" data-i18n="opt_ecommerce">E-Commerce & Retail</option>
+                            <option value="saas" data-i18n="opt_saas">SaaS & Tech Software</option>
+                            <option value="realestate" data-i18n="opt_realestate">Real Estate & Agency</option>
+                            <option value="services" data-i18n="opt_services">Local Business & Services</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="input-product-desc" data-i18n="label_product_desc">Describe your Offer</label>
+                        <textarea id="input-product-desc" rows="3" placeholder="Get 20% off all plans today... / Profitez de 20% de réduction..."></textarea>
+                    </div>
+                    <div class="control-group">
+                        <label for="select-framework" data-i18n="label_framework">Marketing Framework</label>
+                        <select id="select-framework">
+                            <option value="aida">AIDA (Attention, Interest, Desire, Action)</option>
+                            <option value="pas">PAS (Problem, Agitate, Solve)</option>
+                        </select>
+                    </div>
+                    <button id="btn-generate-copy" class="btn-primary">
+                        <span class="icon">✨</span> <span data-i18n="btn_generate_copy">Generate High-Converting Copy</span>
+                    </button>
+                </div>
+
+                <!-- Section 3: Ad Content -->
+                <div class="control-section">
+                    <h3 data-i18n="sec_content">3. Fine-Tune Content</h3>
+                    <div class="control-group">
+                        <label for="input-title" data-i18n="label_title">Headline</label>
+                        <input type="text" id="input-title" value="SPECIAL OFFER">
+                    </div>
+                    <div class="control-group">
+                        <label for="input-desc" data-i18n="label_desc">Description / Body Text</label>
+                        <textarea id="input-desc" rows="2">Get premium access now and boost your sales.</textarea>
+                    </div>
+                    <div class="control-group">
+                        <label for="input-btn-text" data-i18n="label_btn_text">Button Text</label>
+                        <input type="text" id="input-btn-text" value="Claim Offer">
+                    </div>
+                    <div class="control-group">
+                        <label for="input-btn-url" data-i18n="label_btn_url">Target URL</label>
+                        <input type="url" id="input-btn-url" value="https://ia-codestudio.com">
+                    </div>
+                </div>
+
+                <!-- Section 4: Design -->
+                <div class="control-section">
+                    <h3 data-i18n="sec_design">4. Visual Aesthetics</h3>
+                    <div class="control-group color-row">
+                        <div>
+                            <label for="color-primary" data-i18n="label_color_primary">Primary Color</label>
+                            <input type="color" id="color-primary" value="#3b82f6">
+                        </div>
+                        <div>
+                            <label for="color-accent" data-i18n="label_color_accent">Accent Glow</label>
+                            <input type="color" id="color-accent" value="#8b5cf6">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label for="range-opacity" data-i18n="label_opacity">Background Glass Opacity</label>
+                        <div class="slider-wrapper">
+                            <input type="range" id="range-opacity" min="5" max="95" value="15">
+                            <span class="slider-value" id="val-opacity">15%</span>
+                        </div>
+                    </div>
+                    <div class="control-group switch-group">
+                        <label for="switch-glow" data-i18n="label_glow">Neon Border Glow</label>
+                        <input type="checkbox" id="switch-glow" checked>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- COLUMN 2: Preview & Conversion Dashboard -->
+        <main class="panel preview-panel">
+            <div class="panel-header flex-header">
+                <div>
+                    <h2 data-i18n="panel_preview_title">Interactive Live Preview</h2>
+                    <p data-i18n="panel_preview_subtitle">Test behaviors, transitions, and hover triggers</p>
+                </div>
+                <div class="heatmap-toggle-container">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="check-heatmap">
+                        <span data-i18n="toggle_heatmap">🔥 Show Click Heatmap</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="preview-area">
+                <div class="iframe-container">
+                    <iframe id="preview-iframe" title="AD-GENIUS AI Live Widget Preview"></iframe>
+                    
+                    <!-- Heatmap Canvas Overlay -->
+                    <div id="heatmap-overlay" class="heatmap-overlay">
+                        <div class="heatmap-point pt-1"></div>
+                        <div class="heatmap-point pt-2"></div>
+                        <div class="heatmap-point pt-3"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conversion Dashboard -->
+            <div class="dashboard-section">
+                <h3 data-i18n="dash_title">📈 Conversion Intelligence Dashboard</h3>
+                <div class="dashboard-grid">
+                    <div class="dash-card">
+                        <div class="dash-num" id="dash-ctr">4.2%</div>
+                        <div class="dash-label" data-i18n="dash_ctr_label">Simulated CTR (Click Rate)</div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-num" id="dash-score">82/100</div>
+                        <div class="dash-label" data-i18n="dash_score_label">Ad Copy Quality Score</div>
+                    </div>
+                    <div class="dash-card tips-card">
+                        <div class="dash-label bold" data-i18n="dash_tips_title">Optimization Feedback</div>
+                        <p class="dash-tip-text" id="dash-tip" data-i18n="dash_tip_default">Add a clear sense of urgency (e.g. "Limited Time") to increase clicks by up to 25%.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- COLUMN 3: Integration Code & Guide -->
+        <section class="panel code-panel">
+            <div class="panel-header">
+                <h2 data-i18n="panel_code_title">Integration Code</h2>
+                <p data-i18n="panel_code_subtitle">Embed this optimized code block inside your site</p>
+            </div>
+
+            <div class="panel-body">
+                <div class="code-wrapper">
+                    <textarea id="code-output" readonly></textarea>
+                    <div class="code-actions">
+                        <button id="btn-copy-code" class="btn-primary">
+                            <span data-i18n="btn_copy">Copy Code</span>
+                        </button>
+                        <button id="btn-download-html" class="btn-secondary">
+                            <span data-i18n="btn_download">Download HTML</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="guide-section">
+                    <h3 data-i18n="guide_title">How to Install</h3>
+                    <ul class="guide-list">
+                        <li data-i18n="guide_step_1">Copy the generated script code using the button above.</li>
+                        <li data-i18n="guide_step_2">Paste it inside the <code>&lt;body&gt;</code> tag of your web pages.</li>
+                        <li data-i18n="guide_step_3">Exit-Intent popups trigger automatically when users leave. Sticky bars appear instantly at the top/bottom.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        </div>
+
+        <!-- Copied Workspaces -->
+        
+        <!-- Social Workspaces -->
+        <div id="pricing-table-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="pt-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#0f172a;overflow-y:auto;padding:40px;"></div>
+            <div id="pt-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
+        </div>
+        <div id="certificate-studio-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="cert-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#0f172a;overflow-y:auto;"></div>
+            <div id="cert-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
+        </div>
+        <div id="greeting-card-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="gcs-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#0f172a;overflow-y:auto;"></div>
+            <div id="gcs-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
+        </div>
+        <div id="digital-book-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="dbs-center" class="center-panel" style="flex:1;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#0f172a;overflow:hidden;"></div>
+            <div id="dbs-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
+        </div>
+        <div id="magazine-cover-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="mcs-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#0f172a;overflow:hidden;"></div>
+            <div id="mcs-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
+        </div>
+        <div id="digital-menu-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="dmp-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#0f172a;overflow:hidden;"></div>
+            <div id="dmp-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
+        </div>
+        <div id="smart-vcard-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="svc-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#0f172a;overflow:hidden;"></div>
+            <div id="svc-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
+        </div>
+        <div id="biolink-hub-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="bhp-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#0f172a;overflow:hidden;"></div>
+            <div id="bhp-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
+        </div>
+        <div id="smart-signage-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="ssp-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#0f172a;overflow:hidden;"></div>
+            <div id="ssp-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
+        </div>
+        <div id="localized-ad-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="la-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#0f172a;overflow:hidden;"></div>
+            <div id="la-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
+        </div>
+        <div id="spin-wheel-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="sw-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#0f172a;overflow:hidden;"></div>
+            <div id="sw-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
+        </div>
+        <div id="infinite-zoom-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="iz-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#000;overflow:hidden;"></div>
+            <div id="iz-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
+        </div>
+        <div id="gravity-sandbox-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="gs-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#0f172a;overflow:hidden;"></div>
+            <div id="gs-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
+        </div>
+        <div id="gravity-sandbox-pro-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="gsp-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#0f172a;overflow:hidden;"></div>
+            <div id="gsp-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
+        </div>
+        <div id="ar-business-card-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="abc-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#0f172a;overflow:hidden;"></div>
+            <div id="abc-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
+        </div>
+        <div id="playable-ad-builder-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="pab-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#0f172a;overflow:hidden;"></div>
+            <div id="pab-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
+        </div>
+        <div id="kinetic-typography-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="ktp-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#020617;overflow:hidden;"></div>
+            <div id="ktp-right" class="right-panel" style="width:300px;background:#0f172a;display:y:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
+        </div>
+        <div id="mockup-master-workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="mm-center" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;">
+            </div>
+            <div id="mm-right" style="width:300px;background:#0f172a;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
+        </div>
+        <div id="mockup-box-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="mbs-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#1e293b;overflow:hidden;perspective:1000px;"></div>
+            <div id="mbs-right" class="right-panel" style="width:300px;background:#0f172a;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
+        </div>
+        <div id="brand-ad-workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="ba-center" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #222;">
+                <canvas id="ba-canvas" style="width:100%;height:100%;max-width:100%;object-fit:contain;"></canvas>
+            </div>
+            <div id="ba-right" style="width:320px;background:#0a0a0a;display:flex;flex-direction:column;padding:20px;gap:15px;overflow-y:auto;border-left:1px solid #222;">
+                <!-- Controls injected via JS -->
+            </div>
+        </div>
+        <div id="showroom-3d-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="sr-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#0f172a;overflow:hidden;"></div>
+            <div id="sr-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
+        </div>
+        <div id="scratch-card-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="sc-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#0f172a;overflow:hidden;"></div>
+            <div id="sc-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
+        </div>
+
+    </div>
+<!-- Scripts -->
+    <!-- Third-party Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+
+    <!-- App Router -->
+    <script src="app.js"></script>
+
+    <!-- Copied Modules -->
+    <script src="js/pricing-table-studio.js"></script>
+    <script src="js/certificate-studio-pro.js"></script>
+    <script src="js/greeting-card-pro.js"></script>
+    <script src="js/digital-book-studio.js"></script>
+    <script src="js/magazine-cover-pro.js"></script>
+    <script src="js/digital-menu-pro.js"></script>
+    <script src="js/smart-vcard-pro.js"></script>
+    <script src="js/biolink-hub-pro.js"></script>
+    <script src="js/smart-signage-pro.js"></script>
+    <script src="js/localized-ad-engine.js"></script>
+    <script src="js/spin-wheel-ads.js"></script>
+    <script src="js/infinite-zoom.js"></script>
+    <script src="js/gravity-sandbox.js"></script>
+    <script src="js/gravity-sandbox-pro.js"></script>
+    <script src="js/ar-business-card.js"></script>
+    <script src="js/playable-ad-builder.js"></script>
+    <script src="js/kinetic-typography.js"></script>
+    <script src="js/mockup-master-pro.js"></script>
+    <script src="js/mockup-box-studio.js"></script>
+    <script src="js/brand-ad-studio.js"></script>
+    <script src="js/3d-showroom.js"></script>
+    <script src="js/scratch-card-studio.js"></script>
+</body>
+</html>
