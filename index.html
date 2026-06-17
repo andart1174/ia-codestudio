@@ -898,10 +898,7 @@
                 btn.innerText = '💎 Devenir Premium ($10/mo)';
             }
             function triggerPremiumPortal() {
-                if (confirm(currentLang === 'en' ? "TEST MODE: Simulate Stripe payment completion? Press OK if you paid to start your subscription." : "MODE TEST : Simuler la finalisation du paiement Stripe ? Appuyez sur OK si vous avez 'payé' pour démarrer l'abonnement.")) {
-                    localStorage.setItem('ia_premium_sub_date', Date.now().toString());
-                    window.location.reload();
-                }
+                window.open('https://buy.stripe.com/bJecN61Fk3staax7mGbfO03', '_blank');
             }
             document.addEventListener('DOMContentLoaded', checkPremiumPortal);
 
