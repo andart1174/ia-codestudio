@@ -80,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Handle Watermark Locking logic globally
   const wmCheckbox = document.getElementById('chk-watermark');
   if (wmCheckbox) {
+    injectPremiumModal();
     if (!checkIsPremium()) {
       wmCheckbox.checked = true;
       wmCheckbox.disabled = true;
@@ -102,12 +103,8 @@ document.addEventListener('DOMContentLoaded', () => {
           } else {
             e.preventDefault();
           }
-          const activeLang = localStorage.getItem('hub_lang') || 'fr';
-          const msg = activeLang === 'fr' 
-            ? "Le retrait du filigrane est réservé aux membres Premium. Vous allez être redirigé vers la page de mise à niveau." 
-            : "Watermark removal is a Premium feature. You will be redirected to the upgrade page.";
-          alert(msg);
-          window.open('https://buy.stripe.com/bJecN61Fk3staax7mGbfO03', '_blank');
+          const modal = document.getElementById('free-tools-premium-modal');
+          if (modal) modal.style.display = 'flex';
         });
       }
     } else {
@@ -115,6 +112,51 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 });
+
+const modalTranslations = {
+  fr: {
+    title: "Désactiver le branding ?",
+    desc: "Passez à la version Premium de IA Code Studio pour exporter des codes 100% white-label sans filigrane.",
+    cta: "Passer au Premium ⚡",
+    cancel: "Garder le filigrane (Gratuit)"
+  },
+  en: {
+    title: "Remove Branding?",
+    desc: "Upgrade to IA Code Studio Premium to export 100% white-label widgets without watermark.",
+    cta: "Go Premium ⚡",
+    cancel: "Keep watermark (Free)"
+  }
+};
+
+function injectPremiumModal() {
+  if (document.getElementById('free-tools-premium-modal')) return;
+
+  const activeLang = localStorage.getItem('hub_lang') || 'fr';
+  const t = modalTranslations[activeLang] || modalTranslations.fr;
+
+  const modalHtml = `
+    <div id="free-tools-premium-modal" style="display:none; position:fixed; inset:0; background:rgba(3,7,18,0.9); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); z-index:999999; align-items:center; justify-content:center; padding: 20px;">
+      <div style="background:rgba(15,23,42,0.85); border:1px solid rgba(255,255,255,0.08); border-radius:24px; padding:2.5rem 2rem; max-width:440px; width:100%; text-align:center; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); font-family:'Outfit', sans-serif; backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); position:relative;">
+        <div style="font-size:3.5rem; margin-bottom:1.2rem; filter:drop-shadow(0 0 15px rgba(6,182,212,0.4));">💎</div>
+        <h3 style="color:#fff; font-size:1.6rem; margin-bottom:0.75rem; font-weight:700; font-family:'Space Grotesk', sans-serif;">${t.title}</h3>
+        <p style="color:#94a3b8; font-size:0.95rem; line-height:1.6; margin-bottom:2rem; font-family:'Outfit', sans-serif;">${t.desc}</p>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <a href="https://buy.stripe.com/bJecN61Fk3staax7mGbfO03" target="_blank" style="text-decoration:none; padding: 0.9rem 1.5rem; border-radius: 12px; font-weight: 700; width:100%; display:inline-block; background:linear-gradient(135deg, #00f0ff, #3b82f6); color:#fff; border:none; cursor:pointer; font-family:'Outfit', sans-serif; box-sizing:border-box; text-align:center; transition: all 0.3s ease;">${t.cta}</a>
+          <button id="free-tools-modal-close" style="padding: 0.9rem 1.5rem; border-radius: 12px; font-weight: 600; width:100%; cursor:pointer; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; font-family:'Outfit', sans-serif; box-sizing:border-box; transition: all 0.3s ease;">${t.cancel}</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const div = document.createElement('div');
+  div.innerHTML = modalHtml;
+  document.body.appendChild(div.firstElementChild);
+
+  document.getElementById('free-tools-modal-close').addEventListener('click', () => {
+    document.getElementById('free-tools-premium-modal').style.display = 'none';
+  });
+}
+
 
 // Global checkIsPremium function
 function checkIsPremium() {
