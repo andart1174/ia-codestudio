@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IA CODEPLAY — Sandbox Live</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CodeMirror CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/material-ocean.min.css">
+  
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="playground-style.css">
+</head>
+<body class="cyber-bg playground-body">
+  <header class="cyber-header">
+    <div class="header-logo">
+      <span class="logo-icon">⚡</span>
+      <h1 class="logo-text">IA CODE <span class="accent-text">PLAYGROUND</span></h1>
+    </div>
+    <div class="header-controls">
+      <div class="lang-switcher">
+        <button id="btn-lang-fr" class="lang-btn">FR</button>
+        <button id="btn-lang-en" class="lang-btn">EN</button>
+      </div>
+      <a href="../index.html" class="back-link">
+        <span class="back-icon">←</span> <span data-i18n="back_dashboard">Tableau de bord</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="playground-layout">
+    <!-- Left Panel: Code Editors & Controls -->
+    <div class="editor-container">
+      <div class="editor-header-tabs">
+        <button class="tab-btn active" data-tab="html">HTML</button>
+        <button class="tab-btn" data-tab="css">CSS</button>
+        <button class="tab-btn" data-tab="js">JavaScript</button>
+      </div>
+
+      <div class="editors-wrapper">
+        <!-- HTML Editor -->
+        <div id="wrapper-html" class="editor-tab-content active">
+          <textarea id="editor-html"></textarea>
+        </div>
+        <!-- CSS Editor -->
+        <div id="wrapper-css" class="editor-tab-content">
+          <textarea id="editor-css"></textarea>
+        </div>
+        <!-- JS Editor -->
+        <div id="wrapper-js" class="editor-tab-content">
+          <textarea id="editor-js"></textarea>
+        </div>
+      </div>
+
+      <!-- Presets & Exports Bar -->
+      <div class="editor-footer-controls">
+        <div class="presets-section">
+          <span data-i18n="play_presets" class="control-label">Presets WebGL & CSS</span>
+          <div class="preset-buttons">
+            <button class="preset-btn" data-preset="cube" data-i18n="play_preset_cube">Cube 3D Rotatif</button>
+            <button class="preset-btn" data-preset="matrix" data-i18n="play_preset_matrix">Pluie Matrix 3D</button>
+            <button class="preset-btn" data-preset="neon" data-i18n="play_preset_neon">Texte Néon Pulsé</button>
+            <button class="preset-btn" data-preset="glass" data-i18n="play_preset_glass">Formulaire Glassmorphic</button>
+          </div>
+        </div>
+
+        <div class="actions-section">
+          <label class="watermark-toggle-label">
+            <input type="checkbox" id="chk-watermark" checked>
+            <span data-i18n="badge_label">Inclure le badge "Powered by IA Code Studio"</span>
+          </label>
+          
+          <div class="export-actions">
+            <button id="btn-copy-code" class="action-btn cyan-btn">
+              <span>📋</span> <span data-i18n="copy_code">Copier le code</span>
+            </button>
+            <button id="btn-download-html" class="action-btn">
+              <span>📥</span> <span data-i18n="download_html">Télécharger HTML</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel: Preview Iframe -->
+    <div class="preview-container">
+      <div class="preview-header">
+        <span class="preview-dot dot-red"></span>
+        <span class="preview-dot dot-yellow"></span>
+        <span class="preview-dot dot-green"></span>
+        <span class="preview-title" data-i18n="preview_panel">Prévisualisation en direct</span>
+      </div>
+      <iframe id="preview-iframe" sandbox="allow-scripts allow-popups allow-forms allow-modals"></iframe>
+    </div>
+  </div>
+
+  <!-- CodeMirror Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/xml/xml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/css/css.min.js"></script>
+
+  <script src="../js/i18n.js"></script>
+  <script src="../js/main.js"></script>
+  <script src="templates.js"></script>
+  <script src="playground.js"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+/* CSS specifically for Google Font 3D Previewer tool */
+
+.slider-container {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  height: 45px;
+}
+
+.slider-container input[type="range"] {
+  flex: 1;
+  accent-color: var(--accent-cyan);
+  cursor: pointer;
+}
+
+.slider-container span {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--text-main);
+  min-width: 45px;
+  text-align: right;
+}
+
+.color-picker {
+  height: 45px;
+  padding: 0.2rem 0.5rem !important;
+  cursor: pointer;
+}
+
+#preview-container-box {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}

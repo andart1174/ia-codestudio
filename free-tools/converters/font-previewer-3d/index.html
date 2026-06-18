@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IA CODEPLAY — 3D Google Fonts Previewer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="../converters-style.css">
+  <link rel="stylesheet" href="font-previewer-3d.css">
+</head>
+<body class="cyber-bg converter-body">
+  <header class="cyber-header">
+    <div class="header-logo">
+      <span class="logo-icon">🗣️</span>
+      <h1 class="logo-text">3D TEXT <span class="accent-text">MAKER</span></h1>
+    </div>
+    <div class="header-controls">
+      <div class="lang-switcher">
+        <button id="btn-lang-fr" class="lang-btn">FR</button>
+        <button id="btn-lang-en" class="lang-btn">EN</button>
+      </div>
+      <a href="../../index.html" class="back-link">
+        <span class="back-icon">←</span> <span data-i18n="back_dashboard">Tableau de bord</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="converter-layout">
+    <!-- Left: Inputs -->
+    <div class="input-panel">
+      <h2 data-i18n="f3d_title" class="panel-title">Aperçu de Textes 3D (Google Fonts)</h2>
+      
+      <div class="form-group">
+        <label for="inp-text-3d" data-i18n="f3d_input_label">Saisissez votre texte</label>
+        <input type="text" id="inp-text-3d" class="form-input" value="IA STUDIO">
+      </div>
+
+      <div class="form-group">
+        <label for="inp-font-style" data-i18n="f3d_font_label">Sélectionnez le style de police</label>
+        <select id="inp-font-style" class="form-input">
+          <option value="helvetiker">Helvetiker Modern</option>
+          <option value="gentilis">Gentilis Tech</option>
+          <option value="optimer">Optimer Sans</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="inp-depth" data-i18n="f3d_depth_label">Profondeur 3D</label>
+        <div class="slider-container">
+          <input type="range" id="inp-depth" min="1" max="15" value="4">
+          <span id="depth-val">0.4</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="inp-color-3d" data-i18n="f3d_color_label">Couleur du texte 3D</label>
+        <input type="color" id="inp-color-3d" class="form-input color-picker" value="#00f0ff" style="height: 40px;">
+      </div>
+
+      <div class="form-group">
+        <div class="checkbox-list">
+          <label class="checkbox-item">
+            <input type="checkbox" id="chk-bevel" checked>
+            <span data-i18n="f3d_bevel_label">Biseautage (Bevel)</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" id="chk-glow" checked>
+            <span data-i18n="f3d_glow_label">Activer le halo lumineux</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Outputs -->
+    <div class="output-panel">
+      <h2 data-i18n="preview_panel" class="panel-title">Prévisualisation en direct</h2>
+      
+      <div class="visual-preview-box">
+        <div id="preview-container-box">
+          <!-- WebGL Canvas will render here -->
+        </div>
+      </div>
+
+      <div class="watermark-container">
+        <label class="watermark-toggle-label">
+          <input type="checkbox" id="chk-watermark" checked>
+          <span data-i18n="badge_label">Inclure le badge "Powered by IA Code Studio"</span>
+        </label>
+      </div>
+
+      <h2 data-i18n="export_title" class="panel-title">Code à intégrer</h2>
+      <div class="code-output-area" style="flex: 1; min-height: 220px;">
+        <textarea id="output-code" readonly></textarea>
+        <div class="code-actions-row">
+          <button id="btn-copy-code" class="action-btn cyan-btn">
+            <span>📋</span> <span data-i18n="copy_code">Copier le code</span>
+          </button>
+          <button id="btn-download-html" class="action-btn">
+            <span>📥</span> <span data-i18n="download_html">Télécharger HTML</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Three.js & Font scripts via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FontLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/TextGeometry.js"></script>
+
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/main.js"></script>
+  <script src="font-previewer-3d.js"></script>
+</body>
+</html>

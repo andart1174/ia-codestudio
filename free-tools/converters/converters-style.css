@@ -1,0 +1,271 @@
+/* CSS for all converters in the Free Tools Suite */
+
+.converter-body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.converter-layout {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  gap: 2rem;
+}
+
+/* Panel Containers */
+.input-panel, .output-panel {
+  width: 50%;
+  border-radius: 16px;
+  background: var(--panel-bg);
+  border: 1px solid var(--border-color);
+  padding: 2.2rem;
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.panel-title {
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 0.8rem;
+}
+
+/* Input Styles */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-input {
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.form-input:focus {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 180px;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* File Drop Zone (for SVG optimizer) */
+.drop-zone {
+  border: 2px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.01);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.drop-zone:hover, .drop-zone.dragover {
+  border-color: var(--accent-cyan);
+  background: rgba(0, 240, 255, 0.02);
+}
+
+.drop-zone-icon {
+  font-size: 2.5rem;
+}
+
+.drop-zone-text {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Checkbox settings */
+.checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.checkbox-item input {
+  accent-color: var(--accent-cyan);
+  width: 16px;
+  height: 16px;
+}
+
+/* Output Styling */
+.code-output-area {
+  position: relative;
+  background: #090a0f;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  padding: 1.2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+  overflow: hidden;
+}
+
+.code-output-area textarea {
+  background: transparent;
+  border: none;
+  width: 100%;
+  height: 100%;
+  color: #00f0ff;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  resize: none;
+  outline: none;
+  flex: 1;
+}
+
+.code-actions-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 0.8rem;
+}
+
+/* Live Preview box for converters */
+.visual-preview-box {
+  background: #050508;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  height: 280px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#preview-container-box {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.watermark-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+/* Primary Button */
+.btn-primary {
+  width: 100%;
+  padding: 0.85rem;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+  color: #000;
+  font-weight: 700;
+  border: none;
+  font-family: var(--font-main);
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Responsiveness */
+@media (max-width: 900px) {
+  .converter-layout {
+    flex-direction: column;
+    padding: 1rem;
+  }
+  .input-panel, .output-panel {
+    width: 100%;
+  }
+}
+
+/* Specific checkerboard background for SVG preview to support dark and light SVGs */
+.svg-preview-box {
+  background-color: #121218 !important;
+  background-image: 
+    linear-gradient(45deg, #1b1b22 25%, transparent 25%), 
+    linear-gradient(-45deg, #1b1b22 25%, transparent 25%), 
+    linear-gradient(45deg, transparent 75%, #1b1b22 75%), 
+    linear-gradient(-45deg, transparent 75%, #1b1b22 75%) !important;
+  background-size: 20px 20px !important;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px !important;
+}
+
+/* Color Picker Premium Styling */
+.color-picker {
+  padding: 0 !important;
+  border: 1px solid var(--border-color) !important;
+  background: transparent !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+  height: 45px !important;
+  width: 100% !important;
+  cursor: pointer;
+}
+.color-picker::-webkit-color-swatch-wrapper {
+  padding: 0 !important;
+}
+.color-picker::-webkit-color-swatch {
+  border: none !important;
+  border-radius: 6px !important;
+}

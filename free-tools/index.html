@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IA CODE STUDIO — Free Tools Hub</title>
+  <meta name="description" content="Découvrez nos outils de développement et d'intégration web gratuits : Sandbox en direct, convertisseur Tailwind vers CSS standard, optimiseur SVG, compilateur Markdown, aperçu de polices 3D et encodeur Base64. / Explore our free developer tools and code playground. Live sandbox, Tailwind to CSS, SVG optimizer, 3D text previewer, Markdown to HTML, Base64 converter.">
+  <meta name="keywords" content="free tools, web sandbox, code editor, Tailwind to CSS, SVG optimizer, 3D text font previewer, Markdown compiler, Base64 encoder, online developer tools, IA Code Studio">
+  <meta name="robots" content="index, follow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="cyber-bg">
+  <div class="glow-container">
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+  </div>
+
+  <header class="cyber-header">
+    <div class="header-logo">
+      <span class="logo-icon">⚡</span>
+      <h1 class="logo-text">IA CODE <span class="accent-text">PLAYGROUND</span></h1>
+    </div>
+    <div class="header-controls">
+      <div class="lang-switcher">
+        <button id="btn-lang-fr" class="lang-btn active">FR</button>
+        <button id="btn-lang-en" class="lang-btn">EN</button>
+      </div>
+      <a href="../index.html" class="back-link">
+        <span class="back-icon">←</span> <span data-i18n="back_to_site">Retour au Site</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="dashboard-container">
+    <section class="hero-section">
+      <h2 data-i18n="hero_title" class="hero-title">Outils Créatifs & Sandbox Web Gratuits</h2>
+      <p data-i18n="hero_subtitle" class="hero-subtitle">Testez en direct, convertissez vos formats et intégrez des widgets interactifs premium en un clic.</p>
+    </section>
+
+    <div class="tools-grid">
+      <!-- Live Playground Card -->
+      <div class="tool-card feature-card">
+        <div class="card-glow"></div>
+        <div class="card-icon">💻</div>
+        <div class="card-content">
+          <h3 data-i18n="play_title">Live Sandbox Playground</h3>
+          <p data-i18n="play_desc">Un éditeur de code complet en temps réel avec prévisualisation en écran scindé. Presets Three.js 3D et CSS intégrés.</p>
+          <a href="playground/index.html" class="btn-launch">
+            <span data-i18n="btn_launch">Lancer la Sandbox</span> <span class="btn-arrow">→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Text to Glass Card -->
+      <div class="tool-card">
+        <div class="card-glow"></div>
+        <div class="card-icon">🔮</div>
+        <div class="card-content">
+          <h3 data-i18n="text_title">Text to Glassmorphic Card</h3>
+          <p data-i18n="text_desc">Générez instantanément des composants HTML/CSS ultra-modernes à partir de simples textes avec efecte de verre trempé.</p>
+          <a href="converters/text-to-html/index.html" class="btn-launch">
+            <span data-i18n="btn_launch_tool">Ouvrir l'outil</span> <span class="btn-arrow">→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Tailwind Converter -->
+      <div class="tool-card">
+        <div class="card-glow"></div>
+        <div class="card-icon">⚡</div>
+        <div class="card-content">
+          <h3 data-i18n="tailwind_title">Tailwind to CSS Converter</h3>
+          <p data-i18n="tailwind_desc">Convertissez vos structures Tailwind HTML complexes en code HTML autonome doté de styles CSS inline propres.</p>
+          <a href="converters/tailwind-to-vanilla/index.html" class="btn-launch">
+            <span data-i18n="btn_launch_tool">Ouvrir l'outil</span> <span class="btn-arrow">→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- SVG Optimizer -->
+      <div class="tool-card">
+        <div class="card-glow"></div>
+        <div class="card-icon">📐</div>
+        <div class="card-content">
+          <h3 data-i18n="svg_title">SVG Optimizer & Code Extractor</h3>
+          <p data-i18n="svg_desc">Nettoyez les métadonnées inutiles de vos fichiers SVG, optimisez le tracé et prévisualisez le code d'intégration propre.</p>
+          <a href="converters/svg-optimizer/index.html" class="btn-launch">
+            <span data-i18n="btn_launch_tool">Ouvrir l'outil</span> <span class="btn-arrow">→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Google Fonts 3D Previewer -->
+      <div class="tool-card">
+        <div class="card-glow"></div>
+        <div class="card-icon">🗣️</div>
+        <div class="card-content">
+          <h3 data-i18n="fonts_title">3D Google Fonts Previewer</h3>
+          <p data-i18n="fonts_desc">Saisissez votre texte, sélectionnez une police Google Fonts et générez un titre 3D animable en WebGL exportable en 1-clic.</p>
+          <a href="converters/font-previewer-3d/index.html" class="btn-launch">
+            <span data-i18n="btn_launch_tool">Ouvrir l'outil</span> <span class="btn-arrow">→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Markdown Compiler -->
+      <div class="tool-card">
+        <div class="card-glow"></div>
+        <div class="card-icon">📝</div>
+        <div class="card-content">
+          <h3 data-i18n="md_title">Markdown to HTML Converter</h3>
+          <p data-i18n="md_desc">Traduisez instantanément vos notes structurées en Markdown vers du code HTML5 sémantique parfaitement formaté.</p>
+          <a href="converters/markdown-to-html/index.html" class="btn-launch">
+            <span data-i18n="btn_launch_tool">Ouvrir l'outil</span> <span class="btn-arrow">→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Base64 Encoder/Decoder -->
+      <div class="tool-card">
+        <div class="card-glow"></div>
+        <div class="card-icon">🔒</div>
+        <div class="card-content">
+          <h3 data-i18n="b64_title">Base64 Converter (Text & Files)</h3>
+          <p data-i18n="b64_desc">Encodez ou décodez du texte en Base64, sau convertissez des images et fichiers en Data URLs instantanément.</p>
+          <a href="converters/base64/index.html" class="btn-launch">
+            <span data-i18n="btn_launch_tool">Ouvrir l'outil</span> <span class="btn-arrow">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="cyber-footer">
+    <p>© 2026 IA Code Studio Playground. <span data-i18n="footer_terms">Tous droits réservés. Version Gratuite.</span></p>
+  </footer>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

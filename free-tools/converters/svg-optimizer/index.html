@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IA CODEPLAY — SVG Optimizer & Extractor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="../converters-style.css">
+</head>
+<body class="cyber-bg converter-body">
+  <header class="cyber-header">
+    <div class="header-logo">
+      <span class="logo-icon">📐</span>
+      <h1 class="logo-text">SVG <span class="accent-text">OPTIMIZER</span></h1>
+    </div>
+    <div class="header-controls">
+      <div class="lang-switcher">
+        <button id="btn-lang-fr" class="lang-btn">FR</button>
+        <button id="btn-lang-en" class="lang-btn">EN</button>
+      </div>
+      <a href="../../index.html" class="back-link">
+        <span class="back-icon">←</span> <span data-i18n="back_dashboard">Tableau de bord</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="converter-layout">
+    <!-- Left: Inputs -->
+    <div class="input-panel">
+      <h2 data-i18n="svg_opt_title" class="panel-title">Optimiseur & Générateur de Code SVG</h2>
+      
+      <!-- Drop Zone -->
+      <div id="drop-zone" class="drop-zone">
+        <span class="drop-zone-icon">📥</span>
+        <span id="drop-zone-text" data-i18n="svg_drop_zone" class="drop-zone-text">Glissez votre fichier .svg ici ou cliquez pour en sélectionner un</span>
+        <input type="file" id="file-input" accept=".svg" style="display: none;">
+      </div>
+
+      <!-- Settings -->
+      <div class="form-group">
+        <label data-i18n="svg_opt_settings">Paramètres d'optimisation</label>
+        <div class="checkbox-list">
+          <label class="checkbox-item">
+            <input type="checkbox" id="chk-responsive" checked>
+            <span data-i18n="svg_remove_dimensions">Retirer largeur/hauteur fixes (pour rendu responsive)</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" id="chk-minify" checked>
+            <span data-i18n="svg_minify">Minifier le code XML</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="inp-svg-color" data-i18n="svg_accent_color">Colorer les contours/remplissages (optionnel)</label>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <input type="checkbox" id="chk-color-override">
+          <input type="color" id="inp-svg-color" class="form-input color-picker" value="#00f0ff" style="flex: 1; height: 40px;">
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Outputs -->
+    <div class="output-panel">
+      <h2 data-i18n="preview_panel" class="panel-title">Prévisualisation en direct</h2>
+      
+      <div class="visual-preview-box svg-preview-box">
+        <div id="preview-container-box" style="padding: 2rem;">
+          <!-- SVG rendered inline here -->
+        </div>
+      </div>
+
+      <div class="watermark-container">
+        <label class="watermark-toggle-label">
+          <input type="checkbox" id="chk-watermark" checked>
+          <span data-i18n="badge_label">Inclure le badge "Powered by IA Code Studio"</span>
+        </label>
+      </div>
+
+      <h2 data-i18n="export_title" class="panel-title">Code à intégrer</h2>
+      <div class="code-output-area" style="flex: 1; min-height: 220px;">
+        <textarea id="output-code" readonly></textarea>
+        <div class="code-actions-row">
+          <button id="btn-copy-code" class="action-btn cyan-btn">
+            <span>📋</span> <span data-i18n="copy_code">Copier le code</span>
+          </button>
+          <button id="btn-download-html" class="action-btn">
+            <span>📥</span> <span data-i18n="download_html">Télécharger HTML</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/main.js"></script>
+  <script src="svg-optimizer.js"></script>
+</body>
+</html>

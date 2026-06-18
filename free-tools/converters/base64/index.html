@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IA CODEPLAY — Base64 Encoder & Decoder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="../converters-style.css">
+  <link rel="stylesheet" href="base64.css">
+</head>
+<body class="cyber-bg converter-body">
+  <header class="cyber-header">
+    <div class="header-logo">
+      <span class="logo-icon">🔒</span>
+      <h1 class="logo-text">BASE64 <span class="accent-text">CONVERTER</span></h1>
+    </div>
+    <div class="header-controls">
+      <div class="lang-switcher">
+        <button id="btn-lang-fr" class="lang-btn">FR</button>
+        <button id="btn-lang-en" class="lang-btn">EN</button>
+      </div>
+      <a href="../../index.html" class="back-link">
+        <span class="back-icon">←</span> <span data-i18n="back_dashboard">Tableau de bord</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="converter-layout">
+    <!-- Left: Inputs -->
+    <div class="input-panel">
+      <h2 data-i18n="b64_title" class="panel-title">Convertisseur Base64 (Texte & Fichiers)</h2>
+      
+      <!-- Text Mode -->
+      <div class="form-group">
+        <label for="inp-text" data-i18n="b64_mode_text">Mode Texte Base64</label>
+        <textarea id="inp-text" class="form-input form-textarea" style="min-height: 140px;" data-i18n="b64_textarea_placeholder" placeholder="Saisissez ou collez votre texte ici..."></textarea>
+      </div>
+
+      <div class="action-buttons-row">
+        <button id="btn-encode" class="btn-primary half-width-btn" data-i18n="b64_encode">Encoder en Base64 🔒</button>
+        <button id="btn-decode" class="btn-primary half-width-btn btn-secondary" data-i18n="b64_decode">Décoder le Base64 🔓</button>
+      </div>
+
+      <div class="divider-line"></div>
+
+      <!-- File Mode -->
+      <div class="form-group">
+        <label data-i18n="b64_mode_file">Mode Fichier / Image vers Base64</label>
+        <div id="drop-zone" class="drop-zone">
+          <span class="drop-zone-icon">🖼️</span>
+          <span id="drop-zone-text" data-i18n="b64_drop_zone" class="drop-zone-text">Glissez o imagine sau un fișier aici (sau faceți clic)</span>
+          <input type="file" id="file-input" style="display: none;">
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Outputs -->
+    <div class="output-panel">
+      <h2 data-i18n="preview_panel" class="panel-title">Prévisualisation en direct</h2>
+      
+      <div class="visual-preview-box base64-preview-box">
+        <div id="preview-container-box">
+          <div class="empty-state-text" id="preview-empty-text">Aperçu du média</div>
+          <!-- Images/Media rendered here -->
+        </div>
+      </div>
+
+      <div class="watermark-container">
+        <label class="watermark-toggle-label">
+          <input type="checkbox" id="chk-watermark" checked>
+          <span data-i18n="badge_label">Inclure le badge "Powered by IA Code Studio"</span>
+        </label>
+      </div>
+
+      <h2 data-i18n="export_title" class="panel-title">Code à intégrer</h2>
+      <div class="code-output-area" style="flex: 1; min-height: 220px;">
+        <textarea id="output-code" readonly></textarea>
+        <div class="code-actions-row">
+          <button id="btn-copy-code" class="action-btn cyan-btn">
+            <span>📋</span> <span data-i18n="copy_code">Copier le code</span>
+          </button>
+          <button id="btn-download-html" class="action-btn">
+            <span>📥</span> <span data-i18n="download_html">Télécharger HTML</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/main.js"></script>
+  <script src="base64.js"></script>
+</body>
+</html>
