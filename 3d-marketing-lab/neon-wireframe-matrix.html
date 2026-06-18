@@ -777,7 +777,8 @@
             const finalCode = embedHTML.replace(/\\text\{widgetId\}/g, "${widgetId}");
             
             let finalCodeToExport = finalCode;
-            if (document.getElementById('input-license-watermark') && document.getElementById('input-license-watermark').checked) {
+            const includeWatermark = (document.getElementById('input-license-watermark') && document.getElementById('input-license-watermark').checked) || !checkIsPremium();
+            if (includeWatermark) {
                 const watermarkHTML = '\n<a id="ia-brand-badge" href="https://ia-codestudio.com" target="_blank" style="position:absolute; bottom:12px; right:12px; background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.08); backdrop-filter:blur(8px); color:#06b6d4; font-family:sans-serif; text-decoration:none; padding:4px 10px; border-radius:50px; font-size:10px; font-weight:600; z-index:9999; display:flex; align-items:center; gap:4px; box-shadow:0 4px 12px rgba(0,0,0,0.25);"><span>⚡</span><span>3D Widget by IA Code Studio</span></a>\n<script>\nsetTimeout(function(){\n  var badge = document.getElementById("ia-brand-badge");\n  if(!badge || !badge.href || !badge.href.includes("ia-codestudio.com")){\n    var c = document.querySelector("canvas") || document.querySelector(".ia-neon-sign") || document.body;\n    if(c) c.style.opacity = "0.15";\n    \n  }\n}, 3000);\n<' + '/script>';
                 const lastDiv = finalCodeToExport.lastIndexOf('</div>');
                 if (lastDiv !== -1) {
@@ -820,14 +821,51 @@
     </div>
 <script>
         // ========== WATERMARK & PREMIUM UPSELL LOGIC ==========
+        function checkIsPremium() {
+            try {
+                const session = localStorage.getItem('genius_session');
+                if (session) {
+                    const user = JSON.parse(session);
+                    const email = user.email.toLowerCase();
+                    const premiumList = JSON.parse(localStorage.getItem('ia_premium_users') || '[]');
+                    const record = premiumList.find(p => p.email.toLowerCase() === email);
+                    if (record) {
+                        const now = Date.now();
+                        const expiry = (record.addedAt || 0) + (record.days || 0) * 86400000;
+                        const daysLeft = Math.ceil((expiry - now) / 86400000);
+                        const isUnlimited = record.days === 9999;
+                        if (isUnlimited || daysLeft > 0) return true;
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+            }
+            try {
+                const subDate = localStorage.getItem('ia_premium_sub_date');
+                if (subDate) {
+                    const daysPassed = Math.floor((Date.now() - parseInt(subDate)) / (1000 * 60 * 60 * 24));
+                    const left = 30 - daysPassed;
+                    if (left > 0) return true;
+                }
+            } catch (e) {
+                console.error(e);
+            }
+            return false;
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const wmCheckbox = document.getElementById('input-license-watermark');
             const premiumModal = document.getElementById('premium-modal');
             const closePremium = document.getElementById('btn-close-premium');
             
+            // If user is premium, pre-uncheck the watermark for convenience
+            if (wmCheckbox && checkIsPremium()) {
+                wmCheckbox.checked = false;
+            }
+            
             if (wmCheckbox) {
                 wmCheckbox.addEventListener('change', () => {
-                    if (!wmCheckbox.checked) {
+                    if (!wmCheckbox.checked && !checkIsPremium()) {
                         premiumModal.style.display = 'flex';
                     }
                 });
