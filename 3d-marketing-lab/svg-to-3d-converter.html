@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Logo SVG en 3D en Direct | IA Code Studio</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Three.js + SVGLoader Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/SVGLoader.js"></script>
+</head>
+<body>
+
+    <div class="aura-container">
+        <div class="aura-orb orb-1"></div>
+        <div class="aura-orb orb-2"></div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-icon">📐</span>
+            <span data-i18n="nav_title">LOGO SVG VERS 3D</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="btn-back" data-i18n="btn_back">← Retour au labo</a>
+            <div class="lang-toggle">
+                <button class="lang-btn active" data-lang="fr" id="btn-fr">FR</button>
+                <button class="lang-btn" data-lang="en" id="btn-en">EN</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Debug Error Banner -->
+    <div id="error-banner" style="display: none; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #f87171; padding: 12px 20px; border-radius: 8px; margin: 15px auto; max-width: 1000px; font-size: 0.85rem; text-align: left; font-family: monospace; position: relative; z-index: 9999;">
+        <strong>[Debug Error]:</strong> <span id="error-message"></span>
+    </div>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        <div class="builder-layout">
+            
+            <!-- Left Panel: Uploader & Parameters -->
+            <section class="panel">
+                <h2 class="panel-title" data-i18n="config_title">1. Charger & Extruder</h2>
+                
+                <!-- File Input -->
+                <div class="form-group">
+                    <label class="form-label" data-i18n="label_upload">Fichier Vectoriel SVG</label>
+                    <div class="upload-area" id="drop-zone" onclick="document.getElementById('input-file').click()">
+                        <div class="upload-icon">📤</div>
+                        <p style="font-size: 0.9rem; font-weight: 600; color: #fff;" data-i18n="upload_desc">Cliquez ou Glissez un fichier .SVG ici</p>
+                        <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;" data-i18n="upload_limit">Format SVG uniquement, sans scripts complexes</p>
+                        <input type="file" id="input-file" accept=".svg" style="display: none;">
+                    </div>
+                </div>
+
+                <!-- Sliders for Geometry -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <span data-i18n="label_depth">Profondeur Extrusion</span>: 
+                        <span id="val-depth">10</span>
+                    </label>
+                    <input type="range" id="input-depth" class="range-slider" min="1" max="50" value="10">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <span data-i18n="label_bevel">Arrondi (Bevel)</span>: 
+                        <span id="val-bevel">1</span>
+                    </label>
+                    <input type="range" id="input-bevel" class="range-slider" min="0" max="5" value="1">
+                </div>
+
+                <!-- Animation Mode -->
+                <div class="form-group" style="margin-top:1rem;">
+                    <label class="form-label" data-i18n="label_anim">Mode d'Animation</label>
+                    <select id="input-anim" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);color:#fff;padding:0.6rem 0.8rem;border-radius:10px;font-family:inherit;font-size:0.9rem;cursor:pointer;outline:none;">
+                        <option value="rotate">🔄 Rotation</option>
+                        <option value="pause">⏸️ Immobile (drag manuel)</option>
+                        <option value="float">🌊 Lévitation Flottante</option>
+                        <option value="breathe">💓 Respiration (Pulse)</option>
+                        <option value="tumble">🎲 Tumble (3 axes)</option>
+                        <option value="orbit">🪐 Orbite Figure-8</option>
+                        <option value="turbo">⚡ Turbo Boost</option>
+                    </select>
+                </div>
+
+                <!-- Extras Toggles -->
+                <div class="form-row" style="margin-top:0.75rem;gap:1rem;">
+                    <div class="form-group" style="display:flex;align-items:center;gap:0.6rem;">
+                        <input type="checkbox" id="toggle-ring" style="width:16px;height:16px;accent-color:#a855f7;cursor:pointer;">
+                        <label for="toggle-ring" style="font-size:0.85rem;color:var(--text-secondary);cursor:pointer;" data-i18n="label_ring">Anneau Orbital 🪐</label>
+                    </div>
+                    <div class="form-group" style="display:flex;align-items:center;gap:0.6rem;">
+                        <input type="checkbox" id="toggle-mirror" style="width:16px;height:16px;accent-color:#06b6d4;cursor:pointer;">
+                        <label for="toggle-mirror" style="font-size:0.85rem;color:var(--text-secondary);cursor:pointer;" data-i18n="label_mirror">Sol Miroir ✨</label>
+                    </div>
+                </div>
+
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="label_color">Couleur Modèle</label>
+                        <div class="color-picker-wrapper">
+                            <input type="color" id="input-color" class="color-input" value="#06b6d4">
+                            <span style="font-size: 0.85rem; color: var(--text-secondary);">#06b6d4</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="label_speed">Vitesse de Rotation</label>
+                        <input type="range" id="input-speed" class="range-slider" min="0" max="10" value="3">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="label_metallic">Aspect Métal</label>
+                        <input type="range" id="input-metallic" class="range-slider" min="0" max="10" value="7">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="label_glow">Luminescence Neon</label>
+                        <input type="range" id="input-glow" class="range-slider" min="0" max="10" value="2">
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem;">
+                    <button id="btn-export" class="btn btn-primary" data-i18n="btn_export">Générer le Code Widget 3D ⚡</button>
+                <div style="margin-top: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none;">
+                        <input type="checkbox" id="input-license-watermark" checked style="width:18px; height:18px; cursor:pointer;">
+                        <span style="font-size:0.85rem; color:#9ca3af;" data-i18n="cfg_watermark">Inclure le filigrane de branding (Licence Gratuite)</span>
+                    </label>
+                </div>
+
+                </div>
+            </section>
+
+            <!-- Right Panel: Viewport -->
+            <section class="panel" style="display: flex; flex-direction: column;">
+                <h2 class="panel-title" data-i18n="preview_title">2. Rendu 3D Interactif</h2>
+                
+                <div class="canvas-container">
+                    <div class="canvas-label" data-i18n="canvas_label">Glissez pour faire pivoter, scroll pour zoomer</div>
+                    <div id="viewport-3d" style="width: 100%; height: 100%;"></div>
+                </div>
+
+                <!-- WebGL Widget Output Code -->
+                <div id="output-code-container" style="display: none; margin-top: 1.5rem; border-top: 1px solid var(--glass-border); padding-top: 1.5rem;">
+                    <h3 style="font-size: 1.1rem; color: #fff; margin-bottom: 0.5rem;" data-i18n="output_title">Code d'Intégration WebGL (HTML Autonome)</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1rem;" data-i18n="output_desc">Collez ce code HTML/JS autonome dans votre site (Wix, WordPress, HTML) pour afficher directement le logo 3D interactif.</p>
+                    <textarea class="code-area" id="textarea-code" readonly></textarea>
+                    <div style="margin-top: 1rem;">
+                        <button id="btn-copy" class="btn btn-secondary" data-i18n="btn_copy">Copier le Code HTML 📋</button>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Script Section -->
+    <script>
+        // Debug Error Logger
+        window.addEventListener('error', function(e) {
+            const banner = document.getElementById('error-banner');
+            const msg = document.getElementById('error-message');
+            if (banner && msg) {
+                banner.style.display = 'block';
+                msg.textContent = e.message + " (" + e.filename + ":" + e.lineno + ")";
+            }
+        });
+
+        const translations = {
+            fr: {
+                cfg_watermark: "Inclure le filigrane de branding (Licence Gratuite)",
+                modal_premium_title: "Désactiver le branding ?",
+                modal_premium_desc: "Passez à la version Premium de IA Code Studio pour exporter des codes 100% white-label sans filigrane.",
+                modal_premium_cta: "Passer au Premium ⚡",
+                modal_premium_cancel: "Garder le filigrane (Gratuit)",
+                nav_title: "LOGO SVG VERS 3D",
+                btn_back: "← Retour au labo",
+                config_title: "1. Charger & Extruder",
+                label_upload: "Fichier Vectoriel SVG",
+                upload_desc: "Cliquez ou Glissez un fichier .SVG ici",
+                upload_limit: "Format SVG uniquement, sans scripts complexes",
+                label_depth: "Profondeur Extrusion",
+                label_bevel: "Arrondi (Bevel)",
+                label_color: "Couleur Modèle",
+                label_speed: "Vitesse de Rotation",
+                label_metallic: "Aspect Métal",
+                label_glow: "Luminescence Neon",
+                label_anim: "Mode d'Animation",
+                label_ring: "Anneau Orbital 🪐",
+                label_mirror: "Sol Miroir ✨",
+                btn_export: "Générer le Code Widget 3D ⚡",
+                preview_title: "2. Rendu 3D Interactif",
+                canvas_label: "Glissez pour faire pivoter, scroll pour zoomer",
+                output_title: "Code d'Intégration WebGL (HTML Autonome)",
+                output_desc: "Collez ce code HTML/JS autonome dans votre site (Wix, WordPress, HTML) pour afficher directement le logo 3D interactif.",
+                btn_copy: "Copier le Code HTML 📋"
+            },
+            en: {
+                cfg_watermark: "Include branding watermark (Free License)",
+                modal_premium_title: "Remove Branding?",
+                modal_premium_desc: "Upgrade to IA Code Studio Premium to export 100% white-label widgets without watermark.",
+                modal_premium_cta: "Go Premium ⚡",
+                modal_premium_cancel: "Keep watermark (Free)",
+                nav_title: "SVG LOGO TO 3D",
+                btn_back: "← Back to lab",
+                config_title: "1. Upload & Extrude",
+                label_upload: "Vector SVG File",
+                upload_desc: "Click or Drag a .SVG file here",
+                upload_limit: "SVG format only, without complex scripts",
+                label_depth: "Extrusion Depth",
+                label_bevel: "Bevel Radius",
+                label_color: "Model Color",
+                label_speed: "Rotation Speed",
+                label_metallic: "Metal Texture",
+                label_glow: "Neon Glow",
+                label_anim: "Animation Mode",
+                label_ring: "Orbital Ring 🪐",
+                label_mirror: "Mirror Floor ✨",
+                btn_export: "Generate 3D Widget Code ⚡",
+                preview_title: "2. Interactive 3D Render",
+                canvas_label: "Drag to rotate, scroll to zoom",
+                output_title: "WebGL Embed Code (Standalone HTML)",
+                output_desc: "Paste this self-contained HTML/JS code into your website builder to display your interactive 3D logo.",
+                btn_copy: "Copy HTML Code 📋"
+            }
+        };
+
+        const pageTitles = {
+            fr: "Logo SVG en 3D en Direct | IA Code Studio",
+            en: "Live 3D SVG Logo Extruder | IA Code Studio"
+        };
+
+        let currentLang = 'fr';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            const trans = translations[lang];
+            if (!trans) return;
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (trans[key]) {
+                    el.textContent = trans[key];
+                }
+            });
+
+            document.title = pageTitles[lang];
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            if (lang === 'fr') document.getElementById('btn-fr').classList.add('active');
+            else document.getElementById('btn-en').classList.add('active');
+
+            localStorage.setItem('hub_lang', lang);
+        }
+
+        // Live Sliders DOM elements
+        const inputDepth = document.getElementById('input-depth');
+        const inputBevel = document.getElementById('input-bevel');
+        const inputColor = document.getElementById('input-color');
+        const inputSpeed = document.getElementById('input-speed');
+        const inputMetallic = document.getElementById('input-metallic');
+        const inputGlow = document.getElementById('input-glow');
+
+        const valDepth = document.getElementById('val-depth');
+        const valBevel = document.getElementById('val-bevel');
+
+        function updateSliderLabels() {
+            valDepth.textContent = inputDepth.value;
+            valBevel.textContent = inputBevel.value;
+            inputColor.nextElementSibling.textContent = inputColor.value.toUpperCase();
+        }
+
+        inputDepth.addEventListener('input', () => { updateSliderLabels(); rebuild3D(); });
+        inputBevel.addEventListener('input', () => { updateSliderLabels(); rebuild3D(); });
+        inputColor.addEventListener('input', () => { updateSliderLabels(); rebuild3D(); });
+        inputMetallic.addEventListener('input', () => { rebuild3D(); });
+        inputGlow.addEventListener('input', () => { rebuild3D(); });
+
+        // Three.js Render Settings
+        let scene, camera, renderer;
+        let extrudedGroup = null;
+        let currentSVGText = null; // Stored svg content for rebuilds
+        const viewport = document.getElementById('viewport-3d');
+
+        function init3D() {
+            scene = new THREE.Scene();
+            
+            camera = new THREE.PerspectiveCamera(40, viewport.clientWidth / viewport.clientHeight, 1, 1000);
+            camera.position.set(0, 0, 160);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(viewport.clientWidth, viewport.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            viewport.appendChild(renderer.domElement);
+
+            // Lights
+            const ambient = new THREE.AmbientLight(0xffffff, 0.4);
+            scene.add(ambient);
+
+            const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
+            dirLight1.position.set(100, 100, 200);
+            scene.add(dirLight1);
+
+            const dirLight2 = new THREE.DirectionalLight(0x06b6d4, 0.5);
+            dirLight2.position.set(-100, -100, 100);
+            scene.add(dirLight2);
+
+            // Custom Zero-Dependency Drag-to-Rotate Interaction
+            let isDragging = false;
+            let previousMousePosition = { x: 0, y: 0 };
+
+            viewport.addEventListener('mousedown', (e) => {
+                isDragging = true;
+            });
+            viewport.addEventListener('touchstart', (e) => {
+                isDragging = true;
+                if (e.touches.length > 0) {
+                    previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                }
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (isDragging && extrudedGroup) {
+                    const deltaX = e.clientX - previousMousePosition.x;
+                    const deltaY = e.clientY - previousMousePosition.y;
+                    extrudedGroup.rotation.y += deltaX * 0.008;
+                    extrudedGroup.rotation.x += deltaY * 0.008;
+                }
+                previousMousePosition = { x: e.clientX, y: e.clientY };
+            });
+
+            window.addEventListener('touchmove', (e) => {
+                if (isDragging && extrudedGroup && e.touches.length > 0) {
+                    const deltaX = e.touches[0].clientX - previousMousePosition.x;
+                    const deltaY = e.touches[0].clientY - previousMousePosition.y;
+                    extrudedGroup.rotation.y += deltaX * 0.01;
+                    extrudedGroup.rotation.x += deltaY * 0.01;
+                    previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                }
+            });
+
+            window.addEventListener('mouseup', () => { isDragging = false; });
+            window.addEventListener('touchend', () => { isDragging = false; });
+
+            loadDefaultShape();
+            animate();
+        }
+
+        // Draw a basic star path as default fallback shape
+        function loadDefaultShape() {
+            const svgText = `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+                <path fill="#06b6d4" d="M50 5 L63 36 L95 38 L70 60 L78 92 L50 74 L22 92 L30 60 L5 38 L37 36 Z" />
+            </svg>`;
+            currentSVGText = svgText;
+            rebuild3D();
+        }
+
+        function parseAndExtrudeSVG(svgString) {
+            try {
+                if (extrudedGroup) scene.remove(extrudedGroup);
+
+                const loader = new THREE.SVGLoader();
+                let parsed;
+                try {
+                    parsed = loader.parse(svgString);
+                } catch(e) {
+                    console.error("SVG parsing error", e);
+                    return;
+                }
+                
+                const paths = parsed.paths;
+                if (!paths || paths.length === 0) return;
+
+                extrudedGroup = new THREE.Group();
+
+                const depth = parseFloat(inputDepth.value);
+                const bevel = parseFloat(inputBevel.value);
+                const colorHex = inputColor.value;
+                const metallic = parseFloat(inputMetallic.value) / 10;
+                const glowIntensity = parseFloat(inputGlow.value) / 10;
+
+                // Generate Extrude Material
+                const material = new THREE.MeshStandardMaterial({
+                    color: colorHex,
+                    metalness: metallic,
+                    roughness: 1.0 - metallic * 0.8,
+                    emissive: colorHex,
+                    emissiveIntensity: glowIntensity * 0.5,
+                    side: THREE.DoubleSide
+                });
+
+                // Separate solid shapes and hole shapes based on color (white/light paths as holes)
+                let solidShapes = [];
+                let holeShapes = [];
+
+                paths.forEach((path) => {
+                    const style = path.userData.style;
+                    const shapes = THREE.SVGLoader.createShapes(path);
+
+                    let isHole = false;
+                    if (path.color) {
+                        const r = path.color.r;
+                        const g = path.color.g;
+                        const b = path.color.b;
+                        // Color values > 0.9 indicate white/light colors (holes in layered SVGs)
+                        if (r > 0.9 && g > 0.9 && b > 0.9) {
+                            isHole = true;
+                        }
+                    }
+
+                    shapes.forEach((shape) => {
+                        if (isHole) {
+                            holeShapes.push(shape);
+                        } else {
+                            solidShapes.push(shape);
+                        }
+                    });
+                });
+
+                // Point in polygon containment check
+                function isPointInPoly(pt, poly) {
+                    const x = pt.x, y = pt.y;
+                    let inside = false;
+                    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+                        const xi = poly[i].x, yi = poly[i].y;
+                        const xj = poly[j].x, yj = poly[j].y;
+                        const intersect = ((yi > y) !== (yj > y)) &&
+                            (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+                        if (intersect) inside = !inside;
+                    }
+                    return inside;
+                }
+
+                // Subtract hole shapes from the containing solid shapes
+                holeShapes.forEach((holeShape) => {
+                    const holePoints = holeShape.getPoints();
+                    if (holePoints.length === 0) return;
+                    const testPt = holePoints[0];
+
+                    let containerShape = null;
+                    for (let i = 0; i < solidShapes.length; i++) {
+                        const solidShape = solidShapes[i];
+                        const solidPoints = solidShape.getPoints();
+                        if (isPointInPoly(testPt, solidPoints)) {
+                            if (!containerShape) {
+                                containerShape = solidShape;
+                            } else {
+                                const box1 = new THREE.Box2().setFromPoints(solidPoints);
+                                const box2 = new THREE.Box2().setFromPoints(containerShape.getPoints());
+                                if (box1.getArea() < box2.getArea()) {
+                                    containerShape = solidShape;
+                                }
+                            }
+                        }
+                    }
+
+                    if (containerShape) {
+                        const holePath = new THREE.Path(holePoints);
+                        containerShape.holes.push(holePath);
+                    }
+                });
+
+                // If no filled solid shapes are identified, fallback to treating all paths as solids
+                if (solidShapes.length === 0) {
+                    paths.forEach((path) => {
+                        const shapes = THREE.SVGLoader.createShapes(path);
+                        solidShapes.push(...shapes);
+                    });
+                }
+
+                // Extrude solid shapes
+                solidShapes.forEach((shape) => {
+                    const extrudeGeom = new THREE.ExtrudeGeometry(shape, {
+                        depth: depth,
+                        bevelEnabled: bevel > 0,
+                        bevelSegments: 5,
+                        steps: 1,
+                        bevelSize: bevel,
+                        bevelThickness: bevel
+                    });
+
+                    const mesh = new THREE.Mesh(extrudeGeom, material);
+                    extrudedGroup.add(mesh);
+                });
+
+                if (extrudedGroup.children.length === 0) {
+                    throw new Error("No shapes could be extruded from this SVG.");
+                }
+
+                // Compute bounding box of the entire group to center it properly
+                const box = new THREE.Box3().setFromObject(extrudedGroup);
+                const center = box.getCenter(new THREE.Vector3());
+
+                // Center all children relative to the group origin
+                extrudedGroup.children.forEach((mesh) => {
+                    mesh.position.x -= center.x;
+                    mesh.position.y -= center.y;
+                    mesh.position.z -= center.z;
+                });
+
+                // Rotate group 180 deg around X axis to flip Y correctly
+                extrudedGroup.scale.set(1.1, 1.1, 1.1);
+                extrudedGroup.userData.normScale = 1.1;
+                extrudedGroup.rotation.x = Math.PI;
+                scene.add(extrudedGroup);
+
+                // Auto-fit camera to geometry
+                fitCameraToGroup(extrudedGroup);
+
+            } catch (err) {
+                console.error("Error in SVG extrusion:", err);
+                
+                // FALLBACK: Draw a 3D Box so the screen is never black if SVG loader fails or has errors!
+                if (extrudedGroup) scene.remove(extrudedGroup);
+                extrudedGroup = new THREE.Group();
+                const geom = new THREE.BoxGeometry(20, 20, 20);
+                const mat = new THREE.MeshStandardMaterial({
+                    color: inputColor.value,
+                    metalness: 0.5,
+                    roughness: 0.5
+                });
+                const mesh = new THREE.Mesh(geom, mat);
+                extrudedGroup.add(mesh);
+                scene.add(extrudedGroup);
+                fitCameraToGroup(extrudedGroup);
+            }
+        }
+
+        // Auto-fit camera so any SVG size is always visible
+        function fitCameraToGroup(group) {
+            const box = new THREE.Box3().setFromObject(group);
+            const sphere = box.getBoundingSphere(new THREE.Sphere());
+            const fov = camera.fov * (Math.PI / 180);
+            const dist = Math.abs(sphere.radius / Math.sin(fov / 2)) * 1.5;
+            camera.position.set(0, 0, dist);
+            camera.near = dist * 0.01;
+            camera.far = dist * 100;
+            camera.updateProjectionMatrix();
+        }
+
+        function rebuild3D() {
+            if (currentSVGText) {
+                parseAndExtrudeSVG(currentSVGText);
+            }
+        }
+
+        // ---- Orbital Neon Ring ----
+        let orbitalRing = null;
+
+        function createOrbitalRing() {
+            if (orbitalRing) { scene.remove(orbitalRing); orbitalRing = null; }
+            const color = inputColor.value;
+            const ringGeom = new THREE.TorusGeometry(1.8, 0.04, 16, 100);
+            const ringMat = new THREE.MeshStandardMaterial({
+                color: '#a855f7',
+                emissive: '#a855f7',
+                emissiveIntensity: 1.2,
+                metalness: 0.2,
+                roughness: 0.1
+            });
+            orbitalRing = new THREE.Mesh(ringGeom, ringMat);
+            orbitalRing.rotation.x = Math.PI / 2.2;
+            scene.add(orbitalRing);
+        }
+
+        function removeOrbitalRing() {
+            if (orbitalRing) { scene.remove(orbitalRing); orbitalRing = null; }
+        }
+
+        // ---- Mirror Floor ----
+        let mirrorFloor = null;
+
+        function createMirrorFloor() {
+            if (mirrorFloor) { scene.remove(mirrorFloor); mirrorFloor = null; }
+            const floorGeom = new THREE.PlaneGeometry(300, 300);
+            const floorMat = new THREE.MeshStandardMaterial({
+                color: '#030712',
+                metalness: 0.95,
+                roughness: 0.1,
+                transparent: true,
+                opacity: 0.6
+            });
+            mirrorFloor = new THREE.Mesh(floorGeom, floorMat);
+            mirrorFloor.rotation.x = -Math.PI / 2;
+            scene.add(mirrorFloor);
+        }
+
+        function removeMirrorFloor() {
+            if (mirrorFloor) { scene.remove(mirrorFloor); mirrorFloor = null; }
+        }
+
+        document.getElementById('toggle-ring').addEventListener('change', (e) => {
+            if (e.target.checked) createOrbitalRing();
+            else removeOrbitalRing();
+        });
+
+        document.getElementById('toggle-mirror').addEventListener('change', (e) => {
+            if (e.target.checked) createMirrorFloor();
+            else removeMirrorFloor();
+        });
+
+        // ---- 7-Mode Animation Engine ----
+        let animClock = 0;
+        let turboSpeed = 0;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            animClock += 0.016;
+
+            const mode = document.getElementById('input-anim').value;
+            const speed = parseFloat(inputSpeed.value) * 0.002;
+
+            if (extrudedGroup) {
+                switch(mode) {
+                    case 'rotate':
+                        extrudedGroup.rotation.y += speed;
+                        break;
+
+                    case 'pause':
+                        // No auto-animation — manual drag only
+                        break;
+
+                    case 'float':
+                        extrudedGroup.rotation.y += speed * 0.4;
+                        extrudedGroup.position.y = Math.sin(animClock * 1.2) * 0.06 *
+                            (new THREE.Box3().setFromObject(extrudedGroup).getSize(new THREE.Vector3()).y || 1);
+                        break;
+
+                    case 'breathe':
+                        const pulse = 1.0 + Math.sin(animClock * 2) * 0.12;
+                        extrudedGroup.scale.set(
+                            extrudedGroup.scale.x * 0 + pulse * (extrudedGroup.userData.normScale || 1),
+                            extrudedGroup.scale.y * 0 + pulse * (extrudedGroup.userData.normScale || 1),
+                            extrudedGroup.scale.z * 0 + pulse * (extrudedGroup.userData.normScale || 1)
+                        );
+                        extrudedGroup.rotation.y += speed * 0.3;
+                        break;
+
+                    case 'tumble':
+                        extrudedGroup.rotation.x += speed * 0.7;
+                        extrudedGroup.rotation.y += speed;
+                        extrudedGroup.rotation.z += speed * 0.4;
+                        break;
+
+                    case 'orbit':
+                        extrudedGroup.rotation.y += speed;
+                        extrudedGroup.rotation.x = Math.sin(animClock * 0.8) * 0.5;
+                        extrudedGroup.rotation.z = Math.sin(animClock * 0.5) * 0.3;
+                        break;
+
+                    case 'turbo':
+                        turboSpeed += 0.008;
+                        turboSpeed = Math.min(turboSpeed, 0.35);
+                        turboSpeed *= 0.985;
+                        extrudedGroup.rotation.y += turboSpeed;
+                        break;
+                }
+
+                // Orbital ring follows the group
+                if (orbitalRing) {
+                    orbitalRing.rotation.z += 0.022;
+                    orbitalRing.position.copy(extrudedGroup.position);
+                    // Scale ring to match group size
+                    const s = (extrudedGroup.userData.normScale || 1) * 1.5;
+                    if (mode !== 'breathe') orbitalRing.scale.set(s, s, s);
+                }
+
+                // Mirror floor position just below the group
+                if (mirrorFloor) {
+                    const box = new THREE.Box3().setFromObject(extrudedGroup);
+                    mirrorFloor.position.y = box.min.y - 0.05;
+                }
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // File Uploader Event Bindings
+        const inputFile = document.getElementById('input-file');
+        const dropZone = document.getElementById('drop-zone');
+
+        inputFile.addEventListener('change', handleFileSelect);
+
+        // Drag events
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = 'var(--aura-magenta)';
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.style.borderColor = 'var(--glass-border)';
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = 'var(--glass-border)';
+            if (e.dataTransfer.files.length > 0) {
+                const file = e.dataTransfer.files[0];
+                if (file.name.endsWith('.svg')) {
+                    processFile(file);
+                } else {
+                    alert('Fichier non SVG ignoré.');
+                }
+            }
+        });
+
+        function handleFileSelect(e) {
+            if (e.target.files.length > 0) {
+                processFile(e.target.files[0]);
+            }
+        }
+
+        function processFile(file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                currentSVGText = event.target.result;
+                rebuild3D();
+                dropZone.querySelector('p').textContent = file.name;
+                dropZone.style.borderColor = 'var(--aura-cyan)';
+            };
+            reader.readAsText(file);
+        }
+
+        // Window Resizing
+        window.addEventListener('resize', () => {
+            camera.aspect = viewport.clientWidth / viewport.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(viewport.clientWidth, viewport.clientHeight);
+        });
+
+        // Widget Code Builder
+        const btnExport = document.getElementById('btn-export');
+        const codeContainer = document.getElementById('output-code-container');
+        const textareaCode = document.getElementById('textarea-code');
+        const btnCopy = document.getElementById('btn-copy');
+
+        btnExport.addEventListener('click', () => {
+            const depth = inputDepth.value;
+            const bevel = inputBevel.value;
+            const color = inputColor.value;
+            const speed = inputSpeed.value;
+            const metallic = inputMetallic.value;
+            const glow = inputGlow.value;
+            const animMode = document.getElementById('input-anim').value;
+            const hasRing = document.getElementById('toggle-ring').checked;
+            const hasMirror = document.getElementById('toggle-mirror').checked;
+            
+            // Unique ID
+            const widgetId = Math.random().toString(36).substring(2, 9);
+            
+            // Escape SVG text to embed it directly in the script template string safely
+            const escapedSvg = JSON.stringify(currentSVGText || '');
+
+            // Generate 100% self-contained HTML/JS widget code
+            const embedHTML = `
+<!-- START IA CODE STUDIO 3D LOGO WIDGET -->
+<div id="svg-3d-logo-\${widgetId}" style="width:100%;height:400px;background:#03050a;border-radius:14px;overflow:hidden;position:relative;border:1px solid rgba(255,255,255,0.08);box-shadow:0 10px 30px rgba(0,0,0,0.3);cursor:grab;"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/SVGLoader.js"><\/script>
+<script>
+(function() {
+  var container = document.getElementById('svg-3d-logo-\${widgetId}');
+  if (!container) return;
+
+  function initWhenReady() {
+    if (typeof THREE !== 'undefined' && THREE.SVGLoader) { startWidget(); }
+    else { setTimeout(initWhenReady, 50); }
+  }
+  initWhenReady();
+
+  function startWidget() {
+    var W = container.clientWidth || 400, H = container.clientHeight || 400;
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(45, W / H, 0.001, 10000);
+    var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(window.devicePixelRatio || 1);
+    renderer.setSize(W, H);
+    container.appendChild(renderer.domElement);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+    var dl1 = new THREE.DirectionalLight(0xffffff, 1.0);
+    dl1.position.set(1, 1, 2); scene.add(dl1);
+    var dl2 = new THREE.DirectionalLight(0x06b6d4, 0.6);
+    dl2.position.set(-1, -1, 1); scene.add(dl2);
+
+    var svgText = ${escapedSvg};
+    var group = new THREE.Group();
+
+    try {
+      var loader = new THREE.SVGLoader();
+      var parsed = loader.parse(svgText);
+      var paths = parsed.paths;
+
+      var mat = new THREE.MeshStandardMaterial({
+        color: "${color}",
+        metalness: ${metallic} / 10,
+        roughness: 1.0 - (${metallic} / 10) * 0.8,
+        emissive: "${color}",
+        emissiveIntensity: (${glow} / 10) * 0.4,
+        side: THREE.DoubleSide
+      });
+
+      var solids = [], holes = [];
+      paths.forEach(function(path) {
+        var shapes = THREE.SVGLoader.createShapes(path);
+        var isHole = false;
+        if (path.color) {
+          var c = path.color;
+          if (c.r > 0.9 && c.g > 0.9 && c.b > 0.9) isHole = true;
+        }
+        shapes.forEach(function(s) { isHole ? holes.push(s) : solids.push(s); });
+      });
+
+      function ptInPoly(pt, poly) {
+        var x = pt.x, y = pt.y, inside = false;
+        for (var i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+          var xi = poly[i].x, yi = poly[i].y, xj = poly[j].x, yj = poly[j].y;
+          if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) inside = !inside;
+        }
+        return inside;
+      }
+
+      holes.forEach(function(hole) {
+        var hp = hole.getPoints();
+        if (!hp.length) return;
+        var best = null, bestArea = Infinity;
+        solids.forEach(function(solid) {
+          var sp = solid.getPoints();
+          if (ptInPoly(hp[0], sp)) {
+            var b = new THREE.Box2().setFromPoints(sp);
+            var a = b.getArea();
+            if (a < bestArea) { best = solid; bestArea = a; }
+          }
+        });
+        if (best) best.holes.push(new THREE.Path(hp));
+      });
+
+      if (solids.length === 0) {
+        paths.forEach(function(p) { THREE.SVGLoader.createShapes(p).forEach(function(s) { solids.push(s); }); });
+      }
+
+      solids.forEach(function(shape) {
+        var geom = new THREE.ExtrudeGeometry(shape, {
+          depth: ${depth},
+          bevelEnabled: ${bevel} > 0,
+          bevelSegments: 4,
+          steps: 1,
+          bevelSize: ${bevel},
+          bevelThickness: ${bevel}
+        });
+        group.add(new THREE.Mesh(geom, mat));
+      });
+
+      if (group.children.length === 0) throw new Error('No geometry');
+
+    } catch(e) {
+      console.warn('SVG extrusion failed, using fallback box:', e);
+      var fallback = new THREE.Mesh(
+        new THREE.BoxGeometry(1, 1, 1),
+        new THREE.MeshStandardMaterial({ color: "${color}", metalness: 0.5 })
+      );
+      group.add(fallback);
+    }
+
+    // ---- Normalize: flip Y, scale to unit size, then center ----
+    group.rotation.x = Math.PI; // flip SVG Y axis
+    scene.add(group);
+
+    // Center children relative to group origin
+    var bbox = new THREE.Box3().setFromObject(group);
+    var center = bbox.getCenter(new THREE.Vector3());
+    group.children.forEach(function(mesh) {
+      mesh.position.x -= center.x;
+      mesh.position.y -= center.y;
+      mesh.position.z -= center.z;
+    });
+
+    // Recompute size and scale to 2 units
+    var bbox2 = new THREE.Box3().setFromObject(group);
+    var bSize = bbox2.getSize(new THREE.Vector3());
+    var maxDim = Math.max(bSize.x, bSize.y, bSize.z) || 1;
+    var normScale = 2.0 / maxDim;
+    group.scale.set(normScale, normScale, normScale);
+
+    // Camera framing
+    var fovRad = camera.fov * Math.PI / 180;
+    var camDist = (1.2 / Math.tan(fovRad / 2)) * 1.5;
+    camera.position.set(0, 0, camDist);
+    camera.near = camDist * 0.001;
+    camera.far = camDist * 100;
+    camera.updateProjectionMatrix();
+
+    // ---- Optional elements: Ring and Floor ----
+    var orbitalRing = null;
+    if (${hasRing}) {
+      var ringGeom = new THREE.TorusGeometry(1.8, 0.04, 16, 100);
+      var ringMat = new THREE.MeshStandardMaterial({
+        color: '#a855f7',
+        emissive: '#a855f7',
+        emissiveIntensity: 1.2,
+        metalness: 0.2,
+        roughness: 0.1
+      });
+      orbitalRing = new THREE.Mesh(ringGeom, ringMat);
+      orbitalRing.rotation.x = Math.PI / 2.2;
+      scene.add(orbitalRing);
+    }
+
+    var mirrorFloor = null;
+    if (${hasMirror}) {
+      var floorGeom = new THREE.PlaneGeometry(300, 300);
+      var floorMat = new THREE.MeshStandardMaterial({
+        color: '#030712',
+        metalness: 0.95,
+        roughness: 0.1,
+        transparent: true,
+        opacity: 0.6
+      });
+      mirrorFloor = new THREE.Mesh(floorGeom, floorMat);
+      mirrorFloor.rotation.x = -Math.PI / 2;
+      scene.add(mirrorFloor);
+    }
+
+    // ---- Mouse / Touch drag-to-rotate ----
+    var isDragging = false;
+    var px = 0, py = 0;
+    var canvas = renderer.domElement;
+
+    canvas.addEventListener('mousedown', function(e) {
+      isDragging = true; px = e.clientX; py = e.clientY;
+      container.style.cursor = 'grabbing';
+    });
+    canvas.addEventListener('touchstart', function(e) {
+      isDragging = true;
+      if (e.touches.length > 0) { px = e.touches[0].clientX; py = e.touches[0].clientY; }
+    }, { passive: true });
+
+    window.addEventListener('mousemove', function(e) {
+      if (!isDragging) return;
+      group.rotation.y += (e.clientX - px) * 0.01;
+      group.rotation.x += (e.clientY - py) * 0.01;
+      px = e.clientX; py = e.clientY;
+    });
+    window.addEventListener('touchmove', function(e) {
+      if (!isDragging || !e.touches.length) return;
+      group.rotation.y += (e.touches[0].clientX - px) * 0.012;
+      group.rotation.x += (e.touches[0].clientY - py) * 0.012;
+      px = e.touches[0].clientX; py = e.touches[0].clientY;
+    }, { passive: true });
+    window.addEventListener('mouseup', function() {
+      isDragging = false; container.style.cursor = 'grab';
+    });
+    window.addEventListener('touchend', function() { isDragging = false; });
+
+    // ---- Animation loop ----
+    var animClock = 0;
+    var turboSpeed = 0;
+    var animMode = "${animMode}";
+    var speedVal = ${speed} * 0.002;
+
+    (function loop() {
+      requestAnimationFrame(loop);
+      animClock += 0.016;
+
+      if (!isDragging) {
+        switch(animMode) {
+          case 'rotate':
+            group.rotation.y += speedVal;
+            break;
+          case 'pause':
+            break;
+          case 'float':
+            group.rotation.y += speedVal * 0.4;
+            var box = new THREE.Box3().setFromObject(group);
+            var sizeY = box.getSize(new THREE.Vector3()).y || 1;
+            group.position.y = Math.sin(animClock * 1.2) * 0.06 * sizeY;
+            break;
+          case 'breathe':
+            var pulse = 1.0 + Math.sin(animClock * 2) * 0.12;
+            group.scale.set(pulse * normScale, pulse * normScale, pulse * normScale);
+            group.rotation.y += speedVal * 0.3;
+            break;
+          case 'tumble':
+            group.rotation.x += speedVal * 0.7;
+            group.rotation.y += speedVal;
+            group.rotation.z += speedVal * 0.4;
+            break;
+          case 'orbit':
+            group.rotation.y += speedVal;
+            group.rotation.x = Math.sin(animClock * 0.8) * 0.5;
+            group.rotation.z = Math.sin(animClock * 0.5) * 0.3;
+            break;
+          case 'turbo':
+            turboSpeed += 0.008;
+            turboSpeed = Math.min(turboSpeed, 0.35);
+            turboSpeed *= 0.985;
+            group.rotation.y += turboSpeed;
+            break;
+        }
+      }
+
+      // Orbital ring follows the group
+      if (orbitalRing) {
+        orbitalRing.rotation.z += 0.022;
+        orbitalRing.position.copy(group.position);
+      }
+
+      // Mirror floor follows just below group
+      if (mirrorFloor) {
+        var box = new THREE.Box3().setFromObject(group);
+        mirrorFloor.position.y = box.min.y - 0.05;
+      }
+
+      renderer.render(scene, camera);
+    })();
+
+    // ---- Resize ----
+    window.addEventListener('resize', function() {
+      var w = container.clientWidth || 400, h = container.clientHeight || 400;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    });
+  }
+})();
+<\/script>
+<!-- END IA CODE STUDIO 3D LOGO WIDGET -->`;
+
+            
+            let finalCodeToExport = embedHTML;
+            if (document.getElementById('input-license-watermark') && document.getElementById('input-license-watermark').checked) {
+                const watermarkHTML = '\n<a id="ia-brand-badge" href="https://ia-codestudio.com" target="_blank" style="position:absolute; bottom:12px; right:12px; background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.08); backdrop-filter:blur(8px); color:#06b6d4; font-family:sans-serif; text-decoration:none; padding:4px 10px; border-radius:50px; font-size:10px; font-weight:600; z-index:9999; display:flex; align-items:center; gap:4px; box-shadow:0 4px 12px rgba(0,0,0,0.25);"><span>⚡</span><span>3D Widget by IA Code Studio</span></a>\n<script>\nsetTimeout(function(){\n  var badge = document.getElementById("ia-brand-badge");\n  if(!badge || !badge.href || !badge.href.includes("ia-codestudio.com")){\n    var c = document.querySelector("canvas") || document.querySelector(".ia-neon-sign") || document.body;\n    if(c) c.style.opacity = "0.15";\n    \n  }\n}, 3000);\n<' + '/script>';
+                const lastDiv = finalCodeToExport.lastIndexOf('</div>');
+                if (lastDiv !== -1) {
+                    finalCodeToExport = finalCodeToExport.substring(0, lastDiv) + watermarkHTML + finalCodeToExport.substring(lastDiv);
+                } else {
+                    finalCodeToExport += watermarkHTML;
+                }
+            }
+            textareaCode.value = finalCodeToExport.trim();
+    
+            codeContainer.style.display = 'block';
+            codeContainer.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        btnCopy.addEventListener('click', () => {
+            textareaCode.select();
+            document.execCommand('copy');
+            alert(currentLang === 'fr' ? 'Code d\'intégration copié dans le presse-papiers !' : 'WebGL embed code copied to clipboard!');
+        });
+
+        // Initialize Lang, Parameters and Scene
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const isEmbed = urlParams.get('embed') === 'true';
+            
+            // Activate Embed Mode
+            if (isEmbed) {
+                document.body.classList.add('embed-mode');
+            }
+
+            // Parse URL parameters if present
+            const urlColor = urlParams.get('color');
+            const urlDepth = urlParams.get('depth');
+            const urlBevel = urlParams.get('bevel');
+            const urlSpeed = urlParams.get('speed');
+            const urlMetallic = urlParams.get('metallic');
+            const urlGlow = urlParams.get('glow');
+
+            if (urlColor) inputColor.value = '#' + urlColor;
+            if (urlDepth) inputDepth.value = urlDepth;
+            if (urlBevel) inputBevel.value = urlBevel;
+            if (urlSpeed) inputSpeed.value = urlSpeed;
+            if (urlMetallic) inputMetallic.value = urlMetallic;
+            if (urlGlow) inputGlow.value = urlGlow;
+
+            const savedLang = localStorage.getItem('hub_lang') || 'fr';
+            setLanguage(savedLang);
+            updateSliderLabels();
+            init3D();
+
+            document.getElementById('btn-fr').addEventListener('click', () => setLanguage('fr'));
+            document.getElementById('btn-en').addEventListener('click', () => setLanguage('en'));
+        });
+    </script>
+
+    <!-- Premium Upgrade Modal -->
+    <div id="premium-modal" style="display:none; position:fixed; inset:0; background:rgba(3,7,18,0.9); backdrop-filter:blur(12px); z-index:99999; align-items:center; justify-content:center;">
+        <div style="background:rgba(15,23,42,0.8); border:1px solid rgba(255,255,255,0.08); border-radius:24px; padding:2.5rem; max-width:480px; width:90%; text-align:center; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); font-family:'Outfit', sans-serif; backdrop-filter:blur(16px); position:relative;">
+            <div style="font-size:3.5rem; margin-bottom:1.2rem; filter:drop-shadow(0 0 15px rgba(6,182,212,0.4));">💎</div>
+            <h3 style="color:#fff; font-size:1.6rem; margin-bottom:0.75rem; font-weight:700;" data-i18n="modal_premium_title">Désactiver le branding ?</h3>
+            <p style="color:#94a3b8; font-size:0.95rem; line-height:1.6; margin-bottom:2rem;" data-i18n="modal_premium_desc">Passez à la version Premium de IA Code Studio pour exporter des codes 100% white-label sans filigrane.</p>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <a href="/pricing" target="_blank" class="btn btn-primary" style="text-decoration:none; padding: 0.9rem 1.5rem; border-radius: 12px; font-weight: 700; width:100%; display:inline-block;" data-i18n="modal_premium_cta">Passer au Premium ⚡</a>
+                <button id="btn-close-premium" class="btn btn-secondary" style="padding: 0.9rem 1.5rem; border-radius: 12px; font-weight: 600; width:100%; cursor:pointer;">Garder le filigrane (Gratuit)</button>
+            </div>
+        </div>
+    </div>
+<script>
+        // ========== WATERMARK & PREMIUM UPSELL LOGIC ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            const wmCheckbox = document.getElementById('input-license-watermark');
+            const premiumModal = document.getElementById('premium-modal');
+            const closePremium = document.getElementById('btn-close-premium');
+            
+            if (wmCheckbox) {
+                wmCheckbox.addEventListener('change', () => {
+                    if (!wmCheckbox.checked) {
+                        premiumModal.style.display = 'flex';
+                    }
+                });
+            }
+            
+            if (closePremium) {
+                closePremium.addEventListener('click', () => {
+                    premiumModal.style.display = 'none';
+                    if (wmCheckbox) wmCheckbox.checked = true;
+                });
+            }
+        });
+</script>
+</body>
+</html>

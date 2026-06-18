@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Créateur de Bannière Holographique 3D | IA Code Studio</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <style>
+        /* Specific Styles for Hologram Banner Builder */
+        .hologram-banner-view {
+            width: 100%;
+            height: 320px;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+            background: linear-gradient(135deg, #0f172a 0%, #030712 100%);
+        }
+
+        .hologram-text-overlay {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            z-index: 10;
+            pointer-events: none;
+            font-family: 'Outfit', sans-serif;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .hologram-tag {
+            background: #8b5cf6;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 6px;
+        }
+
+        .hologram-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .hologram-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .gyro-badge {
+            position: absolute;
+            top: 20px; right: 20px;
+            background: rgba(6, 182, 212, 0.15);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            color: #22d3ee;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="aura-container">
+        <div class="aura-orb orb-1"></div>
+        <div class="aura-orb orb-2"></div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-icon">🕶️</span>
+            <span data-i18n="nav_title">BANNIÈRE HOLOGRAPHIQUE 3D</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="btn-back" data-i18n="btn_back">← Retour au labo</a>
+            <div class="lang-toggle">
+                <button class="lang-btn active" data-lang="fr" id="btn-fr">FR</button>
+                <button class="lang-btn" data-lang="en" id="btn-en">EN</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        <div class="builder-layout">
+            
+            <!-- Left Panel: Configurations -->
+            <section class="panel">
+                <h2 class="panel-title" data-i18n="config_title">1. Configurer l'Effet Parallaxe</h2>
+                
+                <!-- Title Text Settings -->
+                <div class="form-group">
+                    <label class="form-label" data-i18n="label_heading">Titre du Banner</label>
+                    <input type="text" id="input-title" class="form-input" value="RÉVOLUTION AR">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" data-i18n="label_subtitle">Sous-titre</label>
+                    <input type="text" id="input-sub" class="form-input" value="Interagissez avec le mouvement">
+                </div>
+
+                <!-- 3D Model Selector -->
+                <div class="form-group">
+                    <label class="form-label" data-i18n="label_object">Objet 3D Central</label>
+                    <select id="select-object" class="form-input">
+                        <option value="knot">🌀 Nœud Parallaxe (Futuriste)</option>
+                        <option value="torus">💫 Torus (Anneau Luminescent)</option>
+                        <option value="sphere">🔮 Sphère Facettée</option>
+                        <option value="diamond">💎 Diamant Cristal</option>
+                        <option value="dna">🧬 Hélice ADN</option>
+                        <option value="globe">🌐 Globe Wireframe</option>
+                        <option value="saturn">🪐 Anneaux Planétaires</option>
+                        <option value="dodeca">🔷 Dodécaèdre Mystique</option>
+                        <option value="mobius">♾️ Ruban de Möbius</option>
+                        <option value="galaxy">🌌 Galaxie Spirale</option>
+                        <option value="electric">⚡ Sphère Électrique</option>
+                        <option value="crystal">💠 Cristal Multi-facettes</option>
+                        <option value="target">🎯 Cible Holographique</option>
+                    </select>
+                </div>
+
+                <!-- Sensitivity Slider -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <span data-i18n="label_sensitivity">Sensibilité Parallaxe</span>: 
+                        <span id="val-sensitivity">50</span>
+                    </label>
+                    <input type="range" id="input-sensitivity" class="range-slider" min="10" max="100" value="50">
+                </div>
+
+                <!-- Emissive details -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="label_color">Couleur Hologramme</label>
+                        <div class="color-picker-wrapper">
+                            <input type="color" id="input-color" class="color-input" value="#ec4899">
+                            <span style="font-size: 0.85rem; color: var(--text-secondary);">#ec4899</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="label_ambient">Couleur Ambiance</label>
+                        <div class="color-picker-wrapper">
+                            <input type="color" id="input-ambient" class="color-input" value="#0f172a">
+                            <span style="font-size: 0.85rem; color: var(--text-secondary);">#0F172A</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem;">
+                    <button id="btn-export" class="btn btn-primary" data-i18n="btn_export">Générer le Banner Holographique ⚡</button>
+                <div style="margin-top: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none;">
+                        <input type="checkbox" id="input-license-watermark" checked style="width:18px; height:18px; cursor:pointer;">
+                        <span style="font-size:0.85rem; color:#9ca3af;" data-i18n="cfg_watermark">Inclure le filigrane de branding (Licence Gratuite)</span>
+                    </label>
+                </div>
+
+                </div>
+            </section>
+
+            <!-- Right Panel: Viewport -->
+            <section class="panel" style="display: flex; flex-direction: column;">
+                <h2 class="panel-title" data-i18n="preview_title">2. Rendu Parallaxe Interactif</h2>
+                
+                <div class="hologram-banner-view" id="banner-container">
+                    <!-- Gyro sensor badge -->
+                    <div class="gyro-badge">
+                        <span>✨</span> <span data-i18n="gyro_info">Perspective active</span>
+                    </div>
+
+                    <!-- Banner labels overlay -->
+                    <div class="hologram-text-overlay">
+                        <span class="hologram-tag" data-i18n="tag_text">NOUVEAU</span>
+                        <div class="hologram-title" id="val-title">RÉVOLUTION AR</div>
+                        <div class="hologram-subtitle" id="val-sub">Interagissez avec le mouvement</div>
+                    </div>
+
+                    <!-- 3D Canvas container -->
+                    <div id="viewport-3d" style="width: 100%; height: 100%;"></div>
+                </div>
+
+                <!-- Export Widget HTML Code -->
+                <div id="output-code-container" style="display: none; margin-top: 1.5rem; border-top: 1px solid var(--glass-border); padding-top: 1.5rem;">
+                    <h3 style="font-size: 1.1rem; color: #fff; margin-bottom: 0.5rem;" data-i18n="output_title">Code d'Intégration du Banner (Iframe)</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1rem;" data-i18n="output_desc">Collez ce code HTML5 responsive dans votre site (Shopify, WordPress, Wix) pour activer l'hologramme.</p>
+                    <textarea class="code-area" id="textarea-code" readonly></textarea>
+                    <div style="margin-top: 1rem;">
+                        <button id="btn-copy" class="btn btn-secondary" data-i18n="btn_copy">Copier le Code HTML 📋</button>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Script Section -->
+    <script>
+        const translations = {
+            fr: {
+                cfg_watermark: "Inclure le filigrane de branding (Licence Gratuite)",
+                modal_premium_title: "Désactiver le branding ?",
+                modal_premium_desc: "Passez à la version Premium de IA Code Studio pour exporter des codes 100% white-label sans filigrane.",
+                modal_premium_cta: "Passer au Premium ⚡",
+                modal_premium_cancel: "Garder le filigrane (Gratuit)",
+                nav_title: "BANNIÈRE HOLOGRAPHIQUE 3D",
+                btn_back: "← Retour au labo",
+                config_title: "1. Configurer l'Effet Parallaxe",
+                label_heading: "Titre du Banner",
+                label_subtitle: "Sous-titre",
+                label_object: "Objet 3D Central",
+                obj_knot: "Nœud Parallaxe (Futuriste)",
+                obj_torus: "Torus (Anneau Luminescent)",
+                obj_sphere: "Sphère Facettée",
+                label_sensitivity: "Sensibilité Parallaxe",
+                label_color: "Couleur Hologramme",
+                label_ambient: "Couleur Ambiance",
+                btn_export: "Générer le Banner Holographique ⚡",
+                preview_title: "2. Rendu Parallaxe Interactif",
+                gyro_info: "Perspective active",
+                tag_text: "NOUVEAU",
+                output_title: "Code d'Intégration du Banner (Iframe)",
+                output_desc: "Collez ce code HTML5 responsive dans votre site (Shopify, WordPress, Wix) pour activer l'hologramme.",
+                btn_copy: "Copier le Code HTML 📋"
+            },
+            en: {
+                cfg_watermark: "Include branding watermark (Free License)",
+                modal_premium_title: "Remove Branding?",
+                modal_premium_desc: "Upgrade to IA Code Studio Premium to export 100% white-label widgets without watermark.",
+                modal_premium_cta: "Go Premium ⚡",
+                modal_premium_cancel: "Keep watermark (Free)",
+                nav_title: "3D HOLOGRAM BANNER",
+                btn_back: "← Back to lab",
+                config_title: "1. Configure Parallax Effect",
+                label_heading: "Banner Heading",
+                label_subtitle: "Subtitle",
+                label_object: "Central 3D Object",
+                obj_knot: "Parallax Knot (Futuristic)",
+                obj_torus: "Torus (Glow Ring)",
+                obj_sphere: "Faceted Sphere",
+                label_sensitivity: "Parallax Sensitivity",
+                label_color: "Hologram Color",
+                label_ambient: "Background Color",
+                btn_export: "Generate Holographic Banner ⚡",
+                preview_title: "2. Interactive Parallax Render",
+                gyro_info: "Perspective active",
+                tag_text: "NEW",
+                output_title: "Banner Embed Code (Iframe)",
+                output_desc: "Paste this responsive HTML5 code into your website (Shopify, WordPress, Wix) to launch the hologram.",
+                btn_copy: "Copy HTML Code 📋"
+            }
+        };
+
+        const pageTitles = {
+            fr: "Créateur de Bannière Holographique 3D | IA Code Studio",
+            en: "3D Holographic Banner Creator | IA Code Studio"
+        };
+
+        let currentLang = 'fr';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            const trans = translations[lang];
+            if (!trans) return;
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (trans[key]) {
+                    el.textContent = trans[key];
+                }
+            });
+
+            document.title = pageTitles[lang];
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            if (lang === 'fr') document.getElementById('btn-fr').classList.add('active');
+            else document.getElementById('btn-en').classList.add('active');
+
+            localStorage.setItem('hub_lang', lang);
+        }
+
+        // Live text inputs binding
+        const inputTitle = document.getElementById('input-title');
+        const inputSub = document.getElementById('input-sub');
+        const valTitle = document.getElementById('val-title');
+        const valSub = document.getElementById('val-sub');
+
+        inputTitle.addEventListener('input', () => valTitle.textContent = inputTitle.value);
+        inputSub.addEventListener('input', () => valSub.textContent = inputSub.value);
+
+        // Slider sensitivity
+        const inputSensitivity = document.getElementById('input-sensitivity');
+        const valSensitivity = document.getElementById('val-sensitivity');
+        inputSensitivity.addEventListener('input', () => valSensitivity.textContent = inputSensitivity.value);
+
+        // Three.js Render Settings
+        let scene, camera, renderer, currentMesh;
+        let targetX = 0, targetY = 0; // Target camera positions derived from mouse
+        let currentX = 0, currentY = 0; // Smooth interpolated positions
+        
+        const viewport = document.getElementById('viewport-3d');
+        const bannerContainer = document.getElementById('banner-container');
+        const selectObject = document.getElementById('select-object');
+        const inputColor = document.getElementById('input-color');
+        const inputAmbient = document.getElementById('input-ambient');
+
+        function init3D() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(45, viewport.clientWidth / viewport.clientHeight, 0.1, 100);
+            camera.position.set(0, 0, 5);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(viewport.clientWidth, viewport.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            viewport.appendChild(renderer.domElement);
+
+            // Add Lights
+            const ambient = new THREE.AmbientLight(0xffffff, 0.3);
+            scene.add(ambient);
+            
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            dirLight.position.set(5, 5, 5);
+            scene.add(dirLight);
+
+            const pointLight = new THREE.PointLight(0x06b6d4, 1, 10);
+            pointLight.position.set(-2, 2, 3);
+            scene.add(pointLight);
+
+            updateMesh();
+
+            // Event Listeners for Parallax Mouse Movement
+            bannerContainer.addEventListener('mousemove', handleMouseMove);
+            bannerContainer.addEventListener('mouseleave', resetParallax);
+
+            // Gyroscope tilt on mobile
+            window.addEventListener('deviceorientation', handleDeviceOrientation);
+
+            animate();
+            createStarField(); // safe here — scene is fully initialized
+        }
+
+        // ---- Particle Star Field ----
+        let starField = null;
+        function createStarField() {
+            const count = 300;
+            const positions = new Float32Array(count * 3);
+            for (let i = 0; i < count; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 20;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 10 - 5;
+            }
+            const geom = new THREE.BufferGeometry();
+            geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            const mat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.025, transparent: true, opacity: 0.6 });
+            starField = new THREE.Points(geom, mat);
+            scene.add(starField);
+        }
+
+        function buildGeometry(shape) {
+            switch(shape) {
+                case 'knot':    return new THREE.TorusKnotGeometry(0.7, 0.22, 120, 16);
+                case 'torus':   return new THREE.TorusGeometry(0.8, 0.25, 20, 100);
+                case 'sphere':  return new THREE.IcosahedronGeometry(0.9, 2);
+                case 'diamond': return new THREE.OctahedronGeometry(1.0, 0);
+                case 'dodeca':  return new THREE.DodecahedronGeometry(0.9, 0);
+                case 'crystal': return new THREE.IcosahedronGeometry(0.9, 1);
+                case 'electric': return new THREE.OctahedronGeometry(0.9, 2);
+
+                case 'globe': {
+                    // Wireframe globe
+                    const g = new THREE.SphereGeometry(0.9, 18, 12);
+                    return g;
+                }
+
+                case 'saturn': {
+                    // Planet + ring group handled in updateMesh
+                    return new THREE.SphereGeometry(0.55, 32, 32);
+                }
+
+                case 'dna': {
+                    // DNA helix: two interleaved spirals as tube paths
+                    const curve1Points = [], curve2Points = [];
+                    for (let i = 0; i <= 80; i++) {
+                        const t = (i / 80) * Math.PI * 6;
+                        const y = (i / 80) * 2.4 - 1.2;
+                        curve1Points.push(new THREE.Vector3(Math.cos(t) * 0.5, y, Math.sin(t) * 0.5));
+                        curve2Points.push(new THREE.Vector3(Math.cos(t + Math.PI) * 0.5, y, Math.sin(t + Math.PI) * 0.5));
+                    }
+                    return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(curve1Points), 80, 0.06, 8, false);
+                }
+
+                case 'mobius': {
+                    // Möbius strip via ParametricGeometry substitute
+                    const mobiusGeom = new THREE.BufferGeometry();
+                    const verts = [], uvs = [];
+                    const uSteps = 100, vSteps = 20;
+                    for (let i = 0; i <= uSteps; i++) {
+                        for (let j = 0; j <= vSteps; j++) {
+                            const u = (i / uSteps) * Math.PI * 2;
+                            const v = (j / vSteps) - 0.5;
+                            const x = (1 + v * 0.5 * Math.cos(u / 2)) * Math.cos(u);
+                            const y = (1 + v * 0.5 * Math.cos(u / 2)) * Math.sin(u);
+                            const z = v * 0.5 * Math.sin(u / 2);
+                            verts.push(x * 0.8, y * 0.8, z * 0.8);
+                            uvs.push(i / uSteps, j / vSteps);
+                        }
+                    }
+                    const indices = [];
+                    for (let i = 0; i < uSteps; i++) {
+                        for (let j = 0; j < vSteps; j++) {
+                            const a = i * (vSteps + 1) + j;
+                            const b = a + vSteps + 1;
+                            indices.push(a, b, a + 1, b, b + 1, a + 1);
+                        }
+                    }
+                    mobiusGeom.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
+                    mobiusGeom.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+                    mobiusGeom.setIndex(indices);
+                    mobiusGeom.computeVertexNormals();
+                    return mobiusGeom;
+                }
+
+                case 'galaxy': {
+                    // Galaxy: particle points (returned as Points mesh flag)
+                    return null; // handled separately
+                }
+
+                case 'target': {
+                    // Concentric rings — returns null, handled separately
+                    return null;
+                }
+
+                default: return new THREE.IcosahedronGeometry(0.9, 1);
+            }
+        }
+
+        function updateMesh() {
+            // Remove previous mesh/group
+            if (currentMesh) { scene.remove(currentMesh); currentMesh = null; }
+
+            const shape = selectObject.value;
+            const colorHex = inputColor.value;
+            const ambientHex = inputAmbient.value;
+
+            inputColor.nextElementSibling.textContent = colorHex.toUpperCase();
+            inputAmbient.nextElementSibling.textContent = ambientHex.toUpperCase();
+            bannerContainer.style.background = `linear-gradient(135deg, ${ambientHex} 0%, #030712 100%)`;
+
+            const stdMat = new THREE.MeshStandardMaterial({
+                color: colorHex,
+                roughness: 0.1,
+                metalness: 0.9,
+                emissive: colorHex,
+                emissiveIntensity: 0.2,
+                wireframe: (shape === 'globe')
+            });
+
+            // ---- Galaxy (particle system) ----
+            if (shape === 'galaxy') {
+                const count = 2000;
+                const pos = new Float32Array(count * 3);
+                for (let i = 0; i < count; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const radius = Math.pow(Math.random(), 0.5) * 1.8;
+                    const arm = Math.floor(Math.random() * 3) * (Math.PI * 2 / 3);
+                    const twist = radius * 2.5;
+                    pos[i * 3] = Math.cos(angle + arm + twist) * radius;
+                    pos[i * 3 + 1] = (Math.random() - 0.5) * 0.15;
+                    pos[i * 3 + 2] = Math.sin(angle + arm + twist) * radius;
+                }
+                const gG = new THREE.BufferGeometry();
+                gG.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+                const gM = new THREE.PointsMaterial({ color: colorHex, size: 0.02, transparent: true, opacity: 0.9 });
+                currentMesh = new THREE.Points(gG, gM);
+                scene.add(currentMesh);
+                return;
+            }
+
+            // ---- Holographic Target (concentric rings) ----
+            if (shape === 'target') {
+                const group = new THREE.Group();
+                for (let i = 1; i <= 5; i++) {
+                    const r = i * 0.2;
+                    const ringGeom = new THREE.TorusGeometry(r, 0.02, 8, 80);
+                    const ringMat = new THREE.MeshStandardMaterial({
+                        color: colorHex, emissive: colorHex,
+                        emissiveIntensity: 1.5 - i * 0.2,
+                        transparent: true, opacity: 1.2 - i * 0.15
+                    });
+                    group.add(new THREE.Mesh(ringGeom, ringMat));
+                }
+                // Central dot
+                const dot = new THREE.Mesh(new THREE.SphereGeometry(0.06, 16, 16),
+                    new THREE.MeshStandardMaterial({ color: colorHex, emissive: colorHex, emissiveIntensity: 3 }));
+                group.add(dot);
+                currentMesh = group;
+                scene.add(currentMesh);
+                return;
+            }
+
+            // ---- Saturn (sphere + ring) ----
+            if (shape === 'saturn') {
+                const group = new THREE.Group();
+                const planet = new THREE.Mesh(new THREE.SphereGeometry(0.55, 32, 32), stdMat.clone());
+                group.add(planet);
+                const ringG = new THREE.TorusGeometry(0.9, 0.18, 4, 120);
+                const ringM = new THREE.MeshStandardMaterial({
+                    color: colorHex, emissive: colorHex, emissiveIntensity: 0.3,
+                    transparent: true, opacity: 0.65, side: THREE.DoubleSide
+                });
+                const ring = new THREE.Mesh(ringG, ringM);
+                ring.rotation.x = Math.PI / 2.5;
+                group.add(ring);
+                currentMesh = group;
+                scene.add(currentMesh);
+                return;
+            }
+
+            // ---- DNA (add second strand as tube) ----
+            if (shape === 'dna') {
+                const group = new THREE.Group();
+                const addStrand = (offset) => {
+                    const pts = [];
+                    for (let i = 0; i <= 80; i++) {
+                        const t = (i / 80) * Math.PI * 6;
+                        const y = (i / 80) * 2.4 - 1.2;
+                        pts.push(new THREE.Vector3(Math.cos(t + offset) * 0.5, y, Math.sin(t + offset) * 0.5));
+                    }
+                    const tube = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 80, 0.055, 8, false);
+                    group.add(new THREE.Mesh(tube, stdMat.clone()));
+                };
+                addStrand(0);
+                addStrand(Math.PI);
+                // Rungs
+                for (let i = 0; i <= 24; i++) {
+                    const t = (i / 24) * Math.PI * 6;
+                    const y = (i / 24) * 2.4 - 1.2;
+                    const rung = new THREE.Mesh(
+                        new THREE.CylinderGeometry(0.025, 0.025, 1.0, 6),
+                        new THREE.MeshStandardMaterial({ color: colorHex, emissive: colorHex, emissiveIntensity: 0.5 })
+                    );
+                    rung.position.set(0, y, 0);
+                    rung.rotation.y = t;
+                    rung.rotation.z = Math.PI / 2;
+                    group.add(rung);
+                }
+                currentMesh = group;
+                scene.add(currentMesh);
+                return;
+            }
+
+            // ---- Standard geometry shapes ----
+            const geom = buildGeometry(shape);
+            if (!geom) return;
+            currentMesh = new THREE.Mesh(geom, stdMat);
+            scene.add(currentMesh);
+        }
+
+        selectObject.addEventListener('change', updateMesh);
+        inputColor.addEventListener('input', updateMesh);
+        inputAmbient.addEventListener('input', updateMesh);
+
+        // Mouse Parallax Calculation
+        function handleMouseMove(e) {
+            const rect = bannerContainer.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width; // 0 to 1
+            const y = (e.clientY - rect.top) / rect.height; // 0 to 1
+
+            const sensitivity = parseFloat(inputSensitivity.value) / 100;
+
+            // Map target coordinates from -sensitivity to +sensitivity
+            targetX = (x - 0.5) * 2 * sensitivity;
+            targetY = -(y - 0.5) * 2 * sensitivity;
+        }
+
+        function resetParallax() {
+            targetX = 0;
+            targetY = 0;
+        }
+
+        // Mobile Gyroscope tilt calculation
+        function handleDeviceOrientation(e) {
+            if (!e.gamma || !e.beta) return; // No gyroscope data
+
+            const sensitivity = parseFloat(inputSensitivity.value) / 100;
+            
+            // Gamma is tilt left-right (-90 to 90)
+            // Beta is tilt front-back (-180 to 180)
+            const tiltX = e.gamma / 45; // Normalized approx -1 to 1
+            const tiltY = (e.beta - 45) / 45; // Centered around 45deg tilt
+
+            targetX = THREE.MathUtils.clamp(tiltX, -1, 1) * sensitivity;
+            targetY = -THREE.MathUtils.clamp(tiltY, -1, 1) * sensitivity;
+        }
+
+        let bannerClock = 0;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            bannerClock += 0.016;
+
+            // Smooth parallax lerp
+            currentX += (targetX - currentX) * 0.08;
+            currentY += (targetY - currentY) * 0.08;
+
+            if (camera) {
+                camera.position.x = currentX * 1.5;
+                camera.position.y = currentY * 1.5;
+                camera.lookAt(scene.position);
+            }
+
+            // Slow star field drift
+            if (starField) {
+                starField.rotation.y += 0.0003;
+                starField.rotation.x += 0.0001;
+            }
+
+            const shape = selectObject.value;
+
+            if (currentMesh) {
+                if (shape === 'target') {
+                    // Each ring rotates at different speed
+                    currentMesh.children.forEach((ring, i) => {
+                        ring.rotation.z += 0.012 * (i % 2 === 0 ? 1 : -1);
+                        ring.rotation.x = Math.sin(bannerClock * 0.5 + i) * 0.3;
+                    });
+                } else if (shape === 'galaxy') {
+                    currentMesh.rotation.y += 0.003;
+                } else if (shape === 'dna') {
+                    currentMesh.rotation.y += 0.006;
+                    currentMesh.position.y = Math.sin(bannerClock * 0.8) * 0.05;
+                } else if (shape === 'saturn') {
+                    currentMesh.rotation.y += 0.007;
+                    // Ring child wobble
+                    if (currentMesh.children[1]) {
+                        currentMesh.children[1].rotation.x = Math.PI / 2.5 + Math.sin(bannerClock * 0.4) * 0.1;
+                    }
+                } else if (shape === 'mobius') {
+                    currentMesh.rotation.y += 0.01;
+                    currentMesh.rotation.z += 0.003;
+                } else if (shape === 'electric') {
+                    currentMesh.rotation.x += 0.015;
+                    currentMesh.rotation.y += 0.008;
+                    const pulse = 1 + Math.sin(bannerClock * 5) * 0.06;
+                    currentMesh.scale.set(pulse, pulse, pulse);
+                } else {
+                    currentMesh.rotation.y += 0.005;
+                    currentMesh.rotation.x += 0.002;
+                }
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Widget Code Builder
+        const btnExport = document.getElementById('btn-export');
+        const codeContainer = document.getElementById('output-code-container');
+        const textareaCode = document.getElementById('textarea-code');
+        const btnCopy = document.getElementById('btn-copy');
+
+        btnExport.addEventListener('click', () => {
+            const title = inputTitle.value;
+            const subtitle = inputSub.value;
+            const shape = selectObject.value;
+            const color = inputColor.value;
+            const bg = inputAmbient.value;
+            const sens = inputSensitivity.value;
+
+            // Generate unique ID for the widget container and script references
+            const widgetId = Math.random().toString(36).substring(2, 9);
+
+            // Build self-contained HTML/JS snippet
+            const embedHTML = `
+<!-- START IA CODE STUDIO 3D HOLOGRAM BANNER WIDGET -->
+<div id="hologram-banner-${widgetId}" style="width: 100%; height: 320px; border-radius: 16px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 12px 40px rgba(0,0,0,0.35); background: linear-gradient(135deg, ${bg} 0%, #030712 100%); cursor: pointer; user-select: none;">
+  <!-- Gyro sensor badge -->
+  <div style="position: absolute; top: 20px; right: 20px; background: rgba(6, 182, 212, 0.15); border: 1px solid rgba(6, 182, 212, 0.3); color: #22d3ee; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; z-index: 10; display: flex; align-items: center; gap: 5px; pointer-events: none; font-family: sans-serif;">
+    <span>✨</span> <span>Perspective active</span>
+  </div>
+
+  <!-- Banner labels overlay -->
+  <div style="position: absolute; bottom: 30px; left: 30px; z-index: 10; pointer-events: none; font-family: 'Outfit', Arial, sans-serif; text-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+    <span style="background: #8b5cf6; color: #fff; padding: 3px 10px; border-radius: 50px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: inline-block; margin-bottom: 6px;">NOUVEAU</span>
+    <div style="font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 4px; line-height: 1.2;">${title}</div>
+    <div style="font-size: 0.95rem; color: #cbd5e1; line-height: 1.4;">${subtitle}</div>
+  </div>
+
+  <!-- 3D Canvas container -->
+  <div id="viewport-hologram-${widgetId}" style="width: 100%; height: 100%;"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
+<script>
+(function() {
+  const container = document.getElementById('hologram-banner-${widgetId}');
+  const viewport = document.getElementById('viewport-hologram-${widgetId}');
+  if (!viewport || !container) return;
+
+  function initWhenReady() {
+    if (typeof THREE !== 'undefined') {
+      startWidget();
+    } else {
+      setTimeout(initWhenReady, 50);
+    }
+  }
+  initWhenReady();
+
+  function startWidget() {
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, viewport.clientWidth / viewport.clientHeight, 0.1, 100);
+    camera.position.set(0, 0, 5);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(viewport.clientWidth, viewport.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio || 1);
+    viewport.appendChild(renderer.domElement);
+
+    // Lights
+    const ambient = new THREE.AmbientLight(0xffffff, 0.3);
+    scene.add(ambient);
+    
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    dirLight.position.set(5, 5, 5);
+    scene.add(dirLight);
+
+    const pointLight = new THREE.PointLight(0x06b6d4, 1, 10);
+    pointLight.position.set(-2, 2, 3);
+    scene.add(pointLight);
+
+    // ---- Star field ----
+    var starPos = new Float32Array(300 * 3);
+    for (var si = 0; si < 300; si++) {
+      starPos[si*3]   = (Math.random()-0.5)*20;
+      starPos[si*3+1] = (Math.random()-0.5)*20;
+      starPos[si*3+2] = (Math.random()-0.5)*10 - 5;
+    }
+    var starGeom = new THREE.BufferGeometry();
+    starGeom.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+    var starField = new THREE.Points(starGeom, new THREE.PointsMaterial({color:0xffffff,size:0.025,transparent:true,opacity:0.5}));
+    scene.add(starField);
+
+    // ---- Build geometry & mesh for all 13 shapes ----
+    var shape = "${shape}";
+    var colorHex = "${color}";
+    var stdMat = new THREE.MeshStandardMaterial({color:colorHex,roughness:0.1,metalness:0.9,emissive:colorHex,emissiveIntensity:0.2,wireframe:(shape==='globe')});
+    var currentMesh = null;
+
+    if (shape === 'galaxy') {
+      var gCount = 2000, gPos = new Float32Array(gCount*3);
+      for (var i=0;i<gCount;i++) {
+        var angle=Math.random()*Math.PI*2, radius=Math.pow(Math.random(),0.5)*1.8;
+        var arm=Math.floor(Math.random()*3)*(Math.PI*2/3), twist=radius*2.5;
+        gPos[i*3]=Math.cos(angle+arm+twist)*radius;
+        gPos[i*3+1]=(Math.random()-0.5)*0.15;
+        gPos[i*3+2]=Math.sin(angle+arm+twist)*radius;
+      }
+      var gG=new THREE.BufferGeometry();
+      gG.setAttribute('position',new THREE.BufferAttribute(gPos,3));
+      currentMesh=new THREE.Points(gG,new THREE.PointsMaterial({color:colorHex,size:0.02,transparent:true,opacity:0.9}));
+
+    } else if (shape === 'target') {
+      currentMesh = new THREE.Group();
+      for (var ti=1;ti<=5;ti++) {
+        var rm=new THREE.MeshStandardMaterial({color:colorHex,emissive:colorHex,emissiveIntensity:1.5-ti*0.2,transparent:true,opacity:1.2-ti*0.15});
+        currentMesh.add(new THREE.Mesh(new THREE.TorusGeometry(ti*0.2,0.02,8,80),rm));
+      }
+      currentMesh.add(new THREE.Mesh(new THREE.SphereGeometry(0.06,16,16),new THREE.MeshStandardMaterial({color:colorHex,emissive:colorHex,emissiveIntensity:3})));
+
+    } else if (shape === 'saturn') {
+      currentMesh = new THREE.Group();
+      currentMesh.add(new THREE.Mesh(new THREE.SphereGeometry(0.55,32,32),stdMat.clone()));
+      var rr=new THREE.Mesh(new THREE.TorusGeometry(0.9,0.18,4,120),new THREE.MeshStandardMaterial({color:colorHex,emissive:colorHex,emissiveIntensity:0.3,transparent:true,opacity:0.65,side:THREE.DoubleSide}));
+      rr.rotation.x=Math.PI/2.5; currentMesh.add(rr);
+
+    } else if (shape === 'dna') {
+      currentMesh = new THREE.Group();
+      function addStrand(off) {
+        var pts=[];
+        for(var i=0;i<=80;i++){var t=(i/80)*Math.PI*6,y=(i/80)*2.4-1.2;pts.push(new THREE.Vector3(Math.cos(t+off)*0.5,y,Math.sin(t+off)*0.5));}
+        currentMesh.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),80,0.055,8,false),stdMat.clone()));
+      }
+      addStrand(0); addStrand(Math.PI);
+      for(var di=0;di<=24;di++){
+        var dt=(di/24)*Math.PI*6,dy=(di/24)*2.4-1.2;
+        var rung=new THREE.Mesh(new THREE.CylinderGeometry(0.025,0.025,1.0,6),new THREE.MeshStandardMaterial({color:colorHex,emissive:colorHex,emissiveIntensity:0.5}));
+        rung.position.set(0,dy,0); rung.rotation.y=dt; rung.rotation.z=Math.PI/2;
+        currentMesh.add(rung);
+      }
+
+    } else if (shape === 'mobius') {
+      var mb=new THREE.BufferGeometry(), mv=[], muv=[], uS=100, vS=20;
+      for(var i=0;i<=uS;i++){for(var j=0;j<=vS;j++){
+        var u=(i/uS)*Math.PI*2, v=(j/vS)-0.5;
+        mv.push((1+v*0.5*Math.cos(u/2))*Math.cos(u)*0.8,(1+v*0.5*Math.cos(u/2))*Math.sin(u)*0.8,v*0.5*Math.sin(u/2)*0.8);
+        muv.push(i/uS,j/vS);
+      }}
+      var mi=[];
+      for(var i=0;i<uS;i++){for(var j=0;j<vS;j++){var a=i*(vS+1)+j,b=a+vS+1;mi.push(a,b,a+1,b,b+1,a+1);}}
+      mb.setAttribute('position',new THREE.Float32BufferAttribute(mv,3));
+      mb.setAttribute('uv',new THREE.Float32BufferAttribute(muv,2));
+      mb.setIndex(mi); mb.computeVertexNormals();
+      currentMesh=new THREE.Mesh(mb,stdMat);
+
+    } else {
+      var geom;
+      if(shape==='knot')    geom=new THREE.TorusKnotGeometry(0.7,0.22,120,16);
+      else if(shape==='torus')   geom=new THREE.TorusGeometry(0.8,0.25,20,100);
+      else if(shape==='sphere')  geom=new THREE.IcosahedronGeometry(0.9,2);
+      else if(shape==='diamond') geom=new THREE.OctahedronGeometry(1.0,0);
+      else if(shape==='dodeca')  geom=new THREE.DodecahedronGeometry(0.9,0);
+      else if(shape==='crystal') geom=new THREE.IcosahedronGeometry(0.9,1);
+      else if(shape==='electric') geom=new THREE.OctahedronGeometry(0.9,2);
+      else if(shape==='globe')   geom=new THREE.SphereGeometry(0.9,18,12);
+      else geom=new THREE.TorusKnotGeometry(0.7,0.22,120,16);
+      currentMesh=new THREE.Mesh(geom,stdMat);
+    }
+
+    scene.add(currentMesh);
+
+    // Mouse Parallax Calculation
+    let targetX = 0, targetY = 0;
+    let currentX = 0, currentY = 0;
+    const sensitivity = ${sens} / 100;
+
+    container.addEventListener('mousemove', (e) => {
+      const rect = container.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top) / rect.height;
+      targetX = (x - 0.5) * 2 * sensitivity;
+      targetY = -(y - 0.5) * 2 * sensitivity;
+    });
+
+    container.addEventListener('mouseleave', () => {
+      targetX = 0;
+      targetY = 0;
+    });
+
+    // Mobile Gyroscope tilt
+    window.addEventListener('deviceorientation', (e) => {
+      if (!e.gamma || !e.beta) return;
+      const tiltX = e.gamma / 45;
+      const tiltY = (e.beta - 45) / 45;
+      targetX = Math.max(-1,Math.min(1,tiltX)) * sensitivity;
+      targetY = -Math.max(-1,Math.min(1,tiltY)) * sensitivity;
+    });
+
+    var clock = 0;
+    function animate() {
+      requestAnimationFrame(animate);
+      clock += 0.016;
+
+      currentX += (targetX - currentX) * 0.08;
+      currentY += (targetY - currentY) * 0.08;
+      camera.position.x = currentX * 1.5;
+      camera.position.y = currentY * 1.5;
+      camera.lookAt(scene.position);
+
+      starField.rotation.y += 0.0003;
+
+      if (currentMesh) {
+        if (shape === 'target') {
+          currentMesh.children.forEach(function(r,i){ r.rotation.z += 0.012*(i%2===0?1:-1); r.rotation.x=Math.sin(clock*0.5+i)*0.3; });
+        } else if (shape === 'galaxy') { currentMesh.rotation.y += 0.003; }
+        else if (shape === 'dna') { currentMesh.rotation.y += 0.006; currentMesh.position.y=Math.sin(clock*0.8)*0.05; }
+        else if (shape === 'saturn') { currentMesh.rotation.y += 0.007; if(currentMesh.children[1]) currentMesh.children[1].rotation.x=Math.PI/2.5+Math.sin(clock*0.4)*0.1; }
+        else if (shape === 'mobius') { currentMesh.rotation.y += 0.01; currentMesh.rotation.z += 0.003; }
+        else if (shape === 'electric') { currentMesh.rotation.x += 0.015; currentMesh.rotation.y += 0.008; var p=1+Math.sin(clock*5)*0.06; currentMesh.scale.set(p,p,p); }
+        else { currentMesh.rotation.y += 0.005; currentMesh.rotation.x += 0.002; }
+      }
+
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = viewport.clientWidth / viewport.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(viewport.clientWidth, viewport.clientHeight);
+    });
+  }
+})();
+<\/script>
+<!-- END IA CODE STUDIO 3D HOLOGRAM BANNER WIDGET -->`;
+            
+            
+            let finalCodeToExport = embedHTML;
+            if (document.getElementById('input-license-watermark') && document.getElementById('input-license-watermark').checked) {
+                const watermarkHTML = '\n<a id="ia-brand-badge" href="https://ia-codestudio.com" target="_blank" style="position:absolute; bottom:12px; right:12px; background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.08); backdrop-filter:blur(8px); color:#06b6d4; font-family:sans-serif; text-decoration:none; padding:4px 10px; border-radius:50px; font-size:10px; font-weight:600; z-index:9999; display:flex; align-items:center; gap:4px; box-shadow:0 4px 12px rgba(0,0,0,0.25);"><span>⚡</span><span>3D Widget by IA Code Studio</span></a>\n<script>\nsetTimeout(function(){\n  var badge = document.getElementById("ia-brand-badge");\n  if(!badge || !badge.href || !badge.href.includes("ia-codestudio.com")){\n    var c = document.querySelector("canvas") || document.querySelector(".ia-neon-sign") || document.body;\n    if(c) c.style.opacity = "0.15";\n    \n  }\n}, 3000);\n<' + '/script>';
+                const lastDiv = finalCodeToExport.lastIndexOf('</div>');
+                if (lastDiv !== -1) {
+                    finalCodeToExport = finalCodeToExport.substring(0, lastDiv) + watermarkHTML + finalCodeToExport.substring(lastDiv);
+                } else {
+                    finalCodeToExport += watermarkHTML;
+                }
+            }
+            textareaCode.value = finalCodeToExport.trim();
+    
+            codeContainer.style.display = 'block';
+            codeContainer.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        btnCopy.addEventListener('click', () => {
+            textareaCode.select();
+            document.execCommand('copy');
+            alert(currentLang === 'fr' ? 'Code d\'intégration copié !' : 'Embed code copied!');
+        });
+
+        // Resize support
+        window.addEventListener('resize', () => {
+            camera.aspect = viewport.clientWidth / viewport.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(viewport.clientWidth, viewport.clientHeight);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const isEmbed = urlParams.get('embed') === 'true';
+
+            // Activate Embed Mode
+            if (isEmbed) {
+                document.body.classList.add('embed-mode');
+            }
+
+            // Parse URL parameters if present
+            const urlTitle = urlParams.get('title');
+            const urlSub = urlParams.get('sub');
+            const urlShape = urlParams.get('shape');
+            const urlColor = urlParams.get('color');
+            const urlBg = urlParams.get('bg');
+            const urlSens = urlParams.get('sens');
+
+            if (urlTitle) inputTitle.value = decodeURIComponent(urlTitle);
+            if (urlSub) inputSub.value = decodeURIComponent(urlSub);
+            if (urlShape) selectObject.value = urlShape;
+            if (urlColor) inputColor.value = '#' + urlColor;
+            if (urlBg) inputAmbient.value = '#' + urlBg;
+            if (urlSens) inputSensitivity.value = urlSens;
+
+            valTitle.textContent = inputTitle.value;
+            valSub.textContent = inputSub.value;
+            valSensitivity.textContent = inputSensitivity.value;
+
+            const savedLang = localStorage.getItem('hub_lang') || 'fr';
+            setLanguage(savedLang);
+            updateMesh();
+            init3D();
+
+            document.getElementById('btn-fr').addEventListener('click', () => setLanguage('fr'));
+            document.getElementById('btn-en').addEventListener('click', () => setLanguage('en'));
+        });
+    </script>
+
+    <!-- Premium Upgrade Modal -->
+    <div id="premium-modal" style="display:none; position:fixed; inset:0; background:rgba(3,7,18,0.9); backdrop-filter:blur(12px); z-index:99999; align-items:center; justify-content:center;">
+        <div style="background:rgba(15,23,42,0.8); border:1px solid rgba(255,255,255,0.08); border-radius:24px; padding:2.5rem; max-width:480px; width:90%; text-align:center; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); font-family:'Outfit', sans-serif; backdrop-filter:blur(16px); position:relative;">
+            <div style="font-size:3.5rem; margin-bottom:1.2rem; filter:drop-shadow(0 0 15px rgba(6,182,212,0.4));">💎</div>
+            <h3 style="color:#fff; font-size:1.6rem; margin-bottom:0.75rem; font-weight:700;" data-i18n="modal_premium_title">Désactiver le branding ?</h3>
+            <p style="color:#94a3b8; font-size:0.95rem; line-height:1.6; margin-bottom:2rem;" data-i18n="modal_premium_desc">Passez à la version Premium de IA Code Studio pour exporter des codes 100% white-label sans filigrane.</p>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <a href="/pricing" target="_blank" class="btn btn-primary" style="text-decoration:none; padding: 0.9rem 1.5rem; border-radius: 12px; font-weight: 700; width:100%; display:inline-block;" data-i18n="modal_premium_cta">Passer au Premium ⚡</a>
+                <button id="btn-close-premium" class="btn btn-secondary" style="padding: 0.9rem 1.5rem; border-radius: 12px; font-weight: 600; width:100%; cursor:pointer;">Garder le filigrane (Gratuit)</button>
+            </div>
+        </div>
+    </div>
+<script>
+        // ========== WATERMARK & PREMIUM UPSELL LOGIC ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            const wmCheckbox = document.getElementById('input-license-watermark');
+            const premiumModal = document.getElementById('premium-modal');
+            const closePremium = document.getElementById('btn-close-premium');
+            
+            if (wmCheckbox) {
+                wmCheckbox.addEventListener('change', () => {
+                    if (!wmCheckbox.checked) {
+                        premiumModal.style.display = 'flex';
+                    }
+                });
+            }
+            
+            if (closePremium) {
+                closePremium.addEventListener('click', () => {
+                    premiumModal.style.display = 'none';
+                    if (wmCheckbox) wmCheckbox.checked = true;
+                });
+            }
+        });
+</script>
+</body>
+</html>

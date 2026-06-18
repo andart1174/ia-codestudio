@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logo en Nuage de Particules | IA Code Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --aura-magenta: #ec4899;
+            --aura-purple: #8b5cf6;
+            --aura-cyan: #06b6d4;
+        }
+        body {
+            background-color: #030712;
+            color: #f3f4f6;
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .app-container {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            min-height: 100vh;
+        }
+        @media (max-width: 1024px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        .sidebar {
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(16px);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+        .main-viewport {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: radial-gradient(circle at center, #090d1a 0%, #030712 100%);
+        }
+        .viewport-canvas {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            outline: none;
+            cursor: pointer;
+        }
+        .card-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--aura-cyan);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #9ca3af;
+        }
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--aura-cyan), var(--aura-purple));
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+            transition: transform 0.1s ease;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+        .select-input, .text-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.6rem;
+            color: #fff;
+            outline: none;
+            font-family: inherit;
+        }
+        .select-input option {
+            background: #0f172a;
+            color: #fff;
+        }
+        .drop-zone {
+            border: 2px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .drop-zone:hover {
+            border-color: var(--aura-cyan);
+            background: rgba(6, 182, 212, 0.05);
+        }
+        .color-presets {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+        .color-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        .color-dot.active {
+            border-color: #fff;
+            box-shadow: 0 0 8px currentColor;
+        }
+        .btn-action {
+            background: linear-gradient(135deg, var(--aura-cyan), var(--aura-purple));
+            color: #fff;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+        }
+        .badge-live {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(6, 182, 212, 0.2);
+            border: 1px solid var(--aura-cyan);
+            color: var(--aura-cyan);
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .header-back {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #9ca3af;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .header-back:hover {
+            color: #fff;
+        }
+        .export-output {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            display: none;
+        }
+        .code-textarea {
+            width: 100%;
+            height: 120px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.5rem;
+            color: #34d399;
+            font-family: monospace;
+            font-size: 0.8rem;
+            resize: none;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Controls -->
+        <aside class="sidebar">
+            <a href="index.html" class="header-back">
+                <span>←</span> <span data-i18n="back_dashboard">Dashboard</span>
+            </a>
+            <div>
+                <h1 style="font-size: 1.6rem; font-weight: 800; margin: 0.5rem 0 0.2rem 0; background: linear-gradient(135deg, #fff, #9ca3af); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" data-i18n="title">Nuage de Particules</h1>
+                <p style="color: #9ca3af; font-size: 0.85rem; margin: 0;" data-i18n="subtitle">Transformez votre logo en milliers de particules 3D interactives.</p>
+            </div>
+
+            <!-- Upload SVG -->
+            <div>
+                <span class="card-label" data-i18n="label_import">1. Importer SVG</span>
+                <div class="drop-zone" id="drop-zone">
+                    <span style="font-size: 1.8rem; display: block; margin-bottom: 0.5rem;">🌌</span>
+                    <p style="font-size: 0.85rem; margin: 0; color: #9ca3af;" data-i18n="drop_desc">Glissez ou cliquez pour charger votre SVG</p>
+                    <input type="file" id="input-file" accept=".svg" style="display: none;">
+                </div>
+            </div>
+
+            <!-- Configuration -->
+            <div>
+                <span class="card-label" data-i18n="label_config">2. Configuration</span>
+
+                <!-- Particle Count -->
+                <div class="slider-group">
+                    <div class="slider-header">
+                        <span data-i18n="cfg_count">Nombre de particules</span>
+                        <span id="val-count">2000</span>
+                    </div>
+                    <input type="range" id="input-count" min="500" max="6000" step="100" value="2000">
+                </div>
+
+                <!-- Particle Size -->
+                <div class="slider-group">
+                    <div class="slider-header">
+                        <span data-i18n="cfg_size">Taille des particules</span>
+                        <span id="val-size">1.5</span>
+                    </div>
+                    <input type="range" id="input-size" min="0.5" max="5.0" step="0.1" value="1.5">
+                </div>
+
+                <!-- Color Options -->
+                <div class="slider-group">
+                    <span style="font-size: 0.85rem; color: #9ca3af;" data-i18n="cfg_color">Couleur</span>
+                    <select id="select-color-mode" class="select-input">
+                        <option value="original" data-i18n="col_orig">Originale du SVG</option>
+                        <option value="custom" data-i18n="col_custom">Couleur personnalisée</option>
+                        <option value="rainbow" data-i18n="col_rainbow">Arc-en-ciel</option>
+                    </select>
+                    <div id="custom-color-picker" style="display: none; margin-top: 0.5rem;">
+                        <input type="color" id="input-custom-color" value="#06b6d4" class="text-input" style="height: 38px; padding: 2px; cursor: pointer;">
+                    </div>
+                </div>
+
+                <!-- Force/Interact Mode -->
+                <div class="slider-group">
+                    <span style="font-size: 0.85rem; color: #9ca3af;" data-i18n="cfg_interact">Mode d'interaction</span>
+                    <select id="select-interact-mode" class="select-input">
+                        <option value="disperse" data-i18n="mode_disperse">Dispersion (Fuite)</option>
+                        <option value="orbit" data-i18n="mode_orbit">Orbite autour du curseur</option>
+                        <option value="pull" data-i18n="mode_pull">Attraction gravitationnelle</option>
+                    </select>
+                </div>
+
+                <!-- Scatter Force -->
+                <div class="slider-group">
+                    <div class="slider-header">
+                        <span data-i18n="cfg_force">Force de dispersion</span>
+                        <span id="val-force">3.5</span>
+                    </div>
+                    <input type="range" id="input-force" min="1.0" max="8.0" step="0.2" value="3.5">
+                </div>
+
+                <!-- Spring Tension (Return speed) -->
+                <div class="slider-group">
+                    <div class="slider-header">
+                        <span data-i18n="cfg_return">Vitesse de retour (Ressort)</span>
+                        <span id="val-return">0.05</span>
+                    </div>
+                    <input type="range" id="input-return" min="0.01" max="0.2" step="0.01" value="0.05">
+                </div>
+            </div>
+
+            <!-- Generate/Export -->
+            <button class="btn-action" id="btn-export">
+                <span>⚡</span> <span data-i18n="btn_export">Générer le Code Widget</span>
+            </button>
+                <div style="margin-top: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none;">
+                        <input type="checkbox" id="input-license-watermark" checked style="width:18px; height:18px; cursor:pointer;">
+                        <span style="font-size:0.85rem; color:#9ca3af;" data-i18n="cfg_watermark">Inclure le filigrane de branding (Licence Gratuite)</span>
+                    </label>
+                </div>
+
+
+            <!-- Export Output -->
+            <div class="export-output" id="export-output">
+                <span class="card-label" data-i18n="export_title">Code WebGL Standalone</span>
+                <textarea class="code-textarea" id="textarea-code" readonly></textarea>
+                <button class="btn-action" id="btn-copy" style="background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #10b981; width: 100%;">
+                    <span data-i18n="btn_copy">Copier le Code HTML 📋</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Preview -->
+        <main class="main-viewport" id="viewport">
+            <span class="badge-live" data-i18n="badge_preview">Aperçu interactif 3D</span>
+            <div id="canvas-container" class="viewport-canvas"></div>
+        </main>
+    </div>
+
+    <!-- Script imports -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/SVGLoader.js"></script>
+    <script>
+        // Translations
+        const translations = {
+            fr: {
+                cfg_watermark: "Inclure le filigrane de branding (Licence Gratuite)",
+                modal_premium_title: "Désactiver le branding ?",
+                modal_premium_desc: "Passez à la version Premium de IA Code Studio pour exporter des codes 100% white-label sans filigrane.",
+                modal_premium_cta: "Passer au Premium ⚡",
+                modal_premium_cancel: "Garder le filigrane (Gratuit)",
+                back_dashboard: "Dashboard",
+                title: "Nuage de Particules Logo",
+                subtitle: "Transformez votre logo en milliers de particules 3D interactives.",
+                label_import: "1. Importer SVG",
+                drop_desc: "Glissez ou cliquez pour charger votre SVG",
+                label_config: "2. Configuration",
+                cfg_count: "Nombre de particules",
+                cfg_size: "Taille des particules",
+                cfg_color: "Couleur",
+                col_orig: "Originale du SVG",
+                col_custom: "Couleur personnalisée",
+                col_rainbow: "Arc-en-ciel",
+                cfg_interact: "Mode d'interaction",
+                mode_disperse: "Dispersion (Fuite)",
+                mode_orbit: "Orbite autour du curseur",
+                mode_pull: "Attraction gravitationnelle",
+                cfg_force: "Force d'interaction",
+                cfg_return: "Vitesse de retour (Ressort)",
+                btn_export: "Générer le Code Widget",
+                export_title: "Code WebGL Standalone",
+                btn_copy: "Copier le Code HTML 📋",
+                badge_preview: "Aperçu interactif 3D"
+            },
+            en: {
+                cfg_watermark: "Include branding watermark (Free License)",
+                modal_premium_title: "Remove Branding?",
+                modal_premium_desc: "Upgrade to IA Code Studio Premium to export 100% white-label widgets without watermark.",
+                modal_premium_cta: "Go Premium ⚡",
+                modal_premium_cancel: "Keep watermark (Free)",
+                back_dashboard: "Dashboard",
+                title: "Particle Logo Cloud",
+                subtitle: "Transform your logo into thousands of interactive 3D particles.",
+                label_import: "1. Import SVG",
+                drop_desc: "Drag & drop or click to upload SVG",
+                label_config: "2. Configuration",
+                cfg_count: "Particle Count",
+                cfg_size: "Particle Size",
+                cfg_color: "Color Mode",
+                col_orig: "Original SVG Color",
+                col_custom: "Custom Color",
+                col_rainbow: "Rainbow spectrum",
+                cfg_interact: "Interactive Mode",
+                mode_disperse: "Disperse (Repel)",
+                mode_orbit: "Orbit around cursor",
+                mode_pull: "Gravitational Attraction",
+                cfg_force: "Interaction Force",
+                cfg_return: "Return Speed (Spring)",
+                btn_export: "Generate Widget Code",
+                export_title: "Standalone WebGL Code",
+                btn_copy: "Copy HTML Code 📋",
+                badge_preview: "Interactive 3D Preview"
+            }
+        };
+
+        let currentLang = 'fr';
+        function setLanguage(lang) {
+            currentLang = lang;
+            const trans = translations[lang];
+            if (!trans) return;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (trans[key]) el.textContent = trans[key];
+            });
+            localStorage.setItem('hub_lang', lang);
+        }
+
+        // WebGL Setup
+        const container = document.getElementById('canvas-container');
+        let scene, camera, renderer, particles;
+        let particleGeom;
+        let rawPoints = []; // Loaded shape outline points
+        let particleCount = 2000;
+        let particleSize = 1.5;
+        let colorMode = 'original';
+        let customColor = '#06b6d4';
+        let interactMode = 'disperse';
+        let interactForce = 3.5;
+        let springTension = 0.05;
+
+        let currentSVGText = '';
+
+        // Mouse interaction coords
+        let raycaster = new THREE.Raycaster();
+        let mouse = new THREE.Vector2(-9999, -9999);
+        let mouse3D = new THREE.Vector3(0, 0, 0);
+        let planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+
+        function init3D() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(0, 0, 150);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio || 1);
+            container.appendChild(renderer.domElement);
+
+            // Listeners
+            container.addEventListener('mousemove', onMouseMove);
+            container.addEventListener('touchmove', onTouchMove, { passive: true });
+            container.addEventListener('mouseleave', () => { mouse.set(-9999, -9999); });
+
+            loadDefaultShape();
+            animate();
+        }
+
+        function loadDefaultShape() {
+            const svgText = `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+                <path fill="#06b6d4" d="M50 5 L63 36 L95 38 L70 60 L78 92 L50 74 L22 92 L30 60 L5 38 L37 36 Z" />
+            </svg>`;
+            currentSVGText = svgText;
+            rebuildParticles();
+        }
+
+        function parseSVGPoints(svgString) {
+            const loader = new THREE.SVGLoader();
+            const parsed = loader.parse(svgString);
+            const paths = parsed.paths;
+            const sampled = [];
+
+            paths.forEach(path => {
+                const shapes = THREE.SVGLoader.createShapes(path);
+                const pathColor = path.color || new THREE.Color('#06b6d4');
+                shapes.forEach(shape => {
+                    // Sample spaced points along curves
+                    const points = shape.getSpacedPoints(100);
+                    points.forEach(pt => {
+                        sampled.push({
+                            x: pt.x,
+                            y: pt.y,
+                            color: pathColor.clone()
+                        });
+                    });
+
+                    // Sample holes
+                    shape.holes.forEach(hole => {
+                        const holePoints = hole.getSpacedPoints(50);
+                        holePoints.forEach(pt => {
+                            sampled.push({
+                                x: pt.x,
+                                y: pt.y,
+                                color: new THREE.Color('#ffffff') // contrast holes in white
+                            });
+                        });
+                    });
+                });
+            });
+
+            return sampled;
+        }
+
+        function rebuildParticles() {
+            if (particles) {
+                scene.remove(particles);
+                particles = null;
+            }
+
+            rawPoints = parseSVGPoints(currentSVGText);
+            if (rawPoints.length === 0) {
+                // Fallback circle points if SVG parsing produced empty points
+                for(let i=0; i<500; i++) {
+                    let a = (i/500)*Math.PI*2;
+                    rawPoints.push({
+                        x: Math.cos(a)*40 + 50,
+                        y: Math.sin(a)*40 + 50,
+                        color: new THREE.Color('#06b6d4')
+                    });
+                }
+            }
+
+            // Center rawPoints and flip Y axis to orient SVG upright
+            let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+            rawPoints.forEach(pt => {
+                if(pt.x < minX) minX = pt.x;
+                if(pt.x > maxX) maxX = pt.x;
+                if(pt.y < minY) minY = pt.y;
+                if(pt.y > maxY) maxY = pt.y;
+            });
+            const cx = (minX + maxX)/2;
+            const cy = (minY + maxY)/2;
+            const sizeX = maxX - minX || 1;
+            const sizeY = maxY - minY || 1;
+            const maxDim = Math.max(sizeX, sizeY);
+            const scaleFactor = 90.0 / maxDim; // Fit inside 90x90 box
+
+            rawPoints.forEach(pt => {
+                pt.x = (pt.x - cx) * scaleFactor;
+                pt.y = -(pt.y - cy) * scaleFactor; // Flip SVG Y coordinate
+            });
+
+            // Build particle positions, target positions, velocities, and colors arrays
+            particleGeom = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const targets = new Float32Array(particleCount * 3);
+            const velocities = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount; i++) {
+                // Pick a target index from sampled SVG outline points (wrapping if needed)
+                const pt = rawPoints[i % rawPoints.length];
+                
+                // Set targets
+                targets[i*3] = pt.x;
+                targets[i*3+1] = pt.y;
+                targets[i*3+2] = (Math.random() - 0.5) * 5.0; // small depth scatter
+
+                // Initialize current positions scattered slightly around target (or randomly)
+                positions[i*3] = pt.x + (Math.random() - 0.5) * 80.0;
+                positions[i*3+1] = pt.y + (Math.random() - 0.5) * 80.0;
+                positions[i*3+2] = (Math.random() - 0.5) * 60.0;
+
+                // Velocities
+                velocities[i*3] = 0;
+                velocities[i*3+1] = 0;
+                velocities[i*3+2] = 0;
+
+                // Colors
+                let col = pt.color;
+                if (colorMode === 'custom') {
+                    col = new THREE.Color(customColor);
+                } else if (colorMode === 'rainbow') {
+                    col = new THREE.Color().setHSL((i / particleCount), 1.0, 0.65);
+                }
+                colors[i*3] = col.r;
+                colors[i*3+1] = col.g;
+                colors[i*3+2] = col.b;
+            }
+
+            particleGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particleGeom.setAttribute('target', new THREE.BufferAttribute(targets, 3));
+            particleGeom.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
+            particleGeom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            // Floating glowing point material
+            const mat = new THREE.PointsMaterial({
+                size: particleSize,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.85,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+
+            particles = new THREE.Points(particleGeom, mat);
+            scene.add(particles);
+        }
+
+        function onMouseMove(e) {
+            const rect = container.getBoundingClientRect();
+            mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+        }
+
+        function onTouchMove(e) {
+            if (e.touches.length > 0) {
+                const rect = container.getBoundingClientRect();
+                mouse.x = ((e.touches[0].clientX - rect.left) / rect.width) * 2 - 1;
+                mouse.y = -((e.touches[0].clientY - rect.top) / rect.height) * 2 + 1;
+            }
+        }
+
+        let clock = 0;
+        function animate() {
+            requestAnimationFrame(animate);
+            clock += 0.016;
+
+            if (particles && particleGeom) {
+                const positions = particleGeom.attributes.position.array;
+                const targets = particleGeom.attributes.target.array;
+                const velocities = particleGeom.attributes.velocity.array;
+
+                // Project mouse coordinates onto the Z=0 plane in 3D
+                raycaster.setFromCamera(mouse, camera);
+                raycaster.ray.intersectPlane(planeZ, mouse3D);
+
+                for (let i = 0; i < particleCount; i++) {
+                    const idx = i * 3;
+                    let px = positions[idx];
+                    let py = positions[idx+1];
+                    let pz = positions[idx+2];
+
+                    let tx = targets[idx];
+                    let ty = targets[idx+1];
+                    let tz = targets[idx+2];
+
+                    let vx = velocities[idx];
+                    let vy = velocities[idx+1];
+                    let vz = velocities[idx+2];
+
+                    // Damping and spring pull force back to target
+                    let ax = (tx - px) * springTension - vx * 0.08;
+                    let ay = (ty - py) * springTension - vy * 0.08;
+                    let az = (tz - pz) * springTension - vz * 0.08;
+
+                    // Mouse interaction forces
+                    if (mouse.x > -9000) {
+                        const dx = px - mouse3D.x;
+                        const dy = py - mouse3D.y;
+                        const dz = pz - mouse3D.z;
+                        const dist = Math.sqrt(dx*dx + dy*dy + dz*dz) || 0.001;
+
+                        const interactRadius = interactForce * 8.0;
+                        if (dist < interactRadius) {
+                            const pct = 1.0 - (dist / interactRadius); // 0 to 1 scaling based on proximity
+                            
+                            if (interactMode === 'disperse') {
+                                const push = pct * 4.2;
+                                ax += (dx / dist) * push;
+                                ay += (dy / dist) * push;
+                                az += (dz / dist) * (push * 0.5);
+                            } else if (interactMode === 'orbit') {
+                                const spin = pct * 2.5;
+                                ax += (-dy / dist) * spin;
+                                ay += (dx / dist) * spin;
+                            } else if (interactMode === 'pull') {
+                                const pullForce = pct * 3.5;
+                                ax -= (dx / dist) * pullForce;
+                                ay -= (dy / dist) * pullForce;
+                                az -= (dz / dist) * pullForce;
+                            }
+                        }
+                    }
+
+                    // Natural floating noise/wind drift
+                    ax += Math.sin(clock * 1.5 + i) * 0.02;
+                    ay += Math.cos(clock * 1.1 + i) * 0.02;
+
+                    // Integrate forces
+                    vx += ax;
+                    vy += ay;
+                    vz += az;
+
+                    px += vx;
+                    py += vy;
+                    pz += vz;
+
+                    positions[idx] = px;
+                    positions[idx+1] = py;
+                    positions[idx+2] = pz;
+
+                    velocities[idx] = vx;
+                    velocities[idx+1] = vy;
+                    velocities[idx+2] = vz;
+                }
+
+                particleGeom.attributes.position.needsUpdate = true;
+                particleGeom.attributes.velocity.needsUpdate = true;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // DOM inputs bindings
+        const inputCount = document.getElementById('input-count');
+        const inputSize = document.getElementById('input-size');
+        const selectColorMode = document.getElementById('select-color-mode');
+        const selectInteractMode = document.getElementById('select-interact-mode');
+        const inputForce = document.getElementById('input-force');
+        const inputReturn = document.getElementById('input-return');
+        const customColorPicker = document.getElementById('custom-color-picker');
+        const inputCustomColor = document.getElementById('input-custom-color');
+
+        const valCount = document.getElementById('val-count');
+        const valSize = document.getElementById('val-size');
+        const valForce = document.getElementById('val-force');
+        const valReturn = document.getElementById('val-return');
+
+        function updateLabels() {
+            valCount.textContent = inputCount.value;
+            valSize.textContent = inputSize.value;
+            valForce.textContent = inputForce.value;
+            valReturn.textContent = inputReturn.value;
+        }
+
+        inputCount.addEventListener('input', () => {
+            updateLabels();
+            particleCount = parseInt(inputCount.value);
+            rebuildParticles();
+        });
+
+        inputSize.addEventListener('input', () => {
+            updateLabels();
+            particleSize = parseFloat(inputSize.value);
+            if (particles) particles.material.size = particleSize;
+        });
+
+        selectColorMode.addEventListener('change', () => {
+            colorMode = selectColorMode.value;
+            customColorPicker.style.display = (colorMode === 'custom') ? 'block' : 'none';
+            rebuildParticles();
+        });
+
+        inputCustomColor.addEventListener('input', () => {
+            customColor = inputCustomColor.value;
+            rebuildParticles();
+        });
+
+        selectInteractMode.addEventListener('change', () => {
+            interactMode = selectInteractMode.value;
+        });
+
+        inputForce.addEventListener('input', () => {
+            updateLabels();
+            interactForce = parseFloat(inputForce.value);
+        });
+
+        inputReturn.addEventListener('input', () => {
+            updateLabels();
+            springTension = parseFloat(inputReturn.value);
+        });
+
+        // File loading logic
+        const dropZone = document.getElementById('drop-zone');
+        const inputFile = document.getElementById('input-file');
+
+        dropZone.addEventListener('click', () => inputFile.click());
+        inputFile.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                processFile(e.target.files[0]);
+            }
+        });
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = 'var(--aura-cyan)';
+        });
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+        });
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+            if (e.dataTransfer.files.length > 0) {
+                const file = e.dataTransfer.files[0];
+                if (file.name.endsWith('.svg')) {
+                    processFile(file);
+                } else {
+                    alert('Fichier non SVG ignoré.');
+                }
+            }
+        });
+
+        function processFile(file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                currentSVGText = event.target.result;
+                rebuildParticles();
+                dropZone.querySelector('p').textContent = file.name;
+                dropZone.style.borderColor = 'var(--aura-cyan)';
+            };
+            reader.readAsText(file);
+        }
+
+        // Responsive resizing
+        window.addEventListener('resize', () => {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+
+        // Widget Code Builder
+        const btnExport = document.getElementById('btn-export');
+        const exportOutput = document.getElementById('export-output');
+        const textareaCode = document.getElementById('textarea-code');
+        const btnCopy = document.getElementById('btn-copy');
+
+        btnExport.addEventListener('click', () => {
+            const escapedSvg = JSON.stringify(currentSVGText || '');
+            const widgetId = Math.random().toString(36).substring(2, 9);
+
+            const embedHTML = `
+<!-- START IA CODE STUDIO 3D PARTICLE LOGO WIDGET -->
+<div id="particle-logo-\${widgetId}" style="width:100%;height:400px;background:#03050a;border-radius:14px;overflow:hidden;position:relative;border:1px solid rgba(255,255,255,0.08);box-shadow:0 10px 30px rgba(0,0,0,0.3);cursor:crosshair;"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/SVGLoader.js"><\/script>
+<script>
+(function() {
+  var container = document.getElementById('particle-logo-\${widgetId}');
+  if (!container) return;
+
+  function initWhenReady() {
+    if (typeof THREE !== 'undefined' && THREE.SVGLoader) { startWidget(); }
+    else { setTimeout(initWhenReady, 50); }
+  }
+  initWhenReady();
+
+  function startWidget() {
+    var W = container.clientWidth || 400, H = container.clientHeight || 400;
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 1000);
+    camera.position.set(0, 0, 150);
+
+    var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(window.devicePixelRatio || 1);
+    renderer.setSize(W, H);
+    container.appendChild(renderer.domElement);
+
+    var mouse = new THREE.Vector2(-9999, -9999);
+    var mouse3D = new THREE.Vector3(0, 0, 0);
+    var raycaster = new THREE.Raycaster();
+    var planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+
+    function onMouseMove(e) {
+      var rect = container.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    }
+    function onTouchMove(e) {
+      if (e.touches.length > 0) {
+        var rect = container.getBoundingClientRect();
+        mouse.x = ((e.touches[0].clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((e.touches[0].clientY - rect.top) / rect.height) * 2 + 1;
+      }
+    }
+    container.addEventListener('mousemove', onMouseMove);
+    container.addEventListener('touchmove', onTouchMove, { passive: true });
+    container.addEventListener('mouseleave', function() { mouse.set(-9999, -9999); });
+
+    var svgText = ${escapedSvg};
+    var rawPoints = [];
+    try {
+      var loader = new THREE.SVGLoader();
+      var parsed = loader.parse(svgText);
+      parsed.paths.forEach(function(path) {
+        var shapes = THREE.SVGLoader.createShapes(path);
+        var col = path.color || new THREE.Color('#06b6d4');
+        shapes.forEach(function(shape) {
+          shape.getSpacedPoints(100).forEach(function(pt) {
+            rawPoints.push({ x: pt.x, y: pt.y, color: col.clone() });
+          });
+          shape.holes.forEach(function(shapeHole) {
+            shapeHole.getSpacedPoints(50).forEach(function(pt) {
+              rawPoints.push({ x: pt.x, y: pt.y, color: new THREE.Color('#ffffff') });
+            });
+          });
+        });
+      });
+    } catch(e) {}
+
+    if (rawPoints.length === 0) {
+      for(var i=0; i<500; i++) {
+        var a = (i/500)*Math.PI*2;
+        rawPoints.push({ x: Math.cos(a)*40 + 50, y: Math.sin(a)*40 + 50, color: new THREE.Color('#06b6d4') });
+      }
+    }
+
+    var minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    rawPoints.forEach(function(pt) {
+      if(pt.x < minX) minX = pt.x; if(pt.x > maxX) maxX = pt.x;
+      if(pt.y < minY) minY = pt.y; if(pt.y > maxY) maxY = pt.y;
+    });
+    var cx = (minX + maxX)/2, cy = (minY + maxY)/2;
+    var sizeX = maxX - minX || 1, sizeY = maxY - minY || 1;
+    var maxDim = Math.max(sizeX, sizeY);
+    var scaleFactor = 90.0 / maxDim;
+
+    rawPoints.forEach(function(pt) {
+      pt.x = (pt.x - cx) * scaleFactor;
+      pt.y = -(pt.y - cy) * scaleFactor;
+    });
+
+    var pCount = ${particleCount};
+    var geom = new THREE.BufferGeometry();
+    var positions = new Float32Array(pCount * 3);
+    var targets = new Float32Array(pCount * 3);
+    var velocities = new Float32Array(pCount * 3);
+    var colors = new Float32Array(pCount * 3);
+
+    for (var i = 0; i < pCount; i++) {
+      var pt = rawPoints[i % rawPoints.length];
+      targets[i*3] = pt.x;
+      targets[i*3+1] = pt.y;
+      targets[i*3+2] = (Math.random() - 0.5) * 5.0;
+
+      positions[i*3] = pt.x + (Math.random() - 0.5) * 80.0;
+      positions[i*3+1] = pt.y + (Math.random() - 0.5) * 80.0;
+      positions[i*3+2] = (Math.random() - 0.5) * 60.0;
+
+      var col = pt.color;
+      if ("${colorMode}" === 'custom') {
+        col = new THREE.Color("${customColor}");
+      } else if ("${colorMode}" === 'rainbow') {
+        col = new THREE.Color().setHSL((i / pCount), 1.0, 0.65);
+      }
+      colors[i*3] = col.r; colors[i*3+1] = col.g; colors[i*3+2] = col.b;
+    }
+
+    geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geom.setAttribute('target', new THREE.BufferAttribute(targets, 3));
+    geom.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
+    geom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+    var mat = new THREE.PointsMaterial({
+      size: ${particleSize},
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.85,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+
+    var pts = new THREE.Points(geom, mat);
+    scene.add(pts);
+
+    var clock = 0;
+    (function loop() {
+      requestAnimationFrame(loop);
+      clock += 0.016;
+
+      raycaster.setFromCamera(mouse, camera);
+      raycaster.ray.intersectPlane(planeZ, mouse3D);
+
+      var pos = geom.attributes.position.array;
+      var tar = geom.attributes.target.array;
+      var vel = geom.attributes.velocity.array;
+
+      for (var i = 0; i < pCount; i++) {
+        var idx = i * 3;
+        var px = pos[idx], py = pos[idx+1], pz = pos[idx+2];
+        var tx = tar[idx], ty = tar[idx+1], tz = tar[idx+2];
+        var vx = vel[idx], vy = vel[idx+1], vz = vel[idx+2];
+
+        var ax = (tx - px) * ${springTension} - vx * 0.08;
+        var ay = (ty - py) * ${springTension} - vy * 0.08;
+        var az = (tz - pz) * ${springTension} - vz * 0.08;
+
+        if (mouse.x > -9000) {
+          var dx = px - mouse3D.x;
+          var dy = py - mouse3D.y;
+          var dz = pz - mouse3D.z;
+          var dist = Math.sqrt(dx*dx + dy*dy + dz*dz) || 0.001;
+          var interactRad = ${interactForce} * 8.0;
+
+          if (dist < interactRad) {
+            var pct = 1.0 - (dist / interactRad);
+            if ("${interactMode}" === 'disperse') {
+              var push = pct * 4.2;
+              ax += (dx / dist) * push; ay += (dy / dist) * push; az += (dz / dist) * (push * 0.5);
+            } else if ("${interactMode}" === 'orbit') {
+              var spin = pct * 2.5;
+              ax += (-dy / dist) * spin; ay += (dx / dist) * spin;
+            } else if ("${interactMode}" === 'pull') {
+              var pullForce = pct * 3.5;
+              ax -= (dx / dist) * pullForce; ay -= (dy / dist) * pullForce; az -= (dz / dist) * pullForce;
+            }
+          }
+        }
+
+        ax += Math.sin(clock * 1.5 + i) * 0.02;
+        ay += Math.cos(clock * 1.1 + i) * 0.02;
+
+        vx += ax; vy += ay; vz += az;
+        px += vx; py += vy; pz += vz;
+
+        pos[idx] = px; pos[idx+1] = py; pos[idx+2] = pz;
+        vel[idx] = vx; vel[idx+1] = vy; vel[idx+2] = vz;
+      }
+      geom.attributes.position.needsUpdate = true;
+      renderer.render(scene, camera);
+    })();
+
+    window.addEventListener('resize', function() {
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    });
+  }
+})();
+<\/script>
+<!-- END IA CODE STUDIO 3D PARTICLE LOGO WIDGET -->`;
+
+            
+            let finalCodeToExport = embedHTML;
+            if (document.getElementById('input-license-watermark') && document.getElementById('input-license-watermark').checked) {
+                const watermarkHTML = '\n<a id="ia-brand-badge" href="https://ia-codestudio.com" target="_blank" style="position:absolute; bottom:12px; right:12px; background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.08); backdrop-filter:blur(8px); color:#06b6d4; font-family:sans-serif; text-decoration:none; padding:4px 10px; border-radius:50px; font-size:10px; font-weight:600; z-index:9999; display:flex; align-items:center; gap:4px; box-shadow:0 4px 12px rgba(0,0,0,0.25);"><span>⚡</span><span>3D Widget by IA Code Studio</span></a>\n<script>\nsetTimeout(function(){\n  var badge = document.getElementById("ia-brand-badge");\n  if(!badge || !badge.href || !badge.href.includes("ia-codestudio.com")){\n    var c = document.querySelector("canvas") || document.querySelector(".ia-neon-sign") || document.body;\n    if(c) c.style.opacity = "0.15";\n    \n  }\n}, 3000);\n<' + '/script>';
+                const lastDiv = finalCodeToExport.lastIndexOf('</div>');
+                if (lastDiv !== -1) {
+                    finalCodeToExport = finalCodeToExport.substring(0, lastDiv) + watermarkHTML + finalCodeToExport.substring(lastDiv);
+                } else {
+                    finalCodeToExport += watermarkHTML;
+                }
+            }
+            textareaCode.value = finalCodeToExport.trim();
+    
+            exportOutput.style.display = 'block';
+            exportOutput.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        btnCopy.addEventListener('click', () => {
+            textareaCode.select();
+            document.execCommand('copy');
+            alert(currentLang === 'fr' ? 'Code d\'intégration copié !' : 'Widget code copied to clipboard!');
+        });
+
+        // Initialize Lang and Scene
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('hub_lang') || 'fr';
+            setLanguage(savedLang);
+            updateLabels();
+            init3D();
+        });
+    </script>
+
+    <!-- Premium Upgrade Modal -->
+    <div id="premium-modal" style="display:none; position:fixed; inset:0; background:rgba(3,7,18,0.9); backdrop-filter:blur(12px); z-index:99999; align-items:center; justify-content:center;">
+        <div style="background:rgba(15,23,42,0.8); border:1px solid rgba(255,255,255,0.08); border-radius:24px; padding:2.5rem; max-width:480px; width:90%; text-align:center; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); font-family:'Outfit', sans-serif; backdrop-filter:blur(16px); position:relative;">
+            <div style="font-size:3.5rem; margin-bottom:1.2rem; filter:drop-shadow(0 0 15px rgba(6,182,212,0.4));">💎</div>
+            <h3 style="color:#fff; font-size:1.6rem; margin-bottom:0.75rem; font-weight:700;" data-i18n="modal_premium_title">Désactiver le branding ?</h3>
+            <p style="color:#94a3b8; font-size:0.95rem; line-height:1.6; margin-bottom:2rem;" data-i18n="modal_premium_desc">Passez à la version Premium de IA Code Studio pour exporter des codes 100% white-label sans filigrane.</p>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <a href="/pricing" target="_blank" class="btn btn-primary" style="text-decoration:none; padding: 0.9rem 1.5rem; border-radius: 12px; font-weight: 700; width:100%; display:inline-block;" data-i18n="modal_premium_cta">Passer au Premium ⚡</a>
+                <button id="btn-close-premium" class="btn btn-secondary" style="padding: 0.9rem 1.5rem; border-radius: 12px; font-weight: 600; width:100%; cursor:pointer;">Garder le filigrane (Gratuit)</button>
+            </div>
+        </div>
+    </div>
+<script>
+        // ========== WATERMARK & PREMIUM UPSELL LOGIC ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            const wmCheckbox = document.getElementById('input-license-watermark');
+            const premiumModal = document.getElementById('premium-modal');
+            const closePremium = document.getElementById('btn-close-premium');
+            
+            if (wmCheckbox) {
+                wmCheckbox.addEventListener('change', () => {
+                    if (!wmCheckbox.checked) {
+                        premiumModal.style.display = 'flex';
+                    }
+                });
+            }
+            
+            if (closePremium) {
+                closePremium.addEventListener('click', () => {
+                    premiumModal.style.display = 'none';
+                    if (wmCheckbox) wmCheckbox.checked = true;
+                });
+            }
+        });
+</script>
+</body>
+</html>

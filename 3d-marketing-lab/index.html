@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">3D Marketing Lab | IA Code Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .tools-live-section {
+            margin-bottom: 2rem;
+        }
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #06b6d4;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, rgba(6,182,212,0.4), transparent);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Orbs -->
+    <div class="aura-container">
+        <div class="aura-orb orb-1"></div>
+        <div class="aura-orb orb-2"></div>
+    </div>
+
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <a href="../index.html" class="logo">
+            <span class="logo-icon">🧪</span>
+            <span data-i18n="nav_title">3D MARKETING LAB</span>
+        </a>
+        <div class="nav-links">
+            <a href="../index.html" class="btn-back" data-i18n="btn_back">← Retour au Portail / Back to Portal</a>
+            <div class="lang-toggle">
+                <button class="lang-btn active" data-lang="fr" id="btn-fr">FR</button>
+                <button class="lang-btn" data-lang="en" id="btn-en">EN</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        
+        <header style="text-align: center; margin-bottom: 3.5rem;">
+            <h1 style="font-family: 'Outfit', sans-serif; font-size: 3rem; font-weight: 800; margin-bottom: 1rem; background: linear-gradient(135deg, #fff 30%, #cbd5e1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" data-i18n="hero_title">Laboratoire Marketing 3D</h1>
+            <p style="color: var(--text-secondary); max-width: 650px; margin: 0 auto; font-size: 1.1rem; line-height: 1.6;" data-i18n="hero_desc">Générez gratuitement des widgets interactifs WebGL 3D viraux pour stimuler l'acquisition et le trafic organique.</p>
+        </header>
+
+        <!-- Live Tools -->
+        <div class="tools-live-section">
+            <div class="section-label" data-i18n="label_live">⚡ Outils disponibles / Available tools</div>
+            <section class="showcase-grid">
+
+                <!-- Card 1 — SVG to 3D -->
+                <div class="portal-card">
+                    <span class="portal-icon">📐</span>
+                    <h2 data-i18n="card1_title">Logo SVG vers 3D</h2>
+                    <p data-i18n="card1_desc">Transformez votre logo vectoriel en modèle 3D interactif avec animations, effets métal et export de widget embarquable.</p>
+                    <a href="svg-to-3d-converter.html" class="btn btn-primary" data-i18n="card1_btn">Lancer l'Extrudeur ⚡</a>
+                </div>
+
+                <!-- Card 2 — Hologram Banner -->
+                <div class="portal-card">
+                    <span class="portal-icon">🕶️</span>
+                    <h2 data-i18n="card2_title">Bannière Holographique 3D</h2>
+                    <p data-i18n="card2_desc">Créez des bannières WebGL interactives avec 13 objets 3D animés, effets parallaxe et export de widget pour tout site.</p>
+                    <a href="3d-hologram-banner.html" class="btn btn-primary" data-i18n="card2_btn">Lancer le Générateur ⚡</a>
+                </div>
+
+                <!-- Card 3 — Neon Sign -->
+                <div class="portal-card">
+                    <span class="portal-icon">✨</span>
+                    <h2 data-i18n="card3_title">Générateur Néon Animé</h2>
+                    <p data-i18n="card3_desc">Créez des enseignes néon lumineuses et clignotantes à partir de texte. Export HTML/CSS prêt à intégrer.</p>
+                    <a href="neon-sign-generator.html" class="btn btn-primary" data-i18n="card3_btn">Lancer le Générateur ⚡</a>
+                </div>
+
+                <!-- Card 4 — Particle Logo -->
+                <div class="portal-card">
+                    <span class="portal-icon">🌌</span>
+                    <h2 data-i18n="card4_title">Logo en Nuage de Particules</h2>
+                    <p data-i18n="card4_desc">Transformez votre logo en milliers de particules 3D interactives qui s'écartent à la souris. Ultra-viral.</p>
+                    <a href="particle-logo-cloud.html" class="btn btn-primary" data-i18n="card4_btn">Lancer le Générateur ⚡</a>
+                </div>
+
+                <!-- Card 5 — Countdown 3D -->
+                <div class="portal-card">
+                    <span class="portal-icon">⏱️</span>
+                    <h2 data-i18n="card5_title">Compteur de Lancement 3D</h2>
+                    <p data-i18n="card5_desc">Compte à rebours holographique animé pour vos lancements de produits. Widget export pour tout site web.</p>
+                    <a href="launch-countdown-3d.html" class="btn btn-primary" data-i18n="card5_btn">Lancer le Générateur ⚡</a>
+                </div>
+
+                <!-- Card 6 — Logo Exploder 3D -->
+                <div class="portal-card">
+                    <span class="portal-icon">🌋</span>
+                    <h2 data-i18n="card6_title">Logo Fracturé 3D</h2>
+                    <p data-i18n="card6_desc">Explosez votre logo 3D en éclats scintillants réactifs à la souris qui se recomposent automatiquement.</p>
+                    <a href="logo-exploder-3d.html" class="btn btn-primary" data-i18n="card6_btn">Lancer l'Explodeur ⚡</a>
+                </div>
+
+                <!-- Card 7 — Neon Wireframe Matrix -->
+                <div class="portal-card">
+                    <span class="portal-icon">🕸️</span>
+                    <h2 data-i18n="card7_title">Logo en Fils Électriques</h2>
+                    <p data-i18n="card7_desc">Animez des impulsions de néons laser parcourant les circuits de votre logo avec déviation magnétique.</p>
+                    <a href="neon-wireframe-matrix.html" class="btn btn-primary" data-i18n="card7_btn">Lancer le Réseau ⚡</a>
+                </div>
+
+                <!-- Card 8 — Topographic Grid Deform -->
+                <div class="portal-card">
+                    <span class="portal-icon">🕳️</span>
+                    <h2 data-i18n="card8_title">Déformation Topographique 3D</h2>
+                    <p data-i18n="card8_desc">Gravez votre logo en relief sur une grille d'ondes 3D réactive à la distorsion gravitationnelle du curseur.</p>
+                    <a href="topographic-grid-deform.html" class="btn btn-primary" data-i18n="card8_btn">Lancer la Grille ⚡</a>
+                </div>
+
+                <!-- Card 9 — Holographic Portal Generator -->
+                <div class="portal-card">
+                    <span class="portal-icon">🌀</span>
+                    <h2 data-i18n="card9_title">Portail Holographique 3D</h2>
+                    <p data-i18n="card9_desc">Suspendez votre logo 3D au milieu de disques holographiques tournants, de poussière spatiale et de rayons divins.</p>
+                    <a href="holographic-portal-generator.html" class="btn btn-primary" data-i18n="card9_btn">Lancer le Portail ⚡</a>
+                </div>
+
+            </section>
+        </div>
+
+    </main>
+
+    <script>
+        const translations = {
+            fr: {
+                nav_title: "3D MARKETING LAB",
+                hero_title: "Laboratoire Marketing 3D",
+                hero_desc: "Générez gratuitement des widgets interactifs WebGL 3D viraux pour stimuler l'acquisition et le trafic organique.",
+                label_live: "⚡ Outils disponibles",
+                card1_title: "Logo SVG vers 3D",
+                card1_desc: "Transformez votre logo vectoriel en modèle 3D interactif avec animations, effets métal et export de widget embarquable.",
+                card1_btn: "Lancer l'Extrudeur ⚡",
+                card2_title: "Bannière Holographique 3D",
+                card2_desc: "Créez des bannières WebGL interactives avec 13 objets 3D animés, effets parallaxe et export de widget pour tout site.",
+                card2_btn: "Lancer le Générateur ⚡",
+                card3_title: "Générateur Néon Animé",
+                card3_desc: "Créez des enseignes néon lumineuses et clignotantes à partir de texte. Export HTML/CSS prêt à intégrer.",
+                card3_btn: "Lancer le Générateur ⚡",
+                card4_title: "Logo en Nuage de Particules",
+                card4_desc: "Transformez votre logo en milliers de particules 3D interactives qui s'écartent à la souris. Ultra-viral.",
+                card4_btn: "Lancer le Générateur ⚡",
+                card5_title: "Compteur de Lancement 3D",
+                card5_desc: "Compte à rebours holographique animé pour vos lancements de produits. Widget export pour tout site web.",
+                card5_btn: "Lancer le Générateur ⚡",
+                card6_title: "Logo Fracturé 3D",
+                card6_desc: "Explosez votre logo 3D en éclats scintillants réactifs à la souris qui se recomposent automatiquement.",
+                card6_btn: "Lancer l'Explodeur ⚡",
+                card7_title: "Logo en Fils Électriques",
+                card7_desc: "Animez des impulsions de néons laser parcourant les circuits de votre logo avec déviation magnétique.",
+                card7_btn: "Lancer le Réseau ⚡",
+                card8_title: "Déformation Topographique 3D",
+                card8_desc: "Gravez votre logo en relief sur une grille d'ondes 3D réactive à la distorsion gravitationnelle du curseur.",
+                card8_btn: "Lancer la Grille ⚡",
+                card9_title: "Portail Holographique 3D",
+                card9_desc: "Suspendez votre logo 3D au milieu de disques holographiques tournants, de poussière spatiale et de rayons divins.",
+                card9_btn: "Lancer le Portail ⚡"
+            },
+            en: {
+                nav_title: "3D MARKETING LAB",
+                hero_title: "3D Marketing Lab",
+                hero_desc: "Generate free interactive WebGL 3D widgets to drive viral user acquisition and organic traffic.",
+                label_live: "⚡ Available Tools",
+                card1_title: "SVG to 3D Extruder",
+                card1_desc: "Turn your vector logo into an interactive 3D model with animations, metal effects and embeddable widget export.",
+                card1_btn: "Launch Extruder ⚡",
+                card2_title: "3D Holographic Banner",
+                card2_desc: "Build WebGL interactive banners with 13 animated 3D objects, parallax effects and widget export for any site.",
+                card2_btn: "Launch Generator ⚡",
+                card3_title: "Neon Sign Generator",
+                card3_desc: "Create glowing, flickering neon signs from text. Ready-to-embed HTML/CSS export.",
+                card3_btn: "Launch Generator ⚡",
+                card4_title: "Particle Logo Cloud",
+                card4_desc: "Turn your logo into thousands of interactive 3D particles that scatter on mouse hover. Ultra-viral.",
+                card4_btn: "Launch Generator ⚡",
+                card5_title: "3D Launch Countdown",
+                card5_desc: "Animated holographic countdown timer for product launches. Embed widget for any website.",
+                card5_btn: "Launch Generator ⚡",
+                card6_title: "3D Exploding Logo",
+                card6_desc: "Explode your 3D logo into shiny shards that scatter under mouse force and snap back together.",
+                card6_btn: "Launch Exploder ⚡",
+                card7_title: "Neon Circuit Matrix",
+                card7_desc: "Send glowing electric neon laser pulses traveling along your logo's wireframe paths.",
+                card7_btn: "Launch Matrix ⚡",
+                card8_title: "3D Topographic Terrain",
+                card8_desc: "Engrave your logo on a waving 3D mesh deformed dynamically by mouse gravity.",
+                card8_btn: "Launch Grid ⚡",
+                card9_title: "3D Holographic Portal",
+                card9_desc: "Suspend your 3D logo in a stargate portal with concentric spinning dials, space dust, and god rays.",
+                card9_btn: "Launch Portal ⚡"
+            }
+        };
+
+        const pageTitles = {
+            fr: "3D Marketing Lab | IA Code Studio",
+            en: "3D Marketing Lab | IA Code Studio"
+        };
+
+        function setLanguage(lang) {
+            const trans = translations[lang];
+            if (!trans) return;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (trans[key]) el.textContent = trans[key];
+            });
+            document.title = pageTitles[lang];
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            if (lang === 'fr') document.getElementById('btn-fr').classList.add('active');
+            else document.getElementById('btn-en').classList.add('active');
+            localStorage.setItem('hub_lang', lang);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('hub_lang') || 'fr';
+            setLanguage(savedLang);
+            document.getElementById('btn-fr').addEventListener('click', () => setLanguage('fr'));
+            document.getElementById('btn-en').addEventListener('click', () => setLanguage('en'));
+        });
+    </script>
+</body>
+</html>
