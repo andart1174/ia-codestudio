@@ -121,7 +121,7 @@ function processOptimization() {
   previewBox.innerHTML = optimized;
 
   // Add watermark if checked
-  const includeWatermark = document.getElementById('chk-watermark').checked;
+  const includeWatermark = document.getElementById('chk-watermark').checked || !checkIsPremium();
   
   // Update output textarea
   const finalCodeOutput = `${optimized.trim()}${includeWatermark ? '\n' + watermarkCode.trim() : ''}`;

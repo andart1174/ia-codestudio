@@ -581,16 +581,31 @@
             const closePremium = document.getElementById('btn-close-premium');
             
             // If user is premium, pre-uncheck the watermark for convenience
-            if (wmCheckbox && checkIsPremium()) {
-                wmCheckbox.checked = false;
-            }
-            
             if (wmCheckbox) {
-                wmCheckbox.addEventListener('change', () => {
-                    if (!wmCheckbox.checked && !checkIsPremium()) {
-                        premiumModal.style.display = 'flex';
+                if (checkIsPremium()) {
+                    wmCheckbox.checked = false;
+                } else {
+                    wmCheckbox.checked = true;
+                    wmCheckbox.disabled = true;
+                    wmCheckbox.style.cursor = 'not-allowed';
+                    
+                    const label = wmCheckbox.closest('label');
+                    if (label) {
+                        label.style.cursor = 'pointer';
+                        const textSpan = label.querySelector('span');
+                        if (textSpan && !textSpan.textContent.includes('PRO')) {
+                            textSpan.innerHTML = textSpan.innerHTML + ' <span style="color:#ecc94b; font-weight:bold; margin-left:6px;">🔒 PRO</span>';
+                        }
+                        label.addEventListener('click', (e) => {
+                            if (e.target !== wmCheckbox) {
+                                e.preventDefault();
+                            } else {
+                                e.preventDefault();
+                            }
+                            premiumModal.style.display = 'flex';
+                        });
                     }
-                });
+                }
             }
             
             if (closePremium) {

@@ -148,7 +148,7 @@ function updateOutput() {
   const btn = document.getElementById('inp-btn').value;
   const color = document.getElementById('inp-color').value;
   const blurVal = document.getElementById('inp-blur').value;
-  const includeWatermark = document.getElementById('chk-watermark').checked;
+  const includeWatermark = document.getElementById('chk-watermark').checked || !checkIsPremium();
 
   document.getElementById('blur-val').textContent = `${blurVal}px`;
 

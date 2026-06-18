@@ -168,7 +168,7 @@ function buildMesh(font, text, depth, color, bevel, glow) {
 }
 
 function generateOutputCode(text, depth, color, bevel, glow) {
-  const includeWatermark = document.getElementById('chk-watermark').checked;
+  const includeWatermark = document.getElementById('chk-watermark').checked || !checkIsPremium();
   const fontUrl = fontUrls[activeFontName];
 
   const html = `<!-- 3D Volumetric Text Widget -->

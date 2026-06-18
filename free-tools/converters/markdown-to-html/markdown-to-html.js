@@ -89,7 +89,7 @@ function parseMarkdown(md) {
 
 function processCompile() {
   const mdText = document.getElementById('inp-markdown').value;
-  const includeWatermark = document.getElementById('chk-watermark').checked;
+  const includeWatermark = document.getElementById('chk-watermark').checked || !checkIsPremium();
 
   if (!mdText.trim()) return;
 

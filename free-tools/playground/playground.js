@@ -92,7 +92,7 @@ function updatePreview() {
   const html = cmHtml.getValue();
   const css = cmCss.getValue();
   const js = cmJs.getValue();
-  const includeWatermark = document.getElementById('chk-watermark').checked;
+  const includeWatermark = document.getElementById('chk-watermark').checked || !checkIsPremium();
 
   const iframe = document.getElementById('preview-iframe');
 
@@ -132,7 +132,7 @@ function generateFullOutput() {
   const html = cmHtml.getValue();
   const css = cmCss.getValue();
   const js = cmJs.getValue();
-  const includeWatermark = document.getElementById('chk-watermark').checked;
+  const includeWatermark = document.getElementById('chk-watermark').checked || !checkIsPremium();
 
   return `<!DOCTYPE html>
 <html lang="en">

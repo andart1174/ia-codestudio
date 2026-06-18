@@ -240,7 +240,7 @@ function transpileTailwind(htmlString) {
 
 function processConversion() {
   const input = document.getElementById('inp-tailwind').value;
-  const includeWatermark = document.getElementById('chk-watermark').checked;
+  const includeWatermark = document.getElementById('chk-watermark').checked || !checkIsPremium();
   
   if (!input.trim()) return;
 

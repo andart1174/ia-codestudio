@@ -105,7 +105,7 @@ function handleFileConversion(file) {
 }
 
 function updateOutputCode(payload) {
-  const includeWatermark = document.getElementById('chk-watermark').checked;
+  const includeWatermark = document.getElementById('chk-watermark').checked || !checkIsPremium();
   let finalCode = payload;
 
   if (currentMode === 'text') {
