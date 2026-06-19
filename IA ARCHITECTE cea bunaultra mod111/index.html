@@ -539,6 +539,25 @@
         <div class="win-dots"><span></span><span></span><span class="dot-active"></span></div>
         <span class="file-label">index.html — IA Architecte Studio</span>
         <div class="editor-stats" id="editor-stats"></div>
+
+        <!-- ⏪ DVR | 🗣️ Voice | 🕰️ History — module shortcuts -->
+        <div style="display:flex;align-items:center;gap:5px;margin-left:auto;">
+          <button id="btn-tt-panel-toggle" title="Time-Travel Debugger"
+            onclick="(function(){var p=document.getElementById('tt-float-panel');var open=p.style.display==='flex';p.style.display=open?'none':'flex';if(p.style.display==='flex'){document.getElementById('vr-float-panel').style.display='none';document.getElementById('btn-vr-panel-toggle').style.background='rgba(239,68,68,0.08)';document.getElementById('tm-float-panel').style.display='none';document.getElementById('btn-tm-panel-toggle').style.background='rgba(217,70,239,0.08)';}this.style.background=open?'rgba(239,68,68,0.08)':'rgba(239,68,68,0.28)';})(this)"
+            style="padding:3px 8px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.35);color:#f87171;border-radius:6px;cursor:pointer;font-size:10px;font-weight:700;font-family:var(--font);transition:all .2s;white-space:nowrap;display:inline-flex;align-items:center;gap:3px;">
+            ⏪ DVR
+          </button>
+          <button id="btn-vr-panel-toggle" title="Accessibility Voice Reader"
+            onclick="(function(){var p=document.getElementById('vr-float-panel');var open=p.style.display==='flex';p.style.display=open?'none':'flex';if(p.style.display==='flex'){document.getElementById('tt-float-panel').style.display='none';document.getElementById('btn-tt-panel-toggle').style.background='rgba(239,68,68,0.08)';document.getElementById('tm-float-panel').style.display='none';document.getElementById('btn-tm-panel-toggle').style.background='rgba(217,70,239,0.08)';}this.style.background=open?'rgba(34,197,94,0.08)':'rgba(34,197,94,0.25)';})(this)"
+            style="padding:3px 8px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.35);color:#4ade80;border-radius:6px;cursor:pointer;font-size:10px;font-weight:700;font-family:var(--font);transition:all .2s;white-space:nowrap;display:inline-flex;align-items:center;gap:3px;">
+            🗣️ Voice
+          </button>
+          <button id="btn-tm-panel-toggle" title="Time Machine — Local Version Control"
+            onclick="(function(){var p=document.getElementById('tm-float-panel');var open=p.style.display==='flex';p.style.display=open?'none':'flex';if(p.style.display==='flex'){document.getElementById('tt-float-panel').style.display='none';document.getElementById('btn-tt-panel-toggle').style.background='rgba(239,68,68,0.08)';document.getElementById('vr-float-panel').style.display='none';document.getElementById('btn-vr-panel-toggle').style.background='rgba(34,197,94,0.08)';}this.style.background=open?'rgba(217,70,239,0.08)':'rgba(217,70,239,0.28)';})(this)"
+            style="padding:3px 8px;background:rgba(217,70,239,0.08);border:1px solid rgba(217,70,239,0.35);color:#d946ef;border-radius:6px;cursor:pointer;font-size:10px;font-weight:700;font-family:var(--font);transition:all .2s;white-space:nowrap;display:inline-flex;align-items:center;gap:3px;">
+            🕰️ History
+          </button>
+        </div>
       </div>
       
       <!-- 🪄 AI ONE-CLICK MAGIC BAR -->
@@ -579,27 +598,6 @@
           Scale: <span id="scale-val">100</span>%
         </div>
         <button class="run-btn" id="btn-run">▶ <span id="lbl-run">Run</span></button>
-
-        <!-- ⏪ Time-Travel Debugger toggle -->
-        <button id="btn-tt-panel-toggle" title="Time-Travel Debugger"
-          onclick="(function(){var p=document.getElementById('tt-float-panel');var open=p.style.display==='flex';p.style.display=open?'none':'flex';if(p.style.display==='flex'){document.getElementById('vr-float-panel').style.display='none';document.getElementById('btn-vr-panel-toggle').style.background='rgba(34,197,94,0.08)';}this.style.background=open?'rgba(239,68,68,0.08)':'rgba(239,68,68,0.25)';})(this)"
-          style="padding:4px 9px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.35);color:#f87171;border-radius:6px;cursor:pointer;font-size:11px;font-weight:700;font-family:var(--font);transition:all .2s;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;">
-          ⏪ DVR
-        </button>
-
-        <!-- 🗣️ Voice Reader toggle -->
-        <button id="btn-vr-panel-toggle" title="Accessibility Voice Reader"
-          onclick="(function(){var p=document.getElementById('vr-float-panel');var open=p.style.display==='flex';p.style.display=open?'none':'flex';if(p.style.display==='flex'){document.getElementById('tt-float-panel').style.display='none';document.getElementById('btn-tt-panel-toggle').style.background='rgba(239,68,68,0.08)';document.getElementById('tm-float-panel').style.display='none';document.getElementById('btn-tm-panel-toggle').style.background='rgba(217,70,239,0.08)';}this.style.background=open?'rgba(34,197,94,0.08)':'rgba(34,197,94,0.22)';})(this)"
-          style="padding:4px 9px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.35);color:#4ade80;border-radius:6px;cursor:pointer;font-size:11px;font-weight:700;font-family:var(--font);transition:all .2s;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;">
-          🗣️ Voice
-        </button>
-
-        <!-- 🕰️ Time Machine / History toggle -->
-        <button id="btn-tm-panel-toggle" title="Time Machine — Local Version Control"
-          onclick="(function(){var p=document.getElementById('tm-float-panel');var open=p.style.display==='flex';p.style.display=open?'none':'flex';if(p.style.display==='flex'){document.getElementById('tt-float-panel').style.display='none';document.getElementById('btn-tt-panel-toggle').style.background='rgba(239,68,68,0.08)';document.getElementById('vr-float-panel').style.display='none';document.getElementById('btn-vr-panel-toggle').style.background='rgba(34,197,94,0.08)';}this.style.background=open?'rgba(217,70,239,0.08)':'rgba(217,70,239,0.25)';})(this)"
-          style="padding:4px 9px;background:rgba(217,70,239,0.08);border:1px solid rgba(217,70,239,0.35);color:#d946ef;border-radius:6px;cursor:pointer;font-size:11px;font-weight:700;font-family:var(--font);transition:all .2s;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;">
-          🕰️ History
-        </button>
 
         <button class="share-btn" id="btn-publish-feed" style="padding:4px 10px; background:rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.22); color:#a78bfa; border-radius:6px; cursor:pointer; font-size:11px; font-weight:700; font-family:var(--font); transition:all .2s; white-space:nowrap;" onmouseover="this.style.background='rgba(139,92,246,0.2)'" onmouseout="this.style.background='rgba(139,92,246,0.1)'">
           <i class="fa-solid fa-share-nodes"></i> <span id="lbl-publish" data-en="Share Scene" data-fr="Partager la Scène">Share Scene</span>
