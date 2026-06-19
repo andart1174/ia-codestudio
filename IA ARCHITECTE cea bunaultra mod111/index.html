@@ -579,10 +579,84 @@
           Scale: <span id="scale-val">100</span>%
         </div>
         <button class="run-btn" id="btn-run">▶ <span id="lbl-run">Run</span></button>
+
+        <!-- ⏪ Time-Travel Debugger toggle -->
+        <button id="btn-tt-panel-toggle" title="Time-Travel Debugger"
+          onclick="(function(){var p=document.getElementById('tt-float-panel');var open=p.style.display==='flex';p.style.display=open?'none':'flex';if(p.style.display==='flex'){document.getElementById('vr-float-panel').style.display='none';document.getElementById('btn-vr-panel-toggle').style.background='rgba(34,197,94,0.08)';}this.style.background=open?'rgba(239,68,68,0.08)':'rgba(239,68,68,0.25)';})(this)"
+          style="padding:4px 9px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.35);color:#f87171;border-radius:6px;cursor:pointer;font-size:11px;font-weight:700;font-family:var(--font);transition:all .2s;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;">
+          ⏪ DVR
+        </button>
+
+        <!-- 🗣️ Voice Reader toggle -->
+        <button id="btn-vr-panel-toggle" title="Accessibility Voice Reader"
+          onclick="(function(){var p=document.getElementById('vr-float-panel');var open=p.style.display==='flex';p.style.display=open?'none':'flex';if(p.style.display==='flex'){document.getElementById('tt-float-panel').style.display='none';document.getElementById('btn-tt-panel-toggle').style.background='rgba(239,68,68,0.08)';}this.style.background=open?'rgba(34,197,94,0.08)':'rgba(34,197,94,0.22)';})(this)"
+          style="padding:4px 9px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.35);color:#4ade80;border-radius:6px;cursor:pointer;font-size:11px;font-weight:700;font-family:var(--font);transition:all .2s;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;">
+          🗣️ Voice
+        </button>
+
         <button class="share-btn" id="btn-publish-feed" style="padding:4px 10px; background:rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.22); color:#a78bfa; border-radius:6px; cursor:pointer; font-size:11px; font-weight:700; font-family:var(--font); transition:all .2s; white-space:nowrap;" onmouseover="this.style.background='rgba(139,92,246,0.2)'" onmouseout="this.style.background='rgba(139,92,246,0.1)'">
           <i class="fa-solid fa-share-nodes"></i> <span id="lbl-publish" data-en="Share Scene" data-fr="Partager la Scène">Share Scene</span>
         </button>
       </div>
+      <!-- ⏪ TIME-TRAVEL DEBUGGER FLOATING PANEL -->
+      <div id="tt-float-panel" style="display:none;position:absolute;top:42px;right:8px;z-index:2000;width:240px;flex-direction:column;background:rgba(15,23,42,0.97);border:1px solid rgba(239,68,68,0.35);border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.6);overflow:hidden;font-family:'Inter',sans-serif;">
+        <div style="padding:10px 12px 8px;border-bottom:1px solid rgba(239,68,68,0.2);display:flex;align-items:center;justify-content:space-between;background:rgba(239,68,68,0.06);">
+          <div>
+            <div style="font-size:12px;font-weight:900;color:#f87171;">⏪ Time-Travel Debugger</div>
+            <div style="font-size:9px;color:#64748b;margin-top:1px;">Code &amp; UI Replay DVR</div>
+          </div>
+          <button onclick="document.getElementById('tt-float-panel').style.display='none';document.getElementById('btn-tt-panel-toggle').style.background='rgba(239,68,68,0.08)'" style="background:none;border:none;color:#64748b;cursor:pointer;font-size:15px;line-height:1;padding:0 3px;">&times;</button>
+        </div>
+        <div style="padding:12px;display:flex;flex-direction:column;gap:10px;">
+          <div style="background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.15);border-radius:8px;padding:10px;text-align:center;">
+            <div style="font-size:32px;margin-bottom:8px;">⏪</div>
+            <div style="font-size:10px;color:#94a3b8;margin-bottom:12px;line-height:1.5;">Starts a background DVR that records your code changes as you type. Use the slider to rewind time and see past versions of your UI without losing your current code!</div>
+            <button id="btn-tt-fp-start"
+              onclick="(function(){if(!window.editor)return;window._ttFPHistory=window._ttFPHistory||[];window._ttFPHistory.push(window.editor.getValue());if(window._ttFPListener)window._ttFPListener.dispose();window._ttFPListener=window.editor.onDidChangeModelContent(function(){clearTimeout(window._ttFPTimer);window._ttFPTimer=setTimeout(function(){var c=window.editor.getValue();if(!window._ttFPHistory.length||window._ttFPHistory[window._ttFPHistory.length-1]!==c){window._ttFPHistory.push(c);if(window._ttFPHistory.length>200)window._ttFPHistory.shift();}var sl=document.getElementById('tt-fp-slider');var ct=document.getElementById('tt-fp-count');if(sl){sl.max=Math.max(0,window._ttFPHistory.length-1);sl.value=sl.max;}if(ct)ct.textContent=window._ttFPHistory.length+' States';},1000);});document.getElementById('btn-tt-fp-start').style.display='none';document.getElementById('btn-tt-fp-stop').style.display='block';document.getElementById('tt-fp-status').style.opacity='1';})()"
+              style="width:100%;background:linear-gradient(135deg,#f87171,#f59e0b);border:none;border-radius:6px;padding:9px;color:#fff;font-weight:900;font-size:11px;cursor:pointer;">🔴 Start Recording</button>
+            <button id="btn-tt-fp-stop" style="display:none;width:100%;background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.4);border-radius:6px;padding:9px;color:#fca5a5;font-weight:900;font-size:11px;cursor:pointer;margin-top:4px;"
+              onclick="(function(){if(window._ttFPListener){window._ttFPListener.dispose();window._ttFPListener=null;}document.getElementById('btn-tt-fp-start').style.display='block';document.getElementById('btn-tt-fp-stop').style.display='none';document.getElementById('tt-fp-status').style.opacity='0';})()">⏹️ Stop Recording</button>
+            <div id="tt-fp-status" style="margin-top:8px;font-size:9px;color:#f87171;font-weight:bold;opacity:0;transition:opacity 0.3s;">Recording Active...</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <span style="font-size:10px;color:#cbd5e1;font-weight:bold;">DVR Timeline</span>
+              <span id="tt-fp-count" style="font-size:10px;color:#38bdf8;font-weight:bold;">0 States</span>
+            </div>
+            <input type="range" id="tt-fp-slider" min="0" max="0" value="0" style="width:100%;cursor:pointer;margin-bottom:10px;accent-color:#f87171;"
+              oninput="(function(v){if(!window._ttFPHistory||!window._ttFPHistory[v])return;var iframe=document.getElementById('preview-iframe');if(iframe){var doc=iframe.contentWindow.document;doc.open();doc.write(window._ttFPHistory[v]);doc.close();}})(parseInt(this.value))">
+            <button onclick="(function(){var v=parseInt(document.getElementById('tt-fp-slider').value);if(!window._ttFPHistory||!window._ttFPHistory[v]||!window.editor)return;window.editor.setValue(window._ttFPHistory[v]);if(window.runPreview)window.runPreview();if(window.showToast)window.showToast('Code restored!');})()" style="width:100%;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:#7dd3fc;border-radius:6px;padding:7px;font-weight:bold;font-size:10px;cursor:pointer;">⏪ Restore Editor to this Point</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 🗣️ ACCESSIBILITY VOICE READER FLOATING PANEL -->
+      <div id="vr-float-panel" style="display:none;position:absolute;top:42px;right:8px;z-index:2000;width:240px;flex-direction:column;background:rgba(15,23,42,0.97);border:1px solid rgba(34,197,94,0.35);border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.6);overflow:hidden;font-family:'Inter',sans-serif;">
+        <div style="padding:10px 12px 8px;border-bottom:1px solid rgba(34,197,94,0.2);display:flex;align-items:center;justify-content:space-between;background:rgba(34,197,94,0.06);">
+          <div>
+            <div style="font-size:12px;font-weight:900;color:#4ade80;">🗣️ Accessibility Voice Reader</div>
+            <div style="font-size:9px;color:#64748b;margin-top:1px;">Hear your app as a screen-reader would</div>
+          </div>
+          <button onclick="document.getElementById('vr-float-panel').style.display='none';document.getElementById('btn-vr-panel-toggle').style.background='rgba(34,197,94,0.08)'" style="background:none;border:none;color:#64748b;cursor:pointer;font-size:15px;line-height:1;padding:0 3px;">&times;</button>
+        </div>
+        <div style="padding:12px;display:flex;flex-direction:column;gap:10px;">
+          <div style="font-size:10px;color:#94a3b8;line-height:1.6;background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.15);border-radius:8px;padding:10px;">Simulates how a visually-impaired user hears your page. Click &ldquo;Read Page&rdquo; to have every visible text element spoken aloud in order.</div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <label style="font-size:10px;color:#94a3b8;">Speed: <span id="vr-fp-speed-val">1.0x</span></label>
+            <input type="range" id="vr-fp-speed" min="0.5" max="2" step="0.1" value="1" style="width:100%;accent-color:#4ade80;" oninput="document.getElementById('vr-fp-speed-val').textContent=parseFloat(this.value).toFixed(1)+'x'">
+          </div>
+          <div id="vr-fp-status" style="font-size:11px;color:#fbbf24;min-height:16px;text-align:center;"></div>
+          <div style="display:flex;gap:8px;">
+            <button style="flex:2;background:linear-gradient(135deg,#16a34a,#15803d);border:none;border-radius:8px;padding:10px;color:#fff;font-weight:900;font-size:11px;cursor:pointer;"
+              onclick="(function(){var synth=window.speechSynthesis;if(!synth){document.getElementById('vr-fp-status').textContent='Not supported.';return;}synth.cancel();var iframe=document.getElementById('preview-iframe')||document.querySelector('#right-panel iframe');if(!iframe)return;var doc=iframe.contentDocument||(iframe.contentWindow&&iframe.contentWindow.document);if(!doc||!doc.body)return;var walker=doc.createTreeWalker(doc.body,NodeFilter.SHOW_TEXT,{acceptNode:function(n){var p=n.parentElement;if(!p)return NodeFilter.FILTER_REJECT;var tag=p.tagName.toUpperCase();if(tag==='SCRIPT'||tag==='STYLE'||tag==='NOSCRIPT')return NodeFilter.FILTER_REJECT;var s=doc.defaultView.getComputedStyle(p);if(s.display==='none'||s.visibility==='hidden'||s.opacity==='0')return NodeFilter.FILTER_REJECT;var tx=n.textContent.trim();if(!tx)return NodeFilter.FILTER_SKIP;return NodeFilter.FILTER_ACCEPT;}});var texts=[];var nd;while((nd=walker.nextNode())){var tx=nd.textContent.trim();if(tx.length>1)texts.push(tx);}if(!texts.length){document.getElementById('vr-fp-status').textContent='No readable text found.';return;}var spd=parseFloat(document.getElementById('vr-fp-speed').value)||1;var statusEl=document.getElementById('vr-fp-status');statusEl.textContent='🔊 Reading\u2026';var idx=0;function next(){if(idx>=texts.length){statusEl.textContent='\u2705 Done reading!';return;}var u=new SpeechSynthesisUtterance(texts[idx]);u.rate=spd;u.onend=function(){idx++;next();};u.onerror=function(){idx++;next();};synth.speak(u);idx++;}next();})()">
+              ▶ Read Page
+            </button>
+            <button style="flex:1;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);border-radius:8px;padding:10px;color:#f87171;font-weight:900;font-size:11px;cursor:pointer;"
+              onclick="if(window.speechSynthesis)window.speechSynthesis.cancel();document.getElementById('vr-fp-status').textContent='';">⏹ Stop</button>
+          </div>
+        </div>
+      </div>
+
       <div class="preview-viewport">
         <div class="preview-frame-wrap" id="preview-frame-wrap">
           <iframe id="preview-iframe" title="Application Preview" sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-popups allow-downloads allow-pointer-lock allow-popups-to-escape-sandbox"></iframe>
