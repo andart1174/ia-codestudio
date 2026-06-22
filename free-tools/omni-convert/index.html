@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OmniConvert Pro - Ultimate Code Converter &amp; Dev Toolkit</title>
+  <meta name="description" content="All-in-one offline developer toolkit: live HTML/CSS/JS sandbox, Base64 converter, JSON/XML/YAML serializer, minifier, obfuscator, hash generator, color tools, regex tester, JWT decoder and text diff.">
+  <link rel="stylesheet" href="style.css">
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <div class="header-logo">
+      <i class="fa-solid fa-wand-magic-sparkles logo-icon"></i>
+      <h1>OMNICONVERT PRO <span class="app-tag">Ultimate Dev Toolkit</span></h1>
+    </div>
+    <div class="header-actions">
+      <span class="status-badge"><span class="dot online"></span><span id="lbl-status">Local Engine Active</span></span>
+      <button id="btn-lang" class="lang-btn">🇺🇸 EN | 🇫🇷 FR</button>
+    </div>
+  </header>
+
+  <main class="app-container">
+    <!-- LEFT PANEL: Inputs & Tool tabs -->
+    <section class="panel-left">
+      <nav class="tool-tabs">
+        <button class="tab-btn active" data-tab="playground"><i class="fa-solid fa-code"></i> <span id="tab-lbl-playground">Playground</span></button>
+        <button class="tab-btn" data-tab="base64"><i class="fa-solid fa-box-open"></i> <span id="tab-lbl-base64">Base64</span></button>
+        <button class="tab-btn" data-tab="serialize"><i class="fa-solid fa-arrows-spin"></i> <span id="tab-lbl-serialize">JSON/XML/YAML</span></button>
+        <button class="tab-btn" data-tab="minify"><i class="fa-solid fa-compress"></i> <span id="tab-lbl-minify">Minify &amp; Obfuscate</span></button>
+        <button class="tab-btn" data-tab="utilities"><i class="fa-solid fa-gears"></i> <span id="tab-lbl-utilities">Utilities</span></button>
+        <button class="tab-btn" data-tab="qrcode"><i class="fa-solid fa-qrcode"></i> <span id="tab-lbl-qrcode">QR Code</span></button>
+        <button class="tab-btn" data-tab="hash"><i class="fa-solid fa-fingerprint"></i> <span id="tab-lbl-hash">Hash</span></button>
+        <button class="tab-btn" data-tab="colors"><i class="fa-solid fa-palette"></i> <span id="tab-lbl-colors">Colors</span></button>
+        <button class="tab-btn" data-tab="gradient"><i class="fa-solid fa-fill-drip"></i> <span id="tab-lbl-gradient">Gradient Builder</span></button>
+        <button class="tab-btn" data-tab="shadow"><i class="fa-solid fa-circle-half-stroke"></i> <span id="tab-lbl-shadow">Shadow Builder</span></button>
+        <button class="tab-btn" data-tab="regex"><i class="fa-solid fa-magnifying-glass-chart"></i> <span id="tab-lbl-regex">Regex</span></button>
+        <button class="tab-btn" data-tab="jwt"><i class="fa-solid fa-key"></i> <span id="tab-lbl-jwt">JWT</span></button>
+        <button class="tab-btn" data-tab="diff"><i class="fa-solid fa-code-compare"></i> <span id="tab-lbl-diff">Diff</span></button>
+        <button class="tab-btn" data-tab="snippets"><i class="fa-solid fa-folder-open"></i> <span id="tab-lbl-snippets">Snippet Manager</span></button>
+      </nav>
+
+      <div class="panel-body">
+
+        <!-- TAB 1: PLAYGROUND -->
+        <div class="tab-content active" id="tab-playground">
+          <div class="editor-subtabs">
+            <button class="subtab-btn active" data-editor="html">HTML</button>
+            <button class="subtab-btn" data-editor="css">CSS</button>
+            <button class="subtab-btn" data-editor="js">JavaScript</button>
+          </div>
+          <div class="editor-wrapper">
+            <textarea id="editor-html" class="code-textarea" spellcheck="false" placeholder="<!-- Write HTML here -->
+<div class='card'>
+  <h2>Hello World</h2>
+  <p>Modify code and watch live preview!</p>
+</div>"></textarea>
+            <textarea id="editor-css" class="code-textarea hidden" spellcheck="false" placeholder="/* Write CSS here */
+body {
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: radial-gradient(circle, #1e293b, #0f172a);
+  color: white;
+}
+.card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}"></textarea>
+            <textarea id="editor-js" class="code-textarea hidden" spellcheck="false" placeholder="// Write JavaScript here
+console.log('Sandbox Playground Loaded!');
+document.querySelector('.card').addEventListener('click', () => {
+  console.log('Card Clicked!');
+});"></textarea>
+          </div>
+          <div class="editor-actions" style="margin-top: 12px; display: flex; gap: 8px; justify-content: flex-end; align-items: center;">
+            <label class="watermark-toggle-label" style="font-size: 0.76rem; display: flex; align-items: center; gap: 6px; cursor: pointer; margin-right: auto; user-select: none;">
+              <input type="checkbox" id="chk-watermark" checked>
+              <span data-i18n="badge_label">Include "Powered by IA Code Studio" badge</span>
+            </label>
+            <button class="btn btn-secondary" id="btn-copy-playground"><i class="fa-solid fa-copy"></i> <span data-i18n="copy_code">Copy HTML</span></button>
+            <button class="btn btn-secondary" id="btn-download-playground"><i class="fa-solid fa-download"></i> <span data-i18n="download_html">Download HTML</span></button>
+          </div>
+        </div>
+
+        <!-- TAB 2: BASE64 CONVERTER -->
+        <div class="tab-content" id="tab-base64">
+          <div class="tool-section">
+            <h3 id="lbl-b64-text-title">Base64 Text Mode</h3>
+            <textarea id="b64-text-input" class="code-textarea small-height" placeholder="Enter text to encode or Base64 to decode..."></textarea>
+            <div class="btn-group">
+              <button class="btn btn-primary" id="btn-b64-encode"><i class="fa-solid fa-lock"></i> <span id="lbl-b64-encode">Encode Text</span></button>
+              <button class="btn btn-secondary" id="btn-b64-decode"><i class="fa-solid fa-lock-open"></i> <span id="lbl-b64-decode">Decode Text</span></button>
+            </div>
+          </div>
+          <div class="tool-divider"></div>
+          <div class="tool-section">
+            <h3 id="lbl-b64-file-title">Base64 File Converter</h3>
+            <div class="drop-zone" id="b64-drop-zone">
+              <i class="fa-solid fa-cloud-arrow-up drop-icon"></i>
+              <p id="lbl-drop-text">Drag &amp; drop files (images, audio, video, PDF) or click to browse</p>
+              <input type="file" id="b64-file-input" style="display: none;">
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: JSON / XML / YAML -->
+        <div class="tab-content" id="tab-serialize">
+          <h3 id="lbl-serialize-title">Data Converter (JSON, XML, YAML)</h3>
+          <textarea id="serialize-input" class="code-textarea" spellcheck="false" placeholder='{
+  "project": "omniconvert-pro",
+  "converters": ["JSON", "XML", "YAML"],
+  "active": true
+}'></textarea>
+          <div class="btn-grid">
+            <button class="btn btn-secondary" id="btn-json-xml">JSON <i class="fa-solid fa-arrow-right"></i> XML</button>
+            <button class="btn btn-secondary" id="btn-xml-json">XML <i class="fa-solid fa-arrow-right"></i> JSON</button>
+            <button class="btn btn-secondary" id="btn-json-yaml">JSON <i class="fa-solid fa-arrow-right"></i> YAML</button>
+            <button class="btn btn-secondary" id="btn-yaml-json">YAML <i class="fa-solid fa-arrow-right"></i> JSON</button>
+          </div>
+          <div class="btn-group" style="margin-top: 12px;">
+            <button class="btn btn-primary" id="btn-serialize-format"><i class="fa-solid fa-wand-magic-sparkles"></i> <span id="lbl-serialize-format">Format / Beautify</span></button>
+            <button class="btn btn-secondary" id="btn-serialize-minify"><i class="fa-solid fa-compress"></i> <span id="lbl-serialize-minify">Minify</span></button>
+          </div>
+        </div>
+
+        <!-- TAB 4: MINIFY & OBFUSCATE -->
+        <div class="tab-content" id="tab-minify">
+          <h3 id="lbl-minify-title">Code Compressor &amp; Obfuscator</h3>
+          <textarea id="minify-input" class="code-textarea" spellcheck="false" placeholder="function calculateArea(width, height) {
+  // Multiply dimensions to find surface area
+  const result = width * height;
+  console.log('Calculating area:', result);
+  return result;
+}"></textarea>
+          <div class="btn-group">
+            <button class="btn btn-primary" id="btn-minify-js"><i class="fa-solid fa-compress"></i> <span id="lbl-minify-btn">Minify Code</span></button>
+            <button class="btn btn-accent" id="btn-obfuscate-js"><i class="fa-solid fa-shield-halved"></i> <span id="lbl-obfuscate-btn">Obfuscate JS</span></button>
+          </div>
+        </div>
+
+        <!-- TAB 5: DEV UTILITIES -->
+        <div class="tab-content" id="tab-utilities">
+          <div class="editor-subtabs" id="utilities-subtabs" style="margin-bottom: 16px;">
+            <button class="subtab-btn active" data-util-tab="text-tools" id="subtab-lbl-text-tools">Text Tools</button>
+            <button class="subtab-btn" data-util-tab="generators" id="subtab-lbl-generators">Generators</button>
+            <button class="subtab-btn" data-util-tab="css-glass" id="subtab-lbl-css-glass">CSS Glass</button>
+            <button class="subtab-btn" data-util-tab="timestamp" id="subtab-lbl-timestamp">Timestamp</button>
+            <button class="subtab-btn" data-util-tab="number-base" id="subtab-lbl-number-base">Number Base</button>
+          </div>
+
+          <!-- Subtab 1: Text Tools -->
+          <div class="util-subcontent" id="util-text-tools">
+            <h3 id="lbl-util-title">Web Developer Utilities</h3>
+            <textarea id="utilities-input" class="code-textarea small-height" placeholder="Type text or code here..."></textarea>
+            <div class="btn-grid">
+              <button class="btn btn-secondary" id="btn-url-encode"><span id="lbl-url-encode">URL Encode</span></button>
+              <button class="btn btn-secondary" id="btn-url-decode"><span id="lbl-url-decode">URL Decode</span></button>
+              <button class="btn btn-secondary" id="btn-html-encode"><span id="lbl-html-encode">HTML Escape</span></button>
+              <button class="btn btn-secondary" id="btn-html-decode"><span id="lbl-html-decode">HTML Unescape</span></button>
+              <button class="btn btn-primary" id="btn-markdown" style="grid-column: span 2;"><i class="fa-solid fa-file-code"></i> <span id="lbl-markdown">Render Markdown</span></button>
+            </div>
+          </div>
+
+          <!-- Subtab 2: Generators -->
+          <div class="util-subcontent hidden" id="util-generators">
+            <h3 id="lbl-gen-title">Random Generators</h3>
+            
+            <!-- UUID Generator Section -->
+            <div class="util-section-box" style="margin-top: 10px;">
+              <h4 id="lbl-uuid-title" style="font-size: 0.8rem; font-weight:700; color: var(--text-muted); margin-bottom: 8px;">UUID v4 Generator</h4>
+              <div class="input-inline-group" style="display: flex; gap: 8px; margin-bottom: 8px;">
+                <input type="number" id="uuid-count" class="code-input-field" value="1" min="1" max="100" style="width: 80px;">
+                <button class="btn btn-primary" id="btn-uuid-gen" style="flex: 1;"><i class="fa-solid fa-arrows-rotate"></i> <span id="lbl-uuid-btn">Generate</span></button>
+              </div>
+            </div>
+            
+            <div class="tool-divider" style="margin: 16px 0;"></div>
+            
+            <!-- Password Generator Section -->
+            <div class="util-section-box">
+              <h4 id="lbl-pass-title" style="font-size: 0.8rem; font-weight:700; color: var(--text-muted); margin-bottom: 8px;">Password / Token Generator</h4>
+              <div class="password-options" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; font-size: 0.76rem;">
+                <label style="display:flex; align-items:center; gap:6px; cursor:pointer;"><input type="checkbox" id="pass-upper" checked> <span id="lbl-pass-upper">Uppercase (A-Z)</span></label>
+                <label style="display:flex; align-items:center; gap:6px; cursor:pointer;"><input type="checkbox" id="pass-lower" checked> <span id="lbl-pass-lower">Lowercase (a-z)</span></label>
+                <label style="display:flex; align-items:center; gap:6px; cursor:pointer;"><input type="checkbox" id="pass-numbers" checked> <span id="lbl-pass-nums">Numbers (0-9)</span></label>
+                <label style="display:flex; align-items:center; gap:6px; cursor:pointer;"><input type="checkbox" id="pass-symbols" checked> <span id="lbl-pass-syms">Symbols (%$#@!...)</span></label>
+              </div>
+              <div class="slider-group" style="margin-bottom: 12px;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.76rem; margin-bottom: 4px;">
+                  <span id="lbl-pass-len">Length:</span>
+                  <span id="pass-len-val" class="detail-val" style="color:var(--accent-cyan); font-family:var(--font-mono);">16</span>
+                </div>
+                <input type="range" id="pass-length" min="4" max="64" value="16" style="width:100%; cursor:pointer;">
+              </div>
+              <button class="btn btn-primary" id="btn-pass-gen" style="width: 100%;"><i class="fa-solid fa-shield-halved"></i> <span id="lbl-pass-btn">Generate Password</span></button>
+            </div>
+            
+            <div class="tool-divider" style="margin: 16px 0;"></div>
+            
+            <!-- Lorem Ipsum & Fake Data Section -->
+            <div class="util-section-box">
+              <h4 id="lbl-fake-data-title" style="font-size: 0.8rem; font-weight:700; color: var(--text-muted); margin-bottom: 8px;">Lorem Ipsum &amp; Fake Data</h4>
+              <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.76rem;">
+                <div>
+                  <label id="lbl-fd-type" style="display: block; margin-bottom: 4px;">Type of Data</label>
+                  <select id="fake-data-type" class="code-input-field" style="width: 100%;">
+                    <option value="lorem-words">Lorem Ipsum (Words)</option>
+                    <option value="lorem-paragraphs">Lorem Ipsum (Paragraphs)</option>
+                    <option value="names">Fake Names</option>
+                    <option value="emails">Fake Emails</option>
+                    <option value="users-json">Fake Users (JSON Array)</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                    <span id="lbl-fd-count">Quantity:</span>
+                    <span id="fake-data-count-val" class="detail-val" style="color:var(--accent-cyan); font-family:var(--font-mono);">5</span>
+                  </div>
+                  <input type="range" id="fake-data-count" min="1" max="50" value="5" style="width:100%; cursor:pointer;">
+                </div>
+                
+                <button class="btn btn-primary" id="btn-fake-data-gen" style="width: 100%;"><i class="fa-solid fa-list"></i> <span id="lbl-fake-data-btn">Generate Data</span></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subtab 3: CSS Glassmorphism -->
+          <div class="util-subcontent hidden" id="util-css-glass">
+            <h3 id="lbl-glass-title">Glassmorphism CSS Generator</h3>
+            <div class="glass-controls" style="display: flex; flex-direction: column; gap: 12px; font-size: 0.76rem;">
+              <div class="slider-group">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span id="lbl-blur">Blur:</span>
+                  <span id="blur-val" class="detail-val" style="color:var(--accent-cyan); font-family:var(--font-mono);">8px</span>
+                </div>
+                <input type="range" id="glass-blur" min="0" max="25" value="8" style="width:100%; cursor:pointer;">
+              </div>
+              
+              <div class="slider-group">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span id="lbl-opacity">Transparency:</span>
+                  <span id="opacity-val" class="detail-val" style="color:var(--accent-cyan); font-family:var(--font-mono);">30%</span>
+                </div>
+                <input type="range" id="glass-opacity" min="0" max="100" value="30" style="width:100%; cursor:pointer;">
+              </div>
+
+              <div class="slider-group">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span id="lbl-saturation">Saturation:</span>
+                  <span id="saturation-val" class="detail-val" style="color:var(--accent-cyan); font-family:var(--font-mono);">125%</span>
+                </div>
+                <input type="range" id="glass-saturation" min="50" max="200" value="125" style="width:100%; cursor:pointer;">
+              </div>
+
+              <div class="slider-group">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span id="lbl-border-op">Border Transparency:</span>
+                  <span id="border-op-val" class="detail-val" style="color:var(--accent-cyan); font-family:var(--font-mono);">12%</span>
+                </div>
+                <input type="range" id="glass-border-op" min="0" max="100" value="12" style="width:100%; cursor:pointer;">
+              </div>
+              
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                <span id="lbl-glass-color">Background Color:</span>
+                <input type="color" id="glass-color" value="#ffffff" style="width:48px; height:28px; border:none; border-radius:6px; cursor:pointer; background:none;">
+              </div>
+            </div>
+            
+            <div class="glass-preview-wrapper" style="margin-top: 16px; border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; background: linear-gradient(135deg, #f43f5e, #8b5cf6, #06b6d4); display: flex; justify-content: center; align-items: center; min-height: 140px; overflow: hidden; position: relative;">
+              <div id="glass-preview-card" style="width: 140px; height: 90px; border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 0.72rem; font-weight: 700; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.6); transition: all 0.1s ease;">
+                Preview
+              </div>
+            </div>
+          </div>
+
+          <!-- Subtab 4: Timestamp Converter -->
+          <div class="util-subcontent hidden" id="util-timestamp">
+            <h3 id="lbl-timestamp-title">Timestamp &amp; Date Converter</h3>
+            
+            <div class="util-section-box" style="margin-top: 10px;">
+              <h4 id="lbl-ts-to-date-title" style="font-size: 0.8rem; font-weight:700; color: var(--text-muted); margin-bottom: 8px;">Unix Timestamp ↔ Date</h4>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; gap: 8px;">
+                  <input type="text" id="ts-input" class="code-input-field" placeholder="e.g. 1718919600" style="flex: 1;">
+                  <button class="btn btn-secondary" id="btn-ts-now">Now</button>
+                </div>
+                <button class="btn btn-primary" id="btn-ts-convert" style="width: 100%;"><span id="lbl-ts-convert-btn">Convert to Date</span></button>
+              </div>
+            </div>
+
+            <div class="util-section-box" style="margin-top: 12px;">
+              <h4 id="lbl-date-to-ts-title" style="font-size: 0.8rem; font-weight:700; color: var(--text-muted); margin-bottom: 8px;">Date ↔ Unix Timestamp</h4>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <input type="datetime-local" id="date-input" class="code-input-field" style="width: 100%;">
+                <button class="btn btn-primary" id="btn-date-convert" style="width: 100%;"><span id="lbl-date-convert-btn">Convert to Timestamp</span></button>
+              </div>
+            </div>
+
+            <div class="util-section-box" style="margin-top: 12px;">
+              <h4 id="lbl-ts-diff-title" style="font-size: 0.8rem; font-weight:700; color: var(--text-muted); margin-bottom: 8px;">Date Difference Calculator</h4>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <input type="datetime-local" id="diff-date1" class="code-input-field" style="width: 100%;">
+                <input type="datetime-local" id="diff-date2" class="code-input-field" style="width: 100%;">
+                <button class="btn btn-secondary" id="btn-ts-calc-diff" style="width: 100%;"><span id="lbl-diff-calc-btn">Calculate Difference</span></button>
+              </div>
+            </div>
+
+            <div class="util-section-box" style="margin-top: 12px;">
+              <h4 id="lbl-ts-countdown-title" style="font-size: 0.8rem; font-weight:700; color: var(--text-muted); margin-bottom: 8px;">Live Countdown Timer</h4>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <input type="datetime-local" id="countdown-target" class="code-input-field" style="width: 100%;">
+                <div id="countdown-display" style="font-family: var(--font-mono); font-size: 0.9rem; text-align: center; color: var(--accent-cyan); padding: 8px; border: 1px dashed var(--border-color); border-radius: 6px; display: none;">
+                  00d 00h 00m 00s
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subtab 5: Number Base Converter -->
+          <div class="util-subcontent hidden" id="util-number-base">
+            <h3 id="lbl-number-base-title">Number Base Converter</h3>
+            
+            <div class="util-section-box" style="margin-top: 10px;">
+              <div style="display: flex; flex-direction: column; gap: 10px; font-size: 0.76rem;">
+                <div>
+                  <label id="lbl-nb-dec" style="display: block; margin-bottom: 4px;">Decimal (Base 10)</label>
+                  <input type="text" id="nb-dec" class="code-input-field" placeholder="e.g. 255" style="width: 100%; font-family: var(--font-mono);">
+                </div>
+                <div>
+                  <label id="lbl-nb-hex" style="display: block; margin-bottom: 4px;">Hexadecimal (Base 16)</label>
+                  <input type="text" id="nb-hex" class="code-input-field" placeholder="e.g. ff" style="width: 100%; font-family: var(--font-mono);">
+                </div>
+                <div>
+                  <label id="lbl-nb-bin" style="display: block; margin-bottom: 4px;">Binary (Base 2)</label>
+                  <input type="text" id="nb-bin" class="code-input-field" placeholder="e.g. 11111111" style="width: 100%; font-family: var(--font-mono);">
+                </div>
+                <div>
+                  <label id="lbl-nb-oct" style="display: block; margin-bottom: 4px;">Octal (Base 8)</label>
+                  <input type="text" id="nb-oct" class="code-input-field" placeholder="e.g. 377" style="width: 100%; font-family: var(--font-mono);">
+                </div>
+              </div>
+            </div>
+
+            <div class="util-section-box" style="margin-top: 12px;">
+              <h4 id="lbl-nb-bitwise-title" style="font-size: 0.8rem; font-weight:700; color: var(--text-muted); margin-bottom: 8px;">Bitwise Operations</h4>
+              <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.76rem;">
+                <div style="display: flex; gap: 8px;">
+                  <input type="text" id="nb-bit-a" class="code-input-field" placeholder="Operand A" style="flex: 1; font-family: var(--font-mono);">
+                  <select id="nb-bit-op" class="code-input-field" style="width: 80px;">
+                    <option value="AND">&amp;</option>
+                    <option value="OR">|</option>
+                    <option value="XOR">^</option>
+                    <option value="SHL">&lt;&lt;</option>
+                    <option value="SHR">&gt;&gt;</option>
+                  </select>
+                  <input type="text" id="nb-bit-b" class="code-input-field" placeholder="Operand B" style="flex: 1; font-family: var(--font-mono);">
+                </div>
+                <button class="btn btn-primary" id="btn-nb-bitwise-calc" style="width: 100%;"><span id="lbl-nb-bitwise-btn">Calculate Bitwise</span></button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- NEW TAB: QR CODE GENERATOR -->
+        <div class="tab-content" id="tab-qrcode">
+          <h3 id="lbl-qrcode-title">QR Code Generator</h3>
+          <p class="tool-desc" id="lbl-qrcode-desc">Generate QR Codes offline for URLs, text, or contact cards. Customize colors and size, then download as PNG.</p>
+          <div class="tool-section-box">
+            <textarea id="qrcode-input" class="code-textarea small-height" placeholder="Enter text or URL to generate QR code..."></textarea>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;">
+              <div>
+                <label id="lbl-qr-size" style="font-size: 0.76rem; display: block; margin-bottom: 4px;">Size (px)</label>
+                <input type="number" id="qrcode-size" class="code-input-field" value="256" min="100" max="500" style="width: 100%;">
+              </div>
+              <div>
+                <label id="lbl-qr-ecc" style="font-size: 0.76rem; display: block; margin-bottom: 4px;">Error Correction</label>
+                <select id="qrcode-ecc" class="code-input-field" style="width: 100%;">
+                  <option value="L">Low (7%)</option>
+                  <option value="M" selected>Medium (15%)</option>
+                  <option value="Q">Quarter (25%)</option>
+                  <option value="H">High (30%)</option>
+                </select>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;">
+              <div>
+                <label id="lbl-qr-fg" style="font-size: 0.76rem; display: block; margin-bottom: 4px;">Foreground Color</label>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <input type="color" id="qrcode-fg" value="#000000" style="width: 32px; height: 32px; border: none; border-radius: 4px; cursor: pointer; background: none;">
+                  <input type="text" id="qrcode-fg-hex" class="code-input-field" value="#000000" style="flex: 1; font-size: 0.76rem;">
+                </div>
+              </div>
+              <div>
+                <label id="lbl-qr-bg" style="font-size: 0.76rem; display: block; margin-bottom: 4px;">Background Color</label>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <input type="color" id="qrcode-bg" value="#ffffff" style="width: 32px; height: 32px; border: none; border-radius: 4px; cursor: pointer; background: none;">
+                  <input type="text" id="qrcode-bg-hex" class="code-input-field" value="#ffffff" style="flex: 1; font-size: 0.76rem;">
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-primary" id="btn-qrcode-gen" style="width: 100%; margin-top: 16px;">
+              <i class="fa-solid fa-qrcode"></i> <span id="lbl-qrcode-btn">Generate QR Code</span>
+            </button>
+          </div>
+          
+          <div class="tool-divider" style="margin: 16px 0;"></div>
+          
+          <div class="qrcode-preview-wrapper" style="border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; background: #121824; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;">
+            <div id="qrcode-canvas-container" style="background: white; padding: 8px; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: none;">
+              <canvas id="qrcode-canvas"></canvas>
+            </div>
+            <div id="qrcode-placeholder" style="color: var(--text-muted); font-size: 0.76rem;">No QR code generated yet</div>
+            <button class="btn btn-secondary" id="btn-qrcode-download" style="width: 100%; display: none;">
+              <i class="fa-solid fa-download"></i> <span id="lbl-qrcode-download">Download PNG</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- TAB 6: HASH GENERATOR -->
+        <div class="tab-content" id="tab-hash">
+          <h3 id="lbl-hash-title">Cryptographic Hash Generator</h3>
+          <p class="tool-desc" id="lbl-hash-desc">Generate SHA-1, SHA-256, SHA-384, SHA-512 and MD5-like hashes from any text using the browser's native Web Crypto API.</p>
+          <textarea id="hash-input" class="code-textarea small-height" spellcheck="false" placeholder="Type any text to hash..."></textarea>
+          <div class="hash-results" id="hash-results">
+            <div class="hash-row">
+              <span class="hash-algo">MD5</span>
+              <span class="hash-val" id="hash-md5">—</span>
+              <button class="btn-copy-hash" data-target="hash-md5" title="Copy"><i class="fa-solid fa-copy"></i></button>
+            </div>
+            <div class="hash-row">
+              <span class="hash-algo">SHA-1</span>
+              <span class="hash-val" id="hash-sha1">—</span>
+              <button class="btn-copy-hash" data-target="hash-sha1" title="Copy"><i class="fa-solid fa-copy"></i></button>
+            </div>
+            <div class="hash-row">
+              <span class="hash-algo">SHA-256</span>
+              <span class="hash-val" id="hash-sha256">—</span>
+              <button class="btn-copy-hash" data-target="hash-sha256" title="Copy"><i class="fa-solid fa-copy"></i></button>
+            </div>
+            <div class="hash-row">
+              <span class="hash-algo">SHA-384</span>
+              <span class="hash-val" id="hash-sha384">—</span>
+              <button class="btn-copy-hash" data-target="hash-sha384" title="Copy"><i class="fa-solid fa-copy"></i></button>
+            </div>
+            <div class="hash-row">
+              <span class="hash-algo">SHA-512</span>
+              <span class="hash-val" id="hash-sha512">—</span>
+              <button class="btn-copy-hash" data-target="hash-sha512" title="Copy"><i class="fa-solid fa-copy"></i></button>
+            </div>
+          </div>
+          <button class="btn btn-primary" id="btn-hash-generate" style="width:100%; margin-top:12px;"><i class="fa-solid fa-fingerprint"></i> <span id="lbl-hash-btn">Generate All Hashes</span></button>
+        </div>
+
+        <!-- TAB 7: COLOR CONVERTER -->
+        <div class="tab-content" id="tab-colors">
+          <h3 id="lbl-color-title">Color Converter &amp; Palette</h3>
+          <p class="tool-desc" id="lbl-color-desc">Convert colors between HEX, RGB, and HSL formats. Pick a color or enter any value.</p>
+          <div class="color-picker-row">
+            <input type="color" id="color-picker" value="#06b6d4" class="color-swatch">
+            <input type="text" id="color-hex-input" class="code-input-field" placeholder="#06b6d4" value="#06b6d4">
+          </div>
+          <div class="color-preview-block" id="color-preview-block"></div>
+          <div class="color-fields">
+            <div class="color-field-group">
+              <label id="lbl-hex">HEX</label>
+              <div class="color-field-row">
+                <input type="text" id="out-hex" class="code-input-field" readonly>
+                <button class="btn-copy-hash" data-target-input="out-hex" title="Copy"><i class="fa-solid fa-copy"></i></button>
+              </div>
+            </div>
+            <div class="color-field-group">
+              <label id="lbl-rgb">RGB</label>
+              <div class="color-field-row">
+                <input type="text" id="out-rgb" class="code-input-field" readonly>
+                <button class="btn-copy-hash" data-target-input="out-rgb" title="Copy"><i class="fa-solid fa-copy"></i></button>
+              </div>
+            </div>
+            <div class="color-field-group">
+              <label id="lbl-hsl">HSL</label>
+              <div class="color-field-row">
+                <input type="text" id="out-hsl" class="code-input-field" readonly>
+                <button class="btn-copy-hash" data-target-input="out-hsl" title="Copy"><i class="fa-solid fa-copy"></i></button>
+              </div>
+            </div>
+            <div class="color-field-group">
+              <label id="lbl-css-var">CSS Var</label>
+              <div class="color-field-row">
+                <input type="text" id="out-cssvar" class="code-input-field" readonly>
+                <button class="btn-copy-hash" data-target-input="out-cssvar" title="Copy"><i class="fa-solid fa-copy"></i></button>
+              </div>
+            </div>
+          </div>
+          <div class="tool-divider"></div>
+          <h3 id="lbl-palette-title" style="margin-bottom:10px;">Generated Palette</h3>
+          <div class="palette-swatches" id="palette-swatches"></div>
+        </div>
+
+        <!-- NEW TAB: CSS GRADIENT GENERATOR -->
+        <div class="tab-content" id="tab-gradient">
+          <h3 id="lbl-gradient-title">CSS Gradient Generator</h3>
+          <div class="tool-section-box">
+            <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+              <div style="flex: 1;">
+                <label id="lbl-gradient-type" style="font-size: 0.76rem; display: block; margin-bottom: 4px;">Type</label>
+                <select id="gradient-type" class="code-input-field" style="width: 100%;">
+                  <option value="linear">Linear</option>
+                  <option value="radial">Radial</option>
+                  <option value="conic">Conic</option>
+                </select>
+              </div>
+              <div id="gradient-angle-container" style="flex: 1;">
+                <label id="lbl-gradient-angle" style="font-size: 0.76rem; display: block; margin-bottom: 4px;">Angle (deg)</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <input type="range" id="gradient-angle" min="0" max="360" value="90" style="flex: 1; cursor: pointer;">
+                  <span id="gradient-angle-val" style="font-family: var(--font-mono); font-size: 0.76rem; min-width: 35px;">90°</span>
+                </div>
+              </div>
+            </div>
+
+            <label style="font-size: 0.76rem; display: block; margin-bottom: 8px;" id="lbl-gradient-stops">Color Stops</label>
+            <div id="gradient-stops-list" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;">
+              <!-- stops dynamically rendered here -->
+            </div>
+            <button class="btn btn-secondary" id="btn-gradient-add-stop" style="width: 100%; margin-bottom: 16px;">
+              <i class="fa-solid fa-plus"></i> <span id="lbl-gradient-add">Add Color Stop</span>
+            </button>
+          </div>
+
+          <div class="tool-divider" style="margin: 16px 0;"></div>
+
+          <h4 id="lbl-gradient-presets" style="font-size: 0.8rem; font-weight:700; color: var(--text-muted); margin-bottom: 8px;">Presets</h4>
+          <div id="gradient-presets" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px;">
+            <!-- presets dynamically rendered here -->
+          </div>
+
+          <div class="gradient-preview-wrapper" style="border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; background: #121824; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;">
+            <div id="gradient-preview-card" style="width: 100%; height: 120px; border-radius: 8px; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);"></div>
+          </div>
+        </div>
+
+        <!-- NEW TAB: CSS BOX & TEXT SHADOW BUILDER -->
+        <div class="tab-content" id="tab-shadow">
+          <h3 id="lbl-shadow-title">CSS Shadow Builder</h3>
+          
+          <div class="tool-section-box">
+            <div class="editor-subtabs" id="shadow-type-tabs" style="margin-bottom: 12px;">
+              <button class="subtab-btn active" data-shadow-type="box" id="subtab-lbl-box-shadow">Box Shadow</button>
+              <button class="subtab-btn" data-shadow-type="text" id="subtab-lbl-text-shadow">Text Shadow</button>
+            </div>
+            
+            <div class="shadow-controls" style="display: flex; flex-direction: column; gap: 10px; font-size: 0.76rem;">
+              <div class="slider-group">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span id="lbl-sh-x">Offset X:</span>
+                  <span id="sh-x-val" class="detail-val" style="color:var(--accent-cyan); font-family:var(--font-mono);">10px</span>
+                </div>
+                <input type="range" id="sh-x" min="-50" max="50" value="10" style="width:100%; cursor:pointer;">
+              </div>
+              
+              <div class="slider-group">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span id="lbl-sh-y">Offset Y:</span>
+                  <span id="sh-y-val" class="detail-val" style="color:var(--accent-cyan); font-family:var(--font-mono);">10px</span>
+                </div>
+                <input type="range" id="sh-y" min="-50" max="50" value="10" style="width:100%; cursor:pointer;">
+              </div>
+
+              <div class="slider-group">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span id="lbl-sh-blur">Blur Radius:</span>
+                  <span id="sh-blur-val" class="detail-val" style="color:var(--accent-cyan); font-family:var(--font-mono);">15px</span>
+                </div>
+                <input type="range" id="sh-blur" min="0" max="100" value="15" style="width:100%; cursor:pointer;">
+              </div>
+
+              <div class="slider-group" id="sh-spread-container">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span id="lbl-sh-spread">Spread Radius:</span>
+                  <span id="sh-spread-val" class="detail-val" style="color:var(--accent-cyan); font-family:var(--font-mono);">0px</span>
+                </div>
+                <input type="range" id="sh-spread" min="-50" max="50" value="0" style="width:100%; cursor:pointer;">
+              </div>
+
+              <div class="slider-group">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span id="lbl-sh-opacity">Shadow Opacity:</span>
+                  <span id="sh-opacity-val" class="detail-val" style="color:var(--accent-cyan); font-family:var(--font-mono);">30%</span>
+                </div>
+                <input type="range" id="sh-opacity" min="0" max="100" value="30" style="width:100%; cursor:pointer;">
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                <span id="lbl-sh-color">Shadow Color:</span>
+                <input type="color" id="sh-color" value="#000000" style="width:48px; height:28px; border:none; border-radius:6px; cursor:pointer; background:none;">
+              </div>
+
+              <div id="sh-inset-container" style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+                <input type="checkbox" id="sh-inset" style="cursor: pointer;">
+                <label for="sh-inset" id="lbl-sh-inset" style="cursor: pointer;">Inset Shadow</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="tool-divider" style="margin: 16px 0;"></div>
+
+          <div class="shadow-preview-wrapper" style="border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; background: #1e293b; display: flex; justify-content: center; align-items: center; min-height: 180px; overflow: hidden; position: relative;">
+            <div id="shadow-preview-box" style="width: 120px; height: 120px; background: #0ea5e9; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 0.8rem; font-weight: 700; color: white; text-align: center; transition: all 0.1s ease; padding: 12px; box-sizing: border-box;">
+              <span id="shadow-preview-text">Box Shadow</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 8: REGEX TESTER -->
+        <div class="tab-content" id="tab-regex">
+          <h3 id="lbl-regex-title">Live Regex Tester</h3>
+          <p class="tool-desc" id="lbl-regex-desc">Write a pattern and test it in real time. Matches are highlighted instantly.</p>
+          <div class="regex-pattern-row">
+            <span class="regex-delimiter">/</span>
+            <input type="text" id="regex-pattern" class="code-input-field" placeholder="([a-z]+)\d+" style="flex:1;">
+            <span class="regex-delimiter">/</span>
+            <input type="text" id="regex-flags" class="code-input-field regex-flags" placeholder="gi" value="gi">
+          </div>
+          <div class="regex-info-row">
+            <span id="regex-match-count" class="regex-badge">0 matches</span>
+            <span id="regex-error-msg" class="regex-error"></span>
+          </div>
+          <textarea id="regex-test-input" class="code-textarea" spellcheck="false" placeholder="Enter test text here...
+The quick brown fox123 jumped over the lazy dog456 and ran past cat789."></textarea>
+          <div id="regex-highlighted" class="regex-highlighted-box"></div>
+        </div>
+
+        <!-- TAB 9: JWT DECODER -->
+        <div class="tab-content" id="tab-jwt">
+          <h3 id="lbl-jwt-title">JWT Token Decoder</h3>
+          <p class="tool-desc" id="lbl-jwt-desc">Decode any JSON Web Token offline. Paste a full JWT to inspect its header, payload, and verify the signature structure.</p>
+          <textarea id="jwt-input" class="code-textarea small-height" spellcheck="false" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlN0dWRpb3MtUHJvIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"></textarea>
+          <button class="btn btn-primary" id="btn-jwt-decode" style="width:100%; margin-top:10px;"><i class="fa-solid fa-key"></i> <span id="lbl-jwt-btn">Decode JWT</span></button>
+          <div class="jwt-segments" id="jwt-segments" style="display:none; margin-top:16px;">
+            <div class="jwt-part jwt-header">
+              <div class="jwt-part-label"><i class="fa-solid fa-circle" style="color:#f59e0b;"></i> <span id="lbl-jwt-header">Header</span></div>
+              <pre class="jwt-pre" id="jwt-header-out"></pre>
+            </div>
+            <div class="jwt-part jwt-payload">
+              <div class="jwt-part-label"><i class="fa-solid fa-circle" style="color:#06b6d4;"></i> <span id="lbl-jwt-payload">Payload</span></div>
+              <pre class="jwt-pre" id="jwt-payload-out"></pre>
+            </div>
+            <div class="jwt-part jwt-sig">
+              <div class="jwt-part-label"><i class="fa-solid fa-circle" style="color:#8b5cf6;"></i> <span id="lbl-jwt-sig">Signature</span></div>
+              <pre class="jwt-pre" id="jwt-sig-out"></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 10: TEXT DIFF -->
+        <div class="tab-content" id="tab-diff">
+          <h3 id="lbl-diff-title">Text Diff Viewer</h3>
+          <p class="tool-desc" id="lbl-diff-desc">Compare two blocks of text line by line. Additions are green, removals are red.</p>
+          <div class="diff-inputs">
+            <div class="diff-col">
+              <label class="diff-label" id="lbl-diff-original">Original</label>
+              <textarea id="diff-original" class="code-textarea" spellcheck="false" placeholder="Paste original text here..."></textarea>
+            </div>
+            <div class="diff-col">
+              <label class="diff-label" id="lbl-diff-modified">Modified</label>
+              <textarea id="diff-modified" class="code-textarea" spellcheck="false" placeholder="Paste modified text here..."></textarea>
+            </div>
+          </div>
+          <button class="btn btn-primary" id="btn-diff-compare" style="width:100%; margin-top:10px;"><i class="fa-solid fa-code-compare"></i> <span id="lbl-diff-btn">Compare Texts</span></button>
+        </div>
+
+        <!-- NEW TAB: CODE SNIPPET MANAGER -->
+        <div class="tab-content" id="tab-snippets">
+          <h3 id="lbl-snippets-title">Code Snippet Manager</h3>
+          
+          <div class="tool-section-box">
+            <!-- Save New Snippet Form -->
+            <h4 id="lbl-snip-save-title" style="font-size: 0.8rem; font-weight:700; color: var(--text-muted); margin-bottom: 8px;">Save Snippet</h4>
+            <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.76rem; margin-bottom: 12px;">
+              <input type="text" id="snippet-title" class="code-input-field" placeholder="Snippet Title" style="width: 100%;">
+              <select id="snippet-category" class="code-input-field" style="width: 100%;">
+                <option value="General">General</option>
+                <option value="HTML">HTML</option>
+                <option value="CSS">CSS</option>
+                <option value="JavaScript">JavaScript</option>
+                <option value="SQL">SQL</option>
+                <option value="JSON">JSON</option>
+              </select>
+              <textarea id="snippet-code-input" class="code-textarea small-height" placeholder="Paste code to save..." style="height: 80px;"></textarea>
+              <button class="btn btn-primary" id="btn-snippet-save"><i class="fa-solid fa-save"></i> <span id="lbl-snippet-save-btn">Save Snippet</span></button>
+            </div>
+          </div>
+
+          <div class="tool-divider" style="margin: 16px 0;"></div>
+
+          <div class="tool-section-box">
+            <!-- Snippet List and Search -->
+            <h4 id="lbl-snip-list-title" style="font-size: 0.8rem; font-weight:700; color: var(--text-muted); margin-bottom: 8px;">Saved Snippets</h4>
+            <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.76rem; margin-bottom: 12px;">
+              <div style="display: flex; gap: 8px;">
+                <input type="text" id="snippet-search" class="code-input-field" placeholder="Search snippets..." style="flex: 1;">
+                <select id="snippet-filter-cat" class="code-input-field" style="width: 90px;">
+                  <option value="All">All</option>
+                  <option value="General">General</option>
+                  <option value="HTML">HTML</option>
+                  <option value="CSS">CSS</option>
+                  <option value="JavaScript">JavaScript</option>
+                  <option value="SQL">SQL</option>
+                  <option value="JSON">JSON</option>
+                </select>
+              </div>
+              <div id="snippets-list-container" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; padding: 4px; border: 1px solid var(--border-color); border-radius: 6px; background: #121824;">
+                <!-- Snippets dynamically rendered here -->
+              </div>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
+                <button class="btn btn-secondary" id="btn-snippets-export"><i class="fa-solid fa-file-export"></i> <span id="lbl-snip-export">Export</span></button>
+                <button class="btn btn-secondary" id="btn-snippets-import-trigger"><i class="fa-solid fa-file-import"></i> <span id="lbl-snip-import">Import</span></button>
+                <input type="file" id="snippets-import-file" style="display: none;" accept=".json">
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- RIGHT PANEL: Live Output & Previews -->
+    <section class="panel-right">
+      <div class="panel-header">
+        <h2 id="output-title"><i class="fa-solid fa-laptop-code"></i> Live Preview / Output</h2>
+        <button class="btn btn-icon" id="btn-copy-output" title="Copy Output"><i class="fa-solid fa-copy"></i></button>
+      </div>
+
+      <div class="panel-output-body">
+        <!-- Preview Screen (For Dev Playground) -->
+        <div class="output-container active" id="container-playground">
+          <iframe id="preview-frame" sandbox="allow-scripts"></iframe>
+          <div class="virtual-console">
+            <div class="console-header">
+              <span><i class="fa-solid fa-terminal"></i> Console Logs</span>
+              <button id="btn-clear-console" class="btn-clear-logs">Clear</button>
+            </div>
+            <div class="console-logs" id="console-logs"></div>
+          </div>
+        </div>
+
+        <!-- Base64 Media Preview & Code Embed Panel -->
+        <div class="output-container" id="container-base64">
+          <div class="base64-file-details" id="b64-file-details" style="display: none;">
+            <div class="detail-row"><span class="detail-label">File Name:</span> <span id="b64-name" class="detail-val">-</span></div>
+            <div class="detail-row"><span class="detail-label">File Type:</span> <span id="b64-type" class="detail-val">-</span></div>
+            <div class="detail-row"><span class="detail-label">Size:</span> <span id="b64-size" class="detail-val">-</span></div>
+          </div>
+          <button class="btn btn-secondary" id="btn-b64-download" style="width: 100%; margin-bottom: 16px; display: none;">
+            <i class="fa-solid fa-download"></i> <span id="lbl-b64-download">Download Decoded File</span>
+          </button>
+          
+          <h3 id="lbl-media-preview">Media Preview</h3>
+          <div class="media-preview-box" id="b64-media-preview">
+            <div class="preview-placeholder" id="b64-placeholder">No media decoded yet</div>
+          </div>
+
+          <h3 id="lbl-embed-title" style="margin-top: 16px;">Embed &amp; Share Code</h3>
+          <div class="embed-box">
+            <div class="embed-header">
+              <span id="lbl-data-uri">Data URI Code</span>
+              <button class="btn btn-icon btn-copy-embed" data-target="embed-datauri"><i class="fa-solid fa-copy"></i></button>
+            </div>
+            <textarea id="embed-datauri" class="code-textarea small-height" readonly></textarea>
+          </div>
+          
+          <div class="embed-box" style="margin-top: 10px;">
+            <div class="embed-header">
+              <span id="lbl-html-tag">HTML Tag Embed</span>
+              <button class="btn btn-icon btn-copy-embed" data-target="embed-htmltag"><i class="fa-solid fa-copy"></i></button>
+            </div>
+            <textarea id="embed-htmltag" class="code-textarea small-height" readonly></textarea>
+          </div>
+        </div>
+
+        <!-- Raw Code / Text Output (For Serialize, Minify, Utilities, Hash) -->
+        <div class="output-container" id="container-code">
+          <textarea id="code-output" class="code-textarea full-height" readonly placeholder="Output code will appear here..."></textarea>
+        </div>
+
+        <!-- Diff Output Panel -->
+        <div class="output-container" id="container-diff">
+          <div id="diff-output" class="diff-output-box"></div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <script src="../js/i18n.js"></script>
+  <script src="../js/main.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

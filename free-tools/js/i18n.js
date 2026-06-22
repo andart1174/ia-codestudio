@@ -7,6 +7,8 @@ const translations = {
     // Cards
     play_title: "Live Sandbox Playground",
     play_desc: "Un éditeur de code complet en temps réel avec prévisualisation en écran scindé. Presets Three.js 3D et CSS intégrés.",
+    omni_title: "OmniConvert Pro",
+    omni_desc: "La boîte à outils ultime pour développeurs. Éditeur de code live, convertisseurs de formats (JSON, XML, YAML), Base64, minificateur et utilitaires dans une interface premium.",
     text_title: "Text to Glassmorphic Card",
     text_desc: "Générez instantanément des composants HTML/CSS ultra-modernes à partir de simples textes avec effets de verre trempé.",
     tailwind_title: "Tailwind to CSS Converter",
@@ -96,6 +98,8 @@ const translations = {
     // Cards
     play_title: "Live Sandbox Playground",
     play_desc: "A complete real-time code editor with split-screen live preview. Pre-built Three.js 3D and CSS templates.",
+    omni_title: "OmniConvert Pro",
+    omni_desc: "The ultimate developer toolkit. Real-time code playground, format converters (JSON, XML, YAML), Base64 encoder/decoder, code minifier, and utility tools in a premium interface.",
     text_title: "Text to Glassmorphic Card",
     text_desc: "Instantly generate ultra-modern HTML/CSS card components from plain text with premium frosted glass styles.",
     tailwind_title: "Tailwind to CSS Converter",
