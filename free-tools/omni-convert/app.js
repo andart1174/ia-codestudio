@@ -1,3 +1,4 @@
+(function() {
 // OmniConvert Pro DevPlayground & Code Converter - Core Engine
 let currentLang = 'en';
 let activeTab = 'playground';
@@ -3939,3 +3940,4 @@ function renderSnippets() {
     container.appendChild(item);
   });
 }
+})();
