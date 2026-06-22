@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="fr" class="lang-fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comment Convertir des Fichiers JSON, XML, YAML et Base64 Hors Ligne | IA Code Studio</title>
+  <meta name="description" content="Apprenez à convertir vos fichiers JSON, XML, YAML et Base64 hors ligne en toute sécurité dans votre navigateur avec OmniConvert Pro d'IA Code Studio.">
+  <meta name="keywords" content="convertisseur json xml hors ligne, convertisseur yaml json offline, base64 encodeur decodeur local, generateur qr code securise, outils de developpement offline, client-side converter, data privacy developer, OmniConvert Pro, IA Code Studio">
+  <meta name="robots" content="index, follow">
+  
+  <!-- OpenGraph Cards -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ia-codestudio.com/how-to-convert-files-offline.html">
+  <meta property="og:title" content="How to Convert JSON, XML, YAML, and Base64 Offline Safely">
+  <meta property="og:description" content="Protect your sensitive developer data. Learn how to convert file formats locally in your browser with client-side tools.">
+  <meta property="og:image" content="https://ia-codestudio.com/logo-ia-codestudio.webp">
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --bg-dark: #070912;
+      --bg-card: rgba(17, 24, 39, 0.7);
+      --border-glass: rgba(255, 255, 255, 0.08);
+      --color-primary: #06b6d4;
+      --color-accent: #8b5cf6;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --glow-glow: 0 0 30px rgba(6, 182, 212, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 0%, #0f172a 0%, var(--bg-dark) 100%);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 20px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-glass);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .brand h1 {
+      font-size: 20px;
+      font-weight: 700;
+      background: linear-gradient(to right, #fff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .lang-toggle {
+      display: flex;
+      gap: 0.25rem;
+      background: rgba(0,0,0,0.3);
+      padding: 0.25rem;
+      border-radius: 20px;
+      border: 1px solid var(--border-glass);
+    }
+
+    .lang-btn {
+      background: transparent;
+      color: var(--text-muted);
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 16px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .lang-btn.active {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      border: 1px solid var(--border-glass);
+    }
+
+    .nav-btn {
+      padding: 10px 20px;
+      background: linear-gradient(135deg, var(--color-primary), #0891b2);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(6, 182, 212, 0.5);
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 60px auto;
+      padding: 0 24px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(6, 182, 212, 0.1);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      color: #22d3ee;
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    h2.main-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      background: linear-gradient(to right, #ffffff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 18px;
+      max-width: 700px;
+      margin: 0 auto 36px;
+    }
+
+    .guide-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: 16px;
+      padding: 40px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      margin-bottom: 40px;
+    }
+
+    h3 {
+      font-size: 24px;
+      margin-bottom: 16px;
+      color: #fff;
+    }
+
+    p {
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      font-size: 15px;
+    }
+
+    ol, ul {
+      margin-left: 20px;
+      margin-bottom: 24px;
+      color: var(--text-muted);
+    }
+
+    ol li, ul li {
+      margin-bottom: 12px;
+      padding-left: 8px;
+    }
+
+    ol li strong, ul li strong {
+      color: #fff;
+    }
+
+    .code-block {
+      background: #090d16;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-family: monospace;
+      color: #38bdf8;
+      overflow-x: auto;
+      margin-bottom: 24px;
+      font-size: 13px;
+    }
+
+    .alert {
+      background: rgba(139, 92, 246, 0.05);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 8px;
+      padding: 16px 20px;
+      color: #c084fc;
+      font-size: 14px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .alert i {
+      font-size: 18px;
+    }
+
+    .cta-container {
+      text-align: center;
+      margin-top: 60px;
+      padding: 40px;
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.05), rgba(139, 92, 246, 0.05));
+      border: 1px solid var(--border-glass);
+      border-radius: 20px;
+    }
+
+    .cta-container h4 {
+      font-size: 28px;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 24px;
+    }
+
+    .btn-sec {
+      padding: 12px 24px;
+      border: 1px solid var(--border-glass);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-sec:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    footer {
+      border-top: 1px solid var(--border-glass);
+      padding: 40px 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 100px;
+    }
+
+    /* Bilingual CSS Toggles */
+    html.lang-fr .en-only { display: none !important; }
+    html.lang-en .fr-only { display: none !important; }
+  </style>
+
+  <!-- Synchronous Head Script for SEO Localization and HTML class toggling -->
+  <script>
+    function getLangQuery() {
+      const urlParams = new URLSearchParams(window.location.search);
+      let lang = urlParams.get('lang');
+      if (!lang || (lang !== 'fr' && lang !== 'en')) {
+        lang = localStorage.getItem('hub_lang') || 'fr';
+      }
+      return lang;
+    }
+
+    const currentLang = getLangQuery();
+    document.documentElement.className = 'lang-' + currentLang;
+    document.documentElement.setAttribute('lang', currentLang);
+
+    // Apply translations to head titles and metas immediately
+    document.addEventListener('DOMContentLoaded', () => {
+      const titleEl = document.querySelector('title');
+      const metaDescEl = document.querySelector('meta[name="description"]');
+      if (currentLang === 'fr') {
+        titleEl.textContent = "Comment Convertir des Fichiers JSON, XML, YAML et Base64 Hors Ligne | IA Code Studio";
+        metaDescEl.setAttribute('content', "Apprenez à convertir vos fichiers JSON, XML, YAML et Base64 hors ligne en toute sécurité dans votre navigateur avec OmniConvert Pro d'IA Code Studio.");
+      } else {
+        titleEl.textContent = "How to Convert JSON, XML, YAML, and Base64 Offline Safely | IA Code Studio";
+        metaDescEl.setAttribute('content', "Learn how to securely convert JSON, XML, YAML, and Base64 files offline in your browser. Protect your data privacy with client-side converters from IA Code Studio.");
+      }
+
+      // Sync active state of buttons in DOM
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-lang') === currentLang) {
+          btn.classList.add('active');
+        }
+      });
+    });
+
+    function toggleLang(lang) {
+      localStorage.setItem('hub_lang', lang);
+      // Reload page with new query parameter for Google/Bing SEO compatibility
+      const url = new URL(window.location.href);
+      url.searchParams.set('lang', lang);
+      window.location.href = url.toString();
+    }
+  </script>
+
+  <!-- JSON-LD Structured Data Schema for Google (Bilingual Schema representation) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Convert Developer File Formats Offline (JSON, XML, YAML, Base64)",
+    "description": "Learn how to securely convert code structures and files locally in your web browser without risking data leaks to cloud servers.",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "name": "Open OmniConvert Pro",
+        "text": "Navigate to OmniConvert Pro on IA Code Studio. The entire application runs client-side inside your browser."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Select Converter Tool",
+        "text": "Choose your desired operation from the sidebar (e.g., JSON to XML, XML to JSON, YAML to JSON, Base64 Encoder/Decoder, or QR Code Generator)."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Input Code Data",
+        "text": "Paste your formatted text or load the file directly into the input editor block. Since no network requests are sent, your data remains fully offline."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Export & Copy Output",
+        "text": "Click the run button, inspect the compiled output, and copy or download the results instantly."
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="brand">
+      <div class="brand-logo"><i class="fa-solid fa-cubes"></i></div>
+      <h1 class="fr-only">IA Code Studio</h1>
+      <h1 class="en-only">IA Code Studio</h1>
+    </a>
+    
+    <div class="header-actions">
+      <!-- Language Switcher -->
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="fr" onclick="toggleLang('fr')">FR</button>
+        <button class="lang-btn" data-lang="en" onclick="toggleLang('en')">EN</button>
+      </div>
+
+      <!-- Action Button -->
+      <a href="free-tools/omni-convert/index.html" class="nav-btn fr-only">Lancer OmniConvert Pro 🚀</a>
+      <a href="free-tools/omni-convert/index.html" class="nav-btn en-only">Launch OmniConvert Pro 🚀</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <div class="hero">
+      <span class="badge"><i class="fa-solid fa-shield-halved"></i> 
+        <span class="fr-only">Sécurité 100% Locale / Client-side</span>
+        <span class="en-only">100% Client-Side / Secure & Local</span>
+      </span>
+      
+      <h2 class="main-title fr-only">Comment Convertir vos Fichiers Hors Ligne en Toute Sécurité</h2>
+      <h2 class="main-title en-only">How to Convert Your Files Offline Safely & Securely</h2>
+      
+      <p class="subtitle fr-only">Apprenez à convertir vos formats JSON, XML, YAML et Base64 directement dans votre navigateur. Évitez les fuites de données sur les serveurs cloud tiers.</p>
+      <p class="subtitle en-only">Learn how to convert JSON, XML, YAML, and Base64 formats directly in your browser. Stop risking data leaks to third-party cloud servers.</p>
+    </div>
+
+    <!-- WHY OFFLINE CONVERTERS -->
+    <div class="guide-card">
+      <h3 class="fr-only">Le Danger Invisible des Convertisseurs en Ligne Standard</h3>
+      <h3 class="en-only">The Invisible Danger of Standard Online Converters</h3>
+      
+      <p class="fr-only">La plupart des développeurs utilisent quotidiennement des outils de formatage en ligne rapides pour parser des structures de données (JSON, XML, secrets Base64, jetons JWT). Cependant, la majorité de ces sites gratuits envoient vos fichiers sur des serveurs distants, créant ainsi un risque majeur de fuites d'informations sensibles (clés d'API, données d'utilisateurs, logs de base de données).</p>
+      <p class="en-only">Most developers daily use quick online formatters to parse data structures (JSON, XML, Base64 secrets, JWT tokens). However, the majority of these free sites send your data inputs to remote servers, exposing API keys, personal customer details, and database credentials to potential data leaks.</p>
+      
+      <div class="alert">
+        <i class="fa-solid fa-circle-info"></i>
+        <span class="fr-only"><strong>Note de Sécurité :</strong> Notre suite OmniConvert Pro n'envoie JAMAIS vos données sur le réseau. Les algorithmes de conversion s'exécutent entièrement en JavaScript local dans votre navigateur (Client-side). Vous pouvez l'utiliser en déconnectant votre câble internet !</span>
+        <span class="en-only"><strong>Security Notice:</strong> Our OmniConvert Pro toolkit NEVER sends your inputs across the network. All parsing algorithms execute entirely in local JavaScript inside your browser (Client-side). You can even use it with your internet cable disconnected!</span>
+      </div>
+    </div>
+
+    <!-- STEP-BY-STEP OFFLINE CONVERSION -->
+    <div class="guide-card">
+      <h3 class="fr-only">Guide de Conversion Étape par Étape</h3>
+      <h3 class="en-only">Step-by-Step Conversion Guide</h3>
+      
+      <ol class="fr-only">
+        <li><strong>Lancez l'outil :</strong> Ouvrez <a href="free-tools/omni-convert/index.html" style="color:var(--color-primary);text-decoration:none;font-weight:600;">OmniConvert Pro</a> dans votre navigateur.</li>
+        <li><strong>Sélectionnez le module :</strong> Choisissez votre type de convertisseur dans la barre de navigation (ex. <em>JSON &lt;&gt; XML</em> ou <em>Base64</em>).</li>
+        <li><strong>Saisissez vos données :</strong> Collez votre texte brut ou votre code dans l'éditeur de gauche (intégrant des numéros de lignes dynamiques et la coloration syntaxique).</li>
+        <li><strong>Conversion instantanée :</strong> Les modifications s'exécutent en temps réel ou lors d'un clic. Copiez le résultat propre dans l'éditeur de droite en un clic.</li>
+      </ol>
+      <ol class="en-only">
+        <li><strong>Launch the Tool:</strong> Open <a href="free-tools/omni-convert/index.html" style="color:var(--color-primary);text-decoration:none;font-weight:600;">OmniConvert Pro</a> in your browser.</li>
+        <li><strong>Select the Module:</strong> Pick your required converter from the side navigation tabs (e.g. <em>JSON &lt;&gt; XML</em> or <em>Base64</em>).</li>
+        <li><strong>Enter Data:</strong> Paste your raw text or file inputs inside the left editor (equipped with dynamic line numbers and syntax highlighting).</li>
+        <li><strong>Instant Output:</strong> Converting runs in real time. Click once to copy the clean outputs directly from the right-hand editor.</li>
+      </ol>
+    </div>
+
+    <!-- DETAILS OF THE TOOLKIT -->
+    <div class="guide-card">
+      <h3 class="fr-only">Fonctionnalités Incluses dans OmniConvert Pro</h3>
+      <h3 class="en-only">Features Packed Inside OmniConvert Pro</h3>
+      
+      <ul class="fr-only">
+        <li><strong>JSON &lt;&gt; XML &lt;&gt; YAML :</strong> Nettoyez et structurez vos données d'un format à l'autre en gérant intelligemment les tableaux et les objets complexes.</li>
+        <li><strong>Base64 Encodeur &amp; Décodeur :</strong> Encodez vos chaînes ou décodez vos secrets de configuration d'environnement en toute sécurité, sans risque d'exposer vos jetons.</li>
+        <li><strong>Générateur de QR Codes Hors Ligne :</strong> Saisissez vos liens ou données et téléchargez l'image du code QR générée en local (Canvas HTML5).</li>
+        <li><strong>Générateur de Dégradés CSS :</strong> Configurez visuellement vos gradients, ajustez la direction, le flou et exportez le code CSS pour vos designs Web.</li>
+      </ul>
+      <ul class="en-only">
+        <li><strong>JSON &lt;&gt; XML &lt;&gt; YAML:</strong> Format and convert data structures back and forth, with full support for arrays and nested objects.</li>
+        <li><strong>Base64 Encoder &amp; Decoder:</strong> Securely encode strings or decode sensitive environment configuration variables locally without risking token exposure.</li>
+        <li><strong>Offline QR Code Generator:</strong> Input links or configuration texts and download the generated QR Code image generated client-side via HTML5 Canvas.</li>
+        <li><strong>CSS Gradient Designer:</strong> Visually configure color stops, blur, angles, and export clean CSS syntax for frontend development.</li>
+      </ul>
+
+      <p class="fr-only" style="margin-top:20px; margin-bottom:10px;">Exemple d'une structure de conversion typique :</p>
+      <p class="en-only" style="margin-top:20px; margin-bottom:10px;">Example of a typical offline conversion flow:</p>
+      <div class="code-block">
+        // Input JSON: {"name": "IA Code Studio", "type": "Workspace"}
+        // Output XML: &lt;root&gt;&lt;name&gt;IA Code Studio&lt;/name&gt;&lt;type&gt;Workspace&lt;/type&gt;&lt;/root&gt;
+      </div>
+    </div>
+
+    <!-- CTA CALL TO ACTION -->
+    <div class="cta-container">
+      <h4 class="fr-only">Besoin de convertir des données sensibles ?</h4>
+      <h4 class="en-only">Need to Convert Sensitive Code Data?</h4>
+      
+      <p class="fr-only">Accédez à notre espace de travail gratuit, moderne et garanti 100% hors ligne pour formater vos fichiers.</p>
+      <p class="en-only">Access our free, modern, and guaranteed 100% offline workspace to format your data structures.</p>
+      
+      <div class="btn-group">
+        <a href="free-tools/omni-convert/index.html" class="nav-btn fr-only">Lancer OmniConvert Pro ⚡</a>
+        <a href="free-tools/omni-convert/index.html" class="nav-btn en-only">Launch OmniConvert Pro ⚡</a>
+        
+        <a href="index.html" class="btn-sec fr-only">Retour à l'Accueil</a>
+        <a href="index.html" class="btn-sec en-only">Back to Home</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>v1.0 &copy; 2026 IA Code Studio. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

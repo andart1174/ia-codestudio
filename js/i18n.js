@@ -93,7 +93,9 @@ const translations = {
     studio_share_btn: "Publier dans le Feed 🚀",
     studio_saving: "Enregistrement...",
     studio_synced: "Synchronisé",
-    studio_premium_error: "Accès Premium requis pour coder dans le Studio."
+    studio_premium_error: "Accès Premium requis pour coder dans le Studio.",
+    app8_title: "OMNICONVERT PRO",
+    app8_desc: "La boîte à outils ultime pour développeurs : convertisseur hors ligne ultra-sécurisé (JSON, XML, YAML, Base64), générateur de QR codes et éditeur de gradients CSS. 100% gratuit et local."
   },
   en: {
     nav_title: "IA CODE STUDIO",
@@ -189,6 +191,8 @@ const translations = {
     studio_share_btn: "Share to Feed 🚀",
     studio_saving: "Saving...",
     studio_synced: "Synced",
-    studio_premium_error: "Premium access required to code in Studio."
+    studio_premium_error: "Premium access required to code in Studio.",
+    app8_title: "OMNICONVERT PRO",
+    app8_desc: "The ultimate developer toolkit: ultra-secure offline converter (JSON, XML, YAML, Base64), QR code generator, and CSS gradient editor. 100% free and client-side."
   }
 };

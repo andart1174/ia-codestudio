@@ -911,6 +911,14 @@
             .switch-toggle input:checked + .slider-toggle-round:before {
                 transform: translateX(22px);
             }
+            /* New Badge and Featured Card Styling */
+            .badge-new {
+                animation: pulseGlowBadge 2s infinite ease-in-out;
+            }
+            @keyframes pulseGlowBadge {
+                0%, 100% { transform: scale(1); opacity: 0.9; box-shadow: 0 0 10px rgba(6, 182, 212, 0.4); }
+                50% { transform: scale(1.05); opacity: 1; box-shadow: 0 0 20px rgba(139, 92, 246, 0.7); }
+            }
         </style>
         
         <div class="premium-portal-wrap">
@@ -2276,6 +2284,15 @@
         <!-- Applications Showcase -->
         <section class="showcase" style="justify-content: center; max-width: 900px; margin: 0 auto 50px; gap: 24px;">
             
+            <!-- Featured App: OmniConvert Pro -->
+            <article class="app-card reveal card-aura" style="width: 100%; border: 1px solid rgba(6, 182, 212, 0.4); box-shadow: 0 0 25px rgba(6, 182, 212, 0.15);">
+                <div class="card-icon" style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(139, 92, 246, 0.2)); border-color: rgba(6, 182, 212, 0.4);">🚀</div>
+                <div class="badge-new" style="position: absolute; top: 20px; right: 20px; background: linear-gradient(90deg, #06b6d4, #8b5cf6); color: #fff; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 20px; letter-spacing: 0.5px; text-transform: uppercase;">New</div>
+                <h2 data-i18n="app8_title">OMNICONVERT PRO</h2>
+                <p data-i18n="app8_desc">La boîte à outils ultime pour développeurs : convertisseur hors ligne ultra-sécurisé (JSON, XML, YAML, Base64), générateur de QR codes et éditeur de gradients CSS. 100% gratuit et local.</p>
+                <a href="free-tools/omni-convert/index.html" class="btn-launch" style="background: linear-gradient(135deg, var(--aura-cyan), var(--aura-violet)); border-color: transparent; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);" data-i18n="btn_launch">Lancer l'Application</a>
+            </article>
+
             <!-- App: IA Architecte cea bunaultra mod111 -->
             <article class="app-card reveal" style="width: 100%;">
                 <div class="card-icon">🏛️</div>
