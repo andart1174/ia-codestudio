@@ -601,23 +601,86 @@ function updateUILanguage() {
 // -------------------------------------------------------------
 // Main Tabs Control
 // -------------------------------------------------------------
+const tabSeoTitles = {
+  playground: "HTML/CSS/JS Sandbox & Real-time Playground",
+  base64: "Base64 Encoder & Decoder (Text & Files)",
+  serialize: "JSON, XML, and YAML Data Converter",
+  minify: "JavaScript & CSS Minifier & Obfuscator",
+  utilities: "Unix Timestamp, Number Base & Password Generators",
+  qrcode: "Offline QR Code Generator with Custom Colors",
+  hash: "MD5, SHA-1, SHA-256 Offline Hash Calculator",
+  colors: "HEX, RGB, HSL Color Converter & Palette Builder",
+  gradient: "CSS Gradient Builder & Code Generator",
+  shadow: "Box-Shadow & Text-Shadow CSS Designer",
+  regex: "Regular Expression (RegEx) Tester & Matcher",
+  jwt: "JWT Decoder & Token Debugger offline",
+  diff: "Visual Text Diff & Code Comparison tool",
+  snippets: "Developer Code Snippet Manager"
+};
+
+const tabSeoTitlesFr = {
+  playground: "Sandbox HTML/CSS/JS & Bac à Sable en Temps Réel",
+  base64: "Convertisseur Base64 (Texte & Fichiers)",
+  serialize: "Convertisseur de Données JSON, XML, YAML",
+  minify: "Minificateur & Obfuscateur JavaScript & CSS",
+  utilities: "Générateur de Mots de Passe, Base Numérique & Timestamp",
+  qrcode: "Générateur de Codes QR Personnalisés",
+  hash: "Calculateur de Hachage MD5, SHA-1, SHA-256",
+  colors: "Convertisseur de Couleur HEX, RGB, HSL",
+  gradient: "Générateur & Éditeur de Dégradés CSS",
+  shadow: "Concepteur d'Ombres Box-Shadow & Text-Shadow CSS",
+  regex: "Testeur & Validateur de RegEx (Expressions Régulières)",
+  jwt: "Décodeur de Jeton JWT Hors Ligne",
+  diff: "Comparateur de Texte & Outil Diff Visuel",
+  snippets: "Gestionnaire de Snippets & Bibliothèque de Code"
+};
+
+function updatePageTitleAndHash(tabName) {
+  // Update hash (avoid pushing history state on initial load)
+  if (window.location.hash.substring(1) !== tabName) {
+    history.replaceState(null, null, '#' + tabName);
+  }
+  
+  // Update title
+  const suffix = "OmniConvert Pro";
+  const titles = currentLang === 'fr' ? tabSeoTitlesFr : tabSeoTitles;
+  if (titles[tabName]) {
+    document.title = `${titles[tabName]} — ${suffix}`;
+  } else {
+    document.title = `${suffix} - Ultimate Developer Toolkit`;
+  }
+}
+
+function switchToTab(tabName) {
+  activeTab = tabName;
+  const tabs = document.querySelectorAll('.tab-btn');
+  tabs.forEach(t => t.classList.remove('active'));
+  const activeTabBtn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
+  if (activeTabBtn) activeTabBtn.classList.add('active');
+  
+  document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+  const activeContent = document.getElementById(`tab-${tabName}`);
+  if (activeContent) activeContent.classList.add('active');
+  
+  showOutputContainerForTab(tabName);
+}
+
 function setupTabSwitching() {
   const tabs = document.querySelectorAll('.tab-btn');
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       const tabName = tab.getAttribute('data-tab');
-      activeTab = tabName;
-      
-      tabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      
-      document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-      const activeContent = document.getElementById(`tab-${tabName}`);
-      if (activeContent) activeContent.classList.add('active');
-      
-      showOutputContainerForTab(tabName);
+      switchToTab(tabName);
+      updatePageTitleAndHash(tabName);
     });
   });
+  
+  // Load tab from URL hash on start
+  const hash = window.location.hash.substring(1);
+  if (hash) {
+    switchToTab(hash);
+    updatePageTitleAndHash(hash);
+  }
 }
 
 function showOutputContainerForTab(tabName) {
