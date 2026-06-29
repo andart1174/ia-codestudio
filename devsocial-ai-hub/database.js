@@ -236,6 +236,7 @@ return function() {
   let postListeners = [];
   let challengeListeners = [];
   let configListeners = [];
+  let firestoreIdMap = {};
 
   // Compression/Decompression utilities (using native browser APIs)
   async function compressString(str) {
@@ -358,6 +359,9 @@ return function() {
                    const promises = [];
                    snapshot.forEach(doc => {
                      const post = doc.data();
+                     if (post && post.id) {
+                       firestoreIdMap[String(post.id)] = doc.id;
+                     }
                      postsList.push(post);
                      if (post.compressedCode && !post.code) {
                        promises.push(
@@ -527,7 +531,8 @@ return function() {
     
     likePost: function(postId) {
       if (useFirestore && db) {
-        db.collection('devsocial_posts').doc(String(postId)).update({
+        const docId = firestoreIdMap[String(postId)] || String(postId);
+        db.collection('devsocial_posts').doc(docId).update({
           likes: firebase.firestore.FieldValue.increment(1)
         }).catch(err => {
           console.error("Error liking post in Firestore, falling back to LocalStorage:", err);
@@ -554,7 +559,8 @@ return function() {
     
     reportPost: function(postId) {
       if (useFirestore && db) {
-        db.collection('devsocial_posts').doc(String(postId)).update({
+        const docId = firestoreIdMap[String(postId)] || String(postId);
+        db.collection('devsocial_posts').doc(docId).update({
           reports: firebase.firestore.FieldValue.increment(1)
         }).catch(err => {
           console.error("Error reporting post in Firestore, falling back to LocalStorage:", err);
@@ -581,7 +587,8 @@ return function() {
     
     addComment: function(postId, comment) {
       if (useFirestore && db) {
-        db.collection('devsocial_posts').doc(String(postId)).update({
+        const docId = firestoreIdMap[String(postId)] || String(postId);
+        db.collection('devsocial_posts').doc(docId).update({
           comments: firebase.firestore.FieldValue.arrayUnion(comment)
         }).catch(err => {
           console.error("Error adding comment in Firestore, falling back to LocalStorage:", err);
@@ -620,7 +627,8 @@ return function() {
       localStorage.setItem('devsocial_posts', JSON.stringify(posts));
 
       if (useFirestore && db) {
-        db.collection('devsocial_posts').doc(String(postId)).delete()
+        const docId = firestoreIdMap[String(postId)] || String(postId);
+        db.collection('devsocial_posts').doc(docId).delete()
           .then(() => {
             notifyPostListeners();
           })
