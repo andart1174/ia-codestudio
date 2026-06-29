@@ -38,29 +38,78 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "IA Code Studio",
-      "operatingSystem": "All",
-      "applicationCategory": "DeveloperApplication",
-      "offers": {
-        "@type": "Offer",
-        "price": "10.00",
-        "priceCurrency": "USD"
-      },
-      "description": "AI-powered web development platform and Three.js 3D WebGL code generator. Features co-coding multiplayer rooms, SVG/DXF to 3D extruders, STL/GLB/OBJ imports, WebRTC voice chat, and 1-click cloud deployments.",
-      "featureList": [
-        "Three.js & WebGL Code Generator",
-        "AI Co-pilot Developer Chatbot",
-        "Multiplayer Co-coding Sandbox Rooms",
-        "Integrated WebRTC Voice Chat & Audio",
-        "3D Laser Pointer Cursors",
-        "Vector SVG / DXF 3D Extruder Modeler",
-        "STL, GLB, and OBJ 3D File Importer",
-        "Automatic French & English Bilingual Translation Engine",
-        "1-Click ZIP Exports & Netlify Deployment"
-      ],
-      "releaseNotes": "https://ia-codestudio.com/#faq",
-      "screenshot": "https://ia-codestudio.com/og-social-banner.png"
+      "@graph": [
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://ia-codestudio.com/#software",
+          "name": "IA Code Studio",
+          "url": "https://ia-codestudio.com",
+          "image": "https://ia-codestudio.com/logo-ia-codestudio.webp",
+          "operatingSystem": "Web Browser, Windows, macOS, Linux, iOS, Android",
+          "applicationCategory": "DeveloperApplication",
+          "inLanguage": ["fr", "en"],
+          "description": "Plateforme IA créative tout-en-un : Générateur 3D WebGL Three.js, studio publicitaire animé, co-coding multijoueur et 30+ outils web gratuits.",
+          "offers": [
+            {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD",
+              "name": "Accès Gratuit / Free Access"
+            },
+            {
+              "@type": "Offer",
+              "price": "10.00",
+              "priceCurrency": "USD",
+              "priceSpecification": {
+                "@type": "UnitPriceSpecification",
+                "referenceQuantity": {
+                  "@type": "QuantitativeValue",
+                  "value": "1",
+                  "unitCode": "MON"
+                }
+              },
+              "name": "Abonnement Premium Pro"
+            }
+          ],
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "reviewCount": "148",
+            "bestRating": "5",
+            "worstRating": "1"
+          }
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://ia-codestudio.com/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Est-ce que l'IA Architecte génère du code propre et exportable ?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Oui ! Le code généré est du HTML/CSS/JS pur, sans dépendances lourdes. Exportez en un clic en ZIP ou déployez directement sur Netlify."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Quels formats 3D sont supportés dans Studio 3D/4D Pro ?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Studio 3D/4D Pro supporte les fichiers STL, GLB, GLTF et OBJ avec prévisualisation temps réel et animations WebGL."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Combien de personnes peuvent coder ensemble dans DevSocial AI Hub ?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Plusieurs développeurs peuvent rejoindre la même salle de co-coding simultanément avec chat vocal WebRTC et pointeurs laser 3D temps réel."
+              }
+            }
+          ]
+        }
+      ]
     }
     </script>
 
