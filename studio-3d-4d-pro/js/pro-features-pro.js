@@ -96,10 +96,13 @@
     let ptsData = "";
     let depth = 30;
 
+    let modFormat = "hero-forge";
+
     // Get active model properties if available
     if (window.SketchExtruder && typeof window.SketchExtruder.getActiveModel === 'function') {
       const act = window.SketchExtruder.getActiveModel();
       if (act) {
+        if (act.format) modFormat = act.format;
         if (act.colorHex) colorHex = act.colorHex;
         if (act.depth) depth = act.depth;
         if (act.points && Array.isArray(act.points)) {
@@ -118,13 +121,14 @@
     try {
       if (objData) localStorage.setItem('ia_ar_obj_data', objData);
       localStorage.setItem('ia_ar_color', colorHex);
+      localStorage.setItem('ia_ar_mod', modFormat);
       if (ptsData) localStorage.setItem('ia_ar_pts', ptsData);
       localStorage.setItem('ia_ar_depth', depth);
     } catch(e){}
 
     // Build URL for QR code and sharing
     let arViewerUrl = "https://ia-codestudio.com/studio-3d-4d-pro/ar-viewer.html";
-    let urlParams = `?c=${encodeURIComponent(colorHex)}&d=${depth}`;
+    let urlParams = `?mod=${encodeURIComponent(modFormat)}&c=${encodeURIComponent(colorHex)}&d=${depth}`;
     if (ptsData) {
       urlParams += `&p=${encodeURIComponent(ptsData)}`;
     }

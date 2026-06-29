@@ -22,8 +22,8 @@
         
         /* Center Model Viewers */
         #model-viewer-container { width: 100%; height: 100%; position: relative; }
-        canvas { width: 100%; height: 100%; display: block; }
-        model-viewer { width: 100%; height: 100%; background: radial-gradient(circle at center, #1e1b4b 0%, #090d16 100%); display: none; }
+        model-viewer { width: 100%; height: 100%; background: radial-gradient(circle at center, #1e1b4b 0%, #090d16 100%); display: block; }
+        canvas { width: 100%; height: 100%; display: none; }
 
         /* Bottom Controls */
         .bottom-controls { position: absolute; bottom: 24px; left: 0; right: 0; z-index: 50; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 0 20px; pointer-events: auto; }
@@ -62,14 +62,13 @@
         <div class="top-bar">
             <div class="brand-pill">
                 <img src="../logo-ia-codestudio.webp" alt="Logo">
-                <span>IA CODE STUDIO — CUSTOM 3D SCENE</span>
+                <span id="ar-title-label">IA CODE STUDIO — WEBAR CAMERA ENGINE</span>
             </div>
         </div>
 
         <div id="model-viewer-container">
-            <canvas id="three-canvas"></canvas>
             <model-viewer id="mv" 
-                src=""
+                src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/RobotExpressive/glTF-Binary/RobotExpressive.glb"
                 alt="Custom 3D Model AR"
                 ar 
                 ar-modes="webxr scene-viewer quick-look" 
@@ -77,37 +76,75 @@
                 auto-rotate 
                 shadow-intensity="1.5"
                 exposure="1.2">
+                <button slot="ar-button" id="native-ar-slot-btn" style="display:none;"></button>
             </model-viewer>
+            <canvas id="three-canvas"></canvas>
         </div>
 
         <div class="bottom-controls">
             <button class="ar-trigger-btn" onclick="triggerAR()">
-                📱 Placer dans votre pièce (AR)
+                📷 Ouvrir Caméra AR (Placer dans votre pièce)
             </button>
-            <div class="footer-pill">✨ Scène 3D Personnalisée temps réel</div>
+            <div class="footer-pill">✨ Scène 3D Personnalisée v3</div>
         </div>
     </div>
 
     <script>
         function triggerAR() {
             const mv = document.getElementById('mv');
-            if (mv && mv.style.display !== 'none' && typeof mv.activateAR === 'function') {
+            if (mv && typeof mv.activateAR === 'function') {
                 mv.activateAR();
-            } else {
-                alert("🎮 Mode interactif 3D WebGL activé ! Utilisez votre doigt ou la souris pour faire pivoter la forme 3D sous tous les angles.");
+            } else if (mv) {
+                const slotBtn = mv.shadowRoot ? mv.shadowRoot.querySelector('#ar-button') : document.getElementById('native-ar-slot-btn');
+                if (slotBtn) slotBtn.click();
+                else alert("📱 Mode AR Caméra : Veuillez utiliser Safari sur iOS ou Chrome sur Android pour activer la caméra dans votre pièce.");
             }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            initCustomScene();
+            initARViewer();
         });
 
-        function initCustomScene() {
+        function initARViewer() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const modParam = urlParams.get('mod') || localStorage.getItem('ia_ar_mod') || 'hero-forge';
+            const hexColorParam = urlParams.get('c') || localStorage.getItem('ia_ar_color') || '#00ffcc';
+            const mv = document.getElementById('mv');
+            const label = document.getElementById('ar-title-label');
+
+            // Model Catalog URLs for native mobile AR camera experience
+            const modelCatalog = {
+                'hero-forge': 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/RobotExpressive/glTF-Binary/RobotExpressive.glb',
+                'robot': 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/RobotExpressive/glTF-Binary/RobotExpressive.glb',
+                'steampunk-chrono': 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/AntiqueCamera/glTF-Binary/AntiqueCamera.glb',
+                'clock-ultra': 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/AntiqueCamera/glTF-Binary/AntiqueCamera.glb',
+                'astronaut': 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Astronaut/glTF-Binary/Astronaut.glb',
+                'default': 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/RobotExpressive/glTF-Binary/RobotExpressive.glb'
+            };
+
+            if (modParam === 'hero-forge' || modParam === 'robot') {
+                if (label) label.textContent = "IA CODE STUDIO — HERO FORGE 3D (AR)";
+                if (mv) mv.src = modelCatalog['hero-forge'];
+            } else if (modParam.includes('chrono') || modParam.includes('clock')) {
+                if (label) label.textContent = "IA CODE STUDIO — STEAMPUNK CHRONO (AR)";
+                if (mv) mv.src = modelCatalog['steampunk-chrono'];
+            } else if (modParam === 'extrude' || modParam === 'custom' || modParam === '3d-text') {
+                if (label) label.textContent = "IA CODE STUDIO — CUSTOM EXTRUSION (AR)";
+                // Render Three.js WebGL canvas for custom extrusion if requested
+                initThreeWebGLFallback(hexColorParam, urlParams);
+            } else {
+                if (mv) mv.src = modelCatalog[modParam] || modelCatalog['default'];
+            }
+        }
+
+        function initThreeWebGLFallback(hexColorParam, urlParams) {
+            const mv = document.getElementById('mv');
             const canvas = document.getElementById('three-canvas');
             if (!canvas) return;
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const hexColorParam = urlParams.get('c') || localStorage.getItem('ia_ar_color') || '#00ffcc';
+            if (mv) mv.style.display = 'none';
+            canvas.style.display = 'block';
+
             const depthParam = parseFloat(urlParams.get('d')) || parseFloat(localStorage.getItem('ia_ar_depth')) || 30;
             const pointsParam = urlParams.get('p') || localStorage.getItem('ia_ar_pts');
             const objDataStored = localStorage.getItem('ia_ar_obj_data');
@@ -185,7 +222,6 @@
                 } catch(e){}
             }
 
-            // Default fallback organic 3D cushion mesh if no custom parameters provided
             if (!mainMesh) {
                 const shape = new THREE.Shape();
                 shape.moveTo(-40, -20);
@@ -198,23 +234,20 @@
                 scene.add(mainMesh);
             }
 
-            // 🚀 AUTOMATIC 3D AUTO-FIT & AUTO-CENTERING FOR PERFECT MOBILE & DESKTOP FRAMING
+            // 🚀 AUTOMATIC 3D AUTO-FIT & AUTO-CENTERING
             if (mainMesh) {
                 const box = new THREE.Box3().setFromObject(mainMesh);
                 const center = box.getCenter(new THREE.Vector3());
                 const size = box.getSize(new THREE.Vector3());
 
-                // Center mesh at origin
                 mainMesh.position.x -= center.x;
                 mainMesh.position.y -= center.y;
                 mainMesh.position.z -= center.z;
 
                 const maxDim = Math.max(size.x, size.y, size.z);
                 const fov = camera.fov * (Math.PI / 180);
-                let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
-                cameraZ *= 1.8; // 80% padding so model is comfortably framed
+                let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 1.8;
 
-                // Adjust for vertical mobile screens
                 if (camera.aspect < 1) {
                     cameraZ /= camera.aspect;
                 }
