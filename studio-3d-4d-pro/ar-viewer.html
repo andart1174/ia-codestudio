@@ -2,61 +2,145 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>IA Code Studio — WebAR Instant Preview</title>
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body, html { width: 100%; height: 100%; overflow: hidden; background: #090d16; font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #fff; }
-        #ar-container { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-        model-viewer { width: 100%; height: 100%; background-color: #090d16; --poster-color: transparent; }
-        .ar-overlay { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 12px; width: 90%; max-width: 400px; text-align: center; }
-        .ar-btn { background: linear-gradient(135deg, #8b5cf6, #06b6d4); color: #fff; border: none; border-radius: 50px; padding: 16px 32px; font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4); display: inline-flex; align-items: center; gap: 10px; text-decoration: none; transition: transform 0.2s; }
-        .ar-btn:active { transform: translateX(-50%) scale(0.96); }
-        .ar-badge { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.15); backdrop-filter: blur(12px); padding: 8px 16px; border-radius: 20px; font-size: 12px; color: #94a3b8; }
-        .header-brand { position: absolute; top: 20px; left: 20px; z-index: 10; display: flex; align-items: center; gap: 10px; background: rgba(15, 23, 42, 0.7); padding: 8px 16px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
-        .header-brand img { width: 24px; height: 24px; border-radius: 50%; }
-        .header-brand span { font-size: 13px; font-weight: 700; letter-spacing: 0.5px; color: #f8fafc; }
+        
+        #app-wrapper { width: 100%; height: 100%; position: relative; display: flex; flex-direction: column; }
+        
+        /* Top Bar */
+        .top-bar { position: absolute; top: 16px; left: 16px; right: 16px; z-index: 50; display: flex; justify-content: space-between; align-items: center; pointer-events: none; }
+        .brand-pill { display: flex; align-items: center; gap: 8px; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(139, 92, 246, 0.3); padding: 8px 14px; border-radius: 30px; backdrop-filter: blur(12px); pointer-events: auto; }
+        .brand-pill img { width: 22px; height: 22px; border-radius: 50%; }
+        .brand-pill span { font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: #f8fafc; }
+        
+        /* Center Model Viewers */
+        #model-viewer-container { width: 100%; height: 100%; position: relative; }
+        model-viewer { width: 100%; height: 100%; background: radial-gradient(circle at center, #1e1b4b 0%, #090d16 100%); }
+        #fallback-canvas { width: 100%; height: 100%; display: none; }
+
+        /* Bottom Controls */
+        .bottom-controls { position: absolute; bottom: 24px; left: 0; right: 0; z-index: 50; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 0 20px; pointer-events: auto; }
+        
+        .ar-trigger-btn {
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            color: #ffffff;
+            border: none;
+            border-radius: 50px;
+            padding: 16px 36px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.5);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            animation: pulseGlow 2s infinite;
+        }
+        .ar-trigger-btn:active { transform: scale(0.95); }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(139, 92, 246, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
+        }
+
+        .footer-pill { background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); padding: 6px 14px; border-radius: 20px; font-size: 11px; color: #94a3b8; }
     </style>
 </head>
 <body>
-    <div id="ar-container">
-        <div class="header-brand">
-            <img src="../logo-ia-codestudio.webp" alt="Logo">
-            <span>IA CODE STUDIO — AR</span>
+
+    <div id="app-wrapper">
+        <div class="top-bar">
+            <div class="brand-pill">
+                <img src="../logo-ia-codestudio.webp" alt="Logo">
+                <span>IA CODE STUDIO — AR ENGINE</span>
+            </div>
         </div>
 
-        <model-viewer id="viewer" 
-            src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Astronaut/glTF-Binary/Astronaut.glb"
-            alt="Modèle 3D AR"
-            ar 
-            ar-modes="webxr scene-viewer quick-look" 
-            camera-controls 
-            auto-rotate 
-            shadow-intensity="1.5"
-            shadow-softness="1"
-            exposure="1.2">
-            
-            <button slot="ar-button" class="ar-btn">
+        <div id="model-viewer-container">
+            <model-viewer id="mv" 
+                src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/LeePerrySmith/LeePerrySmith.glb"
+                alt="3D Model AR"
+                ar 
+                ar-modes="webxr scene-viewer quick-look" 
+                camera-controls 
+                auto-rotate 
+                shadow-intensity="1.2"
+                exposure="1.1">
+            </model-viewer>
+            <canvas id="fallback-canvas"></canvas>
+        </div>
+
+        <div class="bottom-controls">
+            <button class="ar-trigger-btn" onclick="triggerAR()">
                 📱 Placer dans votre pièce (AR)
             </button>
-        </model-viewer>
-
-        <div class="ar-overlay">
-            <div class="ar-badge">✨ Propulsé par IA Code Studio WebAR Engine</div>
+            <div class="footer-pill">✨ Propulsé par IA Code Studio WebAR</div>
         </div>
     </div>
 
     <script>
-        // Check for custom model passed via URL hash or search parameter
-        window.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const customSrc = params.get('model');
-            const viewer = document.getElementById('viewer');
-            if (customSrc && viewer) {
-                viewer.src = customSrc;
+        function triggerAR() {
+            const mv = document.getElementById('mv');
+            if (mv && typeof mv.activateAR === 'function') {
+                mv.activateAR();
+            } else if (mv) {
+                // Trigger slot AR click
+                const arBtn = mv.shadowRoot ? mv.shadowRoot.querySelector('#ar-button') : null;
+                if (arBtn) arBtn.click();
+                else alert("Mode AR prêt ! Utilisez Safari (iOS) ou Chrome (Android) pour placer l'objet dans votre pièce.");
             }
+        }
+
+        // Three.js Fallback if model-viewer custom element fails
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const mv = document.getElementById('mv');
+                if (!mv || !mv.loaded) {
+                    initThreeFallback();
+                }
+            }, 2000);
         });
+
+        function initThreeFallback() {
+            const canvas = document.getElementById('fallback-canvas');
+            if (!canvas) return;
+            canvas.style.display = 'block';
+            
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x090d16);
+            const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            // Create colorful 3D Diamond Mesh
+            const geometry = new THREE.OctahedronGeometry(1.8, 2);
+            const material = new THREE.MeshStandardMaterial({ color: 0x8b5cf6, roughness: 0.2, metalness: 0.8, wireframe: false });
+            const mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+
+            const light1 = new THREE.DirectionalLight(0xffffff, 1.5);
+            light1.position.set(5, 10, 7);
+            scene.add(light1);
+            scene.add(new THREE.AmbientLight(0x404040, 2));
+
+            function animate() {
+                requestAnimationFrame(animate);
+                mesh.rotation.y += 0.01;
+                mesh.rotation.x += 0.005;
+                renderer.render(scene, camera);
+            }
+            animate();
+        }
     </script>
 </body>
 </html>

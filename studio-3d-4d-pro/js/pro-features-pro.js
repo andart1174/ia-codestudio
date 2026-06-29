@@ -1,6 +1,5 @@
 /**
- * Studio 3D/4D Pro — Production 3D Exporter & WebAR Engine
- * Pure additive module: does not modify any existing functions.
+ * Studio 3D/4D Pro — Production 3D Exporter & WebAR Engine v2
  */
 
 (function() {
@@ -41,12 +40,14 @@
     const btnDoOBJ = document.getElementById('btn-do-export-obj');
     const btnDoSTL = document.getElementById('btn-do-export-stl');
     const btnDoGLTF = document.getElementById('btn-do-export-gltf');
-    const btnCopyAR = document.getElementById('btn-copy-ar-code');
+    const btnCopyARLink = document.getElementById('btn-copy-ar-link');
+    const btnCopyAREmbed = document.getElementById('btn-copy-ar-embed');
 
     if (btnDoOBJ) btnDoOBJ.addEventListener('click', exportOBJFormat);
     if (btnDoSTL) btnDoSTL.addEventListener('click', exportSTLFormat);
     if (btnDoGLTF) btnDoGLTF.addEventListener('click', exportGLTFFormat);
-    if (btnCopyAR) btnCopyAR.addEventListener('click', copyARCode);
+    if (btnCopyARLink) btnCopyARLink.addEventListener('click', copyARLink);
+    if (btnCopyAREmbed) btnCopyAREmbed.addEventListener('click', copyAREmbed);
 
     // Dynamic Language Synchronization
     window.applyProModalLang = function() {
@@ -77,7 +78,6 @@
     const cleanGroup = new THREE.Group();
     sourceGroup.traverse(function(child) {
       if (child.isMesh && child.geometry) {
-        // Exclude grid or helper planes
         const isHelper = child.type.includes('Helper') || (child.material && child.material.wireframe && child.geometry.type === 'PlaneGeometry');
         if (!isHelper) {
           cleanGroup.add(child.clone());
@@ -156,17 +156,31 @@
     qrContainer.src = qrUrl;
   }
 
-  // 5. Copy 100% Working WebAR Embed Code for Shopify / WordPress
-  function copyARCode() {
-    const embedCode = `<iframe src="https://ia-codestudio.com/studio-3d-4d-pro/ar-viewer.html" width="100%" height="550px" frameborder="0" allow="ar; camera; gyroscope; accelerometer" allowfullscreen style="border-radius:18px; box-shadow:0 12px 35px rgba(0,0,0,0.35); border:1px solid rgba(139,92,246,0.3);"></iframe>`;
-    navigator.clipboard.writeText(embedCode).then(() => {
-      const label = document.getElementById('lbl-copy-ar-status');
+  // 5A. Copy Direct AR Link
+  function copyARLink() {
+    const directUrl = "https://ia-codestudio.com/studio-3d-4d-pro/ar-viewer.html";
+    navigator.clipboard.writeText(directUrl).then(() => {
+      const label = document.getElementById('lbl-copy-link-status');
       if (label) {
         const orig = label.textContent;
         label.textContent = window.currentLang === 'fr' ? '✅ Copié !' : '✅ Copied!';
         setTimeout(() => label.textContent = orig, 2500);
       }
-      showToast(window.currentLang === 'fr' ? '📋 Cod d\'intégration WebAR copié ! Prêt à coller.' : '📋 WebAR Embed code copied! Ready to paste.');
+      showToast(window.currentLang === 'fr' ? '🔗 Lien direct AR copié ! Utile pour navigateur ou mobile.' : '🔗 Direct AR link copied! Useful for mobile browsers.');
+    });
+  }
+
+  // 5B. Copy HTML Embed Code
+  function copyAREmbed() {
+    const embedCode = `<iframe src="https://ia-codestudio.com/studio-3d-4d-pro/ar-viewer.html" width="100%" height="550px" frameborder="0" allow="ar; camera; gyroscope; accelerometer" allowfullscreen style="border-radius:18px; box-shadow:0 12px 35px rgba(0,0,0,0.35); border:1px solid rgba(139,92,246,0.3);"></iframe>`;
+    navigator.clipboard.writeText(embedCode).then(() => {
+      const label = document.getElementById('lbl-copy-embed-status');
+      if (label) {
+        const orig = label.textContent;
+        label.textContent = window.currentLang === 'fr' ? '✅ Copié !' : '✅ Copied!';
+        setTimeout(() => label.textContent = orig, 2500);
+      }
+      showToast(window.currentLang === 'fr' ? '💻 Code HTML Embed copié ! À coller dans l\'éditeur HTML de votre site.' : '💻 HTML Embed code copied! Paste into your site HTML editor.');
     });
   }
 
