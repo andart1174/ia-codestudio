@@ -3,13 +3,56 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IA CODEPLAY — SVG Optimizer & Extractor</title>
+  <title>SVG Optimizer Online Free - Compressez et Rendez vos SVG Responsives</title>
+  <meta name="description" content="Outil gratuit en ligne pour optimiser, minifier et nettoyer vos fichiers vectoriels SVG. Supprimez les métadonnées inutiles, ajustez les dimensions et coloriez vos tracés facilement.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="../../style.css">
   <link rel="stylesheet" href="../converters-style.css">
+
+  <!-- JSON-LD FAQ Schema Markup -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Comment optimiser et réduire la taille d'un fichier SVG ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Déposez simplement votre fichier SVG dans la zone prévue à cet effet. Notre outil supprime les métadonnées d'édition superflues (générées par Illustrator ou Inkscape), nettoie les balises imbriquées inutiles et minifie le code XML pour réduire drastiquement la taille du fichier sans perte de qualité visuelle."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Pourquoi rendre un SVG responsive en retirant sa largeur et sa hauteur ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "En cochant l'option 'Rendre responsive', l'outil supprime les attributs absolus width et height tout en conservant la viewBox. Cela permet au SVG de s'adapter dynamiquement à la taille de son conteneur parent en HTML/CSS, ce qui est indispensable pour les conceptions web modernes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Comment puis-je changer la couleur d'un fichier SVG en ligne ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Activez l'option de suralimentation de couleur, sélectionnez la couleur de votre choix dans le sélecteur de couleurs haut de gamme, et l'outil appliquera dynamiquement cette couleur sur les attributs fill et stroke de votre code vectoriel SVG."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Quelle est la différence entre un SVG minifié et un SVG optimisé ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "La minification supprime uniquement les espaces, les sauts de ligne et les commentaires du code XML. L'optimisation va plus loin en nettoyant la structure du document vectoriel : regroupement des styles, simplification des tracés (paths) et suppression des balises invisibles créées par les éditeurs graphiques."
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body class="cyber-bg converter-body">
   <header class="cyber-header">
@@ -96,8 +139,39 @@
     </div>
   </div>
 
+  <!-- FAQ Section for SEO -->
+  <div class="seo-faq-section">
+    <h3 class="faq-section-title">Foire Aux Questions (FAQ) — Optimiseur SVG</h3>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <div class="faq-question">Comment optimiser et réduire la taille d'un fichier SVG ?</div>
+        <div class="faq-answer">Déposez simplement votre fichier SVG dans la zone prévue à cet effet. Notre outil supprime les métadonnées d'édition superflues (générées par Illustrator ou Inkscape), nettoie les balises imbriquées inutiles et minifie le code XML pour réduire drastiquement la taille du fichier sans perte de qualité visuelle.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">Pourquoi rendre un SVG responsive en retirant sa largeur et sa hauteur ?</div>
+        <div class="faq-answer">En cochant l'option 'Rendre responsive', l'outil supprime les attributs absolus width et height tout en conservant la viewBox. Cela permet au SVG de s'adapter dynamiquement à la taille de son conteneur parent en HTML/CSS, ce qui est indispensable pour les conceptions web modernes.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">Comment puis-je changer la couleur d'un fichier SVG en ligne ?</div>
+        <div class="faq-answer">Activez l'option de suralimentation de couleur, sélectionnez la couleur de votre choix dans le sélecteur de couleurs haut de gamme, et l'outil appliquera dynamiquement cette couleur sur les attributs fill et stroke de votre code vectoriel SVG.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">Quelle est la différence entre un SVG minifié et un SVG optimisé ?</div>
+        <div class="faq-answer">La minification supprime uniquement les espaces, les sauts de ligne et les commentaires du code XML. L'optimisation va plus loin en nettoyant la structure du document vectoriel : regroupement des styles, simplification des tracés (paths) et suppression des balises invisibles créées par les éditeurs graphiques.</div>
+      </div>
+    </div>
+  </div>
+
   <script src="../../js/i18n.js"></script>
   <script src="../../js/main.js"></script>
   <script src="svg-optimizer.js"></script>
+  <script>
+    document.querySelectorAll('.faq-question').forEach(item => {
+      item.addEventListener('click', () => {
+        const parent = item.parentElement;
+        parent.classList.toggle('active');
+      });
+    });
+  </script>
 </body>
 </html>

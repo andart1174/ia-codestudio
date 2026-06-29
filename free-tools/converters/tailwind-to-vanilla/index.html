@@ -3,13 +3,56 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IA CODEPLAY — Tailwind to Vanilla CSS Converter</title>
+  <title>Tailwind to CSS Converter Online - Convertissez vos classes Tailwind en CSS Standard</title>
+  <meta name="description" content="Outil en ligne gratuit pour convertir instantanément votre code HTML Tailwind en CSS vanilla inline ou traditionnel. Idéal pour les e-mails HTML, les CMS et les intégrations web.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="../../style.css">
   <link rel="stylesheet" href="../converters-style.css">
+
+  <!-- JSON-LD FAQ Schema Markup -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Comment convertir du HTML Tailwind en CSS Vanilla ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Collez simplement votre code HTML contenant des classes utilitaires Tailwind dans la boîte de saisie. Notre transpiler intelligent analyse les classes et génère un code HTML propre avec du CSS standard intégré (inline) ou un fichier de feuille de style externe correspondant."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Pourquoi convertir du code Tailwind CSS en CSS standard ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "De nombreuses plateformes limitent l'utilisation de frameworks externes. Par exemple, lors de la création de modèles d'e-mails HTML, les clients de messagerie ne chargent pas les feuilles de style Tailwind externes et nécessitent du style CSS inline. Ce convertisseur automatise ce processus fastidieux."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Ce convertisseur prend-il en charge toutes les classes Tailwind CSS ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, notre transpiler intègre un dictionnaire complet qui prend en charge la grande majorité des classes utilitaires de Tailwind (espacements, flexbox, grille, couleurs HSL/RGB, bordures, ombres et typographies) et les traduit fidèlement en CSS standard."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Est-il utile pour créer des e-mails HTML ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolument. C'est l'un des cas d'usage principaux. Vous pouvez concevoir votre modèle d'e-mail très rapidement en utilisant Tailwind dans votre éditeur préféré, puis utiliser cet outil pour compiler le résultat en un seul fichier HTML autonome, prêt à être envoyé avec les styles CSS injectés directement dans chaque balise."
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body class="cyber-bg converter-body">
   <header class="cyber-header">
@@ -71,8 +114,39 @@
     </div>
   </div>
 
+  <!-- FAQ Section for SEO -->
+  <div class="seo-faq-section">
+    <h3 class="faq-section-title">Foire Aux Questions (FAQ) — Transpiler Tailwind en CSS</h3>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <div class="faq-question">Comment convertir du HTML Tailwind en CSS Vanilla ?</div>
+        <div class="faq-answer">Collez simplement votre code HTML contenant des classes utilitaires Tailwind dans la boîte de saisie. Notre transpiler intelligent analyse les classes et génère un code HTML propre avec du CSS standard intégré (inline) ou un fichier de feuille de style externe correspondant.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">Pourquoi convertir du code Tailwind CSS en CSS standard ?</div>
+        <div class="faq-answer">De nombreuses plateformes limitent l'utilisation de frameworks externes. Par exemple, lors de la création de modèles d'e-mails HTML, les clients de messagerie ne chargent pas les feuilles de style Tailwind externes et nécessitent du style CSS inline. Ce convertisseur automatise ce processus fastidieux.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">Ce convertisseur prend-il en charge toutes les classes Tailwind CSS ?</div>
+        <div class="faq-answer">Oui, notre transpiler intègre un dictionnaire complet qui prend en charge la grande majorité des classes utilitaires de Tailwind (espacements, flexbox, grille, couleurs HSL/RGB, bordures, ombres et typographies) et les traduit fidèlement en CSS standard.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">Est-il utile pour créer des e-mails HTML ?</div>
+        <div class="faq-answer">Absolument. C'est l'un des cas d'usage principaux. Vous pouvez concevoir votre modèle d'e-mail très rapidement en utilisant Tailwind dans votre éditeur préféré, puis utiliser cet outil pour compiler le résultat en un seul fichier HTML autonome, prêt à être envoyé avec les styles CSS injectés directement dans chaque balise.</div>
+      </div>
+    </div>
+  </div>
+
   <script src="../../js/i18n.js"></script>
   <script src="../../js/main.js"></script>
   <script src="tailwind-to-vanilla.js"></script>
+  <script>
+    document.querySelectorAll('.faq-question').forEach(item => {
+      item.addEventListener('click', () => {
+        const parent = item.parentElement;
+        parent.classList.toggle('active');
+      });
+    });
+  </script>
 </body>
 </html>

@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IA CODEPLAY — Base64 Encoder & Decoder</title>
+  <title>Base64 Encoder & Decoder Online - Convertissez Image & Texte en Base64 Gratuitement</title>
+  <meta name="description" content="Convertissez facilement vos textes et images en Base64 ou décodez vos chaînes Base64 en un instant. Outil gratuit, rapide, sécurisé et 100% hors-ligne pour les développeurs.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
@@ -11,6 +12,48 @@
   <link rel="stylesheet" href="../../style.css">
   <link rel="stylesheet" href="../converters-style.css">
   <link rel="stylesheet" href="base64.css">
+
+  <!-- JSON-LD FAQ Schema Markup -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Qu'est-ce que l'encodage Base64 et à quoi sert-il ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "L'encodage Base64 est un processus de conversion de données binaires (telles que des images, des fichiers ou des polices) en une chaîne de caractères ASCII. Il est principalement utilisé en développement web pour intégrer des médias directement dans le code HTML ou CSS (Inline), évitant ainsi des requêtes HTTP supplémentaires."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Comment convertir une image en Base64 ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Faites simplement glisser et déposer votre image (PNG, JPG, SVG, WEBP, etc.) dans notre zone de dépôt de fichiers. L'outil génère automatiquement le code Base64 enveloppé dans une balise de données HTML (Data URI) prête à être copiée et intégrée dans votre code."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "L'utilisation de ce convertisseur Base64 est-elle sécurisée ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, notre convertisseur Base64 fonctionne entièrement côté client. Vos fichiers et textes ne sont jamais envoyés sur nos serveurs. Tout le traitement d'encodage et de décodage se fait directement dans votre navigateur web, garantissant une confidentialité totale."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Pourquoi utiliser le Base64 dans le développement web ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "L'utilisation du Base64 permet de réduire le nombre de requêtes HTTP en intégrant les petites images, icônes ou fichiers directement dans le code source de la page (HTML ou CSS). Cela simplifie également le partage de modèles ou d'e-mails HTML ne contenant aucun fichier externe."
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body class="cyber-bg converter-body">
   <header class="cyber-header">
@@ -91,8 +134,39 @@
     </div>
   </div>
 
+  <!-- FAQ Section for SEO -->
+  <div class="seo-faq-section">
+    <h3 class="faq-section-title">Foire Aux Questions (FAQ) — Convertisseur Base64</h3>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <div class="faq-question">Qu'est-ce que l'encodage Base64 et à quoi sert-il ?</div>
+        <div class="faq-answer">L'encodage Base64 est un processus de conversion de données binaires (telles que des images, des fichiers ou des polices) en une chaîne de caractères ASCII. Il est principalement utilisé en développement web pour intégrer des médias directement dans le code HTML ou CSS (Inline), évitant ainsi des requêtes HTTP supplémentaires.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">Comment convertir une image en Base64 ?</div>
+        <div class="faq-answer">Faites simplement glisser et déposer votre image (PNG, JPG, SVG, WEBP, etc.) dans notre zone de dépôt de fichiers. L'outil génère automatiquement le code Base64 enveloppé dans une balise de données HTML (Data URI) prête à être copiée et intégrée dans votre code.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">L'utilisation de ce convertisseur Base64 est-elle sécurisée ?</div>
+        <div class="faq-answer">Oui, notre convertisseur Base64 fonctionne entièrement côté client. Vos fichiers et textes ne sont jamais envoyés sur nos serveurs. Tout le traitement d'encodage et de décodage se fait directement dans votre navigateur web, garantissant une confidentialité totale.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">Pourquoi utiliser le Base64 dans le développement web ?</div>
+        <div class="faq-answer">L'utilisation du Base64 permet de réduire le nombre de requêtes HTTP en intégrant les petites images, icônes ou fichiers directement dans le code source de la page (HTML ou CSS). Cela simplifie également le partage de modèles ou d'e-mails HTML ne contenant aucun fichier externe.</div>
+      </div>
+    </div>
+  </div>
+
   <script src="../../js/i18n.js"></script>
   <script src="../../js/main.js"></script>
   <script src="base64.js"></script>
+  <script>
+    document.querySelectorAll('.faq-question').forEach(item => {
+      item.addEventListener('click', () => {
+        const parent = item.parentElement;
+        parent.classList.toggle('active');
+      });
+    });
+  </script>
 </body>
 </html>
