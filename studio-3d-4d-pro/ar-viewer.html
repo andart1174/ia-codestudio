@@ -22,8 +22,8 @@
         
         /* Center Model Viewers */
         #model-viewer-container { width: 100%; height: 100%; position: relative; }
-        model-viewer { width: 100%; height: 100%; background: radial-gradient(circle at center, #1e1b4b 0%, #090d16 100%); display: block; }
-        canvas { width: 100%; height: 100%; display: none; }
+        canvas { width: 100%; height: 100%; display: block; }
+        model-viewer { width: 100%; height: 100%; background: radial-gradient(circle at center, #1e1b4b 0%, #090d16 100%); display: none; }
 
         /* Bottom Controls */
         .bottom-controls { position: absolute; bottom: 24px; left: 0; right: 0; z-index: 50; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 0 20px; pointer-events: auto; }
@@ -62,13 +62,14 @@
         <div class="top-bar">
             <div class="brand-pill">
                 <img src="../logo-ia-codestudio.webp" alt="Logo">
-                <span id="ar-title-label">IA CODE STUDIO — WEBAR CAMERA ENGINE</span>
+                <span id="ar-title-label">IA CODE STUDIO — 3D SCENE PREVIEW</span>
             </div>
         </div>
 
         <div id="model-viewer-container">
+            <canvas id="three-canvas"></canvas>
             <model-viewer id="mv" 
-                src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/RobotExpressive/glTF-Binary/RobotExpressive.glb"
+                src=""
                 alt="Custom 3D Model AR"
                 ar 
                 ar-modes="webxr scene-viewer quick-look" 
@@ -76,77 +77,40 @@
                 auto-rotate 
                 shadow-intensity="1.5"
                 exposure="1.2">
-                <button slot="ar-button" id="native-ar-slot-btn" style="display:none;"></button>
             </model-viewer>
-            <canvas id="three-canvas"></canvas>
         </div>
 
         <div class="bottom-controls">
             <button class="ar-trigger-btn" onclick="triggerAR()">
-                📷 Ouvrir Caméra AR (Placer dans votre pièce)
+                📷 Activer Caméra AR (Placer dans votre pièce)
             </button>
-            <div class="footer-pill">✨ Scène 3D Personnalisée v3</div>
+            <div class="footer-pill">✨ Propulsé par IA Code Studio 3D Engine</div>
         </div>
     </div>
 
     <script>
         function triggerAR() {
             const mv = document.getElementById('mv');
-            if (mv && typeof mv.activateAR === 'function') {
+            if (mv && mv.style.display !== 'none' && typeof mv.activateAR === 'function') {
                 mv.activateAR();
-            } else if (mv) {
-                const slotBtn = mv.shadowRoot ? mv.shadowRoot.querySelector('#ar-button') : document.getElementById('native-ar-slot-btn');
-                if (slotBtn) slotBtn.click();
-                else alert("📱 Mode AR Caméra : Veuillez utiliser Safari sur iOS ou Chrome sur Android pour activer la caméra dans votre pièce.");
+            } else {
+                alert("📱 Mode Caméra AR : Pour activer la caméra en temps réel dans votre pièce, ouvrez ce lien dans Safari (iPhone) ou Chrome (Android) et autorisez l'accès caméra.");
             }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            initARViewer();
+            initRobustThreeScene();
         });
 
-        function initARViewer() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const modParam = urlParams.get('mod') || localStorage.getItem('ia_ar_mod') || 'hero-forge';
-            const hexColorParam = urlParams.get('c') || localStorage.getItem('ia_ar_color') || '#00ffcc';
-            const mv = document.getElementById('mv');
-            const label = document.getElementById('ar-title-label');
-
-            // Model Catalog URLs for native mobile AR camera experience
-            const modelCatalog = {
-                'hero-forge': 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/RobotExpressive/glTF-Binary/RobotExpressive.glb',
-                'robot': 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/RobotExpressive/glTF-Binary/RobotExpressive.glb',
-                'steampunk-chrono': 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/AntiqueCamera/glTF-Binary/AntiqueCamera.glb',
-                'clock-ultra': 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/AntiqueCamera/glTF-Binary/AntiqueCamera.glb',
-                'astronaut': 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Astronaut/glTF-Binary/Astronaut.glb',
-                'default': 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/RobotExpressive/glTF-Binary/RobotExpressive.glb'
-            };
-
-            if (modParam === 'hero-forge' || modParam === 'robot') {
-                if (label) label.textContent = "IA CODE STUDIO — HERO FORGE 3D (AR)";
-                if (mv) mv.src = modelCatalog['hero-forge'];
-            } else if (modParam.includes('chrono') || modParam.includes('clock')) {
-                if (label) label.textContent = "IA CODE STUDIO — STEAMPUNK CHRONO (AR)";
-                if (mv) mv.src = modelCatalog['steampunk-chrono'];
-            } else if (modParam === 'extrude' || modParam === 'custom' || modParam === '3d-text') {
-                if (label) label.textContent = "IA CODE STUDIO — CUSTOM EXTRUSION (AR)";
-                // Render Three.js WebGL canvas for custom extrusion if requested
-                initThreeWebGLFallback(hexColorParam, urlParams);
-            } else {
-                if (mv) mv.src = modelCatalog[modParam] || modelCatalog['default'];
-            }
-        }
-
-        function initThreeWebGLFallback(hexColorParam, urlParams) {
-            const mv = document.getElementById('mv');
+        function initRobustThreeScene() {
             const canvas = document.getElementById('three-canvas');
             if (!canvas) return;
 
-            if (mv) mv.style.display = 'none';
-            canvas.style.display = 'block';
-
+            const urlParams = new URLSearchParams(window.location.search);
+            const hexColorParam = urlParams.get('c') || localStorage.getItem('ia_ar_color') || '#00ffcc';
             const depthParam = parseFloat(urlParams.get('d')) || parseFloat(localStorage.getItem('ia_ar_depth')) || 30;
             const pointsParam = urlParams.get('p') || localStorage.getItem('ia_ar_pts');
+            const modParam = urlParams.get('mod') || localStorage.getItem('ia_ar_mod') || 'custom';
             const objDataStored = localStorage.getItem('ia_ar_obj_data');
 
             const scene = new THREE.Scene();
@@ -162,15 +126,14 @@
             controls.enableDamping = true;
             controls.dampingFactor = 0.05;
 
-            // Lights
-            const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
-            scene.add(ambientLight);
+            // Bright Multi-Light Setup
+            scene.add(new THREE.AmbientLight(0xffffff, 1.4));
 
-            const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.5);
+            const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.6);
             dirLight1.position.set(100, 200, 150);
             scene.add(dirLight1);
 
-            const dirLight2 = new THREE.DirectionalLight(0x8b5cf6, 1.0);
+            const dirLight2 = new THREE.DirectionalLight(0x8b5cf6, 1.2);
             dirLight2.position.set(-100, -100, -100);
             scene.add(dirLight2);
 
@@ -183,7 +146,7 @@
                 side: THREE.DoubleSide
             });
 
-            // Reconstruct Geometry
+            // 1. Check Stored OBJ Data
             if (objDataStored && typeof THREE.OBJLoader !== 'undefined') {
                 try {
                     const loader = new THREE.OBJLoader();
@@ -198,6 +161,7 @@
                 } catch(e) {}
             }
 
+            // 2. Check Extruded 2D Contour Points
             if (!mainMesh && pointsParam) {
                 try {
                     const ptsArray = pointsParam.split('|').map(str => {
@@ -222,15 +186,21 @@
                 } catch(e){}
             }
 
+            // 3. Fallback High-Quality 3D Shape if no custom data
             if (!mainMesh) {
-                const shape = new THREE.Shape();
-                shape.moveTo(-40, -20);
-                shape.quadraticCurveTo(-40, 30, 0, 30);
-                shape.quadraticCurveTo(40, 30, 40, -20);
-                shape.quadraticCurveTo(0, -40, -40, -20);
+                const group = new THREE.Group();
+                const torsoGeo = new THREE.CylinderGeometry(15, 12, 40, 16);
+                const torsoMat = new THREE.MeshStandardMaterial({ color: 0x8b5cf6, roughness: 0.3 });
+                const torso = new THREE.Mesh(torsoGeo, torsoMat);
+                group.add(torso);
 
-                const geometry = new THREE.ExtrudeGeometry(shape, { depth: 25, bevelEnabled: true, bevelSegments: 5, steps: 2, bevelSize: 4, bevelThickness: 4 });
-                mainMesh = new THREE.Mesh(geometry, material);
+                const headGeo = new THREE.SphereGeometry(10, 32, 32);
+                const headMat = new THREE.MeshStandardMaterial({ color: 0x06b6d4, metalness: 0.5 });
+                const head = new THREE.Mesh(headGeo, headMat);
+                head.position.y = 30;
+                group.add(head);
+
+                mainMesh = group;
                 scene.add(mainMesh);
             }
 
@@ -246,7 +216,7 @@
 
                 const maxDim = Math.max(size.x, size.y, size.z);
                 const fov = camera.fov * (Math.PI / 180);
-                let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 1.8;
+                let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 2.0;
 
                 if (camera.aspect < 1) {
                     cameraZ /= camera.aspect;
@@ -268,7 +238,7 @@
                     const size = box.getSize(new THREE.Vector3());
                     const maxDim = Math.max(size.x, size.y, size.z);
                     const fov = camera.fov * (Math.PI / 180);
-                    let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 1.8;
+                    let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 2.0;
                     if (camera.aspect < 1) cameraZ /= camera.aspect;
                     camera.position.z = cameraZ;
                     controls.update();
