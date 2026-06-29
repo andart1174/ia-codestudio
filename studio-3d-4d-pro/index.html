@@ -554,7 +554,6 @@
     <button class="tbtn green" id="btn-dl-html"> <span id="lbl-dl">HTML</span></button>
     <button class="tbtn purple" id="btn-export-zip"> <span id="lbl-zip">ZIP Pack</span></button>
     <button class="tbtn" id="btn-export-3d-modal" style="border-color:rgba(6,182,212,0.5);color:#22d3ee;background:rgba(6,182,212,0.1);display:inline-flex;align-items:center;gap:6px;"> 📦 <span id="lbl-export-3d">Export 3D (OBJ)</span></button>
-    <button class="tbtn" id="btn-ar-modal" style="border-color:rgba(168,85,247,0.5);color:#c084fc;background:rgba(168,85,247,0.1);display:inline-flex;align-items:center;gap:6px;"> 📲 <span id="lbl-ar-preview">Aperçu AR</span></button>
     <button class="tbtn" id="btn-export-gist" style="border-color:rgba(244,63,94,0.4);color:#fb7185;">
       <i class="fa-brands fa-github"></i> <span id="lbl-gist">GitHub Gist</span>
     </button>
@@ -790,49 +789,6 @@
             <div style="font-size:11px; color:#94a3b8; font-weight:normal;">Format moderne optimisé pour le web et applications mobile</div>
           </div>
         </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== MODAL WEBAR INSTANT PREVIEW & QR CODE ===== -->
-  <div class="modal-overlay" id="modal-ar-preview">
-    <div class="modal-card" style="max-width: 520px; background: #0f172a; border: 1px solid rgba(168,85,247,0.3); border-radius: 20px; padding: 24px; text-align: center;">
-      <div class="modal-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
-        <h3 style="margin:0; font-size:18px; color:#e2e8f0; display:flex; align-items:center; gap:8px;">
-          📲 <span class="pro-lang-fr">Aperçu Réalité Augmentée (WebAR)</span><span class="pro-lang-en" style="display:none;">Augmented Reality (WebAR) Preview</span>
-        </h3>
-        <button class="modal-close modal-close-pro" style="background:none; border:none; color:#94a3b8; font-size:18px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="modal-body" style="display:flex; flex-direction:column; align-items:center; gap:16px;">
-        <div style="padding:14px; background:#fff; border-radius:16px; box-shadow:0 10px 30px rgba(168,85,247,0.2);">
-          <img id="ar-qr-code-img" src="" alt="AR QR Code" style="width:190px; height:190px; display:block;" />
-        </div>
-        <p style="color:#cbd5e1; font-size:13px; line-height:1.6; margin:0; max-width:420px;">
-          <span class="pro-lang-fr">📱 <b>Placez cet objet 3D dans votre pièce !</b> Scannez le QR code avec l'appareil photo de votre smartphone pour l'ouvrir en AR sans installer d'application.</span>
-          <span class="pro-lang-en" style="display:none;">📱 <b>Place this 3D object in your room!</b> Scan the QR code with your smartphone camera to view it in AR without installing any app.</span>
-        </p>
-
-        <!-- Direct Link Copy Box -->
-        <div style="width:100%; text-align:left; background:rgba(255,255,255,0.03); border:1px solid rgba(139,92,246,0.3); border-radius:12px; padding:12px 14px; margin-top:4px;">
-          <div style="font-size:12px; font-weight:700; color:#c084fc; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-            <span>🔗 <span class="pro-lang-fr">Lien Direct AR (Pour Navigateur & Mobile)</span><span class="pro-lang-en" style="display:none;">Direct AR Link (For Mobile Browsers)</span></span>
-            <button id="btn-copy-ar-link" style="background:rgba(168,85,247,0.2); border:1px solid rgba(168,85,247,0.4); color:#c084fc; border-radius:6px; padding:4px 10px; font-size:11px; cursor:pointer; font-weight:600;"><span id="lbl-copy-link-status">Copier le lien</span></button>
-          </div>
-          <code style="display:block; font-size:11px; color:#22d3ee; background:rgba(0,0,0,0.3); padding:8px; border-radius:6px; word-break:break-all; font-family:monospace;">https://ia-codestudio.com/studio-3d-4d-pro/ar-viewer.html</code>
-        </div>
-
-        <!-- E-Commerce Embed Snippet Box -->
-        <div style="width:100%; text-align:left; background:rgba(255,255,255,0.03); border:1px solid rgba(6,182,212,0.3); border-radius:12px; padding:12px 14px;">
-          <div style="font-size:12px; font-weight:700; color:#38bdf8; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-            <span>💻 <span class="pro-lang-fr">Code HTML Embed (Shopify / WordPress)</span><span class="pro-lang-en" style="display:none;">HTML Embed Code (Shopify / WordPress)</span></span>
-            <button id="btn-copy-ar-embed" style="background:rgba(6,182,212,0.2); border:1px solid rgba(6,182,212,0.4); color:#38bdf8; border-radius:6px; padding:4px 10px; font-size:11px; cursor:pointer; font-weight:600;"><span id="lbl-copy-embed-status">Copier le code</span></button>
-          </div>
-          <code style="display:block; font-size:10px; color:#94a3b8; background:rgba(0,0,0,0.3); padding:8px; border-radius:6px; word-break:break-all; font-family:monospace;">&lt;iframe src="https://ia-codestudio.com/studio-3d-4d-pro/ar-viewer.html" width="100%" height="550px" frameborder="0" allow="ar; camera; gyroscope"&gt;&lt;/iframe&gt;</code>
-        </div>
-        
-        <p style="font-size:11px; color:#64748b; margin-top:4px; font-style:italic;">
-          💡 <span class="pro-lang-fr">Note: Le code HTML Embed (iframe) s'insère dans l'éditeur de votre site web, pas dans la barre de recherche Bing/Google !</span><span class="pro-lang-en" style="display:none;">Note: HTML Embed code (iframe) belongs inside your website HTML editor, not the Bing/Google search bar!</span>
-        </p>
       </div>
     </div>
   </div>

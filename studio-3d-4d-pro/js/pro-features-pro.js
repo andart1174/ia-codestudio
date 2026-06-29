@@ -1,5 +1,6 @@
 /**
- * Studio 3D/4D Pro — Production 3D Exporter & Dynamic WebAR Engine v3
+ * Studio 3D/4D Pro — Production 3D Exporter Engine
+ * Pure additive module for OBJ, STL, and GLTF exports.
  */
 
 (function() {
@@ -9,21 +10,11 @@
 
   function initProFeatures() {
     const btnExport3D = document.getElementById('btn-export-3d-modal');
-    const btnAR = document.getElementById('btn-ar-modal');
     const modalExport3D = document.getElementById('modal-export-3d');
-    const modalAR = document.getElementById('modal-ar-preview');
 
     if (btnExport3D && modalExport3D) {
       btnExport3D.addEventListener('click', function() {
         modalExport3D.classList.add('active');
-        if (window.applyProModalLang) window.applyProModalLang();
-      });
-    }
-
-    if (btnAR && modalAR) {
-      btnAR.addEventListener('click', function() {
-        modalAR.classList.add('active');
-        prepareAndGenerateAR();
         if (window.applyProModalLang) window.applyProModalLang();
       });
     }
@@ -40,14 +31,10 @@
     const btnDoOBJ = document.getElementById('btn-do-export-obj');
     const btnDoSTL = document.getElementById('btn-do-export-stl');
     const btnDoGLTF = document.getElementById('btn-do-export-gltf');
-    const btnCopyARLink = document.getElementById('btn-copy-ar-link');
-    const btnCopyAREmbed = document.getElementById('btn-copy-ar-embed');
 
     if (btnDoOBJ) btnDoOBJ.addEventListener('click', exportOBJFormat);
     if (btnDoSTL) btnDoSTL.addEventListener('click', exportSTLFormat);
     if (btnDoGLTF) btnDoGLTF.addEventListener('click', exportGLTFFormat);
-    if (btnCopyARLink) btnCopyARLink.addEventListener('click', copyARLink);
-    if (btnCopyAREmbed) btnCopyAREmbed.addEventListener('click', copyAREmbed);
 
     // Dynamic Language Synchronization
     window.applyProModalLang = function() {
@@ -86,66 +73,6 @@
     });
 
     return cleanGroup.children.length > 0 ? cleanGroup : sourceGroup;
-  }
-
-  // Prepare active scene data & generate QR code pointing to exact custom model
-  function prepareAndGenerateAR() {
-    const target = getTarget3DGroup();
-    let objData = "";
-    let colorHex = "#00ffcc"; // Default custom cyan color from user screenshot
-    let ptsData = "";
-    let depth = 30;
-
-    let modFormat = "hero-forge";
-
-    // Get active model properties if available
-    if (window.SketchExtruder && typeof window.SketchExtruder.getActiveModel === 'function') {
-      const act = window.SketchExtruder.getActiveModel();
-      if (act) {
-        if (act.format) modFormat = act.format;
-        if (act.colorHex) colorHex = act.colorHex;
-        if (act.depth) depth = act.depth;
-        if (act.points && Array.isArray(act.points)) {
-          // Compact 2D contour points: x,y|x,y|x,y
-          ptsData = act.points.map(p => `${Math.round(p.x)},${Math.round(p.y)}`).join('|');
-        }
-      }
-    }
-
-    if (target && typeof THREE !== 'undefined' && THREE.OBJExporter) {
-      const exporter = new THREE.OBJExporter();
-      objData = exporter.parse(target);
-    }
-
-    // Save to localStorage for same-device direct URL preview
-    try {
-      if (objData) localStorage.setItem('ia_ar_obj_data', objData);
-      localStorage.setItem('ia_ar_color', colorHex);
-      localStorage.setItem('ia_ar_mod', modFormat);
-      if (ptsData) localStorage.setItem('ia_ar_pts', ptsData);
-      localStorage.setItem('ia_ar_depth', depth);
-    } catch(e){}
-
-    // Build URL for QR code and sharing
-    let arViewerUrl = "https://ia-codestudio.com/studio-3d-4d-pro/ar-viewer.html";
-    let urlParams = `?mod=${encodeURIComponent(modFormat)}&c=${encodeURIComponent(colorHex)}&d=${depth}`;
-    if (ptsData) {
-      urlParams += `&p=${encodeURIComponent(ptsData)}`;
-    }
-    
-    const fullArUrl = arViewerUrl + urlParams;
-    window.currentCustomARUrl = fullArUrl;
-
-    // Update code boxes & QR code
-    const qrContainer = document.getElementById('ar-qr-code-img');
-    if (qrContainer) {
-      qrContainer.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(fullArUrl)}&color=8b5cf6&bgcolor=ffffff`;
-    }
-
-    const linkCodeEl = document.querySelector('#modal-ar-preview code');
-    if (linkCodeEl) {
-      linkCodeEl.textContent = fullArUrl;
-    }
   }
 
   // 1. Export OBJ
@@ -205,35 +132,6 @@
     } else {
       showToast('⚠️ GLTF Exporter library loading...', 'error');
     }
-  }
-
-  // Copy Direct AR Link
-  function copyARLink() {
-    const directUrl = window.currentCustomARUrl || "https://ia-codestudio.com/studio-3d-4d-pro/ar-viewer.html";
-    navigator.clipboard.writeText(directUrl).then(() => {
-      const label = document.getElementById('lbl-copy-link-status');
-      if (label) {
-        const orig = label.textContent;
-        label.textContent = window.currentLang === 'fr' ? '✅ Copié !' : '✅ Copied!';
-        setTimeout(() => label.textContent = orig, 2500);
-      }
-      showToast(window.currentLang === 'fr' ? '🔗 Lien direct de la scène 3D copié !' : '🔗 Direct 3D scene link copied!');
-    });
-  }
-
-  // Copy HTML Embed Code
-  function copyAREmbed() {
-    const directUrl = window.currentCustomARUrl || "https://ia-codestudio.com/studio-3d-4d-pro/ar-viewer.html";
-    const embedCode = `<iframe src="${directUrl}" width="100%" height="550px" frameborder="0" allow="ar; camera; gyroscope; accelerometer" allowfullscreen style="border-radius:18px; box-shadow:0 12px 35px rgba(0,0,0,0.35); border:1px solid rgba(139,92,246,0.3);"></iframe>`;
-    navigator.clipboard.writeText(embedCode).then(() => {
-      const label = document.getElementById('lbl-copy-embed-status');
-      if (label) {
-        const orig = label.textContent;
-        label.textContent = window.currentLang === 'fr' ? '✅ Copié !' : '✅ Copied!';
-        setTimeout(() => label.textContent = orig, 2500);
-      }
-      showToast(window.currentLang === 'fr' ? '💻 Code HTML Embed copié ! À coller dans l\'éditeur HTML de votre site.' : '💻 HTML Embed code copied! Paste into your site HTML editor.');
-    });
   }
 
   function downloadBlob(content, filename, contentType) {
