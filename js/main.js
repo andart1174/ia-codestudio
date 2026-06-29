@@ -1,10 +1,14 @@
-let currentLang = 'fr'; // Default language
+var currentLang = 'fr'; // Default language
+window.currentLang = 'fr';
 
 function applyTranslations(lang) {
+  currentLang = lang;
+  window.currentLang = lang;
+  if (typeof translations === 'undefined') return;
   const elements = document.querySelectorAll('[data-i18n]');
   elements.forEach(el => {
     const key = el.getAttribute('data-i18n');
-    if (translations[lang] && translations[lang][key]) {
+    if (translations[lang] && translations[lang][key] !== undefined) {
       el.textContent = translations[lang][key];
     }
   });
@@ -17,12 +21,16 @@ function applyTranslations(lang) {
     }
   });
 }
+window.applyTranslations = applyTranslations;
 
 function setLanguage(lang) {
   currentLang = lang;
+  window.currentLang = lang;
   applyTranslations(lang);
   localStorage.setItem('hub_lang', lang);
 }
+window.setLanguage = setLanguage;
+
 
 document.addEventListener('DOMContentLoaded', () => {
   // Check URL parameters for language first (for SEO indexing)

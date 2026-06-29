@@ -160,8 +160,8 @@
         <div class="lang-toggle-container" style="display: flex; flex-direction: column; align-items: flex-end;">
             <div style="display: flex; gap: 10px; align-items: center;">
                 <div class="lang-toggle">
-                    <button class="lang-btn active" data-lang="fr">FR</button>
-                    <button class="lang-btn" data-lang="en">EN</button>
+                    <button class="lang-btn active" data-lang="fr" onclick="setLanguage('fr')">FR</button>
+                    <button class="lang-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
                 </div>
                 <!-- Login / User Button -->
                 <div id="auth-nav-area">
@@ -2407,149 +2407,282 @@
             </article>
 
 
+        
+
+
+                </section>
+
+
         <!-- ===== REVIEWS + Q&A SECTION ===== -->
-        <section id="user-reviews-qa" style="max-width:1180px;margin:0 auto 20px;padding:0 20px;">
+        <section id="user-reviews-qa" style="max-width:1200px; margin:70px auto 40px; padding:0 20px;">
             <style>
-            #user-reviews-qa .rv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-bottom:56px;}
-            @media(max-width:900px){#user-reviews-qa .rv-grid{grid-template-columns:repeat(2,1fr);}}
-            @media(max-width:580px){#user-reviews-qa .rv-grid{grid-template-columns:1fr;}}
-            #user-reviews-qa .rv-card{border-radius:20px;padding:26px;position:relative;overflow:hidden;transition:transform 0.3s,box-shadow 0.3s;cursor:default;}
-            #user-reviews-qa .rv-card::before{content:'\201C';position:absolute;top:10px;right:18px;font-size:72px;font-family:serif;opacity:0.07;color:#fff;line-height:1;}
-            #user-reviews-qa .rv-card:hover{transform:translateY(-6px);box-shadow:0 18px 50px rgba(0,0,0,0.4);}
-            #user-reviews-qa .rv-stars{font-size:15px;margin-bottom:14px;letter-spacing:2px;}
-            #user-reviews-qa .rv-text{color:#cbd5e1;font-size:13.5px;line-height:1.7;margin:0 0 20px;font-style:italic;}
-            #user-reviews-qa .rv-author{display:flex;align-items:center;gap:11px;}
-            #user-reviews-qa .rv-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
-            #user-reviews-qa .rv-name{color:#f1f5f9;font-size:13px;font-weight:700;}
-            #user-reviews-qa .rv-module{color:#64748b;font-size:11px;margin-top:2px;}
+            #user-reviews-qa .rv-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 24px;
+                margin-bottom: 60px;
+            }
+            @media (max-width: 900px) {
+                #user-reviews-qa .rv-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+            @media (max-width: 600px) {
+                #user-reviews-qa .rv-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+            #user-reviews-qa .rv-card {
+                background: var(--glass-bg, rgba(255, 255, 255, 0.03));
+                border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.08));
+                border-radius: 24px;
+                padding: 2.2rem;
+                backdrop-filter: blur(16px);
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                position: relative;
+                overflow: hidden;
+            }
+            #user-reviews-qa .rv-card::before {
+                content: '';
+                position: absolute;
+                top: 0; left: 0; width: 100%; height: 4px;
+                opacity: 0.8;
+                transition: opacity 0.4s ease;
+            }
+            #user-reviews-qa .rv-card:hover {
+                transform: translateY(-8px);
+                background: rgba(255, 255, 255, 0.06);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 25px rgba(139, 92, 246, 0.25);
+                border-color: rgba(255, 255, 255, 0.2);
+            }
+            #user-reviews-qa .rv-stars {
+                font-size: 16px;
+                color: #f59e0b;
+                margin-bottom: 14px;
+                letter-spacing: 2px;
+            }
+            #user-reviews-qa .rv-text {
+                color: #cbd5e1;
+                font-size: 14px;
+                line-height: 1.7;
+                margin: 0 0 24px;
+                font-style: italic;
+                flex-grow: 1;
+            }
+            #user-reviews-qa .rv-author {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                border-top: 1px solid rgba(255,255,255,0.06);
+                padding-top: 16px;
+            }
+            #user-reviews-qa .rv-avatar {
+                width: 42px;
+                height: 42px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+                font-weight: 800;
+                color: #fff;
+                flex-shrink: 0;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            }
+            #user-reviews-qa .rv-name {
+                color: #f8fafc;
+                font-size: 14px;
+                font-weight: 700;
+            }
+            #user-reviews-qa .rv-module {
+                color: #94a3b8;
+                font-size: 12px;
+                margin-top: 2px;
+            }
             </style>
 
-            <h2 style="text-align:center;font-size:clamp(22px,4vw,34px);font-weight:800;margin-bottom:8px;background:linear-gradient(135deg,#a78bfa,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
-                &#11088; <span data-i18n="reviews_title">Ce que disent nos utilisateurs</span>
-            </h2>
-            <p data-i18n="reviews_sub" style="text-align:center;color:#475569;font-size:14px;margin-bottom:44px;">Avis authentiques de notre communaut&eacute; mondiale</p>
+            <!-- Title -->
+            <div style="text-align: center; margin-bottom: 48px;">
+                <h2 style="font-size: clamp(24px, 4vw, 36px); font-weight: 800; margin-bottom: 10px; background: linear-gradient(135deg, #a78bfa, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; display: inline-flex; align-items: center; gap: 10px;">
+                    ⭐ <span data-i18n="reviews_title">Ce que disent nos utilisateurs</span>
+                </h2>
+                <p data-i18n="reviews_sub" style="color: #94a3b8; font-size: 15px; margin: 0;">Avis authentiques de notre communauté mondiale</p>
+            </div>
 
+            <!-- REVIEWS GRID: 6 Cards in 2 rows of 3 -->
             <div class="rv-grid">
-                <div class="rv-card" style="background:linear-gradient(135deg,rgba(99,102,241,0.18),rgba(139,92,246,0.12));border:1px solid rgba(99,102,241,0.3);">
-                    <div class="rv-stars" style="color:#f59e0b;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                    <p class="rv-text" data-i18n="reviews_r1">"Bluffant. En 30 secondes j'ai g&eacute;n&eacute;r&eacute; une landing page compl&egrave;te avec animations CSS et Three.js."</p>
-                    <div class="rv-author"><div class="rv-avatar" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">AM</div><div><div class="rv-name">Alex M.</div><div class="rv-module">IA Architecte Studio Pro</div></div></div>
+
+                <!-- Card 1: IA Architecte Pro -->
+                <div class="rv-card">
+                    <div style="position:absolute; top:0; left:0; width:100%; height:4px; background:linear-gradient(90deg, #6366f1, #8b5cf6);"></div>
+                    <div class="rv-stars">★★★★★</div>
+                    <p class="rv-text" data-i18n="reviews_r1">"Bluffant. En 30 secondes j'ai généré une landing page complète avec animations CSS et Three.js."</p>
+                    <div class="rv-author">
+                        <div class="rv-avatar" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">AM</div>
+                        <div>
+                            <div class="rv-name">Alex M.</div>
+                            <div class="rv-module">IA Architecte Studio Pro</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="rv-card" style="background:linear-gradient(135deg,rgba(236,72,153,0.16),rgba(244,63,94,0.10));border:1px solid rgba(236,72,153,0.28);">
-                    <div class="rv-stars" style="color:#f59e0b;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                    <p class="rv-text" data-i18n="reviews_r2">"Je remplace Webflow et Figma avec cet outil. L'&eacute;diteur en temps r&eacute;el avec copilote IA est une v&eacute;ritable r&eacute;volution."</p>
-                    <div class="rv-author"><div class="rv-avatar" style="background:linear-gradient(135deg,#ec4899,#f43f5e);">LK</div><div><div class="rv-name">Laura K.</div><div class="rv-module">IA Architecte Studio Pro</div></div></div>
+
+                <!-- Card 2: Studio 3D/4D Pro -->
+                <div class="rv-card">
+                    <div style="position:absolute; top:0; left:0; width:100%; height:4px; background:linear-gradient(90deg, #06b6d4, #0ea5e9);"></div>
+                    <div class="rv-stars">★★★★★</div>
+                    <p class="rv-text" data-i18n="reviews_r3">"Des animations 4D en temps réel directement dans le navigateur ? Rien n'y ressemble."</p>
+                    <div class="rv-author">
+                        <div class="rv-avatar" style="background: linear-gradient(135deg, #06b6d4, #0ea5e9);">TB</div>
+                        <div>
+                            <div class="rv-name">Thomas B.</div>
+                            <div class="rv-module">Studio 3D / 4D Pro</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="rv-card" style="background:linear-gradient(135deg,rgba(6,182,212,0.16),rgba(14,165,233,0.10));border:1px solid rgba(6,182,212,0.28);">
-                    <div class="rv-stars" style="color:#f59e0b;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                    <p class="rv-text" data-i18n="reviews_r3">"Des animations 4D en temps r&eacute;el directement dans le navigateur ? Rien n'y ressemble."</p>
-                    <div class="rv-author"><div class="rv-avatar" style="background:linear-gradient(135deg,#06b6d4,#0ea5e9);">TB</div><div><div class="rv-name">Thomas B.</div><div class="rv-module">Studio 3D / 4D Pro</div></div></div>
+
+                <!-- Card 3: DevSocial AI Hub -->
+                <div class="rv-card">
+                    <div style="position:absolute; top:0; left:0; width:100%; height:4px; background:linear-gradient(90deg, #10b981, #059669);"></div>
+                    <div class="rv-stars">★★★★★</div>
+                    <p class="rv-text" data-i18n="reviews_r4">"La salle de co-coding multijoueur est incroyable. Mon équipe travaille depuis 3 pays. Zéro latence."</p>
+                    <div class="rv-author">
+                        <div class="rv-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">MR</div>
+                        <div>
+                            <div class="rv-name">Marco R.</div>
+                            <div class="rv-module">DevSocial AI Hub</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="rv-card" style="background:linear-gradient(135deg,rgba(16,185,129,0.16),rgba(5,150,105,0.10));border:1px solid rgba(16,185,129,0.28);">
-                    <div class="rv-stars" style="color:#f59e0b;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                    <p class="rv-text" data-i18n="reviews_r4">"La salle de co-coding multijoueur est incroyable. Mon &eacute;quipe travaille depuis 3 pays. Z&eacute;ro latence."</p>
-                    <div class="rv-author"><div class="rv-avatar" style="background:linear-gradient(135deg,#10b981,#059669);">MR</div><div><div class="rv-name">Marco R.</div><div class="rv-module">DevSocial AI Hub</div></div></div>
+
+                <!-- Card 4: AI Ad & Widget Studio -->
+                <div class="rv-card">
+                    <div style="position:absolute; top:0; left:0; width:100%; height:4px; background:linear-gradient(90deg, #0891b2, #0e7490);"></div>
+                    <div class="rv-stars">★★★★★</div>
+                    <p class="rv-text" data-i18n="reviews_r7">"Widget de compteur animé créé en 5 minutes. Mes clients adorent l'effet visuel — les conversions ont augmenté !"</p>
+                    <div class="rv-author">
+                        <div class="rv-avatar" style="background: linear-gradient(135deg, #0891b2, #0e7490);">CV</div>
+                        <div>
+                            <div class="rv-name">Clara V.</div>
+                            <div class="rv-module">AI Ad & Widget Studio</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="rv-card" style="background:linear-gradient(135deg,rgba(249,115,22,0.16),rgba(239,68,68,0.10));border:1px solid rgba(249,115,22,0.28);">
-                    <div class="rv-stars" style="color:#f59e0b;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                    <p class="rv-text" data-i18n="reviews_r5">"Mes publicit&eacute;s ont un taux de clics 3x sup&eacute;rieur depuis Ad-Genius AI. Les animations captent l'attention instantan&eacute;ment."</p>
-                    <div class="rv-author"><div class="rv-avatar" style="background:linear-gradient(135deg,#f97316,#ef4444);">PG</div><div><div class="rv-name">Pierre G.</div><div class="rv-module">Ad-Genius AI Pro</div></div></div>
+
+                <!-- Card 5: Ad-Genius AI Pro -->
+                <div class="rv-card">
+                    <div style="position:absolute; top:0; left:0; width:100%; height:4px; background:linear-gradient(90deg, #f97316, #ef4444);"></div>
+                    <div class="rv-stars">★★★★★</div>
+                    <p class="rv-text" data-i18n="reviews_r5">"Mes publicités ont un taux de clics 3x supérieur depuis Ad-Genius AI. Les animations captent l'attention instantanément."</p>
+                    <div class="rv-author">
+                        <div class="rv-avatar" style="background: linear-gradient(135deg, #f97316, #ef4444);">PG</div>
+                        <div>
+                            <div class="rv-name">Pierre G.</div>
+                            <div class="rv-module">Ad-Genius AI Pro</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="rv-card" style="background:linear-gradient(135deg,rgba(139,92,246,0.18),rgba(217,70,239,0.12));border:1px solid rgba(217,70,239,0.28);">
-                    <div class="rv-stars" style="color:#f59e0b;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                    <p class="rv-text" data-i18n="reviews_r6">"Le g&eacute;n&eacute;rateur de n&eacute;on 3D a transform&eacute; l'image de ma marque. Des visuels professionnels en quelques clics !"</p>
-                    <div class="rv-author"><div class="rv-avatar" style="background:linear-gradient(135deg,#8b5cf6,#d946ef);">SL</div><div><div class="rv-name">Sophie L.</div><div class="rv-module">3D Marketing Lab</div></div></div>
+
+                <!-- Card 6: 3D Marketing Lab -->
+                <div class="rv-card">
+                    <div style="position:absolute; top:0; left:0; width:100%; height:4px; background:linear-gradient(90deg, #8b5cf6, #d946ef);"></div>
+                    <div class="rv-stars">★★★★★</div>
+                    <p class="rv-text" data-i18n="reviews_r6">"Le générateur de néon 3D a transformé l'image de ma marque. Des visuels professionnels en quelques clics !"</p>
+                    <div class="rv-author">
+                        <div class="rv-avatar" style="background: linear-gradient(135deg, #8b5cf6, #d946ef);">SL</div>
+                        <div>
+                            <div class="rv-name">Sophie L.</div>
+                            <div class="rv-module">3D Marketing Lab</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="rv-card" style="background:linear-gradient(135deg,rgba(8,145,178,0.16),rgba(14,116,144,0.10));border:1px solid rgba(8,145,178,0.28);">
-                    <div class="rv-stars" style="color:#f59e0b;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                    <p class="rv-text" data-i18n="reviews_r7">"Widget de compteur anim&eacute; cr&eacute;&eacute; en 5 minutes. Mes clients adorent l'effet visuel &#8212; les conversions ont augment&eacute; !"</p>
-                    <div class="rv-author"><div class="rv-avatar" style="background:linear-gradient(135deg,#0891b2,#0e7490);">CV</div><div><div class="rv-name">Clara V.</div><div class="rv-module">Widget Studio</div></div></div>
-                </div>
-                <div class="rv-card" style="background:linear-gradient(135deg,rgba(6,95,70,0.22),rgba(4,120,87,0.14));border:1px solid rgba(16,185,129,0.22);">
-                    <div class="rv-stars" style="color:#f59e0b;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                    <p class="rv-text" data-i18n="reviews_r8">"Omni-Convert est le meilleur convertisseur que j'aie jamais utilis&eacute;. 100% hors-ligne, aucune donn&eacute;e envoy&eacute;e. Parfait !"</p>
-                    <div class="rv-author"><div class="rv-avatar" style="background:linear-gradient(135deg,#065f46,#047857);">AM</div><div><div class="rv-name">Antoine M.</div><div class="rv-module">Free Tools / Omni-Convert</div></div></div>
-                </div>
-                <div class="rv-card" style="background:linear-gradient(135deg,rgba(124,58,237,0.18),rgba(91,33,182,0.12));border:1px solid rgba(124,58,237,0.28);">
-                    <div class="rv-stars" style="color:#f59e0b;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                    <p class="rv-text" data-i18n="reviews_r9">"Le chat vocal WebRTC int&eacute;gr&eacute; fait toute la diff&eacute;rence. On code et discute sans jamais quitter la plateforme."</p>
-                    <div class="rv-author"><div class="rv-avatar" style="background:linear-gradient(135deg,#7c3aed,#5b21b6);">NS</div><div><div class="rv-name">Nadia S.</div><div class="rv-module">DevSocial AI Hub</div></div></div>
-                </div>
+
+            </div><!-- END REVIEWS GRID -->
+
+            <!-- Q&A ACCORDION -->
+            <div style="text-align: center; margin-top: 60px; margin-bottom: 36px;">
+                <h3 style="font-size: clamp(20px, 3vw, 28px); font-weight: 700; color: #e2e8f0; margin-bottom: 8px; display: inline-flex; align-items: center; gap: 10px;">
+                    💬 <span data-i18n="qa_title">Questions fréquentes par module</span>
+                </h3>
+                <p data-i18n="qa_sub" style="color: #64748b; font-size: 14px; margin: 0;">Cliquez sur une question pour afficher la réponse</p>
             </div>
 
-            <h3 style="text-align:center;font-size:clamp(18px,3vw,26px);font-weight:700;color:#e2e8f0;margin-bottom:6px;">
-                &#128172; <span data-i18n="qa_title">Questions fr&eacute;quentes par module</span>
-            </h3>
-            <p data-i18n="qa_sub" style="text-align:center;color:#475569;font-size:13px;margin-bottom:32px;">Cliquez sur une question pour afficher la r&eacute;ponse</p>
+            <div id="qa-accordion" style="display: flex; flex-direction: column; gap: 14px; max-width: 860px; margin: 0 auto;">
+                
+                <div class="qa-item" style="border: 1px solid rgba(99,102,241,0.25); border-radius: 16px; overflow: hidden; background: rgba(255,255,255,0.02);">
+                    <button class="qa-trigger" onclick="toggleQA(this)" style="width:100%; text-align:left; background:transparent; border:none; padding:20px 24px; color:#e2e8f0; font-size:15px; font-weight:600; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-family:'Inter',sans-serif; transition:background 0.2s; gap:12px;" onmouseover="this.style.background='rgba(99,102,241,0.1)'" onmouseout="this.style.background='transparent'">
+                        <span data-i18n="qa_q1">🏗️ L'IA Architecte génère-t-il du code propre et exportable ?</span>
+                        <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; transition:transform 0.3s;"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="qa-body" style="max-height:0; overflow:hidden; transition:max-height 0.35s ease; background:rgba(99,102,241,0.04);"><p data-i18n="qa_a1" style="padding:18px 24px; color:#94a3b8; font-size:14px; line-height:1.7; margin:0;">Oui ! Le code généré est du HTML/CSS/JS pur, sans dépendances lourdes.</p></div>
+                </div>
 
-            <div id="qa-accordion" style="display:flex;flex-direction:column;gap:12px;max-width:820px;margin:0 auto 20px;">
-                <div class="qa-item" style="border:1px solid rgba(99,102,241,0.25);border-radius:14px;overflow:hidden;">
-                    <button class="qa-trigger" onclick="toggleQA(this)" style="width:100%;text-align:left;background:rgba(99,102,241,0.06);border:none;padding:18px 22px;color:#e2e8f0;font-size:14px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:'Inter',sans-serif;transition:background 0.2s;gap:12px;" onmouseover="this.style.background='rgba(99,102,241,0.14)'" onmouseout="this.style.background='rgba(99,102,241,0.06)'">
-                        <span data-i18n="qa_q1">L'IA Architecte g&eacute;n&egrave;re-t-il du code propre et exportable ?</span>
-                        <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform 0.3s;"><polyline points="6 9 12 15 18 9"/></svg>
+                <div class="qa-item" style="border: 1px solid rgba(6,182,212,0.25); border-radius: 16px; overflow: hidden; background: rgba(255,255,255,0.02);">
+                    <button class="qa-trigger" onclick="toggleQA(this)" style="width:100%; text-align:left; background:transparent; border:none; padding:20px 24px; color:#e2e8f0; font-size:15px; font-weight:600; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-family:'Inter',sans-serif; transition:background 0.2s; gap:12px;" onmouseover="this.style.background='rgba(6,182,212,0.1)'" onmouseout="this.style.background='transparent'">
+                        <span data-i18n="qa_q2">🎯 Quels formats 3D sont supportés en import dans Studio 3D/4D Pro ?</span>
+                        <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; transition:transform 0.3s;"><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
-                    <div class="qa-body" style="max-height:0;overflow:hidden;transition:max-height 0.35s ease;background:rgba(99,102,241,0.04);"><p data-i18n="qa_a1" style="padding:16px 22px;color:#94a3b8;font-size:14px;line-height:1.7;margin:0;">Oui ! Le code g&eacute;n&eacute;r&eacute; est du HTML/CSS/JS pur, sans d&eacute;pendances lourdes.</p></div>
+                    <div class="qa-body" style="max-height:0; overflow:hidden; transition:max-height 0.35s ease; background:rgba(6,182,212,0.04);"><p data-i18n="qa_a2" style="padding:18px 24px; color:#94a3b8; font-size:14px; line-height:1.7; margin:0;">Studio 3D/4D Pro supporte STL, GLB, GLTF et OBJ.</p></div>
                 </div>
-                <div class="qa-item" style="border:1px solid rgba(6,182,212,0.25);border-radius:14px;overflow:hidden;">
-                    <button class="qa-trigger" onclick="toggleQA(this)" style="width:100%;text-align:left;background:rgba(6,182,212,0.06);border:none;padding:18px 22px;color:#e2e8f0;font-size:14px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:'Inter',sans-serif;transition:background 0.2s;gap:12px;" onmouseover="this.style.background='rgba(6,182,212,0.14)'" onmouseout="this.style.background='rgba(6,182,212,0.06)'">
-                        <span data-i18n="qa_q2">Quels formats 3D sont support&eacute;s en import dans Studio 3D/4D Pro ?</span>
-                        <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform 0.3s;"><polyline points="6 9 12 15 18 9"/></svg>
+
+                <div class="qa-item" style="border: 1px solid rgba(16,185,129,0.25); border-radius: 16px; overflow: hidden; background: rgba(255,255,255,0.02);">
+                    <button class="qa-trigger" onclick="toggleQA(this)" style="width:100%; text-align:left; background:transparent; border:none; padding:20px 24px; color:#e2e8f0; font-size:15px; font-weight:600; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-family:'Inter',sans-serif; transition:background 0.2s; gap:12px;" onmouseover="this.style.background='rgba(16,185,129,0.1)'" onmouseout="this.style.background='transparent'">
+                        <span data-i18n="qa_q3">👥 Combien de personnes peuvent coder ensemble dans DevSocial AI Hub ?</span>
+                        <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; transition:transform 0.3s;"><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
-                    <div class="qa-body" style="max-height:0;overflow:hidden;transition:max-height 0.35s ease;background:rgba(6,182,212,0.04);"><p data-i18n="qa_a2" style="padding:16px 22px;color:#94a3b8;font-size:14px;line-height:1.7;margin:0;">Studio 3D/4D Pro supporte STL, GLB, GLTF et OBJ.</p></div>
+                    <div class="qa-body" style="max-height:0; overflow:hidden; transition:max-height 0.35s ease; background:rgba(16,185,129,0.04);"><p data-i18n="qa_a3" style="padding:18px 24px; color:#94a3b8; font-size:14px; line-height:1.7; margin:0;">Plusieurs utilisateurs peuvent rejoindre la même salle simultanément.</p></div>
                 </div>
-                <div class="qa-item" style="border:1px solid rgba(16,185,129,0.25);border-radius:14px;overflow:hidden;">
-                    <button class="qa-trigger" onclick="toggleQA(this)" style="width:100%;text-align:left;background:rgba(16,185,129,0.06);border:none;padding:18px 22px;color:#e2e8f0;font-size:14px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:'Inter',sans-serif;transition:background 0.2s;gap:12px;" onmouseover="this.style.background='rgba(16,185,129,0.14)'" onmouseout="this.style.background='rgba(16,185,129,0.06)'">
-                        <span data-i18n="qa_q3">Combien de personnes peuvent coder ensemble dans DevSocial AI Hub ?</span>
-                        <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform 0.3s;"><polyline points="6 9 12 15 18 9"/></svg>
+
+                <div class="qa-item" style="border: 1px solid rgba(139,92,246,0.25); border-radius: 16px; overflow: hidden; background: rgba(255,255,255,0.02);">
+                    <button class="qa-trigger" onclick="toggleQA(this)" style="width:100%; text-align:left; background:transparent; border:none; padding:20px 24px; color:#e2e8f0; font-size:15px; font-weight:600; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-family:'Inter',sans-serif; transition:background 0.2s; gap:12px;" onmouseover="this.style.background='rgba(139,92,246,0.1)'" onmouseout="this.style.background='transparent'">
+                        <span data-i18n="qa_q4">🔮 Les widgets créés dans Widget Studio fonctionnent-ils sur mobile ?</span>
+                        <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; transition:transform 0.3s;"><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
-                    <div class="qa-body" style="max-height:0;overflow:hidden;transition:max-height 0.35s ease;background:rgba(16,185,129,0.04);"><p data-i18n="qa_a3" style="padding:16px 22px;color:#94a3b8;font-size:14px;line-height:1.7;margin:0;">Plusieurs utilisateurs peuvent rejoindre la m&ecirc;me salle simultan&eacute;ment.</p></div>
+                    <div class="qa-body" style="max-height:0; overflow:hidden; transition:max-height 0.35s ease; background:rgba(139,92,246,0.04);"><p data-i18n="qa_a4" style="padding:18px 24px; color:#94a3b8; font-size:14px; line-height:1.7; margin:0;">Oui, tous les widgets sont entièrement responsifs pour mobile, tablette et desktop.</p></div>
                 </div>
-                <div class="qa-item" style="border:1px solid rgba(139,92,246,0.25);border-radius:14px;overflow:hidden;">
-                    <button class="qa-trigger" onclick="toggleQA(this)" style="width:100%;text-align:left;background:rgba(139,92,246,0.06);border:none;padding:18px 22px;color:#e2e8f0;font-size:14px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:'Inter',sans-serif;transition:background 0.2s;gap:12px;" onmouseover="this.style.background='rgba(139,92,246,0.14)'" onmouseout="this.style.background='rgba(139,92,246,0.06)'">
-                        <span data-i18n="qa_q4">Les widgets cr&eacute;&eacute;s dans Widget Studio fonctionnent-ils sur mobile ?</span>
-                        <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform 0.3s;"><polyline points="6 9 12 15 18 9"/></svg>
+
+                <div class="qa-item" style="border: 1px solid rgba(249,115,22,0.25); border-radius: 16px; overflow: hidden; background: rgba(255,255,255,0.02);">
+                    <button class="qa-trigger" onclick="toggleQA(this)" style="width:100%; text-align:left; background:transparent; border:none; padding:20px 24px; color:#e2e8f0; font-size:15px; font-weight:600; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-family:'Inter',sans-serif; transition:background 0.2s; gap:12px;" onmouseover="this.style.background='rgba(249,115,22,0.1)'" onmouseout="this.style.background='transparent'">
+                        <span data-i18n="qa_q5">⚡ Les publicités Ad-Genius AI sont-elles compatibles Google Ads / Meta Ads ?</span>
+                        <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fb923c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; transition:transform 0.3s;"><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
-                    <div class="qa-body" style="max-height:0;overflow:hidden;transition:max-height 0.35s ease;background:rgba(139,92,246,0.04);"><p data-i18n="qa_a4" style="padding:16px 22px;color:#94a3b8;font-size:14px;line-height:1.7;margin:0;">Oui, tous les widgets sont enti&egrave;rement responsifs pour mobile, tablette et desktop.</p></div>
+                    <div class="qa-body" style="max-height:0; overflow:hidden; transition:max-height 0.35s ease; background:rgba(249,115,22,0.04);"><p data-i18n="qa_a5" style="padding:18px 24px; color:#94a3b8; font-size:14px; line-height:1.7; margin:0;">Les exports HTML5 sont compatibles avec les formats Display Ads standards.</p></div>
                 </div>
-                <div class="qa-item" style="border:1px solid rgba(249,115,22,0.25);border-radius:14px;overflow:hidden;">
-                    <button class="qa-trigger" onclick="toggleQA(this)" style="width:100%;text-align:left;background:rgba(249,115,22,0.06);border:none;padding:18px 22px;color:#e2e8f0;font-size:14px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:'Inter',sans-serif;transition:background 0.2s;gap:12px;" onmouseover="this.style.background='rgba(249,115,22,0.14)'" onmouseout="this.style.background='rgba(249,115,22,0.06)'">
-                        <span data-i18n="qa_q5">Les publicit&eacute;s Ad-Genius AI sont-elles compatibles Google Ads / Meta Ads ?</span>
-                        <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fb923c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform 0.3s;"><polyline points="6 9 12 15 18 9"/></svg>
+
+                <div class="qa-item" style="border: 1px solid rgba(217,70,239,0.25); border-radius: 16px; overflow: hidden; background: rgba(255,255,255,0.02);">
+                    <button class="qa-trigger" onclick="toggleQA(this)" style="width:100%; text-align:left; background:transparent; border:none; padding:20px 24px; color:#e2e8f0; font-size:15px; font-weight:600; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-family:'Inter',sans-serif; transition:background 0.2s; gap:12px;" onmouseover="this.style.background='rgba(217,70,239,0.1)'" onmouseout="this.style.background='transparent'">
+                        <span data-i18n="qa_q6">🌀 Puis-je intégrer mon logo dans les outils du 3D Marketing Lab ?</span>
+                        <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e879f9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; transition:transform 0.3s;"><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
-                    <div class="qa-body" style="max-height:0;overflow:hidden;transition:max-height 0.35s ease;background:rgba(249,115,22,0.04);"><p data-i18n="qa_a5" style="padding:16px 22px;color:#94a3b8;font-size:14px;line-height:1.7;margin:0;">Les exports HTML5 sont compatibles avec les formats Display Ads standards.</p></div>
+                    <div class="qa-body" style="max-height:0; overflow:hidden; transition:max-height 0.35s ease; background:rgba(217,70,239,0.04);"><p data-i18n="qa_a6" style="padding:18px 24px; color:#94a3b8; font-size:14px; line-height:1.7; margin:0;">Oui ! Uploadez votre SVG ou PNG dans Logo Exploder 3D ou Particle Logo Cloud.</p></div>
                 </div>
-                <div class="qa-item" style="border:1px solid rgba(217,70,239,0.25);border-radius:14px;overflow:hidden;">
-                    <button class="qa-trigger" onclick="toggleQA(this)" style="width:100%;text-align:left;background:rgba(217,70,239,0.06);border:none;padding:18px 22px;color:#e2e8f0;font-size:14px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:'Inter',sans-serif;transition:background 0.2s;gap:12px;" onmouseover="this.style.background='rgba(217,70,239,0.14)'" onmouseout="this.style.background='rgba(217,70,239,0.06)'">
-                        <span data-i18n="qa_q6">Puis-je int&eacute;grer mon logo dans les outils du 3D Marketing Lab ?</span>
-                        <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e879f9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform 0.3s;"><polyline points="6 9 12 15 18 9"/></svg>
+
+                <div class="qa-item" style="border: 1px solid rgba(56,189,248,0.25); border-radius: 16px; overflow: hidden; background: rgba(255,255,255,0.02);">
+                    <button class="qa-trigger" onclick="toggleQA(this)" style="width:100%; text-align:left; background:transparent; border:none; padding:20px 24px; color:#e2e8f0; font-size:15px; font-weight:600; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-family:'Inter',sans-serif; transition:background 0.2s; gap:12px;" onmouseover="this.style.background='rgba(56,189,248,0.1)'" onmouseout="this.style.background='transparent'">
+                        <span data-i18n="qa_q7">⚡ Les Free Tools envoient-ils mes données à des serveurs ?</span>
+                        <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; transition:transform 0.3s;"><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
-                    <div class="qa-body" style="max-height:0;overflow:hidden;transition:max-height 0.35s ease;background:rgba(217,70,239,0.04);"><p data-i18n="qa_a6" style="padding:16px 22px;color:#94a3b8;font-size:14px;line-height:1.7;margin:0;">Oui ! Uploadez votre SVG ou PNG dans Logo Exploder 3D ou Particle Logo Cloud.</p></div>
+                    <div class="qa-body" style="max-height:0; overflow:hidden; transition:max-height 0.35s ease; background:rgba(56,189,248,0.04);"><p data-i18n="qa_a7" style="padding:18px 24px; color:#94a3b8; font-size:14px; line-height:1.7; margin:0;">Non, jamais. Tous les outils fonctionnent 100% côté client dans votre navigateur.</p></div>
                 </div>
-                <div class="qa-item" style="border:1px solid rgba(56,189,248,0.25);border-radius:14px;overflow:hidden;">
-                    <button class="qa-trigger" onclick="toggleQA(this)" style="width:100%;text-align:left;background:rgba(56,189,248,0.06);border:none;padding:18px 22px;color:#e2e8f0;font-size:14px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:'Inter',sans-serif;transition:background 0.2s;gap:12px;" onmouseover="this.style.background='rgba(56,189,248,0.14)'" onmouseout="this.style.background='rgba(56,189,248,0.06)'">
-                        <span data-i18n="qa_q7">Les Free Tools envoient-ils mes donn&eacute;es &agrave; des serveurs ?</span>
-                        <svg class="qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform 0.3s;"><polyline points="6 9 12 15 18 9"/></svg>
-                    </button>
-                    <div class="qa-body" style="max-height:0;overflow:hidden;transition:max-height 0.35s ease;background:rgba(56,189,248,0.04);"><p data-i18n="qa_a7" style="padding:16px 22px;color:#94a3b8;font-size:14px;line-height:1.7;margin:0;">Non, jamais. Tous les outils fonctionnent 100% c&ocirc;t&eacute; client dans votre navigateur.</p></div>
-                </div>
-            </div>
+
+            </div><!-- END Q&A -->
 
             <script>
             (function(){
-                window.toggleQA=function(btn){
-                    var item=btn.closest('.qa-item'),body=item.querySelector('.qa-body'),arrow=btn.querySelector('.qa-arrow');
-                    var open=body.style.maxHeight&&body.style.maxHeight!=='0px';
-                    document.querySelectorAll('.qa-body').forEach(function(b){b.style.maxHeight='0px';});
-                    document.querySelectorAll('.qa-arrow').forEach(function(a){a.style.transform='';});
-                    if(!open){body.style.maxHeight=body.scrollHeight+40+'px';arrow.style.transform='rotate(180deg)';}
+                window.toggleQA = function(btn){
+                    var item = btn.closest('.qa-item'), body = item.querySelector('.qa-body'), arrow = btn.querySelector('.qa-arrow');
+                    var open = body.style.maxHeight && body.style.maxHeight !== '0px';
+                    document.querySelectorAll('.qa-body').forEach(function(b){ b.style.maxHeight = '0px'; });
+                    document.querySelectorAll('.qa-arrow').forEach(function(a){ a.style.transform = ''; });
+                    if (!open) { body.style.maxHeight = body.scrollHeight + 40 + 'px'; arrow.style.transform = 'rotate(180deg)'; }
                 };
             })();
             </script>
         </section>
         <!-- ===== END REVIEWS + Q&A SECTION ===== -->
 
-
-        </section>
     </main>
 
     <!-- Footer -->
@@ -2558,8 +2691,8 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="js/i18n.js?v=4"></script>
-    <script src="js/main.js?v=3"></script>
+    <script src="js/i18n.js?v=5"></script>
+    <script src="js/main.js?v=5"></script>
 
     <!-- Product Hunt Floating Badge -->
     <style>
