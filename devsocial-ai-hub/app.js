@@ -470,27 +470,31 @@
       card.className = 'post-card';
       card.dataset.id = post.id;
       
-      const commentsHtml = post.comments.map(c => `
+      const commentsList = post.comments || [];
+      const commentsHtml = commentsList.map(c => `
         <div class="comment-item">
-          <img src="${c.avatar}" alt="User">
+          <img src="${c.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=default'}" alt="User">
           <div class="comment-meta">
-            <h5>${c.user}</h5>
-            <p>${c.text}</p>
+            <h5>${c.user || 'Anonymous'}</h5>
+            <p>${c.text || ''}</p>
           </div>
         </div>
       `).join('');
-
-      const commentsLabel = currentLang === 'fr' ? `Commentaires (${post.comments.length})` : `Comments (${post.comments.length})`;
+ 
+      const commentsLabel = currentLang === 'fr' ? `Commentaires (${commentsList.length})` : `Comments (${commentsList.length})`;
       const forkLabel = currentLang === 'fr' ? `🔌 Importer` : `🔌 Fork Code`;
       const captionText = currentLang === 'fr' ? (post.caption_fr || post.caption || post.caption_en || '') : (post.caption_en || post.caption || post.caption_fr || '');
-
+      const userAvatar = post.userAvatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=default';
+      const userTag = post.userTag || '';
+      const likesCount = post.likes || 0;
+ 
       card.innerHTML = `
         <div class="post-header">
           <div class="post-user-info">
-            <img src="${post.userAvatar}" alt="Avatar">
+            <img src="${userAvatar}" alt="Avatar">
             <div class="post-user-meta">
-              <h4>${post.user}</h4>
-              <span>${post.userTag}</span>
+              <h4>${post.user || 'Anonymous'}</h4>
+              <span>${userTag}</span>
             </div>
           </div>
           <div style="display: flex; align-items: center; gap: 8px;">
@@ -512,7 +516,7 @@
         <div class="post-actions">
           <div class="action-buttons-group">
             <button class="btn-post-action btn-like" onclick="likePost(${post.id})">
-              <i class="fa-solid fa-heart"></i> <span>${post.likes}</span>
+              <i class="fa-solid fa-heart"></i> <span>${likesCount}</span>
             </button>
             <button class="btn-post-action" onclick="toggleComments(${post.id})">
               <i class="fa-solid fa-comment"></i> <span>${commentsLabel}</span>
@@ -525,7 +529,7 @@
             ${forkLabel}
           </button>
         </div>
-
+ 
         <!-- Comments Dropdown -->
         <div class="post-comments-section" id="comments-section-${post.id}" style="display: none;">
           <div class="comments-list" id="comments-list-${post.id}">
@@ -565,11 +569,11 @@
       item.innerHTML = `
         <div class="gallery-3d-preview" id="gallery-viewport-${post.id}"></div>
         <div class="gallery-meta">
-          <h4>@${post.user} - ${typeLabel}</h4>
+          <h4>@${post.user || 'Anonymous'} - ${typeLabel}</h4>
           <p>${truncatedCaption}</p>
           <div class="gallery-footer-actions">
             <div class="gallery-stats-group">
-              <span><i class="fa-solid fa-heart"></i> ${post.likes}</span>
+              <span><i class="fa-solid fa-heart"></i> ${post.likes || 0}</span>
               <span><i class="fa-solid fa-comment"></i> ${(post.comments || []).length}</span>
             </div>
             <button class="btn-fork-code" style="padding: 6px 12px; font-size: 10.5px;" onclick="openForkCodeModal(${post.id})">
