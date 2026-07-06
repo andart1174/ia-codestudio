@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Creative Assets & UI Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="cyber-bg">
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <a href="../index.html" class="back-btn">
+        <span>⬅</span> <span data-i18n="btn_back">Retour / Back</span>
+      </a>
+    </div>
+    <div class="header-logo">
+      <span class="logo-lightning">⚡</span>
+      <h1>3D CREATIVE <span class="accent-glow">STUDIO</span></h1>
+    </div>
+    <div class="header-controls">
+      <div class="lang-selector">
+        <button id="btn-lang-fr" class="lang-btn active">FR</button>
+        <button id="btn-lang-en" class="lang-btn">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="app-layout">
+    
+    <!-- Left Panel: Dynamic Customizer -->
+    <section class="control-panel glass-card">
+      <h2 data-i18n="title_customizer">Personnalisation</h2>
+      
+      <!-- Category Selection -->
+      <div class="control-group">
+        <label for="select-category" data-i18n="label_category">Catégorie</label>
+        <select id="select-category" class="custom-select">
+          <option value="buttons" data-i18n="cat_buttons" selected>Boutons Interactifs</option>
+          <option value="business_cards" data-i18n="cat_cards">Cartes de Visite 3D</option>
+          <option value="gift_cards" data-i18n="cat_gift">Cartes Cadeaux 3D</option>
+          <option value="surprise_cards" data-i18n="cat_surprise">Cartes Surprises 3D</option>
+          <option value="toggles" data-i18n="cat_toggles">Switchs & Toggles 3D</option>
+          <option value="parallax_cards" data-i18n="cat_parallax">Cartes Parallaxe 3D</option>
+          <option value="cursors" data-i18n="cat_cursors">Curseurs 3D</option>
+          <option value="typography" data-i18n="cat_typography">Typographie 3D</option>
+          <option value="background_assets" data-i18n="cat_background">Arrière-plans Flottants</option>
+          <option value="corner_badges" data-i18n="cat_badges">Rubans de Coin / Insignes</option>
+          <option value="data_viz" data-i18n="cat_data_viz">Visualisations de Données 3D</option>
+          <option value="audio_players" data-i18n="cat_audio_players">Lecteurs Audio 3D</option>
+          <option value="loaders" data-i18n="cat_loaders">Écrans de Chargement 3D</option>
+          <option value="carousels" data-i18n="cat_carousels">Carrousels de Produits 3D</option>
+          <option value="menus" data-i18n="cat_menus">Menus de Navigation 3D</option>
+          <option value="widgets" data-i18n="cat_widgets">Widgets Interactifs 3D</option>
+          <option value="sections" data-i18n="cat_sections">Sections Complètes 3D</option>
+          <option value="ads_promo" data-i18n="cat_ads_promo">Publicité & Bannières 3D</option>
+          <option value="gamification" data-i18n="cat_gamification">Gamification & Récompenses 3D</option>
+          <option value="audio_fx" data-i18n="cat_audio_fx">Visualiseurs & Synthétiseurs Audio 3D</option>
+        </select>
+      </div>
+
+      <!-- Component Selection (Filtered dynamically via JS) -->
+      <div class="control-group">
+        <label for="select-component" data-i18n="label_component">Modèle 3D</label>
+        <select id="select-component" class="custom-select"></select>
+      </div>
+
+      <!-- DYNAMIC INPUT FIELDS BASED ON SELECTION -->
+      
+      <!-- 1. Default Simple Text Input -->
+      <div class="control-group dynamic-field" id="field-default-text">
+        <label for="input-text" data-i18n="label_text">Texte principal</label>
+        <input type="text" id="input-text" class="custom-input" value="BOUTON 3D">
+      </div>
+
+      <!-- 2. Business Card Fields -->
+      <div class="dynamic-group dynamic-field" id="field-group-business" style="display: none;">
+        <div class="control-group">
+          <label for="input-card-name" data-i18n="label_card_name">Nom & Prénom</label>
+          <input type="text" id="input-card-name" class="custom-input" value="Alex Dev">
+        </div>
+        <div class="control-group" style="margin-top: 12px;">
+          <label for="input-card-role" data-i18n="label_card_role">Profession / Rôle</label>
+          <input type="text" id="input-card-role" class="custom-input" value="3D Web Developer">
+        </div>
+        <div class="control-group" style="margin-top: 12px;">
+          <label for="input-card-contact" data-i18n="label_card_contact">Contact (Tel/Email)</label>
+          <input type="text" id="input-card-contact" class="custom-input" value="contact@ia-codestudio.com">
+        </div>
+      </div>
+
+      <!-- 3. Gift Card Fields -->
+      <div class="dynamic-group dynamic-field" id="field-group-gift" style="display: none;">
+        <div class="control-group">
+          <label for="input-gift-title" data-i18n="label_gift_title">Titre du cadeau</label>
+          <input type="text" id="input-gift-title" class="custom-input" value="VIP GIFT CARD">
+        </div>
+        <div class="control-group" style="margin-top: 12px;">
+          <label for="input-gift-code" data-i18n="label_gift_code">Code Promo / Promo Code</label>
+          <input type="text" id="input-gift-code" class="custom-input" value="IA-STUDIO-3D">
+        </div>
+        <div class="control-group" style="margin-top: 12px;">
+          <label for="input-gift-value" data-i18n="label_gift_value">Valeur ($ / € / %)</label>
+          <input type="text" id="input-gift-value" class="custom-input" value="$150">
+        </div>
+      </div>
+
+      <!-- 4. Surprise Card Fields -->
+      <div class="control-group dynamic-field" id="field-group-surprise" style="display: none;">
+        <label for="input-surprise-message" data-i18n="label_surprise_msg">Message Secret</label>
+        <textarea id="input-surprise-message" class="custom-input" rows="3">Tu as gagné une consultation gratuite ! 🎁</textarea>
+      </div>
+
+      <!-- Sound Effects Checkbox (Web Audio API synthesis) -->
+      <div class="control-group">
+        <label class="sound-toggle-label">
+          <input type="checkbox" id="chk-sound" checked>
+          <span data-i18n="label_sound_effects">Activer les effets sonores SFX (Web Audio)</span>
+        </label>
+      </div>
+
+      <!-- Color Customization (Common for all) -->
+      <div class="control-group dual-pickers">
+        <div class="picker-item">
+          <label for="color-primary" data-i18n="label_color_primary">Couleur 3D 1</label>
+          <div class="color-wrapper">
+            <input type="color" id="color-primary" value="#00f0ff">
+            <span id="val-color-primary" class="hex-text">#00F0FF</span>
+          </div>
+        </div>
+        <div class="picker-item">
+          <label for="color-secondary" data-i18n="label_color_secondary">Couleur 3D 2</label>
+          <div class="color-wrapper">
+            <input type="color" id="color-secondary" value="#ff007f">
+            <span id="val-color-secondary" class="hex-text">#FF007F</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sliders (Density / Speed for particles) -->
+      <div class="control-group" id="group-speed-density" style="display: none;">
+        <div class="slider-header">
+          <label for="range-density" data-i18n="label_density">Densité des particules</label>
+          <span id="val-density" class="slider-val">5</span>
+        </div>
+        <input type="range" id="range-density" min="1" max="10" step="1" value="5" class="custom-range">
+      </div>
+
+      <!-- Action buttons -->
+      <div class="action-buttons">
+        <button id="btn-copy-code" class="btn btn-primary">
+          <span class="btn-icon">📋</span>
+          <span data-i18n="btn_copy">Copier le code</span>
+        </button>
+        <button id="btn-download-html" class="btn btn-secondary">
+          <span class="btn-icon">📥</span>
+          <span data-i18n="btn_download">Télécharger HTML</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Right Panel: Live Preview Frame -->
+    <section class="preview-panel glass-card">
+      <div class="preview-header">
+        <div class="window-dots">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+        </div>
+        <div class="preview-title" data-i18n="title_preview">Studio de Prévisualisation</div>
+      </div>
+      
+      <div class="preview-body">
+        <iframe id="preview-iframe" sandbox="allow-scripts"></iframe>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="js/premium-lock.js"></script>
+  <script src="templates.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
