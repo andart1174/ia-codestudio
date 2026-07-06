@@ -46,13 +46,6 @@ let nebulaGroup = null;
 let nebulaParticles = null;
 let nebulaVisible = true;
 
-// --- WEBXR AR MODE ---
-let arSession = null;
-let isARActive = false;
-let arHitTestSource = null;
-let arReticle = null;
-let arHologramPlaced = false;
-let arHologramAnchor = new THREE.Group(); // holds the scene in AR space
 
 const hologramTranslations = {
     fr: {
@@ -422,7 +415,6 @@ function init3D() {
     camera.position.set(0, 8, 18);
 
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
-    renderer.xr.enabled = true; // Enable WebXR AR support
     const w = container.clientWidth || (window.innerWidth * 0.6);
     const h = container.clientHeight || (window.innerHeight * 0.7);
     renderer.setSize(w, h);
@@ -1445,290 +1437,6 @@ function animate(timestamp, xrFrame) {
     if (renderer) renderer.render(scene, camera);
 }
 
-// --- WEBXR AR MODE FUNCTIONS ---
-
-// Build the AR floor reticle (targeting circle shown before placement)
-function buildARReticle() {
-    if (arReticle) scene.remove(arReticle);
-    const color = (colorMap[activeColor] && colorMap[activeColor].three) ? colorMap[activeColor].three : 0x00f3ff;
-    arReticle = new THREE.Group();
-    arReticle.matrixAutoUpdate = false;
-
-    // Outer ring
-    const outerGeo = new THREE.RingGeometry(0.12, 0.15, 32);
-    const outerMat = new THREE.MeshBasicMaterial({ color: color, side: THREE.DoubleSide, transparent: true, opacity: 0.9 });
-    arReticle.add(new THREE.Mesh(outerGeo, outerMat));
-
-    // Inner cross lines
-    const lineMat = new THREE.LineBasicMaterial({ color: color, transparent: true, opacity: 0.7 });
-    const hGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-0.2, 0, 0), new THREE.Vector3(0.2, 0, 0)]);
-    const vGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, -0.2), new THREE.Vector3(0, 0, 0.2)]);
-    arReticle.add(new THREE.Line(hGeo, lineMat));
-    arReticle.add(new THREE.Line(vGeo, lineMat));
-
-    // Corner brackets
-    for (let i = 0; i < 4; i++) {
-        const angle = (i / 4) * Math.PI * 2 + Math.PI / 4;
-        const bx = Math.cos(angle) * 0.22;
-        const bz = Math.sin(angle) * 0.22;
-        const bracket = new THREE.Mesh(
-            new THREE.PlaneGeometry(0.05, 0.05),
-            new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.8 })
-        );
-        bracket.position.set(bx, 0, bz);
-        bracket.rotation.x = -Math.PI / 2;
-        arReticle.add(bracket);
-    }
-
-    arReticle.visible = false;
-    scene.add(arReticle);
-}
-
-// Show QR Code modal so desktop user can scan URL on phone
-function showARQRModal() {
-    const modal = document.getElementById('ar-qr-modal');
-    const qrContainer = document.getElementById('ar-qr-code');
-    const urlDisplay = document.getElementById('ar-qr-url');
-    if (!modal || !qrContainer) return;
-
-    // Clear previous QR
-    qrContainer.innerHTML = '';
-
-    const pageUrl = window.location.href;
-    if (urlDisplay) urlDisplay.textContent = pageUrl;
-
-    // Generate QR code using QRCode.js library
-    if (typeof QRCode !== 'undefined') {
-        new QRCode(qrContainer, {
-            text: pageUrl,
-            width: 200,
-            height: 200,
-            colorDark: '#000000',
-            colorLight: '#ffffff',
-            correctLevel: QRCode.CorrectLevel.M
-        });
-    } else {
-        // Fallback: use Google Charts API QR
-        const img = document.createElement('img');
-        img.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(pageUrl)}`;
-        img.width = 200;
-        img.height = 200;
-        img.alt = 'QR Code';
-        qrContainer.appendChild(img);
-    }
-
-    modal.classList.add('active');
-
-    // Close button
-    const closeBtn = document.getElementById('ar-qr-close');
-    if (closeBtn) {
-        closeBtn.onclick = () => modal.classList.remove('active');
-    }
-    // Click outside to close
-    modal.onclick = (e) => {
-        if (e.target === modal) modal.classList.remove('active');
-    };
-
-    logTerminal('📱 QR Code generated — scan with your phone to open in AR!');
-}
-
-// Enter AR session
-async function enterAR() {
-    if (!navigator.xr) {
-        showARQRModal();
-        return;
-    }
-    try {
-        const supported = await navigator.xr.isSessionSupported('immersive-ar');
-        if (!supported) {
-            showARQRModal();
-            return;
-        }
-
-        // Request AR session with hit-test and DOM overlay
-        const sessionInit = {
-            requiredFeatures: ['hit-test'],
-            optionalFeatures: ['dom-overlay', 'light-estimation'],
-            domOverlay: { root: document.getElementById('ar-overlay') }
-        };
-
-        arSession = await navigator.xr.requestSession('immersive-ar', sessionInit);
-        isARActive = true;
-        arHologramPlaced = false;
-
-        // Switch renderer to XR mode
-        renderer.xr.setReferenceSpaceType('local');
-        await renderer.xr.setSession(arSession);
-
-        // Switch from rAF to XR animation loop
-        renderer.setAnimationLoop(animate);
-
-        // Build AR placement reticle
-        buildARReticle();
-
-        // Setup hit-test source
-        const viewerSpace = await arSession.requestReferenceSpace('viewer');
-        arHitTestSource = await arSession.requestHitTestSource({ space: viewerSpace });
-
-        // Show AR overlay UI
-        document.getElementById('ar-overlay').style.display = 'flex';
-        document.getElementById('btn-enter-ar').style.display = 'none';
-        document.getElementById('ar-status').textContent = '📡 Point at a flat surface, then TAP to place hologram';
-
-        // Hide fog in AR (transparent background)
-        scene.fog = null;
-
-        arSession.addEventListener('end', () => exitAR(true));
-
-        // Tap to place hologram
-        renderer.domElement.addEventListener('click', onARTap);
-
-        logTerminal('📡 AR session active. Point camera at a flat surface.');
-        playSound('confirm');
-
-    } catch(err) {
-        console.error('AR Error:', err);
-        logTerminal('❌ AR Error: ' + err.message);
-        alert('AR failed to start: ' + err.message);
-        isARActive = false;
-    }
-}
-
-// Handle tap in AR to place hologram
-function onARTap() {
-    if (!isARActive || !arReticle || !arReticle.visible) return;
-    if (arHologramPlaced) {
-        // Second tap: reposition
-        arHologramAnchor.matrix.copy(arReticle.matrix);
-        arHologramAnchor.matrixAutoUpdate = false;
-        logTerminal('📡 Hologram repositioned.');
-        return;
-    }
-    // First tap: place hologram at reticle position
-    arHologramAnchor = new THREE.Group();
-    arHologramAnchor.matrixAutoUpdate = false;
-    arHologramAnchor.matrix.copy(arReticle.matrix);
-
-    // Move existing scene groups into the AR anchor
-    scene.add(arHologramAnchor);
-    arHologramAnchor.add(coreGroup);
-    arHologramAnchor.add(gridGroup);
-    arHologramAnchor.add(clockGroup);
-    if (nebulaGroup) arHologramAnchor.add(nebulaGroup);
-
-    // Scale to real-world size (1 unit = ~0.3m)
-    arHologramAnchor.scale.set(0.3, 0.3, 0.3);
-
-    arHologramPlaced = true;
-    arReticle.visible = false;
-    document.getElementById('ar-status').textContent = '✅ Hologram placed! Tap again to reposition.';
-    logTerminal('✅ Hologram placed in AR at detected surface.');
-    playSound('confirm');
-}
-
-// Exit AR session and restore normal 3D view
-function exitAR(sessionEndedExternally = false) {
-    if (!isARActive) return;
-    isARActive = false;
-
-    // Restore groups to scene
-    if (arHologramPlaced) {
-        scene.add(coreGroup);
-        scene.add(gridGroup);
-        if (clockGroup) scene.add(clockGroup);
-        if (nebulaGroup) scene.add(nebulaGroup);
-        if (arHologramAnchor) scene.remove(arHologramAnchor);
-    }
-
-    // Restore fog
-    scene.fog = new THREE.FogExp2(0x030308, 0.005);
-
-    // Remove AR reticle
-    if (arReticle) { scene.remove(arReticle); arReticle = null; }
-    if (arHitTestSource) { arHitTestSource.cancel(); arHitTestSource = null; }
-
-    // End XR session if not already ended
-    if (!sessionEndedExternally && arSession) {
-        arSession.end().catch(() => {});
-    }
-    arSession = null;
-    arHologramPlaced = false;
-
-    // Switch back to standard rAF loop
-    renderer.setAnimationLoop(null);
-
-    // Restore groups scales
-    [coreGroup, gridGroup, clockGroup, nebulaGroup].forEach(g => {
-        if (g) { g.scale.set(1, 1, 1); }
-    });
-
-    // Rebuild scene normally
-    buildCore();
-    buildGrid();
-    buildParticleNebula();
-    buildReticle();
-    if (clockGroup) clockGroup.visible = clockVisible;
-    if (nebulaGroup) nebulaGroup.visible = nebulaVisible;
-
-    // Restore UI
-    document.getElementById('ar-overlay').style.display = 'none';
-    const btn = document.getElementById('btn-enter-ar');
-    if (btn) btn.style.display = '';
-    renderer.domElement.removeEventListener('click', onARTap);
-
-    logTerminal('📡 AR session ended. Returning to desktop view.');
-
-    // Resume normal animation loop
-    requestAnimationFrame(function loop() {
-        animate();
-    });
-}
-
-// Check WebXR support and show/hide AR button
-async function checkARSupport() {
-    const btn = document.getElementById('btn-enter-ar');
-    if (!btn) return;
-
-    // Always show button on HTTPS (required for WebXR) — hide only on plain HTTP
-    const isHttps = window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    if (!isHttps) {
-        btn.style.display = 'none';
-        return;
-    }
-
-    // Always show the button visually
-    btn.style.display = '';
-
-    if (!navigator.xr) {
-        // Browser doesn't support WebXR at all — show as dimmed with tooltip
-        btn.style.opacity = '0.45';
-        btn.style.cursor = 'default';
-        btn.title = '📱 AR Mode — Open on Chrome on Android to use AR';
-        btn.innerHTML = '<i class="fa-solid fa-camera"></i> AR MODE';
-        logTerminal('📡 AR Mode available — use Chrome on Android to activate.');
-        return;
-    }
-
-    try {
-        const supported = await navigator.xr.isSessionSupported('immersive-ar');
-        if (supported) {
-            btn.style.opacity = '1';
-            btn.style.cursor = 'pointer';
-            btn.title = '🛸 Open Augmented Reality mode — point your camera at the floor!';
-            btn.innerHTML = '<i class="fa-solid fa-camera"></i> AR MODE';
-            logTerminal('📡 WebXR AR supported on this device!');
-        } else {
-            btn.style.opacity = '0.45';
-            btn.style.cursor = 'default';
-            btn.title = '📱 AR Mode — Open on Chrome on Android to use AR';
-            btn.innerHTML = '<i class="fa-solid fa-camera"></i> AR MODE';
-        }
-    } catch(e) {
-        btn.style.opacity = '0.4';
-        btn.style.cursor = 'default';
-        btn.title = '📱 AR Mode — Open on Chrome on Android to use AR';
-    }
-}
 
 // --- 7. LIVE CODE GENERATOR & UI SYNCS ---
 function updateCodeOutput() {
@@ -4383,9 +4091,7 @@ function bindEvents() {
         playSound('hover');
     });
 
-    // WebXR AR Mode Buttons
-    document.getElementById('btn-enter-ar').addEventListener('click', enterAR);
-    document.getElementById('btn-exit-ar').addEventListener('click', () => exitAR(false));
+
 
     // Reset Model to default shapes
     document.getElementById('btn-reset-model').addEventListener('click', () => {
@@ -4463,6 +4169,5 @@ window.onload = () => {
     setTimeout(onWindowResize, 500);
     updateCodeOutput();
     loadHUDFromURL();
-    checkARSupport(); // Show AR button if device supports WebXR
     logTerminal('Quantum HUD Builder online. Système en ligne.');
 };
