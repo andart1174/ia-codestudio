@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛸 Sci-Fi Hologram HUD Builder</title>
+    <!-- Google Fonts: Orbitron for tech elements, Outfit for general text -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome for futuristic icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Embedded Stylesheet to bypass CORS file:// restriction -->
+    <style id="main-styles">
+        /* =============================================================
+           SCI-FI HOLOGRAM HUD DESIGN SYSTEM
+           ============================================================= */
+
+        :root {
+            /* Theme color mappings (updated dynamically by app.js) */
+            --hud-accent: #00f3ff;
+            --hud-glow: rgba(0, 243, 255, 0.4);
+            --hud-glow-dim: rgba(0, 243, 255, 0.1);
+            
+            /* Global design system tokens */
+            --bg-dark: #030308;
+            --bg-panel: rgba(10, 10, 25, 0.6);
+            --border-glass: rgba(0, 243, 255, 0.15);
+            --text-primary: #e2f1f5;
+            --text-secondary: #8da1b5;
+            --font-tech: 'Orbitron', sans-serif;
+            --font-ui: 'Outfit', sans-serif;
+            
+            /* Configurable slider inputs */
+            --scanline-opacity: 0.4;
+            --glitch-freq: 0.2s;
+            --rotation-speed: 1s;
+        }
+
+        /* Base resets & layouts */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: var(--font-ui);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(20, 20, 60, 0.3) 0%, transparent 80%),
+                linear-gradient(rgba(18, 18, 30, 0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(18, 18, 30, 0.2) 1px, transparent 1px);
+            background-size: 100% 100%, 25px 25px, 25px 25px;
+        }
+
+        /* App Container Layout */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 15px;
+            gap: 15px;
+        }
+
+        /* Glassmorphism Panel base */
+        .glass-panel {
+            background: var(--bg-panel);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            box-shadow: 
+                inset 0 0 15px rgba(0, 243, 255, 0.05),
+                0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Header styling */
+        .header-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 25px;
+            border-bottom: 2px solid var(--hud-accent);
+            box-shadow: 0 0 20px var(--hud-glow-dim);
+            flex-shrink: 0;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-family: var(--font-tech);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-glass);
+            background: rgba(255, 255, 255, 0.03);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-right: 18px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .back-btn:hover {
+            color: var(--hud-accent);
+            border-color: var(--hud-accent);
+            background: rgba(0, 243, 255, 0.08);
+            box-shadow: 0 0 15px var(--hud-glow-dim);
+            transform: translateX(-2px);
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-logo h1 {
+            font-family: var(--font-tech);
+            font-size: 1.4rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--hud-glow);
+        }
+
+        .accent-text {
+            color: var(--hud-accent);
+        }
+
+        .pulse-icon {
+            font-size: 1.5rem;
+            color: var(--hud-accent);
+            animation: iconPulse 2s infinite ease-in-out;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .control-group-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-tech);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Select inputs */
+        .glass-select {
+            background: rgba(0, 0, 0, 0.5);
+            color: var(--text-primary);
+            border: 1px solid var(--border-glass);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-family: var(--font-ui);
+            outline: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .glass-select:hover, .glass-select:focus {
+            border-color: var(--hud-accent);
+            box-shadow: 0 0 8px var(--hud-glow-dim);
+        }
+
+        /* Buttons style */
+        .btn-ctrl {
+            background: rgba(0, 243, 255, 0.05);
+            border: 1px solid var(--border-glass);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: var(--font-tech);
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-ctrl:hover {
+            background: rgba(0, 243, 255, 0.15);
+            border-color: var(--hud-accent);
+            box-shadow: 0 0 12px var(--hud-glow-dim);
+        }
+
+        .btn-ctrl.active {
+            background: var(--hud-accent);
+            color: #000;
+            font-weight: 700;
+            border-color: var(--hud-accent);
+            box-shadow: 0 0 15px var(--hud-glow);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--hud-accent), rgba(0, 160, 255, 0.8));
+            border: none;
+            color: #000;
+            font-family: var(--font-tech);
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--hud-glow-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--hud-glow);
+        }
+
+        /* Workspace Panels Layout */
+        .workspace {
+            display: flex;
+            flex-grow: 1;
+            gap: 15px;
+            height: calc(100vh - 100px);
+        }
+
+        .panel {
+            width: 280px;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 20px;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .panel h2 {
+            font-family: var(--font-tech);
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            color: var(--hud-accent);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel-section {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 20px;
+        }
+
+        .panel-section:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        /* Control Group Sliders & Color Selectors */
+        .control-group {
+            margin-bottom: 18px;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .control-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-family: var(--font-tech);
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .value-display {
+            font-size: 0.8rem;
+            font-family: var(--font-tech);
+            color: var(--hud-accent);
+        }
+
+        /* Slider Custom Inputs */
+        input[type="range"] {
+            width: 100%;
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.05);
+            height: 6px;
+            border-radius: 3px;
+            outline: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            background: var(--hud-accent);
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--hud-glow);
+            transition: all 0.1s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        /* Color theme palette buttons */
+        .color-palette {
+            display: flex;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .color-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .color-btn:hover {
+            transform: scale(1.15);
+        }
+
+        .color-btn.active {
+            border-color: #fff;
+            box-shadow: 0 0 8px currentColor;
+        }
+
+        /* Drag and Drop 3D Model Importer styling */
+        .drop-zone {
+            border: 2px dashed var(--border-glass);
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-tech);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: var(--hud-accent);
+            background: rgba(0, 243, 255, 0.05);
+            color: var(--text-primary);
+            box-shadow: 0 0 10px var(--hud-glow-dim);
+        }
+
+        .drop-zone i {
+            font-size: 1.6rem;
+            color: var(--hud-accent);
+        }
+
+        .drop-zone small {
+            color: var(--text-secondary);
+            font-family: var(--font-ui);
+        }
+
+        /* Layer toggles checks */
+        .layer-toggles {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding-left: 30px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            user-select: none;
+        }
+
+        .toggle-container input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 18px;
+            width: 18px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glass);
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-container:hover input ~ .checkmark {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: var(--hud-accent);
+        }
+
+        .toggle-container input:checked ~ .checkmark {
+            background-color: var(--hud-accent);
+            border-color: var(--hud-accent);
+            box-shadow: 0 0 8px var(--hud-glow);
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+            left: 6px;
+            top: 2px;
+            width: 4px;
+            height: 8px;
+            border: solid #000;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .toggle-container input:checked ~ .checkmark:after {
+            display: block;
+        }
+
+        /* Hint panel text */
+        .hint-section {
+            margin-top: auto;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        /* Viewport Center Stage */
+        .stage-container {
+            flex-grow: 1;
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-glass);
+            background: radial-gradient(circle at 50% 50%, rgba(10, 15, 30, 0.4) 0%, rgba(2, 2, 5, 0.8) 100%);
+            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.8);
+        }
+
+        .stage-container canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Scanline / Grid overlay */
+        .hologram-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%, 
+                rgba(0, 243, 255, calc(var(--scanline-opacity) * 0.05)) 50%
+            );
+            background-size: 100% 4px;
+        }
+
+        .hologram-overlay:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(0deg, rgba(0, 243, 255, 0.02) 0%, rgba(0, 243, 255, 0.08) 10%, rgba(0, 243, 255, 0.02) 20%);
+            animation: scanline 8s infinite linear;
+            background-size: 100% 100%;
+        }
+
+        /* Corner guides & text HUD overlays */
+        .hud-scaffolding {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 4;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .hud-corner {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-glass);
+        }
+
+        .hud-corner.top-left { top: 15px; left: 15px; border-right: none; border-bottom: none; border-color: var(--hud-accent); }
+        .hud-corner.top-right { top: 15px; right: 15px; border-left: none; border-bottom: none; }
+        .hud-corner.bottom-left { bottom: 15px; left: 15px; border-right: none; border-top: none; }
+        .hud-corner.bottom-right { bottom: 15px; right: 15px; border-left: none; border-top: none; border-color: var(--hud-accent); }
+
+        .hud-coordinates {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-family: var(--font-tech);
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            letter-spacing: 1.5px;
+        }
+
+        .hud-status-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-tech);
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--hud-accent);
+            animation: dotPulse 1.5s infinite ease-in-out;
+        }
+
+        /* 3D Target tracker float overlay card */
+        .hud-tracker-overlay {
+            position: absolute;
+            background: rgba(5, 5, 15, 0.85);
+            border: 1px solid var(--hud-accent);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: var(--font-tech);
+            font-size: 0.7rem;
+            pointer-events: none;
+            z-index: 6;
+            box-shadow: 0 0 15px var(--hud-glow-dim);
+            transform: translate(15px, 15px); /* offset from cursor */
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 140px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .hud-tracker-overlay.warning-lock {
+            border-color: #ff3333;
+            box-shadow: 0 0 20px rgba(255, 51, 51, 0.4);
+            animation: warningFlash 0.5s infinite alternate;
+        }
+
+        .tracker-header {
+            color: var(--hud-accent);
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 3px;
+            margin-bottom: 2px;
+        }
+
+        .hud-tracker-overlay.warning-lock .tracker-header {
+            color: #ff3333;
+        }
+
+        .tracker-coordinate {
+            color: var(--text-secondary);
+        }
+
+        /* Exporter Code Block */
+        .code-container {
+            position: relative;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .code-container pre {
+            margin: 0;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.75rem;
+            color: #a5d6ff;
+            max-height: 140px;
+        }
+
+        .copy-btn {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            padding: 4px 10px;
+            font-size: 0.65rem;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .export-desc {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        /* Diagnostics logging terminal block */
+        .terminal-readout {
+            margin-top: auto;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            height: 150px;
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .terminal-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red { background-color: #ff5f56; }
+        .terminal-dot.yellow { background-color: #ffbd2e; }
+        .terminal-dot.green { background-color: #27c93f; }
+
+        .terminal-title {
+            font-size: 0.65rem;
+            font-family: var(--font-tech);
+            color: var(--text-secondary);
+            margin-left: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .terminal-body {
+            padding: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.7rem;
+            color: #4af626;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex-grow: 1;
+        }
+
+        /* Keyframe Animations */
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); filter: drop-shadow(0 0 6px var(--hud-accent)); }
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { opacity: 0.4; box-shadow: 0 0 0 rgba(0, 243, 255, 0); }
+            50% { opacity: 1; box-shadow: 0 0 10px var(--hud-accent); }
+        }
+
+        @keyframes warningFlash {
+            from { border-color: #ff3333; box-shadow: 0 0 10px rgba(255, 51, 51, 0.2); }
+            to { border-color: #ff8888; box-shadow: 0 0 25px rgba(255, 51, 51, 0.6); }
+        }
+
+        /* AR Pulse animation for AR button */
+        @keyframes arPulse {
+            0%, 100% { box-shadow: 0 0 8px rgba(0, 243, 255, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(0, 243, 255, 0.7), 0 0 40px rgba(139,92,246,0.4); }
+        }
+
+        /* AR Full-Screen Overlay */
+        #ar-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 9999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding-bottom: 40px;
+            pointer-events: none;
+        }
+
+        #ar-overlay .ar-ui-bar {
+            pointer-events: all;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            background: rgba(3, 3, 15, 0.85);
+            border: 1px solid rgba(0, 243, 255, 0.4);
+            border-radius: 16px;
+            padding: 18px 30px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2), 0 0 60px rgba(139, 92, 246, 0.15);
+            min-width: 320px;
+            text-align: center;
+        }
+
+        #ar-status {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            color: #00f3ff;
+            letter-spacing: 1px;
+            text-shadow: 0 0 8px rgba(0, 243, 255, 0.6);
+            animation: arTextPulse 2s infinite;
+        }
+
+        @keyframes arTextPulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; text-shadow: 0 0 16px rgba(0, 243, 255, 0.9); }
+        }
+
+        #btn-exit-ar {
+            background: linear-gradient(135deg, #ff3366, #cc0044);
+            border: none;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            padding: 12px 28px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.5);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #btn-exit-ar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 51, 102, 0.8);
+        }
+
+        .ar-hint {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* Theater/VJ mode overrides */
+        body.theater-active .panel {
+            display: none !important;
+        }
+
+        body.theater-active .header-panel {
+            border-bottom: none;
+            background: transparent;
+            box-shadow: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        body.theater-active .header-panel .header-actions select,
+        body.theater-active .header-panel .header-actions button {
+            pointer-events: auto;
+        }
+
+        body.theater-active .workspace {
+            height: 100vh;
+        }
+
+        body.theater-active .stage-container {
+            border: none;
+            border-radius: 0;
+        }
+
+        /* Holographic Annotation Labels */
+        .hud-label-card {
+            position: absolute;
+            background: rgba(0, 243, 255, 0.08);
+            border: 1px solid var(--hud-accent);
+            padding: 4px 10px;
+            font-family: var(--font-tech);
+            font-size: 0.65rem;
+            color: #fff;
+            border-radius: 4px;
+            pointer-events: auto; /* Allow deleting label by clicking */
+            box-shadow: 0 0 10px var(--hud-glow-dim);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            user-select: none;
+            z-index: 10;
+        }
+        .hud-label-card .delete-label-btn {
+            cursor: pointer;
+            color: #ff3333;
+            font-weight: bold;
+            margin-left: 4px;
+            font-size: 0.75rem;
+            transition: color 0.2s ease;
+        }
+        .hud-label-card .delete-label-btn:hover {
+            color: #ff6666;
+        }
+        
+        /* HUD Live Telemetry Overlay */
+        .hud-telemetry-overlay {
+            position: absolute;
+            left: 20px;
+            bottom: 20px;
+            width: 240px;
+            background: rgba(3, 3, 8, 0.75);
+            border: 1px solid var(--hud-glow-dim);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.05);
+            border-left: 3px solid var(--hud-accent);
+            padding: 12px;
+            font-family: 'Orbitron', monospace;
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+            line-height: 1.5;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+            pointer-events: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hud-telemetry-overlay .telemetry-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--hud-accent);
+            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+            padding-bottom: 6px;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .hud-telemetry-overlay .telemetry-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+            font-family: 'Outfit', sans-serif;
+        }
+        .hud-telemetry-overlay .telemetry-row span:first-child {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+        }
+        .hud-telemetry-overlay .telemetry-row span:last-child {
+            color: #ffffff;
+            font-weight: 600;
+            font-family: 'Orbitron', monospace;
+        }
+        .hud-telemetry-overlay .status-active {
+            color: #00ff66 !important;
+            text-shadow: 0 0 5px rgba(0, 255, 102, 0.5);
+        }
+    </style>
+    <!-- Local Three.js and Loaders / Controls / Exporters (Offline & CORS-Free) -->
+    <script src="js/three.min.js"></script>
+    <script src="js/GLTFLoader.js"></script>
+    <script src="js/OBJLoader.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script src="js/GLTFExporter.js"></script>
+    <script src="js/OBJExporter.js"></script>
+    <script src="js/STLExporter.js"></script>
+    <!-- CDN Fallback -->
+    <script>
+      if (typeof THREE === 'undefined') {
+        document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>');
+      }
+    </script>
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- Header Controls -->
+        <header class="glass-panel header-panel">
+            <div style="display: flex; align-items: center;">
+                <a href="../index.html" class="back-btn">
+                    <i class="fa-solid fa-arrow-left"></i> <span data-i18n="btn_back">Retour / Back</span>
+                </a>
+                <div class="header-logo">
+                    <i class="fa-solid fa-satellite-dish pulse-icon"></i>
+                    <h1>QUANTUM <span class="accent-text">HUD BUILDER</span></h1>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="control-group-row">
+                    <label for="preset-select"><i class="fa-solid fa-cube"></i> <span data-i18n="label_preset">Scenario:</span></label>
+                    <select id="preset-select" class="glass-select">
+                        <option value="reactor">⚛️ Quantum Core Reactor</option>
+                        <option value="navigation">🧭 Deep Space Navigation</option>
+                        <option value="vitals">🩺 Cybernetic Medical Vitals</option>
+                        <option value="neural">🧠 AI Neural Network</option>
+                        <option value="neuralpulse">⚡ Neural Pulse Network</option>
+                        <option value="brain">🧠 Cyberpunk Neural Brain</option>
+                        <option value="radar">🛸 Spacecraft Tactical Radar</option>
+                        <option value="dna">🧬 Quantum Double Helix DNA</option>
+                        <option value="mech">🤖 Mech / Vehicle X-Ray Scanner</option>
+                    </select>
+                </div>
+                <button id="btn-voice-toggle" class="btn-ctrl active" title="Toggle AI Voice Telemetry"><i class="fa-solid fa-robot"></i> <span id="txt-voice">Voice: ON</span></button>
+                <button id="btn-sound-toggle" class="btn-ctrl active" title="Toggle Synth Audio"><i class="fa-solid fa-volume-high"></i> <span id="txt-sound">Audio: ON</span></button>
+                <button id="btn-mic-toggle" class="btn-ctrl" title="Enable Microphone Audio Reactivity"><i class="fa-solid fa-microphone-slash"></i> <span id="txt-mic">Mic: OFF</span></button>
+                <button id="btn-theater-mode" class="btn-ctrl" title="Expand Viewport"><i class="fa-solid fa-expand"></i> VJ Mode</button>
+                <button id="btn-enter-ar" class="btn-ctrl" title="Enter Augmented Reality Mode" style="display:none; background: linear-gradient(135deg, rgba(0,243,255,0.15), rgba(139,92,246,0.2)); border-color: rgba(0,243,255,0.5); animation: arPulse 2s infinite ease-in-out;">
+                    <i class="fa-solid fa-camera"></i> AR MODE
+                </button>
+                <div class="lang-selector" style="display: flex; gap: 4px; background: rgba(0,0,0,0.4); padding: 4px; border-radius: 8px; border: 1px solid rgba(0,243,255,0.2);">
+                    <button id="btn-lang-fr" class="lang-btn active" style="background: var(--hud-accent); color: #000; border: none; padding: 4px 10px; border-radius: 6px; font-weight: 800; font-size: 11px; cursor: pointer;">FR</button>
+                    <button id="btn-lang-en" class="lang-btn" style="background: transparent; color: #94a3b8; border: none; padding: 4px 10px; border-radius: 6px; font-weight: 800; font-size: 11px; cursor: pointer;">EN</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="workspace">
+            
+            <!-- Left Panel: Customizer Controls -->
+            <aside class="panel left-panel glass-panel">
+                
+                <!-- Section 1: Projection Settings -->
+                <div class="panel-section">
+                    <h2><i class="fa-solid fa-sliders"></i> <span data-i18n="sec_projection">Projection Settings</span></h2>
+                    
+                    <!-- Primary Color Theme Palette -->
+                    <div class="control-group">
+                        <label data-i18n="label_primary_color">Primary Neon Color</label>
+                        <div class="color-palette">
+                            <button class="color-btn active" data-color="cyan" style="background: #00f3ff;"></button>
+                            <button class="color-btn" data-color="purple" style="background: #bd00ff;"></button>
+                            <button class="color-btn" data-color="emerald" style="background: #00ff66;"></button>
+                            <button class="color-btn" data-color="gold" style="background: #ffd700;"></button>
+                            <button class="color-btn" data-color="orange" style="background: #ff5e00;"></button>
+                        </div>
+                    </div>
+
+                    <!-- Secondary Color Theme Palette -->
+                    <div class="control-group">
+                        <label data-i18n="label_secondary_color">Secondary Accent Color</label>
+                        <div class="color-palette-sec">
+                            <button class="color-btn-sec" data-sec-color="purple" style="background: #bd00ff;"></button>
+                            <button class="color-btn-sec active" data-sec-color="cyan" style="background: #00f3ff;"></button>
+                            <button class="color-btn-sec" data-sec-color="gold" style="background: #ffd700;"></button>
+                            <button class="color-btn-sec" data-sec-color="emerald" style="background: #00ff66;"></button>
+                            <button class="color-btn-sec" data-sec-color="orange" style="background: #ff5e00;"></button>
+                        </div>
+                    </div>
+
+                    <!-- 3D Exploded View Disassembly Slider -->
+                    <div class="control-group">
+                        <div class="slider-header">
+                            <label for="exploded-slider" data-i18n="label_exploded">3D Exploded View</label>
+                            <span class="value-display" id="exploded-value">OFF</span>
+                        </div>
+                        <input type="range" id="exploded-slider" min="0" max="3" step="0.1" value="0">
+                    </div>
+
+                    <!-- Hologram Speed Slider -->
+                    <div class="control-group">
+                        <div class="slider-header">
+                            <label for="speed-slider" data-i18n="label_speed">Rotation Speed</label>
+                            <span class="value-display" id="speed-value">1.0x</span>
+                        </div>
+                        <input type="range" id="speed-slider" min="0" max="3" step="0.1" value="1">
+                    </div>
+
+                    <!-- Scanline Frequency Slider -->
+                    <div class="control-group">
+                        <div class="slider-header">
+                            <label for="scanline-slider" data-i18n="label_scanline">Scanline Contrast</label>
+                            <span class="value-display" id="scanline-value">40%</span>
+                        </div>
+                        <input type="range" id="scanline-slider" min="0" max="100" value="40">
+                    </div>
+
+                    <!-- Glitch Intensity Slider -->
+                    <div class="control-group">
+                        <div class="slider-header">
+                            <label for="glitch-slider" data-i18n="label_glitch">Glitch Frequency</label>
+                            <span class="value-display" id="glitch-value">20%</span>
+                        </div>
+                        <input type="range" id="glitch-slider" min="0" max="100" value="20">
+                    </div>
+                </div>
+
+                <!-- Section 2: 3D Model Importer (CORS Free) -->
+                <div class="panel-section">
+                    <h2><i class="fa-solid fa-file-import"></i> 3D Model Import</h2>
+                    
+                    <!-- Drag and Drop Drop-Zone -->
+                    <div class="control-group">
+                        <div id="drop-zone" class="drop-zone">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <span>Drag & Drop File<br><small>(.glb, .gltf, .obj)</small></span>
+                            <input type="file" id="file-input" accept=".glb,.gltf,.obj" style="display: none;">
+                        </div>
+                    </div>
+
+                    <!-- Visual Representation Select -->
+                    <div class="control-group">
+                        <label for="material-mode">Hologram Visuals</label>
+                        <select id="material-mode" class="glass-select" style="width: 100%;">
+                            <option value="wireframe">Wireframe Glow</option>
+                            <option value="points">Point Cloud</option>
+                            <option value="solid">Solid X-Ray</option>
+                        </select>
+                    </div>
+
+                    <!-- Transform Model Scale -->
+                    <div class="control-group">
+                        <div class="slider-header">
+                            <label for="model-scale-slider">Model Scale</label>
+                            <span class="value-display" id="model-scale-value">1.0x</span>
+                        </div>
+                        <input type="range" id="model-scale-slider" min="0.1" max="3" step="0.1" value="1">
+                    </div>
+
+                    <!-- Transform Model Y height offset -->
+                    <div class="control-group">
+                        <div class="slider-header">
+                            <label for="model-y-slider">Height Offset</label>
+                            <span class="value-display" id="model-y-value">0.0m</span>
+                        </div>
+                        <input type="range" id="model-y-slider" min="-5" max="5" step="0.1" value="0">
+                    </div>
+
+                    <!-- Hologram Slicing (Clipping) -->
+                    <div class="control-group" id="model-slice-group" style="display: none;">
+                        <div class="slider-header">
+                            <label for="model-slice-y">HUD Slice Y-Axis</label>
+                            <span class="value-display" id="model-slice-y-val">OFF</span>
+                        </div>
+                        <input type="range" id="model-slice-y" min="-3" max="3" step="0.1" value="3">
+
+                        <div class="slider-header" style="margin-top: 10px;">
+                            <label for="model-slice-x">HUD Slice X-Axis</label>
+                            <span class="value-display" id="model-slice-x-val">OFF</span>
+                        </div>
+                        <input type="range" id="model-slice-x" min="-3" max="3" step="0.1" value="3">
+
+                        <div class="slider-header" style="margin-top: 10px;">
+                            <label for="model-slice-z">HUD Slice Z-Axis</label>
+                            <span class="value-display" id="model-slice-z-val">OFF</span>
+                        </div>
+                        <input type="range" id="model-slice-z" min="-3" max="3" step="0.1" value="3">
+                    </div>
+
+                    <!-- Holographic Annotations Controls -->
+                    <div class="control-group" id="model-annotation-group" style="display: none; margin-top: 15px;">
+                        <button id="btn-clear-annotations" class="btn-ctrl" style="width: 100%; justify-content: center; background: rgba(0, 243, 255, 0.15);"><i class="fa-solid fa-tags"></i> Clear Scan Labels</button>
+                        <p style="font-size: 0.65rem; color: var(--text-secondary); margin-top: 6px; text-align: center; line-height: 1.3;"><i class="fa-solid fa-mouse-pointer"></i> Double-click on the 3D model to place a technical hologram label!</p>
+                    </div>
+
+                    <!-- Auto-Orbit checkbox -->
+                    <div class="control-group-row" style="margin-bottom: 12px;">
+                        <label class="toggle-container">
+                            <input type="checkbox" id="model-orbit" checked>
+                            <span class="checkmark"></span>
+                            <span>Auto Orbit Mode</span>
+                        </label>
+                    </div>
+
+                    <button id="btn-reset-model" class="btn-ctrl" style="width: 100%; justify-content: center;"><i class="fa-solid fa-rotate-left"></i> Restore Preset Core</button>
+                </div>
+
+                <!-- Section 3: 3D Holographic Digital Clock & Modules -->
+                <div class="panel-section">
+                    <h2><i class="fa-solid fa-clock"></i> <span data-i18n="sec_clock">3D Real-Time Clock & Modules</span></h2>
+                    
+                    <div class="layer-toggles" style="margin-bottom: 12px;">
+                        <label class="toggle-container">
+                            <input type="checkbox" id="layer-clock" checked>
+                            <span class="checkmark"></span>
+                            <span data-i18n="label_clock_show">Show 3D Digital Clock</span>
+                        </label>
+                        <label class="toggle-container">
+                            <input type="checkbox" id="export-clock" checked>
+                            <span class="checkmark"></span>
+                            <span data-i18n="label_clock_export">Include Clock in Code Export</span>
+                        </label>
+                        <label class="toggle-container">
+                            <input type="checkbox" id="layer-globe">
+                            <span class="checkmark"></span>
+                            <span data-i18n="label_globe_show">3D Wireframe World Globe</span>
+                        </label>
+                        <label class="toggle-container">
+                            <input type="checkbox" id="layer-visualizer" checked>
+                            <span class="checkmark"></span>
+                            <span data-i18n="label_vis_show">3D Live Frequency Equalizer</span>
+                        </label>
+                    </div>
+
+                    <!-- Clock Position Y Height -->
+                    <div class="control-group">
+                        <div class="slider-header">
+                            <label for="clock-y-slider" data-i18n="label_clock_y">Clock Y Height</label>
+                            <span class="value-display" id="clock-y-val">4.5m</span>
+                        </div>
+                        <input type="range" id="clock-y-slider" min="-8" max="10" step="0.2" value="4.5">
+                    </div>
+
+                    <!-- Clock Position X Offset -->
+                    <div class="control-group">
+                        <div class="slider-header">
+                            <label for="clock-x-slider" data-i18n="label_clock_x">Clock X Offset</label>
+                            <span class="value-display" id="clock-x-val">0.0m</span>
+                        </div>
+                        <input type="range" id="clock-x-slider" min="-10" max="10" step="0.2" value="0">
+                    </div>
+
+                    <!-- Clock Scale Slider -->
+                    <div class="control-group">
+                        <div class="slider-header">
+                            <label for="clock-scale-slider" data-i18n="label_clock_scale">Clock Scale</label>
+                            <span class="value-display" id="clock-scale-val">1.0x</span>
+                        </div>
+                        <input type="range" id="clock-scale-slider" min="0.3" max="3" step="0.1" value="1">
+                    </div>
+                </div>
+
+                <!-- Section 4: Layer Toggles -->
+                <div class="panel-section">
+                    <h2><i class="fa-solid fa-toggle-on"></i> Widget Layer Toggles</h2>
+                    <div class="layer-toggles">
+                        <label class="toggle-container">
+                            <input type="checkbox" id="layer-grid" checked>
+                            <span class="checkmark"></span>
+                            <span>Projection Grid</span>
+                        </label>
+                        <label class="toggle-container">
+                            <input type="checkbox" id="layer-radar" checked>
+                            <span class="checkmark"></span>
+                            <span>Targeting Radar</span>
+                        </label>
+                        <label class="toggle-container">
+                            <input type="checkbox" id="layer-wave" checked>
+                            <span class="checkmark"></span>
+                            <span>Waveform Monitor</span>
+                        </label>
+                        <label class="toggle-container">
+                            <input type="checkbox" id="layer-terminal" checked>
+                            <span class="checkmark"></span>
+                            <span>Diagnostics Stream</span>
+                        </label>
+                        <label class="toggle-container">
+                            <input type="checkbox" id="layer-bloom" checked>
+                            <span class="checkmark"></span>
+                            <span>Quantum Bloom</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="panel-section hint-section">
+                    <p><i class="fa-solid fa-circle-info"></i> Drag to rotate, scroll to zoom, right-click to pan inside the viewport.</p>
+                </div>
+            </aside>
+
+            <!-- Center Viewport Panel: 3D Hologram Stage -->
+            <section class="stage-container" id="stage-container">
+                <!-- Glitch/Scanline Overlays -->
+                <div class="hologram-overlay"></div>
+                <div class="hud-scaffolding">
+                    <div class="hud-corner top-left"></div>
+                    <div class="hud-corner top-right"></div>
+                    <div class="hud-corner bottom-left"></div>
+                    <div class="hud-corner bottom-right"></div>
+                    <div class="hud-coordinates">SYSTEM LNK: SECURE | SEC-COORD: 45.981A // 002.E</div>
+                    <div class="hud-status-indicator">
+                        <span class="pulse-dot"></span>
+                        <span id="system-status-text">PROJECTION STABLE</span>
+                    </div>
+                </div>
+
+                <!-- Annotation overlay layer -->
+                <div id="annotation-layer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5;">
+                    <svg id="annotation-svg" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; pointer-events: none;"></svg>
+                </div>
+                
+                <!-- 2D Laser Target tracker float overlay card -->
+                <div id="hud-cursor-tracker" class="hud-tracker-overlay" style="display: none;">
+                    <div class="tracker-header" id="track-status">STATUS: SCANNING</div>
+                    <div class="tracker-coordinate">LAT: <span id="track-lat">0.00</span></div>
+                    <div class="tracker-coordinate">LON: <span id="track-lon">0.00</span></div>
+                    <div class="tracker-coordinate">ALT: <span id="track-alt">0.00</span></div>
+                </div>
+
+                <!-- Live Telemetry Widget -->
+                <div id="hud-telemetry-panel" class="hud-telemetry-overlay">
+                    <div class="telemetry-title"><i class="fa-solid fa-gauge-high"></i> CORE TELEMETRY</div>
+                    <div class="telemetry-row"><span>STATUS:</span> <span id="telemetry-status" class="status-active">READY</span></div>
+                    <div class="telemetry-row"><span>ACTIVE POLYGONS:</span> <span id="telemetry-polygons">0</span></div>
+                    <div class="telemetry-row"><span>TOTAL POLYGONS:</span> <span id="telemetry-total-polygons">0</span></div>
+                    <div class="telemetry-row"><span>EST. VOLUME:</span> <span id="telemetry-volume">0.00 m³</span></div>
+                    <div class="telemetry-row"><span>CENTER OF MASS:</span> <span id="telemetry-com">[0.00, 0.00, 0.00]</span></div>
+                    <div class="telemetry-row"><span>SLICE DEPTH Y:</span> <span id="telemetry-val-y">OFF</span></div>
+                    <div class="telemetry-row"><span>SLICE DEPTH X:</span> <span id="telemetry-val-x">OFF</span></div>
+                    <div class="telemetry-row"><span>SLICE DEPTH Z:</span> <span id="telemetry-val-z">OFF</span></div>
+                </div>
+
+                <!-- 3D Canvas will be injected here -->
+            </section>
+
+            <!-- Right Panel: Code Generator & Exporter -->
+            <aside class="panel right-panel glass-panel">
+                <div class="panel-section">
+                    <h2><i class="fa-solid fa-code"></i> Live CSS Tokens</h2>
+                    <div class="code-container">
+                        <pre><code id="code-output">/* CSS Variables */
+:root {
+  --hud-accent: #00f3ff;
+  --hud-glow: rgba(0, 243, 255, 0.4);
+  --scanline-opacity: 0.4;
+  --glitch-freq: 0.2s;
+  --rotation-speed: 1s;
+}</code></pre>
+                        <button id="btn-copy-code" class="btn-ctrl copy-btn" title="Copy code to clipboard"><i class="fa-solid fa-copy"></i> Copy CSS</button>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h2><i class="fa-solid fa-download"></i> Production Export</h2>
+                    <p class="export-desc">Download a fully functional, responsive single-page HTML file containing this customized interactive holographic HUD.</p>
+                    <button id="btn-export-html" class="btn-primary"><i class="fa-solid fa-file-code"></i> EXPORT STANDALONE HTML</button>
+                    <button id="btn-export-blueprint" class="btn-ctrl" style="width: 100%; justify-content: center; margin-top: 10px;"><i class="fa-solid fa-drafting-compass"></i> EXPORT BLUEPRINT SVG</button>
+                    
+                    <div style="margin-top: 15px; border-top: 1px solid rgba(0, 243, 255, 0.15); padding-top: 15px;">
+                        <h3 style="font-size: 0.75rem; color: var(--hud-accent); margin-bottom: 8px; text-transform: uppercase; font-family: Orbitron;"><i class="fa-solid fa-cube"></i> Export 3D Model</h3>
+                        <div style="display: flex; gap: 8px;">
+                            <button id="btn-export-glb" class="btn-ctrl" style="flex: 1; justify-content: center; font-size: 0.7rem;"><i class="fa-solid fa-download"></i> GLB</button>
+                            <button id="btn-export-obj" class="btn-ctrl" style="flex: 1; justify-content: center; font-size: 0.7rem;"><i class="fa-solid fa-download"></i> OBJ</button>
+                            <button id="btn-export-stl" class="btn-ctrl" style="flex: 1; justify-content: center; font-size: 0.7rem;"><i class="fa-solid fa-download"></i> STL</button>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px; border-top: 1px solid rgba(0, 243, 255, 0.15); padding-top: 15px;">
+                        <h3 style="font-size: 0.75rem; color: var(--hud-accent); margin-bottom: 8px; text-transform: uppercase; font-family: Orbitron;"><i class="fa-solid fa-share-nodes"></i> Share &amp; FX</h3>
+                        <button id="btn-share-hud" class="btn-ctrl" style="width: 100%; justify-content: center; margin-bottom: 8px; background: linear-gradient(135deg, rgba(139,92,246,0.25), rgba(0,243,255,0.15)); border-color: rgba(139,92,246,0.5);" title="Copy a shareable URL of your current HUD configuration">
+                            <i class="fa-solid fa-link"></i> SHARE HUD CONFIG URL
+                        </button>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-top: 4px;">
+                            <label style="font-size: 0.7rem; color: #94a3b8; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                                <input type="checkbox" id="toggle-nebula" checked style="accent-color: var(--hud-accent);">
+                                <i class="fa-solid fa-star" style="color: var(--hud-accent); font-size: 0.65rem;"></i>
+                                Particle Nebula Field
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section terminal-readout">
+                    <div class="terminal-header">
+                        <span class="terminal-dot red"></span>
+                        <span class="terminal-dot yellow"></span>
+                        <span class="terminal-dot green"></span>
+                        <span class="terminal-title">diagnostics.log</span>
+                    </div>
+                    <div class="terminal-body" id="terminal-diagnostics">
+                        <div>[SYS] Quantum Projection Pipeline ready.</div>
+                        <div>[SYS] Loaded core shader files successfully.</div>
+                        <div>[SYS] Listening on BroadcastChannel standard.</div>
+                    </div>
+                </div>
+            </aside>
+
+        </main>
+    </div>
+
+    <!-- WebXR AR Overlay — shown only when AR session is active -->
+    <div id="ar-overlay">
+        <div class="ar-ui-bar">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+                <i class="fa-solid fa-satellite-dish" style="color:#00f3ff; font-size:1.2rem; animation: arTextPulse 1.5s infinite;"></i>
+                <span style="font-family:'Orbitron',sans-serif; font-size:0.9rem; font-weight:900; color:#fff; letter-spacing:2px;">QUANTUM AR MODE</span>
+            </div>
+            <div id="ar-status">📡 Initializing AR session...</div>
+            <p class="ar-hint">Point your camera at a flat surface, then tap to place the hologram</p>
+            <button id="btn-exit-ar">
+                <i class="fa-solid fa-xmark"></i> EXIT AR
+            </button>
+        </div>
+    </div>
+
+    <!-- Main JS Application Logic -->
+    <script src="js/premium-lock.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
