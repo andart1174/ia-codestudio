@@ -1484,35 +1484,64 @@ function buildARReticle() {
     scene.add(arReticle);
 }
 
+// Show QR Code modal so desktop user can scan URL on phone
+function showARQRModal() {
+    const modal = document.getElementById('ar-qr-modal');
+    const qrContainer = document.getElementById('ar-qr-code');
+    const urlDisplay = document.getElementById('ar-qr-url');
+    if (!modal || !qrContainer) return;
+
+    // Clear previous QR
+    qrContainer.innerHTML = '';
+
+    const pageUrl = window.location.href;
+    if (urlDisplay) urlDisplay.textContent = pageUrl;
+
+    // Generate QR code using QRCode.js library
+    if (typeof QRCode !== 'undefined') {
+        new QRCode(qrContainer, {
+            text: pageUrl,
+            width: 200,
+            height: 200,
+            colorDark: '#000000',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.M
+        });
+    } else {
+        // Fallback: use Google Charts API QR
+        const img = document.createElement('img');
+        img.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(pageUrl)}`;
+        img.width = 200;
+        img.height = 200;
+        img.alt = 'QR Code';
+        qrContainer.appendChild(img);
+    }
+
+    modal.classList.add('active');
+
+    // Close button
+    const closeBtn = document.getElementById('ar-qr-close');
+    if (closeBtn) {
+        closeBtn.onclick = () => modal.classList.remove('active');
+    }
+    // Click outside to close
+    modal.onclick = (e) => {
+        if (e.target === modal) modal.classList.remove('active');
+    };
+
+    logTerminal('📱 QR Code generated — scan with your phone to open in AR!');
+}
+
 // Enter AR session
 async function enterAR() {
     if (!navigator.xr) {
-        logTerminal('📱 AR Mode: Open this page on Chrome on Android to use AR.');
-        // Show a friendly non-blocking message
-        const arStatus = document.getElementById('ar-status');
-        if (arStatus) {
-            const overlay = document.getElementById('ar-overlay');
-            if (overlay) {
-                overlay.style.display = 'flex';
-                arStatus.textContent = '📱 AR requires Chrome on Android. Use your phone!';
-                setTimeout(() => { overlay.style.display = 'none'; }, 3500);
-            }
-        }
+        showARQRModal();
         return;
     }
     try {
         const supported = await navigator.xr.isSessionSupported('immersive-ar');
         if (!supported) {
-            logTerminal('📱 AR Mode: Not supported on this device/browser. Use Chrome on Android.');
-            const arStatus = document.getElementById('ar-status');
-            if (arStatus) {
-                const overlay = document.getElementById('ar-overlay');
-                if (overlay) {
-                    overlay.style.display = 'flex';
-                    arStatus.textContent = '📱 AR requires an Android phone with Chrome. Open this on your phone!';
-                    setTimeout(() => { overlay.style.display = 'none'; }, 3500);
-                }
-            }
+            showARQRModal();
             return;
         }
 
