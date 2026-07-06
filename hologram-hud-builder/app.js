@@ -3129,45 +3129,166 @@ function exportStandaloneHTML() {
         }
 
         function loadDefaultCore() {
-            const color = colorMap[activeColor].three;
+            const color = colorMap[activeColor] ? colorMap[activeColor].three : 0x00f3ff;
             const secColor = (colorMap[activeColorSecondary] && colorMap[activeColorSecondary].three) ? colorMap[activeColorSecondary].three : color;
-            let coreGeo;
+            const exp = 0; // no explode in export
+
             if (activePreset === 'reactor') {
-                coreGeo = new THREE.IcosahedronGeometry(2.2, 1);
+                const solidGeo = new THREE.IcosahedronGeometry(2.0, 1);
+                const solidMat = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.35, side: THREE.DoubleSide });
+                coreGroup.add(new THREE.Mesh(solidGeo, solidMat));
+                const coreGeo = new THREE.IcosahedronGeometry(2.2, 1);
+                coreMesh = new THREE.Mesh(coreGeo, new THREE.MeshBasicMaterial({ color: color, wireframe: true, transparent: true, opacity: 0.85 }));
+                coreGroup.add(coreMesh);
+                const ringGeo1 = new THREE.RingGeometry(3.5, 3.8, 32);
+                ring1 = new THREE.Mesh(ringGeo1, new THREE.MeshBasicMaterial({ color: secColor, side: THREE.DoubleSide, transparent: true, opacity: 0.6, wireframe: true }));
+                ring1.rotation.x = Math.PI / 2;
+                coreGroup.add(ring1);
+
             } else if (activePreset === 'navigation') {
-                coreGeo = new THREE.OctahedronGeometry(2.5, 0);
+                const solidGeo = new THREE.OctahedronGeometry(2.3, 0);
+                coreGroup.add(new THREE.Mesh(solidGeo, new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.35, side: THREE.DoubleSide })));
+                coreMesh = new THREE.Mesh(new THREE.OctahedronGeometry(2.5, 0), new THREE.MeshBasicMaterial({ color: color, wireframe: true, transparent: true, opacity: 0.85 }));
+                coreGroup.add(coreMesh);
+                ring1 = new THREE.Mesh(new THREE.RingGeometry(3.5, 3.8, 32), new THREE.MeshBasicMaterial({ color: secColor, side: THREE.DoubleSide, transparent: true, opacity: 0.6, wireframe: true }));
+                ring1.rotation.x = Math.PI / 2;
+                coreGroup.add(ring1);
+
             } else if (activePreset === 'vitals') {
-                coreGeo = new THREE.TorusGeometry(1.5, 0.4, 16, 32);
+                coreGroup.add(new THREE.Mesh(new THREE.TorusGeometry(1.4, 0.38, 16, 32), new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.35, side: THREE.DoubleSide })));
+                coreMesh = new THREE.Mesh(new THREE.TorusGeometry(1.5, 0.4, 16, 32), new THREE.MeshBasicMaterial({ color: color, wireframe: true, transparent: true, opacity: 0.85 }));
+                coreGroup.add(coreMesh);
+                ring1 = new THREE.Mesh(new THREE.RingGeometry(3.0, 3.3, 32), new THREE.MeshBasicMaterial({ color: secColor, side: THREE.DoubleSide, transparent: true, opacity: 0.6, wireframe: true }));
+                ring1.rotation.x = Math.PI / 2;
+                coreGroup.add(ring1);
+
+            } else if (activePreset === 'neural') {
+                coreGroup.add(new THREE.Mesh(new THREE.SphereGeometry(2.1, 16, 16), new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.35, side: THREE.DoubleSide })));
+                coreMesh = new THREE.Mesh(new THREE.SphereGeometry(2.2, 16, 16), new THREE.MeshBasicMaterial({ color: color, wireframe: true, transparent: true, opacity: 0.9 }));
+                coreGroup.add(coreMesh);
+                coreGroup.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.8, 1), new THREE.MeshBasicMaterial({ color: secColor, transparent: true, opacity: 0.95 })));
+                ring1 = new THREE.Mesh(new THREE.RingGeometry(3.5, 3.8, 32), new THREE.MeshBasicMaterial({ color: secColor, side: THREE.DoubleSide, transparent: true, opacity: 0.6, wireframe: true }));
+                ring1.rotation.x = Math.PI / 2;
+                coreGroup.add(ring1);
+
+            } else if (activePreset === 'brain') {
+                coreGroup.add(new THREE.Mesh(new THREE.SphereGeometry(2.4, 12, 12), new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.35, side: THREE.DoubleSide })));
+                coreMesh = new THREE.Mesh(new THREE.SphereGeometry(2.5, 12, 12), new THREE.MeshBasicMaterial({ color: color, wireframe: true, transparent: true, opacity: 0.85 }));
+                coreGroup.add(coreMesh);
+                const nodesGroup = new THREE.Group();
+                const nodeGeo = new THREE.SphereGeometry(0.18, 8, 8);
+                const nodeMat = new THREE.MeshBasicMaterial({ color: secColor });
+                for (let i = 0; i < 40; i++) {
+                    const node = new THREE.Mesh(nodeGeo, nodeMat);
+                    const radius = 2.8 + Math.random() * 0.8;
+                    const theta = Math.random() * Math.PI * 2;
+                    const phi = Math.random() * Math.PI;
+                    node.position.set(radius * Math.sin(phi) * Math.cos(theta), radius * Math.sin(phi) * Math.sin(theta), radius * Math.cos(phi));
+                    nodesGroup.add(node);
+                }
+                coreGroup.add(nodesGroup);
+
             } else if (activePreset === 'radar') {
-                coreGeo = new THREE.CylinderGeometry(0, 3, 0.3, 8);
+                const solidGeo = new THREE.CylinderGeometry(3.4, 0.45, 0.8, 16, 1, false);
+                const solidMesh = new THREE.Mesh(solidGeo, new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.35, side: THREE.DoubleSide }));
+                solidMesh.rotation.x = Math.PI / 6;
+                coreGroup.add(solidMesh);
+                coreMesh = new THREE.Mesh(new THREE.CylinderGeometry(3.5, 0.5, 0.8, 16, 1, true), new THREE.MeshBasicMaterial({ color: color, wireframe: true, transparent: true, opacity: 0.85 }));
+                coreMesh.rotation.x = Math.PI / 6;
+                coreGroup.add(coreMesh);
+                ring1 = new THREE.Mesh(new THREE.RingGeometry(1.0, 4.0, 32), new THREE.MeshBasicMaterial({ color: secColor, side: THREE.DoubleSide, transparent: true, opacity: 0.6, wireframe: true }));
+                ring1.rotation.x = Math.PI / 2;
+                ring1.position.y = -1.5;
+                coreGroup.add(ring1);
+                for (let i = 0; i < 3; i++) {
+                    const blip = new THREE.Mesh(new THREE.SphereGeometry(0.3, 8, 8), new THREE.MeshBasicMaterial({ color: secColor }));
+                    const angle = (i / 3) * Math.PI * 2;
+                    blip.position.set(Math.cos(angle) * 3, (i - 1) * 0.5, Math.sin(angle) * 3);
+                    coreGroup.add(blip);
+                }
+
             } else if (activePreset === 'dna') {
-                coreGeo = new THREE.CapsuleGeometry(0.4, 3, 8, 16);
+                // TorusKnot (DNA double helix shape)
+                coreGroup.add(new THREE.Mesh(new THREE.TorusKnotGeometry(1.58, 0.28, 64, 16, 2, 3), new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.35, side: THREE.DoubleSide })));
+                coreMesh = new THREE.Mesh(new THREE.TorusKnotGeometry(1.6, 0.3, 64, 16, 2, 3), new THREE.MeshBasicMaterial({ color: color, wireframe: true, transparent: true, opacity: 0.85 }));
+                coreGroup.add(coreMesh);
+                // DNA strand nodes
+                const dnaGroup = new THREE.Group();
+                const strandLength = 26;
+                const sGeo = new THREE.SphereGeometry(0.16, 8, 8);
+                for (let i = 0; i < strandLength; i++) {
+                    const y = (i - strandLength / 2) * 0.25;
+                    const angle = i * 0.4;
+                    const radius = 2.4;
+                    const x1 = Math.cos(angle) * radius, z1 = Math.sin(angle) * radius;
+                    const p1 = new THREE.Mesh(sGeo, new THREE.MeshBasicMaterial({ color: color }));
+                    p1.position.set(x1, y, z1);
+                    dnaGroup.add(p1);
+                    const x2 = Math.cos(angle + Math.PI) * radius, z2 = Math.sin(angle + Math.PI) * radius;
+                    const p2 = new THREE.Mesh(sGeo, new THREE.MeshBasicMaterial({ color: secColor }));
+                    p2.position.set(x2, y, z2);
+                    dnaGroup.add(p2);
+                    if (i % 2 === 0) {
+                        const lineGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x1, y, z1), new THREE.Vector3(x2, y, z2)]);
+                        dnaGroup.add(new THREE.Line(lineGeo, new THREE.LineBasicMaterial({ color: secColor, transparent: true, opacity: 0.7 })));
+                    }
+                }
+                coreGroup.add(dnaGroup);
+
             } else if (activePreset === 'mech') {
-                coreGeo = new THREE.BoxGeometry(2.5, 2.5, 2.5, 3, 3, 3);
-            } else if (activePreset === 'brain' || activePreset === 'neural' || activePreset === 'neuralpulse') {
-                coreGeo = new THREE.SphereGeometry(2.2, 20, 20);
+                coreGroup.add(new THREE.Mesh(new THREE.DodecahedronGeometry(1.9, 1), new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.35, side: THREE.DoubleSide })));
+                coreMesh = new THREE.Mesh(new THREE.DodecahedronGeometry(2.0, 1), new THREE.MeshBasicMaterial({ color: color, wireframe: true, transparent: true, opacity: 0.85 }));
+                coreGroup.add(coreMesh);
+                coreGroup.add(new THREE.Mesh(new THREE.OctahedronGeometry(3.0, 0), new THREE.MeshBasicMaterial({ color: secColor, wireframe: true, transparent: true, opacity: 0.6 })));
+
+            } else if (activePreset === 'neuralpulse') {
+                // Central icosahedron core
+                coreMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(1.0, 2), new THREE.MeshBasicMaterial({ color: color, wireframe: true, transparent: true, opacity: 0.8 }));
+                coreGroup.add(coreMesh);
+                coreGroup.add(new THREE.Mesh(new THREE.SphereGeometry(0.65, 16, 16), new THREE.MeshBasicMaterial({ color: secColor, transparent: true, opacity: 0.9 })));
+                // Neural nodes
+                const neuralNetGroup = new THREE.Group();
+                const nodeCount = 24;
+                const nodePositions = [];
+                const nodeGeo2 = new THREE.SphereGeometry(0.14, 8, 8);
+                for (let i = 0; i < nodeCount; i++) {
+                    const nodeMat = new THREE.MeshBasicMaterial({ color: (i % 3 === 0) ? secColor : color, transparent: true, opacity: 0.95 });
+                    const node = new THREE.Mesh(nodeGeo2, nodeMat);
+                    const r = 2.8 + Math.random() * 1.4;
+                    const theta = Math.random() * Math.PI * 2;
+                    const phi = Math.acos(2 * Math.random() - 1);
+                    node.position.set(r * Math.sin(phi) * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta), r * Math.cos(phi));
+                    nodePositions.push(node.position.clone());
+                    neuralNetGroup.add(node);
+                }
+                // Synapse connections
+                for (let i = 0; i < nodeCount; i++) {
+                    for (let j = i + 1; j < nodeCount; j++) {
+                        const dist = nodePositions[i].distanceTo(nodePositions[j]);
+                        if (dist < 3.5) {
+                            const lineGeo = new THREE.BufferGeometry().setFromPoints([nodePositions[i], nodePositions[j]]);
+                            neuralNetGroup.add(new THREE.Line(lineGeo, new THREE.LineBasicMaterial({ color: color, transparent: true, opacity: Math.max(0.05, 0.3 - dist * 0.05) })));
+                        }
+                    }
+                }
+                ring1 = new THREE.Mesh(new THREE.RingGeometry(4.0, 4.2, 64), new THREE.MeshBasicMaterial({ color: secColor, side: THREE.DoubleSide, transparent: true, opacity: 0.4 }));
+                ring1.rotation.x = Math.PI / 4;
+                coreGroup.add(ring1);
+                coreGroup.add(neuralNetGroup);
+
             } else {
-                coreGeo = new THREE.SphereGeometry(2, 16, 16);
+                // Default sphere
+                coreGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1.9, 16, 16), new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.35, side: THREE.DoubleSide })));
+                coreMesh = new THREE.Mesh(new THREE.SphereGeometry(2, 16, 16), new THREE.MeshBasicMaterial({ color: color, wireframe: true, transparent: true, opacity: 0.85 }));
+                coreGroup.add(coreMesh);
+                ring1 = new THREE.Mesh(new THREE.RingGeometry(3.5, 3.8, 32), new THREE.MeshBasicMaterial({ color: secColor, side: THREE.DoubleSide, transparent: true, opacity: 0.4, wireframe: true }));
+                ring1.rotation.x = Math.PI / 2;
+                coreGroup.add(ring1);
+                ring2 = new THREE.Mesh(new THREE.RingGeometry(3.0, 3.2, 32), new THREE.MeshBasicMaterial({ color: secColor, side: THREE.DoubleSide, transparent: true, opacity: 0.3 }));
+                ring2.rotation.x = Math.PI / 3;
+                ring2.rotation.z = Math.PI / 5;
+                coreGroup.add(ring2);
             }
-
-            const coreMat = new THREE.MeshBasicMaterial({ color: color, wireframe: true, transparent: true, opacity: 0.6 });
-            coreMesh = new THREE.Mesh(coreGeo, coreMat);
-            coreGroup.add(coreMesh);
-
-            // Orbital ring 1
-            const ringGeo1 = new THREE.RingGeometry(3.5, 3.8, 32);
-            const ringMat1 = new THREE.MeshBasicMaterial({ color: color, side: THREE.DoubleSide, transparent: true, opacity: 0.4, wireframe: true });
-            ring1 = new THREE.Mesh(ringGeo1, ringMat1);
-            ring1.rotation.x = Math.PI / 2;
-            coreGroup.add(ring1);
-
-            // Orbital ring 2 (secondary color, tilted)
-            const ringGeo2 = new THREE.RingGeometry(3.0, 3.2, 32);
-            const ringMat2 = new THREE.MeshBasicMaterial({ color: secColor, side: THREE.DoubleSide, transparent: true, opacity: 0.3 });
-            ring2 = new THREE.Mesh(ringGeo2, ringMat2);
-            ring2.rotation.x = Math.PI / 3;
-            ring2.rotation.z = Math.PI / 5;
-            coreGroup.add(ring2);
         }
 
         function setupExportedModel(object) {
