@@ -99,6 +99,35 @@
     <priority>0.9</priority>
   </url>
 
+  <!-- ===== 3D CREATIVE STUDIO (NOUVEAU) ===== -->
+  <url>
+    <loc>https://ia-codestudio.com/3d-creative-studio/index.html?lang=fr</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/3d-creative-studio/index.html?lang=en</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- ===== QUANTUM 3D HUD BUILDER (NOUVEAU) ===== -->
+  <url>
+    <loc>https://ia-codestudio.com/hologram-hud-builder/index.html?lang=fr</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/hologram-hud-builder/index.html?lang=en</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+
   <!-- ===== TEMPLATES ===== -->
   <url>
     <loc>https://ia-codestudio.com/templates/threejs-basic-scene.html</loc>
