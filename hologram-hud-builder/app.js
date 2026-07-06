@@ -1243,24 +1243,7 @@ function build3DVisualizer() {
 
 // --- 6. ANIMATION RENDER LOOP ---
 let timeClock = 0;
-function animate(timestamp, xrFrame) {
-    // Handle WebXR AR hit-test when AR is active
-    if (isARActive && arSession && xrFrame) {
-        if (arHitTestSource) {
-            const hitTestResults = xrFrame.getHitTestResults(arHitTestSource);
-            if (hitTestResults.length > 0) {
-                const hit = hitTestResults[0];
-                const refSpace = renderer.xr.getReferenceSpace();
-                const pose = hit.getPose(refSpace);
-                if (pose && arReticle) {
-                    arReticle.visible = true;
-                    arReticle.matrix.fromArray(pose.transform.matrix);
-                }
-            } else {
-                if (arReticle) arReticle.visible = false;
-            }
-        }
-    }
+function animate() {
     requestAnimationFrame(animate);
 
     // Calculate volume multiplier if microphone analyzer is online
