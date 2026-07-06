@@ -1487,15 +1487,32 @@ function buildARReticle() {
 // Enter AR session
 async function enterAR() {
     if (!navigator.xr) {
-        alert('WebXR is not supported in this browser.\nPlease use Chrome on Android.');
-        logTerminal('⚠️ WebXR not supported. Use Chrome on Android.');
+        logTerminal('📱 AR Mode: Open this page on Chrome on Android to use AR.');
+        // Show a friendly non-blocking message
+        const arStatus = document.getElementById('ar-status');
+        if (arStatus) {
+            const overlay = document.getElementById('ar-overlay');
+            if (overlay) {
+                overlay.style.display = 'flex';
+                arStatus.textContent = '📱 AR requires Chrome on Android. Use your phone!';
+                setTimeout(() => { overlay.style.display = 'none'; }, 3500);
+            }
+        }
         return;
     }
     try {
         const supported = await navigator.xr.isSessionSupported('immersive-ar');
         if (!supported) {
-            alert('AR is not supported on this device/browser.\nPlease use Chrome on Android.');
-            logTerminal('⚠️ AR not supported on this device.');
+            logTerminal('📱 AR Mode: Not supported on this device/browser. Use Chrome on Android.');
+            const arStatus = document.getElementById('ar-status');
+            if (arStatus) {
+                const overlay = document.getElementById('ar-overlay');
+                if (overlay) {
+                    overlay.style.display = 'flex';
+                    arStatus.textContent = '📱 AR requires an Android phone with Chrome. Open this on your phone!';
+                    setTimeout(() => { overlay.style.display = 'none'; }, 3500);
+                }
+            }
             return;
         }
 
@@ -1642,19 +1659,45 @@ function exitAR(sessionEndedExternally = false) {
 async function checkARSupport() {
     const btn = document.getElementById('btn-enter-ar');
     if (!btn) return;
-    if (!navigator.xr) {
+
+    // Always show button on HTTPS (required for WebXR) — hide only on plain HTTP
+    const isHttps = window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (!isHttps) {
         btn.style.display = 'none';
         return;
     }
+
+    // Always show the button visually
+    btn.style.display = '';
+
+    if (!navigator.xr) {
+        // Browser doesn't support WebXR at all — show as dimmed with tooltip
+        btn.style.opacity = '0.45';
+        btn.style.cursor = 'default';
+        btn.title = '📱 AR Mode — Open on Chrome on Android to use AR';
+        btn.innerHTML = '<i class="fa-solid fa-camera"></i> AR MODE';
+        logTerminal('📡 AR Mode available — use Chrome on Android to activate.');
+        return;
+    }
+
     try {
         const supported = await navigator.xr.isSessionSupported('immersive-ar');
-        btn.style.display = supported ? '' : 'none';
         if (supported) {
-            btn.title = 'Open Augmented Reality mode — point your camera at the floor!';
+            btn.style.opacity = '1';
+            btn.style.cursor = 'pointer';
+            btn.title = '🛸 Open Augmented Reality mode — point your camera at the floor!';
+            btn.innerHTML = '<i class="fa-solid fa-camera"></i> AR MODE';
             logTerminal('📡 WebXR AR supported on this device!');
+        } else {
+            btn.style.opacity = '0.45';
+            btn.style.cursor = 'default';
+            btn.title = '📱 AR Mode — Open on Chrome on Android to use AR';
+            btn.innerHTML = '<i class="fa-solid fa-camera"></i> AR MODE';
         }
     } catch(e) {
-        btn.style.display = 'none';
+        btn.style.opacity = '0.4';
+        btn.style.cursor = 'default';
+        btn.title = '📱 AR Mode — Open on Chrome on Android to use AR';
     }
 }
 
@@ -3077,6 +3120,7 @@ function exportStandaloneHTML() {
         // Inline JS Engine
         let scene, camera, renderer, controls;
         let activeColor = '${activeColor}';
+        let activeColorSecondary = '${activeColorSecondary}';
         let rotationSpeed = ${rotationSpeed};
         let activePreset = '${activePreset}';
         let coreMesh, ring1, ring2, radarLine, waveLines = [];
@@ -3086,6 +3130,18 @@ function exportStandaloneHTML() {
         let lastLockBeepTime = 0;
         let micEnabled = false, micStream = null, analyserNode = null, freqData = null;
         let audioCtx = null;
+
+        // Clock state (exported from builder)
+        let clockVisible = ${clockVisible};
+        let clockPosY = ${clockPosY};
+        let clockPosX = ${clockPosX};
+        let clockPosZ = ${clockPosZ};
+        let clockScale = ${clockScale};
+        let clockGroup = null, clockMesh = null, clockCanvas = null, clockCtx = null, clockTexture = null;
+
+        // Particle Nebula state (exported from builder)
+        let nebulaVisible = ${nebulaVisible};
+        let nebulaGroup = null, nebulaParticles = null;
 
         // Custom Model states
         let customModel = null;
@@ -3158,6 +3214,12 @@ function exportStandaloneHTML() {
             scene.add(radarGroup);
             scene.add(waveGroup);
             scene.add(coreGroup);
+
+            // Build 3D Clock if visible
+            if (clockVisible) build3DClock();
+
+            // Build Particle Nebula
+            buildParticleNebula();
 
             // Raycaster
             raycaster = new THREE.Raycaster();
@@ -3340,21 +3402,45 @@ function exportStandaloneHTML() {
         }
 
         function loadDefaultCore() {
+            const color = colorMap[activeColor].three;
+            const secColor = (colorMap[activeColorSecondary] && colorMap[activeColorSecondary].three) ? colorMap[activeColorSecondary].three : color;
             let coreGeo;
-            if (activePreset === 'reactor') coreGeo = new THREE.IcosahedronGeometry(2.2, 1);
-            else if (activePreset === 'navigation') coreGeo = new THREE.OctahedronGeometry(2.5, 0);
-            else if (activePreset === 'vitals') coreGeo = new THREE.TorusGeometry(1.5, 0.4, 16, 32);
-            else coreGeo = new THREE.SphereGeometry(2, 16, 16);
+            if (activePreset === 'reactor') {
+                coreGeo = new THREE.IcosahedronGeometry(2.2, 1);
+            } else if (activePreset === 'navigation') {
+                coreGeo = new THREE.OctahedronGeometry(2.5, 0);
+            } else if (activePreset === 'vitals') {
+                coreGeo = new THREE.TorusGeometry(1.5, 0.4, 16, 32);
+            } else if (activePreset === 'radar') {
+                coreGeo = new THREE.CylinderGeometry(0, 3, 0.3, 8);
+            } else if (activePreset === 'dna') {
+                coreGeo = new THREE.CapsuleGeometry(0.4, 3, 8, 16);
+            } else if (activePreset === 'mech') {
+                coreGeo = new THREE.BoxGeometry(2.5, 2.5, 2.5, 3, 3, 3);
+            } else if (activePreset === 'brain' || activePreset === 'neural' || activePreset === 'neuralpulse') {
+                coreGeo = new THREE.SphereGeometry(2.2, 20, 20);
+            } else {
+                coreGeo = new THREE.SphereGeometry(2, 16, 16);
+            }
 
-            const coreMat = new THREE.MeshBasicMaterial({ color: colorMap[activeColor].three, wireframe: true, transparent: true, opacity: 0.6 });
+            const coreMat = new THREE.MeshBasicMaterial({ color: color, wireframe: true, transparent: true, opacity: 0.6 });
             coreMesh = new THREE.Mesh(coreGeo, coreMat);
             coreGroup.add(coreMesh);
 
+            // Orbital ring 1
             const ringGeo1 = new THREE.RingGeometry(3.5, 3.8, 32);
-            const ringMat1 = new THREE.MeshBasicMaterial({ color: colorMap[activeColor].three, side: THREE.DoubleSide, transparent: true, opacity: 0.4, wireframe: true });
+            const ringMat1 = new THREE.MeshBasicMaterial({ color: color, side: THREE.DoubleSide, transparent: true, opacity: 0.4, wireframe: true });
             ring1 = new THREE.Mesh(ringGeo1, ringMat1);
             ring1.rotation.x = Math.PI / 2;
             coreGroup.add(ring1);
+
+            // Orbital ring 2 (secondary color, tilted)
+            const ringGeo2 = new THREE.RingGeometry(3.0, 3.2, 32);
+            const ringMat2 = new THREE.MeshBasicMaterial({ color: secColor, side: THREE.DoubleSide, transparent: true, opacity: 0.3 });
+            ring2 = new THREE.Mesh(ringGeo2, ringMat2);
+            ring2.rotation.x = Math.PI / 3;
+            ring2.rotation.z = Math.PI / 5;
+            coreGroup.add(ring2);
         }
 
         function setupExportedModel(object) {
@@ -3668,6 +3754,107 @@ function exportStandaloneHTML() {
             link.click();
         }
 
+        // --- 3D CLOCK BUILDER (exported) ---
+        function drawClockCanvas() {
+            if (!clockCtx || !clockCanvas) return;
+            const now = new Date();
+            const hrs = String(now.getHours()).padStart(2, '0');
+            const mins = String(now.getMinutes()).padStart(2, '0');
+            const secs = String(now.getSeconds()).padStart(2, '0');
+            const ms = String(Math.floor(now.getMilliseconds() / 10)).padStart(2, '0');
+            const timeStr = hrs + ':' + mins + ':' + secs + '.' + ms;
+            const mainHex = (colorMap[activeColor] && colorMap[activeColor].hex) ? colorMap[activeColor].hex : '#00f3ff';
+            const secHex = (colorMap[activeColorSecondary] && colorMap[activeColorSecondary].hex) ? colorMap[activeColorSecondary].hex : mainHex;
+
+            clockCtx.clearRect(0, 0, clockCanvas.width, clockCanvas.height);
+            clockCtx.fillStyle = 'rgba(5, 10, 25, 0.85)';
+            clockCtx.strokeStyle = mainHex;
+            clockCtx.lineWidth = 3;
+            clockCtx.beginPath();
+            if (clockCtx.roundRect) {
+                clockCtx.roundRect(10, 10, 492, 108, 14);
+            } else {
+                clockCtx.rect(10, 10, 492, 108);
+            }
+            clockCtx.fill();
+            clockCtx.stroke();
+            clockCtx.shadowColor = mainHex;
+            clockCtx.shadowBlur = 12;
+            clockCtx.font = '900 44px "Orbitron", sans-serif';
+            clockCtx.fillStyle = mainHex;
+            clockCtx.textAlign = 'center';
+            clockCtx.textBaseline = 'middle';
+            clockCtx.fillText(timeStr, clockCanvas.width / 2, clockCanvas.height / 2 - 6);
+            clockCtx.font = '700 12px "Outfit", sans-serif';
+            clockCtx.fillStyle = secHex;
+            clockCtx.fillText('SYSTEM TIME // REAL-TIME TELEMETRY', clockCanvas.width / 2, clockCanvas.height - 24);
+            if (clockTexture) clockTexture.needsUpdate = true;
+        }
+
+        function build3DClock() {
+            if (clockGroup) scene.remove(clockGroup);
+            clockCanvas = document.createElement('canvas');
+            clockCanvas.width = 512;
+            clockCanvas.height = 128;
+            clockCtx = clockCanvas.getContext('2d');
+            clockTexture = new THREE.CanvasTexture(clockCanvas);
+            clockTexture.minFilter = THREE.LinearFilter;
+            clockTexture.magFilter = THREE.LinearFilter;
+            drawClockCanvas();
+            const clockGeo = new THREE.PlaneGeometry(6, 1.5);
+            const clockMat = new THREE.MeshBasicMaterial({ map: clockTexture, transparent: true, side: THREE.DoubleSide, depthWrite: false });
+            clockMesh = new THREE.Mesh(clockGeo, clockMat);
+            const mainColor = colorMap[activeColor] ? colorMap[activeColor].three : 0x00f3ff;
+            const frameGeo = new THREE.PlaneGeometry(6.3, 1.8);
+            const frameMat = new THREE.MeshBasicMaterial({ color: mainColor, wireframe: true, transparent: true, opacity: 0.3 });
+            const frameMesh = new THREE.Mesh(frameGeo, frameMat);
+            frameMesh.position.z = -0.05;
+            clockGroup = new THREE.Group();
+            clockGroup.add(clockMesh);
+            clockGroup.add(frameMesh);
+            clockGroup.position.set(clockPosX, clockPosY, clockPosZ);
+            clockGroup.scale.set(clockScale, clockScale, clockScale);
+            clockGroup.visible = clockVisible;
+            scene.add(clockGroup);
+        }
+
+        function update3DClock() {
+            if (!clockGroup) return;
+            clockGroup.visible = clockVisible;
+            if (!clockVisible) return;
+            drawClockCanvas();
+        }
+
+        // --- PARTICLE NEBULA BUILDER (exported) ---
+        function buildParticleNebula() {
+            if (nebulaGroup) { scene.remove(nebulaGroup); nebulaGroup = null; nebulaParticles = null; }
+            const particleCount = 1800;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+            const c1 = new THREE.Color(colorMap[activeColor] ? colorMap[activeColor].three : 0x00f3ff);
+            const c2 = new THREE.Color(colorMap[activeColorSecondary] ? colorMap[activeColorSecondary].three : c1.getHex());
+            for (let i = 0; i < particleCount; i++) {
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos(2 * Math.random() - 1);
+                const r = 5 + Math.random() * 7;
+                positions[i * 3]     = r * Math.sin(phi) * Math.cos(theta);
+                positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+                positions[i * 3 + 2] = r * Math.cos(phi);
+                const blend = Math.random();
+                const blended = c1.clone().lerp(c2, blend);
+                colors[i * 3] = blended.r; colors[i * 3 + 1] = blended.g; colors[i * 3 + 2] = blended.b;
+            }
+            const geo = new THREE.BufferGeometry();
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            const mat = new THREE.PointsMaterial({ size: 0.085, vertexColors: true, transparent: true, opacity: 0.72, sizeAttenuation: true });
+            nebulaParticles = new THREE.Points(geo, mat);
+            nebulaGroup = new THREE.Group();
+            nebulaGroup.add(nebulaParticles);
+            nebulaGroup.visible = nebulaVisible;
+            scene.add(nebulaGroup);
+        }
+
         let clock = 0;
         function animate() {
             requestAnimationFrame(animate);
@@ -3727,6 +3914,22 @@ function exportStandaloneHTML() {
                 });
             }
             controls.update();
+
+            // Update 3D clock
+            if (clockVisible) update3DClock();
+
+            // Animate particle nebula
+            if (nebulaGroup && nebulaVisible) {
+                nebulaGroup.rotation.y += 0.0004;
+                nebulaGroup.rotation.x += 0.0002;
+                if (nebulaParticles && micEnabled && freqData) {
+                    let avgVol = 0;
+                    for (let i = 0; i < freqData.length; i++) avgVol += freqData[i];
+                    avgVol /= freqData.length;
+                    nebulaParticles.material.opacity = 0.4 + (avgVol / 255) * 0.6;
+                }
+            }
+
             updateAnnotations();
             renderer.render(scene, camera);
         }
