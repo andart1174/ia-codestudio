@@ -2863,6 +2863,10 @@ function exportStandaloneHTML() {
         let nebulaVisible = ${nebulaVisible};
         let nebulaGroup = null, nebulaParticles = null;
 
+        // 3D Wireframe World Globe state (exported from builder)
+        let globeVisible = ${globeVisible};
+        let globeGroup = null, globeMesh = null;
+
         // Custom Model states
         let customModel = null;
         let customModelScale = ${customModelScale};
@@ -2940,6 +2944,9 @@ function exportStandaloneHTML() {
 
             // Build Particle Nebula
             buildParticleNebula();
+
+            // Build 3D Wireframe World Globe if visible
+            if (globeVisible) build3DGlobe();
 
             // Raycaster
             raycaster = new THREE.Raycaster();
@@ -3575,6 +3582,24 @@ function exportStandaloneHTML() {
             scene.add(nebulaGroup);
         }
 
+        // --- 3D WIREFRAME WORLD GLOBE (exported) ---
+        function build3DGlobe() {
+            if (globeGroup) scene.remove(globeGroup);
+            const mainColor = colorMap[activeColor] ? colorMap[activeColor].three : 0x00f3ff;
+            const sphereGeo = new THREE.SphereGeometry(7, 24, 24);
+            const sphereMat = new THREE.MeshBasicMaterial({
+                color: mainColor,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.15
+            });
+            globeMesh = new THREE.Mesh(sphereGeo, sphereMat);
+            globeGroup = new THREE.Group();
+            globeGroup.add(globeMesh);
+            globeGroup.visible = globeVisible;
+            scene.add(globeGroup);
+        }
+
         let clock = 0;
         function animate() {
             requestAnimationFrame(animate);
@@ -3648,6 +3673,11 @@ function exportStandaloneHTML() {
                     avgVol /= freqData.length;
                     nebulaParticles.material.opacity = 0.4 + (avgVol / 255) * 0.6;
                 }
+            }
+
+            // Rotate 3D globe
+            if (globeMesh && globeVisible) {
+                globeMesh.rotation.y += 0.003 * speed;
             }
 
             updateAnnotations();
