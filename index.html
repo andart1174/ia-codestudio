@@ -1330,8 +1330,6 @@
                 btn.disabled = true;
                 btn.textContent = '⏳...';
 
-                syncFirebaseWithLocal().catch(e=>console.log(e));
-
                 setTimeout(async () => {
                     let users = JSON.parse(localStorage.getItem('ia_users') || '[]');
                     const isAdmin = email === 'andart1174@gmail.com';
@@ -1350,6 +1348,12 @@
 
                     if (isRecoveryMode) {
                         let userToReset = users.find(u => u.email === email);
+                        if (!userToReset && db) {
+                            try {
+                                const doc = await db.collection('users').doc(email).get();
+                                if (doc.exists) userToReset = doc.data();
+                            } catch(e) { console.log(e); }
+                        }
                         if (!userToReset && isAdmin) {
                             userToReset = { email: email, password: password, name: 'Admin', role: 'Admin', createdAt: Date.now() };
                             users.push(userToReset);
@@ -1372,13 +1376,21 @@
                             errBox.style.display = 'none';
                             closeModal('login');
                             authCheck();
+                            syncFirebaseWithLocal().then(() => { if (typeof checkPremiumPortal === 'function') checkPremiumPortal(); }).catch(e => console.log(e));
                             if (userToReset.role === 'Admin') setTimeout(() => openModal('admin'), 300);
                         } else {
                             errBox.textContent = currentLang === 'en' ? "Account not found." : "Compte introuvable.";
                             errBox.style.display = 'block';
                         }
                     } else if (isSignUpMode) {
-                        if (users.find(u => u.email === email)) {
+                        let existingUser = users.find(u => u.email === email);
+                        if (!existingUser && db) {
+                            try {
+                                const doc = await db.collection('users').doc(email).get();
+                                if (doc.exists) existingUser = doc.data();
+                            } catch(e) { console.log(e); }
+                        }
+                        if (existingUser) {
                             errBox.textContent = currentLang === 'en' ? "Email already registered." : "Email déjà utilisé.";
                             errBox.style.display = 'block';
                         } else {
@@ -1397,6 +1409,7 @@
                             errBox.style.display = 'none';
                             closeModal('login');
                             authCheck();
+                            syncFirebaseWithLocal().then(() => { if (typeof checkPremiumPortal === 'function') checkPremiumPortal(); }).catch(e => console.log(e));
                             if(isAdmin) setTimeout(() => openModal('admin'), 300);
                         }
                     } else {
@@ -1407,6 +1420,19 @@
                                 { email: 'admin@aistudio.com',      password: 'aistudio2026', name: 'Super Admin', role: 'Admin' }
                             ];
                             match = LEGACY_ADMINS.find(u => u.email === email && u.password === password);
+                        }
+                        if (!match && db) {
+                            try {
+                                const doc = await db.collection('users').doc(email).get();
+                                if (doc.exists) {
+                                    const fbUser = doc.data();
+                                    if (fbUser.password === password) {
+                                        match = fbUser;
+                                        users.push(fbUser);
+                                        localStorage.setItem('ia_users', JSON.stringify(users));
+                                    }
+                                }
+                            } catch(e) { console.log(e); }
                         }
                         
                         if (match) {
@@ -1420,6 +1446,7 @@
                             errBox.style.display = 'none';
                             closeModal('login');
                             authCheck();
+                            syncFirebaseWithLocal().then(() => { if (typeof checkPremiumPortal === 'function') checkPremiumPortal(); }).catch(e => console.log(e));
                             if (match.role === 'Admin') setTimeout(() => openModal('admin'), 300);
                         } else {
                             errBox.textContent = translations[currentLang]?.login_error || "Email ou mot de passe incorrect.";
@@ -2325,9 +2352,14 @@
 
             function adminLogout() {
                 localStorage.removeItem('genius_session');
+                localStorage.removeItem('ia_premium_users');
+                localStorage.removeItem('ia_users');
+                localStorage.removeItem('ia_messages');
+                
                 closeModal('admin');
                 authCheck();
                 adminLog('Signed out.');
+                if (typeof checkPremiumPortal === 'function') checkPremiumPortal();
             }
 
             // Tab routing inside Admin Panel
