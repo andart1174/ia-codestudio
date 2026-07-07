@@ -36,15 +36,7 @@
       console.error("Error reading premium session:", e);
     }
 
-    // Fallback to legacy key
-    var subDate = localStorage.getItem('ia_premium_sub_date');
-    if (subDate) {
-      var daysPassed = Math.floor((Date.now() - parseInt(subDate, 10)) / (1000 * 60 * 60 * 24));
-      var left = 30 - daysPassed;
-      if (left > 0) {
-        return true;
-      }
-    }
+    
 
     return false;
   };

@@ -1072,20 +1072,6 @@
                         return;
                     }
                 }
-                
-                // Fallback to legacy key (for safety)
-                const subDate = localStorage.getItem('ia_premium_sub_date');
-                if (subDate) {
-                    const daysPassed = Math.floor((Date.now() - parseInt(subDate)) / (1000 * 60 * 60 * 24));
-                    const left = 30 - daysPassed;
-                    if (left > 0) {
-                        btn.classList.add('active-sub');
-                        btn.innerText = '✅ Premium ACTIV (' + left + ' jours restants)';
-                        return;
-                    } else {
-                        localStorage.removeItem('ia_premium_sub_date');
-                    }
-                }
 
                 // Not premium
                 btn.classList.remove('active-sub');
@@ -2417,6 +2403,7 @@
             }
 
             document.addEventListener('DOMContentLoaded', () => {
+                localStorage.removeItem('ia_premium_sub_date');
                 authCheck();
                 verifyBannedStatus();
                 if (localStorage.getItem('genius_session')) {
@@ -2425,6 +2412,8 @@
                             if (typeof checkPremiumPortal === 'function') checkPremiumPortal();
                         })
                         .catch(e => console.log('Startup sync warning:', e));
+                } else {
+                    if (typeof checkPremiumPortal === 'function') checkPremiumPortal();
                 }
             });
         </script>
