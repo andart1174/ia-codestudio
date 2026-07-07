@@ -1049,6 +1049,13 @@
                 const user = JSON.parse(session);
                 const email = user.email.toLowerCase();
                 
+                // Admin bypass (matching premium-lock.js)
+                if (email === 'andart1174@gmail.com') {
+                    btn.classList.add('active-sub');
+                    btn.innerText = currentLang === 'fr' ? '✅ Premium ACTIV (Admin)' : '✅ Premium ACTIVE (Admin)';
+                    return;
+                }
+                
                 // 2. Check in premium database
                 const premiumList = JSON.parse(localStorage.getItem('ia_premium_users') || '[]');
                 const record = premiumList.find(p => p.email.toLowerCase() === email);
@@ -1236,74 +1243,72 @@
             async function syncFirebaseWithLocal() {
                 if (!db) return;
                 try {
-                    // Timeout helper function
                     const timeout = (ms) => new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout Firebase")), ms));
+                    
+                    const session = localStorage.getItem('genius_session');
+                    if (!session) return;
+                    
+                    const currentUser = JSON.parse(session);
+                    const email = currentUser.email.toLowerCase();
+                    const isAdmin = currentUser.role === 'Admin' || email === 'andart1174@gmail.com';
 
-                    // Users Sync - Smart Merge
-                    const uSnap = await Promise.race([db.collection('users').get(), timeout(4000)]);
-                    let lsU = JSON.parse(localStorage.getItem('ia_users') || '[]');
-                    let memU = {};
-                    lsU.forEach(u => {
-                        if (u && u.email) memU[u.email] = u;
-                    });
-                    uSnap.forEach(d => {
-                        let data = d.data();
-                        if (data && data.email) {
-                            memU[data.email] = { ...memU[data.email], ...data };
-                        }
-                    });
-                    const mergedU = Object.values(memU);
-                    localStorage.setItem('ia_users', JSON.stringify(mergedU));
-                    for(let u of mergedU) {
-                        if (u && u.email) {
-                            try { await db.collection('users').doc(u.email).set(u); } catch(e){}
-                        }
-                    }
+                    if (isAdmin) {
+                        // Admin Sync (Read-only download to localStorage, no write-back)
+                        
+                        // 1. Users Sync
+                        const uSnap = await Promise.race([db.collection('users').get(), timeout(5000)]);
+                        const memU = [];
+                        uSnap.forEach(d => {
+                            const data = d.data();
+                            if (data && data.email) memU.push(data);
+                        });
+                        localStorage.setItem('ia_users', JSON.stringify(memU));
 
-                    // Messages Sync - Smart Merge
-                    const mSnap = await Promise.race([db.collection('messages').get(), timeout(4000)]);
-                    let lsM = JSON.parse(localStorage.getItem('ia_messages') || '[]');
-                    let memM = [];
-                    let hashes = new Set();
-                    lsM.forEach(m => {
-                        if (m && m.email && m.date) {
-                            let h = m.date + '_' + m.email;
-                            if (!hashes.has(h)) { memM.push(m); hashes.add(h); }
-                        }
-                    });
-                    mSnap.forEach(d => {
-                        let m = d.data();
-                        if (m && m.email && m.date) {
-                            let h = m.date + '_' + m.email;
-                            if (!hashes.has(h)) { memM.push(m); hashes.add(h); }
-                        }
-                    });
-                    memM.sort((a,b) => b.date - a.date);
-                    localStorage.setItem('ia_messages', JSON.stringify(memM));
-                    for(let m of memM) {
-                        if (m && m.email && m.date) {
-                            try { await db.collection('messages').doc(m.date + '_' + m.email).set(m); } catch(e){}
-                        }
-                    }
+                        // 2. Messages Sync
+                        const mSnap = await Promise.race([db.collection('messages').get(), timeout(5000)]);
+                        const memM = [];
+                        mSnap.forEach(d => {
+                            const data = d.data();
+                            if (data && data.email) memM.push(data);
+                        });
+                        memM.sort((a,b) => b.date - a.date);
+                        localStorage.setItem('ia_messages', JSON.stringify(memM));
 
-                    // Premium - Smart Merge
-                    const pSnap = await Promise.race([db.collection('premium').get(), timeout(4000)]);
-                    let lsP = JSON.parse(localStorage.getItem('ia_premium_users') || '[]');
-                    let memP = {};
-                    lsP.forEach(p => {
-                        if (p && p.email) memP[p.email] = p;
-                    });
-                    pSnap.forEach(d => {
-                        let m = d.data();
-                        if (m && m.email) {
-                            memP[m.email] = { ...memP[m.email], ...m };
-                        }
-                    });
-                    const mergedP = Object.values(memP);
-                    localStorage.setItem('ia_premium_users', JSON.stringify(mergedP));
-                    for(let p of mergedP) {
-                        if (p && p.email) {
-                            try { await db.collection('premium').doc(p.email).set(p); } catch(e){}
+                        // 3. Premium Sync
+                        const pSnap = await Promise.race([db.collection('premium').get(), timeout(5000)]);
+                        const memP = [];
+                        pSnap.forEach(d => {
+                            const data = d.data();
+                            if (data && data.email) memP.push(data);
+                        });
+                        localStorage.setItem('ia_premium_users', JSON.stringify(memP));
+
+                    } else {
+                        // Standard User Sync (Sync ONLY own records, no global database dump)
+                        
+                        // 1. Fetch own user doc (for bans / updates)
+                        try {
+                            const uDoc = await Promise.race([db.collection('users').doc(email).get(), timeout(3000)]);
+                            if (uDoc.exists) {
+                                const data = uDoc.data();
+                                if (data.banned === true) {
+                                    currentUser.banned = true;
+                                    localStorage.setItem('genius_session', JSON.stringify(currentUser));
+                                }
+                            }
+                        } catch(e) { console.log("User doc sync warning:", e); }
+
+                        // 2. Fetch own premium doc
+                        try {
+                            const pDoc = await Promise.race([db.collection('premium').doc(email).get(), timeout(3000)]);
+                            if (pDoc.exists) {
+                                const data = pDoc.data();
+                                localStorage.setItem('ia_premium_users', JSON.stringify([data]));
+                            } else {
+                                localStorage.setItem('ia_premium_users', '[]');
+                            }
+                        } catch(e) {
+                            console.log("Premium doc sync warning:", e);
                         }
                     }
                     
@@ -1624,26 +1629,26 @@
             }
             
             async function adminTogglePremiumLink(email, isCurrentlyPremium) {
+                const targetEmail = email.trim().toLowerCase();
                 if (isCurrentlyPremium) {
-                    if (!confirm(`Revoke premium access for ${email}?`)) return;
+                    if (!confirm(`Revoke premium access for ${targetEmail}?`)) return;
                     let list = getPremiumUsers();
-                    let idx = list.findIndex(u => u.email.toLowerCase() === email.toLowerCase());
+                    let idx = list.findIndex(u => u.email.toLowerCase() === targetEmail);
                     if (idx >= 0) {
-                        const removed = list[idx];
                         list.splice(idx, 1);
                         savePremiumUsers(list);
                         try {
-                            await db.collection('premium').doc(removed.email).delete();
-                            adminLog(`Premium access revoked for: ${email}`);
+                            await db.collection('premium').doc(targetEmail).delete();
+                            adminLog(`Premium access revoked for: ${targetEmail}`);
                             refreshAdminStats();
                         } catch(e) {
                             console.error(e);
                         }
                     }
                 } else {
-                    document.getElementById('premium-user-email').value = email;
+                    document.getElementById('premium-user-email').value = targetEmail;
                     document.getElementById('premium-user-email').focus();
-                    adminLog(`Enter duration and click Grant Premium for ${email}`);
+                    adminLog(`Enter duration and click Grant Premium for ${targetEmail}`);
                 }
             }
 
@@ -1977,6 +1982,12 @@
                 try {
                     await db.collection('messages').doc(msgId).delete();
                     adminLog("Message deleted successfully.");
+                    
+                    // Also filter out of local cache
+                    let lsM = JSON.parse(localStorage.getItem('ia_messages') || '[]');
+                    lsM = lsM.filter(m => (m.date + '_' + m.email) !== msgId);
+                    localStorage.setItem('ia_messages', JSON.stringify(lsM));
+                    
                     loadMessagesTab();
                 } catch(e) {
                     console.error("Error deleting message:", e);
