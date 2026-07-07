@@ -176,63 +176,53 @@
 
   <!-- ===== DEDICATED SEO LANDING PAGES (AD-GENIUS AI PRO) ===== -->
   <url>
-    <loc>https://ia-codestudio.com/ai-scratch-card-generator.html?lang=fr</loc>
-    <lastmod>2026-06-17</lastmod>
+    <loc>https://ia-codestudio.com/ai-scratch-card-generator.html</loc>
+    <lastmod>2026-07-07</lastmod>
     <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/spin-wheel-ad-maker.html</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/certificate-generator-online.html</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/3d-product-showroom-ai.html</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/digital-business-card-generator.html</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- ===== SEO BLOG ARTICLES ===== -->
+  <url>
+    <loc>https://ia-codestudio.com/blog-3d-product-viewer-online.html</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://ia-codestudio.com/ai-scratch-card-generator.html?lang=en</loc>
-    <lastmod>2026-06-17</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://ia-codestudio.com/blog-scratch-card-widget-website.html</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://ia-codestudio.com/spin-wheel-ad-maker.html?lang=fr</loc>
-    <lastmod>2026-06-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/spin-wheel-ad-maker.html?lang=en</loc>
-    <lastmod>2026-06-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/certificate-generator-online.html?lang=fr</loc>
-    <lastmod>2026-06-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/certificate-generator-online.html?lang=en</loc>
-    <lastmod>2026-06-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/3d-product-showroom-ai.html?lang=fr</loc>
-    <lastmod>2026-06-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/3d-product-showroom-ai.html?lang=en</loc>
-    <lastmod>2026-06-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/digital-business-card-generator.html?lang=fr</loc>
-    <lastmod>2026-06-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/digital-business-card-generator.html?lang=en</loc>
-    <lastmod>2026-06-17</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://ia-codestudio.com/blog-digital-business-card-generator.html</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
