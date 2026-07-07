@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    
+body { background: #030712; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: 'Space Grotesk', sans-serif; perspective: 1000px; color: #fff; user-select: none; }
+.wheel-scene { width: 300px; height: 300px; display: flex; justify-content: center; align-items: center; }
+.wheel-wrap { position: relative; width: 240px; height: 240px; display: flex; justify-content: center; align-items: center; transform-style: preserve-3d; transform: rotateX(20deg); transition: transform 0.1s ease; }
+.wheel-pointer { position: absolute; top: -15px; z-index: 20; font-size: 22px; color: var(--c2); text-shadow: 0 0 10px var(--c2); }
+#wheel-canvas { position: absolute; inset: 0; border-radius: 50%; box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 20px var(--c1)40; }
+.wheel-spin-btn {
+  position: absolute; z-index: 10; width: 70px; height: 70px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--c1), var(--c2)); border: 3px solid #fff;
+  color: #fff; font-weight: 900; font-size: 10px; cursor: pointer; text-align: center;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.5); transition: transform 0.2s ease;
+}
+.wheel-spin-btn:hover { transform: scale(1.08); }
+
+  </style>
+</head>
+<body>
+  
+<div class="wheel-scene">
+  <div class="wheel-wrap" id="wheel-wrap" style="--c1: #00f0ff; --c2: #ff007f;">
+    <div class="wheel-pointer">▼</div>
+    <canvas id="wheel-canvas" width="240" height="240"></canvas>
+    <button class="wheel-spin-btn" id="spin-btn">TOURNER & GAGNER</button>
+  </div>
+</div>
+
+  <script>
+    
+const canvas = document.getElementById('wheel-canvas');
+const ctx = canvas.getContext('2d');
+const spinBtn = document.getElementById('spin-btn');
+const wrap = document.getElementById('wheel-wrap');
+
+const prizes = ["-10%", "-20%", "FREE GIFT", "-50%", "VIP PASS", "-30%"];
+const numPrizes = prizes.length;
+const arc = (Math.PI * 2) / numPrizes;
+let currentAngle = 0;
+let isSpinning = false;
+
+function drawWheel() {
+  ctx.clearRect(0,0,240,240);
+  const cx = 120, cy = 120, r = 110;
+
+  for (let i = 0; i < numPrizes; i++) {
+    const angle = currentAngle + i * arc;
+    ctx.beginPath();
+    ctx.fillStyle = i % 2 === 0 ? '#00f0ff' : '#1e293b';
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, angle, angle + arc);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.stroke();
+
+    // Prize text
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(angle + arc / 2);
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold 11px Space Grotesk";
+    ctx.fillText(prizes[i], r - 15, 4);
+    ctx.restore();
+  }
+}
+drawWheel();
+
+spinBtn.addEventListener('click', () => {
+  if (isSpinning) return;
+  isSpinning = true;
+
+  const spins = 5 + Math.random() * 5;
+  const targetAngle = currentAngle + spins * Math.PI * 2 + Math.random() * Math.PI * 2;
+  const duration = 4000;
+  const startTime = performance.now();
+
+  function animateSpin(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    // Ease out cubic
+    const easeOut = 1 - Math.pow(1 - progress, 3);
+    currentAngle = targetAngle * easeOut;
+    drawWheel();
+
+    if (progress < 1) {
+      requestAnimationFrame(animateSpin);
+    } else {
+      isSpinning = false;
+    }
+  }
+  requestAnimationFrame(animateSpin);
+});
+
+document.addEventListener('mousemove', (e) => {
+  const r = wrap.getBoundingClientRect();
+  const x = e.clientX - r.left; const y = e.clientY - r.top;
+  const rx = (0.5 - (y / r.height)) * 20; const ry = ((x / r.width) - 0.5) * 20;
+  wrap.style.transform = 'rotateX(' + (20 + rx) + 'deg) rotateY(' + ry + 'deg)';
+});
+document.addEventListener('mouseleave', () => {
+  wrap.style.transform = 'rotateX(20deg) rotateY(0deg)';
+});
+
+  </script>
+</body>
+</html>

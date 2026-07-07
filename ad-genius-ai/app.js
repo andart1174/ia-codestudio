@@ -1189,3 +1189,16 @@ document.addEventListener('keydown', (e) => {
         e.preventDefault();
     }
 });
+
+// URL parameter router for automatic studio selection
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const studio = urlParams.get('studio');
+    if (studio) {
+        setTimeout(() => {
+            if (typeof window.activateWorkspace === 'function') {
+                window.activateWorkspace(studio);
+            }
+        }, 400);
+    }
+});

@@ -37,6 +37,8 @@
         textSize: 1,
         textColor: '#ffffff',
         textY: 0,
+        customFile: null,
+        customModelDataUrl: null,
         
         // Three.js variables
         active: false,
@@ -98,6 +100,8 @@
         var btnExportHtml = fr ? "Exporter Showroom HTML" : "Export Showroom HTML";
         var btnCaptureImg = fr ? "Prendre une Photo (PNG)" : "Capture Screenshot (PNG)";
 
+        var optCustom = fr ? "Modèle 3D (.glb, .obj)" : "3D Model (.glb, .obj)";
+
         r.innerHTML = `
             <div style="color:white;font-family:sans-serif;padding-bottom:20px;">
                 <h2 style="margin:0 0 5px;color:#a855f7;font-size:18px;">🔮 3D Showroom</h2>
@@ -111,18 +115,19 @@
                             <option value="box">${optBox}</option>
                             <option value="cylinder">${optCyl}</option>
                             <option value="sphere">${optSph}</option>
+                            <option value="custom">${optCustom}</option>
                         </select>
                     </div>
-
+ 
                     <div>
-                        <label style="font-size:11px;color:#d8b4fe;display:block;margin-bottom:4px;">${labelUpload}</label>
+                        <label id="sr-file-label" style="font-size:11px;color:#d8b4fe;display:block;margin-bottom:4px;">${labelUpload}</label>
                         <input type="file" id="sr-file" accept="image/*" style="width:100%;font-size:11px;color:#94a3b8;">
                     </div>
-
+ 
                     <hr style="border:0;border-top:1px solid #334155;margin:8px 0;">
-
+ 
                     <label style="font-size:11px;color:#fef08a;font-weight:bold;margin-bottom:-4px;">${labelColors}</label>
-
+ 
                     <div style="display:flex;gap:5px;">
                         <div style="flex:1;">
                             <span style="font-size:9px;color:#94a3b8;display:block;">${labelBg}</span>
@@ -137,7 +142,7 @@
                             <input type="color" id="sr-col-acc" value="${S.accentColor}" style="width:100%;height:30px;border:none;background:transparent;cursor:pointer;">
                         </div>
                     </div>
-
+ 
                     <div>
                         <label style="font-size:11px;color:#d8b4fe;display:block;margin-bottom:4px;">${labelLighting}</label>
                         <select id="sr-light" style="width:100%;background:#1e293b;color:#fff;border:1px solid #334155;padding:8px;border-radius:4px;">
@@ -146,7 +151,7 @@
                             <option value="neon">${optNeon}</option>
                         </select>
                     </div>
-
+ 
                     <div>
                         <label style="font-size:11px;color:#d8b4fe;display:block;margin-bottom:4px;">${labelMotion}</label>
                         <select id="sr-motion" style="width:100%;background:#1e293b;color:#fff;border:1px solid #334155;padding:8px;border-radius:4px;">
@@ -156,21 +161,21 @@
                             <option value="static">${optStatic}</option>
                         </select>
                     </div>
-
+ 
                     <hr style="border:0;border-top:1px solid #334155;margin:8px 0;">
-
+ 
                     <label style="font-size:11px;color:#fef08a;font-weight:bold;margin-bottom:-4px;">${labelText}</label>
-
+ 
                     <div>
                         <label style="font-size:11px;color:#d8b4fe;display:block;margin-bottom:4px;">${labelTitle}</label>
                         <input type="text" id="sr-inp-head" value="${S.headline}" style="width:100%;background:#1e293b;color:#fff;border:1px solid #334155;padding:8px;border-radius:4px;">
                     </div>
-
+ 
                     <div>
                         <label style="font-size:11px;color:#d8b4fe;display:block;margin-bottom:4px;">${labelSub}</label>
                         <input type="text" id="sr-inp-sub" value="${S.subhead}" style="width:100%;background:#1e293b;color:#fff;border:1px solid #334155;padding:8px;border-radius:4px;">
                     </div>
-
+ 
                     <div style="display:flex;gap:10px;">
                         <div style="flex:1;">
                             <label style="font-size:11px;color:#d8b4fe;display:block;margin-bottom:4px;">${labelSize}</label>
@@ -181,29 +186,49 @@
                             <input type="range" id="sr-range-y" min="-100" max="150" value="${S.textY}" style="width:100%;">
                         </div>
                     </div>
-
+ 
                     <hr style="border:0;border-top:1px solid #334155;margin:8px 0;">
-
+ 
                     <button id="sr-btn-html" style="width:100%;background:linear-gradient(135deg,#a855f7,#8b5cf6);color:#fff;border:none;padding:12px;border-radius:6px;font-weight:bold;cursor:pointer;box-shadow:0 4px 10px rgba(139,92,246,0.2);">🌐 ${btnExportHtml}</button>
                     <button id="sr-btn-png" style="width:100%;background:#334155;color:#fff;border:1px solid #475569;padding:10px;border-radius:6px;font-weight:bold;cursor:pointer;">📸 ${btnCaptureImg}</button>
                 </div>
             </div>
         `;
-
+ 
         setupListeners();
+        updateFileInputState();
         initWebGL();
+    }
+ 
+    function updateFileInputState() {
+        var fileInp = document.getElementById('sr-file');
+        var fileLbl = document.getElementById('sr-file-label');
+        if (!fileInp || !fileLbl) return;
+
+        var fr = window.lang === 'fr';
+        if (S.shape === 'custom') {
+            fileLbl.textContent = fr ? "Télécharger le Modèle 3D (.glb, .obj) :" : "Upload 3D Model (.glb, .obj):";
+            fileInp.setAttribute('accept', '.glb,.gltf,.obj');
+        } else {
+            fileLbl.textContent = fr ? "Télécharger l'étiquette (Image) :" : "Upload Label Texture:";
+            fileInp.setAttribute('accept', 'image/*');
+        }
     }
 
     function setupListeners() {
         document.getElementById('sr-shape').value = S.shape;
-        document.getElementById('sr-shape').onchange = e => { S.shape = e.target.value; rebuildModel(); };
+        document.getElementById('sr-shape').onchange = e => { 
+            S.shape = e.target.value; 
+            updateFileInputState();
+            rebuildModel(); 
+        };
         
         document.getElementById('sr-light').value = S.lightMood;
         document.getElementById('sr-light').onchange = e => { S.lightMood = e.target.value; updateLights(); };
-
+ 
         document.getElementById('sr-motion').value = S.motion;
         document.getElementById('sr-motion').onchange = e => { S.motion = e.target.value; };
-
+ 
         document.getElementById('sr-col-bg').oninput = e => { S.bgColor = e.target.value; updateBg(); };
         document.getElementById('sr-col-pri').oninput = e => { S.primaryColor = e.target.value; rebuildModel(); };
         
@@ -212,7 +237,7 @@
             document.getElementById('sr-over-sub').style.color = S.accentColor;
             rebuildModel();
         };
-
+ 
         // Text listener updates
         document.getElementById('sr-inp-head').oninput = e => {
             S.headline = e.target.value;
@@ -231,17 +256,21 @@
             S.textY = parseInt(e.target.value, 10);
             document.getElementById('sr-text-overlay').style.transform = `translateY(${S.textY}px)`;
         };
-
-        // Upload label
+ 
+        // Upload label or model file
         document.getElementById('sr-file').onchange = e => {
             var f = e.target.files[0];
             if(f) {
-                var rdr = new FileReader();
-                rdr.onload = ev => { S.logoUrl = ev.target.result; loadTexture(); };
-                rdr.readAsDataURL(f);
+                if (S.shape === 'custom') {
+                    load3DModelFile(f);
+                } else {
+                    var rdr = new FileReader();
+                    rdr.onload = ev => { S.logoUrl = ev.target.result; loadTexture(); };
+                    rdr.readAsDataURL(f);
+                }
             }
         };
-
+ 
         document.getElementById('sr-btn-html').onclick = exportHTML;
         document.getElementById('sr-btn-png').onclick = capturePNG;
     }
@@ -314,10 +343,18 @@
 
     function rebuildModel() {
         if(!S.scene) return;
+        if (S.shape === 'custom' && S.mesh && S.mesh.type !== 'Mesh' && S.mesh.children && S.mesh.children.length > 0) {
+            // Already has custom model loaded, keep it
+            return;
+        }
+
         if(S.mesh) {
             S.scene.remove(S.mesh);
-            S.mesh.geometry.dispose();
-            S.mesh.material.dispose();
+            if (S.mesh.geometry) S.mesh.geometry.dispose();
+            if (S.mesh.material) {
+                if (Array.isArray(S.mesh.material)) S.mesh.material.forEach(m => m.dispose());
+                else S.mesh.material.dispose();
+            }
         }
 
         var geo;
@@ -325,6 +362,7 @@
         else if (S.shape === 'box') geo = new THREE.BoxGeometry(2.4, 3.8, 1.6);
         else if (S.shape === 'cylinder') geo = new THREE.CylinderGeometry(1.0, 1.2, 4.6, 32);
         else if (S.shape === 'sphere') geo = new THREE.SphereGeometry(1.8, 32, 32);
+        else if (S.shape === 'custom') geo = new THREE.BoxGeometry(2.2, 2.2, 2.2); // Placeholder Box
 
         var matOpts = { color: S.primaryColor, roughness: 0.15, metalness: 0.85 };
         var mat = new THREE.MeshStandardMaterial(matOpts);
@@ -335,8 +373,75 @@
         loadTexture();
     }
 
+    function load3DModelFile(file) {
+        S.customFile = file;
+        var url = URL.createObjectURL(file);
+        
+        // Read file as Base64 data URL for single-HTML exports
+        var rdr = new FileReader();
+        rdr.onload = ev => { S.customModelDataUrl = ev.target.result; };
+        rdr.readAsDataURL(file);
+
+        var lowerName = file.name.toLowerCase();
+        if (lowerName.endsWith('.glb') || lowerName.endsWith('.gltf')) {
+            if (typeof THREE.GLTFLoader !== 'undefined') {
+                var loader = new THREE.GLTFLoader();
+                loader.load(url, function(gltf) {
+                    loadCustomModel(gltf.scene);
+                }, undefined, function(err) {
+                    console.error("GLTF Load Error:", err);
+                    alert(window.lang === 'fr' ? "Erreur de chargement du modèle GLTF." : "Failed to load GLTF model.");
+                });
+            } else {
+                alert("THREE.GLTFLoader is not available.");
+            }
+        } else if (lowerName.endsWith('.obj')) {
+            if (typeof THREE.OBJLoader !== 'undefined') {
+                var loader = new THREE.OBJLoader();
+                loader.load(url, function(obj) {
+                    loadCustomModel(obj);
+                }, undefined, function(err) {
+                    console.error("OBJ Load Error:", err);
+                    alert(window.lang === 'fr' ? "Erreur de chargement du modèle OBJ." : "Failed to load OBJ model.");
+                });
+            } else {
+                alert("THREE.OBJLoader is not available.");
+            }
+        }
+    }
+
+    function loadCustomModel(model) {
+        if (!S.scene) return;
+        if (S.mesh) {
+            S.scene.remove(S.mesh);
+            if (S.mesh.geometry) S.mesh.geometry.dispose();
+            if (S.mesh.material) {
+                if (Array.isArray(S.mesh.material)) S.mesh.material.forEach(m => m.dispose());
+                else S.mesh.material.dispose();
+            }
+        }
+
+        // Auto center and scale the uploaded model to standard 4.0 units max dimensions
+        var box = new THREE.Box3().setFromObject(model);
+        var size = box.getSize(new THREE.Vector3());
+        var center = box.getCenter(new THREE.Vector3());
+
+        model.position.x += (model.position.x - center.x);
+        model.position.y += (model.position.y - center.y);
+        model.position.z += (model.position.z - center.z);
+
+        var maxDim = Math.max(size.x, size.y, size.z);
+        if (maxDim > 0) {
+            var scale = 4.0 / maxDim;
+            model.scale.set(scale, scale, scale);
+        }
+
+        S.mesh = model;
+        S.scene.add(S.mesh);
+    }
+
     function loadTexture() {
-        if(!S.logoUrl || !S.mesh) return;
+        if(!S.logoUrl || !S.mesh || S.shape === 'custom') return;
         var loader = new THREE.TextureLoader();
         loader.load(S.logoUrl, function(tex) {
             if(S.shape === 'can' || S.shape === 'cylinder') {
@@ -395,7 +500,7 @@
         var cleanLogo = S.logoUrl ? S.logoUrl.replace(/[\r\n\s]+/g, "") : "";
         
         var lgtCode, geoCode, motCode, logoCode;
-
+ 
         if (S.lightMood === 'neon') {
             lgtCode = 'scene.add(new THREE.AmbientLight(0x11052c, 0.3)); var l1=new THREE.DirectionalLight(0xff007f, 1.8); l1.position.set(8, 2, 4); scene.add(l1); var l2=new THREE.DirectionalLight(0x00f0ff, 1.8); l2.position.set(-8, 2, 4); scene.add(l2);';
         } else if (S.lightMood === 'dramatic') {
@@ -403,12 +508,12 @@
         } else {
             lgtCode = 'scene.add(new THREE.AmbientLight(0xffffff, 0.7)); var l1=new THREE.DirectionalLight(0xffffff, 0.8); l1.position.set(5, 8, 5); scene.add(l1); var l2=new THREE.DirectionalLight(0xffffff, 0.3); l2.position.set(-5, 4, -5); scene.add(l2);';
         }
-
+ 
         if (S.shape === 'can') geoCode = 'new THREE.CylinderGeometry(1.4, 1.4, 4.2, 32)';
         else if (S.shape === 'box') geoCode = 'new THREE.BoxGeometry(2.4, 3.8, 1.6)';
         else if (S.shape === 'cylinder') geoCode = 'new THREE.CylinderGeometry(1.0, 1.2, 4.6, 32)';
         else geoCode = 'new THREE.SphereGeometry(1.8, 32, 32)';
-
+ 
         if (S.motion === 'rotateY') {
             motCode = 'mesh.rotation.y += 0.012;';
         } else if (S.motion === 'float') {
@@ -418,12 +523,12 @@
         } else {
             motCode = 'mesh.rotation.y = mouseX * 2; mesh.rotation.x = mouseY * 2;';
         }
-
+ 
         logoCode = '';
         if (cleanLogo) {
             logoCode = 'var img = new Image(); img.onload = function() { var tex = new THREE.Texture(img); if(shape==="can"||shape==="cylinder"){ tex.wrapS=THREE.RepeatWrapping; } tex.needsUpdate=true; mesh.material.map=tex; mesh.material.color.set("#ffffff"); mesh.material.needsUpdate=true; }; img.onerror = function(e) { console.warn("Failed to load texture:", e); }; img.src="' + cleanLogo + '";';
         }
-
+ 
         var css = `
             * { box-sizing: border-box; margin: 0; padding: 0; }
             body { background: ${S.bgColor}; overflow: hidden; font-family: 'Inter', system-ui, sans-serif; height:100vh; display:flex; align-items:center; justify-content:center; }
@@ -432,7 +537,7 @@
             h1 { font-size: 5.5vw; font-weight: 900; color: ${S.textColor}; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 2px; }
             p { font-size: 2.2vw; color: ${S.accentColor}; font-weight: 300; }
         `;
-
+ 
         var inlineJS = `
             try {
                 var scene = new THREE.Scene();
@@ -444,34 +549,83 @@
                 renderer.setSize(W, H);
                 renderer.setPixelRatio(window.devicePixelRatio || 1);
                 document.body.appendChild(renderer.domElement);
-
+ 
                 window.addEventListener('resize', function() {
                     W = window.innerWidth; H = window.innerHeight;
                     camera.aspect = W/H; camera.updateProjectionMatrix();
                     renderer.setSize(W, H);
                 });
-
+ 
                 ${lgtCode}
-
+ 
                 var shape = "${S.shape}";
+                var mesh;
+        `;
+ 
+        if (S.shape === 'custom') {
+            var loaderScript = S.customModelDataUrl ? (
+                S.customFile && (S.customFile.name.toLowerCase().endsWith('.glb') || S.customFile.name.toLowerCase().endsWith('.gltf')) ? `
+                var loader = new THREE.GLTFLoader();
+                loader.load("${S.customModelDataUrl}", function(gltf) {
+                    setupLoadedModel(gltf.scene);
+                });
+                ` : `
+                var loader = new THREE.OBJLoader();
+                loader.load("${S.customModelDataUrl}", function(obj) {
+                    setupLoadedModel(obj);
+                });
+                `
+            ) : `
+                var geo = new THREE.BoxGeometry(2.2, 2.2, 2.2);
+                var mat = new THREE.MeshStandardMaterial({ color: "${S.primaryColor}", roughness: 0.15, metalness: 0.85 });
+                mesh = new THREE.Mesh(geo, mat);
+                scene.add(mesh);
+            `;
+ 
+            inlineJS += `
+                ${loaderScript}
+ 
+                function setupLoadedModel(model) {
+                    var box = new THREE.Box3().setFromObject(model);
+                    var size = box.getSize(new THREE.Vector3());
+                    var center = box.getCenter(new THREE.Vector3());
+                    model.position.x += (model.position.x - center.x);
+                    model.position.y += (model.position.y - center.y);
+                    model.position.z += (model.position.z - center.z);
+                    var maxDim = Math.max(size.x, size.y, size.z);
+                    if (maxDim > 0) {
+                        var scale = 4.0 / maxDim;
+                        model.scale.set(scale, scale, scale);
+                    }
+                    scene.add(model);
+                    mesh = model;
+                }
+            `;
+        } else {
+            inlineJS += `
                 var geo = ${geoCode};
                 var mat = new THREE.MeshStandardMaterial({ color: "${S.primaryColor}", roughness: 0.15, metalness: 0.85 });
-                var mesh = new THREE.Mesh(geo, mat);
+                mesh = new THREE.Mesh(geo, mat);
                 scene.add(mesh);
-
+ 
                 ${logoCode}
-
+            `;
+        }
+ 
+        inlineJS += `
                 var mouseX = 0, mouseY = 0;
                 document.addEventListener('mousemove', function(e) {
                     mouseX = (e.clientX - W/2) / (W/2);
                     mouseY = (e.clientY - H/2) / (H/2);
                 });
-
+ 
                 var t = 0;
                 function loop() {
                     requestAnimationFrame(loop);
                     t += 0.016;
-                    ${motCode}
+                    if (mesh) {
+                        ${motCode}
+                    }
                     renderer.render(scene, camera);
                 }
                 loop();
@@ -483,12 +637,19 @@
                 document.body.appendChild(fallback);
             }
         `;
-
+ 
         var html = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>' + S.headline + '</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;900&display=swap" rel="stylesheet"><style>' + css + '</style></head><body>';
         html += '<div id="overlay"><h1>' + S.headline + '</h1><p>' + S.subhead + '</p></div>';
         html += '<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>';
+        if (S.shape === 'custom') {
+            if (S.customFile && (S.customFile.name.toLowerCase().endsWith('.glb') || S.customFile.name.toLowerCase().endsWith('.gltf'))) {
+                html += '<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>';
+            } else {
+                html += '<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>';
+            }
+        }
         html += '<script>' + inlineJS + '</script></body></html>';
-
+ 
         var blob = new Blob([html], { type: 'text/html' });
         var url = URL.createObjectURL(blob);
         var a = document.createElement('a');
