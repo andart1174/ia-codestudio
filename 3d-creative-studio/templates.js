@@ -4572,6 +4572,8 @@ document.addEventListener('mousemove', (e) => {
   const r = wrap.getBoundingClientRect();
   const x = e.clientX - r.left; const y = e.clientY - r.top;
   const rx = (0.5 - (y / r.height)) * 20; const ry = ((x / r.width) - 0.5) * 20;
+  wrap.style.transform = 'rotateX(' + (20 + rx) + 'deg) rotateY(' + ry + 'deg)';
+});
 document.addEventListener('mouseleave', () => {
   wrap.style.transform = 'rotateX(20deg) rotateY(0deg)';
 });
