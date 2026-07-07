@@ -1193,8 +1193,11 @@ document.addEventListener('keydown', (e) => {
 // URL parameter router for automatic studio selection
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const studio = urlParams.get('studio');
+    let studio = urlParams.get('studio');
     if (studio) {
+        if (studio === '3d-showroom') {
+            studio = 'showroom-3d';
+        }
         setTimeout(() => {
             if (typeof window.activateWorkspace === 'function') {
                 window.activateWorkspace(studio);
