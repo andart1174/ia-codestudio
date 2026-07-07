@@ -382,15 +382,29 @@
         rdr.onload = ev => { S.customModelDataUrl = ev.target.result; };
         rdr.readAsDataURL(file);
 
-        var lowerName = file.name.toLowerCase();
+        var lowerName = file.name.toLowerCase().trim();
         if (lowerName.endsWith('.glb') || lowerName.endsWith('.gltf')) {
             if (typeof THREE.GLTFLoader !== 'undefined') {
                 var loader = new THREE.GLTFLoader();
+                
+                // Add DRACOLoader support if available
+                if (typeof THREE.DRACOLoader !== 'undefined') {
+                    var dracoLoader = new THREE.DRACOLoader();
+                    dracoLoader.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/draco/');
+                    loader.setDRACOLoader(dracoLoader);
+                }
+
                 loader.load(url, function(gltf) {
-                    loadCustomModel(gltf.scene);
+                    try {
+                        loadCustomModel(gltf.scene);
+                    } catch (innerErr) {
+                        console.error("GLTF display error:", innerErr);
+                        alert((window.lang === 'fr' ? "Erreur d'affichage : " : "Display error: ") + innerErr.message);
+                    }
                 }, undefined, function(err) {
                     console.error("GLTF Load Error:", err);
-                    alert(window.lang === 'fr' ? "Erreur de chargement du modèle GLTF." : "Failed to load GLTF model.");
+                    var errMsg = err && (err.message || (err.target && err.target.statusText) || err.toString());
+                    alert((window.lang === 'fr' ? "Erreur de chargement du modèle GLTF: " : "Failed to load GLTF model. Details: ") + errMsg);
                 });
             } else {
                 alert("THREE.GLTFLoader is not available.");
@@ -399,14 +413,22 @@
             if (typeof THREE.OBJLoader !== 'undefined') {
                 var loader = new THREE.OBJLoader();
                 loader.load(url, function(obj) {
-                    loadCustomModel(obj);
+                    try {
+                        loadCustomModel(obj);
+                    } catch (innerErr) {
+                        console.error("OBJ display error:", innerErr);
+                        alert((window.lang === 'fr' ? "Erreur d'affichage : " : "Display error: ") + innerErr.message);
+                    }
                 }, undefined, function(err) {
                     console.error("OBJ Load Error:", err);
-                    alert(window.lang === 'fr' ? "Erreur de chargement du modèle OBJ." : "Failed to load OBJ model.");
+                    var errMsg = err && (err.message || (err.target && err.target.statusText) || err.toString());
+                    alert((window.lang === 'fr' ? "Erreur de chargement du modèle OBJ: " : "Failed to load OBJ model. Details: ") + errMsg);
                 });
             } else {
                 alert("THREE.OBJLoader is not available.");
             }
+        } else {
+            alert(window.lang === 'fr' ? "Format de fichier non supporté. Veuillez charger un fichier .glb, .gltf ou .obj." : "Unsupported file format. Please upload a .glb, .gltf, or .obj file.");
         }
     }
 
@@ -566,13 +588,22 @@
             var loaderScript = S.customModelDataUrl ? (
                 S.customFile && (S.customFile.name.toLowerCase().endsWith('.glb') || S.customFile.name.toLowerCase().endsWith('.gltf')) ? `
                 var loader = new THREE.GLTFLoader();
+                if (typeof THREE.DRACOLoader !== 'undefined') {
+                    var dracoLoader = new THREE.DRACOLoader();
+                    dracoLoader.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/draco/');
+                    loader.setDRACOLoader(dracoLoader);
+                }
                 loader.load("${S.customModelDataUrl}", function(gltf) {
                     setupLoadedModel(gltf.scene);
+                }, undefined, function(err) {
+                    console.error("Exported GLTF load error:", err);
                 });
                 ` : `
                 var loader = new THREE.OBJLoader();
                 loader.load("${S.customModelDataUrl}", function(obj) {
                     setupLoadedModel(obj);
+                }, undefined, function(err) {
+                    console.error("Exported OBJ load error:", err);
                 });
                 `
             ) : `
@@ -644,6 +675,7 @@
         if (S.shape === 'custom') {
             if (S.customFile && (S.customFile.name.toLowerCase().endsWith('.glb') || S.customFile.name.toLowerCase().endsWith('.gltf'))) {
                 html += '<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>';
+                html += '<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>';
             } else {
                 html += '<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>';
             }
