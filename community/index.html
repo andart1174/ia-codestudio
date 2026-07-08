@@ -432,6 +432,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
 <script>
 // ══════════════════════════════════════════
@@ -448,8 +449,7 @@ firebase.initializeApp({
 
 const auth = firebase.auth();
 const db = firebase.firestore();
-const CLOUD = 'ps0klar7';
-const PRESET = 'ia_community'; // Create in Cloudinary Settings → Upload Presets → Unsigned
+const storage = firebase.storage();
 
 // ⚠️ ADD YOUR GMAIL ADDRESS BELOW AFTER FIRST LOGIN:
 const ADMIN_EMAILS = [
@@ -624,7 +624,7 @@ async function onImgSelect(ev) {
     reader.readAsDataURL(f);
     document.getElementById('upProg').style.display = 'block';
     try {
-      const url = await upCloud(f, p => { document.getElementById('upBar').style.width = p + '%'; });
+      const url = await upFirebaseStorage(f, p => { document.getElementById('upBar').style.width = p + '%'; });
       uploadedUrls[idx] = url;
       toast('Image uploaded ✓', 'success');
     } catch(e) { toast('Upload failed: ' + e.message, 'error'); }
@@ -633,20 +633,27 @@ async function onImgSelect(ev) {
   document.getElementById('upBar').style.width = '0%';
 }
 
-function upCloud(file, onProg) {
+function upFirebaseStorage(file, onProg) {
   return new Promise((res, rej) => {
-    const fd = new FormData();
-    fd.append('file', file);
-    fd.append('upload_preset', PRESET);
-    const xhr = new XMLHttpRequest();
-    xhr.upload.onprogress = e => { if (e.lengthComputable) onProg(Math.round(e.loaded/e.total*90)); };
-    xhr.onload = () => {
-      if (xhr.status === 200) { onProg(100); res(JSON.parse(xhr.responseText).secure_url); }
-      else rej(new Error(JSON.parse(xhr.responseText).error?.message || 'Upload failed'));
-    };
-    xhr.onerror = () => rej(new Error('Network error'));
-    xhr.open('POST', `https://api.cloudinary.com/v1_1/${CLOUD}/image/upload`);
-    xhr.send(fd);
+    const filename = 'community/' + Date.now() + '_' + Math.random().toString(36).substring(2, 9) + '_' + file.name;
+    const storageRef = storage.ref(filename);
+    const uploadTask = storageRef.put(file);
+    
+    uploadTask.on('state_changed', 
+      (snapshot) => {
+        const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 90);
+        onProg(progress);
+      }, 
+      (error) => {
+        rej(error);
+      }, 
+      () => {
+        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+          onProg(100);
+          res(downloadURL);
+        });
+      }
+    );
   });
 }
 
