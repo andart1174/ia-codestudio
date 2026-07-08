@@ -225,8 +225,8 @@
             </div>
             
             <div class="support-menu">
-                <a href="community/" class="support-btn" style="text-decoration: none;">
-                    <span>🌐</span> <span data-i18n="menu_community">Communauté</span>
+                <a href="community/" class="support-btn community-btn" style="text-decoration: none;">
+                    <span>🌐</span> <span data-i18n="menu_community">Communauté</span> <span class="new-badge" data-i18n="new_badge">NOUVEAU</span>
                 </a>
                 <button class="support-btn" onclick="openModal('contact')">
                     <span>💬</span> <span data-i18n="menu_contact">Contact</span>
@@ -871,6 +871,32 @@
                 background: rgba(255,255,255,0.05);
                 border-color: #8b5cf6;
                 transform: translateX(-5px);
+            }
+            .support-btn.community-btn {
+                background: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(139, 92, 246, 0.15));
+                border-color: rgba(139, 92, 246, 0.45);
+                box-shadow: 0 0 15px rgba(124, 58, 237, 0.2);
+            }
+            .support-btn.community-btn:hover {
+                background: linear-gradient(135deg, rgba(124, 58, 237, 0.4), rgba(139, 92, 246, 0.2));
+                border-color: #8b5cf6;
+                box-shadow: 0 0 20px rgba(124, 58, 237, 0.35);
+            }
+            .new-badge {
+                background: linear-gradient(135deg, #10b981, #059669);
+                color: #fff;
+                font-size: 9px;
+                font-weight: 800;
+                padding: 1px 5px;
+                border-radius: 4px;
+                text-transform: uppercase;
+                margin-left: 2px;
+                letter-spacing: 0.05em;
+                animation: badgePulse 2s infinite;
+            }
+            @keyframes badgePulse {
+                0%, 100% { opacity: 1; transform: scale(1); }
+                50% { opacity: 0.85; transform: scale(0.95); }
             }
 
             /* Modal Overlay - HIDDEN BY DEFAULT */
