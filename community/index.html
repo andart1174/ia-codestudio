@@ -641,7 +641,7 @@ function renderPost(p) {
   const a = p.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.displayName||'User')}&background=7c3aed&color=fff&bold=true`;
   const liked = user && p.likedBy && p.likedBy.includes(user.uid);
   const canDel = user && (isAdmin || user.uid === p.uid);
-  const time = p.createdAt ? timeAgo(p.createdAt.toDate()) : 'just now';
+  const time = p.createdAt ? timeAgo(safeGetDate(p.createdAt)) : 'just now';
   const cCls = 'cat-' + (p.category || 'general');
   const cEm = catEmoji(p.category), cLbl = catLabel(p.category);
 
@@ -896,7 +896,7 @@ function openCmts(postId) {
       const canDel = user && (isAdmin || user.uid === c.uid);
       const d = document.createElement('div');
       d.className = 'c-item';
-      d.innerHTML = `<img src="${a}" class="c-avatar"><div class="c-body"><div class="c-author">${esc(c.displayName||'Anonymous')}${canDel?`<button class="c-del" onclick="delCmt('${postId}','${c.id}')">🗑</button>`:''}</div><div class="c-text">${esc(c.content)}</div><div class="c-time">${c.createdAt?timeAgo(c.createdAt.toDate()):'just now'}</div></div>`;
+      d.innerHTML = `<img src="${a}" class="c-avatar"><div class="c-body"><div class="c-author">${esc(c.displayName||'Anonymous')}${canDel?`<button class="c-del" onclick="delCmt('${postId}','${c.id}')">🗑</button>`:''}</div><div class="c-text">${esc(c.content)}</div><div class="c-time">${c.createdAt?timeAgo(safeGetDate(c.createdAt)):'just now'}</div></div>`;
       list.appendChild(d);
     });
     list.scrollTop = list.scrollHeight;
@@ -978,6 +978,14 @@ function ytEmbed(url) {
 }
 function catEmoji(c) { return {showcase:'🏆',aiapp:'🤖','3ddesign':'🎨',marketing:'📢',webdev:'💻',tips:'💡',general:'💬'}[c]||'💬'; }
 function catLabel(c) { return {showcase:'Showcase',aiapp:'AI App','3ddesign':'3D Design',marketing:'Marketing',webdev:'Web Dev',tips:'Tips',general:'General'}[c]||'General'; }
+function safeGetDate(createdAt) {
+  if (!createdAt) return new Date();
+  if (typeof createdAt.toDate === 'function') return createdAt.toDate();
+  if (createdAt instanceof Date) return createdAt;
+  if (typeof createdAt === 'number') return new Date(createdAt);
+  if (createdAt.seconds) return new Date(createdAt.seconds * 1000);
+  return new Date(createdAt);
+}
 function timeAgo(d) {
   const s = Math.floor((Date.now()-d)/1000);
   if (s<60) return 'just now';
