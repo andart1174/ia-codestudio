@@ -453,7 +453,7 @@ const storage = firebase.storage();
 
 // ⚠️ ADD YOUR GMAIL ADDRESS BELOW AFTER FIRST LOGIN:
 const ADMIN_EMAILS = [
-  'andalionart111@gmail.com'
+  'andart1174@gmail.com'
 ];
 
 let user = null, isAdmin = false, curCat = 'all', curPostId = null;
@@ -516,8 +516,8 @@ function loadFeed() {
   const el = document.getElementById('feedEl');
   el.innerHTML = '<div class="feed-loading"><div class="spinner"></div><div>Loading posts...</div></div>';
   if (unsub) unsub();
-  let q = db.collection('posts').limit(50);
-  if (curCat !== 'all') q = db.collection('posts').where('category','==',curCat).limit(50);
+  let q = db.collection('devsocial_posts').limit(50);
+  if (curCat !== 'all') q = db.collection('devsocial_posts').where('category','==',curCat).limit(50);
   unsub = q.onSnapshot(snap => {
     if (snap.empty) { el.innerHTML = '<div class="empty"><div class="empty-icon">✨</div><div class="empty-title">No posts yet</div><div class="empty-text">Be the first to share something amazing!</div></div>'; return; }
     el.innerHTML = '';
@@ -683,10 +683,23 @@ async function publish() {
   const btn = document.getElementById('btnPub');
   btn.disabled = true; btn.textContent = 'Publishing...';
   try {
-    await db.collection('posts').add({
-      uid: user.uid, displayName: user.displayName, photoURL: user.photoURL,
-      content, images: imgs, videoUrl: videoUrl || null, category,
-      likedBy: [], likesCount: 0, commentsCount: 0,
+    const postRef = db.collection('devsocial_posts').doc();
+    const postId = postRef.id;
+    await postRef.set({
+      id: postId,
+      uid: user.uid,
+      user: user.displayName,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+      caption: content,
+      content,
+      images: imgs,
+      videoUrl: videoUrl || null,
+      category,
+      likedBy: [],
+      likesCount: 0,
+      likes: 0,
+      commentsCount: 0,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
     toast('Post published! ✨', 'success');
@@ -711,7 +724,7 @@ async function toggleLike(postId, liked) {
   const cnt = document.getElementById('lc-' + postId);
   btn.disabled = true;
   try {
-    const ref = db.collection('posts').doc(postId);
+    const ref = db.collection('devsocial_posts').doc(postId);
     if (liked) {
       await ref.update({ likedBy: firebase.firestore.FieldValue.arrayRemove(user.uid), likesCount: firebase.firestore.FieldValue.increment(-1) });
       btn.classList.remove('liked'); btn.querySelector('svg').setAttribute('fill','none');
@@ -737,7 +750,7 @@ function openCmts(postId) {
   const list = document.getElementById('cmtList');
   list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)"><div class="spinner" style="width:22px;height:22px;border-width:2px;margin:0 auto 8px"></div>Loading...</div>';
   if (unsubCmt) unsubCmt();
-  unsubCmt = db.collection('posts').doc(postId).collection('comments').orderBy('createdAt','asc').limit(100).onSnapshot(snap => {
+  unsubCmt = db.collection('devsocial_posts').doc(postId).collection('comments').orderBy('createdAt','asc').limit(100).onSnapshot(snap => {
     if (snap.empty) { list.innerHTML = '<div class="no-comments">No comments yet. Be the first! 💬</div>'; return; }
     list.innerHTML = '';
     snap.forEach(doc => {
@@ -765,8 +778,8 @@ async function sendCmt() {
   if (!content) return;
   inp.value = ''; inp.style.height = 'auto';
   try {
-    await db.collection('posts').doc(curPostId).collection('comments').add({ uid:user.uid, displayName:user.displayName, photoURL:user.photoURL, content, createdAt:firebase.firestore.FieldValue.serverTimestamp() });
-    await db.collection('posts').doc(curPostId).update({ commentsCount:firebase.firestore.FieldValue.increment(1) });
+    await db.collection('devsocial_posts').doc(curPostId).collection('comments').add({ uid:user.uid, displayName:user.displayName, photoURL:user.photoURL, content, createdAt:firebase.firestore.FieldValue.serverTimestamp() });
+    await db.collection('devsocial_posts').doc(curPostId).update({ commentsCount:firebase.firestore.FieldValue.increment(1) });
     const cc = document.getElementById('cc-' + curPostId);
     if (cc) cc.textContent = parseInt(cc.textContent) + 1;
   } catch(e) { toast('Error: ' + e.message, 'error'); inp.value = content; }
@@ -774,8 +787,8 @@ async function sendCmt() {
 async function delCmt(postId, cmtId) {
   if (!confirm('Delete this comment?')) return;
   try {
-    await db.collection('posts').doc(postId).collection('comments').doc(cmtId).delete();
-    await db.collection('posts').doc(postId).update({ commentsCount:firebase.firestore.FieldValue.increment(-1) });
+    await db.collection('devsocial_posts').doc(postId).collection('comments').doc(cmtId).delete();
+    await db.collection('devsocial_posts').doc(postId).update({ commentsCount:firebase.firestore.FieldValue.increment(-1) });
     const cc = document.getElementById('cc-' + postId);
     if (cc) cc.textContent = Math.max(0, parseInt(cc.textContent) - 1);
     toast('Comment deleted', 'info');
@@ -783,7 +796,7 @@ async function delCmt(postId, cmtId) {
 }
 async function delPost(postId) {
   if (!confirm('Delete this post? This cannot be undone.')) return;
-  try { await db.collection('posts').doc(postId).delete(); toast('Post deleted', 'info'); loadStats(); }
+  try { await db.collection('devsocial_posts').doc(postId).delete(); toast('Post deleted', 'info'); loadStats(); }
   catch(e) { toast('Error: ' + e.message, 'error'); }
 }
 
@@ -797,7 +810,7 @@ function sharePost(id) {
 }
 async function loadStats() {
   try {
-    const [posts, users] = await Promise.all([db.collection('posts').get(), db.collection('users').get()]);
+    const [posts, users] = await Promise.all([db.collection('devsocial_posts').get(), db.collection('users').get()]);
     document.getElementById('sTotalPosts').textContent = posts.size;
     document.getElementById('sTotalMembers').textContent = users.size;
     let lk = 0; posts.forEach(d => lk += d.data().likesCount || 0);
@@ -806,7 +819,7 @@ async function loadStats() {
 }
 async function loadUserStats(uid) {
   try {
-    const posts = await db.collection('posts').where('uid','==',uid).get();
+    const posts = await db.collection('devsocial_posts').where('uid','==',uid).get();
     document.getElementById('uPosts').textContent = posts.size;
     let lk = 0; posts.forEach(d => lk += d.data().likesCount || 0);
     document.getElementById('uLikes').textContent = lk;
