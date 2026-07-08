@@ -453,7 +453,7 @@ const storage = firebase.storage();
 
 // ⚠️ ADD YOUR GMAIL ADDRESS BELOW AFTER FIRST LOGIN:
 const ADMIN_EMAILS = [
-  // 'youremail@gmail.com'
+  'andalionart111@gmail.com'
 ];
 
 let user = null, isAdmin = false, curCat = 'all', curPostId = null;
@@ -516,12 +516,22 @@ function loadFeed() {
   const el = document.getElementById('feedEl');
   el.innerHTML = '<div class="feed-loading"><div class="spinner"></div><div>Loading posts...</div></div>';
   if (unsub) unsub();
-  let q = db.collection('posts').orderBy('createdAt','desc').limit(30);
-  if (curCat !== 'all') q = db.collection('posts').where('category','==',curCat).orderBy('createdAt','desc').limit(30);
+  let q = db.collection('posts').limit(50);
+  if (curCat !== 'all') q = db.collection('posts').where('category','==',curCat).limit(50);
   unsub = q.onSnapshot(snap => {
     if (snap.empty) { el.innerHTML = '<div class="empty"><div class="empty-icon">✨</div><div class="empty-title">No posts yet</div><div class="empty-text">Be the first to share something amazing!</div></div>'; return; }
     el.innerHTML = '';
-    snap.forEach(doc => el.appendChild(renderPost({ id:doc.id, ...doc.data() })));
+    let posts = [];
+    snap.forEach(doc => posts.push({ id:doc.id, ...doc.data() }));
+    
+    // Sort in memory to avoid index requirements in Firestore
+    posts.sort((a, b) => {
+      const tA = a.createdAt ? a.createdAt.toMillis() : Date.now();
+      const tB = b.createdAt ? b.createdAt.toMillis() : Date.now();
+      return tB - tA;
+    });
+    
+    posts.forEach(p => el.appendChild(renderPost(p)));
   }, e => { el.innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-title">Error</div><div class="empty-text">'+e.message+'</div></div>'; });
 }
 
