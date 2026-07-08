@@ -581,7 +581,56 @@ window.addEventListener('DOMContentLoaded',()=>{
     });
 
     window.editor = editor; // 🚀 Globalize for IA-PRO Features
-    updateQuality();updateStats();runPreview();
+    
+    // Check for Fork URL Parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const forkId = urlParams.get('fork');
+    if (forkId && typeof db !== 'undefined') {
+      if (window.showToast) {
+        window.showToast(window.appLang === 'fr' ? "⏳ Chargement du template..." : "⏳ Loading template...");
+      }
+      db.collection('devsocial_posts').doc(forkId).get().then(doc => {
+        if (doc.exists) {
+          const postData = doc.data();
+          if (postData) {
+            if (postData.code) {
+              editor.setValue(postData.code);
+              updateQuality();
+              updateStats();
+              runPreview();
+              if (window.showToast) {
+                window.showToast(window.appLang === 'fr' ? "⚡ Template chargé !" : "⚡ Template loaded!");
+              }
+            } else if (postData.compressedCode && window.DevSocialDB && typeof window.DevSocialDB._decompress === 'function') {
+              window.DevSocialDB._decompress(postData.compressedCode).then(decompressed => {
+                editor.setValue(decompressed);
+                updateQuality();
+                updateStats();
+                runPreview();
+                if (window.showToast) {
+                  window.showToast(window.appLang === 'fr' ? "⚡ Template chargé !" : "⚡ Template loaded!");
+                }
+              }).catch(err => {
+                console.error("Decompression of fork failed:", err);
+                updateQuality();updateStats();runPreview();
+              });
+            } else {
+              updateQuality();updateStats();runPreview();
+            }
+          } else {
+            updateQuality();updateStats();runPreview();
+          }
+        } else {
+          console.warn("Fork post not found:", forkId);
+          updateQuality();updateStats();runPreview();
+        }
+      }).catch(err => {
+        console.error("Error loading fork post:", err);
+        updateQuality();updateStats();runPreview();
+      });
+    } else {
+      updateQuality();updateStats();runPreview();
+    }
   });
 
   window.addEventListener('message', e => {

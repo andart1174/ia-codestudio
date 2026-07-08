@@ -234,6 +234,94 @@
     .cat-tips { background:rgba(20,184,166,.15); color:#2dd4bf; }
     .cat-general { background:rgba(148,163,184,.12); color:#94a3b8; }
 
+    /* INTERACTIVE CODE PREVIEW CARD */
+    .p-code-preview {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin: 12px 0;
+      height: 320px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .code-preview-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at center, rgba(124, 58, 237, 0.08) 0%, #030712 100%);
+      z-index: 10;
+      padding: 20px;
+      text-align: center;
+    }
+    .cpp-icon {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .cpp-text {
+      color: #94a3b8;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 18px;
+    }
+    .btn-run-demo {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      border: none;
+      padding: 9px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+      transition: all 0.2s;
+    }
+    .btn-run-demo:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.6);
+    }
+    .preview-iframe-post {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #000;
+      border-radius: 12px;
+      z-index: 5;
+    }
+    .p-code-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .btn-fork-edit {
+      flex: 1;
+      text-align: center;
+      background: rgba(124, 58, 237, 0.1);
+      border: 1px solid var(--border);
+      color: var(--accent3);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-fork-edit:hover {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+      border-color: transparent;
+    }
+
     /* RESPONSIVE */
     @media(max-width:1024px) { .wrap { grid-template-columns:1fr; } .sl,.sr { display:none; } }
     @media(max-width:640px) {
@@ -574,6 +662,29 @@ function renderPost(p) {
     if (emb) vid = `<div class="p-video"><iframe src="${emb}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
   }
 
+  // Code Preview HTML (Bilingual EN/FR)
+  let codeHtml = '';
+  const currentLang = localStorage.getItem('hub_lang') || 'fr';
+  const lblRunDemo = currentLang === 'fr' ? '▶️ Lancer la Démo Live' : '▶️ Run Live Demo';
+  const lblEditStudio = currentLang === 'fr' ? '⚡ Éditer dans le Studio' : '⚡ Edit in Studio';
+  
+  if (p.code) {
+    const uniqueId = `iframe-container-${p.id}`;
+    const escapedCode = encodeURIComponent(p.code);
+    codeHtml = `
+      <div class="p-code-preview" id="${uniqueId}">
+        <div class="code-preview-placeholder">
+          <div class="cpp-icon">🌐</div>
+          <div class="cpp-text">${currentLang === 'fr' ? 'Projet Interactif HTML/JS/3D' : 'Interactive HTML/JS/3D Project'}</div>
+          <button class="btn-run-demo" onclick="runPostDemo('${p.id}', '${escapedCode}')">${lblRunDemo}</button>
+        </div>
+      </div>
+      <div class="p-code-actions">
+        <a href="../IA%20ARCHITECTE%20cea%20bunaultra%20mod111/index.html?fork=${p.id}" class="btn-fork-edit" style="text-decoration:none;">${lblEditStudio}</a>
+      </div>
+    `;
+  }
+
   el.innerHTML = `
     <div class="ph">
       <img src="${a}" class="p-avatar">
@@ -585,7 +696,7 @@ function renderPost(p) {
       ${canDel?`<button class="del-btn" onclick="delPost('${p.id}')">🗑 Delete</button>`:''}
     </div>
     ${p.content?`<div class="p-content">${esc(p.content)}</div>`:''}
-    ${imgs}${vid}
+    ${imgs}${vid}${codeHtml}
     <div class="pf">
       <button class="act-btn ${liked?'liked':''}" id="lb-${p.id}" onclick="toggleLike('${p.id}',${liked})">
         <svg viewBox="0 0 24 24" fill="${liked?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
@@ -601,6 +712,19 @@ function renderPost(p) {
       </button>
     </div>`;
   return el;
+}
+
+function runPostDemo(id, escapedCode) {
+  const container = document.getElementById(`iframe-container-${id}`);
+  if (!container) return;
+  const decodedCode = decodeURIComponent(escapedCode);
+  const iframe = document.createElement('iframe');
+  iframe.className = 'preview-iframe-post';
+  iframe.srcdoc = decodedCode;
+  iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+  iframe.setAttribute('allowfullscreen', 'true');
+  container.innerHTML = '';
+  container.appendChild(iframe);
 }
 
 // ══════════════════════════════════════════
