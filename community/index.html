@@ -612,7 +612,12 @@ function loadFeed() {
     if (snap.empty) { el.innerHTML = '<div class="empty"><div class="empty-icon">✨</div><div class="empty-title">No posts yet</div><div class="empty-text">Be the first to share something amazing!</div></div>'; return; }
     el.innerHTML = '';
     let posts = [];
-    snap.forEach(doc => posts.push({ id:doc.id, ...doc.data() }));
+    window.communityPosts = window.communityPosts || {};
+    snap.forEach(doc => {
+      const p = { id:doc.id, ...doc.data() };
+      posts.push(p);
+      if (p.code) window.communityPosts[p.id] = p.code;
+    });
     
     // Sort in memory to avoid index requirements in Firestore
     posts.sort((a, b) => {
@@ -638,7 +643,8 @@ function loadFeed() {
 function renderPost(p) {
   const el = document.createElement('div');
   el.className = 'post-card';
-  const a = p.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.displayName||'User')}&background=7c3aed&color=fff&bold=true`;
+  const displayName = p.displayName || p.user || 'Anonymous';
+  const a = p.photoURL || p.userAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=7c3aed&color=fff&bold=true`;
   const liked = user && p.likedBy && p.likedBy.includes(user.uid);
   const canDel = user && (isAdmin || user.uid === p.uid);
   const time = p.createdAt ? timeAgo(safeGetDate(p.createdAt)) : 'just now';
@@ -670,13 +676,12 @@ function renderPost(p) {
   
   if (p.code) {
     const uniqueId = `iframe-container-${p.id}`;
-    const escapedCode = encodeURIComponent(p.code);
     codeHtml = `
       <div class="p-code-preview" id="${uniqueId}">
         <div class="code-preview-placeholder">
           <div class="cpp-icon">🌐</div>
           <div class="cpp-text">${currentLang === 'fr' ? 'Projet Interactif HTML/JS/3D' : 'Interactive HTML/JS/3D Project'}</div>
-          <button class="btn-run-demo" onclick="runPostDemo('${p.id}', '${escapedCode}')">${lblRunDemo}</button>
+          <button class="btn-run-demo" onclick="runPostDemo('${p.id}')">${lblRunDemo}</button>
         </div>
       </div>
       <div class="p-code-actions">
@@ -689,7 +694,7 @@ function renderPost(p) {
     <div class="ph">
       <img src="${a}" class="p-avatar">
       <div class="pm">
-        <div class="p-author">${esc(p.displayName||'Anonymous')}</div>
+        <div class="p-author">${esc(displayName)}</div>
         <div class="p-time">${time}</div>
       </div>
       <span class="p-cat ${cCls}">${cEm} ${cLbl}</span>
@@ -714,13 +719,14 @@ function renderPost(p) {
   return el;
 }
 
-function runPostDemo(id, escapedCode) {
+function runPostDemo(id) {
   const container = document.getElementById(`iframe-container-${id}`);
   if (!container) return;
-  const decodedCode = decodeURIComponent(escapedCode);
+  const code = window.communityPosts ? window.communityPosts[id] : '';
+  if (!code) return;
   const iframe = document.createElement('iframe');
   iframe.className = 'preview-iframe-post';
-  iframe.srcdoc = decodedCode;
+  iframe.srcdoc = code;
   iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
   iframe.setAttribute('allowfullscreen', 'true');
   container.innerHTML = '';

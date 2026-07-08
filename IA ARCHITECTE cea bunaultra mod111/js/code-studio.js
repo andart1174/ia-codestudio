@@ -585,11 +585,12 @@ window.addEventListener('DOMContentLoaded',()=>{
     // Check for Fork URL Parameter
     const urlParams = new URLSearchParams(window.location.search);
     const forkId = urlParams.get('fork');
-    if (forkId && typeof db !== 'undefined') {
+    const fdb = (typeof firebase !== 'undefined' && typeof firebase.firestore === 'function') ? firebase.firestore() : null;
+    if (forkId && fdb) {
       if (window.showToast) {
         window.showToast(window.appLang === 'fr' ? "⏳ Chargement du template..." : "⏳ Loading template...");
       }
-      db.collection('devsocial_posts').doc(forkId).get().then(doc => {
+      fdb.collection('devsocial_posts').doc(forkId).get().then(doc => {
         if (doc.exists) {
           const postData = doc.data();
           if (postData) {
