@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IA Studio Community — Share, Learn & Get Inspired | IA Code Studio</title>
+  <meta name="description" content="Join the IA Studio Community. Share your AI creations, 3D designs, web apps and get inspired by creators worldwide. Free to join.">
+  <link rel="canonical" href="https://ia-codestudio.com/community/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ia-codestudio.com/community/">
+  <meta property="og:title" content="IA Studio Community — Share & Get Inspired">
+  <meta property="og:description" content="Share your AI creations, 3D designs and web apps. Connect with creators worldwide.">
+  <meta property="og:image" content="https://ia-codestudio.com/og-social-banner.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://ia-codestudio.com/og-social-banner.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #030712; --bg2: #0d1117; --bg3: #161b27;
+      --accent: #7c3aed; --accent2: #a855f7; --accent3: #c084fc;
+      --green: #10b981; --red: #ef4444; --text: #e2e8f0;
+      --muted: #64748b; --border: rgba(124,58,237,0.2); --border2: rgba(255,255,255,0.07);
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.6; min-height: 100vh; }
+    body::before { content:''; position:fixed; inset:0; background: radial-gradient(ellipse at 10% 20%, rgba(124,58,237,0.06) 0%, transparent 50%), radial-gradient(ellipse at 90% 80%, rgba(168,85,247,0.04) 0%, transparent 50%); pointer-events:none; z-index:0; }
+
+    /* HEADER */
+    .header { position:sticky; top:0; z-index:1000; background:rgba(3,7,18,0.92); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); padding:0 24px; height:60px; display:flex; align-items:center; gap:16px; }
+    .header-logo { display:flex; align-items:center; gap:10px; text-decoration:none; flex-shrink:0; }
+    .header-logo img { height:28px; }
+    .header-logo .lt { font-family:'Outfit',sans-serif; font-weight:700; font-size:.95rem; color:#fff; }
+    .header-sep { width:1px; height:20px; background:var(--border2); flex-shrink:0; }
+    .header-brand { font-family:'Outfit',sans-serif; font-weight:800; font-size:1rem; background:linear-gradient(135deg,var(--accent3),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .header-actions { margin-left:auto; display:flex; align-items:center; gap:10px; }
+    .btn-google { display:inline-flex; align-items:center; gap:8px; padding:8px 16px; border-radius:8px; background:#fff; color:#1a1a1a; border:none; font-size:.85rem; font-weight:600; cursor:pointer; transition:all .2s; font-family:inherit; }
+    .btn-google img { width:16px; height:16px; }
+    .btn-google:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(0,0,0,.4); }
+    .btn-logout { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:8px; background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.3); color:#f87171; font-size:.82rem; font-weight:600; cursor:pointer; font-family:inherit; transition:all .2s; }
+    .btn-logout:hover { background:rgba(239,68,68,.2); }
+    .hdr-avatar { width:32px; height:32px; border-radius:50%; border:2px solid var(--accent); object-fit:cover; }
+    .hdr-name { font-size:.85rem; font-weight:500; color:var(--text); }
+    .admin-badge { background:linear-gradient(135deg,#f59e0b,#f97316); color:#000; font-size:.68rem; font-weight:800; padding:2px 8px; border-radius:999px; letter-spacing:.05em; }
+
+    /* LAYOUT */
+    .wrap { position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:24px; display:grid; grid-template-columns:220px 1fr 260px; gap:20px; align-items:start; }
+
+    /* SIDEBAR LEFT */
+    .sl { position:sticky; top:80px; }
+    .scard { background:var(--bg2); border:1px solid var(--border); border-radius:16px; padding:18px; margin-bottom:14px; }
+    .stitle { font-size:.75rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; margin-bottom:12px; }
+    .cat-btn { display:flex; align-items:center; gap:8px; width:100%; padding:9px 10px; border-radius:10px; border:none; background:none; color:var(--muted); font-size:.88rem; font-weight:500; cursor:pointer; text-align:left; transition:all .2s; font-family:inherit; margin-bottom:2px; }
+    .cat-btn:hover { background:rgba(124,58,237,.1); color:var(--text); }
+    .cat-btn.active { background:rgba(124,58,237,.15); color:var(--accent3); border:1px solid var(--border); }
+    .u-avatar { width:60px; height:60px; border-radius:50%; border:3px solid var(--accent); margin:0 auto 10px; display:block; object-fit:cover; }
+    .u-name { font-family:'Outfit',sans-serif; font-weight:700; font-size:.95rem; color:#fff; text-align:center; margin-bottom:4px; }
+    .u-email { font-size:.75rem; color:var(--muted); text-align:center; margin-bottom:12px; }
+    .u-stats { display:flex; justify-content:center; gap:20px; }
+    .u-stat { text-align:center; }
+    .u-stat-n { font-family:'Outfit',sans-serif; font-weight:800; font-size:1.1rem; color:var(--accent3); }
+    .u-stat-l { font-size:.7rem; color:var(--muted); }
+
+    /* FEED */
+    .feed {}
+    .create-bar { background:var(--bg2); border:1px solid var(--border); border-radius:16px; padding:14px 16px; margin-bottom:18px; display:flex; align-items:center; gap:10px; }
+    .cb-avatar { width:38px; height:38px; border-radius:50%; border:2px solid var(--accent); object-fit:cover; flex-shrink:0; }
+    .cb-input { flex:1; background:var(--bg3); border:1px solid var(--border2); border-radius:24px; padding:10px 18px; color:var(--muted); font-size:.88rem; cursor:pointer; transition:all .2s; user-select:none; }
+    .cb-input:hover { border-color:var(--accent); color:var(--text); }
+    .cb-btn { display:flex; align-items:center; gap:6px; padding:10px 18px; background:linear-gradient(135deg,var(--accent),var(--accent2)); border:none; border-radius:24px; color:#fff; font-size:.85rem; font-weight:700; cursor:pointer; transition:all .2s; font-family:inherit; flex-shrink:0; }
+    .cb-btn:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(124,58,237,.5); }
+
+    .ftabs { display:flex; gap:6px; margin-bottom:18px; overflow-x:auto; scrollbar-width:none; }
+    .ftabs::-webkit-scrollbar { display:none; }
+    .ftab { padding:7px 14px; border-radius:999px; border:1px solid var(--border2); background:var(--bg2); color:var(--muted); font-size:.8rem; font-weight:600; cursor:pointer; white-space:nowrap; transition:all .2s; font-family:inherit; }
+    .ftab:hover { border-color:var(--accent3); color:var(--accent3); }
+    .ftab.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+
+    /* POST CARD */
+    .post-card { background:var(--bg2); border:1px solid var(--border2); border-radius:16px; padding:18px; margin-bottom:14px; transition:border-color .2s, box-shadow .2s; }
+    .post-card:hover { border-color:var(--border); box-shadow:0 4px 24px rgba(0,0,0,.3); }
+    .ph { display:flex; align-items:flex-start; gap:10px; margin-bottom:12px; }
+    .p-avatar { width:42px; height:42px; border-radius:50%; border:2px solid var(--accent); object-fit:cover; flex-shrink:0; }
+    .pm { flex:1; min-width:0; }
+    .p-author { font-weight:600; font-size:.92rem; color:#fff; }
+    .p-time { font-size:.75rem; color:var(--muted); }
+    .p-cat { display:inline-flex; align-items:center; gap:3px; padding:3px 10px; border-radius:999px; font-size:.7rem; font-weight:600; flex-shrink:0; }
+    .del-btn { background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.2); color:#f87171; border-radius:7px; padding:4px 9px; font-size:.72rem; cursor:pointer; font-family:inherit; transition:all .2s; }
+    .del-btn:hover { background:rgba(239,68,68,.3); }
+    .p-content { color:#cbd5e1; line-height:1.75; margin-bottom:12px; font-size:.92rem; white-space:pre-wrap; word-break:break-word; }
+
+    /* IMAGES */
+    .p-images { margin-bottom:12px; border-radius:12px; overflow:hidden; }
+    .ig-1 img { width:100%; max-height:380px; object-fit:cover; border-radius:12px; }
+    .ig-2 { display:grid; grid-template-columns:1fr 1fr; gap:3px; }
+    .ig-2 img { width:100%; height:210px; object-fit:cover; }
+    .ig-3 { display:grid; grid-template-columns:1fr 1fr; gap:3px; }
+    .ig-3 .img-main { grid-row:span 2; }
+    .ig-3 img { width:100%; height:180px; object-fit:cover; }
+    .ig-3 .img-main img { height:363px; }
+    .ig-4 { display:grid; grid-template-columns:1fr 1fr; gap:3px; }
+    .ig-4 img { width:100%; height:180px; object-fit:cover; }
+    .p-images img { cursor:pointer; transition:opacity .2s; }
+    .p-images img:hover { opacity:.9; }
+
+    .p-video { margin-bottom:12px; border-radius:12px; overflow:hidden; aspect-ratio:16/9; }
+    .p-video iframe { width:100%; height:100%; border:none; }
+
+    /* POST FOOTER */
+    .pf { display:flex; align-items:center; gap:4px; padding-top:12px; border-top:1px solid var(--border2); }
+    .act-btn { display:inline-flex; align-items:center; gap:5px; padding:7px 12px; border-radius:8px; border:none; background:none; color:var(--muted); font-size:.83rem; font-weight:500; cursor:pointer; transition:all .2s; font-family:inherit; }
+    .act-btn:hover { background:rgba(255,255,255,.05); color:var(--text); }
+    .act-btn.liked { color:#f43f5e; }
+    .act-btn.liked:hover { background:rgba(244,63,94,.1); }
+    .act-btn svg { width:17px; height:17px; transition:transform .15s; }
+    .act-btn.liked svg { transform:scale(1.2); }
+    .share-btn { margin-left:auto; }
+
+    /* STATES */
+    .feed-loading { text-align:center; padding:48px; color:var(--muted); }
+    .spinner { width:32px; height:32px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; margin:0 auto 12px; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .empty { text-align:center; padding:56px 24px; }
+    .empty-icon { font-size:3.5rem; margin-bottom:14px; }
+    .empty-title { font-family:'Outfit',sans-serif; font-size:1.2rem; font-weight:700; color:#fff; margin-bottom:8px; }
+    .empty-text { color:var(--muted); font-size:.88rem; }
+
+    .login-prompt { background:linear-gradient(135deg,rgba(124,58,237,.15),rgba(168,85,247,.08)); border:1px solid var(--border); border-radius:16px; padding:28px 24px; text-align:center; margin-bottom:18px; }
+    .lp-icon { font-size:2.2rem; margin-bottom:10px; }
+    .login-prompt h3 { font-family:'Outfit',sans-serif; font-size:1.05rem; font-weight:700; color:#fff; margin-bottom:6px; }
+    .login-prompt p { color:var(--muted); font-size:.85rem; margin-bottom:14px; }
+
+    /* RIGHT SIDEBAR */
+    .sr { position:sticky; top:80px; }
+    .stats-card { background:var(--bg2); border:1px solid var(--border); border-radius:16px; padding:18px; margin-bottom:14px; }
+    .sc-title { font-size:.75rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; margin-bottom:14px; }
+    .stat-row { display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px solid var(--border2); }
+    .stat-row:last-child { border:none; }
+    .sr-lbl { color:var(--muted); font-size:.83rem; }
+    .sr-val { font-family:'Outfit',sans-serif; font-weight:700; color:var(--accent3); }
+    .tool-links { display:flex; flex-direction:column; gap:6px; }
+    .tool-link { display:flex; align-items:center; gap:8px; padding:9px 11px; border-radius:10px; text-decoration:none; color:var(--muted); font-size:.82rem; font-weight:500; background:var(--bg3); border:1px solid var(--border2); transition:all .2s; }
+    .tool-link:hover { color:var(--accent3); border-color:var(--border); transform:translateX(3px); }
+
+    /* MODALS */
+    .overlay { position:fixed; inset:0; background:rgba(0,0,0,.8); backdrop-filter:blur(4px); z-index:2000; display:flex; align-items:center; justify-content:center; padding:20px; opacity:0; pointer-events:none; transition:opacity .2s; }
+    .overlay.open { opacity:1; pointer-events:all; }
+    .modal { background:var(--bg2); border:1px solid var(--border); border-radius:20px; width:100%; max-width:560px; max-height:90vh; overflow-y:auto; transform:scale(.95) translateY(10px); transition:transform .2s; }
+    .overlay.open .modal { transform:scale(1) translateY(0); }
+    .mh { display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid var(--border2); }
+    .mt { font-family:'Outfit',sans-serif; font-weight:700; font-size:1.05rem; color:#fff; }
+    .mc { width:30px; height:30px; border-radius:50%; border:1px solid var(--border2); background:none; color:var(--muted); font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; line-height:1; }
+    .mc:hover { background:rgba(255,255,255,.05); color:#fff; }
+    .mb { padding:22px; }
+
+    /* CREATE POST */
+    .comp-hdr { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+    .comp-avatar { width:40px; height:40px; border-radius:50%; border:2px solid var(--accent); object-fit:cover; }
+    .comp-name { font-weight:600; color:#fff; font-size:.92rem; }
+    .comp-sub { font-size:.75rem; color:var(--muted); }
+    .p-textarea { width:100%; min-height:110px; background:var(--bg3); border:1px solid var(--border2); border-radius:12px; padding:12px 14px; color:var(--text); font-size:.92rem; font-family:inherit; resize:vertical; outline:none; line-height:1.6; transition:border-color .2s; }
+    .p-textarea:focus { border-color:var(--accent); }
+    .p-textarea::placeholder { color:var(--muted); }
+    .char-count { text-align:right; font-size:.72rem; color:var(--muted); margin-top:4px; }
+    .opt-lbl { font-size:.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:5px; display:block; }
+    .opt-section { margin-top:14px; }
+    .sel { width:100%; background:var(--bg3); border:1px solid var(--border2); border-radius:10px; padding:9px 13px; color:var(--text); font-family:inherit; font-size:.88rem; outline:none; cursor:pointer; transition:border-color .2s; }
+    .sel:focus { border-color:var(--accent); }
+    .up-area { border:2px dashed var(--border2); border-radius:12px; padding:20px; text-align:center; cursor:pointer; transition:all .2s; position:relative; }
+    .up-area:hover { border-color:var(--accent); background:rgba(124,58,237,.05); }
+    .up-area input { position:absolute; inset:0; opacity:0; cursor:pointer; }
+    .up-icon { font-size:1.8rem; margin-bottom:6px; }
+    .up-text { color:var(--muted); font-size:.82rem; }
+    .up-text strong { color:var(--accent3); }
+    .up-prog { background:var(--bg3); border-radius:999px; height:5px; margin-top:8px; overflow:hidden; display:none; }
+    .up-prog-bar { height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:999px; transition:width .3s; }
+    .img-previews { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+    .ip-item { position:relative; }
+    .ip-item img { width:76px; height:76px; object-fit:cover; border-radius:8px; border:2px solid var(--border); }
+    .ip-rm { position:absolute; top:-5px; right:-5px; width:18px; height:18px; border-radius:50%; background:var(--red); color:#fff; border:none; font-size:.65rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+    .vid-input { width:100%; background:var(--bg3); border:1px solid var(--border2); border-radius:10px; padding:9px 13px; color:var(--text); font-family:inherit; font-size:.88rem; outline:none; transition:border-color .2s; }
+    .vid-input:focus { border-color:var(--accent); }
+    .vid-input::placeholder { color:var(--muted); }
+    .mf { padding:14px 22px; border-top:1px solid var(--border2); display:flex; justify-content:flex-end; gap:8px; }
+    .btn-cancel { padding:9px 18px; border-radius:10px; border:1px solid var(--border2); background:none; color:var(--muted); font-size:.88rem; font-weight:600; cursor:pointer; font-family:inherit; transition:all .2s; }
+    .btn-cancel:hover { color:var(--text); border-color:var(--text); }
+    .btn-pub { padding:9px 22px; border-radius:10px; border:none; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; font-size:.88rem; font-weight:700; cursor:pointer; font-family:inherit; transition:all .2s; box-shadow:0 4px 14px rgba(124,58,237,.4); }
+    .btn-pub:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(124,58,237,.6); }
+    .btn-pub:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+
+    /* COMMENTS */
+    .comments-list { display:flex; flex-direction:column; gap:10px; max-height:380px; overflow-y:auto; margin-bottom:14px; padding-right:4px; }
+    .comments-list::-webkit-scrollbar { width:4px; }
+    .comments-list::-webkit-scrollbar-thumb { background:var(--accent); border-radius:2px; }
+    .c-item { display:flex; gap:8px; padding:11px; background:var(--bg3); border-radius:12px; }
+    .c-avatar { width:34px; height:34px; border-radius:50%; border:2px solid var(--accent); object-fit:cover; flex-shrink:0; }
+    .c-body { flex:1; min-width:0; }
+    .c-author { font-weight:600; font-size:.82rem; color:#fff; margin-bottom:3px; }
+    .c-text { color:#cbd5e1; font-size:.85rem; line-height:1.5; word-break:break-word; }
+    .c-time { font-size:.7rem; color:var(--muted); margin-top:3px; }
+    .c-del { background:rgba(239,68,68,.1); border:none; color:#f87171; border-radius:5px; padding:2px 7px; font-size:.68rem; cursor:pointer; font-family:inherit; margin-left:6px; transition:all .2s; }
+    .c-del:hover { background:rgba(239,68,68,.3); }
+    .c-compose { display:flex; gap:8px; align-items:flex-end; }
+    .c-compose-avatar { width:34px; height:34px; border-radius:50%; border:2px solid var(--accent); object-fit:cover; flex-shrink:0; }
+    .c-input { flex:1; background:var(--bg3); border:1px solid var(--border2); border-radius:10px; padding:9px 13px; color:var(--text); font-family:inherit; font-size:.85rem; outline:none; resize:none; min-height:40px; max-height:110px; transition:border-color .2s; }
+    .c-input:focus { border-color:var(--accent); }
+    .c-input::placeholder { color:var(--muted); }
+    .c-send { width:40px; height:40px; border-radius:50%; border:none; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; cursor:pointer; flex-shrink:0; transition:all .2s; display:flex; align-items:center; justify-content:center; font-size:.95rem; }
+    .c-send:hover { transform:scale(1.1); box-shadow:0 4px 14px rgba(124,58,237,.5); }
+    .no-comments { text-align:center; padding:28px; color:var(--muted); font-size:.85rem; }
+
+    /* LIGHTBOX */
+    .lightbox { position:fixed; inset:0; background:rgba(0,0,0,.95); z-index:3000; display:none; align-items:center; justify-content:center; padding:20px; }
+    .lightbox.open { display:flex; }
+    .lightbox img { max-width:100%; max-height:90vh; object-fit:contain; border-radius:8px; }
+    .lb-close { position:absolute; top:14px; right:14px; width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2); color:#fff; font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+
+    /* TOAST */
+    .toast-wrap { position:fixed; bottom:20px; right:20px; z-index:4000; display:flex; flex-direction:column; gap:7px; }
+    .toast { padding:11px 18px; border-radius:11px; font-size:.85rem; font-weight:500; transform:translateX(120%); transition:transform .3s; max-width:280px; }
+    .toast.show { transform:translateX(0); }
+    .toast.success { background:rgba(16,185,129,.15); border:1px solid rgba(16,185,129,.3); color:#34d399; }
+    .toast.error { background:rgba(239,68,68,.15); border:1px solid rgba(239,68,68,.3); color:#f87171; }
+    .toast.info { background:rgba(124,58,237,.15); border:1px solid rgba(124,58,237,.3); color:var(--accent3); }
+
+    /* CATEGORY COLORS */
+    .cat-showcase { background:rgba(16,185,129,.15); color:#34d399; }
+    .cat-aiapp { background:rgba(124,58,237,.15); color:var(--accent3); }
+    .cat-3ddesign { background:rgba(59,130,246,.15); color:#60a5fa; }
+    .cat-marketing { background:rgba(245,158,11,.15); color:#fbbf24; }
+    .cat-webdev { background:rgba(239,68,68,.15); color:#f87171; }
+    .cat-tips { background:rgba(20,184,166,.15); color:#2dd4bf; }
+    .cat-general { background:rgba(148,163,184,.12); color:#94a3b8; }
+
+    /* RESPONSIVE */
+    @media(max-width:1024px) { .wrap { grid-template-columns:1fr; } .sl,.sr { display:none; } }
+    @media(max-width:640px) {
+      .wrap { padding:12px; }
+      .ftab { padding:6px 11px; font-size:.76rem; }
+      .header { padding:0 14px; }
+      .hdr-name { display:none; }
+      .overlay { align-items:flex-end; padding:0; }
+      .modal { border-radius:16px 16px 0 0; max-height:92vh; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <a href="https://ia-codestudio.com" class="header-logo">
+    <img src="../logo-ia-codestudio.webp" alt="IA Code Studio">
+    <span class="lt">IA Code Studio</span>
+  </a>
+  <div class="header-sep"></div>
+  <span class="header-brand">✦ Community</span>
+  <div class="header-actions" id="hdrActions">
+    <button class="btn-google" onclick="signInGoogle()">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
+      Sign in with Google
+    </button>
+  </div>
+</header>
+
+<!-- MAIN LAYOUT -->
+<div class="wrap">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="sl">
+    <div class="scard" id="userCard" style="display:none">
+      <img src="" alt="" class="u-avatar" id="slAvatar">
+      <div class="u-name" id="slName"></div>
+      <div class="u-email" id="slEmail"></div>
+      <div class="u-stats">
+        <div class="u-stat"><div class="u-stat-n" id="uPosts">0</div><div class="u-stat-l">Posts</div></div>
+        <div class="u-stat"><div class="u-stat-n" id="uLikes">0</div><div class="u-stat-l">Likes</div></div>
+      </div>
+    </div>
+    <div class="scard">
+      <div class="stitle">Categories</div>
+      <button class="cat-btn active" data-cat="all" onclick="filterCat('all',this)">🌐 All Posts</button>
+      <button class="cat-btn" data-cat="showcase" onclick="filterCat('showcase',this)">🏆 Showcase</button>
+      <button class="cat-btn" data-cat="aiapp" onclick="filterCat('aiapp',this)">🤖 AI Apps</button>
+      <button class="cat-btn" data-cat="3ddesign" onclick="filterCat('3ddesign',this)">🎨 3D Design</button>
+      <button class="cat-btn" data-cat="marketing" onclick="filterCat('marketing',this)">📢 Marketing</button>
+      <button class="cat-btn" data-cat="webdev" onclick="filterCat('webdev',this)">💻 Web Dev</button>
+      <button class="cat-btn" data-cat="tips" onclick="filterCat('tips',this)">💡 Tips & Tricks</button>
+      <button class="cat-btn" data-cat="general" onclick="filterCat('general',this)">💬 General</button>
+    </div>
+  </aside>
+
+  <!-- FEED -->
+  <main class="feed">
+
+    <!-- Login Prompt -->
+    <div class="login-prompt" id="loginPrompt" style="display:none">
+      <div class="lp-icon">🌟</div>
+      <h3>Join the IA Studio Community</h3>
+      <p>Sign in to share your AI creations, get inspired and connect with creators worldwide.</p>
+      <button class="btn-google" onclick="signInGoogle()" style="margin:0 auto">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
+        Sign in with Google
+      </button>
+    </div>
+
+    <!-- Create bar -->
+    <div class="create-bar" id="createBar" style="display:none">
+      <img src="" alt="" class="cb-avatar" id="cbAvatar">
+      <div class="cb-input" onclick="openCreate()">What are you creating today? ✨</div>
+      <button class="cb-btn" onclick="openCreate()">✦ Post</button>
+    </div>
+
+    <!-- Filter tabs -->
+    <div class="ftabs">
+      <button class="ftab active" data-cat="all" onclick="filterTab('all',this)">🌐 All</button>
+      <button class="ftab" data-cat="showcase" onclick="filterTab('showcase',this)">🏆 Showcase</button>
+      <button class="ftab" data-cat="aiapp" onclick="filterTab('aiapp',this)">🤖 AI Apps</button>
+      <button class="ftab" data-cat="3ddesign" onclick="filterTab('3ddesign',this)">🎨 3D Design</button>
+      <button class="ftab" data-cat="marketing" onclick="filterTab('marketing',this)">📢 Marketing</button>
+      <button class="ftab" data-cat="webdev" onclick="filterTab('webdev',this)">💻 Web Dev</button>
+      <button class="ftab" data-cat="tips" onclick="filterTab('tips',this)">💡 Tips</button>
+      <button class="ftab" data-cat="general" onclick="filterTab('general',this)">💬 General</button>
+    </div>
+
+    <div id="feedEl">
+      <div class="feed-loading"><div class="spinner"></div><div>Loading posts...</div></div>
+    </div>
+  </main>
+
+  <!-- RIGHT SIDEBAR -->
+  <aside class="sr">
+    <div class="stats-card">
+      <div class="sc-title">Community Stats</div>
+      <div class="stat-row"><span class="sr-lbl">📝 Posts</span><span class="sr-val" id="sTotalPosts">0</span></div>
+      <div class="stat-row"><span class="sr-lbl">👤 Members</span><span class="sr-val" id="sTotalMembers">0</span></div>
+      <div class="stat-row"><span class="sr-lbl">❤️ Likes</span><span class="sr-val" id="sTotalLikes">0</span></div>
+    </div>
+    <div class="stats-card">
+      <div class="sc-title">IA Code Studio Tools</div>
+      <div class="tool-links">
+        <a href="https://ia-codestudio.com/ia-architecte-studio-pro/" class="tool-link">🏛️ IA Architecte Studio Pro</a>
+        <a href="https://ia-codestudio.com/3d-product-showroom-ai.html" class="tool-link">🔮 3D Product Showroom</a>
+        <a href="https://ia-codestudio.com/ai-scratch-card-generator.html" class="tool-link">🎰 Scratch Card Generator</a>
+        <a href="https://ia-codestudio.com/spin-wheel-ad-maker.html" class="tool-link">🎡 Spin Wheel Maker</a>
+        <a href="https://ia-codestudio.com/certificate-generator-online.html" class="tool-link">🎓 Certificate Generator</a>
+        <a href="https://ia-codestudio.com/digital-business-card-generator.html" class="tool-link">💼 Business Card</a>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- CREATE POST MODAL -->
+<div class="overlay" id="createOverlay" onclick="closeCreate(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="mh"><div class="mt">✦ Create Post</div><button class="mc" onclick="closeCreate()">✕</button></div>
+    <div class="mb">
+      <div class="comp-hdr">
+        <img src="" alt="" class="comp-avatar" id="compAvatar">
+        <div><div class="comp-name" id="compName"></div><div class="comp-sub">Posting to the community</div></div>
+      </div>
+      <textarea class="p-textarea" id="postContent" placeholder="Share your creation, idea or tip with the community... ✨" oninput="updChar()"></textarea>
+      <div class="char-count" id="charCnt">0 / 2000</div>
+
+      <div class="opt-section">
+        <label class="opt-lbl">Category</label>
+        <select class="sel" id="postCat">
+          <option value="general">💬 General</option>
+          <option value="showcase">🏆 Showcase — Share your creation</option>
+          <option value="aiapp">🤖 AI App — Built with IA Architecte</option>
+          <option value="3ddesign">🎨 3D Design — Showroom / mockup</option>
+          <option value="marketing">📢 Marketing — Scratch card / spin wheel</option>
+          <option value="webdev">💻 Web Dev — Code & development</option>
+          <option value="tips">💡 Tips & Tricks</option>
+        </select>
+      </div>
+
+      <div class="opt-section">
+        <label class="opt-lbl">Images (up to 4)</label>
+        <div class="up-area">
+          <input type="file" id="imgInput" accept="image/*" multiple onchange="onImgSelect(event)">
+          <div class="up-icon">🖼️</div>
+          <div class="up-text"><strong>Click to upload</strong> or drag & drop<br>JPG, PNG, GIF · Max 5MB each</div>
+        </div>
+        <div class="up-prog" id="upProg"><div class="up-prog-bar" id="upBar" style="width:0%"></div></div>
+        <div class="img-previews" id="imgPreviews"></div>
+      </div>
+
+      <div class="opt-section">
+        <label class="opt-lbl">YouTube Video (paste link, max 1 min)</label>
+        <input type="url" class="vid-input" id="vidUrl" placeholder="https://youtube.com/watch?v=... or https://youtu.be/...">
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn-cancel" onclick="closeCreate()">Cancel</button>
+      <button class="btn-pub" id="btnPub" onclick="publish()">✦ Publish Post</button>
+    </div>
+  </div>
+</div>
+
+<!-- COMMENTS MODAL -->
+<div class="overlay" id="cmtOverlay" onclick="closeCmts(event)">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:600px">
+    <div class="mh"><div class="mt">💬 Comments</div><button class="mc" onclick="closeCmts()">✕</button></div>
+    <div class="mb">
+      <div class="comments-list" id="cmtList"></div>
+      <div class="c-compose" id="cmtCompose" style="display:none">
+        <img src="" alt="" class="c-compose-avatar" id="cmtAvatar">
+        <textarea class="c-input" id="cmtInput" placeholder="Write a comment..." rows="1"
+          oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendCmt()}"></textarea>
+        <button class="c-send" onclick="sendCmt()">➤</button>
+      </div>
+      <div id="cmtLoginMsg" style="display:none;text-align:center;padding:14px;color:var(--muted);font-size:.83rem">
+        Sign in to leave a comment
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lb" onclick="closeLb()">
+  <button class="lb-close" onclick="closeLb()">✕</button>
+  <img src="" alt="" id="lbImg">
+</div>
+
+<!-- TOASTS -->
+<div class="toast-wrap" id="toasts"></div>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+// ══════════════════════════════════════════
+// CONFIG — Edit ADMIN_EMAILS after first login!
+// ══════════════════════════════════════════
+firebase.initializeApp({
+  apiKey: "AIzaSyBqjfupwzDVdNqaTm8bmEyw7FKMMlOUDJE",
+  authDomain: "ia-codestudio-community-dcea3.firebaseapp.com",
+  projectId: "ia-codestudio-community-dcea3",
+  storageBucket: "ia-codestudio-community-dcea3.firebasestorage.app",
+  messagingSenderId: "745989139444",
+  appId: "1:745989139444:web:5c0614bb0f087b708667a1"
+});
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+const CLOUD = 'ps0klar7';
+const PRESET = 'ia_community'; // Create in Cloudinary Settings → Upload Presets → Unsigned
+
+// ⚠️ ADD YOUR GMAIL ADDRESS BELOW AFTER FIRST LOGIN:
+const ADMIN_EMAILS = [
+  // 'youremail@gmail.com'
+];
+
+let user = null, isAdmin = false, curCat = 'all', curPostId = null;
+let uploadedUrls = [], unsub = null, unsubCmt = null;
+
+// ══════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════
+auth.onAuthStateChanged(async u => {
+  user = u;
+  if (u) {
+    isAdmin = ADMIN_EMAILS.includes(u.email);
+    renderLoggedIn(u);
+    db.collection('users').doc(u.uid).set({ displayName:u.displayName, photoURL:u.photoURL, email:u.email, lastSeen:firebase.firestore.FieldValue.serverTimestamp() }, { merge:true });
+    loadUserStats(u.uid);
+  } else {
+    renderLoggedOut();
+  }
+  loadFeed();
+  loadStats();
+});
+
+function signInGoogle() {
+  auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e => toast(e.message, 'error'));
+}
+function signOut() { auth.signOut().then(() => toast('Signed out', 'info')); }
+
+function av(u) { return u.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.displayName||'User')}&background=7c3aed&color=fff&bold=true`; }
+
+function renderLoggedIn(u) {
+  const a = av(u);
+  document.getElementById('hdrActions').innerHTML = `
+    <img src="${a}" class="hdr-avatar">
+    <span class="hdr-name">${u.displayName}</span>
+    ${isAdmin?'<span class="admin-badge">ADMIN</span>':''}
+    <button class="btn-logout" onclick="signOut()">Sign Out</button>`;
+  document.getElementById('loginPrompt').style.display = 'none';
+  document.getElementById('createBar').style.display = 'flex';
+  document.getElementById('cbAvatar').src = a;
+  document.getElementById('compAvatar').src = a;
+  document.getElementById('compName').textContent = u.displayName;
+  document.getElementById('cmtAvatar').src = a;
+  const uc = document.getElementById('userCard');
+  uc.style.display = 'block';
+  document.getElementById('slAvatar').src = a;
+  document.getElementById('slName').textContent = u.displayName;
+  document.getElementById('slEmail').textContent = u.email;
+}
+function renderLoggedOut() {
+  document.getElementById('hdrActions').innerHTML = `<button class="btn-google" onclick="signInGoogle()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">Sign in with Google</button>`;
+  document.getElementById('loginPrompt').style.display = 'block';
+  document.getElementById('createBar').style.display = 'none';
+  document.getElementById('userCard').style.display = 'none';
+}
+
+// ══════════════════════════════════════════
+// FEED
+// ══════════════════════════════════════════
+function loadFeed() {
+  const el = document.getElementById('feedEl');
+  el.innerHTML = '<div class="feed-loading"><div class="spinner"></div><div>Loading posts...</div></div>';
+  if (unsub) unsub();
+  let q = db.collection('posts').orderBy('createdAt','desc').limit(30);
+  if (curCat !== 'all') q = db.collection('posts').where('category','==',curCat).orderBy('createdAt','desc').limit(30);
+  unsub = q.onSnapshot(snap => {
+    if (snap.empty) { el.innerHTML = '<div class="empty"><div class="empty-icon">✨</div><div class="empty-title">No posts yet</div><div class="empty-text">Be the first to share something amazing!</div></div>'; return; }
+    el.innerHTML = '';
+    snap.forEach(doc => el.appendChild(renderPost({ id:doc.id, ...doc.data() })));
+  }, e => { el.innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-title">Error</div><div class="empty-text">'+e.message+'</div></div>'; });
+}
+
+function renderPost(p) {
+  const el = document.createElement('div');
+  el.className = 'post-card';
+  const a = p.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.displayName||'User')}&background=7c3aed&color=fff&bold=true`;
+  const liked = user && p.likedBy && p.likedBy.includes(user.uid);
+  const canDel = user && (isAdmin || user.uid === p.uid);
+  const time = p.createdAt ? timeAgo(p.createdAt.toDate()) : 'just now';
+  const cCls = 'cat-' + (p.category || 'general');
+  const cEm = catEmoji(p.category), cLbl = catLabel(p.category);
+
+  // Images HTML
+  let imgs = '';
+  if (p.images && p.images.length) {
+    const ii = p.images;
+    if (ii.length === 1) imgs = `<div class="p-images ig-1"><img src="${ii[0]}" onclick="openLb('${ii[0]}')" loading="lazy"></div>`;
+    else if (ii.length === 2) imgs = `<div class="p-images ig-2">${ii.map(u=>`<img src="${u}" onclick="openLb('${u}')" loading="lazy">`).join('')}</div>`;
+    else if (ii.length === 3) imgs = `<div class="p-images ig-3"><div class="img-main"><img src="${ii[0]}" onclick="openLb('${ii[0]}')" loading="lazy" style="height:100%"></div><img src="${ii[1]}" onclick="openLb('${ii[1]}')" loading="lazy"><img src="${ii[2]}" onclick="openLb('${ii[2]}')" loading="lazy"></div>`;
+    else imgs = `<div class="p-images ig-4">${ii.slice(0,4).map(u=>`<img src="${u}" onclick="openLb('${u}')" loading="lazy">`).join('')}</div>`;
+  }
+
+  // Video HTML
+  let vid = '';
+  if (p.videoUrl) {
+    const emb = ytEmbed(p.videoUrl);
+    if (emb) vid = `<div class="p-video"><iframe src="${emb}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
+  }
+
+  el.innerHTML = `
+    <div class="ph">
+      <img src="${a}" class="p-avatar">
+      <div class="pm">
+        <div class="p-author">${esc(p.displayName||'Anonymous')}</div>
+        <div class="p-time">${time}</div>
+      </div>
+      <span class="p-cat ${cCls}">${cEm} ${cLbl}</span>
+      ${canDel?`<button class="del-btn" onclick="delPost('${p.id}')">🗑 Delete</button>`:''}
+    </div>
+    ${p.content?`<div class="p-content">${esc(p.content)}</div>`:''}
+    ${imgs}${vid}
+    <div class="pf">
+      <button class="act-btn ${liked?'liked':''}" id="lb-${p.id}" onclick="toggleLike('${p.id}',${liked})">
+        <svg viewBox="0 0 24 24" fill="${liked?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span id="lc-${p.id}">${p.likesCount||0}</span>
+      </button>
+      <button class="act-btn" onclick="openCmts('${p.id}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span id="cc-${p.id}">${p.commentsCount||0}</span>
+      </button>
+      <button class="act-btn share-btn" onclick="sharePost('${p.id}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        Share
+      </button>
+    </div>`;
+  return el;
+}
+
+// ══════════════════════════════════════════
+// FILTERS
+// ══════════════════════════════════════════
+function filterCat(cat, btn) {
+  curCat = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.ftab').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+  loadFeed();
+}
+function filterTab(cat, btn) {
+  curCat = cat;
+  document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+  loadFeed();
+}
+
+// ══════════════════════════════════════════
+// CREATE POST
+// ══════════════════════════════════════════
+function openCreate() { if (!user) { signInGoogle(); return; } document.getElementById('createOverlay').classList.add('open'); document.getElementById('postContent').focus(); }
+function closeCreate(e) { if (e && e.target !== document.getElementById('createOverlay')) return; document.getElementById('createOverlay').classList.remove('open'); }
+function updChar() { document.getElementById('charCnt').textContent = document.getElementById('postContent').value.length + ' / 2000'; }
+
+async function onImgSelect(ev) {
+  const files = Array.from(ev.target.files).slice(0, 4 - uploadedUrls.length);
+  ev.target.value = '';
+  for (let i = 0; i < files.length; i++) {
+    const f = files[i];
+    if (f.size > 5*1024*1024) { toast('Image too large (max 5MB)', 'error'); continue; }
+    const idx = uploadedUrls.length + i;
+    const reader = new FileReader();
+    reader.onload = e2 => {
+      const prv = document.createElement('div');
+      prv.className = 'ip-item';
+      prv.id = 'prv-' + idx;
+      prv.innerHTML = `<img src="${e2.target.result}"><button class="ip-rm" onclick="rmPrv(${idx})">✕</button>`;
+      document.getElementById('imgPreviews').appendChild(prv);
+    };
+    reader.readAsDataURL(f);
+    document.getElementById('upProg').style.display = 'block';
+    try {
+      const url = await upCloud(f, p => { document.getElementById('upBar').style.width = p + '%'; });
+      uploadedUrls[idx] = url;
+      toast('Image uploaded ✓', 'success');
+    } catch(e) { toast('Upload failed: ' + e.message, 'error'); }
+  }
+  document.getElementById('upProg').style.display = 'none';
+  document.getElementById('upBar').style.width = '0%';
+}
+
+function upCloud(file, onProg) {
+  return new Promise((res, rej) => {
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('upload_preset', PRESET);
+    const xhr = new XMLHttpRequest();
+    xhr.upload.onprogress = e => { if (e.lengthComputable) onProg(Math.round(e.loaded/e.total*90)); };
+    xhr.onload = () => {
+      if (xhr.status === 200) { onProg(100); res(JSON.parse(xhr.responseText).secure_url); }
+      else rej(new Error(JSON.parse(xhr.responseText).error?.message || 'Upload failed'));
+    };
+    xhr.onerror = () => rej(new Error('Network error'));
+    xhr.open('POST', `https://api.cloudinary.com/v1_1/${CLOUD}/image/upload`);
+    xhr.send(fd);
+  });
+}
+
+function rmPrv(idx) {
+  uploadedUrls[idx] = null;
+  document.getElementById('prv-' + idx)?.remove();
+}
+
+async function publish() {
+  if (!user) return;
+  const content = document.getElementById('postContent').value.trim();
+  const category = document.getElementById('postCat').value;
+  const videoUrl = document.getElementById('vidUrl').value.trim();
+  const imgs = uploadedUrls.filter(Boolean);
+  if (!content && !imgs.length && !videoUrl) { toast('Add some content first', 'error'); return; }
+  if (content.length > 2000) { toast('Content too long (max 2000)', 'error'); return; }
+  const btn = document.getElementById('btnPub');
+  btn.disabled = true; btn.textContent = 'Publishing...';
+  try {
+    await db.collection('posts').add({
+      uid: user.uid, displayName: user.displayName, photoURL: user.photoURL,
+      content, images: imgs, videoUrl: videoUrl || null, category,
+      likedBy: [], likesCount: 0, commentsCount: 0,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    toast('Post published! ✨', 'success');
+    document.getElementById('createOverlay').classList.remove('open');
+    document.getElementById('postContent').value = '';
+    document.getElementById('postCat').value = 'general';
+    document.getElementById('vidUrl').value = '';
+    document.getElementById('imgPreviews').innerHTML = '';
+    document.getElementById('charCnt').textContent = '0 / 2000';
+    uploadedUrls = [];
+    loadStats();
+  } catch(e) { toast('Error: ' + e.message, 'error'); }
+  finally { btn.disabled = false; btn.textContent = '✦ Publish Post'; }
+}
+
+// ══════════════════════════════════════════
+// LIKES
+// ══════════════════════════════════════════
+async function toggleLike(postId, liked) {
+  if (!user) { toast('Sign in to like posts', 'info'); return; }
+  const btn = document.getElementById('lb-' + postId);
+  const cnt = document.getElementById('lc-' + postId);
+  btn.disabled = true;
+  try {
+    const ref = db.collection('posts').doc(postId);
+    if (liked) {
+      await ref.update({ likedBy: firebase.firestore.FieldValue.arrayRemove(user.uid), likesCount: firebase.firestore.FieldValue.increment(-1) });
+      btn.classList.remove('liked'); btn.querySelector('svg').setAttribute('fill','none');
+      cnt.textContent = Math.max(0, parseInt(cnt.textContent) - 1);
+    } else {
+      await ref.update({ likedBy: firebase.firestore.FieldValue.arrayUnion(user.uid), likesCount: firebase.firestore.FieldValue.increment(1) });
+      btn.classList.add('liked'); btn.querySelector('svg').setAttribute('fill','currentColor');
+      cnt.textContent = parseInt(cnt.textContent) + 1;
+    }
+    btn.setAttribute('onclick', `toggleLike('${postId}',${!liked})`);
+  } catch(e) { toast('Error: ' + e.message, 'error'); }
+  finally { btn.disabled = false; }
+}
+
+// ══════════════════════════════════════════
+// COMMENTS
+// ══════════════════════════════════════════
+function openCmts(postId) {
+  curPostId = postId;
+  document.getElementById('cmtOverlay').classList.add('open');
+  document.getElementById('cmtCompose').style.display = user ? 'flex' : 'none';
+  document.getElementById('cmtLoginMsg').style.display = user ? 'none' : 'block';
+  const list = document.getElementById('cmtList');
+  list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)"><div class="spinner" style="width:22px;height:22px;border-width:2px;margin:0 auto 8px"></div>Loading...</div>';
+  if (unsubCmt) unsubCmt();
+  unsubCmt = db.collection('posts').doc(postId).collection('comments').orderBy('createdAt','asc').limit(100).onSnapshot(snap => {
+    if (snap.empty) { list.innerHTML = '<div class="no-comments">No comments yet. Be the first! 💬</div>'; return; }
+    list.innerHTML = '';
+    snap.forEach(doc => {
+      const c = { id: doc.id, ...doc.data() };
+      const a = c.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.displayName||'User')}&background=7c3aed&color=fff&bold=true`;
+      const canDel = user && (isAdmin || user.uid === c.uid);
+      const d = document.createElement('div');
+      d.className = 'c-item';
+      d.innerHTML = `<img src="${a}" class="c-avatar"><div class="c-body"><div class="c-author">${esc(c.displayName||'Anonymous')}${canDel?`<button class="c-del" onclick="delCmt('${postId}','${c.id}')">🗑</button>`:''}</div><div class="c-text">${esc(c.content)}</div><div class="c-time">${c.createdAt?timeAgo(c.createdAt.toDate()):'just now'}</div></div>`;
+      list.appendChild(d);
+    });
+    list.scrollTop = list.scrollHeight;
+  });
+}
+function closeCmts(e) {
+  if (e && e.target !== document.getElementById('cmtOverlay')) return;
+  document.getElementById('cmtOverlay').classList.remove('open');
+  if (unsubCmt) { unsubCmt(); unsubCmt = null; }
+  curPostId = null;
+}
+async function sendCmt() {
+  if (!user || !curPostId) return;
+  const inp = document.getElementById('cmtInput');
+  const content = inp.value.trim();
+  if (!content) return;
+  inp.value = ''; inp.style.height = 'auto';
+  try {
+    await db.collection('posts').doc(curPostId).collection('comments').add({ uid:user.uid, displayName:user.displayName, photoURL:user.photoURL, content, createdAt:firebase.firestore.FieldValue.serverTimestamp() });
+    await db.collection('posts').doc(curPostId).update({ commentsCount:firebase.firestore.FieldValue.increment(1) });
+    const cc = document.getElementById('cc-' + curPostId);
+    if (cc) cc.textContent = parseInt(cc.textContent) + 1;
+  } catch(e) { toast('Error: ' + e.message, 'error'); inp.value = content; }
+}
+async function delCmt(postId, cmtId) {
+  if (!confirm('Delete this comment?')) return;
+  try {
+    await db.collection('posts').doc(postId).collection('comments').doc(cmtId).delete();
+    await db.collection('posts').doc(postId).update({ commentsCount:firebase.firestore.FieldValue.increment(-1) });
+    const cc = document.getElementById('cc-' + postId);
+    if (cc) cc.textContent = Math.max(0, parseInt(cc.textContent) - 1);
+    toast('Comment deleted', 'info');
+  } catch(e) { toast('Error: ' + e.message, 'error'); }
+}
+async function delPost(postId) {
+  if (!confirm('Delete this post? This cannot be undone.')) return;
+  try { await db.collection('posts').doc(postId).delete(); toast('Post deleted', 'info'); loadStats(); }
+  catch(e) { toast('Error: ' + e.message, 'error'); }
+}
+
+// ══════════════════════════════════════════
+// SHARE & STATS
+// ══════════════════════════════════════════
+function sharePost(id) {
+  const url = `${location.origin}/community/?post=${id}`;
+  if (navigator.share) navigator.share({ title:'IA Studio Community', url });
+  else navigator.clipboard.writeText(url).then(() => toast('Link copied! 🔗', 'success'));
+}
+async function loadStats() {
+  try {
+    const [posts, users] = await Promise.all([db.collection('posts').get(), db.collection('users').get()]);
+    document.getElementById('sTotalPosts').textContent = posts.size;
+    document.getElementById('sTotalMembers').textContent = users.size;
+    let lk = 0; posts.forEach(d => lk += d.data().likesCount || 0);
+    document.getElementById('sTotalLikes').textContent = lk;
+  } catch(e) {}
+}
+async function loadUserStats(uid) {
+  try {
+    const posts = await db.collection('posts').where('uid','==',uid).get();
+    document.getElementById('uPosts').textContent = posts.size;
+    let lk = 0; posts.forEach(d => lk += d.data().likesCount || 0);
+    document.getElementById('uLikes').textContent = lk;
+  } catch(e) {}
+}
+
+// ══════════════════════════════════════════
+// LIGHTBOX
+// ══════════════════════════════════════════
+function openLb(url) { document.getElementById('lbImg').src = url; document.getElementById('lb').classList.add('open'); }
+function closeLb() { document.getElementById('lb').classList.remove('open'); }
+
+// ══════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════
+function ytEmbed(url) {
+  const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  return m ? `https://www.youtube.com/embed/${m[1]}?rel=0` : null;
+}
+function catEmoji(c) { return {showcase:'🏆',aiapp:'🤖','3ddesign':'🎨',marketing:'📢',webdev:'💻',tips:'💡',general:'💬'}[c]||'💬'; }
+function catLabel(c) { return {showcase:'Showcase',aiapp:'AI App','3ddesign':'3D Design',marketing:'Marketing',webdev:'Web Dev',tips:'Tips',general:'General'}[c]||'General'; }
+function timeAgo(d) {
+  const s = Math.floor((Date.now()-d)/1000);
+  if (s<60) return 'just now';
+  if (s<3600) return Math.floor(s/60)+'m ago';
+  if (s<86400) return Math.floor(s/3600)+'h ago';
+  if (s<604800) return Math.floor(s/86400)+'d ago';
+  return d.toLocaleDateString();
+}
+function esc(s) { if (!s) return ''; return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
+function toast(msg, type='info') {
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  document.getElementById('toasts').appendChild(t);
+  setTimeout(()=>t.classList.add('show'),10);
+  setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=>t.remove(),300); },3500);
+}
+document.addEventListener('keydown', e => { if (e.key==='Escape') { closeCreate(); closeCmts(); closeLb(); } });
+</script>
+</body>
+</html>
