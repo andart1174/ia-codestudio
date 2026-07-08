@@ -439,12 +439,12 @@
 // CONFIG — Edit ADMIN_EMAILS after first login!
 // ══════════════════════════════════════════
 firebase.initializeApp({
-  apiKey: "AIzaSyBqjfupwzDVdNqaTm8bmEyw7FKMMlOUDJE",
-  authDomain: "ia-codestudio-community-dcea3.firebaseapp.com",
-  projectId: "ia-codestudio-community-dcea3",
-  storageBucket: "ia-codestudio-community-dcea3.firebasestorage.app",
-  messagingSenderId: "745989139444",
-  appId: "1:745989139444:web:5c0614bb0f087b708667a1"
+  apiKey: "AIzaSyBXJ0LstZF7c3-GI2eDtv6V7vsx0scgXHk",
+  authDomain: "ia-codestudio.firebaseapp.com",
+  projectId: "ia-codestudio",
+  storageBucket: "ia-codestudio.firebasestorage.app",
+  messagingSenderId: "977495027432",
+  appId: "1:977495027432:web:fb93e8ae7712c70df2635d"
 });
 
 const auth = firebase.auth();
@@ -477,7 +477,9 @@ auth.onAuthStateChanged(async u => {
 });
 
 function signInGoogle() {
-  auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e => toast(e.message, 'error'));
+  const provider = new firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
+  auth.signInWithPopup(provider).catch(e => toast(e.message, 'error'));
 }
 function signOut() { auth.signOut().then(() => toast('Signed out', 'info')); }
 
