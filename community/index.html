@@ -631,10 +631,11 @@ function updChar() { document.getElementById('charCnt').textContent = document.g
 async function onImgSelect(ev) {
   const files = Array.from(ev.target.files).slice(0, 4 - uploadedUrls.length);
   ev.target.value = '';
+  const startIdx = uploadedUrls.length;
   for (let i = 0; i < files.length; i++) {
     const f = files[i];
     if (f.size > 5*1024*1024) { toast('Image too large (max 5MB)', 'error'); continue; }
-    const idx = uploadedUrls.length + i;
+    const idx = startIdx + i;
     const reader = new FileReader();
     reader.onload = e2 => {
       const prv = document.createElement('div');
