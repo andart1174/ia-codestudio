@@ -371,6 +371,24 @@
       justify-content:center; flex-shrink:0; transition:all .2s; margin-top:1px; }
     .c-send:hover { transform:scale(1.08); box-shadow:0 4px 12px rgba(124,58,237,.5); }
 
+    /* ADMIN PANEL */
+    .admin-stats-card { border-color: rgba(245,158,11,0.3) !important; background: rgba(245,158,11,0.04) !important; }
+    .admin-stats-card .sc-title { color: #fbbf24; }
+    .admin-stats-card .sr-val { color: #fbbf24; }
+    .admin-actions-card { border-color: rgba(245,158,11,0.2) !important; }
+    .admin-actions-card .sc-title { color: #f59e0b; }
+    .adm-btn {
+      display: block; width: 100%; text-align: left;
+      background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.2);
+      color: #fcd34d; font-size: .8rem; font-weight: 600; font-family: inherit;
+      padding: 8px 12px; border-radius: 8px; cursor: pointer;
+      margin-bottom: 6px; transition: all .18s;
+    }
+    .adm-btn:hover { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.5); transform: translateX(2px); }
+    .adm-btn-warn { background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.25); color: #fca5a5; }
+    .adm-btn-warn:hover { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.5); }
+    .adm-divider { height: 1px; background: rgba(245,158,11,0.12); margin: 10px 0; }
+
     /* RESPONSIVE */
     @media(max-width:1024px) { .wrap { grid-template-columns:1fr; } .sl,.sr { display:none; } }
     @media(max-width:640px) {
@@ -497,12 +515,28 @@
 
   <!-- RIGHT SIDEBAR -->
   <aside class="sr">
-    <div class="stats-card">
-      <div class="sc-title">Community Stats</div>
-      <div class="stat-row"><span class="sr-lbl">📝 Posts</span><span class="sr-val" id="sTotalPosts">0</span></div>
-      <div class="stat-row"><span class="sr-lbl">👤 Members</span><span class="sr-val" id="sTotalMembers">0</span></div>
-      <div class="stat-row"><span class="sr-lbl">❤️ Likes</span><span class="sr-val" id="sTotalLikes">0</span></div>
+    <!-- Admin Panel — visible only to admin -->
+    <div id="adminPanel" style="display:none">
+      <div class="stats-card admin-stats-card">
+        <div class="sc-title">🛡️ Admin Dashboard</div>
+        <div class="stat-row"><span class="sr-lbl">📝 Posts</span><span class="sr-val" id="sTotalPosts">—</span></div>
+        <div class="stat-row"><span class="sr-lbl">👤 Members</span><span class="sr-val" id="sTotalMembers">—</span></div>
+        <div class="stat-row"><span class="sr-lbl">❤️ Likes</span><span class="sr-val" id="sTotalLikes">—</span></div>
+        <div class="stat-row"><span class="sr-lbl">💬 Comments</span><span class="sr-val" id="sTotalComments">—</span></div>
+      </div>
+      <div class="stats-card admin-actions-card">
+        <div class="sc-title">⚙️ Admin Controls</div>
+        <button class="adm-btn" onclick="adminPinTop()">📌 Pin a Post to Top</button>
+        <button class="adm-btn" onclick="adminResetFakeComments()">🔧 Fix Fake Comments → 0</button>
+        <button class="adm-btn" onclick="adminDeleteSeeds()">🗑️ Delete All Seed Posts</button>
+        <button class="adm-btn adm-btn-warn" onclick="adminWipeAll()">⚠️ Wipe Entire Feed</button>
+        <div class="adm-divider"></div>
+        <div class="sc-title" style="margin-top:4px">📣 Broadcast Message</div>
+        <textarea id="adminBroadcastMsg" placeholder="Write a pinned announcement..." rows="3" style="width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:8px 10px;color:var(--text);font-size:.8rem;font-family:inherit;resize:vertical;outline:none"></textarea>
+        <button class="adm-btn" style="margin-top:6px" onclick="adminBroadcast()">📢 Post Announcement</button>
+      </div>
     </div>
+    <!-- Tools — visible to everyone -->
     <div class="stats-card">
       <div class="sc-title">IA Code Studio Tools</div>
       <div class="tool-links">
@@ -645,7 +679,7 @@ auth.onAuthStateChanged(async u => {
     renderLoggedOut();
   }
   loadFeed();
-  loadStats();
+  if (u && ADMIN_EMAILS.includes(u.email)) loadStats();
 });
 
 function signInGoogle() {
@@ -675,12 +709,18 @@ function renderLoggedIn(u) {
   document.getElementById('slAvatar').src = a;
   document.getElementById('slName').textContent = u.displayName;
   document.getElementById('slEmail').textContent = u.email;
+  // Show Admin Panel only for admins
+  const ap = document.getElementById('adminPanel');
+  if (ap) ap.style.display = isAdmin ? 'block' : 'none';
+  if (isAdmin) loadStats();
 }
 function renderLoggedOut() {
   document.getElementById('hdrActions').innerHTML = `<button class="btn-google" onclick="signInGoogle()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">Sign in with Google</button>`;
   document.getElementById('loginPrompt').style.display = 'block';
   document.getElementById('createBar').style.display = 'none';
   document.getElementById('userCard').style.display = 'none';
+  const ap = document.getElementById('adminPanel');
+  if (ap) ap.style.display = 'none';
 }
 
 
@@ -722,7 +762,7 @@ async function autoSeedCommunity() {
       code: p.code, hasThree: true,
       likes: 10 + Math.floor(Math.random() * 120),
       likesCount: 10 + Math.floor(Math.random() * 120),
-      likedBy: [], commentsCount: Math.floor(Math.random() * 18),
+      likedBy: [], commentsCount: 0,
       comments: [], preset: 'custom',
       createdAt: firebase.firestore.Timestamp.fromMillis(Date.now() - count * 3600000 * 4)
     };
@@ -1185,8 +1225,104 @@ async function delCmt(postId, cmtId) {
 }
 async function delPost(postId) {
   if (!confirm('Delete this post? This cannot be undone.')) return;
-  try { await db.collection('devsocial_posts').doc(postId).delete(); toast('Post deleted', 'info'); loadStats(); }
+  try { await db.collection('devsocial_posts').doc(postId).delete(); toast('Post deleted', 'info'); if(isAdmin) loadStats(); }
   catch(e) { toast('Error: ' + e.message, 'error'); }
+}
+
+// ══════════════════════════════════════════
+// ADMIN FUNCTIONS
+// ══════════════════════════════════════════
+async function adminResetFakeComments() {
+  if (!isAdmin) return;
+  if (!confirm('Reset commentsCount to 0 on ALL posts that have no real comments? This fixes fake numbers.')) return;
+  toast('🔧 Scanning posts...', 'info');
+  try {
+    const posts = await db.collection('devsocial_posts').get();
+    let fixed = 0;
+    for (const d of posts.docs) {
+      const realCmts = await db.collection('devsocial_posts').doc(d.id).collection('comments').get();
+      const realCount = realCmts.size;
+      const storedCount = d.data().commentsCount || 0;
+      if (storedCount !== realCount) {
+        await db.collection('devsocial_posts').doc(d.id).update({ commentsCount: realCount });
+        fixed++;
+      }
+    }
+    toast(`✅ Fixed ${fixed} posts — all comment counts are now accurate!`, 'success');
+    loadStats();
+  } catch(e) { toast('Error: ' + e.message, 'error'); }
+}
+
+async function adminDeleteSeeds() {
+  if (!isAdmin) return;
+  if (!confirm('Delete all auto-seeded demo posts? Real user posts will NOT be deleted.')) return;
+  toast('🗑️ Removing seed posts...', 'info');
+  try {
+    const posts = await db.collection('devsocial_posts').get();
+    let deleted = 0;
+    for (const d of posts.docs) {
+      const data = d.data();
+      // Seed posts have uid starting with "seed_"
+      if (data.uid && data.uid.startsWith('seed_')) {
+        await db.collection('devsocial_posts').doc(d.id).delete();
+        deleted++;
+      }
+    }
+    toast(`✅ Deleted ${deleted} seed posts. Feed will reload.`, 'success');
+    window._seedRunning = false;
+    loadFeed();
+    loadStats();
+  } catch(e) { toast('Error: ' + e.message, 'error'); }
+}
+
+async function adminWipeAll() {
+  if (!isAdmin) return;
+  if (!confirm('⚠️ DELETE ALL posts from the feed? This CANNOT be undone!')) return;
+  if (!confirm('Are you absolutely sure? All posts, including real user posts, will be deleted.')) return;
+  toast('⚠️ Wiping feed...', 'info');
+  try {
+    const posts = await db.collection('devsocial_posts').get();
+    for (const d of posts.docs) {
+      await db.collection('devsocial_posts').doc(d.id).delete();
+    }
+    toast('✅ Feed wiped. It is now empty.', 'success');
+    window._seedRunning = false;
+    loadFeed();
+    loadStats();
+  } catch(e) { toast('Error: ' + e.message, 'error'); }
+}
+
+async function adminPinTop() {
+  if (!isAdmin) return;
+  const postId = prompt('Enter the Post ID to pin to top (visible in browser console when you click the post):');
+  if (!postId) return;
+  try {
+    await db.collection('devsocial_posts').doc(postId.trim()).update({ pinned: true, pinnedAt: firebase.firestore.FieldValue.serverTimestamp() });
+    toast('📌 Post pinned to top!', 'success');
+    loadFeed();
+  } catch(e) { toast('Error: ' + e.message, 'error'); }
+}
+
+async function adminBroadcast() {
+  if (!isAdmin) return;
+  const msg = document.getElementById('adminBroadcastMsg').value.trim();
+  if (!msg) { toast('Write a message first', 'error'); return; }
+  try {
+    await db.collection('devsocial_posts').add({
+      uid: user.uid,
+      displayName: '📣 IA Studio — Admin',
+      photoURL: user.photoURL,
+      content: msg,
+      category: 'general',
+      pinned: true,
+      isAnnouncement: true,
+      likedBy: [], likesCount: 0, commentsCount: 0,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    document.getElementById('adminBroadcastMsg').value = '';
+    toast('📢 Announcement posted!', 'success');
+    loadFeed(); loadStats();
+  } catch(e) { toast('Error: ' + e.message, 'error'); }
 }
 
 // ══════════════════════════════════════════
@@ -1198,13 +1334,30 @@ function sharePost(id) {
   else navigator.clipboard.writeText(url).then(() => toast('Link copied! 🔗', 'success'));
 }
 async function loadStats() {
+  if (!isAdmin) return; // Only admin sees real stats
   try {
-    const [posts, users] = await Promise.all([db.collection('devsocial_posts').get(), db.collection('users').get()]);
-    document.getElementById('sTotalPosts').textContent = posts.size;
-    document.getElementById('sTotalMembers').textContent = users.size;
-    let lk = 0; posts.forEach(d => lk += d.data().likesCount || 0);
-    document.getElementById('sTotalLikes').textContent = lk;
-  } catch(e) {}
+    const posts = await db.collection('devsocial_posts').get();
+    let lk = 0, totalCmts = 0;
+    const cmtPromises = [];
+    posts.forEach(d => {
+      lk += d.data().likesCount || 0;
+      cmtPromises.push(
+        db.collection('devsocial_posts').doc(d.id).collection('comments').get()
+          .then(cs => { totalCmts += cs.size; })
+          .catch(() => {})
+      );
+    });
+    await Promise.all(cmtPromises);
+    const users = await db.collection('users').get();
+    const tp = document.getElementById('sTotalPosts');
+    const tm = document.getElementById('sTotalMembers');
+    const tl = document.getElementById('sTotalLikes');
+    const tc = document.getElementById('sTotalComments');
+    if (tp) tp.textContent = posts.size;
+    if (tm) tm.textContent = users.size;
+    if (tl) tl.textContent = lk;
+    if (tc) tc.textContent = totalCmts;
+  } catch(e) { console.warn('loadStats error:', e); }
 }
 async function loadUserStats(uid) {
   try {
