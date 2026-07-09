@@ -2179,14 +2179,15 @@ function loadFeed() {
   let q = db.collection('devsocial_posts').limit(50);
   if (curCat !== 'all') q = db.collection('devsocial_posts').where('category','==',curCat).limit(50);
   unsub = q.onSnapshot(async snap => {
-    if (snap.empty || snap.size < 5) {
+    if (snap.empty) {
       if (isAdmin && !window._seedRunning) {
         window._seedRunning = true;
         el.innerHTML = '<div class="feed-loading"><div class="spinner"></div><div>🚀 Setting up community feed...</div></div>';
         await autoSeedCommunity();
         return;
       }
-      if (snap.empty) { el.innerHTML = '<div class="empty"><div class="empty-icon">✨</div><div class="empty-title">No posts yet</div><div class="empty-text">Be the first to share something amazing!</div></div>'; return; }
+      el.innerHTML = '<div class="empty"><div class="empty-icon">✨</div><div class="empty-title">No posts yet</div><div class="empty-text">Be the first to share something amazing!</div></div>';
+      return;
     }
     el.innerHTML = '';
     let posts = [];
