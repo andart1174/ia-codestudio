@@ -582,6 +582,44 @@ window.addEventListener('DOMContentLoaded',()=>{
 
     window.editor = editor; // 🚀 Globalize for IA-PRO Features
     
+    // ── HTML Beautifier for forked code ──────────────────────────────────
+    function formatHTMLCode(html) {
+      if (!html || typeof html !== 'string') return html;
+      // If already multiline (more than 5 lines), don't re-format
+      if ((html.match(/\n/g) || []).length > 5) return html;
+      let indent = 0;
+      const INDENT = '  ';
+      // Split on tag boundaries
+      const tokens = html
+        .replace(/<script/gi, '\n<script')
+        .replace(/<\/script>/gi, '\n<\/script>\n')
+        .replace(/<style/gi, '\n<style')
+        .replace(/<\/style>/gi, '\n<\/style>\n')
+        .replace(/(<(?!script|style|\/script|\/style)[^>]+>)/g, '\n$1\n')
+        .split('\n')
+        .map(l => l.trim())
+        .filter(l => l.length > 0);
+
+      const VOID = /^<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)/i;
+      const CLOSE = /^<\//;
+      const OPEN = /^<[^/!][^>]*[^/]>$/;
+
+      let result = [];
+      for (let token of tokens) {
+        if (CLOSE.test(token)) {
+          indent = Math.max(0, indent - 1);
+          result.push(INDENT.repeat(indent) + token);
+        } else if (OPEN.test(token) && !VOID.test(token)) {
+          result.push(INDENT.repeat(indent) + token);
+          indent++;
+        } else {
+          result.push(INDENT.repeat(indent) + token);
+        }
+      }
+      return result.join('\n');
+    }
+    window.formatHTMLCode = formatHTMLCode; // Expose globally for Beautify button
+
     // Check for Fork URL Parameter
     const urlParams = new URLSearchParams(window.location.search);
     const forkId = urlParams.get('fork');
@@ -595,16 +633,27 @@ window.addEventListener('DOMContentLoaded',()=>{
           const postData = doc.data();
           if (postData) {
             if (postData.code) {
-              editor.setValue(postData.code);
+              const formatted = formatHTMLCode(postData.code);
+              editor.setValue(formatted);
+              // Trigger Monaco's built-in format after a short delay
+              setTimeout(() => {
+                const formatAction = editor.getAction('editor.action.formatDocument');
+                if (formatAction) formatAction.run();
+              }, 400);
               updateQuality();
               updateStats();
               runPreview();
               if (window.showToast) {
-                window.showToast(window.appLang === 'fr' ? "⚡ Template chargé !" : "⚡ Template loaded!");
+                window.showToast(window.appLang === 'fr' ? "⚡ Template chargé et formaté !" : "⚡ Template loaded & formatted!");
               }
             } else if (postData.compressedCode && window.DevSocialDB && typeof window.DevSocialDB._decompress === 'function') {
               window.DevSocialDB._decompress(postData.compressedCode).then(decompressed => {
-                editor.setValue(decompressed);
+                const formatted = formatHTMLCode(decompressed);
+                editor.setValue(formatted);
+                setTimeout(() => {
+                  const formatAction = editor.getAction('editor.action.formatDocument');
+                  if (formatAction) formatAction.run();
+                }, 400);
                 updateQuality();
                 updateStats();
                 runPreview();
@@ -2219,11 +2268,22 @@ function wireMagicButtons() {
   document.getElementById('mbtn-beautify')?.addEventListener('click', () => {
     if(!editor) return;
     let code = editor.getValue();
-    editor.getAction('editor.action.formatDocument').run();
-    if(window.AIEngine) {
-      code = AIEngine.smartFix(code);
-      editor.setValue(code);
+    // If code is minified (single line or very few lines), expand it first
+    const lineCount = (code.match(/\n/g) || []).length;
+    if (lineCount < 5 && code.length > 200) {
+      // Use the fork formatter to expand single-line HTML
+      const expanded = (typeof formatHTMLCode === 'function') ? formatHTMLCode(code) : code;
+      editor.setValue(expanded);
     }
+    // Then run Monaco's built-in prettier format
+    setTimeout(() => {
+      editor.getAction('editor.action.formatDocument').run();
+      if(window.AIEngine) {
+        const fixed = AIEngine.smartFix(editor.getValue());
+        editor.setValue(fixed);
+      }
+      if(window.showToast) window.showToast('✨ Code formatted & beautified!');
+    }, 200);
   });
 
   document.getElementById('mbtn-mobile')?.addEventListener('click', () => {
