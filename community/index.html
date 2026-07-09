@@ -322,6 +322,55 @@
       border-color: transparent;
     }
 
+    /* COMMENTS — upgraded threaded system */
+    .comments-list { max-height: 420px; overflow-y: auto; padding: 12px 16px; display:flex; flex-direction:column; gap:10px; scrollbar-width:thin; scrollbar-color:var(--border) transparent; }
+    .no-comments { text-align:center; padding:32px 16px; color:var(--muted); font-size:.9rem; }
+
+    .c-item { display:flex; gap:10px; animation: fadeSlideUp .3s ease; }
+    @keyframes fadeSlideUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+    /* Threaded reply — indented with left bar */
+    .c-reply { margin-left:36px; padding-left:12px; border-left:2px solid rgba(124,58,237,0.25); }
+
+    .c-avatar { width:32px; height:32px; border-radius:50%; object-fit:cover; flex-shrink:0; border:1.5px solid var(--border); }
+    .c-reply .c-avatar { width:26px; height:26px; }
+
+    .c-body { flex:1; min-width:0; }
+    .c-author { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+    .c-name { font-size:.82rem; font-weight:700; color:var(--text); }
+    .c-time { font-size:.72rem; color:var(--muted); }
+
+    .c-text { font-size:.87rem; color:var(--text); line-height:1.55; word-break:break-word;
+      background:var(--bg3); border-radius:0 12px 12px 12px; padding:8px 12px;
+      border:1px solid var(--border2); }
+    .c-reply .c-text { background:rgba(124,58,237,0.05); border-color:rgba(124,58,237,0.15); }
+
+    /* @mention highlight */
+    .c-mention { color:var(--accent3); font-weight:700; font-size:.85rem; }
+
+    /* Action row below each comment */
+    .c-actions { display:flex; align-items:center; gap:10px; margin-top:5px; padding-left:2px; }
+    .c-act-btn { display:inline-flex; align-items:center; gap:4px; background:none; border:none;
+      color:var(--muted); font-size:.76rem; font-weight:600; cursor:pointer; padding:3px 6px;
+      border-radius:6px; transition:all .18s; font-family:inherit; }
+    .c-act-btn:hover { background:rgba(124,58,237,0.1); color:var(--accent3); }
+    .c-act-btn.c-liked { color:#f472b6; }
+    .c-act-btn.c-liked:hover { background:rgba(244,114,182,0.1); }
+    .c-del-btn:hover { color:var(--red) !important; background:rgba(239,68,68,0.08) !important; }
+
+    /* Compose area */
+    .c-compose { display:flex; align-items:flex-start; gap:10px; padding:12px 16px;
+      border-top:1px solid var(--border2); background:var(--bg2); }
+    .c-compose-avatar { width:34px; height:34px; border-radius:50%; object-fit:cover; flex-shrink:0; border:2px solid var(--accent); margin-top:3px; }
+    .c-input { flex:1; background:var(--bg3); border:1px solid var(--border2); border-radius:20px;
+      padding:9px 16px; color:var(--text); font-size:.87rem; font-family:inherit; resize:none;
+      min-height:38px; max-height:120px; overflow-y:auto; transition:border-color .2s; outline:none; }
+    .c-input:focus { border-color:var(--accent); }
+    .c-send { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent2));
+      border:none; color:#fff; font-size:1rem; cursor:pointer; display:flex; align-items:center;
+      justify-content:center; flex-shrink:0; transition:all .2s; margin-top:1px; }
+    .c-send:hover { transform:scale(1.08); box-shadow:0 4px 12px rgba(124,58,237,.5); }
+
     /* RESPONSIVE */
     @media(max-width:1024px) { .wrap { grid-template-columns:1fr; } .sl,.sr { display:none; } }
     @media(max-width:640px) {
@@ -331,6 +380,7 @@
       .hdr-name { display:none; }
       .overlay { align-items:flex-end; padding:0; }
       .modal { border-radius:16px 16px 0 0; max-height:92vh; }
+      .c-reply { margin-left:20px; }
     }
   </style>
   <script type="application/ld+json">
@@ -521,6 +571,12 @@
     <div class="mh"><div class="mt">💬 Comments</div><button class="mc" onclick="closeCmts()">✕</button></div>
     <div class="mb">
       <div class="comments-list" id="cmtList"></div>
+      <!-- Reply context bar -->
+      <div id="replyBar" style="display:none;align-items:center;gap:8px;padding:8px 14px;background:rgba(124,58,237,0.08);border-top:1px solid rgba(124,58,237,0.2);border-bottom:1px solid rgba(124,58,237,0.2)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" width="14" height="14"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>
+        <span id="replyingTo" style="font-size:.8rem;color:#a78bfa;flex:1"></span>
+        <button onclick="hideReplyBar()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0">✕</button>
+      </div>
       <div class="c-compose" id="cmtCompose" style="display:none">
         <img src="" alt="" class="c-compose-avatar" id="cmtAvatar">
         <textarea class="c-input" id="cmtInput" placeholder="Write a comment..." rows="1"
@@ -975,53 +1031,153 @@ async function toggleLike(postId, liked) {
 // ══════════════════════════════════════════
 // COMMENTS
 // ══════════════════════════════════════════
+// Reply state
+let replyTo = null; // { cmtId, displayName }
+
 function openCmts(postId) {
   curPostId = postId;
+  replyTo = null;
   document.getElementById('cmtOverlay').classList.add('open');
   document.getElementById('cmtCompose').style.display = user ? 'flex' : 'none';
   document.getElementById('cmtLoginMsg').style.display = user ? 'none' : 'block';
+  hideReplyBar();
   const list = document.getElementById('cmtList');
   list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)"><div class="spinner" style="width:22px;height:22px;border-width:2px;margin:0 auto 8px"></div>Loading...</div>';
   if (unsubCmt) unsubCmt();
-  unsubCmt = db.collection('devsocial_posts').doc(postId).collection('comments').orderBy('createdAt','asc').limit(100).onSnapshot(snap => {
+  unsubCmt = db.collection('devsocial_posts').doc(postId).collection('comments')
+    .orderBy('createdAt','asc').limit(200).onSnapshot(snap => {
     if (snap.empty) { list.innerHTML = '<div class="no-comments">No comments yet. Be the first! 💬</div>'; return; }
-    list.innerHTML = '';
+    // Build map: top-level comments and their replies
+    const topLevel = [];
+    const repliesMap = {};
     snap.forEach(doc => {
       const c = { id: doc.id, ...doc.data() };
-      const a = c.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.displayName||'User')}&background=7c3aed&color=fff&bold=true`;
-      const canDel = user && (isAdmin || user.uid === c.uid);
-      const d = document.createElement('div');
-      d.className = 'c-item';
-      d.innerHTML = `<img src="${a}" class="c-avatar"><div class="c-body"><div class="c-author">${esc(c.displayName||'Anonymous')}${canDel?`<button class="c-del" onclick="delCmt('${postId}','${c.id}')">🗑</button>`:''}</div><div class="c-text">${esc(c.content)}</div><div class="c-time">${c.createdAt?timeAgo(safeGetDate(c.createdAt)):'just now'}</div></div>`;
-      list.appendChild(d);
+      if (c.replyTo) {
+        if (!repliesMap[c.replyTo]) repliesMap[c.replyTo] = [];
+        repliesMap[c.replyTo].push(c);
+      } else {
+        topLevel.push(c);
+      }
+    });
+    list.innerHTML = '';
+    topLevel.forEach(c => {
+      list.appendChild(renderComment(c, false));
+      // Render replies under this comment
+      if (repliesMap[c.id]) {
+        repliesMap[c.id].forEach(rep => {
+          list.appendChild(renderComment(rep, true));
+        });
+      }
     });
     list.scrollTop = list.scrollHeight;
   });
 }
+
+function renderComment(c, isReply) {
+  const a = c.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.displayName||'User')}&background=7c3aed&color=fff&bold=true`;
+  const canDel = user && (isAdmin || user.uid === c.uid);
+  const myLike = user && c.likedBy && c.likedBy.includes(user.uid);
+  const likeCount = c.likeCount || 0;
+  const d = document.createElement('div');
+  d.className = 'c-item' + (isReply ? ' c-reply' : '');
+  d.id = 'cmt-' + c.id;
+  const mentionHtml = c.replyToName ? `<span class="c-mention">@${esc(c.replyToName)}</span> ` : '';
+  d.innerHTML = `
+    <img src="${a}" class="c-avatar">
+    <div class="c-body">
+      <div class="c-author">
+        <span class="c-name">${esc(c.displayName||'Anonymous')}</span>
+        <span class="c-time">${c.createdAt ? timeAgo(safeGetDate(c.createdAt)) : 'just now'}</span>
+      </div>
+      <div class="c-text">${mentionHtml}${esc(c.content)}</div>
+      <div class="c-actions">
+        ${user ? `<button class="c-act-btn ${myLike ? 'c-liked' : ''}" onclick="likeCmt('${curPostId}','${c.id}',${myLike})">
+          <svg viewBox="0 0 24 24" fill="${myLike ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span id="clc-${c.id}">${likeCount > 0 ? likeCount : ''}</span>
+        </button>` : ''}
+        ${user && !isReply ? `<button class="c-act-btn" onclick="startReply('${c.id}','${esc(c.displayName||'Anonymous')}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>
+          Reply
+        </button>` : ''}
+        ${canDel ? `<button class="c-act-btn c-del-btn" onclick="delCmt('${curPostId}','${c.id}')">🗑 Delete</button>` : ''}
+      </div>
+    </div>`;
+  return d;
+}
+
+function startReply(cmtId, displayName) {
+  replyTo = { cmtId, displayName };
+  const bar = document.getElementById('replyBar');
+  const inp = document.getElementById('cmtInput');
+  bar.style.display = 'flex';
+  document.getElementById('replyingTo').textContent = `Replying to @${displayName}`;
+  inp.placeholder = `Reply to @${displayName}...`;
+  inp.focus();
+  // Scroll compose into view
+  document.getElementById('cmtCompose').scrollIntoView({ behavior: 'smooth' });
+}
+
+function hideReplyBar() {
+  replyTo = null;
+  const bar = document.getElementById('replyBar');
+  if (bar) bar.style.display = 'none';
+  const inp = document.getElementById('cmtInput');
+  if (inp) inp.placeholder = 'Write a comment...';
+}
+
+async function likeCmt(postId, cmtId, liked) {
+  if (!user) { toast('Sign in to like comments', 'info'); return; }
+  const ref = db.collection('devsocial_posts').doc(postId).collection('comments').doc(cmtId);
+  try {
+    if (liked) {
+      await ref.update({ likedBy: firebase.firestore.FieldValue.arrayRemove(user.uid), likeCount: firebase.firestore.FieldValue.increment(-1) });
+    } else {
+      await ref.update({ likedBy: firebase.firestore.FieldValue.arrayUnion(user.uid), likeCount: firebase.firestore.FieldValue.increment(1) });
+    }
+  } catch(e) { toast('Error: '+e.message,'error'); }
+}
+
 function closeCmts(e) {
   if (e && e.target !== document.getElementById('cmtOverlay')) return;
   document.getElementById('cmtOverlay').classList.remove('open');
   if (unsubCmt) { unsubCmt(); unsubCmt = null; }
   curPostId = null;
+  hideReplyBar();
 }
+
 async function sendCmt() {
   if (!user || !curPostId) return;
   const inp = document.getElementById('cmtInput');
   const content = inp.value.trim();
   if (!content) return;
   inp.value = ''; inp.style.height = 'auto';
+  const docData = {
+    uid: user.uid,
+    displayName: user.displayName,
+    photoURL: user.photoURL,
+    content,
+    likedBy: [],
+    likeCount: 0,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
+  if (replyTo) {
+    docData.replyTo = replyTo.cmtId;
+    docData.replyToName = replyTo.displayName;
+    hideReplyBar();
+  }
   try {
-    await db.collection('devsocial_posts').doc(curPostId).collection('comments').add({ uid:user.uid, displayName:user.displayName, photoURL:user.photoURL, content, createdAt:firebase.firestore.FieldValue.serverTimestamp() });
-    await db.collection('devsocial_posts').doc(curPostId).update({ commentsCount:firebase.firestore.FieldValue.increment(1) });
+    await db.collection('devsocial_posts').doc(curPostId).collection('comments').add(docData);
+    await db.collection('devsocial_posts').doc(curPostId).update({ commentsCount: firebase.firestore.FieldValue.increment(1) });
     const cc = document.getElementById('cc-' + curPostId);
     if (cc) cc.textContent = parseInt(cc.textContent) + 1;
   } catch(e) { toast('Error: ' + e.message, 'error'); inp.value = content; }
 }
+
 async function delCmt(postId, cmtId) {
   if (!confirm('Delete this comment?')) return;
   try {
     await db.collection('devsocial_posts').doc(postId).collection('comments').doc(cmtId).delete();
-    await db.collection('devsocial_posts').doc(postId).update({ commentsCount:firebase.firestore.FieldValue.increment(-1) });
+    await db.collection('devsocial_posts').doc(postId).update({ commentsCount: firebase.firestore.FieldValue.increment(-1) });
     const cc = document.getElementById('cc-' + postId);
     if (cc) cc.textContent = Math.max(0, parseInt(cc.textContent) - 1);
     toast('Comment deleted', 'info');
