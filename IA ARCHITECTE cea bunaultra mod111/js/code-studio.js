@@ -585,37 +585,101 @@ window.addEventListener('DOMContentLoaded',()=>{
     // ── HTML Beautifier for forked code ──────────────────────────────────
     function formatHTMLCode(html) {
       if (!html || typeof html !== 'string') return html;
-      // If already multiline (more than 5 lines), don't re-format
-      if ((html.match(/\n/g) || []).length > 5) return html;
+      
+      const blocks = [];
+      let lastIndex = 0;
+      
+      // Regex to find script and style tags
+      const tagRegex = /<(script|style)[^>]*>([\s\S]*?)<\/\1>/gi;
+      let match;
+      
+      while ((match = tagRegex.exec(html)) !== null) {
+        if (match.index > lastIndex) {
+          blocks.push({
+            type: 'html',
+            content: html.substring(lastIndex, match.index)
+          });
+        }
+        blocks.push({
+          type: match[1].toLowerCase(),
+          tagOpen: match[0].substring(0, match[0].indexOf('>') + 1),
+          content: match[2],
+          tagClose: `</${match[1]}>`
+        });
+        lastIndex = tagRegex.lastIndex;
+      }
+      
+      if (lastIndex < html.length) {
+        blocks.push({
+          type: 'html',
+          content: html.substring(lastIndex)
+        });
+      }
+      
+      let result = [];
       let indent = 0;
       const INDENT = '  ';
-      // Split on tag boundaries
-      const tokens = html
-        .replace(/<script/gi, '\n<script')
-        .replace(/<\/script>/gi, '\n<\/script>\n')
-        .replace(/<style/gi, '\n<style')
-        .replace(/<\/style>/gi, '\n<\/style>\n')
-        .replace(/(<(?!script|style|\/script|\/style)[^>]+>)/g, '\n$1\n')
-        .split('\n')
-        .map(l => l.trim())
-        .filter(l => l.length > 0);
-
-      const VOID = /^<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)/i;
-      const CLOSE = /^<\//;
-      const OPEN = /^<[^/!][^>]*[^/]>$/;
-
-      let result = [];
-      for (let token of tokens) {
-        if (CLOSE.test(token)) {
-          indent = Math.max(0, indent - 1);
-          result.push(INDENT.repeat(indent) + token);
-        } else if (OPEN.test(token) && !VOID.test(token)) {
-          result.push(INDENT.repeat(indent) + token);
-          indent++;
+      
+      for (const block of blocks) {
+        if (block.type === 'html') {
+          const tokens = block.content
+            .replace(/(<[^>]+>)/g, '\n$1\n')
+            .split('\n')
+            .map(l => l.trim())
+            .filter(l => l.length > 0);
+            
+          const VOID = /^<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)/i;
+          const CLOSE = /^<\//;
+          const OPEN = /^<[^/!][^>]*[^/]>$/;
+          
+          for (const token of tokens) {
+            if (CLOSE.test(token)) {
+              indent = Math.max(0, indent - 1);
+              result.push(INDENT.repeat(indent) + token);
+            } else if (OPEN.test(token) && !VOID.test(token)) {
+              result.push(INDENT.repeat(indent) + token);
+              indent++;
+            } else {
+              result.push(INDENT.repeat(indent) + token);
+            }
+          }
         } else {
-          result.push(INDENT.repeat(indent) + token);
+          // Format script/style block without parsing internal < and > as HTML
+          result.push(INDENT.repeat(indent) + block.tagOpen);
+          
+          const rawLines = block.content.split('\n');
+          let contentLines = [];
+          
+          if (rawLines.length <= 1) {
+            // Expand single-line JS/CSS to multiple lines cleanly
+            let formattedContent = block.content
+              .replace(/;/g, ';\n')
+              .replace(/{/g, '{\n')
+              .replace(/}/g, '\n}\n');
+            contentLines = formattedContent.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+          } else {
+            contentLines = rawLines.map(l => l.trim());
+          }
+          
+          let innerIndent = indent + 1;
+          for (let line of contentLines) {
+            // Adjust indent down if the line starts with a closing brace
+            if (line.startsWith('}') || line.startsWith(']')) {
+              innerIndent = Math.max(indent + 1, innerIndent - 1);
+            }
+            
+            result.push(INDENT.repeat(innerIndent) + line);
+            
+            // Adjust indent up if the line ends with an opening brace
+            if (line.endsWith('{') || line.endsWith('[')) {
+              innerIndent++;
+            }
+          }
+          
+          result.push(INDENT.repeat(indent) + block.tagClose);
         }
       }
+      
       return result.join('\n');
     }
     window.formatHTMLCode = formatHTMLCode; // Expose globally for Beautify button
