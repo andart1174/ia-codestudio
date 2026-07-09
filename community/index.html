@@ -528,6 +528,7 @@
         <div class="sc-title">⚙️ Admin Controls</div>
         <button class="adm-btn" onclick="adminPinTop()">📌 Pin a Post to Top</button>
         <button class="adm-btn" onclick="adminResetFakeComments()">🔧 Fix Fake Comments → 0</button>
+        <button class="adm-btn" onclick="adminForceSeed()">🚀 Seed Demo Projects</button>
         <button class="adm-btn" onclick="adminDeleteSeeds()">🗑️ Delete All Seed Posts</button>
         <button class="adm-btn adm-btn-warn" onclick="adminWipeAll()">⚠️ Wipe Entire Feed</button>
         <div class="adm-divider"></div>
@@ -2644,6 +2645,15 @@ async function adminResetFakeComments() {
     toast(`✅ Fixed ${fixed} posts — all comment counts are now accurate!`, 'success');
     loadStats();
   } catch(e) { toast('Error: ' + e.message, 'error'); }
+}
+
+async function adminForceSeed() {
+  if (!isAdmin) return;
+  if (window._seedRunning) { toast('Seeding is already in progress...', 'info'); return; }
+  if (!confirm('Add the 10 clean, beautiful, formatted demo projects to the feed?')) return;
+  window._seedRunning = true;
+  toast('🚀 Publishing demo projects...', 'info');
+  await autoSeedCommunity();
 }
 
 async function adminDeleteSeeds() {
