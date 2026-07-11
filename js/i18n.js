@@ -1,6 +1,6 @@
 const translations = {
   fr: {
-    nav_title: "IA CODE STUDIO",
+    nav_title: "IA CODE STUDIO — Générateur de Widgets 3D & IDE Web IA",
     hero_title: "L'Avenir de l'Intelligence Artificielle",
     hero_subtitle: "Découvrez notre plateforme phare propulsée par l'IA. Conception structurelle avancée et génération intelligente dans un studio de développement complet.",
     app1_title: "IA ARCHITECTE STUDIO PRO",
@@ -137,7 +137,7 @@ const translations = {
     qa_a7: "Non, jamais. Tous les outils Free Tools fonctionnent 100% côté client (dans votre navigateur). Aucune donnée n'est transmise à un serveur externe."
   },
   en: {
-    nav_title: "IA CODE STUDIO",
+    nav_title: "IA CODE STUDIO — Free 3D WebGL Widget & AI Web IDE",
     hero_title: "The Future of Artificial Intelligence",
     hero_subtitle: "Discover our flagship AI-powered platform. Advanced structural design and intelligent generation in one comprehensive studio.",
     app1_title: "IA ARCHITECTE STUDIO PRO",
