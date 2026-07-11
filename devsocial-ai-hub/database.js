@@ -509,17 +509,33 @@ return function() {
       }
 
       if (useFirestore && db && !isTooLargeForFirestore) {
-        return db.collection('devsocial_posts').doc(String(post.id)).set(post)
-          .then(() => {
-            console.log("Post synced online successfully.");
-            return true;
-          })
-          .catch(err => {
-            console.error("Error saving post to Firestore, saving to LocalStorage instead:", err);
-            window.lastFirestoreError = err.message || String(err);
-            saveToLocal(post);
-            return false;
-          });
+        const checkAuth = async () => {
+          if (window.firebase && typeof window.firebase.auth === 'function') {
+            const auth = window.firebase.auth();
+            if (!auth.currentUser) {
+              try {
+                console.log("Not authenticated in Firebase. Signing in anonymously...");
+                await auth.signInAnonymously();
+              } catch (authErr) {
+                console.warn("Anonymous authentication failed:", authErr);
+              }
+            }
+          }
+        };
+
+        return checkAuth().then(() => {
+          return db.collection('devsocial_posts').doc(String(post.id)).set(post)
+            .then(() => {
+              console.log("Post synced online successfully.");
+              return true;
+            })
+            .catch(err => {
+              console.error("Error saving post to Firestore, saving to LocalStorage instead:", err);
+              window.lastFirestoreError = err.message || String(err);
+              saveToLocal(post);
+              return false;
+            });
+        });
       } else {
         if (!window.lastFirestoreError) {
           window.lastFirestoreError = window.lastFirebaseInitError || "Database initialization or connection failed (fallback to local)";
