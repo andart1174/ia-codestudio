@@ -50,6 +50,9 @@
 
   <div id="canvas-container"></div>
 
+  <!-- IA Code Studio Brand Badge -->
+  <a id="ia-brand-badge" href="https://ia-codestudio.com" target="_blank" style="position:absolute; bottom:20px; right:20px; background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.08); backdrop-filter:blur(8px); color:#6366f1; font-family:sans-serif; text-decoration:none; padding:8px 16px; border-radius:50px; font-size:12px; font-weight:600; z-index:9999; display:flex; align-items:center; gap:6px; box-shadow:0 4px 12px rgba(0,0,0,0.25);"><span>⚡</span><span>3D Widget by IA Code Studio</span></a>
+
   <div class="info-hud">
     <h1>Three.js Starter Template</h1>
     <p>OrbitControls Enabled. Drag to rotate, scroll to zoom.</p>
@@ -124,6 +127,15 @@
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
+
+    // Brand Protection Check
+    setTimeout(function(){
+      var badge = document.getElementById("ia-brand-badge");
+      if(!badge || !badge.href || !badge.href.includes("ia-codestudio.com")){
+        var c = document.getElementById("canvas-container") || document.body;
+        if(c) c.style.opacity = "0.15";
+      }
+    }, 3000);
   </script>
 </body>
 </html>
