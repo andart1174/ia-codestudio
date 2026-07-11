@@ -389,6 +389,95 @@
     .adm-btn-warn:hover { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.5); }
     .adm-divider { height: 1px; background: rgba(245,158,11,0.12); margin: 10px 0; }
 
+    /* CODE VIEWER SYSTEM */
+    .p-code-tab-container {
+      margin-top: 12px;
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      background: var(--bg2);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .cv-tabs {
+      display: flex;
+      background: rgba(0,0,0,0.2);
+      border-bottom: 1px solid var(--border2);
+      padding: 4px;
+      gap: 4px;
+    }
+    .cv-tab {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: .8rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all .2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .cv-tab:hover {
+      color: var(--text);
+      background: rgba(255,255,255,0.04);
+    }
+    .cv-tab.active {
+      color: #fff;
+      background: var(--accent);
+    }
+    .cv-content-area {
+      position: relative;
+    }
+    .cv-pane {
+      width: 100%;
+    }
+    .cv-pane.pane-preview {
+      display: block;
+    }
+    .cv-code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 12px;
+      background: rgba(0,0,0,0.15);
+      border-bottom: 1px solid var(--border2);
+      font-size: .75rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .cv-copy-btn {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      font-size: .7rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all .18s;
+    }
+    .cv-copy-btn:hover {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+    }
+    .cv-code-block {
+      margin: 0;
+      padding: 12px;
+      background: #090d16;
+      max-height: 380px;
+      overflow-y: auto;
+      font-family: 'Fira Code', 'Courier New', Courier, monospace;
+      font-size: .8rem;
+      line-height: 1.5;
+      text-align: left;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
     /* RESPONSIVE */
     @media(max-width:1024px) { .wrap { grid-template-columns:1fr; } .sl,.sr { display:none; } }
     @media(max-width:640px) {
@@ -855,12 +944,60 @@ function renderPost(p) {
   
   if (p.code) {
     const uniqueId = `iframe-container-${p.id}`;
+    const parts = extractCodeParts(p.code);
+    const labelPreview = currentLang === 'fr' ? '🖥️ Aperçu' : '🖥️ Preview';
+    const labelHTML = '📄 HTML';
+    const labelCSS = '🎨 CSS';
+    const labelJS = '⚡ JS';
+    const labelCopy = currentLang === 'fr' ? 'Copier' : 'Copy';
+
     codeHtml = `
-      <div class="p-code-preview" id="${uniqueId}">
-        <div class="code-preview-placeholder">
-          <div class="cpp-icon">🌐</div>
-          <div class="cpp-text">${currentLang === 'fr' ? 'Projet Interactif HTML/JS/3D' : 'Interactive HTML/JS/3D Project'}</div>
-          <button class="btn-run-demo" onclick="runPostDemo('${p.id}')">${lblRunDemo}</button>
+      <div class="p-code-tab-container" id="cv-container-${p.id}">
+        <div class="cv-tabs">
+          <button class="cv-tab active" id="tab-preview-${p.id}" onclick="switchCvTab('${p.id}', 'preview')">${labelPreview}</button>
+          <button class="cv-tab" id="tab-html-${p.id}" onclick="switchCvTab('${p.id}', 'html')">${labelHTML}</button>
+          <button class="cv-tab" id="tab-css-${p.id}" onclick="switchCvTab('${p.id}', 'css')">${labelCSS}</button>
+          <button class="cv-tab" id="tab-js-${p.id}" onclick="switchCvTab('${p.id}', 'js')">${labelJS}</button>
+        </div>
+        
+        <div class="cv-content-area">
+          <!-- Preview Pane -->
+          <div class="cv-pane pane-preview" id="pane-preview-${p.id}">
+            <div class="p-code-preview" id="${uniqueId}">
+              <div class="code-preview-placeholder">
+                <div class="cpp-icon">🌐</div>
+                <div class="cpp-text">${currentLang === 'fr' ? 'Projet Interactif HTML/JS/3D' : 'Interactive HTML/JS/3D Project'}</div>
+                <button class="btn-run-demo" onclick="runPostDemo('${p.id}')">${lblRunDemo}</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Code Pane - HTML -->
+          <div class="cv-pane pane-code" id="pane-html-${p.id}" style="display:none;">
+            <div class="cv-code-header">
+              <span>HTML Markup</span>
+              <button class="cv-copy-btn" id="btn-copy-html-${p.id}" onclick="copyCvCode('${p.id}', 'html')">${labelCopy}</button>
+            </div>
+            <pre class="cv-code-block"><code id="code-html-text-${p.id}">${esc(parts.html)}</code></pre>
+          </div>
+          
+          <!-- Code Pane - CSS -->
+          <div class="cv-pane pane-code" id="pane-css-${p.id}" style="display:none;">
+            <div class="cv-code-header">
+              <span>CSS Styles</span>
+              <button class="cv-copy-btn" id="btn-copy-css-${p.id}" onclick="copyCvCode('${p.id}', 'css')">${labelCopy}</button>
+            </div>
+            <pre class="cv-code-block"><code id="code-css-text-${p.id}">${esc(parts.css || '/* No CSS styles in this project */')}</code></pre>
+          </div>
+          
+          <!-- Code Pane - JS -->
+          <div class="cv-pane pane-code" id="pane-js-${p.id}" style="display:none;">
+            <div class="cv-code-header">
+              <span>JavaScript Logic</span>
+              <button class="cv-copy-btn" id="btn-copy-js-${p.id}" onclick="copyCvCode('${p.id}', 'js')">${labelCopy}</button>
+            </div>
+            <pre class="cv-code-block"><code id="code-js-text-${p.id}">${esc(parts.js || '// No JavaScript code in this project')}</code></pre>
+          </div>
         </div>
       </div>
       <div class="p-code-actions">
@@ -896,6 +1033,88 @@ function renderPost(p) {
       </button>
     </div>`;
   return el;
+}
+
+function extractCodeParts(html) {
+  let css = '';
+  let js = '';
+  
+  // Extract CSS
+  const cssMatch = html.match(/<style[^>]*>([\s\S]*?)<\/style>/i);
+  if (cssMatch) css = cssMatch[1].trim();
+
+  // Extract JS (all script tags)
+  const scriptRegex = /<script[^>]*>([\s\S]*?)<\/script>/gi;
+  let match;
+  while ((match = scriptRegex.exec(html)) !== null) {
+    js += match[1].trim() + '\n\n';
+  }
+  js = js.trim();
+
+  // Extract clean HTML (strip style and script tags)
+  let cleanHtml = html
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+  
+  const bodyMatch = cleanHtml.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+  if (bodyMatch) {
+    cleanHtml = bodyMatch[1].trim();
+  } else {
+    cleanHtml = cleanHtml
+      .replace(/<!DOCTYPE[^>]*>/i, '')
+      .replace(/<\/?html[^>]*>/gi, '')
+      .replace(/<head[^>]*>[\s\S]*?<\/head>/gi, '')
+      .trim();
+  }
+
+  return { html: cleanHtml, css, js };
+}
+
+function switchCvTab(postId, tabName) {
+  const container = document.getElementById(`cv-container-${postId}`);
+  if (!container) return;
+  
+  // Update active tab button style
+  const tabs = container.querySelectorAll('.cv-tab');
+  tabs.forEach(tab => {
+    if (tab.id === `tab-${tabName}-${postId}`) {
+      tab.classList.add('active');
+    } else {
+      tab.classList.remove('active');
+    }
+  });
+
+  // Toggle panes visibility
+  const panes = container.querySelectorAll('.cv-pane');
+  panes.forEach(pane => {
+    if (pane.id === `pane-${tabName}-${postId}`) {
+      pane.style.display = 'block';
+    } else {
+      pane.style.display = 'none';
+    }
+  });
+}
+
+function copyCvCode(postId, tabName) {
+  const codeElement = document.getElementById(`code-${tabName}-text-${postId}`);
+  if (!codeElement) return;
+  
+  const text = codeElement.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById(`btn-copy-${tabName}-${postId}`);
+    if (btn) {
+      const originalText = btn.textContent;
+      const currentLang = localStorage.getItem('hub_lang') || 'fr';
+      btn.textContent = currentLang === 'fr' ? 'Copie !' : 'Copied!';
+      btn.style.borderColor = 'var(--green)';
+      btn.style.color = 'var(--green)';
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.style.borderColor = '';
+        btn.style.color = '';
+      }, 1500);
+    }
+  }).catch(err => console.error('Failed to copy code:', err));
 }
 
 function runPostDemo(id) {
