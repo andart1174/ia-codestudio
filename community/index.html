@@ -820,7 +820,12 @@ function renderPost(p) {
   const displayName = p.displayName || p.user || 'Anonymous';
   const a = p.photoURL || p.userAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=7c3aed&color=fff&bold=true`;
   const liked = user && p.likedBy && p.likedBy.includes(user.uid);
-  const canDel = user && (isAdmin || user.uid === p.uid);
+  const canDel = user && (
+    isAdmin || 
+    (p.uid && user.uid === p.uid) || 
+    (p.userEmail && user.email === p.userEmail) || 
+    (p.uid && user.email === p.uid)
+  );
   const time = p.createdAt ? timeAgo(safeGetDate(p.createdAt)) : 'just now';
   const cCls = 'cat-' + (p.category || 'general');
   const cEm = catEmoji(p.category), cLbl = catLabel(p.category);

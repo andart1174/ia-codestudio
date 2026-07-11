@@ -524,6 +524,12 @@ return function() {
         };
 
         return checkAuth().then(() => {
+          if (window.firebase && typeof window.firebase.auth === 'function') {
+            const currentUser = window.firebase.auth().currentUser;
+            if (currentUser && !post.uid) {
+              post.uid = currentUser.uid;
+            }
+          }
           return db.collection('devsocial_posts').doc(String(post.id)).set(post)
             .then(() => {
               console.log("Post synced online successfully.");
