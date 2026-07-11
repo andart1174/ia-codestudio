@@ -1,212 +1,240 @@
-
-<!-- START IA CODE STUDIO 3D PARTICLE LOGO WIDGET -->
-<div id="particle-logo-\abc1234" style="width:100%;height:400px;background:#03050a;border-radius:14px;overflow:hidden;position:relative;border:1px solid rgba(255,255,255,0.08);box-shadow:0 10px 30px rgba(0,0,0,0.3);cursor:crosshair;">
-<a id="ia-brand-badge" href="https://ia-codestudio.com" target="_blank" style="position:absolute; bottom:12px; right:12px; background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.08); backdrop-filter:blur(8px); color:#06b6d4; font-family:sans-serif; text-decoration:none; padding:4px 10px; border-radius:50px; font-size:10px; font-weight:600; z-index:9999; display:flex; align-items:center; gap:4px; box-shadow:0 4px 12px rgba(0,0,0,0.25);"><span>⚡</span><span>3D Widget by IA Code Studio</span></a>
-<script>
-setTimeout(function(){
-  var badge = document.getElementById("ia-brand-badge");
-  if(!badge || !badge.href || !badge.href.includes("ia-codestudio.com")){
-    var c = document.querySelector("canvas") || document.querySelector(".ia-neon-sign") || document.body;
-    if(c) c.style.opacity = "0.15";
-    
-  }
-}, 3000);
-</script></div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/SVGLoader.js"></script>
-<script>
-(function() {
-  var container = document.getElementById('particle-logo-\abc1234');
-  if (!container) return;
-
-  function initWhenReady() {
-    if (typeof THREE !== 'undefined' && THREE.SVGLoader) { startWidget(); }
-    else { setTimeout(initWhenReady, 50); }
-  }
-  initWhenReady();
-
-  function startWidget() {
-    var W = container.clientWidth || 400, H = container.clientHeight || 400;
-    var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 1000);
-    camera.position.set(0, 0, 150);
-
-    var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(window.devicePixelRatio || 1);
-    renderer.setSize(W, H);
-    container.appendChild(renderer.domElement);
-
-    var mouse = new THREE.Vector2(-9999, -9999);
-    var mouse3D = new THREE.Vector3(0, 0, 0);
-    var raycaster = new THREE.Raycaster();
-    var planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
-
-    function onMouseMove(e) {
-      var rect = container.getBoundingClientRect();
-      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Particle Logo Cloud | IA Code Studio Open Source Templates</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #03050a;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
     }
-    function onTouchMove(e) {
-      if (e.touches.length > 0) {
+    #widget-wrapper {
+      width: 100%;
+      max-width: 800px;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="widget-wrapper">
+    <!-- START IA CODE STUDIO 3D PARTICLE LOGO WIDGET -->
+    <div id="particle-logo-1234" style="width:100%;height:400px;background:#03050a;border-radius:14px;overflow:hidden;position:relative;border:1px solid rgba(255,255,255,0.08);box-shadow:0 10px 30px rgba(0,0,0,0.3);cursor:crosshair;">
+      <a id="ia-brand-badge" href="https://ia-codestudio.com" target="_blank" style="position:absolute; bottom:12px; right:12px; background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.08); backdrop-filter:blur(8px); color:#06b6d4; font-family:sans-serif; text-decoration:none; padding:4px 10px; border-radius:50px; font-size:10px; font-weight:600; z-index:9999; display:flex; align-items:center; gap:4px; box-shadow:0 4px 12px rgba(0,0,0,0.25);"><span>⚡</span><span>3D Widget by IA Code Studio</span></a>
+      <script>
+      setTimeout(function(){
+        var badge = document.getElementById("ia-brand-badge");
+        if(!badge || !badge.href || !badge.href.includes("ia-codestudio.com")){
+          var c = document.querySelector("canvas") || document.querySelector(".ia-neon-sign") || document.body;
+          if(c) c.style.opacity = "0.15";
+        }
+      }, 3000);
+      </script>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/SVGLoader.js"></script>
+  <script>
+  (function() {
+    var container = document.getElementById('particle-logo-1234');
+    if (!container) return;
+
+    function initWhenReady() {
+      if (typeof THREE !== 'undefined' && THREE.SVGLoader) { startWidget(); }
+      else { setTimeout(initWhenReady, 50); }
+    }
+    initWhenReady();
+
+    function startWidget() {
+      var W = container.clientWidth || 400, H = container.clientHeight || 400;
+      var scene = new THREE.Scene();
+      var camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 1000);
+      camera.position.set(0, 0, 150);
+
+      var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setPixelRatio(window.devicePixelRatio || 1);
+      renderer.setSize(W, H);
+      container.appendChild(renderer.domElement);
+
+      var mouse = new THREE.Vector2(-9999, -9999);
+      var mouse3D = new THREE.Vector3(0, 0, 0);
+      var raycaster = new THREE.Raycaster();
+      var planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+
+      function onMouseMove(e) {
         var rect = container.getBoundingClientRect();
-        mouse.x = ((e.touches[0].clientX - rect.left) / rect.width) * 2 - 1;
-        mouse.y = -((e.touches[0].clientY - rect.top) / rect.height) * 2 + 1;
+        mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
       }
-    }
-    container.addEventListener('mousemove', onMouseMove);
-    container.addEventListener('touchmove', onTouchMove, { passive: true });
-    container.addEventListener('mouseleave', function() { mouse.set(-9999, -9999); });
+      function onTouchMove(e) {
+        if (e.touches.length > 0) {
+          var rect = container.getBoundingClientRect();
+          mouse.x = ((e.touches[0].clientX - rect.left) / rect.width) * 2 - 1;
+          mouse.y = -((e.touches[0].clientY - rect.top) / rect.height) * 2 + 1;
+        }
+      }
+      container.addEventListener('mousemove', onMouseMove);
+      container.addEventListener('touchmove', onTouchMove, { passive: true });
+      container.addEventListener('mouseleave', function() { mouse.set(-9999, -9999); });
 
-    var svgText = "<svg></svg>";
-    var rawPoints = [];
-    try {
-      var loader = new THREE.SVGLoader();
-      var parsed = loader.parse(svgText);
-      parsed.paths.forEach(function(path) {
-        var shapes = THREE.SVGLoader.createShapes(path);
-        var col = path.color || new THREE.Color('#06b6d4');
-        shapes.forEach(function(shape) {
-          shape.getSpacedPoints(100).forEach(function(pt) {
-            rawPoints.push({ x: pt.x, y: pt.y, color: col.clone() });
-          });
-          shape.holes.forEach(function(shapeHole) {
-            shapeHole.getSpacedPoints(50).forEach(function(pt) {
-              rawPoints.push({ x: pt.x, y: pt.y, color: new THREE.Color('#ffffff') });
+      var svgText = "<svg></svg>";
+      var rawPoints = [];
+      try {
+        var loader = new THREE.SVGLoader();
+        var parsed = loader.parse(svgText);
+        parsed.paths.forEach(function(path) {
+          var shapes = THREE.SVGLoader.createShapes(path);
+          var col = path.color || new THREE.Color('#06b6d4');
+          shapes.forEach(function(shape) {
+            shape.getSpacedPoints(100).forEach(function(pt) {
+              rawPoints.push({ x: pt.x, y: pt.y, color: col.clone() });
+            });
+            shape.holes.forEach(function(shapeHole) {
+              shapeHole.getSpacedPoints(50).forEach(function(pt) {
+                rawPoints.push({ x: pt.x, y: pt.y, color: new THREE.Color('#ffffff') });
+              });
             });
           });
         });
+      } catch(e) {}
+
+      if (rawPoints.length === 0) {
+        for(var i=0; i<500; i++) {
+          var a = (i/500)*Math.PI*2;
+          rawPoints.push({ x: Math.cos(a)*40 + 50, y: Math.sin(a)*40 + 50, color: new THREE.Color('#06b6d4') });
+        }
+      }
+
+      var minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+      rawPoints.forEach(function(pt) {
+        if(pt.x < minX) minX = pt.x; if(pt.x > maxX) maxX = pt.x;
+        if(pt.y < minY) minY = pt.y; if(pt.y > maxY) maxY = pt.y;
       });
-    } catch(e) {}
+      var cx = (minX + maxX)/2, cy = (minY + maxY)/2;
+      var sizeX = maxX - minX || 1, sizeY = maxY - minY || 1;
+      var maxDim = Math.max(sizeX, sizeY);
+      var scaleFactor = 90.0 / maxDim;
 
-    if (rawPoints.length === 0) {
-      for(var i=0; i<500; i++) {
-        var a = (i/500)*Math.PI*2;
-        rawPoints.push({ x: Math.cos(a)*40 + 50, y: Math.sin(a)*40 + 50, color: new THREE.Color('#06b6d4') });
-      }
-    }
+      rawPoints.forEach(function(pt) {
+        pt.x = (pt.x - cx) * scaleFactor;
+        pt.y = -(pt.y - cy) * scaleFactor;
+      });
 
-    var minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-    rawPoints.forEach(function(pt) {
-      if(pt.x < minX) minX = pt.x; if(pt.x > maxX) maxX = pt.x;
-      if(pt.y < minY) minY = pt.y; if(pt.y > maxY) maxY = pt.y;
-    });
-    var cx = (minX + maxX)/2, cy = (minY + maxY)/2;
-    var sizeX = maxX - minX || 1, sizeY = maxY - minY || 1;
-    var maxDim = Math.max(sizeX, sizeY);
-    var scaleFactor = 90.0 / maxDim;
-
-    rawPoints.forEach(function(pt) {
-      pt.x = (pt.x - cx) * scaleFactor;
-      pt.y = -(pt.y - cy) * scaleFactor;
-    });
-
-    var pCount = 1500;
-    var geom = new THREE.BufferGeometry();
-    var positions = new Float32Array(pCount * 3);
-    var targets = new Float32Array(pCount * 3);
-    var velocities = new Float32Array(pCount * 3);
-    var colors = new Float32Array(pCount * 3);
-
-    for (var i = 0; i < pCount; i++) {
-      var pt = rawPoints[i % rawPoints.length];
-      targets[i*3] = pt.x;
-      targets[i*3+1] = pt.y;
-      targets[i*3+2] = (Math.random() - 0.5) * 5.0;
-
-      positions[i*3] = pt.x + (Math.random() - 0.5) * 80.0;
-      positions[i*3+1] = pt.y + (Math.random() - 0.5) * 80.0;
-      positions[i*3+2] = (Math.random() - 0.5) * 60.0;
-
-      var col = pt.color;
-      if ('rainbow' === 'custom') {
-        col = new THREE.Color('#06b6d4');
-      } else if ('rainbow' === 'rainbow') {
-        col = new THREE.Color().setHSL((i / pCount), 1.0, 0.65);
-      }
-      colors[i*3] = col.r; colors[i*3+1] = col.g; colors[i*3+2] = col.b;
-    }
-
-    geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geom.setAttribute('target', new THREE.BufferAttribute(targets, 3));
-    geom.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
-    geom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-    var mat = new THREE.PointsMaterial({
-      size: 1.2,
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.85,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false
-    });
-
-    var pts = new THREE.Points(geom, mat);
-    scene.add(pts);
-
-    var clock = 0;
-    (function loop() {
-      requestAnimationFrame(loop);
-      clock += 0.016;
-
-      raycaster.setFromCamera(mouse, camera);
-      raycaster.ray.intersectPlane(planeZ, mouse3D);
-
-      var pos = geom.attributes.position.array;
-      var tar = geom.attributes.target.array;
-      var vel = geom.attributes.velocity.array;
+      var pCount = 1500;
+      var geom = new THREE.BufferGeometry();
+      var positions = new Float32Array(pCount * 3);
+      var targets = new Float32Array(pCount * 3);
+      var velocities = new Float32Array(pCount * 3);
+      var colors = new Float32Array(pCount * 3);
 
       for (var i = 0; i < pCount; i++) {
-        var idx = i * 3;
-        var px = pos[idx], py = pos[idx+1], pz = pos[idx+2];
-        var tx = tar[idx], ty = tar[idx+1], tz = tar[idx+2];
-        var vx = vel[idx], vy = vel[idx+1], vz = vel[idx+2];
+        var pt = rawPoints[i % rawPoints.length];
+        targets[i*3] = pt.x;
+        targets[i*3+1] = pt.y;
+        targets[i*3+2] = (Math.random() - 0.5) * 5.0;
 
-        var ax = (tx - px) * 0.02 - vx * 0.08;
-        var ay = (ty - py) * 0.02 - vy * 0.08;
-        var az = (tz - pz) * 0.02 - vz * 0.08;
+        positions[i*3] = pt.x + (Math.random() - 0.5) * 80.0;
+        positions[i*3+1] = pt.y + (Math.random() - 0.5) * 80.0;
+        positions[i*3+2] = (Math.random() - 0.5) * 60.0;
 
-        if (mouse.x > -9000) {
-          var dx = px - mouse3D.x;
-          var dy = py - mouse3D.y;
-          var dz = pz - mouse3D.z;
-          var dist = Math.sqrt(dx*dx + dy*dy + dz*dz) || 0.001;
-          var interactRad = 5.0 * 8.0;
+        var col = pt.color;
+        if ('rainbow' === 'custom') {
+          col = new THREE.Color('#06b6d4');
+        } else if ('rainbow' === 'rainbow') {
+          col = new THREE.Color().setHSL((i / pCount), 1.0, 0.65);
+        }
+        colors[i*3] = col.r; colors[i*3+1] = col.g; colors[i*3+2] = col.b;
+      }
 
-          if (dist < interactRad) {
-            var pct = 1.0 - (dist / interactRad);
-            if ('disperse' === 'disperse') {
-              var push = pct * 4.2;
-              ax += (dx / dist) * push; ay += (dy / dist) * push; az += (dz / dist) * (push * 0.5);
-            } else if ('disperse' === 'orbit') {
-              var spin = pct * 2.5;
-              ax += (-dy / dist) * spin; ay += (dx / dist) * spin;
-            } else if ('disperse' === 'pull') {
-              var pullForce = pct * 3.5;
-              ax -= (dx / dist) * pullForce; ay -= (dy / dist) * pullForce; az -= (dz / dist) * pullForce;
+      geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geom.setAttribute('target', new THREE.BufferAttribute(targets, 3));
+      geom.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
+      geom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+      var mat = new THREE.PointsMaterial({
+        size: 1.2,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.85,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+
+      var pts = new THREE.Points(geom, mat);
+      scene.add(pts);
+
+      var clock = 0;
+      (function loop() {
+        requestAnimationFrame(loop);
+        clock += 0.016;
+
+        raycaster.setFromCamera(mouse, camera);
+        raycaster.ray.intersectPlane(planeZ, mouse3D);
+
+        var pos = geom.attributes.position.array;
+        var tar = geom.attributes.target.array;
+        var vel = geom.attributes.velocity.array;
+
+        for (var i = 0; i < pCount; i++) {
+          var idx = i * 3;
+          var px = pos[idx], py = pos[idx+1], pz = pos[idx+2];
+          var tx = tar[idx], ty = tar[idx+1], tz = tar[idx+2];
+          var vx = vel[idx], vy = vel[idx+1], vz = vel[idx+2];
+
+          var ax = (tx - px) * 0.02 - vx * 0.08;
+          var ay = (ty - py) * 0.02 - vy * 0.08;
+          var az = (tz - pz) * 0.02 - vz * 0.08;
+
+          if (mouse.x > -9000) {
+            var dx = px - mouse3D.x;
+            var dy = py - mouse3D.y;
+            var dz = pz - mouse3D.z;
+            var dist = Math.sqrt(dx*dx + dy*dy + dz*dz) || 0.001;
+            var interactRad = 5.0 * 8.0;
+
+            if (dist < interactRad) {
+              var pct = 1.0 - (dist / interactRad);
+              if ('disperse' === 'disperse') {
+                var push = pct * 4.2;
+                ax += (dx / dist) * push; ay += (dy / dist) * push; az += (dz / dist) * (push * 0.5);
+              } else if ('disperse' === 'orbit') {
+                var spin = pct * 2.5;
+                ax += (-dy / dist) * spin; ay += (dx / dist) * spin;
+              } else if ('disperse' === 'pull') {
+                var pullForce = pct * 3.5;
+                ax -= (dx / dist) * pullForce; ay -= (dy / dist) * pullForce; az -= (dz / dist) * pullForce;
+              }
             }
           }
+
+          ax += Math.sin(clock * 1.5 + i) * 0.02;
+          ay += Math.cos(clock * 1.1 + i) * 0.02;
+
+          vx += ax; vy += ay; vz += az;
+          px += vx; py += vy; pz += vz;
+
+          pos[idx] = px; pos[idx+1] = py; pos[idx+2] = pz;
+          vel[idx] = vx; vel[idx+1] = vy; vel[idx+2] = vz;
         }
+        geom.attributes.position.needsUpdate = true;
+        renderer.render(scene, camera);
+      })();
 
-        ax += Math.sin(clock * 1.5 + i) * 0.02;
-        ay += Math.cos(clock * 1.1 + i) * 0.02;
-
-        vx += ax; vy += ay; vz += az;
-        px += vx; py += vy; pz += vz;
-
-        pos[idx] = px; pos[idx+1] = py; pos[idx+2] = pz;
-        vel[idx] = vx; vel[idx+1] = vy; vel[idx+2] = vz;
-      }
-      geom.attributes.position.needsUpdate = true;
-      renderer.render(scene, camera);
-    })();
-
-    window.addEventListener('resize', function() {
-      camera.aspect = container.clientWidth / container.clientHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(container.clientWidth, container.clientHeight);
-    });
-  }
-})();
-</script>
-<!-- END IA CODE STUDIO 3D PARTICLE LOGO WIDGET -->
+      window.addEventListener('resize', function() {
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+      });
+    }
+  })();
+  </script>
+</body>
+</html>
