@@ -101,7 +101,7 @@ setTimeout(function(){
       pt.y = -(pt.y - cy) * scaleFactor;
     });
 
-    var pCount = ${particleCount};
+    var pCount = 1500;
     var geom = new THREE.BufferGeometry();
     var positions = new Float32Array(pCount * 3);
     var targets = new Float32Array(pCount * 3);
@@ -119,9 +119,9 @@ setTimeout(function(){
       positions[i*3+2] = (Math.random() - 0.5) * 60.0;
 
       var col = pt.color;
-      if ("${colorMode}" === 'custom') {
-        col = new THREE.Color("${customColor}");
-      } else if ("${colorMode}" === 'rainbow') {
+      if ('rainbow' === 'custom') {
+        col = new THREE.Color('#06b6d4');
+      } else if ('rainbow' === 'rainbow') {
         col = new THREE.Color().setHSL((i / pCount), 1.0, 0.65);
       }
       colors[i*3] = col.r; colors[i*3+1] = col.g; colors[i*3+2] = col.b;
@@ -133,7 +133,7 @@ setTimeout(function(){
     geom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
     var mat = new THREE.PointsMaterial({
-      size: ${particleSize},
+      size: 1.2,
       vertexColors: true,
       transparent: true,
       opacity: 0.85,
@@ -162,26 +162,26 @@ setTimeout(function(){
         var tx = tar[idx], ty = tar[idx+1], tz = tar[idx+2];
         var vx = vel[idx], vy = vel[idx+1], vz = vel[idx+2];
 
-        var ax = (tx - px) * ${springTension} - vx * 0.08;
-        var ay = (ty - py) * ${springTension} - vy * 0.08;
-        var az = (tz - pz) * ${springTension} - vz * 0.08;
+        var ax = (tx - px) * 0.02 - vx * 0.08;
+        var ay = (ty - py) * 0.02 - vy * 0.08;
+        var az = (tz - pz) * 0.02 - vz * 0.08;
 
         if (mouse.x > -9000) {
           var dx = px - mouse3D.x;
           var dy = py - mouse3D.y;
           var dz = pz - mouse3D.z;
           var dist = Math.sqrt(dx*dx + dy*dy + dz*dz) || 0.001;
-          var interactRad = ${interactForce} * 8.0;
+          var interactRad = 5.0 * 8.0;
 
           if (dist < interactRad) {
             var pct = 1.0 - (dist / interactRad);
-            if ("${interactMode}" === 'disperse') {
+            if ('disperse' === 'disperse') {
               var push = pct * 4.2;
               ax += (dx / dist) * push; ay += (dy / dist) * push; az += (dz / dist) * (push * 0.5);
-            } else if ("${interactMode}" === 'orbit') {
+            } else if ('disperse' === 'orbit') {
               var spin = pct * 2.5;
               ax += (-dy / dist) * spin; ay += (dx / dist) * spin;
-            } else if ("${interactMode}" === 'pull') {
+            } else if ('disperse' === 'pull') {
               var pullForce = pct * 3.5;
               ax -= (dx / dist) * pullForce; ay -= (dy / dist) * pullForce; az -= (dz / dist) * pullForce;
             }
@@ -208,5 +208,5 @@ setTimeout(function(){
     });
   }
 })();
-<</script>
+</script>
 <!-- END IA CODE STUDIO 3D PARTICLE LOGO WIDGET -->
