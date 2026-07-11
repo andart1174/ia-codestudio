@@ -675,6 +675,34 @@ auth.onAuthStateChanged(async u => {
     db.collection('users').doc(u.uid).set({ displayName:u.displayName, photoURL:u.photoURL, email:u.email, lastSeen:firebase.firestore.FieldValue.serverTimestamp() }, { merge:true });
     loadUserStats(u.uid);
   } else {
+    // Check if user is logged in via Premium Session on the main site
+    try {
+      const session = localStorage.getItem('genius_session');
+      if (session) {
+        const sessionUser = JSON.parse(session);
+        if (sessionUser && sessionUser.email) {
+          if (!window._signingAnon) {
+            window._signingAnon = true;
+            auth.signInAnonymously().catch(e => console.error("Anon auth failed:", e));
+          }
+          user = {
+            uid: sessionUser.email, // Use email as unique identifier for likes/comments
+            displayName: sessionUser.name || sessionUser.email.split('@')[0],
+            email: sessionUser.email,
+            photoURL: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(sessionUser.name || 'User')}`,
+            isCustomSession: true
+          };
+          isAdmin = ADMIN_EMAILS.includes(sessionUser.email);
+          renderLoggedIn(user);
+          db.collection('users').doc(user.uid).set({ displayName:user.displayName, photoURL:user.photoURL, email:user.email, lastSeen:firebase.firestore.FieldValue.serverTimestamp() }, { merge:true });
+          loadUserStats(user.uid);
+          loadFeed();
+          if (isAdmin) loadStats();
+          return;
+        }
+      }
+    } catch (e) { console.error("Genius session auth parsing error:", e); }
+
     renderLoggedOut();
   }
   loadFeed();
@@ -686,7 +714,13 @@ function signInGoogle() {
   provider.setCustomParameters({ prompt: 'select_account' });
   auth.signInWithPopup(provider).catch(e => toast(e.message, 'error'));
 }
-function signOut() { auth.signOut().then(() => toast('Signed out', 'info')); }
+function signOut() { 
+  localStorage.removeItem('genius_session');
+  auth.signOut().then(() => {
+    toast('Signed out', 'info');
+    setTimeout(() => window.location.reload(), 500);
+  });
+}
 
 function av(u) { return u.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.displayName||'User')}&background=7c3aed&color=fff&bold=true`; }
 
