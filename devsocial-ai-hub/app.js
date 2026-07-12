@@ -843,17 +843,24 @@
     }
 
     if (confirm(currentLang === 'fr' ? "Êtes-vous sûr de vouloir supprimer cette publication ?" : "Are you sure you want to delete this post?")) {
-      window.DevSocialDB.deletePost(postId)
-        .then(() => {
-          stopAll3DViews();
-          toast(currentLang === 'fr' ? "Publication supprimée !" : "Post deleted successfully!");
-        })
-        .catch(err => {
-          console.error("Delete failed:", err);
-          alert(currentLang === 'fr' 
-            ? `❌ Erreur de suppression : ${err.message || err}` 
-            : `❌ Delete failed: ${err.message || err}`);
-        });
+      const deletePromise = window.DevSocialDB.deletePost(postId);
+      if (deletePromise && typeof deletePromise.then === 'function') {
+        deletePromise
+          .then(() => {
+            stopAll3DViews();
+            toast(currentLang === 'fr' ? "Publication supprimée !" : "Post deleted successfully!");
+          })
+          .catch(err => {
+            console.error("Delete failed:", err);
+            alert(currentLang === 'fr' 
+              ? `❌ Erreur de suppression : ${err.message || err}` 
+              : `❌ Delete failed: ${err.message || err}`);
+          });
+      } else {
+        // Fallback for cached database.js (old version)
+        stopAll3DViews();
+        toast(currentLang === 'fr' ? "Publication supprimée !" : "Post deleted successfully!");
+      }
     }
   };
 
