@@ -867,6 +867,27 @@ function renderLoggedOut() {
 
 
 // ══════════════════════════════════════════
+// DECOMPRESSION HELPERS
+// ══════════════════════════════════════════
+async function decompressString(base64) {
+  if (typeof DecompressionStream === 'undefined') return base64;
+  try {
+    const binaryString = atob(base64);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+    const buffer = await new Response(stream).arrayBuffer();
+    return new TextDecoder().decode(buffer);
+  } catch (e) {
+    console.warn("Gzip decompression failed:", e);
+    return base64;
+  }
+}
+
+// ══════════════════════════════════════════
 // FEED
 // ══════════════════════════════════════════
 function loadFeed() {
@@ -896,11 +917,31 @@ function loadFeed() {
     el.innerHTML = '';
     let posts = [];
     window.communityPosts = window.communityPosts || {};
+    
+    const promises = [];
     snap.forEach(doc => {
       const p = { id:doc.id, ...doc.data() };
       posts.push(p);
-      if (p.code) window.communityPosts[p.id] = p.code;
+      
+      if (p.compressedCode && !p.code) {
+        promises.push(
+          decompressString(p.compressedCode).then(decompressed => {
+            p.code = decompressed;
+            window.communityPosts[p.id] = decompressed;
+          })
+        );
+      } else if (p.code) {
+        window.communityPosts[p.id] = p.code;
+      }
     });
+
+    if (promises.length > 0) {
+      try {
+        await Promise.all(promises);
+      } catch (err) {
+        console.error("Error decompressing codes in feed:", err);
+      }
+    }
     
     // Sort in memory to avoid index requirements in Firestore
     posts.sort((a, b) => {
@@ -927,6 +968,7 @@ function renderPost(p) {
   const el = document.createElement('div');
   el.className = 'post-card';
   const displayName = p.displayName || p.user || 'Anonymous';
+  const userTag = p.userTag || '';
   const a = p.photoURL || p.userAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=7c3aed&color=fff&bold=true`;
   const liked = user && p.likedBy && p.likedBy.includes(user.uid);
   const canDel = user && (
@@ -1037,17 +1079,19 @@ function renderPost(p) {
     `;
   }
 
+  const postCaption = p.content || p.caption || (currentLang === 'fr' ? (p.caption_fr || p.caption_en) : (p.caption_en || p.caption_fr)) || '';
+
   el.innerHTML = `
     <div class="ph">
       <img src="${a}" class="p-avatar">
       <div class="pm">
-        <div class="p-author">${esc(displayName)}</div>
+        <div class="p-author">${esc(displayName)} ${userTag ? `<span class="user-tag" style="background: rgba(124, 58, 237, 0.15); color: #c084fc; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 6px; font-weight: normal; display: inline-block;">${esc(userTag)}</span>` : ''}</div>
         <div class="p-time">${time}</div>
       </div>
       <span class="p-cat ${cCls}">${cEm} ${cLbl}</span>
       ${canDel?`<button class="del-btn" onclick="delPost('${p.id}')">🗑 Delete</button>`:''}
     </div>
-    ${p.content?`<div class="p-content">${esc(p.content)}</div>`:''}
+    ${postCaption ? `<div class="p-content">${esc(postCaption)}</div>` : ''}
     ${imgs}${vid}${codeHtml}
     <div class="pf">
       <button class="act-btn ${liked?'liked':''}" id="lb-${p.id}" onclick="toggleLike('${p.id}',${liked})">
