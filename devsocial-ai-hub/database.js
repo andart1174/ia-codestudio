@@ -649,17 +649,36 @@ return function() {
       localStorage.setItem('devsocial_posts', JSON.stringify(posts));
 
       if (useFirestore && db) {
-        const docId = firestoreIdMap[String(postId)] || String(postId);
-        db.collection('devsocial_posts').doc(docId).delete()
-          .then(() => {
-            notifyPostListeners();
-          })
-          .catch(err => {
-            console.error("Error deleting post from Firestore:", err);
-            notifyPostListeners();
-          });
+        const checkAuth = async () => {
+          if (window.firebase && typeof window.firebase.auth === 'function') {
+            const auth = window.firebase.auth();
+            if (!auth.currentUser) {
+              try {
+                console.log("Authenticating for delete request...");
+                await auth.signInAnonymously();
+              } catch (authErr) {
+                console.warn("Anonymous authentication for delete failed:", authErr);
+              }
+            }
+          }
+        };
+
+        return checkAuth().then(() => {
+          const docId = firestoreIdMap[String(postId)] || String(postId);
+          return db.collection('devsocial_posts').doc(docId).delete()
+            .then(() => {
+              notifyPostListeners();
+              return true;
+            })
+            .catch(err => {
+              console.error("Error deleting post from Firestore:", err);
+              notifyPostListeners();
+              throw err;
+            });
+        });
       } else {
         notifyPostListeners();
+        return Promise.resolve(true);
       }
     },
     

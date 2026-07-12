@@ -461,7 +461,7 @@
     postsToRender.forEach(post => {
       const showDelete = currentUser && (currentUser.role === 'Admin' || currentUser.email === post.userEmail);
       const deleteButtonHtml = showDelete ? `
-        <button class="btn-delete-post" onclick="deletePost(${post.id})" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: #f87171; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;" title="${currentLang === 'fr' ? 'Supprimer la publication' : 'Delete Post'}">
+        <button class="btn-delete-post" onclick="deletePost('${post.id}')" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: #f87171; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;" title="${currentLang === 'fr' ? 'Supprimer la publication' : 'Delete Post'}">
           <i class="fa-solid fa-trash" style="font-size: 11px;"></i>
         </button>
       ` : '';
@@ -833,7 +833,7 @@
 
   window.deletePost = function(postId) {
     if (!currentUser) return;
-    const post = posts.find(p => p.id === postId);
+    const post = posts.find(p => String(p.id) === String(postId));
     if (!post) return;
     
     const isAllowed = currentUser.role === 'Admin' || currentUser.email === post.userEmail;
@@ -843,9 +843,17 @@
     }
 
     if (confirm(currentLang === 'fr' ? "Êtes-vous sûr de vouloir supprimer cette publication ?" : "Are you sure you want to delete this post?")) {
-      window.DevSocialDB.deletePost(postId);
-      stopAll3DViews();
-      toast(currentLang === 'fr' ? "Publication supprimée !" : "Post deleted successfully!");
+      window.DevSocialDB.deletePost(postId)
+        .then(() => {
+          stopAll3DViews();
+          toast(currentLang === 'fr' ? "Publication supprimée !" : "Post deleted successfully!");
+        })
+        .catch(err => {
+          console.error("Delete failed:", err);
+          alert(currentLang === 'fr' 
+            ? `❌ Erreur de suppression : ${err.message || err}` 
+            : `❌ Delete failed: ${err.message || err}`);
+        });
     }
   };
 
