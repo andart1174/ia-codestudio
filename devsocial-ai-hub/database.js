@@ -669,8 +669,10 @@ return function() {
               reward: "7 Days Premium",
               createdAt: Date.now()
             };
-            db.collection('devsocial_challenges').doc("default").set(defaultChallenge);
+            db.collection('devsocial_challenges').doc("default").set(defaultChallenge).catch(e => {});
           }
+        }).catch(err => {
+          console.warn("Could not check/initialize active challenge in Firestore:", err);
         });
 
         return db.collection('devsocial_challenges')
@@ -684,8 +686,22 @@ return function() {
                    }
                  }, error => {
                    console.error("Firestore challenge subscription error. Falling back to LocalStorage:", error);
-                   useFirestore = false;
-                   this.subscribeActiveChallenge(callback);
+                   let challenge = null;
+                   try { challenge = JSON.parse(localStorage.getItem('devsocial_active_challenge') || 'null'); } catch(e){}
+                   if (!challenge) {
+                     challenge = {
+                       id: "default",
+                       title_en: "Procedural Clockwork Wheel",
+                       title_fr: "Roue Dentée Rétro",
+                       desc_en: "Create a custom animated gear mesh using Three.js logic and share it with the tag #chrono2026.",
+                       desc_fr: "Créez un engrenage animé personnalisé avec Three.js et partagez-le avec le hashtag #chrono2026.",
+                       expiry: Date.now() + 24 * 3600 * 1000,
+                       reward: "7 Days Premium",
+                       createdAt: Date.now()
+                     };
+                     localStorage.setItem('devsocial_active_challenge', JSON.stringify(challenge));
+                   }
+                   callback(challenge);
                  });
       } else {
         challengeListeners.push(callback);
@@ -715,8 +731,10 @@ return function() {
       if (useFirestore && db) {
         db.collection('admin_config').doc('global').get().then(doc => {
           if (!doc.exists) {
-            db.collection('admin_config').doc('global').set({ profanityFilter: false });
+            db.collection('admin_config').doc('global').set({ profanityFilter: false }).catch(e => {});
           }
+        }).catch(err => {
+          console.warn("Could not check/initialize global config in Firestore:", err);
         });
 
         return db.collection('admin_config').doc('global').onSnapshot(doc => {
@@ -725,8 +743,13 @@ return function() {
           }
         }, err => {
           console.error("Config subscription error. Falling back to LocalStorage:", err);
-          useFirestore = false;
-          this.subscribeGlobalConfig(callback);
+          let config = null;
+          try { config = JSON.parse(localStorage.getItem('devsocial_global_config') || 'null'); } catch(e){}
+          if (!config) {
+            config = { profanityFilter: false };
+            localStorage.setItem('devsocial_global_config', JSON.stringify(config));
+          }
+          callback(config);
         });
       } else {
         configListeners.push(callback);
