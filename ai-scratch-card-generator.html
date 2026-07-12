@@ -258,6 +258,94 @@
             .hero-desc { font-size: 1.1rem; }
             .container { padding: 2rem 1rem; }
         }
+
+        /* Portal Promo Section Styling */
+        .portal-promo-section {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(59, 130, 246, 0.04) 100%);
+            border: 1px solid rgba(124, 58, 237, 0.15);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            margin: 4rem auto;
+            max-width: 1100px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        .portal-promo-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.2) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+        .promo-content {
+            flex: 1;
+            z-index: 1;
+        }
+        .promo-badge {
+            background: rgba(124, 58, 237, 0.15);
+            color: #c084fc;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            letter-spacing: 0.05em;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        .promo-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 40%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .promo-desc {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+        .promo-cta-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .promo-cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.6);
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+        }
+        @media (max-width: 768px) {
+            .portal-promo-section {
+                flex-direction: column;
+                text-align: center;
+                padding: 2.5rem 1.5rem;
+            }
+            .promo-desc {
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
     </style>
 
     <!-- Google Structured Data (FAQ Schema) -->
@@ -321,6 +409,20 @@
                 <span class="feature-icon">⚡</span>
                 <h3 data-i18n="feat3_title">Export Facile & Rapide</h3>
                 <p data-i18n="feat3_desc">Téléchargez votre carte à gratter sous forme de code HTML5 autonome pour l'intégrer sur Wix, Shopify ou WordPress en un clin d'œil.</p>
+            </div>
+        </section>
+
+        <!-- Cross-Promotion Section (IA Code Studio Portal) -->
+        <section class="portal-promo-section">
+            <div class="promo-content">
+                <span class="promo-badge" data-i18n="promo_badge">EXPLORE MORE WIDGETS</span>
+                <h2 class="promo-title" data-i18n="promo_title">Create Neon 3D Buttons, Interactive Globes & WebGL HUDs</h2>
+                <p class="promo-desc" data-i18n="promo_desc">Unlock the full power of WebGL and Three.js. Design, preview, and export high-performance 3D visual components for any web project with our AI assistant.</p>
+                <div class="promo-btn-wrapper">
+                    <a href="index.html" class="promo-cta-btn" data-i18n="promo_cta">
+                        Launch IA Code Studio Portal 🚀
+                    </a>
+                </div>
             </div>
         </section>
 
@@ -416,7 +518,11 @@
                 faq4_a: "Absolument. Nos cartes à gratter utilisent des technologies web modernes comme HTML5 Canvas. Elles sont 100% responsives et offrent une expérience de grattage tactile ultra-fluide sur smartphones, tablettes et ordinateurs.",
                 faq5_q: "Comment exporter ma carte à gratter ?",
                 faq5_a: "L'exportation se fait en un clic. En tant que membre Premium de IA Code Studio, vous pouvez exporter le code HTML autonome, télécharger un package ZIP ou copier le code source propre pour l'héberger sur votre propre serveur.",
-                footer_text: "© 2026 IA CODE STUDIO. Tous droits réservés."
+                footer_text: "© 2026 IA CODE STUDIO. Tous droits réservés.",
+                promo_badge: "EXPLORER PLUS DE WIDGETS",
+                promo_title: "Créez des Boutons 3D Néon, des Globes Interactifs & HUDs WebGL",
+                promo_desc: "Libérez toute la puissance de WebGL et Three.js. Concevez, prévisualisez et exportez des composants visuels 3D haute performance pentru orice proiect web cu ajutorul asistentului nostru IA.",
+                promo_cta: "Lancer le portail IA Code Studio 🚀"
             },
             en: {
                 badge_text: "AD-GENIUS AI PRO Studio",
@@ -440,7 +546,11 @@
                 faq4_a: "Yes, it uses advanced HTML5 canvas technology. It is fully mobile responsive and optimized for touch scratching on smartphones and tablets.",
                 faq5_q: "How do I export my finished scratch card?",
                 faq5_a: "Exports are made in 1 click. Premium members of IA Code Studio can download the standalone HTML code, get a structured ZIP bundle, or host the code files anywhere.",
-                footer_text: "© 2026 IA CODE STUDIO. All rights reserved."
+                footer_text: "© 2026 IA CODE STUDIO. All rights reserved.",
+                promo_badge: "EXPLORE MORE WIDGETS",
+                promo_title: "Create Neon 3D Buttons, Interactive Globes & WebGL HUDs",
+                promo_desc: "Unlock the full power of WebGL and Three.js. Design, preview, and export high-performance 3D visual components for any web project with our AI assistant.",
+                promo_cta: "Launch IA Code Studio Portal 🚀"
             }
         };
 
