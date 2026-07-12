@@ -746,4 +746,5 @@ return function() {
     _compress: compressString,
     _decompress: decompressString
   };
+  console.log("DevSocial AI Hub Database.js Loaded - Version 604");
 })();

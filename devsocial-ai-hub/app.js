@@ -842,7 +842,7 @@
       return;
     }
 
-    if (confirm(currentLang === 'fr' ? "Êtes-vous sûr de vouloir supprimer cette publication ?" : "Are you sure you want to delete this post?")) {
+    if (confirm(currentLang === 'fr' ? "Êtes-vous sûr de vouloir supprimer cette publication ? (v604)" : "Are you sure you want to delete this post? (v604)")) {
       const deletePromise = window.DevSocialDB.deletePost(postId);
       if (deletePromise && typeof deletePromise.then === 'function') {
         deletePromise
@@ -3095,5 +3095,5 @@ return function() {
       });
     });
   }
-
+  console.log("DevSocial AI Hub App.js Loaded - Version 604");
 })();
