@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Procedural Galaxy Generator · Three.js WebGL</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: #020409;
+      overflow: hidden;
+      font-family: 'Outfit', sans-serif;
+      color: #ffffff;
+    }
+
+    #webgl-container {
+      width: 100vw;
+      height: 100vh;
+      position: absolute;
+      top: 0; left: 0;
+      z-index: 1;
+      cursor: crosshair;
+    }
+
+    .hint-label {
+      position: absolute;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      color: rgba(139, 92, 246, 0.55);
+      z-index: 10;
+      text-transform: uppercase;
+      white-space: nowrap;
+      animation: pulse-hint 3s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes pulse-hint {
+      0%, 100% { opacity: 0.35; }
+      50% { opacity: 0.85; }
+    }
+
+    .ia-badge {
+      position: absolute;
+      bottom: 24px;
+      left: 24px;
+      background: rgba(2, 4, 9, 0.8);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      padding: 20px;
+      border-radius: 16px;
+      z-index: 10;
+      max-width: 300px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.7), 0 0 20px rgba(139,92,246,0.08);
+      transition: all 0.3s ease;
+    }
+
+    .ia-badge:hover {
+      border-color: rgba(139, 92, 246, 0.5);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.7), 0 0 30px rgba(139,92,246,0.2);
+      transform: translateY(-2px);
+    }
+
+    .badge-tag {
+      background: rgba(139, 92, 246, 0.2);
+      color: #c084fc;
+      font-size: 10px;
+      font-weight: bold;
+      letter-spacing: 0.06em;
+      padding: 3px 10px;
+      border-radius: 30px;
+      display: inline-block;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .ia-badge h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      background: linear-gradient(135deg, #fff 40%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .ia-badge p {
+      font-size: 11px;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.55;
+      margin-bottom: 12px;
+    }
+
+    .galaxy-stats {
+      font-size: 10px;
+      color: rgba(96, 165, 250, 0.85);
+      font-weight: 600;
+      margin-bottom: 14px;
+      padding: 8px 10px;
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.15);
+      border-radius: 8px;
+      line-height: 1.7;
+    }
+
+    .badge-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+      color: #fff;
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 10px 16px;
+      border-radius: 20px;
+      transition: all 0.2s ease;
+      border: 1px solid rgba(255,255,255,0.1);
+      width: 100%;
+    }
+
+    .badge-link:hover {
+      background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+      transform: scale(1.02);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="webgl-container"></div>
+
+  <div class="hint-label">MOVE MOUSE TO ORBIT · REFRESH FOR NEW GALAXY</div>
+
+  <div class="ia-badge">
+    <span class="badge-tag">WebGL 3D Galaxy</span>
+    <h3>Procedural Galaxy Generator</h3>
+    <p>Every page refresh creates a unique galaxy. Move your mouse to orbit the camera around it.</p>
+    <div class="galaxy-stats" id="galaxy-stats">Generating galaxy...</div>
+    <a href="https://ia-codestudio.com" target="_blank" class="badge-link">
+      Create More 3D Widgets on IA Code Studio 🚀
+    </a>
+  </div>
+
+  <script>
+    function initGalaxy() {
+      const W = window.innerWidth;
+      const H = window.innerHeight;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(60, W / H, 0.1, 2000);
+      camera.position.set(0, 90, 130);
+      camera.lookAt(0, 0, 0);
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(W, H);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setClearColor(0x020409, 1);
+      document.getElementById('webgl-container').appendChild(renderer.domElement);
+
+      // Randomized galaxy parameters
+      const numArms     = Math.floor(Math.random() * 3) + 2;
+      const spinFactor  = 1.2 + Math.random() * 0.8;
+      const galaxyRadius = 100 + Math.floor(Math.random() * 40);
+      const totalStars  = 70000 + Math.floor(Math.random() * 30000);
+
+      const statsEl = document.getElementById('galaxy-stats');
+      if (statsEl) {
+        statsEl.innerHTML =
+          '⭐ ' + totalStars.toLocaleString() + ' Stars<br>' +
+          '🌀 ' + numArms + ' Spiral Arms<br>' +
+          '📏 ' + galaxyRadius + ' Light-Years Radius';
+      }
+
+      const positions  = new Float32Array(totalStars * 3);
+      const colors     = new Float32Array(totalStars * 3);
+      const coreColor  = new THREE.Color(0xffffff);
+      const midColor   = new THREE.Color(0x99ccff);
+      const outerColor = new THREE.Color(0x3322aa);
+      const nebulaPool = [
+        new THREE.Color(0x8b5cf6),
+        new THREE.Color(0x06b6d4),
+        new THREE.Color(0xd946ef),
+        new THREE.Color(0xf59e0b),
+        new THREE.Color(0x3b82f6)
+      ];
+
+      for (let i = 0; i < totalStars; i++) {
+        const r           = Math.pow(Math.random(), 2.5) * galaxyRadius;
+        const armAngle    = ((i % numArms) / numArms) * Math.PI * 2;
+        const spiralOffset = r * spinFactor * 0.018;
+        const sf          = 0.25 * Math.sqrt(r);
+
+        positions[i*3]   = Math.cos(armAngle + spiralOffset) * r + (Math.random()-0.5)*sf*2.5;
+        positions[i*3+1] = (Math.random()-0.5)*sf*0.5;
+        positions[i*3+2] = Math.sin(armAngle + spiralOffset) * r + (Math.random()-0.5)*sf*2.5;
+
+        const t = Math.min(r / galaxyRadius, 1.0);
+        let col;
+        if (Math.random() < 0.025) {
+          col = nebulaPool[Math.floor(Math.random() * nebulaPool.length)].clone();
+        } else if (t < 0.25) {
+          col = coreColor.clone().lerp(midColor, t / 0.25);
+        } else {
+          col = midColor.clone().lerp(outerColor, (t - 0.25) / 0.75);
+        }
+        col.multiplyScalar(0.55 + Math.random() * 0.45);
+        colors[i*3] = col.r; colors[i*3+1] = col.g; colors[i*3+2] = col.b;
+      }
+
+      const geom = new THREE.BufferGeometry();
+      geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+      const mat = new THREE.PointsMaterial({ size: 0.75, vertexColors: true, transparent: true, opacity: 0.92, sizeAttenuation: true });
+      const galaxy = new THREE.Points(geom, mat);
+      scene.add(galaxy);
+
+      // Background starfield
+      const bgCount = 3000;
+      const bgPos = new Float32Array(bgCount * 3);
+      const bgCol = new Float32Array(bgCount * 3);
+      for (let i = 0; i < bgCount; i++) {
+        bgPos[i*3]   = (Math.random()-0.5)*1800;
+        bgPos[i*3+1] = (Math.random()-0.5)*1800;
+        bgPos[i*3+2] = (Math.random()-0.5)*1800;
+        const br = 0.2 + Math.random()*0.4;
+        bgCol[i*3] = br; bgCol[i*3+1] = br; bgCol[i*3+2] = br + Math.random()*0.3;
+      }
+      const bgGeom = new THREE.BufferGeometry();
+      bgGeom.setAttribute('position', new THREE.BufferAttribute(bgPos, 3));
+      bgGeom.setAttribute('color', new THREE.BufferAttribute(bgCol, 3));
+      scene.add(new THREE.Points(bgGeom, new THREE.PointsMaterial({ size: 1.0, vertexColors: true, transparent: true, opacity: 0.6 })));
+
+      let mouseX = 0, mouseY = 0, camY = 90, camAngle = 0;
+
+      window.addEventListener('mousemove', (e) => {
+        mouseX = (e.clientX / W - 0.5) * 2;
+        mouseY = (e.clientY / H - 0.5) * 2;
+      });
+
+      const clock = new THREE.Clock();
+
+      function animate() {
+        requestAnimationFrame(animate);
+        const t = clock.getElapsedTime();
+        galaxy.rotation.y = t * 0.04;
+
+        const targetAngle = t * 0.06 + mouseX * 0.8;
+        const targetY = 65 + mouseY * 45;
+        const camR = 155;
+        camAngle += (targetAngle - camAngle) * 0.015;
+        camY += (targetY - camY) * 0.025;
+
+        camera.position.x = Math.cos(camAngle) * camR;
+        camera.position.y = camY;
+        camera.position.z = Math.sin(camAngle) * camR;
+        camera.lookAt(0, 0, 0);
+        renderer.render(scene, camera);
+      }
+
+      animate();
+
+      window.addEventListener('resize', () => {
+        const nw = window.innerWidth, nh = window.innerHeight;
+        camera.aspect = nw / nh;
+        camera.updateProjectionMatrix();
+        renderer.setSize(nw, nh);
+      });
+    }
+
+    initGalaxy();
+  </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+﻿{
+  "name": "HyperStudio 3D/4D | Pilot & Engine",
+  "short_name": "HyperStudio 3D",
+  "description": "HTML 3D/4D Code Engine, Cyber Vehicle Simulator, and 3D Studio",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a0c14",
+  "theme_color": "#00f2fe",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='40' fill='%230a0f1e'/><path d='M96 30 L150 60 L150 130 L96 160 L42 130 L42 60 Z' fill='none' stroke='%2300f2fe' stroke-width='8'/><path d='M96 30 L96 95 L150 60 M96 95 L42 60 M96 95 L96 160' fill='none' stroke='%237928ca' stroke-width='6'/><circle cx='96' cy='95' r='14' fill='%23ff007f'/></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%230a0f1e'/><path d='M256 70 L410 160 L410 350 L256 440 L102 350 L102 160 Z' fill='none' stroke='%2300f2fe' stroke-width='20'/><path d='M256 70 L256 256 L410 160 M256 256 L102 160 M256 256 L256 440' fill='none' stroke='%237928ca' stroke-width='16'/><circle cx='256' cy='256' r='36' fill='%23ff007f'/></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["graphics", "entertainment", "utilities", "games"]
+}
