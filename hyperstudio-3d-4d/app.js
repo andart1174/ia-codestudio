@@ -6371,7 +6371,7 @@
 
     document.getElementById('btn-close-4d').addEventListener('click', () => {
         playClickSFX();
-        document.getElementById('panel-4d-controls').add('hidden');
+        document.getElementById('panel-4d-controls').classList.add('hidden');
         document.getElementById('btn-toggle-4d-panel').classList.remove('active');
     });
 
