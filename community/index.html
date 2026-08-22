@@ -658,6 +658,437 @@
       white-space: pre-wrap;
       word-break: break-all;
     }
+
+    /* ══════════════════════════════════════════
+       GENIUS IA COIN & VAULT STYLES
+       ══════════════════════════════════════════ */
+    .hdr-coin-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(124,58,237,0.15));
+      border: 1.5px solid rgba(245,158,11,0.4);
+      padding: 5px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 15px rgba(245,158,11,0.15);
+      user-select: none;
+    }
+    .hdr-coin-pill:hover {
+      transform: translateY(-1px) scale(1.03);
+      border-color: #f59e0b;
+      box-shadow: 0 0 25px rgba(245,158,11,0.4), 0 0 10px rgba(124,58,237,0.3);
+      background: linear-gradient(135deg, rgba(245,158,11,0.25), rgba(124,58,237,0.25));
+    }
+    .hdr-coin-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      object-fit: cover;
+      filter: drop-shadow(0 0 4px rgba(245,158,11,0.6));
+      animation: coinPulse 3s ease-in-out infinite;
+    }
+    @keyframes coinPulse {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(6deg) scale(1.08); }
+    }
+    .hdr-coin-val {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 0.88rem;
+      background: linear-gradient(90deg, #fcd34d, #f59e0b, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.02em;
+    }
+    .hdr-coin-tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #fbbf24;
+      text-transform: uppercase;
+      opacity: 0.85;
+    }
+
+    /* VAULT MODAL TABS */
+    .vault-modal {
+      max-width: 620px !important;
+      background: linear-gradient(145deg, #0d121f, #050811) !important;
+      border: 1px solid rgba(245,158,11,0.3) !important;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 40px rgba(245,158,11,0.15) !important;
+    }
+    .v-tabs {
+      display: flex;
+      gap: 6px;
+      padding: 0 22px 14px;
+      border-bottom: 1px solid var(--border2);
+    }
+    .v-tab {
+      flex: 1;
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border2);
+      background: rgba(255,255,255,0.03);
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .v-tab:hover {
+      background: rgba(245,158,11,0.1);
+      color: #fcd34d;
+      border-color: rgba(245,158,11,0.3);
+    }
+    .v-tab.active {
+      background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(124,58,237,0.2));
+      border-color: #f59e0b;
+      color: #fff;
+      box-shadow: 0 0 15px rgba(245,158,11,0.2);
+    }
+
+    /* LUCKY WHEEL STYLES */
+    .wheel-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 10px 0;
+    }
+    .wheel-stage {
+      position: relative;
+      width: 290px;
+      height: 290px;
+      margin: 10px auto 16px;
+    }
+    #luckyWheelCanvas {
+      width: 290px;
+      height: 290px;
+      border-radius: 50%;
+      box-shadow: 0 0 35px rgba(245,158,11,0.3), 0 0 60px rgba(124,58,237,0.25);
+    }
+    .wheel-pointer {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+      border-top: 24px solid #f59e0b;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.8)) drop-shadow(0 0 6px #f59e0b);
+      z-index: 10;
+    }
+    .wheel-center-cap {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #1e1b4b, #030712);
+      border: 3px solid #f59e0b;
+      box-shadow: 0 0 20px rgba(245,158,11,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+      pointer-events: none;
+    }
+    .wheel-center-cap img {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+    }
+    .btn-spin-wheel {
+      padding: 12px 32px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #f59e0b, #d946ef);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.25s;
+      font-family: inherit;
+      box-shadow: 0 6px 20px rgba(245,158,11,0.4);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.03em;
+    }
+    .btn-spin-wheel:hover:not(:disabled) {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 10px 30px rgba(245,158,11,0.6);
+    }
+    .btn-spin-wheel:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .spin-subtext {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      margin-top: 10px;
+    }
+
+    /* DAILY QUESTS STYLES */
+    .quests-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .quest-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border2);
+      border-radius: 14px;
+      padding: 12px 16px;
+      transition: all 0.2s;
+    }
+    .quest-card:hover {
+      border-color: rgba(245,158,11,0.3);
+      background: rgba(245,158,11,0.03);
+    }
+    .quest-card.completed {
+      border-color: rgba(16,185,129,0.3);
+      background: rgba(16,185,129,0.04);
+    }
+    .q-icon {
+      font-size: 1.6rem;
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: rgba(124,58,237,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .q-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .q-title {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: #fff;
+      margin-bottom: 3px;
+    }
+    .q-desc {
+      font-size: 0.76rem;
+      color: #94a3b8;
+      margin-bottom: 6px;
+    }
+    .q-prog-bar {
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+    .q-prog-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #f59e0b, #10b981);
+      transition: width 0.3s ease;
+    }
+    .q-reward {
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .q-val {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: #fbbf24;
+      margin-bottom: 4px;
+    }
+    .btn-claim-quest {
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: none;
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .btn-claim-quest:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 12px rgba(16,185,129,0.5);
+    }
+    .btn-claim-quest.claimed {
+      background: rgba(255,255,255,0.08);
+      color: #64748b;
+      cursor: default;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* TRANSACTIONS & WALLET VIEW */
+    .vault-balance-hero {
+      background: radial-gradient(circle at center, rgba(245,158,11,0.12) 0%, rgba(3,7,18,0.6) 100%);
+      border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 16px;
+      padding: 22px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .v-hero-coin {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      margin: 0 auto 10px;
+      display: block;
+      box-shadow: 0 0 25px rgba(245,158,11,0.4);
+    }
+    .v-hero-amount {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 900;
+      font-size: 2.2rem;
+      background: linear-gradient(90deg, #fcd34d, #f59e0b, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+    .v-hero-lbl {
+      color: #94a3b8;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .tx-list {
+      max-height: 220px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .tx-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: var(--bg3);
+      border-radius: 10px;
+      border: 1px solid var(--border2);
+      font-size: 0.82rem;
+    }
+    .tx-desc { color: #cbd5e1; font-weight: 500; }
+    .tx-time { color: var(--muted); font-size: 0.72rem; }
+    .tx-amt { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.9rem; }
+    .tx-amt.plus { color: #34d399; }
+    .tx-amt.minus { color: #f87171; }
+
+    /* COMMUNITY POST TIPPING BUTTONS */
+    .btn-tip-post {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 11px;
+      border-radius: 8px;
+      border: 1px solid rgba(245,158,11,0.3);
+      background: rgba(245,158,11,0.06);
+      color: #fbbf24;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .btn-tip-post:hover {
+      background: rgba(245,158,11,0.18);
+      border-color: #f59e0b;
+      transform: translateY(-1px);
+      box-shadow: 0 0 14px rgba(245,158,11,0.3);
+      color: #fff;
+    }
+    .btn-tip-post img {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+    }
+    .tip-chips {
+      display: flex;
+      gap: 8px;
+      margin: 14px 0;
+    }
+    .tip-chip {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border2);
+      background: var(--bg3);
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .tip-chip:hover, .tip-chip.active {
+      border-color: #f59e0b;
+      background: rgba(245,158,11,0.15);
+      color: #fcd34d;
+    }
+
+    /* ADMIN BANK CONTROLS */
+    .admin-bank-card {
+      border-color: rgba(245,158,11,0.4) !important;
+      background: linear-gradient(145deg, rgba(245,158,11,0.08), rgba(124,58,237,0.04)) !important;
+    }
+    .adm-input {
+      width: 100%;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      padding: 8px 10px;
+      color: var(--text);
+      font-size: 0.8rem;
+      font-family: inherit;
+      outline: none;
+      margin-bottom: 6px;
+    }
+    .adm-input:focus {
+      border-color: #f59e0b;
+    }
+
+    /* FLYING COINS PARTICLES */
+    #flying-coins-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999999;
+      overflow: hidden;
+    }
+    .flying-coin-particle {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-size: cover;
+      box-shadow: 0 0 15px rgba(245,158,11,0.8);
+      transition: all 0.9s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
     /* RESPONSIVE */
     @media(max-width:1024px) { .wrap { grid-template-columns:1fr; } .sl,.sr { display:none; } }
     @media(max-width:640px) {
@@ -722,6 +1153,14 @@
   </a>
   <div class="header-sep"></div>
   <span class="header-brand">✦ Community</span>
+
+  <!-- GENIUS IA COIN WIDGET -->
+  <div class="hdr-coin-pill" id="hdrCoinWidget" onclick="openVaultModal()" title="Genius Vault & Lucky Wheel" style="margin-left:auto;">
+    <img src="../genius-ia-coin.png" class="hdr-coin-icon" alt="GENIUS IA">
+    <span class="hdr-coin-val" id="hdrCoinBalance">0</span>
+    <span class="hdr-coin-tag">GENIUS IA</span>
+  </div>
+
   <div class="header-actions" id="hdrActions">
     <button class="btn-google" onclick="signInGoogle()">
       <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
@@ -822,6 +1261,35 @@
         <div class="sc-title" style="margin-top:4px">📣 Broadcast Message</div>
         <textarea id="adminBroadcastMsg" placeholder="Write a pinned announcement..." rows="3" style="width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:8px 10px;color:var(--text);font-size:.8rem;font-family:inherit;resize:vertical;outline:none"></textarea>
         <button class="adm-btn" style="margin-top:6px" onclick="adminBroadcast()">📢 Post Announcement</button>
+      </div>
+
+      <!-- ADMIN CENTRAL BANK -->
+      <div class="stats-card admin-bank-card">
+        <div class="sc-title" style="color:#fbbf24;">🏛️ Banca Centrală GENIUS IA</div>
+        <div style="font-size:0.75rem;color:#94a3b8;margin-bottom:10px;">Cont Admin: <strong style="color:#fcd34d;">Sold Nelimitat (∞)</strong></div>
+        
+        <div style="font-size:0.72rem;font-weight:700;color:#fbbf24;margin-bottom:4px;text-transform:uppercase;">⚡ Mint / Adaugă Monede Ție</div>
+        <div style="display:flex;gap:4px;margin-bottom:8px;">
+          <input type="number" id="admSelfMintAmount" placeholder="Suma (ex: 5000)" class="adm-input" style="margin-bottom:0;" value="5000">
+          <button class="adm-btn" style="width:auto;white-space:nowrap;margin-bottom:0;padding:6px 12px;background:#f59e0b;color:#000;font-weight:800;" onclick="adminMintCoins()">+ Mint</button>
+        </div>
+
+        <div class="adm-divider"></div>
+        <div style="font-size:0.72rem;font-weight:700;color:#34d399;margin-bottom:4px;text-transform:uppercase;">🎁 Trimite Monede Utilizator</div>
+        <input type="text" id="admSendTarget" placeholder="Email sau Nume membru..." class="adm-input">
+        <div style="display:flex;gap:4px;margin-bottom:6px;">
+          <input type="number" id="admSendAmount" placeholder="Monede" class="adm-input" style="margin-bottom:0;flex:1;" value="100">
+          <input type="text" id="admSendReason" placeholder="Motiv (ex: Premiu)" class="adm-input" style="margin-bottom:0;flex:2;">
+        </div>
+        <button class="adm-btn" style="background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.4);color:#34d399;" onclick="adminSendCoinsToUser()">🎁 Trimite Recompensă</button>
+
+        <div class="adm-divider"></div>
+        <div style="font-size:0.72rem;font-weight:700;color:#a855f7;margin-bottom:4px;text-transform:uppercase;">🌧️ Global Airdrop (Toți Membrii)</div>
+        <div style="display:flex;gap:4px;margin-bottom:6px;">
+          <input type="number" id="admAirdropAmount" placeholder="Monede per membru" class="adm-input" style="margin-bottom:0;flex:1;" value="25">
+          <input type="text" id="admAirdropMsg" placeholder="Mesaj Airdrop..." class="adm-input" style="margin-bottom:0;flex:2;" value="🎁 Cadou de la Admin!">
+        </div>
+        <button class="adm-btn" style="background:rgba(124,58,237,0.2);border-color:rgba(124,58,237,0.5);color:#c084fc;" onclick="adminGlobalAirdrop()">🌧️ Lansează Airdrop Global</button>
       </div>
     </div>
     <!-- Tools — visible to everyone -->
@@ -943,6 +1411,174 @@
     </div>
   </div>
 </div>
+
+<!-- GENIUS VAULT & LUCKY WHEEL MODAL -->
+<div class="overlay" id="vaultOverlay" onclick="closeVaultModal(event)">
+  <div class="modal vault-modal" onclick="event.stopPropagation()">
+    <div class="mh" style="border-bottom:none;padding-bottom:10px;">
+      <div class="mt" style="display:flex;align-items:center;gap:8px;">
+        <img src="../genius-ia-coin.png" style="width:26px;height:26px;border-radius:50%;" alt="GENIUS IA">
+        <span style="background:linear-gradient(90deg,#fcd34d,#f59e0b,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">GENIUS VAULT</span>
+      </div>
+      <button class="mc" onclick="closeVaultModal()">✕</button>
+    </div>
+
+    <!-- Navigation Tabs inside Vault -->
+    <div class="v-tabs">
+      <button class="v-tab active" id="vtab-btn-wheel" onclick="switchVaultTab('wheel')">🎰 Roata Norocului</button>
+      <button class="v-tab" id="vtab-btn-quests" onclick="switchVaultTab('quests')">🎯 Misiuni Zilnice</button>
+      <button class="v-tab" id="vtab-btn-wallet" onclick="switchVaultTab('wallet')">📜 Portofel & Tranzacții</button>
+    </div>
+
+    <div class="mb" style="padding-top:16px;">
+      <!-- TAB 1: LUCKY WHEEL -->
+      <div id="vpane-wheel" class="v-pane">
+        <div class="wheel-container">
+          <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1.1rem;color:#fff;margin-bottom:2px;">
+            🎰 Roata Norocului GENIUS IA
+          </div>
+          <div style="font-size:0.8rem;color:#94a3b8;">
+            1 Rotire GRATIS pe zi! Rotiri suplimentare: 50 🪙
+          </div>
+
+          <div class="wheel-stage">
+            <div class="wheel-pointer"></div>
+            <canvas id="luckyWheelCanvas" width="580" height="580"></canvas>
+            <div class="wheel-center-cap">
+              <img src="../genius-ia-coin.png" alt="GENIUS IA">
+            </div>
+          </div>
+
+          <button class="btn-spin-wheel" id="btnSpinWheel" onclick="spinLuckyWheel()">
+            🎁 Învârte Gratuit!
+          </button>
+          <div class="spin-subtext" id="wheelCooldownText">Rotirea ta gratuită de azi este gata!</div>
+        </div>
+      </div>
+
+      <!-- TAB 2: DAILY QUESTS -->
+      <div id="vpane-quests" class="v-pane" style="display:none;">
+        <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1.05rem;color:#fff;margin-bottom:4px;">
+          🎯 Misiunile Zilei (Se resetează la 24h)
+        </div>
+        <div style="font-size:0.8rem;color:#94a3b8;margin-bottom:14px;">
+          Completează task-urile de mai jos pentru a câștiga monede GENIUS IA gratuite!
+        </div>
+
+        <div class="quests-list" id="questsListContainer">
+          <!-- Quest 1 -->
+          <div class="quest-card" id="qcard-publish">
+            <div class="q-icon">🚀</div>
+            <div class="q-info">
+              <div class="q-title">Creatorul Zilei</div>
+              <div class="q-desc">Publică 1 proiect nou sau cod în comunitate</div>
+              <div class="q-prog-bar"><div class="q-prog-fill" id="qprog-publish" style="width:0%"></div></div>
+            </div>
+            <div class="q-reward">
+              <div class="q-val">+25 🪙</div>
+              <button class="btn-claim-quest" id="qbtn-publish" onclick="claimQuest('publish')">Revendică</button>
+            </div>
+          </div>
+
+          <!-- Quest 2 -->
+          <div class="quest-card" id="qcard-qr">
+            <div class="q-icon">📱</div>
+            <div class="q-info">
+              <div class="q-title">Mobile Explorer</div>
+              <div class="q-desc">Deschide codul QR și testează un proiect pe telefon</div>
+              <div class="q-prog-bar"><div class="q-prog-fill" id="qprog-qr" style="width:0%"></div></div>
+            </div>
+            <div class="q-reward">
+              <div class="q-val">+10 🪙</div>
+              <button class="btn-claim-quest" id="qbtn-qr" onclick="claimQuest('qr')">Revendică</button>
+            </div>
+          </div>
+
+          <!-- Quest 3 -->
+          <div class="quest-card" id="qcard-like">
+            <div class="q-icon">⭐</div>
+            <div class="q-info">
+              <div class="q-title">Comunitate Activă</div>
+              <div class="q-desc">Apreciază (like) 3 creații din comunitate (<span id="qlikes-count">0</span>/3)</div>
+              <div class="q-prog-bar"><div class="q-prog-fill" id="qprog-like" style="width:0%"></div></div>
+            </div>
+            <div class="q-reward">
+              <div class="q-val">+5 🪙</div>
+              <button class="btn-claim-quest" id="qbtn-like" onclick="claimQuest('like')">Revendică</button>
+            </div>
+          </div>
+
+          <!-- Quest 4 -->
+          <div class="quest-card" id="qcard-comment">
+            <div class="q-icon">💬</div>
+            <div class="q-info">
+              <div class="q-title">Feedback Master</div>
+              <div class="q-desc">Lasă 2 comentarii constructive altor membri (<span id="qcomments-count">0</span>/2)</div>
+              <div class="q-prog-bar"><div class="q-prog-fill" id="qprog-comment" style="width:0%"></div></div>
+            </div>
+            <div class="q-reward">
+              <div class="q-val">+10 🪙</div>
+              <button class="btn-claim-quest" id="qbtn-comment" onclick="claimQuest('comment')">Revendică</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: WALLET & TRANSACTIONS -->
+      <div id="vpane-wallet" class="v-pane" style="display:none;">
+        <div class="vault-balance-hero">
+          <img src="../genius-ia-coin.png" class="v-hero-coin" alt="GENIUS IA">
+          <div class="v-hero-amount" id="vHeroBalance">0</div>
+          <div class="v-hero-lbl">Sold Disponibil GENIUS IA</div>
+        </div>
+
+        <div style="font-size:0.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">
+          Istoric Tranzacții & Recompense
+        </div>
+        <div class="tx-list" id="vaultTxList">
+          <div style="text-align:center;padding:20px;color:var(--muted);font-size:0.82rem;">Nu există tranzacții încă.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TIP CREATOR MODAL -->
+<div class="overlay" id="tipOverlay" onclick="closeTipModal(event)">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:440px;">
+    <div class="mh">
+      <div class="mt" style="display:flex;align-items:center;gap:6px;">
+        <span>🪙</span> <span>Trimite Bacșiș Creatorului</span>
+      </div>
+      <button class="mc" onclick="closeTipModal()">✕</button>
+    </div>
+    <div class="mb">
+      <div style="text-align:center;margin-bottom:14px;">
+        <div style="font-size:0.88rem;color:#94a3b8;">Trimite monede GENIUS IA către</div>
+        <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1.1rem;color:#fff;margin-top:2px;" id="tipRecipientName">Creator</div>
+      </div>
+
+      <div class="tip-chips">
+        <button class="tip-chip" onclick="selectTipAmount(5, this)">5 🪙</button>
+        <button class="tip-chip active" onclick="selectTipAmount(20, this)">20 🪙</button>
+        <button class="tip-chip" onclick="selectTipAmount(50, this)">50 🪙</button>
+        <button class="tip-chip" onclick="selectTipAmount(100, this)">100 🪙</button>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <label class="opt-lbl">Sau introdu o sumă personalizată</label>
+        <input type="number" class="adm-input" id="tipCustomAmount" value="20" min="1" oninput="clearTipChipActive()">
+      </div>
+
+      <button class="qr-open-btn" style="background:linear-gradient(135deg,#f59e0b,#d946ef);border:none;cursor:pointer;width:100%;" onclick="confirmSendTip()">
+        🪙 Trimite Bacșișul Acum
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- FLYING COINS PARTICLES CONTAINER -->
+<div id="flying-coins-container"></div>
 
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lb" onclick="closeLb()">
@@ -1069,6 +1705,7 @@ function renderLoggedIn(u) {
   const ap = document.getElementById('adminPanel');
   if (ap) ap.style.display = isAdmin ? 'block' : 'none';
   if (isAdmin) loadStats();
+  loadUserCoins(u.uid, u.email);
 }
 function renderLoggedOut() {
   document.getElementById('hdrActions').innerHTML = `<button class="btn-google" onclick="signInGoogle()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">Sign in with Google</button>`;
@@ -1077,6 +1714,7 @@ function renderLoggedOut() {
   document.getElementById('userCard').style.display = 'none';
   const ap = document.getElementById('adminPanel');
   if (ap) ap.style.display = 'none';
+  loadUserCoins(null, null);
 }
 
 
@@ -1323,6 +1961,11 @@ function renderPost(p) {
       <button class="act-btn" onclick="openCmts('${p.id}')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         <span id="cc-${p.id}">${p.commentsCount||0}</span>
+      </button>
+      <button class="btn-tip-post" onclick="openTipModal('${p.id}', '${esc(p.uid || p.userEmail || '')}', '${esc(displayName).replace(/'/g, "\\'")}')">
+        <img src="../genius-ia-coin.png" alt="🪙">
+        <span>${currentLang === 'fr' ? 'Pourboire' : 'Tip'}</span>
+        ${p.tipsTotal ? `<span style="opacity:0.85;font-size:0.75rem;font-weight:700;">(${p.tipsTotal}🪙)</span>` : ''}
       </button>
       <button class="act-btn share-btn" onclick="sharePost('${p.id}')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
@@ -1651,6 +2294,7 @@ async function publish() {
     document.getElementById('charCnt').textContent = '0 / 2000';
     uploadedUrls = [];
     loadStats();
+    recordQuestProgress('publish', 1);
   } catch(e) { toast('Error: ' + e.message, 'error'); }
   finally { btn.disabled = false; btn.textContent = '✦ Publish Post'; }
 }
@@ -1673,6 +2317,7 @@ async function toggleLike(postId, liked) {
       await ref.update({ likedBy: firebase.firestore.FieldValue.arrayUnion(user.uid), likesCount: firebase.firestore.FieldValue.increment(1) });
       btn.classList.add('liked'); btn.querySelector('svg').setAttribute('fill','currentColor');
       cnt.textContent = parseInt(cnt.textContent) + 1;
+      recordQuestProgress('like', 1);
     }
     btn.setAttribute('onclick', `toggleLike('${postId}',${!liked})`);
   } catch(e) { toast('Error: ' + e.message, 'error'); }
@@ -1821,6 +2466,7 @@ async function sendCmt() {
     await db.collection('devsocial_posts').doc(curPostId).update({ commentsCount: firebase.firestore.FieldValue.increment(1) });
     const cc = document.getElementById('cc-' + curPostId);
     if (cc) cc.textContent = parseInt(cc.textContent) + 1;
+    recordQuestProgress('comment', 1);
   } catch(e) { toast('Error: ' + e.message, 'error'); inp.value = content; }
 }
 
@@ -2068,6 +2714,7 @@ function openQrModal(postId, postTitle) {
   }
 
   modal.classList.add('open');
+  recordQuestProgress('qr', 1);
 }
 
 function closeQrModal(e) {
@@ -2100,7 +2747,801 @@ function copyQrModalLink() {
   }).catch(() => toast('Failed to copy', 'error'));
 }
 
-document.addEventListener('keydown', e => { if (e.key==='Escape') { closeCreate(); closeCmts(); closeLb(); closeQrModal(); } });
+// ══════════════════════════════════════════
+// 🪙 GENIUS IA COIN & VAULT ENGINE
+// ══════════════════════════════════════════
+
+// 1. Audio Synthesis Engine (Zero Latency Web Audio API)
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+function playCoinSound() {
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(987.77, now); // B5
+    osc.frequency.setValueAtTime(1318.51, now + 0.08); // E6
+    gain.gain.setValueAtTime(0.25, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.35);
+  } catch(e) {}
+}
+
+function playWheelTickSound() {
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(340, now);
+    osc.frequency.exponentialRampToValueAtTime(90, now + 0.04);
+    gain.gain.setValueAtTime(0.2, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.04);
+  } catch(e) {}
+}
+
+function playJackpotSound() {
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now + i * 0.09);
+      gain.gain.setValueAtTime(0.3, now + i * 0.09);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.09 + 0.4);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + i * 0.09);
+      osc.stop(now + i * 0.09 + 0.4);
+    });
+  } catch(e) {}
+}
+
+function playSpendSound() {
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(587.33, now);
+    osc.frequency.exponentialRampToValueAtTime(293.66, now + 0.2);
+    gain.gain.setValueAtTime(0.2, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.2);
+  } catch(e) {}
+}
+
+// 2. Flying Coins Animation System
+function spawnFlyingCoins(startX, startY, count = 6) {
+  const container = document.getElementById('flying-coins-container');
+  const target = document.getElementById('hdrCoinWidget');
+  if (!container || !target) return;
+
+  const targetRect = target.getBoundingClientRect();
+  const destX = targetRect.left + targetRect.width / 2;
+  const destY = targetRect.top + targetRect.height / 2;
+
+  const srcX = startX || window.innerWidth / 2;
+  const srcY = startY || window.innerHeight / 2;
+
+  for (let i = 0; i < count; i++) {
+    const coin = document.createElement('div');
+    coin.className = 'flying-coin-particle';
+    coin.style.backgroundImage = 'url("../genius-ia-coin.png")';
+    
+    // Random burst scatter
+    const angle = (Math.PI * 2 * i) / count + (Math.random() * 0.5 - 0.25);
+    const radius = 60 + Math.random() * 60;
+    const burstX = srcX + Math.cos(angle) * radius;
+    const burstY = srcY + Math.sin(angle) * radius;
+
+    coin.style.left = `${srcX - 16}px`;
+    coin.style.top = `${srcY - 16}px`;
+    coin.style.transform = 'scale(0.2)';
+    coin.style.opacity = '0';
+
+    container.appendChild(coin);
+
+    // Step 1: Burst outwards
+    setTimeout(() => {
+      coin.style.transform = 'scale(1.2) rotate(180deg)';
+      coin.style.opacity = '1';
+      coin.style.left = `${burstX - 16}px`;
+      coin.style.top = `${burstY - 16}px`;
+      playCoinSound();
+    }, i * 40);
+
+    // Step 2: Fly to header balance
+    setTimeout(() => {
+      coin.style.transition = 'all 0.65s cubic-bezier(0.2, 0.9, 0.3, 1)';
+      coin.style.transform = 'scale(0.5) rotate(720deg)';
+      coin.style.opacity = '0.9';
+      coin.style.left = `${destX - 16}px`;
+      coin.style.top = `${destY - 16}px`;
+    }, 280 + i * 40);
+
+    // Step 3: Land & pulse header
+    setTimeout(() => {
+      coin.remove();
+      target.style.transform = 'scale(1.18)';
+      setTimeout(() => target.style.transform = '', 180);
+    }, 950 + i * 40);
+  }
+}
+
+// 3. User Coin State Management
+let currentCoins = 50;
+let userTransactions = [];
+let lastFreeSpin = null;
+let currentQuests = { publish: 0, qr: 0, like: 0, comment: 0, claimed: {} };
+
+async function loadUserCoins(uid, email) {
+  const isSuperAdmin = (email && ADMIN_EMAILS.includes(email)) || (user && user.email && ADMIN_EMAILS.includes(user.email));
+  
+  if (isSuperAdmin) {
+    currentCoins = 10000;
+    document.getElementById('hdrCoinBalance').textContent = '👑 10,000 (∞)';
+    document.getElementById('vHeroBalance').textContent = '10,000 (∞)';
+    if (uid) {
+      db.collection('users').doc(uid).set({ geniusCoins: 10000, isAdminBank: true }, { merge: true }).catch(() => {});
+    }
+    loadQuestsFromStorage();
+    checkWheelStatus();
+    return;
+  }
+
+  if (uid) {
+    try {
+      const doc = await db.collection('users').doc(uid).get();
+      if (doc.exists) {
+        const data = doc.data();
+        currentCoins = typeof data.geniusCoins === 'number' ? data.geniusCoins : 50;
+        lastFreeSpin = data.lastFreeSpin || null;
+        userTransactions = data.transactions || [];
+        if (data.dailyQuests) currentQuests = data.dailyQuests;
+      } else {
+        currentCoins = 50;
+        await db.collection('users').doc(uid).set({ geniusCoins: 50, createdAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
+      }
+    } catch(e) {
+      console.warn("Coin fetch fallback to local:", e);
+      currentCoins = parseInt(localStorage.getItem('genius_coins') || '50', 10);
+    }
+  } else {
+    currentCoins = parseInt(localStorage.getItem('genius_coins') || '50', 10);
+  }
+
+  updateCoinUI();
+  loadQuestsFromStorage();
+  checkWheelStatus();
+  renderTxList();
+}
+
+function updateCoinUI() {
+  const isSuperAdmin = user && user.email && ADMIN_EMAILS.includes(user.email);
+  const formatted = isSuperAdmin ? '👑 10,000 (∞)' : currentCoins.toLocaleString();
+  const el1 = document.getElementById('hdrCoinBalance');
+  const el2 = document.getElementById('vHeroBalance');
+  if (el1) el1.textContent = formatted;
+  if (el2) el2.textContent = formatted;
+  localStorage.setItem('genius_coins', currentCoins.toString());
+}
+
+async function addCoins(amount, reason, showAnim = true, originEl = null) {
+  const isSuperAdmin = user && user.email && ADMIN_EMAILS.includes(user.email);
+  if (!isSuperAdmin) {
+    currentCoins += amount;
+  }
+  
+  const tx = {
+    desc: reason,
+    amount: `+${amount} 🪙`,
+    type: 'plus',
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  };
+  userTransactions.unshift(tx);
+  if (userTransactions.length > 30) userTransactions.pop();
+
+  updateCoinUI();
+  renderTxList();
+
+  if (showAnim) {
+    let x = window.innerWidth / 2, y = window.innerHeight / 2;
+    if (originEl) {
+      const rect = originEl.getBoundingClientRect();
+      x = rect.left + rect.width / 2;
+      y = rect.top + rect.height / 2;
+    }
+    spawnFlyingCoins(x, y, 6);
+  }
+
+  if (user && user.uid && !isSuperAdmin) {
+    try {
+      await db.collection('users').doc(user.uid).set({
+        geniusCoins: currentCoins,
+        transactions: userTransactions
+      }, { merge: true });
+    } catch(e) {}
+  }
+}
+
+async function deductCoins(amount, reason) {
+  const isSuperAdmin = user && user.email && ADMIN_EMAILS.includes(user.email);
+  if (isSuperAdmin) {
+    playSpendSound();
+    return true; // Admin has infinite coins
+  }
+
+  if (currentCoins < amount) {
+    toast(`Sold insuficient! Ai nevoie de ${amount} GENIUS IA.`, 'error');
+    return false;
+  }
+
+  currentCoins -= amount;
+  playSpendSound();
+
+  const tx = {
+    desc: reason,
+    amount: `-${amount} 🪙`,
+    type: 'minus',
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  };
+  userTransactions.unshift(tx);
+  if (userTransactions.length > 30) userTransactions.pop();
+
+  updateCoinUI();
+  renderTxList();
+
+  if (user && user.uid) {
+    try {
+      await db.collection('users').doc(user.uid).set({
+        geniusCoins: currentCoins,
+        transactions: userTransactions
+      }, { merge: true });
+    } catch(e) {}
+  }
+  return true;
+}
+
+function renderTxList() {
+  const container = document.getElementById('vaultTxList');
+  if (!container) return;
+  if (!userTransactions.length) {
+    container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:0.82rem;">Nu există tranzacții recente.</div>';
+    return;
+  }
+  container.innerHTML = userTransactions.map(t => `
+    <div class="tx-item">
+      <div>
+        <div class="tx-desc">${esc(t.desc)}</div>
+        <div class="tx-time">${esc(t.time)}</div>
+      </div>
+      <div class="tx-amt ${t.type}">${t.amount}</div>
+    </div>
+  `).join('');
+}
+
+// 4. Lucky Wheel Engine
+const WHEEL_SLICES = [10, 25, 50, 75, 100, 150, 200];
+const WHEEL_COLORS = [
+  ['#06b6d4', '#0891b2'], // 10
+  ['#3b82f6', '#2563eb'], // 25
+  ['#8b5cf6', '#7c3aed'], // 50
+  ['#ec4899', '#db2777'], // 75
+  ['#f97316', '#ea580c'], // 100
+  ['#eab308', '#ca8a04'], // 150
+  ['#f59e0b', '#d97706']  // 200 Jackpot
+];
+
+let wheelCurrentAngle = 0;
+let isWheelSpinning = false;
+
+function drawLuckyWheel(angle = 0) {
+  const canvas = document.getElementById('luckyWheelCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const size = canvas.width;
+  const center = size / 2;
+  const radius = center - 16;
+  const numSlices = WHEEL_SLICES.length;
+  const sliceAngle = (2 * Math.PI) / numSlices;
+
+  ctx.clearRect(0, 0, size, size);
+
+  // Outer Gold Glow Rim
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(center, center, radius + 10, 0, 2 * Math.PI);
+  ctx.fillStyle = '#0a0f1d';
+  ctx.fill();
+  ctx.lineWidth = 8;
+  ctx.strokeStyle = '#f59e0b';
+  ctx.shadowColor = '#f59e0b';
+  ctx.shadowBlur = 20;
+  ctx.stroke();
+  ctx.restore();
+
+  // Draw Slices
+  for (let i = 0; i < numSlices; i++) {
+    const startA = angle + i * sliceAngle;
+    const endA = startA + sliceAngle;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(center, center);
+    ctx.arc(center, center, radius, startA, endA);
+    ctx.closePath();
+
+    // Gradient fill
+    const grad = ctx.createRadialGradient(center, center, 30, center, center, radius);
+    grad.addColorStop(0, WHEEL_COLORS[i][0]);
+    grad.addColorStop(1, WHEEL_COLORS[i][1]);
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Slice separator
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+    ctx.stroke();
+
+    // Text Label
+    ctx.save();
+    ctx.translate(center, center);
+    ctx.rotate(startA + sliceAngle / 2);
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 30px Outfit, sans-serif';
+    ctx.shadowColor = 'rgba(0,0,0,0.8)';
+    ctx.shadowBlur = 6;
+    ctx.fillText(`${WHEEL_SLICES[i]} 🪙`, radius - 24, 10);
+    ctx.restore();
+
+    ctx.restore();
+  }
+}
+
+function checkWheelStatus() {
+  const today = new Date().toISOString().slice(0, 10);
+  const storedDate = localStorage.getItem('genius_last_spin') || lastFreeSpin;
+  const isFree = storedDate !== today;
+  const btn = document.getElementById('btnSpinWheel');
+  const sub = document.getElementById('wheelCooldownText');
+  if (!btn || !sub) return;
+
+  if (isFree) {
+    btn.innerHTML = '🎁 Învârte Gratuit! (1/zi)';
+    btn.style.background = 'linear-gradient(135deg, #10b981, #06b6d4)';
+    sub.textContent = 'Rotirea ta gratuită de azi este disponibilă!';
+    sub.style.color = '#34d399';
+  } else {
+    btn.innerHTML = '🎲 Învârte pentru 50 🪙';
+    btn.style.background = 'linear-gradient(135deg, #f59e0b, #d946ef)';
+    sub.textContent = 'Ai folosit rotirea gratuită. Fiecare rotire următoare: 50 GENIUS IA';
+    sub.style.color = '#94a3b8';
+  }
+}
+
+async function spinLuckyWheel() {
+  if (isWheelSpinning) return;
+  const today = new Date().toISOString().slice(0, 10);
+  const storedDate = localStorage.getItem('genius_last_spin') || lastFreeSpin;
+  const isFree = storedDate !== today;
+  const isSuperAdmin = user && user.email && ADMIN_EMAILS.includes(user.email);
+
+  if (!isFree && !isSuperAdmin) {
+    const success = await deductCoins(50, '🎲 Rotire Roata Norocului');
+    if (!success) return;
+  }
+
+  isWheelSpinning = true;
+  const btn = document.getElementById('btnSpinWheel');
+  if (btn) btn.disabled = true;
+
+  // Mark free spin as consumed
+  if (isFree) {
+    localStorage.setItem('genius_last_spin', today);
+    lastFreeSpin = today;
+    if (user && user.uid) {
+      db.collection('users').doc(user.uid).set({ lastFreeSpin: today }, { merge: true }).catch(() => {});
+    }
+  }
+
+  // Generate target spin: 5 to 7 full rotations + random slice offset
+  const numSlices = WHEEL_SLICES.length;
+  const sliceAngle = (2 * Math.PI) / numSlices;
+  const winIndex = Math.floor(Math.random() * numSlices);
+  const extraRotations = 6;
+  
+  // Angle needed for winIndex to land at top (top is -Math.PI / 2)
+  const targetSliceCenter = (winIndex + 0.5) * sliceAngle;
+  let targetAngle = (3 * Math.PI / 2) - targetSliceCenter + (extraRotations * 2 * Math.PI);
+  
+  // Ensure we always rotate forward
+  while (targetAngle < wheelCurrentAngle + extraRotations * 2 * Math.PI) {
+    targetAngle += 2 * Math.PI;
+  }
+
+  const startAngle = wheelCurrentAngle;
+  const totalDelta = targetAngle - startAngle;
+  const duration = 4800; // 4.8 seconds
+  const startTime = performance.now();
+  let lastTickSlice = -1;
+
+  function animateWheel(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    
+    // Ease-out cubic
+    const easeOut = 1 - Math.pow(1 - progress, 3);
+    wheelCurrentAngle = startAngle + totalDelta * easeOut;
+
+    drawLuckyWheel(wheelCurrentAngle);
+
+    // Audio Tick calculation
+    const normAngle = ((3 * Math.PI / 2) - (wheelCurrentAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+    const currentSlice = Math.floor(normAngle / sliceAngle) % numSlices;
+    if (currentSlice !== lastTickSlice) {
+      playWheelTickSound();
+      lastTickSlice = currentSlice;
+    }
+
+    if (progress < 1) {
+      requestAnimationFrame(animateWheel);
+    } else {
+      // Finished Spin
+      wheelCurrentAngle = targetAngle % (2 * Math.PI);
+      drawLuckyWheel(wheelCurrentAngle);
+      isWheelSpinning = false;
+      if (btn) btn.disabled = false;
+      checkWheelStatus();
+
+      const prize = WHEEL_SLICES[winIndex];
+      if (prize >= 100) {
+        playJackpotSound();
+      } else {
+        playCoinSound();
+      }
+
+      toast(`🎉 Felicitări! Ai câștigat ${prize} GENIUS IA la Roata Norocului!`, 'success');
+      const wheelBtn = document.getElementById('btnSpinWheel');
+      addCoins(prize, `🎰 Premiu Roata Norocului (${prize} 🪙)`, true, wheelBtn);
+    }
+  }
+
+  requestAnimationFrame(animateWheel);
+}
+
+// 5. Daily Quests System
+const QUEST_REWARDS = {
+  publish: { target: 1, reward: 25, title: 'Creatorul Zilei' },
+  qr:      { target: 1, reward: 10, title: 'Mobile Explorer' },
+  like:    { target: 3, reward: 5,  title: 'Comunitate Activă' },
+  comment: { target: 2, reward: 10, title: 'Feedback Master' }
+};
+
+function loadQuestsFromStorage() {
+  const today = new Date().toISOString().slice(0, 10);
+  const stored = JSON.parse(localStorage.getItem('genius_quests') || '{}');
+  if (stored.date !== today) {
+    currentQuests = { date: today, publish: 0, qr: 0, like: 0, comment: 0, claimed: {} };
+    localStorage.setItem('genius_quests', JSON.stringify(currentQuests));
+  } else {
+    currentQuests = stored;
+  }
+  updateQuestsUI();
+}
+
+function recordQuestProgress(type, count = 1) {
+  const today = new Date().toISOString().slice(0, 10);
+  if (currentQuests.date !== today) loadQuestsFromStorage();
+  if (typeof currentQuests[type] === 'number') {
+    currentQuests[type] = (currentQuests[type] || 0) + count;
+    localStorage.setItem('genius_quests', JSON.stringify(currentQuests));
+    updateQuestsUI();
+    if (user && user.uid) {
+      db.collection('users').doc(user.uid).set({ dailyQuests: currentQuests }, { merge: true }).catch(() => {});
+    }
+  }
+}
+
+function updateQuestsUI() {
+  ['publish', 'qr', 'like', 'comment'].forEach(type => {
+    const q = QUEST_REWARDS[type];
+    const val = currentQuests[type] || 0;
+    const isClaimed = currentQuests.claimed && currentQuests.claimed[type];
+    const isDone = val >= q.target;
+
+    const progFill = document.getElementById(`qprog-${type}`);
+    const card = document.getElementById(`qcard-${type}`);
+    const btn = document.getElementById(`qbtn-${type}`);
+    
+    if (progFill) {
+      const pct = Math.min(100, Math.round((val / q.target) * 100));
+      progFill.style.width = `${pct}%`;
+    }
+    if (type === 'like') {
+      const cnt = document.getElementById('qlikes-count');
+      if (cnt) cnt.textContent = Math.min(3, val);
+    }
+    if (type === 'comment') {
+      const cnt = document.getElementById('qcomments-count');
+      if (cnt) cnt.textContent = Math.min(2, val);
+    }
+
+    if (btn) {
+      if (isClaimed) {
+        btn.textContent = '✓ Revendicat';
+        btn.className = 'btn-claim-quest claimed';
+        btn.disabled = true;
+        if (card) card.classList.add('completed');
+      } else if (isDone) {
+        btn.textContent = '🎁 Revendică';
+        btn.className = 'btn-claim-quest';
+        btn.disabled = false;
+        if (card) card.classList.add('completed');
+      } else {
+        btn.textContent = `${val}/${q.target}`;
+        btn.className = 'btn-claim-quest claimed';
+        btn.disabled = true;
+        if (card) card.classList.remove('completed');
+      }
+    }
+  });
+}
+
+function claimQuest(type) {
+  const q = QUEST_REWARDS[type];
+  const val = currentQuests[type] || 0;
+  if (val < q.target || (currentQuests.claimed && currentQuests.claimed[type])) return;
+
+  currentQuests.claimed = currentQuests.claimed || {};
+  currentQuests.claimed[type] = true;
+  localStorage.setItem('genius_quests', JSON.stringify(currentQuests));
+  updateQuestsUI();
+
+  const card = document.getElementById(`qcard-${type}`);
+  addCoins(q.reward, `🎯 Misiune: ${q.title}`, true, card);
+  toast(`🎉 Recompensă revendicată: +${q.reward} GENIUS IA!`, 'success');
+
+  if (user && user.uid) {
+    db.collection('users').doc(user.uid).set({ dailyQuests: currentQuests }, { merge: true }).catch(() => {});
+  }
+}
+
+// 6. Community Tipping & Post Boost Engine
+let activeTipPostId = null;
+let activeTipAuthorUid = null;
+let activeTipAmount = 20;
+
+function openTipModal(postId, authorUid, authorName) {
+  if (!user) { signInGoogle(); return; }
+  activeTipPostId = postId;
+  activeTipAuthorUid = authorUid;
+  activeTipAmount = 20;
+
+  document.getElementById('tipRecipientName').textContent = authorName || 'Creator';
+  document.getElementById('tipCustomAmount').value = 20;
+  document.getElementById('tipOverlay').classList.add('open');
+}
+
+function closeTipModal(e) {
+  if (e && e.target !== document.getElementById('tipOverlay') && !e.target.classList.contains('mc')) return;
+  document.getElementById('tipOverlay').classList.remove('open');
+  activeTipPostId = null;
+  activeTipAuthorUid = null;
+}
+
+function selectTipAmount(amt, btn) {
+  activeTipAmount = amt;
+  document.getElementById('tipCustomAmount').value = amt;
+  document.querySelectorAll('.tip-chip').forEach(c => c.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+function clearTipChipActive() {
+  const val = parseInt(document.getElementById('tipCustomAmount').value, 10) || 1;
+  activeTipAmount = Math.max(1, val);
+  document.querySelectorAll('.tip-chip').forEach(c => c.classList.remove('active'));
+}
+
+async function confirmSendTip() {
+  const amt = parseInt(document.getElementById('tipCustomAmount').value, 10) || activeTipAmount;
+  if (amt <= 0) { toast('Introdu o sumă validă', 'error'); return; }
+
+  const recipientName = document.getElementById('tipRecipientName').textContent;
+  const success = await deductCoins(amt, `🪙 Bacșiș trimis către @${recipientName}`);
+  if (!success) return;
+
+  // Credit author in Firestore
+  if (activeTipAuthorUid) {
+    db.collection('users').doc(activeTipAuthorUid).set({
+      geniusCoins: firebase.firestore.FieldValue.increment(amt),
+      transactions: firebase.firestore.FieldValue.arrayUnion({
+        desc: `🪙 Bacșiș primit de la @${user.displayName}`,
+        amount: `+${amt} 🪙`,
+        type: 'plus',
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      })
+    }, { merge: true }).catch(() => {});
+  }
+
+  // Update post tips total
+  if (activeTipPostId) {
+    db.collection('devsocial_posts').doc(activeTipPostId).update({
+      tipsTotal: firebase.firestore.FieldValue.increment(amt)
+    }).catch(() => {});
+  }
+
+  closeTipModal();
+  toast(`🪙 Ai trimis cu succes ${amt} GENIUS IA către @${recipientName}!`, 'success');
+  spawnFlyingCoins(window.innerWidth / 2, window.innerHeight / 2, 8);
+}
+
+// 7. Admin Central Bank Engine
+async function adminMintCoins() {
+  if (!isAdmin) return;
+  const amt = parseInt(document.getElementById('admSelfMintAmount').value, 10);
+  if (!amt || amt <= 0) { toast('Introdu o sumă validă', 'error'); return; }
+
+  addCoins(amt, `⚡ Admin Mint: +${amt} 🪙`, true);
+  toast(`⚡ Au fost generate +${amt} GENIUS IA în contul tău!`, 'success');
+}
+
+async function adminSendCoinsToUser() {
+  if (!isAdmin) return;
+  const target = document.getElementById('admSendTarget').value.trim().toLowerCase();
+  const amt = parseInt(document.getElementById('admSendAmount').value, 10);
+  const reason = document.getElementById('admSendReason').value.trim() || 'Premiu de la Admin';
+
+  if (!target || !amt || amt <= 0) { toast('Completează utilizatorul și suma!', 'error'); return; }
+
+  try {
+    const snap = await db.collection('users').get();
+    let foundDoc = null;
+    snap.forEach(d => {
+      const data = d.data();
+      if ((data.email && data.email.toLowerCase() === target) || (data.displayName && data.displayName.toLowerCase() === target) || d.id === target) {
+        foundDoc = d;
+      }
+    });
+
+    if (!foundDoc) {
+      toast('Utilizatorul nu a fost găsit în baza de date!', 'error');
+      return;
+    }
+
+    await db.collection('users').doc(foundDoc.id).set({
+      geniusCoins: firebase.firestore.FieldValue.increment(amt),
+      transactions: firebase.firestore.FieldValue.arrayUnion({
+        desc: `🎁 ${reason}`,
+        amount: `+${amt} 🪙`,
+        type: 'plus',
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      })
+    }, { merge: true });
+
+    toast(`🎁 Ai trimis ${amt} GENIUS IA către ${foundDoc.data().displayName || target}!`, 'success');
+    document.getElementById('admSendTarget').value = '';
+  } catch(e) {
+    toast('Eroare: ' + e.message, 'error');
+  }
+}
+
+async function adminGlobalAirdrop() {
+  if (!isAdmin) return;
+  const amt = parseInt(document.getElementById('admAirdropAmount').value, 10);
+  const msg = document.getElementById('admAirdropMsg').value.trim() || 'Cadou de la Admin!';
+
+  if (!amt || amt <= 0) { toast('Introdu o sumă validă per membru!', 'error'); return; }
+  if (!confirm(`Sigur vrei să trimiți ${amt} GENIUS IA tuturor membrilor înregistrați?`)) return;
+
+  try {
+    const snap = await db.collection('users').get();
+    const batch = db.batch();
+    snap.forEach(d => {
+      batch.set(db.collection('users').doc(d.id), {
+        geniusCoins: firebase.firestore.FieldValue.increment(amt),
+        transactions: firebase.firestore.FieldValue.arrayUnion({
+          desc: `🌧️ Airdrop Global: ${msg}`,
+          amount: `+${amt} 🪙`,
+          type: 'plus',
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        })
+      }, { merge: true });
+    });
+    await batch.commit();
+
+    // Post announcement in community feed
+    await db.collection('devsocial_posts').add({
+      uid: user.uid,
+      displayName: '📣 IA Studio — Admin Central Bank',
+      photoURL: user.photoURL,
+      content: `🌧️ GLOBAL AIRDROP! Toți membrii comunității au primit tocmai acum +${amt} GENIUS IA în portofel! ${msg} 🪙✨`,
+      category: 'general',
+      pinned: true,
+      isAnnouncement: true,
+      likedBy: [], likesCount: 0, commentsCount: 0,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    toast(`🌧️ Airdrop-ul de ${amt} GENIUS IA a fost trimis către ${snap.size} membri!`, 'success');
+    loadFeed();
+  } catch(e) {
+    toast('Eroare airdrop: ' + e.message, 'error');
+  }
+}
+
+// 8. Vault Modal Controls
+function openVaultModal() {
+  document.getElementById('vaultOverlay').classList.add('open');
+  drawLuckyWheel(wheelCurrentAngle);
+  checkWheelStatus();
+  updateQuestsUI();
+  renderTxList();
+}
+
+function closeVaultModal(e) {
+  if (e && e.target !== document.getElementById('vaultOverlay') && !e.target.classList.contains('mc')) return;
+  document.getElementById('vaultOverlay').classList.remove('open');
+}
+
+function switchVaultTab(tabName) {
+  document.querySelectorAll('.v-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.v-pane').forEach(p => p.style.display = 'none');
+  
+  const tabBtn = document.getElementById(`vtab-btn-${tabName}`);
+  const pane = document.getElementById(`vpane-${tabName}`);
+  if (tabBtn) tabBtn.classList.add('active');
+  if (pane) pane.style.display = 'block';
+
+  if (tabName === 'wheel') {
+    setTimeout(() => drawLuckyWheel(wheelCurrentAngle), 50);
+  }
+}
+
+// Auto draw wheel on page load
+window.addEventListener('DOMContentLoaded', () => {
+  drawLuckyWheel(wheelCurrentAngle);
+  loadQuestsFromStorage();
+  checkWheelStatus();
+});
+
+document.addEventListener('keydown', e => { 
+  if (e.key==='Escape') { 
+    closeCreate(); 
+    closeCmts(); 
+    closeLb(); 
+    closeQrModal(); 
+    closeVaultModal(); 
+    closeTipModal(); 
+  } 
+});
 </script>
 </body>
 </html>
