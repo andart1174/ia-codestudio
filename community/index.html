@@ -1970,7 +1970,7 @@ function renderPost(p) {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         <span id="cc-${p.id}">${p.commentsCount||0}</span>
       </button>
-      <button class="btn-tip-post" onclick="openTipModal('${p.id}', '${esc(p.uid || p.userEmail || '')}', '${esc(displayName).replace(/'/g, "\\'")}')">
+      <button class="btn-tip-post" onclick="openTipModal('${p.id}', '${esc(p.uid || '')}', '${esc(p.userEmail || p.email || '')}', '${esc(displayName).replace(/'/g, "\\'")}')">
         <img src="../genius-ia-coin.png" alt="🪙">
         <span>${currentLang === 'fr' ? 'Pourboire' : 'Tip'}</span>
         ${p.tipsTotal ? `<span style="opacity:0.85;font-size:0.75rem;font-weight:700;">(${p.tipsTotal}🪙)</span>` : ''}
@@ -3168,11 +3168,118 @@ function spawnFlyingCoins(startX, startY, count = 6) {
   }
 }
 
-// 4. User Coin State & Robust Synchronization
+// 4. User Coin State & Robust Multi-Match Synchronization
 let currentCoins = 50;
 let userTransactions = [];
 let lastFreeSpin = null;
 let currentQuests = { publish: 0, qr: 0, like: 0, comment: 0, claimed: {} };
+let userCoinUnsub = null;
+let lastKnownCoins = null;
+
+// Multi-match helper to credit any user regardless of UID vs Email storage
+async function creditUserCoins(targetUid, targetEmail, targetName, amount, txDesc) {
+  const recTx = {
+    desc: txDesc,
+    amount: `+${amount} 🪙`,
+    type: 'plus',
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  };
+
+  const targetDocIds = new Set();
+  if (targetUid) targetDocIds.add(targetUid);
+  if (targetEmail) targetDocIds.add(targetEmail);
+
+  try {
+    const snap = await db.collection('users').get();
+    const tEmailLow = (targetEmail || '').toLowerCase();
+    const tNameLow = (targetName || '').toLowerCase();
+    const tUidLow = (targetUid || '').toLowerCase();
+
+    snap.forEach(d => {
+      const data = d.data() || {};
+      const dEmail = (data.email || '').toLowerCase();
+      const dName = (data.displayName || data.name || '').toLowerCase();
+      const docIdLow = d.id.toLowerCase();
+
+      if ((tUidLow && docIdLow === tUidLow) ||
+          (tEmailLow && (docIdLow === tEmailLow || dEmail === tEmailLow)) ||
+          (tNameLow && (dName === tNameLow || docIdLow === tNameLow))) {
+        targetDocIds.add(d.id);
+      }
+    });
+  } catch(e) {
+    console.warn("User lookup note:", e);
+  }
+
+  if (targetDocIds.size === 0) {
+    const fallbackId = targetUid || targetEmail || targetName;
+    if (fallbackId) targetDocIds.add(fallbackId);
+  }
+
+  for (const docId of targetDocIds) {
+    try {
+      await db.collection('users').doc(docId).set({
+        geniusCoins: firebase.firestore.FieldValue.increment(amount),
+        transactions: firebase.firestore.FieldValue.arrayUnion(recTx),
+        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+    } catch(err) {
+      console.warn("Could not credit docId", docId, err);
+    }
+  }
+}
+
+function subscribeUserCoins(targetUid, email) {
+  if (userCoinUnsub) {
+    userCoinUnsub();
+    userCoinUnsub = null;
+  }
+  if (!targetUid) return;
+
+  const isSuperAdmin = (email && ADMIN_EMAILS.includes(email)) || (user && user.email && ADMIN_EMAILS.includes(user.email));
+
+  userCoinUnsub = db.collection('users').doc(targetUid).onSnapshot(doc => {
+    if (!doc.exists) return;
+    const d = doc.data() || {};
+
+    if (typeof d.geniusCoins === 'number') {
+      const newCoins = isSuperAdmin ? Math.max(10000, d.geniusCoins) : d.geniusCoins;
+      const prevCoins = lastKnownCoins;
+      lastKnownCoins = newCoins;
+      currentCoins = newCoins;
+      localStorage.setItem('genius_coins', currentCoins.toString());
+      updateCoinUI();
+
+      // If coins increased from external event (like receiving a tip or admin reward)
+      if (prevCoins !== null && newCoins > prevCoins && !isSuperAdmin) {
+        playCoinSound();
+        spawnFlyingCoins(window.innerWidth / 2, window.innerHeight / 2, 6);
+        const lang = getCommunityLang();
+        toast(lang === 'fr' ? `🪙 Vous avez reçu +${newCoins - prevCoins} GENIUS IA !` : `🪙 You received +${newCoins - prevCoins} GENIUS IA!`, 'success');
+      }
+    }
+
+    if (Array.isArray(d.transactions) && d.transactions.length > 0) {
+      userTransactions = d.transactions;
+      localStorage.setItem('genius_txs', JSON.stringify(userTransactions));
+      renderTxList();
+    }
+
+    if (d.lastFreeSpin) {
+      lastFreeSpin = d.lastFreeSpin;
+      localStorage.setItem('genius_last_spin', lastFreeSpin);
+      checkWheelStatus();
+    }
+
+    if (d.dailyQuests && d.dailyQuests.date === new Date().toISOString().slice(0, 10)) {
+      currentQuests = d.dailyQuests;
+      localStorage.setItem('genius_quests', JSON.stringify(currentQuests));
+      updateQuestsUI();
+    }
+  }, err => {
+    console.warn("User coin snapshot listener note:", err);
+  });
+}
 
 async function loadUserCoins(uid, email) {
   const isSuperAdmin = (email && ADMIN_EMAILS.includes(email)) || (user && user.email && ADMIN_EMAILS.includes(user.email));
@@ -3187,6 +3294,7 @@ async function loadUserCoins(uid, email) {
     currentCoins = isSuperAdmin ? 10000 : 50;
   }
   if (isSuperAdmin && currentCoins < 10000) currentCoins = 10000;
+  lastKnownCoins = currentCoins;
 
   if (savedTx) {
     try { userTransactions = JSON.parse(savedTx) || []; } catch(e) { userTransactions = []; }
@@ -3203,7 +3311,7 @@ async function loadUserCoins(uid, email) {
     try {
       const doc = await db.collection('users').doc(targetUid).get();
       if (doc.exists) {
-        const d = doc.data();
+        const d = doc.data() || {};
         if (typeof d.geniusCoins === 'number') {
           currentCoins = isSuperAdmin ? Math.max(10000, d.geniusCoins) : d.geniusCoins;
         }
@@ -3219,11 +3327,22 @@ async function loadUserCoins(uid, email) {
           localStorage.setItem('genius_quests', JSON.stringify(currentQuests));
         }
       } else {
-        // Create user document
-        currentCoins = isSuperAdmin ? 10000 : 50;
+        let foundExisting = false;
+        if (email && email !== targetUid) {
+          const emailDoc = await db.collection('users').doc(email).get();
+          if (emailDoc.exists) {
+            const ed = emailDoc.data() || {};
+            if (typeof ed.geniusCoins === 'number') currentCoins = ed.geniusCoins;
+            if (Array.isArray(ed.transactions)) userTransactions = ed.transactions;
+            foundExisting = true;
+          }
+        }
+        if (!foundExisting) {
+          currentCoins = isSuperAdmin ? 10000 : 50;
+        }
         await db.collection('users').doc(targetUid).set({
           displayName: user ? user.displayName : 'User',
-          email: user ? user.email : '',
+          email: user ? user.email : (email || ''),
           geniusCoins: currentCoins,
           transactions: userTransactions,
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -3232,9 +3351,13 @@ async function loadUserCoins(uid, email) {
     } catch(err) {
       console.warn("Firestore user coin load note:", err);
     }
+
+    // Subscribe to real-time updates
+    subscribeUserCoins(targetUid, email);
   }
 
-  // 3. Save merged state & refresh UI
+  // 3. Save state & refresh UI
+  lastKnownCoins = currentCoins;
   localStorage.setItem('genius_coins', currentCoins.toString());
   localStorage.setItem('genius_txs', JSON.stringify(userTransactions));
   updateCoinUI();
@@ -3244,6 +3367,7 @@ async function loadUserCoins(uid, email) {
 }
 
 async function saveUserCoinState() {
+  lastKnownCoins = currentCoins;
   localStorage.setItem('genius_coins', currentCoins.toString());
   localStorage.setItem('genius_txs', JSON.stringify(userTransactions));
   localStorage.setItem('genius_quests', JSON.stringify(currentQuests));
@@ -3654,12 +3778,14 @@ async function claimQuest(type) {
 // 7. Community Tipping & Post Boost Engine
 let activeTipPostId = null;
 let activeTipAuthorUid = null;
+let activeTipAuthorEmail = null;
 let activeTipAmount = 20;
 
-function openTipModal(postId, authorUid, authorName) {
+function openTipModal(postId, authorUid, authorEmail, authorName) {
   if (!user) { signInGoogle(); return; }
   activeTipPostId = postId;
   activeTipAuthorUid = authorUid;
+  activeTipAuthorEmail = authorEmail;
   activeTipAmount = 20;
 
   document.getElementById('tipRecipientName').textContent = authorName || 'Creator';
@@ -3672,6 +3798,7 @@ function closeTipModal(e) {
   document.getElementById('tipOverlay').classList.remove('open');
   activeTipPostId = null;
   activeTipAuthorUid = null;
+  activeTipAuthorEmail = null;
 }
 
 function selectTipAmount(amt, btn) {
@@ -3698,25 +3825,12 @@ async function confirmSendTip() {
   const success = await deductCoins(amt, tipDesc);
   if (!success) return;
 
-  // Credit author in Firestore
-  if (activeTipAuthorUid) {
-    const recTx = {
-      desc: lang === 'fr' ? `🪙 Pourboire reçu de @${user ? user.displayName : 'Ami'}` : `🪙 Tip received from @${user ? user.displayName : 'Friend'}`,
-      amount: `+${amt} 🪙`,
-      type: 'plus',
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
-    try {
-      await db.collection('users').doc(activeTipAuthorUid).set({
-        geniusCoins: firebase.firestore.FieldValue.increment(amt),
-        transactions: firebase.firestore.FieldValue.arrayUnion(recTx)
-      }, { merge: true });
-    } catch(e) {
-      console.warn("Could not credit author directly:", e);
-    }
-  }
+  const recTxDesc = lang === 'fr' ? `🪙 Pourboire reçu de @${user ? user.displayName : 'Ami'}` : `🪙 Tip received from @${user ? user.displayName : 'Friend'}`;
 
-  // Update post tips total
+  // Credit author in Firestore with multi-doc resolution
+  await creditUserCoins(activeTipAuthorUid, activeTipAuthorEmail, recipientName, amt, recTxDesc);
+
+  // Update post tips total in Firestore
   if (activeTipPostId) {
     try {
       await db.collection('devsocial_posts').doc(activeTipPostId).update({
@@ -3753,42 +3867,8 @@ async function adminSendCoinsToUser() {
   if (!target || !amt || amt <= 0) { toast(t.fillUserAndAmt, 'error'); return; }
 
   try {
-    const targetLower = target.toLowerCase();
-    const snap = await db.collection('users').get();
-    let foundDoc = null;
-    snap.forEach(d => {
-      const data = d.data();
-      if ((data.email && data.email.toLowerCase() === targetLower) ||
-          (data.displayName && data.displayName.toLowerCase() === targetLower) ||
-          d.id.toLowerCase() === targetLower) {
-        foundDoc = d;
-      }
-    });
-
-    const recTx = {
-      desc: `🎁 ${reason}`,
-      amount: `+${amt} 🪙`,
-      type: 'plus',
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
-
-    if (foundDoc) {
-      await db.collection('users').doc(foundDoc.id).set({
-        geniusCoins: firebase.firestore.FieldValue.increment(amt),
-        transactions: firebase.firestore.FieldValue.arrayUnion(recTx)
-      }, { merge: true });
-    } else {
-      await db.collection('users').doc(target).set({
-        email: target,
-        displayName: target.split('@')[0],
-        geniusCoins: amt + 50,
-        transactions: [recTx],
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      }, { merge: true });
-    }
-
     const adminTx = {
-      desc: `🎁 Sent ${amt} 🪙 to ${foundDoc ? (foundDoc.data().displayName || target) : target}`,
+      desc: `🎁 Sent ${amt} 🪙 to ${target}`,
       amount: `-${amt} 🪙`,
       type: 'minus',
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -3796,6 +3876,9 @@ async function adminSendCoinsToUser() {
     userTransactions.unshift(adminTx);
     renderTxList();
     await saveUserCoinState();
+
+    // Credit recipient user via multi-match
+    await creditUserCoins(null, target, target, amt, `🎁 ${reason}`);
 
     toast(t.adminSendSuccess.replace('{n}', amt).replace('{target}', target), 'success');
     document.getElementById('admSendTarget').value = '';
