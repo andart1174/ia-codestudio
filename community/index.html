@@ -80,6 +80,8 @@
     .btn-google:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(0,0,0,.4); }
     .btn-logout { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:8px; background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.3); color:#f87171; font-size:.82rem; font-weight:600; cursor:pointer; font-family:inherit; transition:all .2s; }
     .btn-logout:hover { background:rgba(239,68,68,.2); }
+    .btn-lang-toggle { display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:20px; background:rgba(255,255,255,0.06); border:1px solid var(--border2); color:#fff; font-size:0.8rem; font-weight:700; cursor:pointer; transition:all .2s; font-family:inherit; flex-shrink:0; }
+    .btn-lang-toggle:hover { background:rgba(124,58,237,0.2); border-color:var(--accent); transform:translateY(-1px); }
     .hdr-avatar { width:32px; height:32px; border-radius:50%; border:2px solid var(--accent); object-fit:cover; }
     .hdr-name { font-size:.85rem; font-weight:500; color:var(--text); }
     .admin-badge { background:linear-gradient(135deg,#f59e0b,#f97316); color:#000; font-size:.68rem; font-weight:800; padding:2px 8px; border-radius:999px; letter-spacing:.05em; }
@@ -1152,7 +1154,13 @@
     <span class="lt">IA Code Studio</span>
   </a>
   <div class="header-sep"></div>
-  <span class="header-brand">✦ Community</span>
+  <span class="header-brand" id="lbl-header-brand">✦ Community</span>
+
+  <!-- LANGUAGE TOGGLE -->
+  <button class="btn-lang-toggle" id="btnLangToggle" onclick="toggleCommunityLanguage()" title="Switch Language (EN / FR)">
+    <span id="langFlag">🇬🇧</span>
+    <span id="langText">EN</span>
+  </button>
 
   <!-- GENIUS IA COIN WIDGET -->
   <div class="hdr-coin-pill" id="hdrCoinWidget" onclick="openVaultModal()" title="Genius Vault & Lucky Wheel" style="margin-left:auto;">
@@ -1184,15 +1192,15 @@
       </div>
     </div>
     <div class="scard">
-      <div class="stitle">Categories</div>
-      <button class="cat-btn active" data-cat="all" onclick="filterCat('all',this)">🌐 All Posts</button>
-      <button class="cat-btn" data-cat="showcase" onclick="filterCat('showcase',this)">🏆 Showcase</button>
-      <button class="cat-btn" data-cat="aiapp" onclick="filterCat('aiapp',this)">🤖 AI Apps</button>
-      <button class="cat-btn" data-cat="3ddesign" onclick="filterCat('3ddesign',this)">🎨 3D Design</button>
-      <button class="cat-btn" data-cat="marketing" onclick="filterCat('marketing',this)">📢 Marketing</button>
-      <button class="cat-btn" data-cat="webdev" onclick="filterCat('webdev',this)">💻 Web Dev</button>
-      <button class="cat-btn" data-cat="tips" onclick="filterCat('tips',this)">💡 Tips & Tricks</button>
-      <button class="cat-btn" data-cat="general" onclick="filterCat('general',this)">💬 General</button>
+      <div class="stitle" id="lbl-categories-title">Categories</div>
+      <button class="cat-btn active" data-cat="all" onclick="filterCat('all',this)" id="catbtn-all">🌐 All Posts</button>
+      <button class="cat-btn" data-cat="showcase" onclick="filterCat('showcase',this)" id="catbtn-showcase">🏆 Showcase</button>
+      <button class="cat-btn" data-cat="aiapp" onclick="filterCat('aiapp',this)" id="catbtn-aiapp">🤖 AI Apps</button>
+      <button class="cat-btn" data-cat="3ddesign" onclick="filterCat('3ddesign',this)" id="catbtn-3ddesign">🎨 3D Design</button>
+      <button class="cat-btn" data-cat="marketing" onclick="filterCat('marketing',this)" id="catbtn-marketing">📢 Marketing</button>
+      <button class="cat-btn" data-cat="webdev" onclick="filterCat('webdev',this)" id="catbtn-webdev">💻 Web Dev</button>
+      <button class="cat-btn" data-cat="tips" onclick="filterCat('tips',this)" id="catbtn-tips">💡 Tips & Tricks</button>
+      <button class="cat-btn" data-cat="general" onclick="filterCat('general',this)" id="catbtn-general">💬 General</button>
     </div>
   </aside>
 
@@ -1265,31 +1273,31 @@
 
       <!-- ADMIN CENTRAL BANK -->
       <div class="stats-card admin-bank-card">
-        <div class="sc-title" style="color:#fbbf24;">🏛️ Banca Centrală GENIUS IA</div>
-        <div style="font-size:0.75rem;color:#94a3b8;margin-bottom:10px;">Cont Admin: <strong style="color:#fcd34d;">Sold Nelimitat (∞)</strong></div>
+        <div class="sc-title" style="color:#fbbf24;" id="lbl-admin-bank-title">🏛️ GENIUS IA Central Bank</div>
+        <div style="font-size:0.75rem;color:#94a3b8;margin-bottom:10px;" id="lbl-admin-acc-status">Admin Account: <strong style="color:#fcd34d;">Unlimited Balance (∞)</strong></div>
         
-        <div style="font-size:0.72rem;font-weight:700;color:#fbbf24;margin-bottom:4px;text-transform:uppercase;">⚡ Mint / Adaugă Monede Ție</div>
+        <div style="font-size:0.72rem;font-weight:700;color:#fbbf24;margin-bottom:4px;text-transform:uppercase;" id="lbl-admin-mint-title">⚡ Mint / Add Coins to Admin</div>
         <div style="display:flex;gap:4px;margin-bottom:8px;">
-          <input type="number" id="admSelfMintAmount" placeholder="Suma (ex: 5000)" class="adm-input" style="margin-bottom:0;" value="5000">
-          <button class="adm-btn" style="width:auto;white-space:nowrap;margin-bottom:0;padding:6px 12px;background:#f59e0b;color:#000;font-weight:800;" onclick="adminMintCoins()">+ Mint</button>
+          <input type="number" id="admSelfMintAmount" placeholder="Amount (e.g. 5000)" class="adm-input" style="margin-bottom:0;" value="5000">
+          <button class="adm-btn" style="width:auto;white-space:nowrap;margin-bottom:0;padding:6px 12px;background:#f59e0b;color:#000;font-weight:800;" onclick="adminMintCoins()" id="btn-admin-mint">+ Mint</button>
         </div>
 
         <div class="adm-divider"></div>
-        <div style="font-size:0.72rem;font-weight:700;color:#34d399;margin-bottom:4px;text-transform:uppercase;">🎁 Trimite Monede Utilizator</div>
-        <input type="text" id="admSendTarget" placeholder="Email sau Nume membru..." class="adm-input">
+        <div style="font-size:0.72rem;font-weight:700;color:#34d399;margin-bottom:4px;text-transform:uppercase;" id="lbl-admin-send-title">🎁 Send Coins to User</div>
+        <input type="text" id="admSendTarget" placeholder="Member Email or Name..." class="adm-input">
         <div style="display:flex;gap:4px;margin-bottom:6px;">
-          <input type="number" id="admSendAmount" placeholder="Monede" class="adm-input" style="margin-bottom:0;flex:1;" value="100">
-          <input type="text" id="admSendReason" placeholder="Motiv (ex: Premiu)" class="adm-input" style="margin-bottom:0;flex:2;">
+          <input type="number" id="admSendAmount" placeholder="Coins" class="adm-input" style="margin-bottom:0;flex:1;" value="100">
+          <input type="text" id="admSendReason" placeholder="Reason (e.g. Award)" class="adm-input" style="margin-bottom:0;flex:2;">
         </div>
-        <button class="adm-btn" style="background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.4);color:#34d399;" onclick="adminSendCoinsToUser()">🎁 Trimite Recompensă</button>
+        <button class="adm-btn" style="background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.4);color:#34d399;" onclick="adminSendCoinsToUser()" id="btn-admin-send">🎁 Send Reward</button>
 
         <div class="adm-divider"></div>
-        <div style="font-size:0.72rem;font-weight:700;color:#a855f7;margin-bottom:4px;text-transform:uppercase;">🌧️ Global Airdrop (Toți Membrii)</div>
+        <div style="font-size:0.72rem;font-weight:700;color:#a855f7;margin-bottom:4px;text-transform:uppercase;" id="lbl-admin-airdrop-title">🌧️ Global Airdrop (All Members)</div>
         <div style="display:flex;gap:4px;margin-bottom:6px;">
-          <input type="number" id="admAirdropAmount" placeholder="Monede per membru" class="adm-input" style="margin-bottom:0;flex:1;" value="25">
-          <input type="text" id="admAirdropMsg" placeholder="Mesaj Airdrop..." class="adm-input" style="margin-bottom:0;flex:2;" value="🎁 Cadou de la Admin!">
+          <input type="number" id="admAirdropAmount" placeholder="Coins per member" class="adm-input" style="margin-bottom:0;flex:1;" value="25">
+          <input type="text" id="admAirdropMsg" placeholder="Airdrop Message..." class="adm-input" style="margin-bottom:0;flex:2;" value="🎁 Gift from Admin!">
         </div>
-        <button class="adm-btn" style="background:rgba(124,58,237,0.2);border-color:rgba(124,58,237,0.5);color:#c084fc;" onclick="adminGlobalAirdrop()">🌧️ Lansează Airdrop Global</button>
+        <button class="adm-btn" style="background:rgba(124,58,237,0.2);border-color:rgba(124,58,237,0.5);color:#c084fc;" onclick="adminGlobalAirdrop()" id="btn-admin-airdrop">🌧️ Launch Global Airdrop</button>
       </div>
     </div>
     <!-- Tools — visible to everyone -->
@@ -1425,20 +1433,20 @@
 
     <!-- Navigation Tabs inside Vault -->
     <div class="v-tabs">
-      <button class="v-tab active" id="vtab-btn-wheel" onclick="switchVaultTab('wheel')">🎰 Roata Norocului</button>
-      <button class="v-tab" id="vtab-btn-quests" onclick="switchVaultTab('quests')">🎯 Misiuni Zilnice</button>
-      <button class="v-tab" id="vtab-btn-wallet" onclick="switchVaultTab('wallet')">📜 Portofel & Tranzacții</button>
+      <button class="v-tab active" id="vtab-btn-wheel" onclick="switchVaultTab('wheel')">🎰 Lucky Wheel</button>
+      <button class="v-tab" id="vtab-btn-quests" onclick="switchVaultTab('quests')">🎯 Daily Quests</button>
+      <button class="v-tab" id="vtab-btn-wallet" onclick="switchVaultTab('wallet')">📜 Wallet & History</button>
     </div>
 
     <div class="mb" style="padding-top:16px;">
       <!-- TAB 1: LUCKY WHEEL -->
       <div id="vpane-wheel" class="v-pane">
         <div class="wheel-container">
-          <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1.1rem;color:#fff;margin-bottom:2px;">
-            🎰 Roata Norocului GENIUS IA
+          <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1.1rem;color:#fff;margin-bottom:2px;" id="lbl-wheel-title">
+            🎰 GENIUS IA Lucky Wheel
           </div>
-          <div style="font-size:0.8rem;color:#94a3b8;">
-            1 Rotire GRATIS pe zi! Rotiri suplimentare: 50 🪙
+          <div style="font-size:0.8rem;color:#94a3b8;" id="lbl-wheel-sub">
+            1 FREE Spin Daily! Extra spins: 50 🪙
           </div>
 
           <div class="wheel-stage">
@@ -1450,19 +1458,19 @@
           </div>
 
           <button class="btn-spin-wheel" id="btnSpinWheel" onclick="spinLuckyWheel()">
-            🎁 Învârte Gratuit!
+            🎁 Spin for Free! (1/day)
           </button>
-          <div class="spin-subtext" id="wheelCooldownText">Rotirea ta gratuită de azi este gata!</div>
+          <div class="spin-subtext" id="wheelCooldownText">Your free daily spin is ready!</div>
         </div>
       </div>
 
       <!-- TAB 2: DAILY QUESTS -->
       <div id="vpane-quests" class="v-pane" style="display:none;">
-        <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1.05rem;color:#fff;margin-bottom:4px;">
-          🎯 Misiunile Zilei (Se resetează la 24h)
+        <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1.05rem;color:#fff;margin-bottom:4px;" id="lbl-quests-title">
+          🎯 Daily Quests (Resets every 24h)
         </div>
-        <div style="font-size:0.8rem;color:#94a3b8;margin-bottom:14px;">
-          Completează task-urile de mai jos pentru a câștiga monede GENIUS IA gratuite!
+        <div style="font-size:0.8rem;color:#94a3b8;margin-bottom:14px;" id="lbl-quests-sub">
+          Complete quests below to earn free GENIUS IA coins!
         </div>
 
         <div class="quests-list" id="questsListContainer">
@@ -1470,13 +1478,13 @@
           <div class="quest-card" id="qcard-publish">
             <div class="q-icon">🚀</div>
             <div class="q-info">
-              <div class="q-title">Creatorul Zilei</div>
-              <div class="q-desc">Publică 1 proiect nou sau cod în comunitate</div>
+              <div class="q-title" id="qtitle-publish">Daily Creator</div>
+              <div class="q-desc" id="qdesc-publish">Publish 1 new project or code in the community</div>
               <div class="q-prog-bar"><div class="q-prog-fill" id="qprog-publish" style="width:0%"></div></div>
             </div>
             <div class="q-reward">
               <div class="q-val">+25 🪙</div>
-              <button class="btn-claim-quest" id="qbtn-publish" onclick="claimQuest('publish')">Revendică</button>
+              <button class="btn-claim-quest" id="qbtn-publish" onclick="claimQuest('publish')">Claim</button>
             </div>
           </div>
 
@@ -1484,13 +1492,13 @@
           <div class="quest-card" id="qcard-qr">
             <div class="q-icon">📱</div>
             <div class="q-info">
-              <div class="q-title">Mobile Explorer</div>
-              <div class="q-desc">Deschide codul QR și testează un proiect pe telefon</div>
+              <div class="q-title" id="qtitle-qr">Mobile Explorer</div>
+              <div class="q-desc" id="qdesc-qr">Scan QR code and test a project on mobile</div>
               <div class="q-prog-bar"><div class="q-prog-fill" id="qprog-qr" style="width:0%"></div></div>
             </div>
             <div class="q-reward">
               <div class="q-val">+10 🪙</div>
-              <button class="btn-claim-quest" id="qbtn-qr" onclick="claimQuest('qr')">Revendică</button>
+              <button class="btn-claim-quest" id="qbtn-qr" onclick="claimQuest('qr')">Claim</button>
             </div>
           </div>
 
@@ -1498,13 +1506,13 @@
           <div class="quest-card" id="qcard-like">
             <div class="q-icon">⭐</div>
             <div class="q-info">
-              <div class="q-title">Comunitate Activă</div>
-              <div class="q-desc">Apreciază (like) 3 creații din comunitate (<span id="qlikes-count">0</span>/3)</div>
+              <div class="q-title" id="qtitle-like">Active Community</div>
+              <div class="q-desc" id="qdesc-like">Like 3 creations in community (<span id="qlikes-count">0</span>/3)</div>
               <div class="q-prog-bar"><div class="q-prog-fill" id="qprog-like" style="width:0%"></div></div>
             </div>
             <div class="q-reward">
               <div class="q-val">+5 🪙</div>
-              <button class="btn-claim-quest" id="qbtn-like" onclick="claimQuest('like')">Revendică</button>
+              <button class="btn-claim-quest" id="qbtn-like" onclick="claimQuest('like')">Claim</button>
             </div>
           </div>
 
@@ -1512,13 +1520,13 @@
           <div class="quest-card" id="qcard-comment">
             <div class="q-icon">💬</div>
             <div class="q-info">
-              <div class="q-title">Feedback Master</div>
-              <div class="q-desc">Lasă 2 comentarii constructive altor membri (<span id="qcomments-count">0</span>/2)</div>
+              <div class="q-title" id="qtitle-comment">Feedback Master</div>
+              <div class="q-desc" id="qdesc-comment">Leave 2 comments on other creators' posts (<span id="qcomments-count">0</span>/2)</div>
               <div class="q-prog-bar"><div class="q-prog-fill" id="qprog-comment" style="width:0%"></div></div>
             </div>
             <div class="q-reward">
               <div class="q-val">+10 🪙</div>
-              <button class="btn-claim-quest" id="qbtn-comment" onclick="claimQuest('comment')">Revendică</button>
+              <button class="btn-claim-quest" id="qbtn-comment" onclick="claimQuest('comment')">Claim</button>
             </div>
           </div>
         </div>
@@ -1529,14 +1537,14 @@
         <div class="vault-balance-hero">
           <img src="../genius-ia-coin.png" class="v-hero-coin" alt="GENIUS IA">
           <div class="v-hero-amount" id="vHeroBalance">0</div>
-          <div class="v-hero-lbl">Sold Disponibil GENIUS IA</div>
+          <div class="v-hero-lbl" id="lbl-vault-balance-title">Available GENIUS IA Balance</div>
         </div>
 
-        <div style="font-size:0.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">
-          Istoric Tranzacții & Recompense
+        <div style="font-size:0.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;" id="lbl-vault-history-title">
+          Transactions & Rewards History
         </div>
         <div class="tx-list" id="vaultTxList">
-          <div style="text-align:center;padding:20px;color:var(--muted);font-size:0.82rem;">Nu există tranzacții încă.</div>
+          <div style="text-align:center;padding:20px;color:var(--muted);font-size:0.82rem;" id="lbl-no-tx">No recent transactions.</div>
         </div>
       </div>
     </div>
@@ -1548,13 +1556,13 @@
   <div class="modal" onclick="event.stopPropagation()" style="max-width:440px;">
     <div class="mh">
       <div class="mt" style="display:flex;align-items:center;gap:6px;">
-        <span>🪙</span> <span>Trimite Bacșiș Creatorului</span>
+        <span>🪙</span> <span id="lbl-tip-modal-title">Tip Creator</span>
       </div>
       <button class="mc" onclick="closeTipModal()">✕</button>
     </div>
     <div class="mb">
       <div style="text-align:center;margin-bottom:14px;">
-        <div style="font-size:0.88rem;color:#94a3b8;">Trimite monede GENIUS IA către</div>
+        <div style="font-size:0.88rem;color:#94a3b8;" id="lbl-tip-modal-sub">Send GENIUS IA coins to</div>
         <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1.1rem;color:#fff;margin-top:2px;" id="tipRecipientName">Creator</div>
       </div>
 
@@ -1566,12 +1574,12 @@
       </div>
 
       <div style="margin-bottom:16px;">
-        <label class="opt-lbl">Sau introdu o sumă personalizată</label>
+        <label class="opt-lbl" id="lbl-tip-custom-amount">Or enter a custom amount</label>
         <input type="number" class="adm-input" id="tipCustomAmount" value="20" min="1" oninput="clearTipChipActive()">
       </div>
 
-      <button class="qr-open-btn" style="background:linear-gradient(135deg,#f59e0b,#d946ef);border:none;cursor:pointer;width:100%;" onclick="confirmSendTip()">
-        🪙 Trimite Bacșișul Acum
+      <button class="qr-open-btn" style="background:linear-gradient(135deg,#f59e0b,#d946ef);border:none;cursor:pointer;width:100%;" onclick="confirmSendTip()" id="btn-send-tip-modal">
+        🪙 Send Tip Now
       </button>
     </div>
   </div>
@@ -2748,10 +2756,275 @@ function copyQrModalLink() {
 }
 
 // ══════════════════════════════════════════
-// 🪙 GENIUS IA COIN & VAULT ENGINE
+// 🪙 GENIUS IA COIN & VAULT BILINGUAL ENGINE
 // ══════════════════════════════════════════
 
-// 1. Audio Synthesis Engine (Zero Latency Web Audio API)
+// 1. Translation System (EN / FR Only)
+const I18N = {
+  en: {
+    communityBrand: '✦ Community',
+    allPosts: '🌐 All Posts',
+    catGeneral: '💬 General',
+    catShowcase: '🏆 Showcase',
+    catAiApp: '🤖 AI Apps',
+    cat3d: '🎨 3D Design',
+    catMarketing: '📢 Marketing',
+    catWebDev: '💻 Web Dev',
+    catTips: '💡 Tips & Tricks',
+    sharePrompt: 'Share your creation, idea or tip with the community... ✨',
+    btnPublish: '✦ Publish Post',
+    btnPublishing: 'Publishing...',
+    postSuccess: 'Post published! ✨',
+    btnSignIn: 'Sign in with Google',
+    btnSignOut: 'Sign Out',
+    signedOutToast: 'Signed out',
+    adminBadge: 'ADMIN',
+    // Vault
+    vaultTitle: 'GENIUS VAULT',
+    tabWheel: '🎰 Lucky Wheel',
+    tabQuests: '🎯 Daily Quests',
+    tabWallet: '📜 Wallet & History',
+    wheelTitle: '🎰 GENIUS IA Lucky Wheel',
+    wheelSub: '1 FREE Spin Daily! Extra spins: 50 🪙',
+    btnSpinFree: '🎁 Spin for Free! (1/day)',
+    btnSpinPaid: '🎲 Spin for 50 🪙',
+    freeSpinReady: 'Your free daily spin is ready!',
+    freeSpinUsed: 'Daily free spin used. Extra spins: 50 GENIUS IA',
+    wheelWon: '🎉 Congratulations! You won {n} GENIUS IA on the Lucky Wheel!',
+    questsTitle: '🎯 Daily Quests (Resets every 24h)',
+    questsSub: 'Complete quests below to earn free GENIUS IA coins!',
+    qPublishTitle: 'Daily Creator',
+    qPublishDesc: 'Publish 1 new project or code in the community',
+    qQrTitle: 'Mobile Explorer',
+    qQrDesc: 'Scan QR code and test a project on mobile',
+    qLikeTitle: 'Active Community',
+    qLikeDesc: 'Like 3 creations in community',
+    qCommentTitle: 'Feedback Master',
+    qCommentDesc: 'Leave 2 comments on other creators\' posts',
+    btnClaim: 'Claim',
+    btnClaimed: '✓ Claimed',
+    questClaimedToast: '🎉 Reward claimed: +{n} GENIUS IA!',
+    balanceHeroLbl: 'Available GENIUS IA Balance',
+    txHistoryLbl: 'Transactions & Rewards History',
+    noTx: 'No recent transactions.',
+    // Tips
+    tipModalTitle: 'Tip Creator',
+    tipModalSub: 'Send GENIUS IA coins to',
+    tipCustomLbl: 'Or enter a custom amount',
+    btnSendTip: '🪙 Send Tip Now',
+    tipSuccessToast: '🪙 Successfully sent {n} GENIUS IA to @{name}!',
+    tipBtnLbl: 'Tip',
+    // Admin Bank
+    adminBankTitle: '🏛️ GENIUS IA Central Bank',
+    adminAccSub: 'Admin Account: <strong style="color:#fcd34d;">Unlimited Balance (∞)</strong>',
+    adminMintTitle: '⚡ Mint / Add Coins to Admin',
+    adminMintBtn: '+ Mint',
+    adminMintSuccess: '⚡ Generated +{n} GENIUS IA to your account!',
+    adminSendTitle: '🎁 Send Coins to User',
+    adminSendTargetPh: 'Member Email or Name...',
+    adminSendReasonPh: 'Reason (e.g. Award)',
+    adminSendBtn: '🎁 Send Reward',
+    adminSendSuccess: '🎁 Sent {n} GENIUS IA to {target}!',
+    adminAirdropTitle: '🌧️ Global Airdrop (All Members)',
+    adminAirdropMsgPh: 'Airdrop Message...',
+    adminAirdropBtn: '🌧️ Launch Global Airdrop',
+    adminAirdropSuccess: '🌧️ Sent {n} GENIUS IA to all {count} members!',
+    adminAirdropConfirm: 'Are you sure you want to send {n} GENIUS IA to all registered members?',
+    // Mobile Test
+    mobileTestBtn: '📱 Test on Mobile',
+    editInStudioBtn: '⚡ Edit in Studio',
+    qrTitle: 'Mobile Live Play',
+    qrDesc: 'Scan this QR code with your phone camera to run this 3D / WebGL project in full-screen at 60 FPS without installing anything!',
+    qrOpenTab: '🚀 Open Standalone Tab',
+    copiedToast: 'Link copied! 🔗',
+    copyBtn: '📋 Copy',
+    copySuccessBtn: '✓ Copied!',
+    // General
+    insufficientFunds: 'Insufficient balance! You need {n} GENIUS IA.',
+    enterValidAmount: 'Please enter a valid amount',
+    fillUserAndAmt: 'Please fill in member and amount'
+  },
+  fr: {
+    communityBrand: '✦ Communauté',
+    allPosts: '🌐 Tous les Posts',
+    catGeneral: '💬 Général',
+    catShowcase: '🏆 Créations',
+    catAiApp: '🤖 Applications IA',
+    cat3d: '🎨 Design 3D',
+    catMarketing: '📢 Marketing',
+    catWebDev: '💻 Dév Web',
+    catTips: '💡 Astuces & Conseils',
+    sharePrompt: 'Partagez votre création, idée ou astuce avec la communauté... ✨',
+    btnPublish: '✦ Publier le Post',
+    btnPublishing: 'Publication...',
+    postSuccess: 'Post publié ! ✨',
+    btnSignIn: 'Se connecter avec Google',
+    btnSignOut: 'Se déconnecter',
+    signedOutToast: 'Déconnecté',
+    adminBadge: 'ADMIN',
+    // Vault
+    vaultTitle: 'GENIUS VAULT',
+    tabWheel: '🎰 Roue de la Fortune',
+    tabQuests: '🎯 Quêtes Quotidiennes',
+    tabWallet: '📜 Portefeuille & Historique',
+    wheelTitle: '🎰 Roue de la Fortune GENIUS IA',
+    wheelSub: '1 Tour GRATUIT par jour ! Tours supplémentaires : 50 🪙',
+    btnSpinFree: '🎁 Tourner Gratuitement ! (1/j)',
+    btnSpinPaid: '🎲 Tourner pour 50 🪙',
+    freeSpinReady: 'Votre tour gratuit du jour est prêt !',
+    freeSpinUsed: 'Tour gratuit utilisé. Chaque tour suivant coûte 50 GENIUS IA',
+    wheelWon: '🎉 Félicitations ! Vous avez gagné {n} GENIUS IA à la Roue de la Fortune !',
+    questsTitle: '🎯 Quêtes du Jour (Réinitialisation 24h)',
+    questsSub: 'Complétez les quêtes ci-dessous pour gagner des pièces GENIUS IA gratuites !',
+    qPublishTitle: 'Créateur du Jour',
+    qPublishDesc: 'Publiez 1 nouveau projet ou code dans la communauté',
+    qQrTitle: 'Explorateur Mobile',
+    qQrDesc: 'Scannez le code QR et testez un projet sur mobile',
+    qLikeTitle: 'Communauté Active',
+    qLikeDesc: 'Aimez 3 créations dans la communauté',
+    qCommentTitle: 'Maître du Feedback',
+    qCommentDesc: 'Laissez 2 commentaires constructifs sur d\'autres posts',
+    btnClaim: 'Réclamer',
+    btnClaimed: '✓ Réclamé',
+    questClaimedToast: '🎉 Récompense réclamée : +{n} GENIUS IA !',
+    balanceHeroLbl: 'Solde GENIUS IA Disponible',
+    txHistoryLbl: 'Historique des Transactions & Récompenses',
+    noTx: 'Aucune transaction récente.',
+    // Tips
+    tipModalTitle: 'Envoyer un Pourboire',
+    tipModalSub: 'Envoyer des pièces GENIUS IA à',
+    tipCustomLbl: 'Ou entrez un montant personnalisé',
+    btnSendTip: '🪙 Envoyer le Pourboire',
+    tipSuccessToast: '🪙 Vous avez envoyé {n} GENIUS IA à @{name} !',
+    tipBtnLbl: 'Pourboire',
+    // Admin Bank
+    adminBankTitle: '🏛️ Banque Centrale GENIUS IA',
+    adminAccSub: 'Compte Admin : <strong style="color:#fcd34d;">Solde Illimité (∞)</strong>',
+    adminMintTitle: '⚡ Mint / Ajouter des Pièces à l\'Admin',
+    adminMintBtn: '+ Mint',
+    adminMintSuccess: '⚡ +{n} GENIUS IA générées sur votre compte !',
+    adminSendTitle: '🎁 Envoyer des Pièces à un Membre',
+    adminSendTargetPh: 'Email ou Nom du membre...',
+    adminSendReasonPh: 'Motif (ex: Récompense)',
+    adminSendBtn: '🎁 Envoyer Récompense',
+    adminSendSuccess: '🎁 {n} GENIUS IA envoyées à {target} !',
+    adminAirdropTitle: '🌧️ Airdrop Global (Tous les Membres)',
+    adminAirdropMsgPh: 'Message Airdrop...',
+    adminAirdropBtn: '🌧️ Lancer l\'Airdrop Global',
+    adminAirdropSuccess: '🌧️ Airdrop de {n} GENIUS IA envoyé aux {count} membres !',
+    adminAirdropConfirm: 'Êtes-vous sûr de vouloir envoyer {n} GENIUS IA à tous les membres ?',
+    // Mobile Test
+    mobileTestBtn: '📱 Tester sur Mobile',
+    editInStudioBtn: '⚡ Éditer dans le Studio',
+    qrTitle: 'Test en Direct sur Mobile',
+    qrDesc: 'Scannez ce code QR avec l\'appareil photo de votre téléphone pour exécuter ce projet 3D / WebGL en plein écran à 60 FPS sans rien installer !',
+    qrOpenTab: '🚀 Ouvrir en Plein Écran (Nouvel Onglet)',
+    copiedToast: 'Lien copié ! 🔗',
+    copyBtn: '📋 Copier',
+    copySuccessBtn: '✓ Copié !',
+    // General
+    insufficientFunds: 'Solde insuffisant ! Vous avez besoin de {n} GENIUS IA.',
+    enterValidAmount: 'Veuillez entrer un montant valide',
+    fillUserAndAmt: 'Veuillez renseigner le membre et le montant'
+  }
+};
+
+function getCommunityLang() {
+  const lang = localStorage.getItem('hub_lang');
+  return (lang === 'fr' || lang === 'en') ? lang : 'en';
+}
+
+function setCommunityLanguage(lang) {
+  localStorage.setItem('hub_lang', lang);
+  applyCommunityLanguage(lang);
+}
+
+function toggleCommunityLanguage() {
+  const cur = getCommunityLang();
+  const next = cur === 'en' ? 'fr' : 'en';
+  setCommunityLanguage(next);
+  loadFeed();
+}
+
+function applyCommunityLanguage(lang) {
+  const t = I18N[lang] || I18N.en;
+  
+  // Header
+  const flagEl = document.getElementById('langFlag');
+  const textEl = document.getElementById('langText');
+  const brandEl = document.getElementById('lbl-header-brand');
+  if (flagEl) flagEl.textContent = lang === 'fr' ? '🇫🇷' : '🇬🇧';
+  if (textEl) textEl.textContent = lang === 'fr' ? 'FR' : 'EN';
+  if (brandEl) brandEl.textContent = t.communityBrand;
+
+  // Categories
+  const catTitle = document.getElementById('lbl-categories-title');
+  if (catTitle) catTitle.textContent = lang === 'fr' ? 'Catégories' : 'Categories';
+  const cAll = document.getElementById('catbtn-all'); if (cAll) cAll.textContent = t.allPosts;
+  const cSho = document.getElementById('catbtn-showcase'); if (cSho) cSho.textContent = t.catShowcase;
+  const cAi = document.getElementById('catbtn-aiapp'); if (cAi) cAi.textContent = t.catAiApp;
+  const c3d = document.getElementById('catbtn-3ddesign'); if (c3d) c3d.textContent = t.cat3d;
+  const cMkt = document.getElementById('catbtn-marketing'); if (cMkt) cMkt.textContent = t.catMarketing;
+  const cDev = document.getElementById('catbtn-webdev'); if (cDev) cDev.textContent = t.catWebDev;
+  const cTip = document.getElementById('catbtn-tips'); if (cTip) cTip.textContent = t.catTips;
+  const cGen = document.getElementById('catbtn-general'); if (cGen) cGen.textContent = t.catGeneral;
+
+  // Post composer placeholder
+  const postInp = document.getElementById('postContent');
+  if (postInp) postInp.placeholder = t.sharePrompt;
+  const pubBtn = document.getElementById('btnPub');
+  if (pubBtn && !pubBtn.disabled) pubBtn.textContent = t.btnPublish;
+
+  // Admin Bank
+  const abTitle = document.getElementById('lbl-admin-bank-title'); if (abTitle) abTitle.textContent = t.adminBankTitle;
+  const abStatus = document.getElementById('lbl-admin-acc-status'); if (abStatus) abStatus.innerHTML = t.adminAccSub;
+  const abMintT = document.getElementById('lbl-admin-mint-title'); if (abMintT) abMintT.textContent = t.adminMintTitle;
+  const abMintB = document.getElementById('btn-admin-mint'); if (abMintB) abMintB.textContent = t.adminMintBtn;
+  const abSendT = document.getElementById('lbl-admin-send-title'); if (abSendT) abSendT.textContent = t.adminSendTitle;
+  const abSendPh = document.getElementById('admSendTarget'); if (abSendPh) abSendPh.placeholder = t.adminSendTargetPh;
+  const abSendRPh = document.getElementById('admSendReason'); if (abSendRPh) abSendRPh.placeholder = t.adminSendReasonPh;
+  const abSendB = document.getElementById('btn-admin-send'); if (abSendB) abSendB.textContent = t.adminSendBtn;
+  const abDropT = document.getElementById('lbl-admin-airdrop-title'); if (abDropT) abDropT.textContent = t.adminAirdropTitle;
+  const abDropMsg = document.getElementById('admAirdropMsg'); if (abDropMsg) abDropMsg.placeholder = t.adminAirdropMsgPh;
+  const abDropB = document.getElementById('btn-admin-airdrop'); if (abDropB) abDropB.textContent = t.adminAirdropBtn;
+
+  // Vault Tabs
+  const vWheel = document.getElementById('vtab-btn-wheel'); if (vWheel) vWheel.textContent = t.tabWheel;
+  const vQuests = document.getElementById('vtab-btn-quests'); if (vQuests) vQuests.textContent = t.tabQuests;
+  const vWallet = document.getElementById('vtab-btn-wallet'); if (vWallet) vWallet.textContent = t.tabWallet;
+
+  // Lucky Wheel
+  const wTitle = document.getElementById('lbl-wheel-title'); if (wTitle) wTitle.textContent = t.wheelTitle;
+  const wSub = document.getElementById('lbl-wheel-sub'); if (wSub) wSub.textContent = t.wheelSub;
+
+  // Quests
+  const qTitle = document.getElementById('lbl-quests-title'); if (qTitle) qTitle.textContent = t.questsTitle;
+  const qSub = document.getElementById('lbl-quests-sub'); if (qSub) qSub.textContent = t.questsSub;
+  const qPubT = document.getElementById('qtitle-publish'); if (qPubT) qPubT.textContent = t.qPublishTitle;
+  const qPubD = document.getElementById('qdesc-publish'); if (qPubD) qPubD.textContent = t.qPublishDesc;
+  const qQrT = document.getElementById('qtitle-qr'); if (qQrT) qQrT.textContent = t.qQrTitle;
+  const qQrD = document.getElementById('qdesc-qr'); if (qQrD) qQrD.textContent = t.qQrDesc;
+  const qLikeT = document.getElementById('qtitle-like'); if (qLikeT) qLikeT.textContent = t.qLikeTitle;
+  const qLikeD = document.getElementById('qdesc-like'); if (qLikeD) qLikeD.innerHTML = `${t.qLikeDesc} (<span id="qlikes-count">${currentQuests.like || 0}</span>/3)`;
+  const qCmtT = document.getElementById('qtitle-comment'); if (qCmtT) qCmtT.textContent = t.qCommentTitle;
+  const qCmtD = document.getElementById('qdesc-comment'); if (qCmtD) qCmtD.innerHTML = `${t.qCommentDesc} (<span id="qcomments-count">${currentQuests.comment || 0}</span>/2)`;
+
+  // Wallet
+  const valHero = document.getElementById('lbl-vault-balance-title'); if (valHero) valHero.textContent = t.balanceHeroLbl;
+  const valHist = document.getElementById('lbl-vault-history-title'); if (valHist) valHist.textContent = t.txHistoryLbl;
+  const noTxEl = document.getElementById('lbl-no-tx'); if (noTxEl) noTxEl.textContent = t.noTx;
+
+  // Tip Modal
+  const tipT = document.getElementById('lbl-tip-modal-title'); if (tipT) tipT.textContent = t.tipModalTitle;
+  const tipSub = document.getElementById('lbl-tip-modal-sub'); if (tipSub) tipSub.textContent = t.tipModalSub;
+  const tipCust = document.getElementById('lbl-tip-custom-amount'); if (tipCust) tipCust.textContent = t.tipCustomLbl;
+  const tipSendB = document.getElementById('btn-send-tip-modal'); if (tipSendB) tipSendB.textContent = t.btnSendTip;
+
+  checkWheelStatus();
+  updateQuestsUI();
+}
+
+// 2. Audio Synthesis Engine (Zero Latency Web Audio API)
 let audioCtx = null;
 function getAudioCtx() {
   if (!audioCtx) {
@@ -2837,7 +3110,7 @@ function playSpendSound() {
   } catch(e) {}
 }
 
-// 2. Flying Coins Animation System
+// 3. Flying Coins Animation System
 function spawnFlyingCoins(startX, startY, count = 6) {
   const container = document.getElementById('flying-coins-container');
   const target = document.getElementById('hdrCoinWidget');
@@ -2895,7 +3168,7 @@ function spawnFlyingCoins(startX, startY, count = 6) {
   }
 }
 
-// 3. User Coin State Management
+// 4. User Coin State & Robust Synchronization
 let currentCoins = 50;
 let userTransactions = [];
 let lastFreeSpin = null;
@@ -2904,58 +3177,108 @@ let currentQuests = { publish: 0, qr: 0, like: 0, comment: 0, claimed: {} };
 async function loadUserCoins(uid, email) {
   const isSuperAdmin = (email && ADMIN_EMAILS.includes(email)) || (user && user.email && ADMIN_EMAILS.includes(user.email));
   
-  if (isSuperAdmin) {
-    currentCoins = 10000;
-    document.getElementById('hdrCoinBalance').textContent = '👑 10,000 (∞)';
-    document.getElementById('vHeroBalance').textContent = '10,000 (∞)';
-    if (uid) {
-      db.collection('users').doc(uid).set({ geniusCoins: 10000, isAdminBank: true }, { merge: true }).catch(() => {});
-    }
-    loadQuestsFromStorage();
-    checkWheelStatus();
-    return;
-  }
-
-  if (uid) {
-    try {
-      const doc = await db.collection('users').doc(uid).get();
-      if (doc.exists) {
-        const data = doc.data();
-        currentCoins = typeof data.geniusCoins === 'number' ? data.geniusCoins : 50;
-        lastFreeSpin = data.lastFreeSpin || null;
-        userTransactions = data.transactions || [];
-        if (data.dailyQuests) currentQuests = data.dailyQuests;
-      } else {
-        currentCoins = 50;
-        await db.collection('users').doc(uid).set({ geniusCoins: 50, createdAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
-      }
-    } catch(e) {
-      console.warn("Coin fetch fallback to local:", e);
-      currentCoins = parseInt(localStorage.getItem('genius_coins') || '50', 10);
-    }
+  // 1. Initial immediate render from localStorage
+  const savedCoins = localStorage.getItem('genius_coins');
+  const savedTx = localStorage.getItem('genius_txs');
+  
+  if (savedCoins !== null) {
+    currentCoins = parseInt(savedCoins, 10) || (isSuperAdmin ? 10000 : 50);
   } else {
-    currentCoins = parseInt(localStorage.getItem('genius_coins') || '50', 10);
+    currentCoins = isSuperAdmin ? 10000 : 50;
+  }
+  if (isSuperAdmin && currentCoins < 10000) currentCoins = 10000;
+
+  if (savedTx) {
+    try { userTransactions = JSON.parse(savedTx) || []; } catch(e) { userTransactions = []; }
   }
 
   updateCoinUI();
+  renderTxList();
   loadQuestsFromStorage();
   checkWheelStatus();
+
+  // 2. Fetch fresh persistent state from Firestore
+  const targetUid = uid || (user ? user.uid : null);
+  if (targetUid) {
+    try {
+      const doc = await db.collection('users').doc(targetUid).get();
+      if (doc.exists) {
+        const d = doc.data();
+        if (typeof d.geniusCoins === 'number') {
+          currentCoins = isSuperAdmin ? Math.max(10000, d.geniusCoins) : d.geniusCoins;
+        }
+        if (Array.isArray(d.transactions) && d.transactions.length > 0) {
+          userTransactions = d.transactions;
+        }
+        if (d.lastFreeSpin) {
+          lastFreeSpin = d.lastFreeSpin;
+          localStorage.setItem('genius_last_spin', lastFreeSpin);
+        }
+        if (d.dailyQuests && d.dailyQuests.date === new Date().toISOString().slice(0, 10)) {
+          currentQuests = d.dailyQuests;
+          localStorage.setItem('genius_quests', JSON.stringify(currentQuests));
+        }
+      } else {
+        // Create user document
+        currentCoins = isSuperAdmin ? 10000 : 50;
+        await db.collection('users').doc(targetUid).set({
+          displayName: user ? user.displayName : 'User',
+          email: user ? user.email : '',
+          geniusCoins: currentCoins,
+          transactions: userTransactions,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+      }
+    } catch(err) {
+      console.warn("Firestore user coin load note:", err);
+    }
+  }
+
+  // 3. Save merged state & refresh UI
+  localStorage.setItem('genius_coins', currentCoins.toString());
+  localStorage.setItem('genius_txs', JSON.stringify(userTransactions));
+  updateCoinUI();
   renderTxList();
+  updateQuestsUI();
+  checkWheelStatus();
+}
+
+async function saveUserCoinState() {
+  localStorage.setItem('genius_coins', currentCoins.toString());
+  localStorage.setItem('genius_txs', JSON.stringify(userTransactions));
+  localStorage.setItem('genius_quests', JSON.stringify(currentQuests));
+  if (lastFreeSpin) localStorage.setItem('genius_last_spin', lastFreeSpin);
+
+  const targetUid = user ? user.uid : null;
+  if (targetUid) {
+    try {
+      await db.collection('users').doc(targetUid).set({
+        geniusCoins: currentCoins,
+        transactions: userTransactions,
+        dailyQuests: currentQuests,
+        lastFreeSpin: lastFreeSpin || null,
+        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+    } catch(e) {
+      console.warn("Firestore sync warning:", e);
+    }
+  }
 }
 
 function updateCoinUI() {
   const isSuperAdmin = user && user.email && ADMIN_EMAILS.includes(user.email);
-  const formatted = isSuperAdmin ? '👑 10,000 (∞)' : currentCoins.toLocaleString();
+  const formatted = isSuperAdmin ? `👑 ${currentCoins.toLocaleString()} (∞)` : currentCoins.toLocaleString();
   const el1 = document.getElementById('hdrCoinBalance');
   const el2 = document.getElementById('vHeroBalance');
   if (el1) el1.textContent = formatted;
   if (el2) el2.textContent = formatted;
-  localStorage.setItem('genius_coins', currentCoins.toString());
 }
 
 async function addCoins(amount, reason, showAnim = true, originEl = null) {
   const isSuperAdmin = user && user.email && ADMIN_EMAILS.includes(user.email);
-  if (!isSuperAdmin) {
+  if (isSuperAdmin) {
+    currentCoins = Math.max(10000, currentCoins + amount);
+  } else {
     currentCoins += amount;
   }
   
@@ -2966,10 +3289,11 @@ async function addCoins(amount, reason, showAnim = true, originEl = null) {
     time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   };
   userTransactions.unshift(tx);
-  if (userTransactions.length > 30) userTransactions.pop();
+  if (userTransactions.length > 50) userTransactions.pop();
 
   updateCoinUI();
   renderTxList();
+  await saveUserCoinState();
 
   if (showAnim) {
     let x = window.innerWidth / 2, y = window.innerHeight / 2;
@@ -2980,26 +3304,29 @@ async function addCoins(amount, reason, showAnim = true, originEl = null) {
     }
     spawnFlyingCoins(x, y, 6);
   }
-
-  if (user && user.uid && !isSuperAdmin) {
-    try {
-      await db.collection('users').doc(user.uid).set({
-        geniusCoins: currentCoins,
-        transactions: userTransactions
-      }, { merge: true });
-    } catch(e) {}
-  }
 }
 
 async function deductCoins(amount, reason) {
   const isSuperAdmin = user && user.email && ADMIN_EMAILS.includes(user.email);
   if (isSuperAdmin) {
     playSpendSound();
-    return true; // Admin has infinite coins
+    const tx = {
+      desc: reason,
+      amount: `-${amount} 🪙`,
+      type: 'minus',
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    userTransactions.unshift(tx);
+    if (userTransactions.length > 50) userTransactions.pop();
+    renderTxList();
+    await saveUserCoinState();
+    return true;
   }
 
   if (currentCoins < amount) {
-    toast(`Sold insuficient! Ai nevoie de ${amount} GENIUS IA.`, 'error');
+    const lang = getCommunityLang();
+    const t = I18N[lang] || I18N.en;
+    toast(t.insufficientFunds.replace('{n}', amount), 'error');
     return false;
   }
 
@@ -3013,41 +3340,36 @@ async function deductCoins(amount, reason) {
     time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   };
   userTransactions.unshift(tx);
-  if (userTransactions.length > 30) userTransactions.pop();
+  if (userTransactions.length > 50) userTransactions.pop();
 
   updateCoinUI();
   renderTxList();
-
-  if (user && user.uid) {
-    try {
-      await db.collection('users').doc(user.uid).set({
-        geniusCoins: currentCoins,
-        transactions: userTransactions
-      }, { merge: true });
-    } catch(e) {}
-  }
+  await saveUserCoinState();
   return true;
 }
 
 function renderTxList() {
   const container = document.getElementById('vaultTxList');
   if (!container) return;
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+
   if (!userTransactions.length) {
-    container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:0.82rem;">Nu există tranzacții recente.</div>';
+    container.innerHTML = `<div style="text-align:center;padding:20px;color:var(--muted);font-size:0.82rem;" id="lbl-no-tx">${t.noTx}</div>`;
     return;
   }
-  container.innerHTML = userTransactions.map(t => `
+  container.innerHTML = userTransactions.map(item => `
     <div class="tx-item">
       <div>
-        <div class="tx-desc">${esc(t.desc)}</div>
-        <div class="tx-time">${esc(t.time)}</div>
+        <div class="tx-desc">${esc(item.desc)}</div>
+        <div class="tx-time">${esc(item.time)}</div>
       </div>
-      <div class="tx-amt ${t.type}">${t.amount}</div>
+      <div class="tx-amt ${item.type}">${item.amount}</div>
     </div>
   `).join('');
 }
 
-// 4. Lucky Wheel Engine
+// 5. Lucky Wheel Engine
 const WHEEL_SLICES = [10, 25, 50, 75, 100, 150, 200];
 const WHEEL_COLORS = [
   ['#06b6d4', '#0891b2'], // 10
@@ -3133,16 +3455,18 @@ function checkWheelStatus() {
   const btn = document.getElementById('btnSpinWheel');
   const sub = document.getElementById('wheelCooldownText');
   if (!btn || !sub) return;
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
 
   if (isFree) {
-    btn.innerHTML = '🎁 Învârte Gratuit! (1/zi)';
+    btn.innerHTML = t.btnSpinFree;
     btn.style.background = 'linear-gradient(135deg, #10b981, #06b6d4)';
-    sub.textContent = 'Rotirea ta gratuită de azi este disponibilă!';
+    sub.textContent = t.freeSpinReady;
     sub.style.color = '#34d399';
   } else {
-    btn.innerHTML = '🎲 Învârte pentru 50 🪙';
+    btn.innerHTML = t.btnSpinPaid;
     btn.style.background = 'linear-gradient(135deg, #f59e0b, #d946ef)';
-    sub.textContent = 'Ai folosit rotirea gratuită. Fiecare rotire următoare: 50 GENIUS IA';
+    sub.textContent = t.freeSpinUsed;
     sub.style.color = '#94a3b8';
   }
 }
@@ -3153,9 +3477,11 @@ async function spinLuckyWheel() {
   const storedDate = localStorage.getItem('genius_last_spin') || lastFreeSpin;
   const isFree = storedDate !== today;
   const isSuperAdmin = user && user.email && ADMIN_EMAILS.includes(user.email);
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
 
   if (!isFree && !isSuperAdmin) {
-    const success = await deductCoins(50, '🎲 Rotire Roata Norocului');
+    const success = await deductCoins(50, lang === 'fr' ? '🎲 Tour Roue de la Fortune' : '🎲 Lucky Wheel Spin');
     if (!success) return;
   }
 
@@ -3163,47 +3489,38 @@ async function spinLuckyWheel() {
   const btn = document.getElementById('btnSpinWheel');
   if (btn) btn.disabled = true;
 
-  // Mark free spin as consumed
   if (isFree) {
     localStorage.setItem('genius_last_spin', today);
     lastFreeSpin = today;
-    if (user && user.uid) {
-      db.collection('users').doc(user.uid).set({ lastFreeSpin: today }, { merge: true }).catch(() => {});
-    }
+    await saveUserCoinState();
   }
 
-  // Generate target spin: 5 to 7 full rotations + random slice offset
   const numSlices = WHEEL_SLICES.length;
   const sliceAngle = (2 * Math.PI) / numSlices;
   const winIndex = Math.floor(Math.random() * numSlices);
   const extraRotations = 6;
   
-  // Angle needed for winIndex to land at top (top is -Math.PI / 2)
   const targetSliceCenter = (winIndex + 0.5) * sliceAngle;
   let targetAngle = (3 * Math.PI / 2) - targetSliceCenter + (extraRotations * 2 * Math.PI);
   
-  // Ensure we always rotate forward
   while (targetAngle < wheelCurrentAngle + extraRotations * 2 * Math.PI) {
     targetAngle += 2 * Math.PI;
   }
 
   const startAngle = wheelCurrentAngle;
   const totalDelta = targetAngle - startAngle;
-  const duration = 4800; // 4.8 seconds
+  const duration = 4800;
   const startTime = performance.now();
   let lastTickSlice = -1;
 
   function animateWheel(now) {
     const elapsed = now - startTime;
     const progress = Math.min(elapsed / duration, 1);
-    
-    // Ease-out cubic
     const easeOut = 1 - Math.pow(1 - progress, 3);
     wheelCurrentAngle = startAngle + totalDelta * easeOut;
 
     drawLuckyWheel(wheelCurrentAngle);
 
-    // Audio Tick calculation
     const normAngle = ((3 * Math.PI / 2) - (wheelCurrentAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
     const currentSlice = Math.floor(normAngle / sliceAngle) % numSlices;
     if (currentSlice !== lastTickSlice) {
@@ -3214,7 +3531,6 @@ async function spinLuckyWheel() {
     if (progress < 1) {
       requestAnimationFrame(animateWheel);
     } else {
-      // Finished Spin
       wheelCurrentAngle = targetAngle % (2 * Math.PI);
       drawLuckyWheel(wheelCurrentAngle);
       isWheelSpinning = false;
@@ -3228,21 +3544,22 @@ async function spinLuckyWheel() {
         playCoinSound();
       }
 
-      toast(`🎉 Felicitări! Ai câștigat ${prize} GENIUS IA la Roata Norocului!`, 'success');
+      toast(t.wheelWon.replace('{n}', prize), 'success');
       const wheelBtn = document.getElementById('btnSpinWheel');
-      addCoins(prize, `🎰 Premiu Roata Norocului (${prize} 🪙)`, true, wheelBtn);
+      const winDesc = lang === 'fr' ? `🎰 Gain Roue de la Fortune (+${prize} 🪙)` : `🎰 Lucky Wheel Reward (+${prize} 🪙)`;
+      addCoins(prize, winDesc, true, wheelBtn);
     }
   }
 
   requestAnimationFrame(animateWheel);
 }
 
-// 5. Daily Quests System
+// 6. Daily Quests System
 const QUEST_REWARDS = {
-  publish: { target: 1, reward: 25, title: 'Creatorul Zilei' },
-  qr:      { target: 1, reward: 10, title: 'Mobile Explorer' },
-  like:    { target: 3, reward: 5,  title: 'Comunitate Activă' },
-  comment: { target: 2, reward: 10, title: 'Feedback Master' }
+  publish: { target: 1, reward: 25, title_en: 'Daily Creator', title_fr: 'Créateur du Jour' },
+  qr:      { target: 1, reward: 10, title_en: 'Mobile Explorer', title_fr: 'Explorateur Mobile' },
+  like:    { target: 3, reward: 5,  title_en: 'Active Community', title_fr: 'Communauté Active' },
+  comment: { target: 2, reward: 10, title_en: 'Feedback Master', title_fr: 'Maître du Feedback' }
 };
 
 function loadQuestsFromStorage() {
@@ -3262,15 +3579,15 @@ function recordQuestProgress(type, count = 1) {
   if (currentQuests.date !== today) loadQuestsFromStorage();
   if (typeof currentQuests[type] === 'number') {
     currentQuests[type] = (currentQuests[type] || 0) + count;
-    localStorage.setItem('genius_quests', JSON.stringify(currentQuests));
+    saveUserCoinState();
     updateQuestsUI();
-    if (user && user.uid) {
-      db.collection('users').doc(user.uid).set({ dailyQuests: currentQuests }, { merge: true }).catch(() => {});
-    }
   }
 }
 
 function updateQuestsUI() {
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+
   ['publish', 'qr', 'like', 'comment'].forEach(type => {
     const q = QUEST_REWARDS[type];
     const val = currentQuests[type] || 0;
@@ -3296,12 +3613,12 @@ function updateQuestsUI() {
 
     if (btn) {
       if (isClaimed) {
-        btn.textContent = '✓ Revendicat';
+        btn.textContent = t.btnClaimed;
         btn.className = 'btn-claim-quest claimed';
         btn.disabled = true;
         if (card) card.classList.add('completed');
       } else if (isDone) {
-        btn.textContent = '🎁 Revendică';
+        btn.textContent = `🎁 ${t.btnClaim}`;
         btn.className = 'btn-claim-quest';
         btn.disabled = false;
         if (card) card.classList.add('completed');
@@ -3315,26 +3632,26 @@ function updateQuestsUI() {
   });
 }
 
-function claimQuest(type) {
+async function claimQuest(type) {
   const q = QUEST_REWARDS[type];
   const val = currentQuests[type] || 0;
   if (val < q.target || (currentQuests.claimed && currentQuests.claimed[type])) return;
 
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+  const questTitle = lang === 'fr' ? q.title_fr : q.title_en;
+
   currentQuests.claimed = currentQuests.claimed || {};
   currentQuests.claimed[type] = true;
-  localStorage.setItem('genius_quests', JSON.stringify(currentQuests));
   updateQuestsUI();
 
   const card = document.getElementById(`qcard-${type}`);
-  addCoins(q.reward, `🎯 Misiune: ${q.title}`, true, card);
-  toast(`🎉 Recompensă revendicată: +${q.reward} GENIUS IA!`, 'success');
-
-  if (user && user.uid) {
-    db.collection('users').doc(user.uid).set({ dailyQuests: currentQuests }, { merge: true }).catch(() => {});
-  }
+  await addCoins(q.reward, `🎯 ${lang === 'fr' ? 'Quête' : 'Quest'}: ${questTitle}`, true, card);
+  toast(t.questClaimedToast.replace('{n}', q.reward), 'success');
+  await saveUserCoinState();
 }
 
-// 6. Community Tipping & Post Boost Engine
+// 7. Community Tipping & Post Boost Engine
 let activeTipPostId = null;
 let activeTipAuthorUid = null;
 let activeTipAmount = 20;
@@ -3372,117 +3689,155 @@ function clearTipChipActive() {
 
 async function confirmSendTip() {
   const amt = parseInt(document.getElementById('tipCustomAmount').value, 10) || activeTipAmount;
-  if (amt <= 0) { toast('Introdu o sumă validă', 'error'); return; }
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+  if (!amt || amt <= 0) { toast(t.enterValidAmount, 'error'); return; }
 
   const recipientName = document.getElementById('tipRecipientName').textContent;
-  const success = await deductCoins(amt, `🪙 Bacșiș trimis către @${recipientName}`);
+  const tipDesc = lang === 'fr' ? `🪙 Pourboire envoyé à @${recipientName}` : `🪙 Tip sent to @${recipientName}`;
+  const success = await deductCoins(amt, tipDesc);
   if (!success) return;
 
   // Credit author in Firestore
   if (activeTipAuthorUid) {
-    db.collection('users').doc(activeTipAuthorUid).set({
-      geniusCoins: firebase.firestore.FieldValue.increment(amt),
-      transactions: firebase.firestore.FieldValue.arrayUnion({
-        desc: `🪙 Bacșiș primit de la @${user.displayName}`,
-        amount: `+${amt} 🪙`,
-        type: 'plus',
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      })
-    }, { merge: true }).catch(() => {});
+    const recTx = {
+      desc: lang === 'fr' ? `🪙 Pourboire reçu de @${user ? user.displayName : 'Ami'}` : `🪙 Tip received from @${user ? user.displayName : 'Friend'}`,
+      amount: `+${amt} 🪙`,
+      type: 'plus',
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    try {
+      await db.collection('users').doc(activeTipAuthorUid).set({
+        geniusCoins: firebase.firestore.FieldValue.increment(amt),
+        transactions: firebase.firestore.FieldValue.arrayUnion(recTx)
+      }, { merge: true });
+    } catch(e) {
+      console.warn("Could not credit author directly:", e);
+    }
   }
 
   // Update post tips total
   if (activeTipPostId) {
-    db.collection('devsocial_posts').doc(activeTipPostId).update({
-      tipsTotal: firebase.firestore.FieldValue.increment(amt)
-    }).catch(() => {});
+    try {
+      await db.collection('devsocial_posts').doc(activeTipPostId).update({
+        tipsTotal: firebase.firestore.FieldValue.increment(amt)
+      });
+    } catch(e) {}
   }
 
   closeTipModal();
-  toast(`🪙 Ai trimis cu succes ${amt} GENIUS IA către @${recipientName}!`, 'success');
+  toast(t.tipSuccessToast.replace('{n}', amt).replace('{name}', recipientName), 'success');
   spawnFlyingCoins(window.innerWidth / 2, window.innerHeight / 2, 8);
 }
 
-// 7. Admin Central Bank Engine
+// 8. Admin Central Bank Engine
 async function adminMintCoins() {
   if (!isAdmin) return;
   const amt = parseInt(document.getElementById('admSelfMintAmount').value, 10);
-  if (!amt || amt <= 0) { toast('Introdu o sumă validă', 'error'); return; }
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+  if (!amt || amt <= 0) { toast(t.enterValidAmount, 'error'); return; }
 
-  addCoins(amt, `⚡ Admin Mint: +${amt} 🪙`, true);
-  toast(`⚡ Au fost generate +${amt} GENIUS IA în contul tău!`, 'success');
+  await addCoins(amt, `⚡ Admin Mint: +${amt} 🪙`, true);
+  toast(t.adminMintSuccess.replace('{n}', amt), 'success');
 }
 
 async function adminSendCoinsToUser() {
   if (!isAdmin) return;
-  const target = document.getElementById('admSendTarget').value.trim().toLowerCase();
+  const target = document.getElementById('admSendTarget').value.trim();
   const amt = parseInt(document.getElementById('admSendAmount').value, 10);
-  const reason = document.getElementById('admSendReason').value.trim() || 'Premiu de la Admin';
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+  const reason = document.getElementById('admSendReason').value.trim() || (lang === 'fr' ? 'Récompense Admin' : 'Admin Award');
 
-  if (!target || !amt || amt <= 0) { toast('Completează utilizatorul și suma!', 'error'); return; }
+  if (!target || !amt || amt <= 0) { toast(t.fillUserAndAmt, 'error'); return; }
 
   try {
+    const targetLower = target.toLowerCase();
     const snap = await db.collection('users').get();
     let foundDoc = null;
     snap.forEach(d => {
       const data = d.data();
-      if ((data.email && data.email.toLowerCase() === target) || (data.displayName && data.displayName.toLowerCase() === target) || d.id === target) {
+      if ((data.email && data.email.toLowerCase() === targetLower) ||
+          (data.displayName && data.displayName.toLowerCase() === targetLower) ||
+          d.id.toLowerCase() === targetLower) {
         foundDoc = d;
       }
     });
 
-    if (!foundDoc) {
-      toast('Utilizatorul nu a fost găsit în baza de date!', 'error');
-      return;
+    const recTx = {
+      desc: `🎁 ${reason}`,
+      amount: `+${amt} 🪙`,
+      type: 'plus',
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    if (foundDoc) {
+      await db.collection('users').doc(foundDoc.id).set({
+        geniusCoins: firebase.firestore.FieldValue.increment(amt),
+        transactions: firebase.firestore.FieldValue.arrayUnion(recTx)
+      }, { merge: true });
+    } else {
+      await db.collection('users').doc(target).set({
+        email: target,
+        displayName: target.split('@')[0],
+        geniusCoins: amt + 50,
+        transactions: [recTx],
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
     }
 
-    await db.collection('users').doc(foundDoc.id).set({
-      geniusCoins: firebase.firestore.FieldValue.increment(amt),
-      transactions: firebase.firestore.FieldValue.arrayUnion({
-        desc: `🎁 ${reason}`,
-        amount: `+${amt} 🪙`,
-        type: 'plus',
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      })
-    }, { merge: true });
+    const adminTx = {
+      desc: `🎁 Sent ${amt} 🪙 to ${foundDoc ? (foundDoc.data().displayName || target) : target}`,
+      amount: `-${amt} 🪙`,
+      type: 'minus',
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    userTransactions.unshift(adminTx);
+    renderTxList();
+    await saveUserCoinState();
 
-    toast(`🎁 Ai trimis ${amt} GENIUS IA către ${foundDoc.data().displayName || target}!`, 'success');
+    toast(t.adminSendSuccess.replace('{n}', amt).replace('{target}', target), 'success');
     document.getElementById('admSendTarget').value = '';
+    spawnFlyingCoins(window.innerWidth / 2, window.innerHeight / 2, 6);
   } catch(e) {
-    toast('Eroare: ' + e.message, 'error');
+    toast('Error: ' + e.message, 'error');
   }
 }
 
 async function adminGlobalAirdrop() {
   if (!isAdmin) return;
   const amt = parseInt(document.getElementById('admAirdropAmount').value, 10);
-  const msg = document.getElementById('admAirdropMsg').value.trim() || 'Cadou de la Admin!';
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+  const msg = document.getElementById('admAirdropMsg').value.trim() || (lang === 'fr' ? 'Cadeau de l\'Admin !' : 'Gift from Admin!');
 
-  if (!amt || amt <= 0) { toast('Introdu o sumă validă per membru!', 'error'); return; }
-  if (!confirm(`Sigur vrei să trimiți ${amt} GENIUS IA tuturor membrilor înregistrați?`)) return;
+  if (!amt || amt <= 0) { toast(t.enterValidAmount, 'error'); return; }
+  if (!confirm(t.adminAirdropConfirm.replace('{n}', amt))) return;
 
   try {
     const snap = await db.collection('users').get();
     const batch = db.batch();
+    const airdropTx = {
+      desc: `🌧️ Global Airdrop: ${msg}`,
+      amount: `+${amt} 🪙`,
+      type: 'plus',
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
     snap.forEach(d => {
       batch.set(db.collection('users').doc(d.id), {
         geniusCoins: firebase.firestore.FieldValue.increment(amt),
-        transactions: firebase.firestore.FieldValue.arrayUnion({
-          desc: `🌧️ Airdrop Global: ${msg}`,
-          amount: `+${amt} 🪙`,
-          type: 'plus',
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        })
+        transactions: firebase.firestore.FieldValue.arrayUnion(airdropTx)
       }, { merge: true });
     });
     await batch.commit();
 
-    // Post announcement in community feed
     await db.collection('devsocial_posts').add({
-      uid: user.uid,
+      uid: user ? user.uid : 'admin',
       displayName: '📣 IA Studio — Admin Central Bank',
-      photoURL: user.photoURL,
-      content: `🌧️ GLOBAL AIRDROP! Toți membrii comunității au primit tocmai acum +${amt} GENIUS IA în portofel! ${msg} 🪙✨`,
+      photoURL: user ? user.photoURL : '../logo-ia-codestudio.webp',
+      content: `🌧️ GLOBAL AIRDROP! All community members just received +${amt} GENIUS IA coins! ${msg} 🪙✨`,
       category: 'general',
       pinned: true,
       isAnnouncement: true,
@@ -3490,14 +3845,24 @@ async function adminGlobalAirdrop() {
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
 
-    toast(`🌧️ Airdrop-ul de ${amt} GENIUS IA a fost trimis către ${snap.size} membri!`, 'success');
+    const adminTx = {
+      desc: `🌧️ Global Airdrop (${amt} 🪙 x ${snap.size} members)`,
+      amount: `-${amt * snap.size} 🪙`,
+      type: 'minus',
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    userTransactions.unshift(adminTx);
+    renderTxList();
+    await saveUserCoinState();
+
+    toast(t.adminAirdropSuccess.replace('{n}', amt).replace('{count}', snap.size), 'success');
     loadFeed();
   } catch(e) {
-    toast('Eroare airdrop: ' + e.message, 'error');
+    toast('Error: ' + e.message, 'error');
   }
 }
 
-// 8. Vault Modal Controls
+// 9. Vault Modal Controls
 function openVaultModal() {
   document.getElementById('vaultOverlay').classList.add('open');
   drawLuckyWheel(wheelCurrentAngle);
@@ -3525,11 +3890,12 @@ function switchVaultTab(tabName) {
   }
 }
 
-// Auto draw wheel on page load
+// Initialize on page load
 window.addEventListener('DOMContentLoaded', () => {
+  const initialLang = getCommunityLang();
+  applyCommunityLanguage(initialLang);
   drawLuckyWheel(wheelCurrentAngle);
-  loadQuestsFromStorage();
-  checkWheelStatus();
+  loadUserCoins(null, null);
 });
 
 document.addEventListener('keydown', e => { 
