@@ -1409,6 +1409,206 @@
       margin-top: 16px;
     }
 
+    /* 🔥 1. DAILY STREAK WIDGET */
+    .streak-box {
+      background: linear-gradient(135deg, rgba(239,68,68,0.12), rgba(245,158,11,0.12));
+      border: 1px solid rgba(245,158,11,0.3);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+    .streak-badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: linear-gradient(135deg, rgba(239,68,68,0.25), rgba(245,158,11,0.25));
+      border: 1px solid rgba(245,158,11,0.5);
+      color: #fbbf24;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-left: 6px;
+    }
+    .streak-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      margin: 12px 0;
+    }
+    .streak-day {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 4px;
+      text-align: center;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .streak-day.claimed {
+      background: rgba(16,185,129,0.15);
+      border-color: #10b981;
+      color: #34d399;
+    }
+    .streak-day.today {
+      background: linear-gradient(135deg, rgba(245,158,11,0.25), rgba(239,68,68,0.25));
+      border-color: #fbbf24;
+      box-shadow: 0 0 12px rgba(245,158,11,0.3);
+      animation: pulse 1.8s infinite;
+    }
+    .streak-day-num { font-size: 0.68rem; font-weight: 700; color: var(--muted); text-transform: uppercase; }
+    .streak-day-icon { font-size: 1.1rem; margin: 4px 0; }
+    .streak-day-reward { font-size: 0.72rem; font-weight: 800; color: #fbbf24; }
+
+    /* 👥 2. VIRAL REFERRAL WIDGET */
+    .referral-box {
+      background: linear-gradient(135deg, rgba(56,189,248,0.12), rgba(124,58,237,0.15));
+      border: 1px solid rgba(56,189,248,0.3);
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 14px;
+    }
+    .ref-link-wrap {
+      display: flex;
+      gap: 6px;
+      margin: 10px 0 8px;
+    }
+    .ref-input {
+      flex: 1;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      padding: 7px 10px;
+      color: #38bdf8;
+      font-size: 0.78rem;
+      font-family: monospace;
+      outline: none;
+    }
+    .ref-social-btns {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .ref-social-btn {
+      flex: 1;
+      padding: 6px;
+      border-radius: 8px;
+      border: 1px solid var(--border2);
+      background: var(--bg3);
+      color: var(--text);
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+    .ref-social-btn:hover { background: var(--border); transform: translateY(-1px); }
+
+    /* 📸 3. SOCIAL SHARE CARD MODAL */
+    .social-card-stage {
+      background: #020617;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    #socialCardCanvas {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 8px;
+    }
+    .btn-action-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      padding: 5px 10px;
+      color: var(--text);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .btn-action-pill:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.3);
+      transform: translateY(-1px);
+    }
+    .btn-action-pill.active {
+      background: rgba(245,158,11,0.2);
+      border-color: #f59e0b;
+      color: #fbbf24;
+    }
+
+    /* 🎆 4. LIVE FLOATING REACTIONS & PARTICLES */
+    .reactions-bar {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 10px;
+      background: rgba(255,255,255,0.03);
+      border-top: 1px solid rgba(255,255,255,0.05);
+      flex-wrap: wrap;
+    }
+    .reaction-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 3px 8px;
+      font-size: 0.75rem;
+      color: var(--text2);
+      cursor: pointer;
+      transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+      user-select: none;
+    }
+    .reaction-pill:hover {
+      background: rgba(255,255,255,0.15);
+      transform: scale(1.1);
+    }
+    .reaction-pill:active {
+      transform: scale(0.92);
+    }
+    .reaction-pill.reacted {
+      background: rgba(124,58,237,0.25);
+      border-color: #a855f7;
+      color: #e9d5ff;
+    }
+    .floating-reaction {
+      position: fixed;
+      font-size: 1.8rem;
+      pointer-events: none;
+      z-index: 10000;
+      animation: floatUpAndFade 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    @keyframes floatUpAndFade {
+      0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(0.6) rotate(0deg);
+      }
+      50% {
+        opacity: 1;
+        transform: translate(calc(var(--rand-x) * 1px), -80px) scale(1.4) rotate(calc(var(--rand-r) * 1deg));
+      }
+      100% {
+        opacity: 0;
+        transform: translate(calc(var(--rand-x) * 1.5px), -150px) scale(1) rotate(calc(var(--rand-r) * 2deg));
+      }
+    }
+
     /* RESPONSIVE */
     @media(max-width:1024px) { .wrap { grid-template-columns:1fr; } .sl,.sr { display:none; } }
     @media(max-width:640px) {
@@ -1879,12 +2079,30 @@
         <div class="shop-grid" id="shopGlowsGrid"></div>
       </div>
 
-      <!-- TAB 4: DAILY QUESTS -->
+      <!-- TAB 4: DAILY QUESTS & STREAK -->
       <div id="vpane-quests" class="v-pane" style="display:none;">
-        <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1.05rem;color:#fff;margin-bottom:4px;" id="lbl-quests-title">
+        
+        <!-- 🔥 DAILY LOGIN STREAK -->
+        <div class="streak-box">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+            <div>
+              <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1.05rem;color:#fff;display:flex;align-items:center;gap:6px;">
+                <span>🔥</span> <span id="lbl-streak-title">7-Day Login Streak</span>
+                <span class="streak-badge-pill" id="vaultStreakPill">🔥 Day 1</span>
+              </div>
+              <div style="font-size:0.78rem;color:#cbd5e1;margin-top:2px;" id="lbl-streak-sub">Check in daily to earn escalating coins and free Mystery Chests!</div>
+            </div>
+            <button class="shop-btn buy" style="width:auto;padding:6px 14px;font-size:0.78rem;" id="btnClaimDailyStreak" onclick="claimDailyStreak()">🎁 Claim Today</button>
+          </div>
+          <div class="streak-grid" id="streakGridContainer">
+            <!-- 7 Days rendered dynamically by JS -->
+          </div>
+        </div>
+
+        <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1.02rem;color:#fff;margin:16px 0 4px;" id="lbl-quests-title">
           🎯 Daily Quests (Resets every 24h)
         </div>
-        <div style="font-size:0.8rem;color:#94a3b8;margin-bottom:14px;" id="lbl-quests-sub">
+        <div style="font-size:0.8rem;color:#94a3b8;margin-bottom:12px;" id="lbl-quests-sub">
           Complete quests below to earn free GENIUS IA coins!
         </div>
 
@@ -1945,6 +2163,27 @@
             </div>
           </div>
         </div>
+
+        <!-- 👥 VIRAL REFERRAL WIDGET -->
+        <div class="referral-box">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+            <div>
+              <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:0.95rem;color:#fff;" id="lbl-ref-title">👥 Invite Friends & Earn 100 🪙</div>
+              <div style="font-size:0.75rem;color:#94a3b8;" id="lbl-ref-sub">Both you and your friend get 100 GENIUS IA when they join!</div>
+            </div>
+            <div style="font-size:0.78rem;color:#38bdf8;font-weight:700;" id="refCountStats">0 Friends Invited</div>
+          </div>
+          <div class="ref-link-wrap">
+            <input type="text" class="ref-input" id="refLinkInput" readonly value="https://ia-codestudio.com/community/?ref=...">
+            <button class="shop-btn buy" style="width:auto;padding:6px 12px;font-size:0.78rem;" onclick="copyReferralLink()" id="btnCopyRef">📋 Copy</button>
+          </div>
+          <div class="ref-social-btns">
+            <button class="ref-social-btn" onclick="shareReferral('whatsapp')">💬 WhatsApp</button>
+            <button class="ref-social-btn" onclick="shareReferral('telegram')">✈️ Telegram</button>
+            <button class="ref-social-btn" onclick="shareReferral('twitter')">𝕏 Twitter / X</button>
+          </div>
+        </div>
+
       </div>
 
       <!-- TAB 5: LEADERBOARD & BOUNTIES -->
@@ -2053,6 +2292,34 @@
       <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.3rem;color:#fff;margin:12px 0 4px;" id="chestResultTitle">Opening Chest...</div>
       <div style="font-size:0.9rem;color:#fbbf24;font-weight:700;" id="chestResultDesc">Rolling mystery rewards!</div>
       <button class="shop-btn buy" style="margin-top:18px;width:auto;padding:8px 24px;" onclick="closeChestModal()" id="btn-claim-chest-reward">Awesome! ✨</button>
+    </div>
+  </div>
+</div>
+
+<!-- SOCIAL SHARE CARD MODAL -->
+<div class="overlay" id="socialCardOverlay" onclick="closeSocialCardModal(event)">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:640px;">
+    <div class="mh">
+      <div class="mt" style="display:flex;align-items:center;gap:6px;">
+        <span>📸</span> <span id="lbl-social-card-title">Social Share Card</span>
+      </div>
+      <button class="mc" onclick="closeSocialCardModal()">✕</button>
+    </div>
+    <div class="mb">
+      <div style="font-size:0.84rem;color:#94a3b8;margin-bottom:12px;" id="lbl-social-card-sub">
+        Download or copy your branded 3D project showcase card with live QR Code to share on social media.
+      </div>
+      <div class="social-card-stage">
+        <canvas id="socialCardCanvas" width="1200" height="630"></canvas>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button class="shop-btn" style="width:auto;padding:8px 16px;background:var(--bg3);border:1px solid var(--border2);color:#fff;" onclick="copySocialCardToClipboard()" id="btn-copy-social-card">
+          📋 Copy Image
+        </button>
+        <button class="shop-btn buy" style="width:auto;padding:8px 18px;" onclick="downloadSocialCard()" id="btn-download-social-card">
+          📥 Download PNG
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -2209,6 +2476,9 @@ auth.onAuthStateChanged(async u => {
     }
     db.collection('users').doc(u.uid).set(userDataToSave, { merge: true });
     loadUserStats(u.uid);
+    initReferralSystem();
+    loadStreakState();
+    checkAndApplyReferralBonus();
   } else {
     // Check if user is logged in via Premium Session on the main site
     try {
@@ -2235,6 +2505,9 @@ auth.onAuthStateChanged(async u => {
           renderLoggedIn(user);
           db.collection('users').doc(user.uid).set({ displayName:user.displayName, photoURL:user.photoURL, email:user.email, lastSeen:firebase.firestore.FieldValue.serverTimestamp() }, { merge:true });
           loadUserStats(user.uid);
+          initReferralSystem();
+          loadStreakState();
+          checkAndApplyReferralBonus();
           loadFeed();
           if (isAdmin) loadStats();
           return;
@@ -2580,10 +2853,25 @@ function renderPost(p) {
         <span>🚀</span>
         <span>${currentLang === 'fr' ? 'Booster' : 'Boost'}</span>
       </button>` : ''}
+      <button class="btn-action-pill" onclick="openSocialCardModal('${p.id}')" title="Generate Share Card">
+        <span>📸</span>
+        <span>${currentLang === 'fr' ? 'Carte Sociale' : 'Card'}</span>
+      </button>
       <button class="act-btn share-btn" onclick="sharePost('${p.id}')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
         ${currentLang === 'fr' ? 'Partager' : 'Share'}
       </button>
+    </div>
+    <div class="reactions-bar" id="rx-bar-${p.id}">
+      ${['🔥', '🚀', '💎', '🤯', '✨', '❤️'].map(emoji => {
+        const count = (p.reactions && p.reactions[emoji]) || 0;
+        return `
+          <button class="reaction-pill" onclick="reactToPost('${p.id}', '${emoji}', event)">
+            <span>${emoji}</span>
+            <span class="rx-cnt" id="rx-cnt-${p.id}-${encodeURIComponent(emoji)}">${count > 0 ? count : ''}</span>
+          </button>
+        `;
+      }).join('')}
     </div>`;
   return el;
 }
@@ -3505,7 +3793,28 @@ const I18N = {
     // General
     insufficientFunds: 'Insufficient balance! You need {n} GENIUS IA.',
     enterValidAmount: 'Please enter a valid amount',
-    fillUserAndAmt: 'Please fill in member and amount'
+    fillUserAndAmt: 'Please fill in member and amount',
+    // Daily Streak
+    streakTitle: '7-Day Login Streak',
+    streakSub: 'Check in daily to earn escalating coins and free Mystery Chests!',
+    btnClaimStreak: '🎁 Claim Today',
+    streakClaimedToast: '🔥 Daily Streak #{day} claimed: +{n} GENIUS IA!',
+    streakChestUnlocked: '🎁 BONUS! You unlocked a Free Diamond Chest!',
+    streakDayLbl: 'Day {n}',
+    streakClaimedLbl: 'Claimed',
+    // Referral
+    refTitle: '👥 Invite Friends & Earn 100 🪙',
+    refSub: 'Both you and your friend get 100 GENIUS IA when they join!',
+    refStatsLbl: '{n} Friends Invited',
+    refLinkCopiedToast: '📋 Referral invite link copied!',
+    refRewardToast: '🎁 Welcome Bonus! You received +100 GENIUS IA from referral invite!',
+    // Social Card
+    socialCardTitle: 'Social Share Card',
+    socialCardSub: 'Download or copy your branded 3D project showcase card with live QR Code to share on social media.',
+    btnCopyImage: '📋 Copy Image',
+    btnDownloadImage: '📥 Download PNG',
+    imageCopiedToast: '✨ Social card copied to clipboard!',
+    downloadStartedToast: '📥 Download started!'
   },
   fr: {
     communityBrand: '✦ Communauté',
@@ -3646,7 +3955,28 @@ const I18N = {
     // General
     insufficientFunds: 'Solde insuffisant ! Vous avez besoin de {n} GENIUS IA.',
     enterValidAmount: 'Veuillez entrer un montant valide',
-    fillUserAndAmt: 'Veuillez renseigner le membre et le montant'
+    fillUserAndAmt: 'Veuillez renseigner le membre et le montant',
+    // Daily Streak
+    streakTitle: 'Série de Connexion (7 Jours)',
+    streakSub: 'Connectez-vous chaque jour pour gagner des pièces croissantes et des coffres gratuits !',
+    btnClaimStreak: '🎁 Réclamer Aujourd\'hui',
+    streakClaimedToast: '🔥 Série Jour #{day} réclamée : +{n} GENIUS IA !',
+    streakChestUnlocked: '🎁 BONUS ! Vous avez débloqué un Coffre Diamant Gratuit !',
+    streakDayLbl: 'Jour {n}',
+    streakClaimedLbl: 'Réclamé',
+    // Referral
+    refTitle: '👥 Invitez des Amis & Gagnez 100 🪙',
+    refSub: 'Vous et votre ami recevez chacun 100 GENIUS IA dès son inscription !',
+    refStatsLbl: '{n} Amis Invités',
+    refLinkCopiedToast: '📋 Lien de parrainage copié !',
+    refRewardToast: '🎁 Bonus de Bienvenue ! Vous avez reçu +100 GENIUS IA grâce au parrainage !',
+    // Social Card
+    socialCardTitle: 'Carte de Partage Social',
+    socialCardSub: 'Téléchargez ou copiez votre carte de projet 3D avec QR Code en direct pour vos réseaux sociaux.',
+    btnCopyImage: '📋 Copier l\'Image',
+    btnDownloadImage: '📥 Télécharger PNG',
+    imageCopiedToast: '✨ Carte copiée dans le presse-papiers !',
+    downloadStartedToast: '📥 Téléchargement lancé !'
   }
 };
 
@@ -3726,6 +4056,19 @@ function applyCommunityLanguage(lang) {
   const vQuests = document.getElementById('vtab-btn-quests'); if (vQuests) vQuests.textContent = t.tabQuests;
   const vLb = document.getElementById('vtab-btn-leaderboard'); if (vLb) vLb.textContent = t.tabLeaderboard;
   const vWallet = document.getElementById('vtab-btn-wallet'); if (vWallet) vWallet.textContent = t.tabWallet;
+
+  // Streak & Referral in Quests
+  const strkT = document.getElementById('lbl-streak-title'); if (strkT) strkT.textContent = t.streakTitle;
+  const strkS = document.getElementById('lbl-streak-sub'); if (strkS) strkS.textContent = t.streakSub;
+  const refT = document.getElementById('lbl-ref-title'); if (refT) refT.textContent = t.refTitle;
+  const refS = document.getElementById('lbl-ref-sub'); if (refS) refS.textContent = t.refSub;
+  const refB = document.getElementById('btnCopyRef'); if (refB) refB.textContent = t.copyBtn;
+
+  // Social Card Modal
+  const scT = document.getElementById('lbl-social-card-title'); if (scT) scT.textContent = t.socialCardTitle;
+  const scS = document.getElementById('lbl-social-card-sub'); if (scS) scS.textContent = t.socialCardSub;
+  const scCopyB = document.getElementById('btn-copy-social-card'); if (scCopyB) scCopyB.textContent = t.btnCopyImage;
+  const scDlB = document.getElementById('btn-download-social-card'); if (scDlB) scDlB.textContent = t.btnDownloadImage;
 
   // Lucky Wheel
   const wTitle = document.getElementById('lbl-wheel-title'); if (wTitle) wTitle.textContent = t.wheelTitle;
@@ -5395,6 +5738,467 @@ async function adminGlobalAirdrop() {
 }
 
 // ══════════════════════════════════════════
+// 🔥 13. 7-DAY LOGIN STREAK ENGINE
+// ══════════════════════════════════════════
+const STREAK_REWARDS = [
+  { day: 1, reward: 10, icon: '🔥' },
+  { day: 2, reward: 15, icon: '⚡' },
+  { day: 3, reward: 25, icon: '🌟' },
+  { day: 4, reward: 40, icon: '💎' },
+  { day: 5, reward: 60, icon: '👑' },
+  { day: 6, reward: 80, icon: '🚀' },
+  { day: 7, reward: 150, icon: '🎁', isSpecial: true }
+];
+
+let userStreak = { count: 1, lastClaimDate: null, maxStreak: 7 };
+
+function getTodayDateString() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function getYesterdayDateString() {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function loadStreakState() {
+  const today = getTodayDateString();
+  const yesterday = getYesterdayDateString();
+  try {
+    const saved = localStorage.getItem('genius_streak_state');
+    if (saved) {
+      userStreak = JSON.parse(saved);
+      if (userStreak.lastClaimDate && userStreak.lastClaimDate !== today && userStreak.lastClaimDate !== yesterday) {
+        // Streak broken after missing a full day
+        userStreak.count = 1;
+      }
+    }
+  } catch(e) {}
+  renderStreakUI();
+}
+
+function renderStreakUI() {
+  const container = document.getElementById('streakGridContainer');
+  if (!container) return;
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+  const today = getTodayDateString();
+  const isClaimedToday = userStreak.lastClaimDate === today;
+
+  const currentDay = userStreak.count || 1;
+  const vaultPill = document.getElementById('vaultStreakPill');
+  if (vaultPill) vaultPill.textContent = `🔥 ${t.streakDayLbl.replace('{n}', currentDay)}`;
+
+  const btnClaim = document.getElementById('btnClaimDailyStreak');
+  if (btnClaim) {
+    if (isClaimedToday) {
+      btnClaim.textContent = `✓ ${t.streakClaimedLbl}`;
+      btnClaim.className = 'shop-btn equipped';
+      btnClaim.disabled = true;
+    } else {
+      btnClaim.textContent = `🎁 ${t.btnClaimStreak}`;
+      btnClaim.className = 'shop-btn buy';
+      btnClaim.disabled = false;
+    }
+  }
+
+  container.innerHTML = STREAK_REWARDS.map(sr => {
+    const isClaimed = sr.day < currentDay || (sr.day === currentDay && isClaimedToday);
+    const isToday = sr.day === currentDay && !isClaimedToday;
+    let cls = 'streak-day';
+    if (isClaimed) cls += ' claimed';
+    if (isToday) cls += ' today';
+
+    return `
+      <div class="${cls}">
+        <div class="streak-day-num">${t.streakDayLbl.replace('{n}', sr.day)}</div>
+        <div class="streak-day-icon">${sr.icon}</div>
+        <div class="streak-day-reward">+${sr.reward}🪙</div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function claimDailyStreak() {
+  if (!user) { signInGoogle(); return; }
+  const today = getTodayDateString();
+  if (userStreak.lastClaimDate === today) return;
+
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+  const dayIndex = ((userStreak.count - 1) % 7);
+  const rewardObj = STREAK_REWARDS[dayIndex] || STREAK_REWARDS[0];
+  const rewardAmt = rewardObj.reward;
+
+  userStreak.lastClaimDate = today;
+  if (userStreak.count >= 7) {
+    // Unlocked Day 7: Give free Diamond Chest + reset cycle
+    userStreak.count = 1;
+    toast(t.streakChestUnlocked, 'success');
+    openMysteryChest('diamond', true); // Free chest!
+  } else {
+    userStreak.count = (userStreak.count || 1) + 1;
+  }
+
+  try {
+    localStorage.setItem('genius_streak_state', JSON.stringify(userStreak));
+  } catch(e) {}
+
+  await addCoins(rewardAmt, `🔥 ${lang === 'fr' ? 'Série Quotidienne' : 'Daily Streak'} #${rewardObj.day}`);
+  toast(t.streakClaimedToast.replace('{day}', rewardObj.day).replace('{n}', rewardAmt), 'success');
+  playJackpotSound();
+  spawnFlyingCoins(window.innerWidth / 2, window.innerHeight / 2, 8);
+  renderStreakUI();
+}
+
+// ══════════════════════════════════════════
+// 👥 14. VIRAL REFERRAL SYSTEM
+// ══════════════════════════════════════════
+function getReferralLink() {
+  const host = window.location.origin + window.location.pathname;
+  const refCode = user ? (user.displayName || user.uid) : 'join';
+  return `${host}?ref=${encodeURIComponent(refCode)}`;
+}
+
+function initReferralSystem() {
+  // Capture ref from URL parameter
+  const params = new URLSearchParams(window.location.search);
+  const ref = params.get('ref');
+  if (ref && !sessionStorage.getItem('community_ref')) {
+    sessionStorage.setItem('community_ref', ref);
+  }
+
+  // Update input
+  const input = document.getElementById('refLinkInput');
+  if (input) input.value = getReferralLink();
+
+  // Update count stats
+  const countStats = document.getElementById('refCountStats');
+  const invitedCount = parseInt(localStorage.getItem('genius_referrals_count') || '0', 10);
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+  if (countStats) countStats.textContent = t.refStatsLbl.replace('{n}', invitedCount);
+}
+
+function copyReferralLink() {
+  const link = getReferralLink();
+  const input = document.getElementById('refLinkInput');
+  if (input) input.value = link;
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+
+  navigator.clipboard.writeText(link).then(() => {
+    toast(t.refLinkCopiedToast, 'success');
+    const btn = document.getElementById('btnCopyRef');
+    if (btn) {
+      const orig = btn.textContent;
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => { btn.textContent = orig; }, 1500);
+    }
+  }).catch(() => toast('Failed to copy', 'error'));
+}
+
+function shareReferral(platform) {
+  const link = getReferralLink();
+  const msg = encodeURIComponent(`🚀 Join me on IA Code Studio Community to explore, create, and share interactive 3D WebGL & AI code! Get 100 free coins on sign up: ${link}`);
+  
+  if (platform === 'whatsapp') {
+    window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
+  } else if (platform === 'telegram') {
+    window.open(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${msg}`, '_blank');
+  } else if (platform === 'twitter') {
+    window.open(`https://twitter.com/intent/tweet?text=${msg}`, '_blank');
+  }
+}
+
+async function checkAndApplyReferralBonus() {
+  const ref = sessionStorage.getItem('community_ref');
+  if (!ref || !user) return;
+  const claimedKey = `ref_claimed_${user.uid || user.email}`;
+  if (localStorage.getItem(claimedKey)) return;
+
+  // Credit new user +100 🪙
+  localStorage.setItem(claimedKey, 'true');
+  sessionStorage.removeItem('community_ref');
+  
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+  await addCoins(100, `🎁 Referral Welcome Bonus from @${ref}`);
+  toast(t.refRewardToast, 'success');
+
+  // Credit referrer if matching user doc
+  try {
+    await creditUserCoins(null, ref, ref, 100, `🎁 Referral Invite Bonus from new member`);
+  } catch(e) {}
+}
+
+// ══════════════════════════════════════════
+// 📸 15. SOCIAL SHARE CARD GENERATOR (CANVAS 2D)
+// ══════════════════════════════════════════
+let activeSocialCardPost = null;
+
+function openSocialCardModal(postId) {
+  const post = (window.latestPosts || []).find(p => p.id === postId);
+  if (!post) {
+    db.collection('devsocial_posts').doc(postId).get().then(doc => {
+      if (doc.exists) {
+        renderSocialCardCanvas({ id: doc.id, ...doc.data() });
+      }
+    });
+  } else {
+    renderSocialCardCanvas(post);
+  }
+  const overlay = document.getElementById('socialCardOverlay');
+  if (overlay) overlay.classList.add('open');
+}
+
+function closeSocialCardModal(e) {
+  if (e && e.target !== document.getElementById('socialCardOverlay') && !e.target.classList.contains('mc')) return;
+  const overlay = document.getElementById('socialCardOverlay');
+  if (overlay) overlay.classList.remove('open');
+  activeSocialCardPost = null;
+}
+
+function renderSocialCardCanvas(post) {
+  activeSocialCardPost = post;
+  const canvas = document.getElementById('socialCardCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;  // 1200
+  const h = canvas.height; // 630
+
+  // 1. Dark Futuristic Cyber Gradient Background
+  const bgGrad = ctx.createLinearGradient(0, 0, w, h);
+  bgGrad.addColorStop(0, '#030712');
+  bgGrad.addColorStop(0.5, '#0f172a');
+  bgGrad.addColorStop(1, '#020617');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, w, h);
+
+  // 2. Cyber Grid & Glowing Accents
+  ctx.strokeStyle = 'rgba(124, 58, 237, 0.08)';
+  ctx.lineWidth = 1;
+  const gridSize = 40;
+  for (let x = 0; x < w; x += gridSize) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+  }
+  for (let y = 0; y < h; y += gridSize) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+  }
+
+  // Glowing Neon Corner Orbs
+  const orb1 = ctx.createRadialGradient(150, 100, 10, 150, 100, 300);
+  orb1.addColorStop(0, 'rgba(124, 58, 237, 0.35)');
+  orb1.addColorStop(1, 'rgba(124, 58, 237, 0)');
+  ctx.fillStyle = orb1; ctx.fillRect(0, 0, w, h);
+
+  const orb2 = ctx.createRadialGradient(w - 200, h - 150, 10, w - 200, h - 150, 350);
+  orb2.addColorStop(0, 'rgba(236, 72, 153, 0.25)');
+  orb2.addColorStop(1, 'rgba(236, 72, 153, 0)');
+  ctx.fillStyle = orb2; ctx.fillRect(0, 0, w, h);
+
+  // Border frame
+  ctx.strokeStyle = 'rgba(124, 58, 237, 0.5)';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(20, 20, w - 40, h - 40);
+
+  // 3. Header Branding
+  ctx.fillStyle = '#c084fc';
+  ctx.font = 'bold 26px Outfit, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('✦ IA CODE STUDIO COMMUNITY', 60, 80);
+
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '18px Outfit, sans-serif';
+  ctx.fillText('Explore & Run Interactive 3D WebGL / AI Creations Live', 60, 112);
+
+  // 4. Category Pill
+  const cat = post.category || 'general';
+  ctx.fillStyle = 'rgba(124, 58, 237, 0.3)';
+  ctx.strokeStyle = '#a855f7';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.roundRect(60, 150, 160, 36, [18]);
+  ctx.fill(); ctx.stroke();
+
+  ctx.fillStyle = '#f3e8ff';
+  ctx.font = 'bold 16px Outfit, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(`⚡ ${cat.toUpperCase()}`, 140, 174);
+
+  // 5. Post Title / Caption
+  const title = (post.title || post.caption || post.content || 'Interactive 3D WebGL Creation').slice(0, 75);
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 36px Outfit, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText(title, 60, 240);
+
+  // 6. Creator Info
+  const authorName = post.displayName || post.user || 'Creator';
+  ctx.fillStyle = '#fbbf24';
+  ctx.font = 'bold 22px Outfit, sans-serif';
+  ctx.fillText(`👤 Built by @${authorName}`, 60, 290);
+
+  if (post.equippedBadge) {
+    ctx.fillStyle = 'rgba(245, 158, 11, 0.2)';
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(60, 315, 180, 30, [15]);
+    ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#fcd34d';
+    ctx.font = 'bold 14px Outfit, sans-serif';
+    ctx.fillText(post.equippedBadge, 75, 335);
+  }
+
+  // 7. Embed Live QR Code
+  const qrBoxX = w - 300;
+  const qrBoxY = 160;
+  const qrBoxW = 230;
+  const qrBoxH = 290;
+
+  ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.5)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.roundRect(qrBoxX, qrBoxY, qrBoxW, qrBoxH, [16]);
+  ctx.fill(); ctx.stroke();
+
+  ctx.fillStyle = '#38bdf8';
+  ctx.font = 'bold 15px Outfit, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('📱 SCAN TO RUN LIVE', qrBoxX + qrBoxW / 2, qrBoxY + 34);
+
+  const qrUrl = `https://ia-codestudio.com/community/?post=${encodeURIComponent(post.id)}`;
+  const qrImg = new Image();
+  qrImg.crossOrigin = 'anonymous';
+  qrImg.onload = () => {
+    ctx.drawImage(qrImg, qrBoxX + 25, qrBoxY + 50, 180, 180);
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '13px Outfit, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Instant 60FPS WebGL Preview', qrBoxX + qrBoxW / 2, qrBoxY + 260);
+  };
+  qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(qrUrl)}`;
+
+  // 8. Footer Bar
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+  ctx.fillRect(40, h - 80, w - 80, 50);
+  ctx.fillStyle = '#cbd5e1';
+  ctx.font = 'bold 16px Outfit, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('🌐 ia-codestudio.com/community', 60, h - 48);
+
+  ctx.fillStyle = '#a855f7';
+  ctx.textAlign = 'right';
+  ctx.fillText('🪙 Powered by GENIUS IA Ecosystem', w - 60, h - 48);
+}
+
+function downloadSocialCard() {
+  const canvas = document.getElementById('socialCardCanvas');
+  if (!canvas) return;
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+  
+  const link = document.createElement('a');
+  link.download = `IA-CodeStudio-Card-${activeSocialCardPost ? activeSocialCardPost.id : 'project'}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  toast(t.downloadStartedToast, 'info');
+}
+
+async function copySocialCardToClipboard() {
+  const canvas = document.getElementById('socialCardCanvas');
+  if (!canvas) return;
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+
+  try {
+    canvas.toBlob(blob => {
+      if (!blob) return;
+      const item = new ClipboardItem({ 'image/png': blob });
+      navigator.clipboard.write([item]).then(() => {
+        toast(t.imageCopiedToast, 'success');
+        const btn = document.getElementById('btn-copy-social-card');
+        if (btn) {
+          const orig = btn.textContent;
+          btn.textContent = '✓ Copied!';
+          setTimeout(() => { btn.textContent = orig; }, 1500);
+        }
+      }).catch(err => {
+        console.warn('Clipboard write failed, downloading instead:', err);
+        downloadSocialCard();
+      });
+    });
+  } catch(e) {
+    downloadSocialCard();
+  }
+}
+
+// ══════════════════════════════════════════
+// 🎆 16. LIVE FLOATING PARTICLE REACTIONS
+// ══════════════════════════════════════════
+async function reactToPost(postId, emoji, event) {
+  if (event) {
+    const rect = event.currentTarget.getBoundingClientRect();
+    spawnFloatingReaction(emoji, rect.left + rect.width / 2, rect.top);
+  }
+
+  // Update UI counter immediately
+  const countEl = document.getElementById(`rx-cnt-${postId}-${encodeURIComponent(emoji)}`);
+  if (countEl) {
+    const current = parseInt(countEl.textContent || '0', 10);
+    countEl.textContent = current + 1;
+  }
+
+  // Play reaction pop sound
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(440 + Math.random() * 200, now);
+    gain.gain.setValueAtTime(0.15, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.2);
+  } catch(e) {}
+
+  // Record in Firestore
+  if (typeof db !== 'undefined') {
+    try {
+      await db.collection('devsocial_posts').doc(postId).update({
+        [`reactions.${emoji}`]: firebase.firestore.FieldValue.increment(1)
+      });
+    } catch(e) {
+      console.warn("Reaction write note:", e);
+    }
+  }
+}
+
+function spawnFloatingReaction(emoji, x, y) {
+  for (let i = 0; i < 3; i++) {
+    const el = document.createElement('div');
+    el.className = 'floating-reaction';
+    el.textContent = emoji;
+    el.style.left = `${x + (Math.random() * 20 - 10)}px`;
+    el.style.top = `${y}px`;
+    el.style.setProperty('--rand-x', (Math.random() * 80 - 40).toString());
+    el.style.setProperty('--rand-r', (Math.random() * 40 - 20).toString());
+    document.body.appendChild(el);
+
+    setTimeout(() => {
+      if (el && el.parentNode) el.parentNode.removeChild(el);
+    }, 1200);
+  }
+}
+
+// ══════════════════════════════════════════
 // 🏛️ 12. VAULT MODAL CONTROLS
 // ══════════════════════════════════════════
 function openVaultModal() {
@@ -5403,6 +6207,7 @@ function openVaultModal() {
   checkWheelStatus();
   updateQuestsUI();
   renderTxList();
+  loadStreakState();
 }
 
 function closeVaultModal(e) {
@@ -5425,6 +6230,8 @@ function switchVaultTab(tabName) {
     setTimeout(() => initScratchCard(), 50);
   } else if (tabName === 'shop') {
     renderShop();
+  } else if (tabName === 'quests') {
+    loadStreakState();
   } else if (tabName === 'leaderboard') {
     loadLeaderboard(currentLbTab);
   }
@@ -5436,6 +6243,8 @@ window.addEventListener('DOMContentLoaded', () => {
   applyCommunityLanguage(initialLang);
   drawLuckyWheel(wheelCurrentAngle);
   loadUserCoins(null, null);
+  initReferralSystem();
+  loadStreakState();
 });
 
 document.addEventListener('keydown', e => { 
@@ -5448,6 +6257,7 @@ document.addEventListener('keydown', e => {
     closeTipModal(); 
     closeBoostModal();
     closeChestModal();
+    closeSocialCardModal();
   } 
 });
 </script>
