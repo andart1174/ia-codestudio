@@ -2165,11 +2165,49 @@ let uploadedUrls = [], unsub = null, unsubCmt = null;
 // AUTH
 // ══════════════════════════════════════════
 auth.onAuthStateChanged(async u => {
-  user = u;
   if (u) {
+    user = u;
     isAdmin = ADMIN_EMAILS.includes(u.email);
-    renderLoggedIn(u);
-    db.collection('users').doc(u.uid).set({ displayName:u.displayName, photoURL:u.photoURL, email:u.email, lastSeen:firebase.firestore.FieldValue.serverTimestamp() }, { merge:true });
+
+    // Retrieve saved custom display name if set previously
+    let customName = localStorage.getItem('custom_display_name_' + u.uid) || 
+                     localStorage.getItem('custom_display_name_' + u.email) ||
+                     localStorage.getItem('hub_custom_name');
+
+    try {
+      const userDoc = await db.collection('users').doc(u.uid).get();
+      if (userDoc.exists && userDoc.data().displayName) {
+        customName = userDoc.data().displayName;
+      } else if (u.email && u.email !== u.uid) {
+        const emailDoc = await db.collection('users').doc(u.email).get();
+        if (emailDoc.exists && emailDoc.data().displayName) {
+          customName = emailDoc.data().displayName;
+        }
+      }
+    } catch(e) {
+      console.warn("User doc lookup note:", e);
+    }
+
+    if (customName) {
+      user.displayName = customName;
+      localStorage.setItem('custom_display_name_' + u.uid, customName);
+      if (u.email) localStorage.setItem('custom_display_name_' + u.email, customName);
+      localStorage.setItem('hub_custom_name', customName);
+    }
+
+    renderLoggedIn(user);
+
+    const userDataToSave = {
+      photoURL: u.photoURL,
+      email: u.email,
+      lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    if (customName) {
+      userDataToSave.displayName = customName;
+    } else if (u.displayName) {
+      userDataToSave.displayName = u.displayName;
+    }
+    db.collection('users').doc(u.uid).set(userDataToSave, { merge: true });
     loadUserStats(u.uid);
   } else {
     // Check if user is logged in via Premium Session on the main site
@@ -2182,11 +2220,15 @@ auth.onAuthStateChanged(async u => {
             window._signingAnon = true;
             auth.signInAnonymously().catch(e => console.error("Anon auth failed:", e));
           }
+          let customName = localStorage.getItem('custom_display_name_' + sessionUser.email) ||
+                           localStorage.getItem('hub_custom_name') ||
+                           sessionUser.name ||
+                           sessionUser.email.split('@')[0];
           user = {
             uid: sessionUser.email, // Use email as unique identifier for likes/comments
-            displayName: sessionUser.name || sessionUser.email.split('@')[0],
+            displayName: customName,
             email: sessionUser.email,
-            photoURL: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(sessionUser.name || 'User')}`,
+            photoURL: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(customName || 'User')}`,
             isCustomSession: true
           };
           isAdmin = ADMIN_EMAILS.includes(sessionUser.email);
@@ -4222,6 +4264,15 @@ async function saveProfileName() {
   const hdrN = document.getElementById('hdrName'); if (hdrN) hdrN.textContent = newName;
   const compN = document.getElementById('compName'); if (compN) compN.textContent = newName;
 
+  // Persist locally for instant reload without waiting for auth
+  localStorage.setItem('hub_custom_name', newName);
+  if (user && user.uid) {
+    localStorage.setItem('custom_display_name_' + user.uid, newName);
+  }
+  if (user && user.email) {
+    localStorage.setItem('custom_display_name_' + user.email, newName);
+  }
+
   try {
     const sessionStr = localStorage.getItem('genius_session');
     if (sessionStr) {
@@ -4231,8 +4282,17 @@ async function saveProfileName() {
     }
   } catch(e) {}
 
-  const uid = user ? user.uid : null;
-  const email = user ? user.email : null;
+  // Update Firebase Auth currentUser profile if possible
+  if (auth.currentUser) {
+    try {
+      await auth.currentUser.updateProfile({ displayName: newName });
+    } catch(e) {
+      console.warn("Auth profile update note:", e);
+    }
+  }
+
+  const uid = user ? user.uid : (auth.currentUser ? auth.currentUser.uid : null);
+  const email = user ? user.email : (auth.currentUser ? auth.currentUser.email : null);
   if (uid) {
     try {
       await db.collection('users').doc(uid).set({ displayName: newName }, { merge: true });
