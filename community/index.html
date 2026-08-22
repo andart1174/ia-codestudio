@@ -1502,8 +1502,12 @@
   <aside class="sl">
     <div class="scard" id="userCard" style="display:none">
       <img src="" alt="" class="u-avatar" id="slAvatar">
-      <div class="u-name" id="slName"></div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px;">
+        <div class="u-name" id="slName" style="margin-top:0;"></div>
+        <button onclick="openEditProfileModal()" title="Edit Name" style="background:none;border:none;color:#a855f7;cursor:pointer;font-size:0.85rem;padding:2px 4px;border-radius:4px;transition:all 0.2s;">✏️</button>
+      </div>
       <div class="u-email" id="slEmail"></div>
+      <button onclick="openEditProfileModal()" id="btn-edit-profile-card" style="width:100%;margin:8px 0 10px;padding:5px 8px;border-radius:8px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);color:#c084fc;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s;">✏️ Edit Display Name</button>
       <div class="u-stats">
         <div class="u-stat"><div class="u-stat-n" id="uPosts">0</div><div class="u-stat-l">Posts</div></div>
         <div class="u-stat"><div class="u-stat-n" id="uLikes">0</div><div class="u-stat-l">Likes</div></div>
@@ -1569,14 +1573,17 @@
 
   <!-- RIGHT SIDEBAR -->
   <aside class="sr">
-    <!-- Admin Panel — visible only to admin -->
+    <!-- ADMIN PANEL (visible only to admin) -->
     <div id="adminPanel" style="display:none">
       <div class="stats-card admin-stats-card">
-        <div class="sc-title">🛡️ Admin Dashboard</div>
-        <div class="stat-row"><span class="sr-lbl">📝 Posts</span><span class="sr-val" id="sTotalPosts">—</span></div>
-        <div class="stat-row"><span class="sr-lbl">👤 Members</span><span class="sr-val" id="sTotalMembers">—</span></div>
-        <div class="stat-row"><span class="sr-lbl">❤️ Likes</span><span class="sr-val" id="sTotalLikes">—</span></div>
-        <div class="stat-row"><span class="sr-lbl">💬 Comments</span><span class="sr-val" id="sTotalComments">—</span></div>
+        <div class="sc-title" style="display:flex;align-items:center;justify-content:space-between;">
+          <span>⚡ Admin Dashboard</span>
+          <span class="admin-badge" style="font-size:.68rem;">SUPER ADMIN</span>
+        </div>
+        <div class="stat-row"><span class="sr-lbl">Total Posts</span><span class="sr-val" id="sTotalPosts">—</span></div>
+        <div class="stat-row"><span class="sr-lbl">Total Members</span><span class="sr-val" id="sTotalMembers">—</span></div>
+        <div class="stat-row"><span class="sr-lbl">Total Likes</span><span class="sr-val" id="sTotalLikes">—</span></div>
+        <div class="stat-row"><span class="sr-lbl">Total Comments</span><span class="sr-val" id="sTotalComments">—</span></div>
       </div>
       <div class="stats-card admin-actions-card">
         <div class="sc-title">⚙️ Admin Controls</div>
@@ -1592,13 +1599,23 @@
       <!-- ADMIN CENTRAL BANK -->
       <div class="stats-card admin-bank-card">
         <div class="sc-title" style="color:#fbbf24;" id="lbl-admin-bank-title">🏛️ GENIUS IA Central Bank</div>
-        <div style="font-size:0.75rem;color:#94a3b8;margin-bottom:10px;" id="lbl-admin-acc-status">Admin Account: <strong style="color:#fcd34d;">Unlimited Balance (∞)</strong></div>
+        <div style="font-size:0.75rem;color:#94a3b8;margin-bottom:10px;" id="lbl-admin-acc-status">Admin Controls: <strong style="color:#fcd34d;">Custom Balance & Minting</strong></div>
         
-        <div style="font-size:0.72rem;font-weight:700;color:#fbbf24;margin-bottom:4px;text-transform:uppercase;" id="lbl-admin-mint-title">⚡ Mint / Add Coins to Admin</div>
+        <div style="font-size:0.72rem;font-weight:700;color:#fbbf24;margin-bottom:4px;text-transform:uppercase;" id="lbl-admin-mint-title">⚡ Set Balance / Mint Coins</div>
         <div style="display:flex;gap:4px;margin-bottom:8px;">
-          <input type="number" id="admSelfMintAmount" placeholder="Amount (e.g. 5000)" class="adm-input" style="margin-bottom:0;" value="5000">
-          <button class="adm-btn" style="width:auto;white-space:nowrap;margin-bottom:0;padding:6px 12px;background:#f59e0b;color:#000;font-weight:800;" onclick="adminMintCoins()" id="btn-admin-mint">+ Mint</button>
+          <input type="number" id="admSelfMintAmount" placeholder="Amount (e.g. 50, 500, 1000)" class="adm-input" style="margin-bottom:0;" value="50">
+          <button class="adm-btn" style="width:auto;white-space:nowrap;margin-bottom:0;padding:6px 10px;background:#f59e0b;color:#000;font-weight:800;" onclick="adminSetExactBalance()" id="btn-admin-setbal">Set</button>
+          <button class="adm-btn" style="width:auto;white-space:nowrap;margin-bottom:0;padding:6px 10px;background:rgba(245,158,11,0.2);color:#fcd34d;font-weight:700;" onclick="adminMintCoins()" id="btn-admin-mint">+ Mint</button>
         </div>
+
+        <div class="adm-divider"></div>
+        <div style="font-size:0.72rem;font-weight:700;color:#38bdf8;margin-bottom:4px;text-transform:uppercase;" id="lbl-admin-edituser-title">👤 Edit Member Name / Coins</div>
+        <input type="text" id="admEditUserTarget" placeholder="Member Email or Name..." class="adm-input">
+        <div style="display:flex;gap:4px;margin-bottom:6px;">
+          <input type="text" id="admEditUserNewName" placeholder="New Name" class="adm-input" style="margin-bottom:0;flex:2;">
+          <input type="number" id="admEditUserNewCoins" placeholder="New Coins" class="adm-input" style="margin-bottom:0;flex:1;">
+        </div>
+        <button class="adm-btn" style="background:rgba(56,189,248,0.15);border-color:rgba(56,189,248,0.4);color:#38bdf8;" onclick="adminUpdateUserProfile()" id="btn-admin-update-user">👤 Update Member</button>
 
         <div class="adm-divider"></div>
         <div style="font-size:0.72rem;font-weight:700;color:#34d399;margin-bottom:4px;text-transform:uppercase;" id="lbl-admin-send-title">🎁 Send Coins to User</div>
@@ -2069,6 +2086,27 @@
 
       <button class="qr-open-btn" style="background:linear-gradient(135deg,#f59e0b,#d946ef);border:none;cursor:pointer;width:100%;" onclick="confirmSendTip()" id="btn-send-tip-modal">
         🪙 Send Tip Now
+      </button>
+    </div>
+  <!-- EDIT PROFILE NAME MODAL -->
+<div class="overlay" id="editProfileOverlay" onclick="closeEditProfileModal(event)">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:400px;">
+    <div class="mh">
+      <div class="mt" style="display:flex;align-items:center;gap:6px;">
+        <span>✏️</span> <span id="lbl-edit-profile-title">Edit Display Name</span>
+      </div>
+      <button class="mc" onclick="closeEditProfileModal()">✕</button>
+    </div>
+    <div class="mb">
+      <div style="font-size:0.82rem;color:#94a3b8;margin-bottom:12px;" id="lbl-edit-profile-sub">
+        Choose your display name visible across community posts, comments, and rankings.
+      </div>
+      <div style="margin-bottom:14px;">
+        <label class="opt-lbl" id="lbl-edit-profile-input">Display Name</label>
+        <input type="text" class="adm-input" id="editProfileNameInput" maxlength="30" placeholder="e.g. Alex, CyberDev, Andrei...">
+      </div>
+      <button class="shop-btn buy" style="width:100%;padding:9px;font-size:0.88rem;" onclick="saveProfileName()" id="btn-save-profile-name">
+        ✓ Save Changes
       </button>
     </div>
   </div>
@@ -3298,6 +3336,13 @@ const I18N = {
     btnSignOut: 'Sign Out',
     signedOutToast: 'Signed out',
     adminBadge: 'ADMIN',
+    // Profile Edit
+    editProfileTitle: 'Edit Display Name',
+    editProfileSub: 'Choose your display name visible across community posts, comments, and rankings.',
+    editProfileInputLbl: 'Display Name',
+    btnSaveProfileName: '✓ Save Changes',
+    nameUpdatedToast: '✅ Display name updated successfully!',
+    editProfileCardBtn: '✏️ Edit Display Name',
     // Vault Tabs
     vaultTitle: 'GENIUS VAULT',
     tabWheel: '🎰 Lucky Wheel',
@@ -3381,10 +3426,15 @@ const I18N = {
     tipBtnLbl: 'Tip',
     // Admin Bank
     adminBankTitle: '🏛️ GENIUS IA Central Bank',
-    adminAccSub: 'Admin Account: <strong style="color:#fcd34d;">Unlimited Balance (∞)</strong>',
-    adminMintTitle: '⚡ Mint / Add Coins to Admin',
+    adminAccSub: 'Admin Controls: <strong style="color:#fcd34d;">Custom Balance & Minting</strong>',
+    adminMintTitle: '⚡ Set Balance / Mint Coins',
     adminMintBtn: '+ Mint',
+    adminSetBalBtn: 'Set',
+    adminSetBalSuccess: '⚡ Admin balance set to {n} GENIUS IA!',
     adminMintSuccess: '⚡ Generated +{n} GENIUS IA to your account!',
+    adminEditUserTitle: '👤 Edit Member Name / Coins',
+    adminUpdateUserBtn: '👤 Update Member',
+    adminUpdateUserSuccess: '✅ Member profile & coins updated!',
     adminSendTitle: '🎁 Send Coins to User',
     adminSendTargetPh: 'Member Email or Name...',
     adminSendReasonPh: 'Reason (e.g. Award)',
@@ -3427,6 +3477,13 @@ const I18N = {
     btnSignOut: 'Se déconnecter',
     signedOutToast: 'Déconnecté',
     adminBadge: 'ADMIN',
+    // Profile Edit
+    editProfileTitle: 'Modifier le Pseudo',
+    editProfileSub: 'Choisissez votre pseudo visible sur vos posts, commentaires et classements.',
+    editProfileInputLbl: 'Pseudo',
+    btnSaveProfileName: '✓ Enregistrer',
+    nameUpdatedToast: '✅ Pseudo mis à jour avec succès !',
+    editProfileCardBtn: '✏️ Modifier le Pseudo',
     // Vault Tabs
     vaultTitle: 'GENIUS VAULT',
     tabWheel: '🎰 Roue de la Fortune',
@@ -3510,10 +3567,15 @@ const I18N = {
     tipBtnLbl: 'Pourboire',
     // Admin Bank
     adminBankTitle: '🏛️ Banque Centrale GENIUS IA',
-    adminAccSub: 'Compte Admin : <strong style="color:#fcd34d;">Solde Illimité (∞)</strong>',
-    adminMintTitle: '⚡ Mint / Ajouter des Pièces à l\'Admin',
+    adminAccSub: 'Contrôles Admin : <strong style="color:#fcd34d;">Solde Personnalisé & Minutage</strong>',
+    adminMintTitle: '⚡ Définir le Solde / Minuter',
     adminMintBtn: '+ Mint',
+    adminSetBalBtn: 'Définir',
+    adminSetBalSuccess: '⚡ Solde admin mis à jour à {n} GENIUS IA !',
     adminMintSuccess: '⚡ +{n} GENIUS IA générées sur votre compte !',
+    adminEditUserTitle: '👤 Modifier Membre (Pseudo/Solde)',
+    adminUpdateUserBtn: '👤 Mettre à Jour',
+    adminUpdateUserSuccess: '✅ Profil et solde du membre mis à jour !',
     adminSendTitle: '🎁 Envoyer des Pièces à un Membre',
     adminSendTargetPh: 'Email ou Nom du membre...',
     adminSendReasonPh: 'Motif (ex: Récompense)',
@@ -3580,6 +3642,13 @@ function applyCommunityLanguage(lang) {
   const cTip = document.getElementById('catbtn-tips'); if (cTip) cTip.textContent = t.catTips;
   const cGen = document.getElementById('catbtn-general'); if (cGen) cGen.textContent = t.catGeneral;
 
+  // Profile Edit Card & Modal
+  const editCardBtn = document.getElementById('btn-edit-profile-card'); if (editCardBtn) editCardBtn.textContent = t.editProfileCardBtn;
+  const editProfTitle = document.getElementById('lbl-edit-profile-title'); if (editProfTitle) editProfTitle.textContent = t.editProfileTitle;
+  const editProfSub = document.getElementById('lbl-edit-profile-sub'); if (editProfSub) editProfSub.textContent = t.editProfileSub;
+  const editProfLbl = document.getElementById('lbl-edit-profile-input'); if (editProfLbl) editProfLbl.textContent = t.editProfileInputLbl;
+  const editProfSave = document.getElementById('btn-save-profile-name'); if (editProfSave) editProfSave.textContent = t.btnSaveProfileName;
+
   // Post composer placeholder
   const postInp = document.getElementById('postContent');
   if (postInp) postInp.placeholder = t.sharePrompt;
@@ -3591,6 +3660,9 @@ function applyCommunityLanguage(lang) {
   const abStatus = document.getElementById('lbl-admin-acc-status'); if (abStatus) abStatus.innerHTML = t.adminAccSub;
   const abMintT = document.getElementById('lbl-admin-mint-title'); if (abMintT) abMintT.textContent = t.adminMintTitle;
   const abMintB = document.getElementById('btn-admin-mint'); if (abMintB) abMintB.textContent = t.adminMintBtn;
+  const abSetB = document.getElementById('btn-admin-setbal'); if (abSetB) abSetB.textContent = t.adminSetBalBtn;
+  const abEditUT = document.getElementById('lbl-admin-edituser-title'); if (abEditUT) abEditUT.textContent = t.adminEditUserTitle;
+  const abEditUB = document.getElementById('btn-admin-update-user'); if (abEditUB) abEditUB.textContent = t.adminUpdateUserBtn;
   const abSendT = document.getElementById('lbl-admin-send-title'); if (abSendT) abSendT.textContent = t.adminSendTitle;
   const abSendPh = document.getElementById('admSendTarget'); if (abSendPh) abSendPh.placeholder = t.adminSendTargetPh;
   const abSendRPh = document.getElementById('admSendReason'); if (abSendRPh) abSendRPh.placeholder = t.adminSendReasonPh;
@@ -3887,14 +3959,12 @@ function subscribeUserCoins(targetUid, email) {
   }
   if (!targetUid) return;
 
-  const isSuperAdmin = (email && ADMIN_EMAILS.includes(email)) || (user && user.email && ADMIN_EMAILS.includes(user.email));
-
   userCoinUnsub = db.collection('users').doc(targetUid).onSnapshot(doc => {
     if (!doc.exists) return;
     const d = doc.data() || {};
 
     if (typeof d.geniusCoins === 'number') {
-      const newCoins = isSuperAdmin ? Math.max(10000, d.geniusCoins) : d.geniusCoins;
+      const newCoins = d.geniusCoins;
       const prevCoins = lastKnownCoins;
       lastKnownCoins = newCoins;
       currentCoins = newCoins;
@@ -3902,7 +3972,7 @@ function subscribeUserCoins(targetUid, email) {
       updateCoinUI();
 
       // If coins increased from external event (like receiving a tip or admin reward)
-      if (prevCoins !== null && newCoins > prevCoins && !isSuperAdmin) {
+      if (prevCoins !== null && newCoins > prevCoins) {
         playCoinSound();
         spawnFlyingCoins(window.innerWidth / 2, window.innerHeight / 2, 6);
         const lang = getCommunityLang();
@@ -3946,8 +4016,6 @@ function subscribeUserCoins(targetUid, email) {
 }
 
 async function loadUserCoins(uid, email) {
-  const isSuperAdmin = (email && ADMIN_EMAILS.includes(email)) || (user && user.email && ADMIN_EMAILS.includes(user.email));
-  
   // 1. Initial immediate render from localStorage
   const savedCoins = localStorage.getItem('genius_coins');
   const savedTx = localStorage.getItem('genius_txs');
@@ -3955,11 +4023,10 @@ async function loadUserCoins(uid, email) {
   const savedEq = localStorage.getItem('genius_equipped');
   
   if (savedCoins !== null) {
-    currentCoins = parseInt(savedCoins, 10) || (isSuperAdmin ? 10000 : 50);
+    currentCoins = parseInt(savedCoins, 10) || 50;
   } else {
-    currentCoins = isSuperAdmin ? 10000 : 50;
+    currentCoins = 50;
   }
-  if (isSuperAdmin && currentCoins < 10000) currentCoins = 10000;
   lastKnownCoins = currentCoins;
 
   if (savedTx) {
@@ -3987,7 +4054,7 @@ async function loadUserCoins(uid, email) {
       if (doc.exists) {
         const d = doc.data() || {};
         if (typeof d.geniusCoins === 'number') {
-          currentCoins = isSuperAdmin ? Math.max(10000, d.geniusCoins) : d.geniusCoins;
+          currentCoins = d.geniusCoins;
         }
         if (Array.isArray(d.transactions) && d.transactions.length > 0) {
           userTransactions = d.transactions;
@@ -4020,7 +4087,7 @@ async function loadUserCoins(uid, email) {
           }
         }
         if (!foundExisting) {
-          currentCoins = isSuperAdmin ? 10000 : 50;
+          currentCoins = 50;
         }
         await db.collection('users').doc(targetUid).set({
           displayName: user ? user.displayName : 'User',
@@ -4082,8 +4149,7 @@ async function saveUserCoinState() {
 }
 
 function updateCoinUI() {
-  const isSuperAdmin = user && user.email && ADMIN_EMAILS.includes(user.email);
-  const formatted = isSuperAdmin ? `👑 ${currentCoins.toLocaleString()} (∞)` : currentCoins.toLocaleString();
+  const formatted = currentCoins.toLocaleString();
   const el1 = document.getElementById('hdrCoinBalance');
   const el2 = document.getElementById('vHeroBalance');
   if (el1) el1.textContent = formatted;
@@ -4107,13 +4173,63 @@ function updateUserAvatarCosmetics() {
   }
 }
 
-async function addCoins(amount, reason, showAnim = true, originEl = null) {
-  const isSuperAdmin = user && user.email && ADMIN_EMAILS.includes(user.email);
-  if (isSuperAdmin) {
-    currentCoins = Math.max(10000, currentCoins + amount);
-  } else {
-    currentCoins += amount;
+// Profile Display Name Management (For Users & Admin)
+function openEditProfileModal() {
+  if (!user) { signInGoogle(); return; }
+  const inp = document.getElementById('editProfileNameInput');
+  if (inp) inp.value = user.displayName || '';
+  document.getElementById('editProfileOverlay').classList.add('open');
+}
+
+function closeEditProfileModal(e) {
+  if (e && e.target !== document.getElementById('editProfileOverlay') && !e.target.classList.contains('mc')) return;
+  document.getElementById('editProfileOverlay').classList.remove('open');
+}
+
+async function saveProfileName() {
+  if (!user) return;
+  const inp = document.getElementById('editProfileNameInput');
+  const newName = inp.value.trim();
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+
+  if (!newName) {
+    toast(t.enterValidAmount, 'error');
+    return;
   }
+
+  user.displayName = newName;
+
+  const slN = document.getElementById('slName'); if (slN) slN.textContent = newName;
+  const hdrN = document.getElementById('hdrName'); if (hdrN) hdrN.textContent = newName;
+  const compN = document.getElementById('compName'); if (compN) compN.textContent = newName;
+
+  try {
+    const sessionStr = localStorage.getItem('genius_session');
+    if (sessionStr) {
+      const session = JSON.parse(sessionStr);
+      session.name = newName;
+      localStorage.setItem('genius_session', JSON.stringify(session));
+    }
+  } catch(e) {}
+
+  try {
+    await db.collection('users').doc(user.uid).set({ displayName: newName }, { merge: true });
+    if (user.email && user.email !== user.uid) {
+      await db.collection('users').doc(user.email).set({ displayName: newName }, { merge: true });
+    }
+  } catch(e) {
+    console.warn("Firestore profile name update note:", e);
+  }
+
+  closeEditProfileModal();
+  toast(t.nameUpdatedToast, 'success');
+  loadFeed();
+  loadLeaderboard(currentLbTab);
+}
+
+async function addCoins(amount, reason, showAnim = true, originEl = null) {
+  currentCoins += amount;
   
   const tx = {
     desc: reason,
@@ -4140,22 +4256,6 @@ async function addCoins(amount, reason, showAnim = true, originEl = null) {
 }
 
 async function deductCoins(amount, reason) {
-  const isSuperAdmin = user && user.email && ADMIN_EMAILS.includes(user.email);
-  if (isSuperAdmin) {
-    playSpendSound();
-    const tx = {
-      desc: reason,
-      amount: `-${amount} 🪙`,
-      type: 'minus',
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
-    userTransactions.unshift(tx);
-    if (userTransactions.length > 50) userTransactions.pop();
-    renderTxList();
-    await saveUserCoinState();
-    return true;
-  }
-
   if (currentCoins < amount) {
     const lang = getCommunityLang();
     const t = I18N[lang] || I18N.en;
@@ -4885,7 +4985,8 @@ async function loadLeaderboard(type = 'holders') {
 
   try {
     const snap = await db.collection('users').get();
-    let members = [];
+    const membersMap = new Map();
+
     snap.forEach(d => {
       const data = d.data() || {};
       const coins = typeof data.geniusCoins === 'number' ? data.geniusCoins : 0;
@@ -4893,9 +4994,15 @@ async function loadLeaderboard(type = 'holders') {
       const avatar = data.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=7c3aed&color=fff&bold=true`;
       const frame = data.equipped && data.equipped.frame ? `avatar-frame-${data.equipped.frame}` : '';
       const badge = data.equipped && data.equipped.badge ? data.equipped.badge : '';
-      members.push({ id: d.id, name, avatar, coins, frame, badge });
+      const uniqueKey = (data.email || name || d.id).toLowerCase();
+
+      // Deduplicate so each unique member only appears once with their highest/latest balance
+      if (!membersMap.has(uniqueKey) || membersMap.get(uniqueKey).coins < coins) {
+        membersMap.set(uniqueKey, { id: d.id, name, avatar, coins, frame, badge });
+      }
     });
 
+    let members = Array.from(membersMap.values());
     members.sort((a, b) => b.coins - a.coins);
     const top3 = members.slice(0, 3);
     const others = members.slice(3, 10);
@@ -5039,6 +5146,29 @@ async function confirmSendTip() {
 }
 
 // Admin Central Bank
+async function adminSetExactBalance() {
+  if (!isAdmin) return;
+  const amt = parseInt(document.getElementById('admSelfMintAmount').value, 10);
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+  if (isNaN(amt) || amt < 0) { toast(t.enterValidAmount, 'error'); return; }
+
+  currentCoins = amt;
+  updateCoinUI();
+  const tx = {
+    desc: `⚡ Admin Set Balance: ${amt} 🪙`,
+    amount: `=${amt} 🪙`,
+    type: 'plus',
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  };
+  userTransactions.unshift(tx);
+  renderTxList();
+  await saveUserCoinState();
+  toast(t.adminSetBalSuccess.replace('{n}', amt), 'success');
+  spawnFlyingCoins(window.innerWidth / 2, window.innerHeight / 2, 6);
+  loadLeaderboard(currentLbTab);
+}
+
 async function adminMintCoins() {
   if (!isAdmin) return;
   const amt = parseInt(document.getElementById('admSelfMintAmount').value, 10);
@@ -5048,6 +5178,48 @@ async function adminMintCoins() {
 
   await addCoins(amt, `⚡ Admin Mint: +${amt} 🪙`, true);
   toast(t.adminMintSuccess.replace('{n}', amt), 'success');
+  loadLeaderboard(currentLbTab);
+}
+
+async function adminUpdateUserProfile() {
+  if (!isAdmin) return;
+  const target = document.getElementById('admEditUserTarget').value.trim();
+  const newName = document.getElementById('admEditUserNewName').value.trim();
+  const newCoinsStr = document.getElementById('admEditUserNewCoins').value.trim();
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+
+  if (!target) { toast(t.fillUserAndAmt, 'error'); return; }
+
+  try {
+    const snap = await db.collection('users').get();
+    let found = 0;
+    const tLow = target.toLowerCase();
+    for (const d of snap.docs) {
+      const data = d.data() || {};
+      const dEmail = (data.email || '').toLowerCase();
+      const dName = (data.displayName || data.name || '').toLowerCase();
+      if (d.id.toLowerCase() === tLow || dEmail === tLow || dName === tLow) {
+        const updateObj = {};
+        if (newName) updateObj.displayName = newName;
+        if (newCoinsStr !== '') updateObj.geniusCoins = parseInt(newCoinsStr, 10);
+        await db.collection('users').doc(d.id).set(updateObj, { merge: true });
+        found++;
+      }
+    }
+    if (found > 0) {
+      toast(t.adminUpdateUserSuccess, 'success');
+      document.getElementById('admEditUserTarget').value = '';
+      document.getElementById('admEditUserNewName').value = '';
+      document.getElementById('admEditUserNewCoins').value = '';
+      loadLeaderboard(currentLbTab);
+      loadFeed();
+    } else {
+      toast('Member not found', 'error');
+    }
+  } catch(e) {
+    toast('Error: ' + e.message, 'error');
+  }
 }
 
 async function adminSendCoinsToUser() {
@@ -5077,6 +5249,7 @@ async function adminSendCoinsToUser() {
     toast(t.adminSendSuccess.replace('{n}', amt).replace('{target}', target), 'success');
     document.getElementById('admSendTarget').value = '';
     spawnFlyingCoins(window.innerWidth / 2, window.innerHeight / 2, 6);
+    loadLeaderboard(currentLbTab);
   } catch(e) {
     toast('Error: ' + e.message, 'error');
   }
