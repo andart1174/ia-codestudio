@@ -1091,6 +1091,324 @@
       transition: all 0.9s cubic-bezier(0.25, 1, 0.5, 1);
     }
 
+    /* ══════════════════════════════════════════
+       🎨 COSMETIC FRAMES, BADGES & GLOWS
+       ══════════════════════════════════════════ */
+    .avatar-frame-neon {
+      border: 2.5px solid #06b6d4 !important;
+      box-shadow: 0 0 12px rgba(6,182,212,0.8), inset 0 0 8px rgba(236,72,153,0.6) !important;
+      animation: neonPulse 2s infinite alternate ease-in-out;
+    }
+    @keyframes neonPulse {
+      0% { border-color: #06b6d4; box-shadow: 0 0 10px rgba(6,182,212,0.8); }
+      100% { border-color: #ec4899; box-shadow: 0 0 18px rgba(236,72,153,0.9); }
+    }
+
+    .avatar-frame-gold {
+      border: 2.5px solid #f59e0b !important;
+      box-shadow: 0 0 16px rgba(245,158,11,0.85) !important;
+      position: relative;
+    }
+
+    .avatar-frame-hologram {
+      border: 2.5px solid #a855f7 !important;
+      box-shadow: 0 0 15px rgba(168,85,247,0.8), 0 0 25px rgba(56,189,248,0.5) !important;
+      animation: holoRotate 4s linear infinite;
+    }
+    @keyframes holoRotate {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      background: rgba(124,58,237,0.15);
+      border: 1px solid rgba(124,58,237,0.3);
+      color: #c084fc;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    .user-glow-prism {
+      background: linear-gradient(90deg, #f43f5e, #fb923c, #facc15, #4ade80, #38bdf8, #818cf8, #e879f9);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: prismShine 3s linear infinite;
+      font-weight: 800;
+    }
+    @keyframes prismShine {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    /* ══════════════════════════════════════════
+       🚀 POST BOOST STYLES
+       ══════════════════════════════════════════ */
+    .post-boost-standard {
+      border: 1.5px solid rgba(168,85,247,0.5) !important;
+      box-shadow: 0 0 20px rgba(168,85,247,0.15) !important;
+    }
+    .post-boost-ultra {
+      border: 2px solid transparent !important;
+      background-image: linear-gradient(var(--bg2), var(--bg2)), linear-gradient(135deg, #f59e0b, #ec4899, #8b5cf6, #06b6d4) !important;
+      background-origin: border-box !important;
+      background-clip: padding-box, border-box !important;
+      box-shadow: 0 0 28px rgba(245,158,11,0.25) !important;
+    }
+    .p-boost-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      margin-left: 8px;
+    }
+    .p-boost-badge.ultra {
+      background: linear-gradient(135deg, #f59e0b, #d946ef);
+      color: #000;
+      box-shadow: 0 0 10px rgba(245,158,11,0.5);
+    }
+    .p-boost-badge.standard {
+      background: rgba(168,85,247,0.2);
+      border: 1px solid rgba(168,85,247,0.4);
+      color: #c084fc;
+    }
+
+    .btn-boost-post {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.3);
+      color: #fcd34d;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .btn-boost-post:hover {
+      background: rgba(245,158,11,0.25);
+      border-color: #f59e0b;
+      transform: translateY(-1px);
+    }
+
+    /* ══════════════════════════════════════════
+       🛍️ GENIUS SHOP STYLES
+       ══════════════════════════════════════════ */
+    .shop-section-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 16px 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .shop-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .shop-card {
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: 14px;
+      padding: 14px;
+      text-align: center;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .shop-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    }
+    .shop-preview {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      background: rgba(255,255,255,0.04);
+    }
+    .shop-item-name {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+    .shop-item-desc {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+      line-height: 1.3;
+      min-height: 28px;
+    }
+    .shop-btn {
+      width: 100%;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      border: none;
+    }
+    .shop-btn.buy {
+      background: linear-gradient(135deg, #f59e0b, #d946ef);
+      color: #fff;
+    }
+    .shop-btn.buy:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(245,158,11,0.4);
+    }
+    .shop-btn.equip {
+      background: rgba(16,185,129,0.15);
+      border: 1px solid rgba(16,185,129,0.4);
+      color: #34d399;
+    }
+    .shop-btn.equipped {
+      background: #10b981;
+      color: #000;
+      cursor: default;
+    }
+
+    /* ══════════════════════════════════════════
+       🎫 ARCADE & MYSTERY CHESTS STYLES
+       ══════════════════════════════════════════ */
+    .arcade-section {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .scratch-stage-box {
+      position: relative;
+      width: 280px;
+      height: 150px;
+      margin: 12px auto;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      user-select: none;
+    }
+    .scratch-prize-under {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #1e1b4b, #312e81);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 10px;
+    }
+    #scratchCanvas {
+      position: absolute;
+      inset: 0;
+      cursor: crosshair;
+      touch-action: none;
+    }
+
+    .chests-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .chest-card {
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: 14px;
+      padding: 14px 10px;
+      text-align: center;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .chest-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    .chest-card.bronze:hover { border-color: #cd7f32; }
+    .chest-card.gold:hover { border-color: #f59e0b; }
+    .chest-card.diamond:hover { border-color: #38bdf8; }
+
+    .chest-icon { font-size: 2.4rem; margin-bottom: 6px; }
+    .chest-title { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.88rem; color: #fff; }
+    .chest-cost { font-size: 0.76rem; color: #fbbf24; font-weight: 700; margin: 4px 0 8px; }
+
+    /* ══════════════════════════════════════════
+       🏆 LEADERBOARD & BOUNTIES STYLES
+       ══════════════════════════════════════════ */
+    .podium-grid {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 14px;
+      margin: 16px 0 20px;
+    }
+    .podium-card {
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: 14px;
+      padding: 14px 10px;
+      text-align: center;
+      width: 120px;
+      position: relative;
+    }
+    .podium-card.rank-1 {
+      border-color: #f59e0b;
+      background: linear-gradient(180deg, rgba(245,158,11,0.12), var(--bg3));
+      transform: translateY(-10px);
+    }
+    .podium-card.rank-2 { border-color: #94a3b8; }
+    .podium-card.rank-3 { border-color: #cd7f32; }
+
+    .podium-medal { font-size: 1.4rem; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); }
+    .podium-avatar { width: 44px; height: 44px; border-radius: 50%; margin: 6px auto 4px; object-fit: cover; }
+    .podium-name { font-size: 0.78rem; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .podium-coins { font-size: 0.72rem; color: #fbbf24; font-weight: 700; }
+
+    .lb-table { width: 100%; border-collapse: collapse; }
+    .lb-row { display: flex; align-items: center; padding: 8px 12px; border-radius: 10px; margin-bottom: 4px; background: rgba(255,255,255,0.02); transition: background 0.2s; }
+    .lb-row:hover { background: rgba(124,58,237,0.1); }
+    .lb-rank { width: 28px; font-weight: 800; font-size: 0.85rem; color: var(--muted); }
+    .lb-avatar { width: 28px; height: 28px; border-radius: 50%; margin-right: 10px; }
+    .lb-name { flex: 1; font-size: 0.85rem; font-weight: 600; color: #fff; display: flex; align-items: center; }
+    .lb-val { font-family: 'Outfit', sans-serif; font-weight: 700; color: #fbbf24; font-size: 0.88rem; }
+
+    .bounty-box {
+      background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(245,158,11,0.08));
+      border: 1px solid rgba(245,158,11,0.4);
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 16px;
+    }
+
     /* RESPONSIVE */
     @media(max-width:1024px) { .wrap { grid-template-columns:1fr; } .sl,.sr { display:none; } }
     @media(max-width:640px) {
@@ -1420,9 +1738,9 @@
   </div>
 </div>
 
-<!-- GENIUS VAULT & LUCKY WHEEL MODAL -->
+<!-- GENIUS VAULT & REWARDS MODAL -->
 <div class="overlay" id="vaultOverlay" onclick="closeVaultModal(event)">
-  <div class="modal vault-modal" onclick="event.stopPropagation()">
+  <div class="modal vault-modal" onclick="event.stopPropagation()" style="max-width:620px;">
     <div class="mh" style="border-bottom:none;padding-bottom:10px;">
       <div class="mt" style="display:flex;align-items:center;gap:8px;">
         <img src="../genius-ia-coin.png" style="width:26px;height:26px;border-radius:50%;" alt="GENIUS IA">
@@ -1432,9 +1750,12 @@
     </div>
 
     <!-- Navigation Tabs inside Vault -->
-    <div class="v-tabs">
+    <div class="v-tabs" style="overflow-x:auto;padding-bottom:4px;">
       <button class="v-tab active" id="vtab-btn-wheel" onclick="switchVaultTab('wheel')">🎰 Lucky Wheel</button>
+      <button class="v-tab" id="vtab-btn-arcade" onclick="switchVaultTab('arcade')">🎫 Arcade & Chests</button>
+      <button class="v-tab" id="vtab-btn-shop" onclick="switchVaultTab('shop')">🛍️ Genius Shop</button>
       <button class="v-tab" id="vtab-btn-quests" onclick="switchVaultTab('quests')">🎯 Daily Quests</button>
+      <button class="v-tab" id="vtab-btn-leaderboard" onclick="switchVaultTab('leaderboard')">🏆 Leaderboard</button>
       <button class="v-tab" id="vtab-btn-wallet" onclick="switchVaultTab('wallet')">📜 Wallet & History</button>
     </div>
 
@@ -1464,7 +1785,84 @@
         </div>
       </div>
 
-      <!-- TAB 2: DAILY QUESTS -->
+      <!-- TAB 2: ARCADE & MYSTERY CHESTS -->
+      <div id="vpane-arcade" class="v-pane" style="display:none;">
+        <div class="arcade-section">
+          <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1.05rem;color:#fff;margin-bottom:2px;" id="lbl-scratch-title">
+            🎫 3D Scratch Card
+          </div>
+          <div style="font-size:0.8rem;color:#94a3b8;" id="lbl-scratch-sub">
+            Scratch the foil to reveal 3 matching symbols and win up to 500 🪙!
+          </div>
+
+          <div class="scratch-stage-box">
+            <div class="scratch-prize-under" id="scratchUnderLayer">
+              <div style="font-size:1.8rem;" id="scratchPrizeIcon">💎</div>
+              <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.2rem;color:#fbbf24;" id="scratchPrizeVal">+100 🪙</div>
+              <div style="font-size:0.72rem;color:#cbd5e1;" id="scratchPrizeTxt">Match 3 Diamonds!</div>
+            </div>
+            <canvas id="scratchCanvas" width="280" height="150"></canvas>
+          </div>
+
+          <div style="display:flex;justify-content:center;gap:10px;">
+            <button class="btn-spin-wheel" style="width:auto;padding:8px 18px;font-size:0.85rem;" id="btnNewScratch" onclick="initNewScratchCard()">
+              🎲 New Card (30 🪙)
+            </button>
+          </div>
+        </div>
+
+        <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1.05rem;color:#fff;margin:16px 0 4px;" id="lbl-chests-title">
+          📦 Mystery Chests Unboxing
+        </div>
+        <div style="font-size:0.8rem;color:#94a3b8;" id="lbl-chests-sub">
+          Open chests for instant coin jackpots and rare cosmetics!
+        </div>
+
+        <div class="chests-grid">
+          <!-- Bronze -->
+          <div class="chest-card bronze" onclick="openMysteryChest('bronze')">
+            <div class="chest-icon">📦</div>
+            <div class="chest-title" id="lbl-chest-bronze-t">Bronze Chest</div>
+            <div class="chest-cost">25 🪙</div>
+            <button class="shop-btn buy" style="font-size:0.72rem;">Open</button>
+          </div>
+          <!-- Gold -->
+          <div class="chest-card gold" onclick="openMysteryChest('gold')">
+            <div class="chest-icon">🎁</div>
+            <div class="chest-title" id="lbl-chest-gold-t">Gold Chest</div>
+            <div class="chest-cost">100 🪙</div>
+            <button class="shop-btn buy" style="font-size:0.72rem;">Open</button>
+          </div>
+          <!-- Diamond -->
+          <div class="chest-card diamond" onclick="openMysteryChest('diamond')">
+            <div class="chest-icon">💎</div>
+            <div class="chest-title" id="lbl-chest-diamond-t">Diamond Chest</div>
+            <div class="chest-cost">250 🪙</div>
+            <button class="shop-btn buy" style="font-size:0.72rem;">Open</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: GENIUS SHOP -->
+      <div id="vpane-shop" class="v-pane" style="display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <div>
+            <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1.1rem;color:#fff;" id="lbl-shop-title">🛍️ GENIUS Shop</div>
+            <div style="font-size:0.78rem;color:#94a3b8;" id="lbl-shop-sub">Customize your profile with 3D animated frames and badges</div>
+          </div>
+        </div>
+
+        <div class="shop-section-title" id="lbl-shop-frames-title">✨ 3D Avatar Frames</div>
+        <div class="shop-grid" id="shopFramesGrid"></div>
+
+        <div class="shop-section-title" id="lbl-shop-badges-title">🎖️ Collectible Badges</div>
+        <div class="shop-grid" id="shopBadgesGrid"></div>
+
+        <div class="shop-section-title" id="lbl-shop-glows-title">🌈 Username Effects</div>
+        <div class="shop-grid" id="shopGlowsGrid"></div>
+      </div>
+
+      <!-- TAB 4: DAILY QUESTS -->
       <div id="vpane-quests" class="v-pane" style="display:none;">
         <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1.05rem;color:#fff;margin-bottom:4px;" id="lbl-quests-title">
           🎯 Daily Quests (Resets every 24h)
@@ -1532,7 +1930,44 @@
         </div>
       </div>
 
-      <!-- TAB 3: WALLET & TRANSACTIONS -->
+      <!-- TAB 5: LEADERBOARD & BOUNTIES -->
+      <div id="vpane-leaderboard" class="v-pane" style="display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <div>
+            <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1.05rem;color:#fff;" id="lbl-lb-title">🏆 Community Leaderboard</div>
+            <div style="font-size:0.78rem;color:#94a3b8;" id="lbl-lb-sub">Top ranked creators and coin holders</div>
+          </div>
+          <div style="display:flex;gap:4px;">
+            <button class="v-tab active" id="btn-lb-holders" style="padding:4px 10px;font-size:0.75rem;" onclick="switchLbTab('holders')">👑 Top Holders</button>
+            <button class="v-tab" id="btn-lb-tippers" style="padding:4px 10px;font-size:0.75rem;" onclick="switchLbTab('tippers')">💖 Top Tippers</button>
+          </div>
+        </div>
+
+        <div class="podium-grid" id="lbPodium"></div>
+        <div class="lb-table" id="lbRowsContainer"></div>
+
+        <div class="bounty-box">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+              <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:0.95rem;color:#fbbf24;" id="lbl-bounty-title">
+                ⚔️ Challenge of the Week: 3D Shader Mastery
+              </div>
+              <div style="font-size:0.78rem;color:#cbd5e1;margin-top:2px;" id="lbl-bounty-desc">
+                Create and publish an interactive Three.js WebGL scene with custom lighting.
+              </div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <div style="font-size:0.7rem;color:#94a3b8;">Prize Pool</div>
+              <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.1rem;color:#fbbf24;">2,500 🪙</div>
+            </div>
+          </div>
+          <button class="shop-btn buy" style="margin-top:10px;width:auto;padding:6px 14px;" onclick="participateBounty()" id="btn-join-bounty">
+            🚀 Submit Creation
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 6: WALLET & TRANSACTIONS -->
       <div id="vpane-wallet" class="v-pane" style="display:none;">
         <div class="vault-balance-hero">
           <img src="../genius-ia-coin.png" class="v-hero-coin" alt="GENIUS IA">
@@ -1547,6 +1982,60 @@
           <div style="text-align:center;padding:20px;color:var(--muted);font-size:0.82rem;" id="lbl-no-tx">No recent transactions.</div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- POST BOOST MODAL -->
+<div class="overlay" id="boostOverlay" onclick="closeBoostModal(event)">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:440px;">
+    <div class="mh">
+      <div class="mt" style="display:flex;align-items:center;gap:6px;">
+        <span>🚀</span> <span id="lbl-boost-modal-title">Boost & Promote Post</span>
+      </div>
+      <button class="mc" onclick="closeBoostModal()">✕</button>
+    </div>
+    <div class="mb">
+      <div style="font-size:0.84rem;color:#94a3b8;margin-bottom:14px;" id="lbl-boost-modal-sub">
+        Pin your post at the top of the feed with an exclusive glowing frame to get maximum views and tips!
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+        <!-- Standard -->
+        <div class="chest-card" style="text-align:left;display:flex;align-items:center;gap:12px;padding:12px;" onclick="confirmBoostPost('standard')">
+          <div style="font-size:1.8rem;">🔥</div>
+          <div style="flex:1;">
+            <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:0.92rem;color:#fff;" id="lbl-boost-std-title">Standard Featured (12h)</div>
+            <div style="font-size:0.74rem;color:#94a3b8;" id="lbl-boost-std-desc">Featured badge & purple glow in feed</div>
+          </div>
+          <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1rem;color:#fbbf24;">75 🪙</div>
+        </div>
+
+        <!-- Ultra -->
+        <div class="chest-card" style="text-align:left;display:flex;align-items:center;gap:12px;padding:12px;border-color:rgba(245,158,11,0.5);background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(236,72,153,0.08));" onclick="confirmBoostPost('ultra')">
+          <div style="font-size:1.8rem;">👑</div>
+          <div style="flex:1;">
+            <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:0.92rem;color:#fcd34d;" id="lbl-boost-ultra-title">Ultra Pinned Top (24h)</div>
+            <div style="font-size:0.74rem;color:#e2e8f0;" id="lbl-boost-ultra-desc">Top 1 pinned spot + animated rainbow gold border</div>
+          </div>
+          <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1rem;color:#fbbf24;">150 🪙</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MYSTERY CHEST UNBOXING MODAL -->
+<div class="overlay" id="chestOverlay" onclick="closeChestModal(event)">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:380px;text-align:center;">
+    <div class="mh" style="border:none;justify-content:flex-end;">
+      <button class="mc" onclick="closeChestModal()">✕</button>
+    </div>
+    <div class="mb" style="padding:10px 20px 24px;">
+      <div id="chestAnimIcon" style="font-size:4.5rem;animation:bounce 0.6s infinite alternate;">🎁</div>
+      <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.3rem;color:#fff;margin:12px 0 4px;" id="chestResultTitle">Opening Chest...</div>
+      <div style="font-size:0.9rem;color:#fbbf24;font-weight:700;" id="chestResultDesc">Rolling mystery rewards!</div>
+      <button class="shop-btn buy" style="margin-top:18px;width:auto;padding:8px 24px;" onclick="closeChestModal()" id="btn-claim-chest-reward">Awesome! ✨</button>
     </div>
   </div>
 </div>
@@ -1803,10 +2292,21 @@ function loadFeed() {
       }
     }
     
-    // Sort in memory to avoid index requirements in Firestore
+    // Sort with Boost prioritization
+    const now = Date.now();
     posts.sort((a, b) => {
-      let tA = Date.now();
-      let tB = Date.now();
+      let scoreA = 0;
+      let scoreB = 0;
+
+      if (a.boostedUntil && a.boostedUntil > now) {
+        scoreA += (a.boostTier === 'ultra' ? 2000000000000 : 1000000000000);
+      }
+      if (b.boostedUntil && b.boostedUntil > now) {
+        scoreB += (b.boostTier === 'ultra' ? 2000000000000 : 1000000000000);
+      }
+
+      let tA = 0;
+      let tB = 0;
       if (a.createdAt) {
         if (typeof a.createdAt.toMillis === 'function') tA = a.createdAt.toMillis();
         else if (typeof a.createdAt === 'number') tA = a.createdAt;
@@ -1817,7 +2317,7 @@ function loadFeed() {
         else if (typeof b.createdAt === 'number') tB = b.createdAt;
         else if (b.createdAt.seconds) tB = b.createdAt.seconds * 1000;
       }
-      return tB - tA;
+      return (scoreB + tB) - (scoreA + tA);
     });
     
     posts.forEach(p => el.appendChild(renderPost(p)));
@@ -1827,6 +2327,13 @@ function loadFeed() {
 function renderPost(p) {
   const el = document.createElement('div');
   el.className = 'post-card';
+
+  const now = Date.now();
+  const isBoostedUltra = p.boostedUntil && p.boostedUntil > now && p.boostTier === 'ultra';
+  const isBoostedStd = p.boostedUntil && p.boostedUntil > now && p.boostTier === 'standard';
+  if (isBoostedUltra) el.classList.add('post-boost-ultra');
+  else if (isBoostedStd) el.classList.add('post-boost-standard');
+
   const displayName = p.displayName || p.user || 'Anonymous';
   const userTag = p.userTag || '';
   const a = p.photoURL || p.userAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=7c3aed&color=fff&bold=true`;
@@ -1840,6 +2347,12 @@ function renderPost(p) {
   const time = p.createdAt ? timeAgo(safeGetDate(p.createdAt)) : 'just now';
   const cCls = 'cat-' + (p.category || 'general');
   const cEm = catEmoji(p.category), cLbl = catLabel(p.category);
+  const currentLang = typeof getCommunityLang === 'function' ? getCommunityLang() : (localStorage.getItem('hub_lang') || 'en');
+
+  // Cosmetics
+  const authorFrame = p.equippedFrame ? `avatar-frame-${p.equippedFrame}` : '';
+  const authorBadge = p.equippedBadge ? `<span class="badge-pill">${esc(p.equippedBadge)}</span>` : '';
+  const authorGlow = p.equippedGlow === 'prism' ? 'user-glow-prism' : '';
 
   // Images HTML
   let imgs = '';
@@ -1860,7 +2373,6 @@ function renderPost(p) {
 
   // Code Preview HTML (Bilingual EN/FR)
   let codeHtml = '';
-  const currentLang = localStorage.getItem('hub_lang') || 'fr';
   const lblRunDemo = currentLang === 'fr' ? '▶️ Lancer la Démo Live' : '▶️ Run Live Demo';
   const lblEditStudio = currentLang === 'fr' ? '⚡ Éditer dans le Studio' : '⚡ Edit in Studio';
   const lblMobileTest = currentLang === 'fr' ? '📱 Tester sur Mobile' : '📱 Test on Mobile';
@@ -1951,13 +2463,16 @@ function renderPost(p) {
 
   el.innerHTML = `
     <div class="ph">
-      <img src="${a}" class="p-avatar">
+      <img src="${a}" class="p-avatar ${authorFrame}">
       <div class="pm">
-        <div class="p-author">${esc(displayName)} ${userTag ? `<span class="user-tag" style="background: rgba(124, 58, 237, 0.15); color: #c084fc; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 6px; font-weight: normal; display: inline-block;">${esc(userTag)}</span>` : ''}</div>
+        <div class="p-author ${authorGlow}">${esc(displayName)} ${authorBadge} ${userTag ? `<span class="user-tag" style="background: rgba(124, 58, 237, 0.15); color: #c084fc; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 6px; font-weight: normal; display: inline-block;">${esc(userTag)}</span>` : ''}</div>
         <div class="p-time">${time}</div>
       </div>
-      <span class="p-cat ${cCls}">${cEm} ${cLbl}</span>
-      ${canDel?`<button class="del-btn" onclick="delPost('${p.id}')">🗑 Delete</button>`:''}
+      <div style="display:flex;align-items:center;gap:6px;">
+        ${isBoostedUltra ? `<span class="p-boost-badge ultra">👑 ULTRA</span>` : (isBoostedStd ? `<span class="p-boost-badge standard">🔥 FEATURED</span>` : '')}
+        <span class="p-cat ${cCls}">${cEm} ${cLbl}</span>
+        ${canDel?`<button class="del-btn" onclick="delPost('${p.id}')">🗑 Delete</button>`:''}
+      </div>
     </div>
     ${postCaption ? `<div class="p-content">${esc(postCaption)}</div>` : ''}
     ${imgs}${vid}${codeHtml}
@@ -1975,9 +2490,13 @@ function renderPost(p) {
         <span>${currentLang === 'fr' ? 'Pourboire' : 'Tip'}</span>
         ${p.tipsTotal ? `<span style="opacity:0.85;font-size:0.75rem;font-weight:700;">(${p.tipsTotal}🪙)</span>` : ''}
       </button>
+      <button class="btn-boost-post" onclick="openBoostModal('${p.id}')">
+        <span>🚀</span>
+        <span>${currentLang === 'fr' ? 'Booster' : 'Boost'}</span>
+      </button>
       <button class="act-btn share-btn" onclick="sharePost('${p.id}')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-        Share
+        ${currentLang === 'fr' ? 'Partager' : 'Share'}
       </button>
     </div>`;
   return el;
@@ -2779,11 +3298,15 @@ const I18N = {
     btnSignOut: 'Sign Out',
     signedOutToast: 'Signed out',
     adminBadge: 'ADMIN',
-    // Vault
+    // Vault Tabs
     vaultTitle: 'GENIUS VAULT',
     tabWheel: '🎰 Lucky Wheel',
+    tabArcade: '🎫 Arcade & Chests',
+    tabShop: '🛍️ Genius Shop',
     tabQuests: '🎯 Daily Quests',
+    tabLeaderboard: '🏆 Leaderboard',
     tabWallet: '📜 Wallet & History',
+    // Wheel
     wheelTitle: '🎰 GENIUS IA Lucky Wheel',
     wheelSub: '1 FREE Spin Daily! Extra spins: 50 🪙',
     btnSpinFree: '🎁 Spin for Free! (1/day)',
@@ -2791,6 +3314,31 @@ const I18N = {
     freeSpinReady: 'Your free daily spin is ready!',
     freeSpinUsed: 'Daily free spin used. Extra spins: 50 GENIUS IA',
     wheelWon: '🎉 Congratulations! You won {n} GENIUS IA on the Lucky Wheel!',
+    // Arcade & Chests
+    scratchTitle: '🎫 3D Scratch Card',
+    scratchSub: 'Scratch the foil to reveal 3 matching symbols and win up to 500 🪙!',
+    btnNewScratch: '🎲 New Card (30 🪙)',
+    scratchWon: '🎉 Scratch Win! You uncovered +{n} GENIUS IA coins!',
+    chestsTitle: '📦 Mystery Chests Unboxing',
+    chestsSub: 'Open chests for instant coin jackpots and rare cosmetics!',
+    chestBronze: 'Bronze Chest',
+    chestGold: 'Gold Chest',
+    chestDiamond: 'Diamond Chest',
+    openingChest: 'Opening Chest...',
+    rollingRewards: 'Rolling mystery rewards!',
+    chestWonCoins: '🎉 JACKPOT! You found +{n} GENIUS IA inside the chest!',
+    chestWonItem: '✨ UNLOCKED! You found exclusive {name}!',
+    // Shop
+    shopTitle: '🛍️ GENIUS Shop',
+    shopSub: 'Customize your profile with 3D animated frames, badges, and glows',
+    shopFramesTitle: '✨ 3D Avatar Frames',
+    shopBadgesTitle: '🎖️ Collectible Badges',
+    shopGlowsTitle: '🌈 Username Effects',
+    btnBuyItem: 'Buy {cost} 🪙',
+    btnEquip: 'Equip',
+    btnEquipped: '✓ Equipped',
+    itemPurchasedToast: '🛍️ Unlocked {name}! Applied to your profile.',
+    // Quests
     questsTitle: '🎯 Daily Quests (Resets every 24h)',
     questsSub: 'Complete quests below to earn free GENIUS IA coins!',
     qPublishTitle: 'Daily Creator',
@@ -2804,9 +3352,26 @@ const I18N = {
     btnClaim: 'Claim',
     btnClaimed: '✓ Claimed',
     questClaimedToast: '🎉 Reward claimed: +{n} GENIUS IA!',
+    // Leaderboard & Bounties
+    lbTitle: '🏆 Community Leaderboard',
+    lbSub: 'Top ranked creators and coin holders',
+    lbHoldersBtn: '👑 Top Holders',
+    lbTippersBtn: '💖 Top Tippers',
+    bountyTitle: '⚔️ Challenge of the Week: 3D Shader Mastery',
+    bountyDesc: 'Create and publish an interactive Three.js WebGL scene with custom lighting.',
+    btnJoinBounty: '🚀 Submit Creation',
+    // Wallet
     balanceHeroLbl: 'Available GENIUS IA Balance',
     txHistoryLbl: 'Transactions & Rewards History',
     noTx: 'No recent transactions.',
+    // Boost Post
+    boostModalTitle: 'Boost & Promote Post',
+    boostModalSub: 'Pin your post at the top of the feed with an exclusive glowing frame to get maximum views and tips!',
+    boostStdTitle: 'Standard Featured (12h)',
+    boostStdDesc: 'Featured badge & purple glow in feed',
+    boostUltraTitle: 'Ultra Pinned Top (24h)',
+    boostUltraDesc: 'Top 1 pinned spot + animated rainbow gold border',
+    boostSuccessToast: '🚀 Post successfully boosted!',
     // Tips
     tipModalTitle: 'Tip Creator',
     tipModalSub: 'Send GENIUS IA coins to',
@@ -2862,11 +3427,15 @@ const I18N = {
     btnSignOut: 'Se déconnecter',
     signedOutToast: 'Déconnecté',
     adminBadge: 'ADMIN',
-    // Vault
+    // Vault Tabs
     vaultTitle: 'GENIUS VAULT',
     tabWheel: '🎰 Roue de la Fortune',
+    tabArcade: '🎫 Arcade & Coffres',
+    tabShop: '🛍️ Boutique Genius',
     tabQuests: '🎯 Quêtes Quotidiennes',
+    tabLeaderboard: '🏆 Classement',
     tabWallet: '📜 Portefeuille & Historique',
+    // Wheel
     wheelTitle: '🎰 Roue de la Fortune GENIUS IA',
     wheelSub: '1 Tour GRATUIT par jour ! Tours supplémentaires : 50 🪙',
     btnSpinFree: '🎁 Tourner Gratuitement ! (1/j)',
@@ -2874,6 +3443,31 @@ const I18N = {
     freeSpinReady: 'Votre tour gratuit du jour est prêt !',
     freeSpinUsed: 'Tour gratuit utilisé. Chaque tour suivant coûte 50 GENIUS IA',
     wheelWon: '🎉 Félicitations ! Vous avez gagné {n} GENIUS IA à la Roue de la Fortune !',
+    // Arcade & Chests
+    scratchTitle: '🎫 Carte à Gratter 3D',
+    scratchSub: 'Grattez le vernis pour révéler 3 symboles identiques et gagner jusqu\'à 500 🪙 !',
+    btnNewScratch: '🎲 Nouveau Ticket (30 🪙)',
+    scratchWon: '🎉 Gain au Grattage ! Vous avez découvert +{n} pièces GENIUS IA !',
+    chestsTitle: '📦 Ouverture de Coffres Mystères',
+    chestsSub: 'Ouvrez des coffres pour remporter des jackpots et cosmétiques rares !',
+    chestBronze: 'Coffre de Bronze',
+    chestGold: 'Coffre d\'Or',
+    chestDiamond: 'Coffre de Diamant',
+    openingChest: 'Ouverture du Coffre...',
+    rollingRewards: 'Tirage des récompenses mystères !',
+    chestWonCoins: '🎉 JACKPOT ! Vous avez trouvé +{n} GENIUS IA dans le coffre !',
+    chestWonItem: '✨ DÉBLOQUÉ ! Vous avez obtenu {name} exclusif !',
+    // Shop
+    shopTitle: '🛍️ Boutique GENIUS',
+    shopSub: 'Personnalisez votre profil avec des cadres 3D animés, badges et lueurs',
+    shopFramesTitle: '✨ Cadres d\'Avatar 3D',
+    shopBadgesTitle: '🎖️ Badges de Collection',
+    shopGlowsTitle: '🌈 Effets de Pseudo',
+    btnBuyItem: 'Acheter {cost} 🪙',
+    btnEquip: 'Équiper',
+    btnEquipped: '✓ Équipé',
+    itemPurchasedToast: '🛍️ {name} débloqué ! Appliqué à votre profil.',
+    // Quests
     questsTitle: '🎯 Quêtes du Jour (Réinitialisation 24h)',
     questsSub: 'Complétez les quêtes ci-dessous pour gagner des pièces GENIUS IA gratuites !',
     qPublishTitle: 'Créateur du Jour',
@@ -2887,9 +3481,26 @@ const I18N = {
     btnClaim: 'Réclamer',
     btnClaimed: '✓ Réclamé',
     questClaimedToast: '🎉 Récompense réclamée : +{n} GENIUS IA !',
+    // Leaderboard & Bounties
+    lbTitle: '🏆 Classement de la Communauté',
+    lbSub: 'Top créateurs et détenteurs de pièces',
+    lbHoldersBtn: '👑 Top Balances',
+    lbTippersBtn: '💖 Top Donateurs',
+    bountyTitle: '⚔️ Défi de la Semaine : Maîtrise des Shaders 3D',
+    bountyDesc: 'Créez et publiez une scène Three.js WebGL interactive avec éclairages dynamiques.',
+    btnJoinBounty: '🚀 Soumettre Création',
+    // Wallet
     balanceHeroLbl: 'Solde GENIUS IA Disponible',
     txHistoryLbl: 'Historique des Transactions & Récompenses',
     noTx: 'Aucune transaction récente.',
+    // Boost Post
+    boostModalTitle: 'Booster & Mettre en Avant',
+    boostModalSub: 'Épinglez votre post en haut du fil avec un cadre lumineux exclusif pour maximiser vos vues et pourboires !',
+    boostStdTitle: 'Mis en Avant Standard (12h)',
+    boostStdDesc: 'Badge en vedette & lueur violette dans le fil',
+    boostUltraTitle: 'Ultra Épinglé en Top 1 (24h)',
+    boostUltraDesc: 'Emplacement N°1 + bordure dorée scintillante animée',
+    boostSuccessToast: '🚀 Post boosté avec succès !',
     // Tips
     tipModalTitle: 'Envoyer un Pourboire',
     tipModalSub: 'Envoyer des pièces GENIUS IA à',
@@ -2990,12 +3601,32 @@ function applyCommunityLanguage(lang) {
 
   // Vault Tabs
   const vWheel = document.getElementById('vtab-btn-wheel'); if (vWheel) vWheel.textContent = t.tabWheel;
+  const vArcade = document.getElementById('vtab-btn-arcade'); if (vArcade) vArcade.textContent = t.tabArcade;
+  const vShop = document.getElementById('vtab-btn-shop'); if (vShop) vShop.textContent = t.tabShop;
   const vQuests = document.getElementById('vtab-btn-quests'); if (vQuests) vQuests.textContent = t.tabQuests;
+  const vLb = document.getElementById('vtab-btn-leaderboard'); if (vLb) vLb.textContent = t.tabLeaderboard;
   const vWallet = document.getElementById('vtab-btn-wallet'); if (vWallet) vWallet.textContent = t.tabWallet;
 
   // Lucky Wheel
   const wTitle = document.getElementById('lbl-wheel-title'); if (wTitle) wTitle.textContent = t.wheelTitle;
   const wSub = document.getElementById('lbl-wheel-sub'); if (wSub) wSub.textContent = t.wheelSub;
+
+  // Arcade & Chests
+  const sTitle = document.getElementById('lbl-scratch-title'); if (sTitle) sTitle.textContent = t.scratchTitle;
+  const sSub = document.getElementById('lbl-scratch-sub'); if (sSub) sSub.textContent = t.scratchSub;
+  const sBtn = document.getElementById('btnNewScratch'); if (sBtn) sBtn.textContent = t.btnNewScratch;
+  const chTitle = document.getElementById('lbl-chests-title'); if (chTitle) chTitle.textContent = t.chestsTitle;
+  const chSub = document.getElementById('lbl-chests-sub'); if (chSub) chSub.textContent = t.chestsSub;
+  const chB = document.getElementById('lbl-chest-bronze-t'); if (chB) chB.textContent = t.chestBronze;
+  const chG = document.getElementById('lbl-chest-gold-t'); if (chG) chG.textContent = t.chestGold;
+  const chD = document.getElementById('lbl-chest-diamond-t'); if (chD) chD.textContent = t.chestDiamond;
+
+  // Shop
+  const shTitle = document.getElementById('lbl-shop-title'); if (shTitle) shTitle.textContent = t.shopTitle;
+  const shSub = document.getElementById('lbl-shop-sub'); if (shSub) shSub.textContent = t.shopSub;
+  const shFrTitle = document.getElementById('lbl-shop-frames-title'); if (shFrTitle) shFrTitle.textContent = t.shopFramesTitle;
+  const shBdTitle = document.getElementById('lbl-shop-badges-title'); if (shBdTitle) shBdTitle.textContent = t.shopBadgesTitle;
+  const shGlTitle = document.getElementById('lbl-shop-glows-title'); if (shGlTitle) shGlTitle.textContent = t.shopGlowsTitle;
 
   // Quests
   const qTitle = document.getElementById('lbl-quests-title'); if (qTitle) qTitle.textContent = t.questsTitle;
@@ -3009,10 +3640,27 @@ function applyCommunityLanguage(lang) {
   const qCmtT = document.getElementById('qtitle-comment'); if (qCmtT) qCmtT.textContent = t.qCommentTitle;
   const qCmtD = document.getElementById('qdesc-comment'); if (qCmtD) qCmtD.innerHTML = `${t.qCommentDesc} (<span id="qcomments-count">${currentQuests.comment || 0}</span>/2)`;
 
+  // Leaderboard & Bounties
+  const lbT = document.getElementById('lbl-lb-title'); if (lbT) lbT.textContent = t.lbTitle;
+  const lbS = document.getElementById('lbl-lb-sub'); if (lbS) lbS.textContent = t.lbSub;
+  const lbHBtn = document.getElementById('btn-lb-holders'); if (lbHBtn) lbHBtn.textContent = t.lbHoldersBtn;
+  const lbTBtn = document.getElementById('btn-lb-tippers'); if (lbTBtn) lbTBtn.textContent = t.lbTippersBtn;
+  const bTitle = document.getElementById('lbl-bounty-title'); if (bTitle) bTitle.textContent = t.bountyTitle;
+  const bDesc = document.getElementById('lbl-bounty-desc'); if (bDesc) bDesc.textContent = t.bountyDesc;
+  const bBtn = document.getElementById('btn-join-bounty'); if (bBtn) bBtn.textContent = t.btnJoinBounty;
+
   // Wallet
   const valHero = document.getElementById('lbl-vault-balance-title'); if (valHero) valHero.textContent = t.balanceHeroLbl;
   const valHist = document.getElementById('lbl-vault-history-title'); if (valHist) valHist.textContent = t.txHistoryLbl;
   const noTxEl = document.getElementById('lbl-no-tx'); if (noTxEl) noTxEl.textContent = t.noTx;
+
+  // Boost Modal
+  const bstT = document.getElementById('lbl-boost-modal-title'); if (bstT) bstT.textContent = t.boostModalTitle;
+  const bstSub = document.getElementById('lbl-boost-modal-sub'); if (bstSub) bstSub.textContent = t.boostModalSub;
+  const bstStdT = document.getElementById('lbl-boost-std-title'); if (bstStdT) bstStdT.textContent = t.boostStdTitle;
+  const bstStdD = document.getElementById('lbl-boost-std-desc'); if (bstStdD) bstStdD.textContent = t.boostStdDesc;
+  const bstUltT = document.getElementById('lbl-boost-ultra-title'); if (bstUltT) bstUltT.textContent = t.boostUltraTitle;
+  const bstUltD = document.getElementById('lbl-boost-ultra-desc'); if (bstUltD) bstUltD.textContent = t.boostUltraDesc;
 
   // Tip Modal
   const tipT = document.getElementById('lbl-tip-modal-title'); if (tipT) tipT.textContent = t.tipModalTitle;
@@ -3022,6 +3670,7 @@ function applyCommunityLanguage(lang) {
 
   checkWheelStatus();
   updateQuestsUI();
+  renderShop();
 }
 
 // 2. Audio Synthesis Engine (Zero Latency Web Audio API)
@@ -3173,6 +3822,8 @@ let currentCoins = 50;
 let userTransactions = [];
 let lastFreeSpin = null;
 let currentQuests = { publish: 0, qr: 0, like: 0, comment: 0, claimed: {} };
+let userInventory = { frames: [], badges: [], glows: [] };
+let userEquipped = { frame: null, badge: null, glow: null };
 let userCoinUnsub = null;
 let lastKnownCoins = null;
 
@@ -3265,6 +3916,19 @@ function subscribeUserCoins(targetUid, email) {
       renderTxList();
     }
 
+    if (d.inventory) {
+      userInventory = Object.assign({ frames: [], badges: [], glows: [] }, d.inventory);
+      localStorage.setItem('genius_inventory', JSON.stringify(userInventory));
+      renderShop();
+    }
+
+    if (d.equipped) {
+      userEquipped = Object.assign({ frame: null, badge: null, glow: null }, d.equipped);
+      localStorage.setItem('genius_equipped', JSON.stringify(userEquipped));
+      renderShop();
+      updateUserAvatarCosmetics();
+    }
+
     if (d.lastFreeSpin) {
       lastFreeSpin = d.lastFreeSpin;
       localStorage.setItem('genius_last_spin', lastFreeSpin);
@@ -3287,6 +3951,8 @@ async function loadUserCoins(uid, email) {
   // 1. Initial immediate render from localStorage
   const savedCoins = localStorage.getItem('genius_coins');
   const savedTx = localStorage.getItem('genius_txs');
+  const savedInv = localStorage.getItem('genius_inventory');
+  const savedEq = localStorage.getItem('genius_equipped');
   
   if (savedCoins !== null) {
     currentCoins = parseInt(savedCoins, 10) || (isSuperAdmin ? 10000 : 50);
@@ -3299,11 +3965,19 @@ async function loadUserCoins(uid, email) {
   if (savedTx) {
     try { userTransactions = JSON.parse(savedTx) || []; } catch(e) { userTransactions = []; }
   }
+  if (savedInv) {
+    try { userInventory = JSON.parse(savedInv) || { frames: [], badges: [], glows: [] }; } catch(e) {}
+  }
+  if (savedEq) {
+    try { userEquipped = JSON.parse(savedEq) || { frame: null, badge: null, glow: null }; } catch(e) {}
+  }
 
   updateCoinUI();
   renderTxList();
   loadQuestsFromStorage();
   checkWheelStatus();
+  renderShop();
+  updateUserAvatarCosmetics();
 
   // 2. Fetch fresh persistent state from Firestore
   const targetUid = uid || (user ? user.uid : null);
@@ -3317,6 +3991,12 @@ async function loadUserCoins(uid, email) {
         }
         if (Array.isArray(d.transactions) && d.transactions.length > 0) {
           userTransactions = d.transactions;
+        }
+        if (d.inventory) {
+          userInventory = Object.assign({ frames: [], badges: [], glows: [] }, d.inventory);
+        }
+        if (d.equipped) {
+          userEquipped = Object.assign({ frame: null, badge: null, glow: null }, d.equipped);
         }
         if (d.lastFreeSpin) {
           lastFreeSpin = d.lastFreeSpin;
@@ -3334,6 +4014,8 @@ async function loadUserCoins(uid, email) {
             const ed = emailDoc.data() || {};
             if (typeof ed.geniusCoins === 'number') currentCoins = ed.geniusCoins;
             if (Array.isArray(ed.transactions)) userTransactions = ed.transactions;
+            if (ed.inventory) userInventory = ed.inventory;
+            if (ed.equipped) userEquipped = ed.equipped;
             foundExisting = true;
           }
         }
@@ -3345,6 +4027,8 @@ async function loadUserCoins(uid, email) {
           email: user ? user.email : (email || ''),
           geniusCoins: currentCoins,
           transactions: userTransactions,
+          inventory: userInventory,
+          equipped: userEquipped,
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         }, { merge: true });
       }
@@ -3360,10 +4044,14 @@ async function loadUserCoins(uid, email) {
   lastKnownCoins = currentCoins;
   localStorage.setItem('genius_coins', currentCoins.toString());
   localStorage.setItem('genius_txs', JSON.stringify(userTransactions));
+  localStorage.setItem('genius_inventory', JSON.stringify(userInventory));
+  localStorage.setItem('genius_equipped', JSON.stringify(userEquipped));
   updateCoinUI();
   renderTxList();
   updateQuestsUI();
   checkWheelStatus();
+  renderShop();
+  updateUserAvatarCosmetics();
 }
 
 async function saveUserCoinState() {
@@ -3371,6 +4059,8 @@ async function saveUserCoinState() {
   localStorage.setItem('genius_coins', currentCoins.toString());
   localStorage.setItem('genius_txs', JSON.stringify(userTransactions));
   localStorage.setItem('genius_quests', JSON.stringify(currentQuests));
+  localStorage.setItem('genius_inventory', JSON.stringify(userInventory));
+  localStorage.setItem('genius_equipped', JSON.stringify(userEquipped));
   if (lastFreeSpin) localStorage.setItem('genius_last_spin', lastFreeSpin);
 
   const targetUid = user ? user.uid : null;
@@ -3380,6 +4070,8 @@ async function saveUserCoinState() {
         geniusCoins: currentCoins,
         transactions: userTransactions,
         dailyQuests: currentQuests,
+        inventory: userInventory,
+        equipped: userEquipped,
         lastFreeSpin: lastFreeSpin || null,
         lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
       }, { merge: true });
@@ -3396,6 +4088,23 @@ function updateCoinUI() {
   const el2 = document.getElementById('vHeroBalance');
   if (el1) el1.textContent = formatted;
   if (el2) el2.textContent = formatted;
+}
+
+function updateUserAvatarCosmetics() {
+  const hdrAv = document.getElementById('hdrAvatar');
+  if (hdrAv) {
+    hdrAv.classList.remove('avatar-frame-neon', 'avatar-frame-gold', 'avatar-frame-hologram');
+    if (userEquipped && userEquipped.frame) {
+      hdrAv.classList.add(`avatar-frame-${userEquipped.frame}`);
+    }
+  }
+  const hdrName = document.getElementById('hdrName');
+  if (hdrName) {
+    hdrName.classList.remove('user-glow-prism');
+    if (userEquipped && userEquipped.glow === 'prism') {
+      hdrName.classList.add('user-glow-prism');
+    }
+  }
 }
 
 async function addCoins(amount, reason, showAnim = true, originEl = null) {
@@ -3775,7 +4484,492 @@ async function claimQuest(type) {
   await saveUserCoinState();
 }
 
-// 7. Community Tipping & Post Boost Engine
+// ══════════════════════════════════════════
+// 🛍️ 7. GENIUS SHOP ENGINE
+// ══════════════════════════════════════════
+const SHOP_ITEMS = {
+  frames: [
+    { id: 'neon', name_en: 'Cyber Neon Pulse', name_fr: 'Pulsion Cyber Néon', desc_en: 'Animated cyan & pink neon pulse ring', desc_fr: 'Anneau lumineux cyan & rose pulsé', cost: 100, icon: '⚡' },
+    { id: 'gold', name_en: 'Golden Royalty', name_fr: 'Royauté Dorée', desc_en: 'Regal golden border with glowing radiant aura', desc_fr: 'Bordure royale dorée avec aura éclatante', cost: 250, icon: '👑' },
+    { id: 'hologram', name_en: 'Hologram Matrix', name_fr: 'Matrice Hologramme', desc_en: 'Dynamic rotating chromatic glitch aura', desc_fr: 'Aura chromatique rotative dynamique', cost: 500, icon: '🔮' }
+  ],
+  badges: [
+    { id: '🚀 Code Pioneer', name_en: 'Code Pioneer', name_fr: 'Pionnier du Code', desc_en: 'Displayed next to your name on all posts', desc_fr: 'Affiché à côté de votre nom sur vos posts', cost: 50, icon: '🚀' },
+    { id: '⚡ AI Wizard', name_en: 'AI Wizard', name_fr: 'Sorcier de l\'IA', desc_en: 'Master of prompt engineering & AI tools', desc_fr: 'Maître des prompts et outils d\'IA', cost: 150, icon: '⚡' },
+    { id: '💎 Diamond Creator', name_en: 'Diamond Creator', name_fr: 'Créateur Diamant', desc_en: 'Elite status in the IA Code Studio community', desc_fr: 'Statut d\'élite dans la communauté', cost: 300, icon: '💎' },
+    { id: '🏛️ Master Architect', name_en: 'Master Architect', name_fr: 'Maître Architecte', desc_en: 'Architect of advanced Three.js WebGL scenes', desc_fr: 'Architecte de scènes WebGL Three.js', cost: 500, icon: '🏛️' }
+  ],
+  glows: [
+    { id: 'prism', name_en: 'Prism Gradient Glow', name_fr: 'Lueur Prisme Arc-en-ciel', desc_en: 'Animates your username with a vibrant prism rainbow shine', desc_fr: 'Anime votre pseudo avec un dégradé arc-en-ciel éclatant', cost: 150, icon: '🌈' }
+  ]
+};
+
+function renderShop() {
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+
+  // Render Frames
+  const framesGrid = document.getElementById('shopFramesGrid');
+  if (framesGrid) {
+    framesGrid.innerHTML = SHOP_ITEMS.frames.map(item => {
+      const isOwned = userInventory.frames && userInventory.frames.includes(item.id);
+      const isEquipped = userEquipped && userEquipped.frame === item.id;
+      const itemName = lang === 'fr' ? item.name_fr : item.name_en;
+      const itemDesc = lang === 'fr' ? item.desc_fr : item.desc_en;
+
+      let btnHtml = '';
+      if (isEquipped) {
+        btnHtml = `<button class="shop-btn equipped" onclick="toggleEquipCosmetic('frame', '${item.id}')">${t.btnEquipped}</button>`;
+      } else if (isOwned) {
+        btnHtml = `<button class="shop-btn equip" onclick="toggleEquipCosmetic('frame', '${item.id}')">${t.btnEquip}</button>`;
+      } else {
+        btnHtml = `<button class="shop-btn buy" onclick="buyShopItem('frame', '${item.id}', ${item.cost}, '${itemName}')">${t.btnBuyItem.replace('{cost}', item.cost)}</button>`;
+      }
+
+      return `
+        <div class="shop-card">
+          <div class="shop-preview avatar-frame-${item.id}">${item.icon}</div>
+          <div class="shop-item-name">${esc(itemName)}</div>
+          <div class="shop-item-desc">${esc(itemDesc)}</div>
+          ${btnHtml}
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Render Badges
+  const badgesGrid = document.getElementById('shopBadgesGrid');
+  if (badgesGrid) {
+    badgesGrid.innerHTML = SHOP_ITEMS.badges.map(item => {
+      const isOwned = userInventory.badges && userInventory.badges.includes(item.id);
+      const isEquipped = userEquipped && userEquipped.badge === item.id;
+      const itemName = lang === 'fr' ? item.name_fr : item.name_en;
+      const itemDesc = lang === 'fr' ? item.desc_fr : item.desc_en;
+
+      let btnHtml = '';
+      if (isEquipped) {
+        btnHtml = `<button class="shop-btn equipped" onclick="toggleEquipCosmetic('badge', '${item.id}')">${t.btnEquipped}</button>`;
+      } else if (isOwned) {
+        btnHtml = `<button class="shop-btn equip" onclick="toggleEquipCosmetic('badge', '${item.id}')">${t.btnEquip}</button>`;
+      } else {
+        btnHtml = `<button class="shop-btn buy" onclick="buyShopItem('badge', '${item.id}', ${item.cost}, '${itemName}')">${t.btnBuyItem.replace('{cost}', item.cost)}</button>`;
+      }
+
+      return `
+        <div class="shop-card">
+          <div class="shop-preview"><span class="badge-pill">${item.id}</span></div>
+          <div class="shop-item-name">${esc(itemName)}</div>
+          <div class="shop-item-desc">${esc(itemDesc)}</div>
+          ${btnHtml}
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Render Glows
+  const glowsGrid = document.getElementById('shopGlowsGrid');
+  if (glowsGrid) {
+    glowsGrid.innerHTML = SHOP_ITEMS.glows.map(item => {
+      const isOwned = userInventory.glows && userInventory.glows.includes(item.id);
+      const isEquipped = userEquipped && userEquipped.glow === item.id;
+      const itemName = lang === 'fr' ? item.name_fr : item.name_en;
+      const itemDesc = lang === 'fr' ? item.desc_fr : item.desc_en;
+
+      let btnHtml = '';
+      if (isEquipped) {
+        btnHtml = `<button class="shop-btn equipped" onclick="toggleEquipCosmetic('glow', '${item.id}')">${t.btnEquipped}</button>`;
+      } else if (isOwned) {
+        btnHtml = `<button class="shop-btn equip" onclick="toggleEquipCosmetic('glow', '${item.id}')">${t.btnEquip}</button>`;
+      } else {
+        btnHtml = `<button class="shop-btn buy" onclick="buyShopItem('glow', '${item.id}', ${item.cost}, '${itemName}')">${t.btnBuyItem.replace('{cost}', item.cost)}</button>`;
+      }
+
+      return `
+        <div class="shop-card">
+          <div class="shop-preview"><span class="user-glow-prism">User ✨</span></div>
+          <div class="shop-item-name">${esc(itemName)}</div>
+          <div class="shop-item-desc">${esc(itemDesc)}</div>
+          ${btnHtml}
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+async function buyShopItem(category, itemId, cost, itemName) {
+  if (!user) { signInGoogle(); return; }
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+
+  const success = await deductCoins(cost, `🛍️ Shop: ${itemName}`);
+  if (!success) return;
+
+  const catKey = category === 'frame' ? 'frames' : (category === 'badge' ? 'badges' : 'glows');
+  userInventory[catKey] = userInventory[catKey] || [];
+  if (!userInventory[catKey].includes(itemId)) {
+    userInventory[catKey].push(itemId);
+  }
+  userEquipped[category] = itemId;
+
+  await saveUserCoinState();
+  updateUserAvatarCosmetics();
+  renderShop();
+  toast(t.itemPurchasedToast.replace('{name}', itemName), 'success');
+  playJackpotSound();
+  spawnFlyingCoins(window.innerWidth / 2, window.innerHeight / 2, 8);
+}
+
+async function toggleEquipCosmetic(category, itemId) {
+  if (!user) return;
+  if (userEquipped[category] === itemId) {
+    userEquipped[category] = null;
+  } else {
+    userEquipped[category] = itemId;
+  }
+  await saveUserCoinState();
+  updateUserAvatarCosmetics();
+  renderShop();
+  loadFeed();
+}
+
+// ══════════════════════════════════════════
+// 🚀 8. POST BOOST & PROMOTION ENGINE
+// ══════════════════════════════════════════
+let activeBoostPostId = null;
+
+function openBoostModal(postId) {
+  if (!user) { signInGoogle(); return; }
+  activeBoostPostId = postId;
+  document.getElementById('boostOverlay').classList.add('open');
+}
+
+function closeBoostModal(e) {
+  if (e && e.target !== document.getElementById('boostOverlay') && !e.target.classList.contains('mc')) return;
+  document.getElementById('boostOverlay').classList.remove('open');
+  activeBoostPostId = null;
+}
+
+async function confirmBoostPost(tier) {
+  if (!activeBoostPostId || !user) return;
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+
+  const cost = tier === 'ultra' ? 150 : 75;
+  const hours = tier === 'ultra' ? 24 : 12;
+  const reason = lang === 'fr' ? `🚀 Boost Post (${tier.toUpperCase()} ${hours}h)` : `🚀 Post Boost (${tier.toUpperCase()} ${hours}h)`;
+
+  const success = await deductCoins(cost, reason);
+  if (!success) return;
+
+  const boostedUntil = Date.now() + (hours * 3600 * 1000);
+  try {
+    await db.collection('devsocial_posts').doc(activeBoostPostId).update({
+      boostedUntil,
+      boostTier: tier
+    });
+    closeBoostModal();
+    toast(t.boostSuccessToast, 'success');
+    playJackpotSound();
+    spawnFlyingCoins(window.innerWidth / 2, window.innerHeight / 2, 8);
+    loadFeed();
+  } catch(e) {
+    toast('Error: ' + e.message, 'error');
+  }
+}
+
+// ══════════════════════════════════════════
+// 🎮 9. ARCADE: 3D SCRATCH CARD & CHESTS
+// ══════════════════════════════════════════
+let scratchCanvasInited = false;
+let isScratching = false;
+let isCardRevealed = false;
+let currentScratchPrize = 100;
+
+const SCRATCH_PRIZES = [
+  { val: 15, icon: '🪙', text_en: 'Match 3 Coins!', text_fr: '3 Pièces Gagnées !' },
+  { val: 30, icon: '⭐', text_en: 'Match 3 Stars!', text_fr: '3 Étoiles Gagnées !' },
+  { val: 75, icon: '🔥', text_en: 'Match 3 Fire!', text_fr: '3 Flammes Gagnées !' },
+  { val: 150, icon: '💎', text_en: 'Match 3 Diamonds!', text_fr: '3 Diamants Gagnés !' },
+  { val: 300, icon: '👑', text_en: 'Match 3 Crowns!', text_fr: '3 Couronnes Gagnées !' },
+  { val: 600, icon: '⚡', text_en: 'MEGA JACKPOT!', text_fr: 'MÉGA JACKPOT !' }
+];
+
+function initScratchCard() {
+  const canvas = document.getElementById('scratchCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width;
+  const height = canvas.height;
+
+  // Draw silver foil
+  ctx.globalCompositeOperation = 'source-over';
+  const grad = ctx.createLinearGradient(0, 0, width, height);
+  grad.addColorStop(0, '#94a3b8');
+  grad.addColorStop(0.3, '#cbd5e1');
+  grad.addColorStop(0.5, '#e2e8f0');
+  grad.addColorStop(0.7, '#94a3b8');
+  grad.addColorStop(1, '#64748b');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, width, height);
+
+  // Pattern text
+  ctx.fillStyle = 'rgba(15,23,42,0.6)';
+  ctx.font = 'bold 16px Outfit, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('✨ SCRATCH WITH MOUSE / TOUCH ✨', width / 2, height / 2 + 6);
+
+  isCardRevealed = false;
+
+  if (!scratchCanvasInited) {
+    scratchCanvasInited = true;
+
+    function scratch(e) {
+      if (!isScratching || isCardRevealed) return;
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const x = (clientX - rect.left) * (canvas.width / rect.width);
+      const y = (clientY - rect.top) * (canvas.height / rect.height);
+
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.beginPath();
+      ctx.arc(x, y, 18, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Check scratched percentage randomly
+      if (Math.random() < 0.2) {
+        checkScratchCompletion();
+      }
+    }
+
+    canvas.addEventListener('mousedown', () => { isScratching = true; });
+    window.addEventListener('mouseup', () => { isScratching = false; });
+    canvas.addEventListener('mousemove', scratch);
+
+    canvas.addEventListener('touchstart', (e) => { isScratching = true; scratch(e); }, { passive: false });
+    window.addEventListener('touchend', () => { isScratching = false; });
+    canvas.addEventListener('touchmove', scratch, { passive: false });
+  }
+}
+
+function checkScratchCompletion() {
+  if (isCardRevealed) return;
+  const canvas = document.getElementById('scratchCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const pixels = imgData.data;
+  let transparentCount = 0;
+
+  for (let i = 3; i < pixels.length; i += 16) {
+    if (pixels[i] < 128) transparentCount++;
+  }
+
+  const totalChecked = pixels.length / 16;
+  if (transparentCount / totalChecked > 0.40) {
+    revealScratchPrize();
+  }
+}
+
+function revealScratchPrize() {
+  if (isCardRevealed) return;
+  isCardRevealed = true;
+  const canvas = document.getElementById('scratchCanvas');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+
+  if (currentScratchPrize >= 150) playJackpotSound();
+  else playCoinSound();
+
+  toast(t.scratchWon.replace('{n}', currentScratchPrize), 'success');
+  addCoins(currentScratchPrize, `🎫 ${lang === 'fr' ? 'Gain Carte à Gratter' : 'Scratch Card Reward'} (+${currentScratchPrize} 🪙)`);
+}
+
+async function initNewScratchCard() {
+  const isSuperAdmin = user && user.email && ADMIN_EMAILS.includes(user.email);
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+
+  if (!isSuperAdmin) {
+    const success = await deductCoins(30, lang === 'fr' ? '🎲 Nouvelle Carte à Gratter' : '🎲 New Scratch Card');
+    if (!success) return;
+  }
+
+  // Pick random prize weighted
+  const roll = Math.random();
+  let prizeObj = SCRATCH_PRIZES[0];
+  if (roll < 0.35) prizeObj = SCRATCH_PRIZES[0]; // 15
+  else if (roll < 0.65) prizeObj = SCRATCH_PRIZES[1]; // 30
+  else if (roll < 0.85) prizeObj = SCRATCH_PRIZES[2]; // 75
+  else if (roll < 0.95) prizeObj = SCRATCH_PRIZES[3]; // 150
+  else if (roll < 0.99) prizeObj = SCRATCH_PRIZES[4]; // 300
+  else prizeObj = SCRATCH_PRIZES[5]; // 600 MEGA
+
+  currentScratchPrize = prizeObj.val;
+  document.getElementById('scratchPrizeIcon').textContent = prizeObj.icon;
+  document.getElementById('scratchPrizeVal').textContent = `+${prizeObj.val} 🪙`;
+  document.getElementById('scratchPrizeTxt').textContent = lang === 'fr' ? prizeObj.text_fr : prizeObj.text_en;
+
+  initScratchCard();
+}
+
+// Mystery Chests
+async function openMysteryChest(tier) {
+  if (!user) { signInGoogle(); return; }
+  const isSuperAdmin = user && user.email && ADMIN_EMAILS.includes(user.email);
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+
+  const cost = tier === 'diamond' ? 250 : (tier === 'gold' ? 100 : 25);
+  const chestName = tier === 'diamond' ? t.chestDiamond : (tier === 'gold' ? t.chestGold : t.chestBronze);
+
+  if (!isSuperAdmin) {
+    const success = await deductCoins(cost, `📦 ${chestName}`);
+    if (!success) return;
+  }
+
+  const modal = document.getElementById('chestOverlay');
+  const animIcon = document.getElementById('chestAnimIcon');
+  const resTitle = document.getElementById('chestResultTitle');
+  const resDesc = document.getElementById('chestResultDesc');
+
+  animIcon.textContent = tier === 'diamond' ? '💎' : (tier === 'gold' ? '🎁' : '📦');
+  animIcon.style.animation = 'bounce 0.6s infinite alternate';
+  resTitle.textContent = t.openingChest;
+  resDesc.textContent = t.rollingRewards;
+  modal.classList.add('open');
+
+  setTimeout(async () => {
+    animIcon.style.animation = 'none';
+    let wonCoins = 0;
+    if (tier === 'bronze') {
+      wonCoins = Math.floor(15 + Math.random() * 65);
+    } else if (tier === 'gold') {
+      wonCoins = Math.floor(60 + Math.random() * 290);
+    } else {
+      wonCoins = Math.floor(200 + Math.random() * 800);
+    }
+
+    animIcon.textContent = '🎉';
+    resTitle.textContent = `+${wonCoins} GENIUS IA!`;
+    resDesc.textContent = t.chestWonCoins.replace('{n}', wonCoins);
+
+    playJackpotSound();
+    spawnFlyingCoins(window.innerWidth / 2, window.innerHeight / 2, 8);
+    await addCoins(wonCoins, `📦 ${chestName} Reward (+${wonCoins} 🪙)`);
+  }, 1200);
+}
+
+function closeChestModal() {
+  document.getElementById('chestOverlay').classList.remove('open');
+}
+
+// ══════════════════════════════════════════
+// 🏆 10. LEADERBOARD & BOUNTIES ENGINE
+// ══════════════════════════════════════════
+let currentLbTab = 'holders';
+
+async function loadLeaderboard(type = 'holders') {
+  currentLbTab = type;
+  const podiumEl = document.getElementById('lbPodium');
+  const listEl = document.getElementById('lbRowsContainer');
+  if (!podiumEl || !listEl) return;
+
+  podiumEl.innerHTML = '<div style="color:#94a3b8;font-size:0.8rem;">Loading rankings...</div>';
+  listEl.innerHTML = '';
+
+  try {
+    const snap = await db.collection('users').get();
+    let members = [];
+    snap.forEach(d => {
+      const data = d.data() || {};
+      const coins = typeof data.geniusCoins === 'number' ? data.geniusCoins : 0;
+      const name = data.displayName || data.name || (data.email ? data.email.split('@')[0] : 'User');
+      const avatar = data.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=7c3aed&color=fff&bold=true`;
+      const frame = data.equipped && data.equipped.frame ? `avatar-frame-${data.equipped.frame}` : '';
+      const badge = data.equipped && data.equipped.badge ? data.equipped.badge : '';
+      members.push({ id: d.id, name, avatar, coins, frame, badge });
+    });
+
+    members.sort((a, b) => b.coins - a.coins);
+    const top3 = members.slice(0, 3);
+    const others = members.slice(3, 10);
+
+    // Podium rendering (Rank 2, Rank 1, Rank 3 order)
+    let podiumHtml = '';
+    if (top3[1]) {
+      podiumHtml += `
+        <div class="podium-card rank-2">
+          <div class="podium-medal">🥈</div>
+          <img src="${top3[1].avatar}" class="podium-avatar ${top3[1].frame}">
+          <div class="podium-name">${esc(top3[1].name)}</div>
+          <div class="podium-coins">${top3[1].coins} 🪙</div>
+        </div>
+      `;
+    }
+    if (top3[0]) {
+      podiumHtml += `
+        <div class="podium-card rank-1">
+          <div class="podium-medal">🥇</div>
+          <img src="${top3[0].avatar}" class="podium-avatar ${top3[0].frame}">
+          <div class="podium-name">${esc(top3[0].name)}</div>
+          <div class="podium-coins">${top3[0].coins} 🪙</div>
+        </div>
+      `;
+    }
+    if (top3[2]) {
+      podiumHtml += `
+        <div class="podium-card rank-3">
+          <div class="podium-medal">🥉</div>
+          <img src="${top3[2].avatar}" class="podium-avatar ${top3[2].frame}">
+          <div class="podium-name">${esc(top3[2].name)}</div>
+          <div class="podium-coins">${top3[2].coins} 🪙</div>
+        </div>
+      `;
+    }
+    podiumEl.innerHTML = podiumHtml || '<div style="color:#94a3b8;font-size:0.8rem;">No members yet.</div>';
+
+    // Ranks 4 to 10
+    listEl.innerHTML = others.map((m, idx) => `
+      <div class="lb-row">
+        <div class="lb-rank">#${idx + 4}</div>
+        <img src="${m.avatar}" class="lb-avatar ${m.frame}">
+        <div class="lb-name">
+          ${esc(m.name)}
+          ${m.badge ? `<span class="badge-pill">${esc(m.badge)}</span>` : ''}
+        </div>
+        <div class="lb-val">${m.coins} 🪙</div>
+      </div>
+    `).join('');
+  } catch(e) {
+    podiumEl.innerHTML = '<div style="color:#ef4444;font-size:0.8rem;">Error loading leaderboard.</div>';
+  }
+}
+
+function switchLbTab(type) {
+  document.getElementById('btn-lb-holders').classList.toggle('active', type === 'holders');
+  document.getElementById('btn-lb-tippers').classList.toggle('active', type === 'tippers');
+  loadLeaderboard(type);
+}
+
+function participateBounty() {
+  closeVaultModal();
+  openCreate();
+  const inp = document.getElementById('postContent');
+  if (inp) {
+    inp.value = '#ChallengeOfTheWeek #ShaderMastery ';
+    inp.focus();
+  }
+}
+
+// ══════════════════════════════════════════
+// 🪙 11. TIPPING & ADMIN BANK
+// ══════════════════════════════════════════
 let activeTipPostId = null;
 let activeTipAuthorUid = null;
 let activeTipAuthorEmail = null;
@@ -3844,7 +5038,7 @@ async function confirmSendTip() {
   spawnFlyingCoins(window.innerWidth / 2, window.innerHeight / 2, 8);
 }
 
-// 8. Admin Central Bank Engine
+// Admin Central Bank
 async function adminMintCoins() {
   if (!isAdmin) return;
   const amt = parseInt(document.getElementById('admSelfMintAmount').value, 10);
@@ -3945,7 +5139,9 @@ async function adminGlobalAirdrop() {
   }
 }
 
-// 9. Vault Modal Controls
+// ══════════════════════════════════════════
+// 🏛️ 12. VAULT MODAL CONTROLS
+// ══════════════════════════════════════════
 function openVaultModal() {
   document.getElementById('vaultOverlay').classList.add('open');
   drawLuckyWheel(wheelCurrentAngle);
@@ -3970,6 +5166,12 @@ function switchVaultTab(tabName) {
 
   if (tabName === 'wheel') {
     setTimeout(() => drawLuckyWheel(wheelCurrentAngle), 50);
+  } else if (tabName === 'arcade') {
+    setTimeout(() => initScratchCard(), 50);
+  } else if (tabName === 'shop') {
+    renderShop();
+  } else if (tabName === 'leaderboard') {
+    loadLeaderboard(currentLbTab);
   }
 }
 
@@ -3989,6 +5191,8 @@ document.addEventListener('keydown', e => {
     closeQrModal(); 
     closeVaultModal(); 
     closeTipModal(); 
+    closeBoostModal();
+    closeChestModal();
   } 
 });
 </script>
