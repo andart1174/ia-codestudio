@@ -2088,7 +2088,10 @@
         🪙 Send Tip Now
       </button>
     </div>
-  <!-- EDIT PROFILE NAME MODAL -->
+  </div>
+</div>
+
+<!-- EDIT PROFILE NAME MODAL -->
 <div class="overlay" id="editProfileOverlay" onclick="closeEditProfileModal(event)">
   <div class="modal" onclick="event.stopPropagation()" style="max-width:400px;">
     <div class="mh">
@@ -2376,12 +2379,13 @@ function renderPost(p) {
   const userTag = p.userTag || '';
   const a = p.photoURL || p.userAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=7c3aed&color=fff&bold=true`;
   const liked = user && p.likedBy && p.likedBy.includes(user.uid);
-  const canDel = user && (
-    isAdmin || 
+  const isPostAuthor = user && (
     (p.uid && user.uid === p.uid) || 
-    (p.userEmail && user.email === p.userEmail) || 
-    (p.uid && user.email === p.uid)
+    (p.userEmail && user.email && p.userEmail.toLowerCase() === user.email.toLowerCase()) || 
+    (p.email && user.email && p.email.toLowerCase() === user.email.toLowerCase()) ||
+    (p.uid && user.email && p.uid.toLowerCase() === user.email.toLowerCase())
   );
+  const canDel = user && (isAdmin || isPostAuthor);
   const time = p.createdAt ? timeAgo(safeGetDate(p.createdAt)) : 'just now';
   const cCls = 'cat-' + (p.category || 'general');
   const cEm = catEmoji(p.category), cLbl = catLabel(p.category);
@@ -2523,15 +2527,17 @@ function renderPost(p) {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         <span id="cc-${p.id}">${p.commentsCount||0}</span>
       </button>
+      ${!isPostAuthor ? `
       <button class="btn-tip-post" onclick="openTipModal('${p.id}', '${esc(p.uid || '')}', '${esc(p.userEmail || p.email || '')}', '${esc(displayName).replace(/'/g, "\\'")}')">
         <img src="../genius-ia-coin.png" alt="🪙">
         <span>${currentLang === 'fr' ? 'Pourboire' : 'Tip'}</span>
         ${p.tipsTotal ? `<span style="opacity:0.85;font-size:0.75rem;font-weight:700;">(${p.tipsTotal}🪙)</span>` : ''}
-      </button>
+      </button>` : ''}
+      ${isPostAuthor ? `
       <button class="btn-boost-post" onclick="openBoostModal('${p.id}')">
         <span>🚀</span>
         <span>${currentLang === 'fr' ? 'Booster' : 'Boost'}</span>
-      </button>
+      </button>` : ''}
       <button class="act-btn share-btn" onclick="sharePost('${p.id}')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
         ${currentLang === 'fr' ? 'Partager' : 'Share'}
@@ -4175,21 +4181,33 @@ function updateUserAvatarCosmetics() {
 
 // Profile Display Name Management (For Users & Admin)
 function openEditProfileModal() {
-  if (!user) { signInGoogle(); return; }
+  let currentName = '';
+  if (user && user.displayName) {
+    currentName = user.displayName;
+  } else {
+    try {
+      const sess = JSON.parse(localStorage.getItem('genius_session') || '{}');
+      if (sess.name) currentName = sess.name;
+    } catch(e) {}
+  }
+  const slN = document.getElementById('slName');
+  if (!currentName && slN) currentName = slN.textContent.trim();
+
   const inp = document.getElementById('editProfileNameInput');
-  if (inp) inp.value = user.displayName || '';
-  document.getElementById('editProfileOverlay').classList.add('open');
+  if (inp) inp.value = currentName;
+  const overlay = document.getElementById('editProfileOverlay');
+  if (overlay) overlay.classList.add('open');
 }
 
 function closeEditProfileModal(e) {
   if (e && e.target !== document.getElementById('editProfileOverlay') && !e.target.classList.contains('mc')) return;
-  document.getElementById('editProfileOverlay').classList.remove('open');
+  const overlay = document.getElementById('editProfileOverlay');
+  if (overlay) overlay.classList.remove('open');
 }
 
 async function saveProfileName() {
-  if (!user) return;
   const inp = document.getElementById('editProfileNameInput');
-  const newName = inp.value.trim();
+  const newName = inp ? inp.value.trim() : '';
   const lang = getCommunityLang();
   const t = I18N[lang] || I18N.en;
 
@@ -4198,7 +4216,7 @@ async function saveProfileName() {
     return;
   }
 
-  user.displayName = newName;
+  if (user) user.displayName = newName;
 
   const slN = document.getElementById('slName'); if (slN) slN.textContent = newName;
   const hdrN = document.getElementById('hdrName'); if (hdrN) hdrN.textContent = newName;
@@ -4213,13 +4231,17 @@ async function saveProfileName() {
     }
   } catch(e) {}
 
-  try {
-    await db.collection('users').doc(user.uid).set({ displayName: newName }, { merge: true });
-    if (user.email && user.email !== user.uid) {
-      await db.collection('users').doc(user.email).set({ displayName: newName }, { merge: true });
+  const uid = user ? user.uid : null;
+  const email = user ? user.email : null;
+  if (uid) {
+    try {
+      await db.collection('users').doc(uid).set({ displayName: newName }, { merge: true });
+      if (email && email !== uid) {
+        await db.collection('users').doc(email).set({ displayName: newName }, { merge: true });
+      }
+    } catch(e) {
+      console.warn("Firestore profile name update note:", e);
     }
-  } catch(e) {
-    console.warn("Firestore profile name update note:", e);
   }
 
   closeEditProfileModal();
@@ -4735,17 +4757,17 @@ async function toggleEquipCosmetic(category, itemId) {
 // ══════════════════════════════════════════
 // 🚀 8. POST BOOST & PROMOTION ENGINE
 // ══════════════════════════════════════════
-let activeBoostPostId = null;
-
-function openBoostModal(postId) {
+async function openBoostModal(postId) {
   if (!user) { signInGoogle(); return; }
   activeBoostPostId = postId;
-  document.getElementById('boostOverlay').classList.add('open');
+  const overlay = document.getElementById('boostOverlay');
+  if (overlay) overlay.classList.add('open');
 }
 
 function closeBoostModal(e) {
   if (e && e.target !== document.getElementById('boostOverlay') && !e.target.classList.contains('mc')) return;
-  document.getElementById('boostOverlay').classList.remove('open');
+  const overlay = document.getElementById('boostOverlay');
+  if (overlay) overlay.classList.remove('open');
   activeBoostPostId = null;
 }
 
