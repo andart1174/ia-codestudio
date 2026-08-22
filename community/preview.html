@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Live Preview — IA Code Studio</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #030712;
+      --accent: #7c3aed;
+      --accent2: #a855f7;
+      --accent3: #c084fc;
+      --green: #10b981;
+      --border: rgba(124,58,237,0.3);
+      --border2: rgba(255,255,255,0.1);
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: #e2e8f0;
+      touch-action: manipulation;
+    }
+    
+    /* PREVIEW CONTAINER */
+    #preview-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      background: #000;
+    }
+    
+    /* FLOATING TOP BAR (HUD) */
+    .floating-hud {
+      position: fixed;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 20px rgba(124,58,237,0.25);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      max-width: 92vw;
+    }
+    .floating-hud.minimized {
+      transform: translateX(-50%) translateY(-70px);
+      opacity: 0.2;
+    }
+    .floating-hud.minimized:hover {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .hud-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 180px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .hud-badge {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .hud-btn {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--border2);
+      color: #cbd5e1;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+      font-family: inherit;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .hud-btn:hover {
+      background: rgba(124,58,237,0.25);
+      border-color: var(--accent3);
+      color: #fff;
+    }
+    .hud-btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      color: #fff;
+      font-weight: 700;
+    }
+    .hud-btn-primary:hover {
+      box-shadow: 0 4px 12px rgba(124,58,237,0.5);
+    }
+    .hud-toggle-btn {
+      position: fixed;
+      top: 14px;
+      right: 14px;
+      z-index: 10000;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border2);
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+    
+    /* LOADING SCREEN */
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: #030712;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      text-align: center;
+      padding: 20px;
+    }
+    .loader-spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(124, 58, 237, 0.2);
+      border-top-color: var(--accent3);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .loader-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.25rem;
+      background: linear-gradient(135deg, #fff, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .loader-sub {
+      color: #94a3b8;
+      font-size: 0.85rem;
+    }
+
+    /* ERROR STATE */
+    #error-box {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #030712;
+      z-index: 1001;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+    }
+    .err-card {
+      background: #0f172a;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 18px;
+      padding: 28px 24px;
+      max-width: 400px;
+    }
+    .err-icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .err-title { font-family: 'Outfit', sans-serif; font-size: 1.1rem; color: #f87171; font-weight: 700; margin-bottom: 8px; }
+    .err-text { color: #94a3b8; font-size: 0.85rem; margin-bottom: 18px; line-height: 1.5; }
+    
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(16, 185, 129, 0.9);
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      z-index: 10002;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: none;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="loader-spinner"></div>
+    <div class="loader-title">IA Code Studio Live</div>
+    <div class="loader-sub">Loading project in 60 FPS sandbox...</div>
+  </div>
+
+  <!-- ERROR SCREEN -->
+  <div id="error-box">
+    <div class="err-card">
+      <div class="err-icon">⚠️</div>
+      <div class="err-title" id="err-title">Project Not Found</div>
+      <div class="err-text" id="err-desc">The requested creation could not be found or has expired.</div>
+      <a href="index.html" class="hud-btn hud-btn-primary" style="display:inline-flex;justify-content:center;padding:10px 20px;">
+        ← Back to Community
+      </a>
+    </div>
+  </div>
+
+  <!-- FLOATING HUD -->
+  <header class="floating-hud" id="floating-hud">
+    <div class="hud-title">
+      <span class="hud-badge">LIVE</span>
+      <span id="post-title">Project Preview</span>
+    </div>
+    <button class="hud-btn" onclick="reloadPreview()" title="Reload Demo">
+      🔄 <span style="display:none;" class="lbl-desktop">Reload</span>
+    </button>
+    <button class="hud-btn" onclick="toggleFullscreen()" title="Fullscreen Mode">
+      ⛶ <span style="display:none;" class="lbl-desktop">Fullscreen</span>
+    </button>
+    <a href="#" id="btn-studio-edit" class="hud-btn hud-btn-primary">
+      ⚡ <span class="lbl-studio">Studio</span>
+    </a>
+    <a href="index.html" class="hud-btn" title="Exit to Community">
+      ✕
+    </a>
+  </header>
+
+  <button class="hud-toggle-btn" onclick="toggleHudVisibility()" title="Toggle Controls">
+    👁️
+  </button>
+
+  <!-- IFRAME CONTAINER -->
+  <iframe id="preview-frame" sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals" allow="accelerometer; autoplay; camera; microphone; gyroscope; payment; display-capture"></iframe>
+
+  <div class="toast" id="toast">Link copied! 🔗</div>
+
+  <!-- FIREBASE SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    // Initialize Firebase (Matches IA Code Studio Project)
+    firebase.initializeApp({
+      apiKey: "AIzaSyBXJ0LstZF7c3-GI2eDtv6V7vsx0scgXHk",
+      authDomain: "ia-codestudio.firebaseapp.com",
+      projectId: "ia-codestudio",
+      storageBucket: "ia-codestudio.firebasestorage.app",
+      messagingSenderId: "977495027432",
+      appId: "1:977495027432:web:fb93e8ae7712c70df2635d"
+    });
+
+    const db = firebase.firestore();
+    let currentCode = '';
+    let isHudHidden = false;
+
+    // Decompression helper
+    async function decompressString(base64) {
+      if (typeof DecompressionStream === 'undefined') return base64;
+      try {
+        const binaryString = atob(base64);
+        const len = binaryString.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+        const buffer = await new Response(stream).arrayBuffer();
+        return new TextDecoder().decode(buffer);
+      } catch (e) {
+        console.warn("Gzip decompression failed, fallback:", e);
+        return base64;
+      }
+    }
+
+    async function loadProject() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const postId = urlParams.get('id');
+
+      if (!postId) {
+        showError('No Project Specified', 'Please provide a valid project ID in the URL parameter.');
+        return;
+      }
+
+      // Set link to open in studio
+      const studioLink = document.getElementById('btn-studio-edit');
+      if (studioLink) {
+        studioLink.href = `../IA%20ARCHITECTE%20cea%20bunaultra%20mod111/index.html?fork=${encodeURIComponent(postId)}`;
+      }
+
+      try {
+        const doc = await db.collection('devsocial_posts').doc(postId).get();
+        if (!doc.exists) {
+          showError('Project Not Found', 'This creation may have been removed or is no longer available in the community feed.');
+          return;
+        }
+
+        const data = doc.data();
+        const title = data.title || data.caption || data.caption_en || data.caption_fr || data.content || 'Interactive 3D / WebGL Creation';
+        document.getElementById('post-title').textContent = title.length > 25 ? title.substring(0, 25) + '...' : title;
+        document.title = `${title} — IA Code Studio Live`;
+
+        let code = data.code || '';
+        if (!code && data.compressedCode) {
+          code = await decompressString(data.compressedCode);
+        }
+
+        if (!code) {
+          showError('Empty Project', 'This post does not contain standalone executable code.');
+          return;
+        }
+
+        currentCode = code;
+        runCode(code);
+
+      } catch (err) {
+        console.error('Error fetching post:', err);
+        showError('Loading Error', 'Failed to load project from cloud database. ' + err.message);
+      }
+    }
+
+    function runCode(code) {
+      const iframe = document.getElementById('preview-frame');
+      iframe.srcdoc = code;
+      
+      iframe.onload = () => {
+        const loader = document.getElementById('loader');
+        if (loader) {
+          loader.style.opacity = '0';
+          loader.style.transition = 'opacity 0.3s ease';
+          setTimeout(() => loader.style.display = 'none', 300);
+        }
+      };
+    }
+
+    function reloadPreview() {
+      if (!currentCode) return;
+      const loader = document.getElementById('loader');
+      if (loader) {
+        loader.style.display = 'flex';
+        loader.style.opacity = '1';
+      }
+      runCode(currentCode);
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.warn('Fullscreen error:', err);
+        });
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    function toggleHudVisibility() {
+      const hud = document.getElementById('floating-hud');
+      isHudHidden = !isHudHidden;
+      if (isHudHidden) {
+        hud.classList.add('minimized');
+      } else {
+        hud.classList.remove('minimized');
+      }
+    }
+
+    function showError(title, desc) {
+      document.getElementById('loader').style.display = 'none';
+      const errBox = document.getElementById('error-box');
+      errBox.style.display = 'flex';
+      document.getElementById('err-title').textContent = title;
+      document.getElementById('err-desc').textContent = desc;
+    }
+
+    // Auto load on start
+    window.addEventListener('DOMContentLoaded', loadProject);
+  </script>
+</body>
+</html>

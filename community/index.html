@@ -347,18 +347,159 @@
       background: rgba(124, 58, 237, 0.1);
       border: 1px solid var(--border);
       color: var(--accent3);
-      padding: 8px 16px;
+      padding: 8px 14px;
       border-radius: 8px;
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
     }
     .btn-fork-edit:hover {
       background: linear-gradient(135deg, var(--accent), var(--accent2));
       color: #fff;
       box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
       border-color: transparent;
+    }
+    .btn-mobile-test {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(6, 182, 212, 0.08));
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #34d399;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn-mobile-test:hover {
+      background: linear-gradient(135deg, #10b981, #06b6d4);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
+      transform: translateY(-1px);
+      border-color: transparent;
+    }
+
+    /* QR CODE MODAL */
+    .qr-box-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 6px 0;
+    }
+    .qr-scanner-card {
+      position: relative;
+      background: #060913;
+      padding: 16px;
+      border-radius: 16px;
+      border: 2px solid rgba(124, 58, 237, 0.4);
+      box-shadow: 0 0 35px rgba(124, 58, 237, 0.25), inset 0 0 20px rgba(0,0,0,0.8);
+      margin-bottom: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .qr-scanner-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #a855f7, #34d399, transparent);
+      box-shadow: 0 0 8px #a855f7;
+      animation: qrScanLine 2.5s ease-in-out infinite;
+      z-index: 2;
+    }
+    @keyframes qrScanLine {
+      0%, 100% { top: 6px; }
+      50% { top: calc(100% - 8px); }
+    }
+    #qrcode-target {
+      background: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      display: inline-block;
+      line-height: 0;
+    }
+    #qrcode-target img, #qrcode-target canvas {
+      display: block !important;
+      margin: 0 auto;
+    }
+    .qr-instructions {
+      color: #94a3b8;
+      font-size: 0.86rem;
+      margin-bottom: 16px;
+      line-height: 1.5;
+      max-width: 380px;
+    }
+    .qr-link-box {
+      width: 100%;
+      display: flex;
+      gap: 8px;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      padding: 6px 8px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .qr-link-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #cbd5e1;
+      font-size: 0.8rem;
+      font-family: monospace;
+      outline: none;
+      padding-left: 6px;
+    }
+    .qr-copy-btn {
+      background: rgba(124, 58, 237, 0.2);
+      border: 1px solid var(--border);
+      color: var(--accent3);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .qr-copy-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+    .qr-open-btn {
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 700;
+      transition: all 0.2s;
+      box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+    }
+    .qr-open-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.6);
     }
 
     /* COMMENTS — upgraded threaded system */
@@ -772,6 +913,37 @@
   </div>
 </div>
 
+<!-- QR CODE MODAL -->
+<div class="overlay" id="qrOverlay" onclick="closeQrModal(event)">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:440px">
+    <div class="mh">
+      <div class="mt">📱 <span id="lbl-qr-title">Mobile Live Play</span></div>
+      <button class="mc" onclick="closeQrModal()">✕</button>
+    </div>
+    <div class="mb">
+      <div class="qr-box-wrap">
+        <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;color:#fff;margin-bottom:6px;" id="qrModalTitle">Project Preview</div>
+        <div class="qr-instructions" id="qrModalDesc">
+          Scan this QR code with your phone's camera to run this 3D / WebGL project in full-screen mode at 60 FPS without installing anything!
+        </div>
+
+        <div class="qr-scanner-card">
+          <div id="qrcode-target"></div>
+        </div>
+
+        <div class="qr-link-box">
+          <input type="text" class="qr-link-input" id="qrLinkInput" readonly>
+          <button class="qr-copy-btn" id="btnCopyQr" onclick="copyQrModalLink()">📋 Copy</button>
+        </div>
+
+        <a href="#" target="_blank" class="qr-open-btn" id="qrOpenLink">
+          🚀 Open Standalone Tab
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lb" onclick="closeLb()">
   <button class="lb-close" onclick="closeLb()">✕</button>
@@ -780,6 +952,9 @@
 
 <!-- TOASTS -->
 <div class="toast-wrap" id="toasts"></div>
+
+<!-- QR CODE GENERATOR LIB -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -1042,6 +1217,7 @@ function renderPost(p) {
   const currentLang = localStorage.getItem('hub_lang') || 'fr';
   const lblRunDemo = currentLang === 'fr' ? '▶️ Lancer la Démo Live' : '▶️ Run Live Demo';
   const lblEditStudio = currentLang === 'fr' ? '⚡ Éditer dans le Studio' : '⚡ Edit in Studio';
+  const lblMobileTest = currentLang === 'fr' ? '📱 Tester sur Mobile' : '📱 Test on Mobile';
   
   if (p.code) {
     const uniqueId = `iframe-container-${p.id}`;
@@ -1052,6 +1228,8 @@ function renderPost(p) {
     const labelJS = '⚡ JS';
     const labelFull = currentLang === 'fr' ? '📄 Code Complet' : '📄 Full Code';
     const labelCopy = currentLang === 'fr' ? 'Copier' : 'Copy';
+
+    const safeTitle = (p.title || p.caption || p.content || 'IA Project').replace(/[\r\n\t]+/g, ' ').replace(/'/g, "\\'");
 
     codeHtml = `
       <div class="p-code-tab-container" id="cv-container-${p.id}">
@@ -1113,7 +1291,12 @@ function renderPost(p) {
         </div>
       </div>
       <div class="p-code-actions">
-        <a href="../IA%20ARCHITECTE%20cea%20bunaultra%20mod111/index.html?fork=${p.id}" class="btn-fork-edit" style="text-decoration:none;">${lblEditStudio}</a>
+        <button class="btn-mobile-test" onclick="openQrModal('${p.id}', '${safeTitle}')">
+          ${lblMobileTest}
+        </button>
+        <a href="../IA%20ARCHITECTE%20cea%20bunaultra%20mod111/index.html?fork=${p.id}" class="btn-fork-edit" style="text-decoration:none;">
+          ${lblEditStudio}
+        </a>
       </div>
     `;
   }
@@ -1816,7 +1999,108 @@ function toast(msg, type='info') {
   setTimeout(()=>t.classList.add('show'),10);
   setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=>t.remove(),300); },3500);
 }
-document.addEventListener('keydown', e => { if (e.key==='Escape') { closeCreate(); closeCmts(); closeLb(); } });
+// ══════════════════════════════════════════
+// QR CODE MODAL LOGIC (MOBILE LIVE PLAY)
+// ══════════════════════════════════════════
+let qrInstance = null;
+
+function openQrModal(postId, postTitle) {
+  const modal = document.getElementById('qrOverlay');
+  const qrTarget = document.getElementById('qrcode-target');
+  const titleEl = document.getElementById('qrModalTitle');
+  const descEl = document.getElementById('qrModalDesc');
+  const linkInput = document.getElementById('qrLinkInput');
+  const openLink = document.getElementById('qrOpenLink');
+  const modalHeaderTitle = document.getElementById('lbl-qr-title');
+  
+  if (!modal || !qrTarget) return;
+
+  const currentLang = localStorage.getItem('hub_lang') || 'fr';
+  const displayTitle = postTitle || (currentLang === 'fr' ? 'Projet Interactif' : 'Interactive Project');
+  if (titleEl) titleEl.textContent = displayTitle;
+
+  if (currentLang === 'fr') {
+    if (modalHeaderTitle) modalHeaderTitle.textContent = 'Test en Direct sur Mobile';
+    if (descEl) descEl.textContent = 'Scannez ce code QR avec l\'appareil photo de votre téléphone pour exécuter ce projet 3D / WebGL en plein écran à 60 FPS sans rien installer !';
+    if (openLink) openLink.innerHTML = '🚀 Ouvrir en Plein Écran (Nouvel Onglet)';
+  } else {
+    if (modalHeaderTitle) modalHeaderTitle.textContent = 'Mobile Live Play';
+    if (descEl) descEl.textContent = 'Scan this QR code with your phone\'s camera to run this 3D / WebGL project in full-screen mode at 60 FPS without installing anything!';
+    if (openLink) openLink.innerHTML = '🚀 Open Standalone Tab';
+  }
+
+  // Construct absolute URL to preview.html?id=...
+  let baseUrl = window.location.href.split('?')[0].split('#')[0];
+  if (baseUrl.endsWith('/index.html')) {
+    baseUrl = baseUrl.replace('/index.html', '/preview.html');
+  } else if (baseUrl.endsWith('/')) {
+    baseUrl = baseUrl + 'preview.html';
+  } else {
+    baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf('/') + 1) + 'preview.html';
+  }
+  const previewUrl = `${baseUrl}?id=${encodeURIComponent(postId)}`;
+
+  if (linkInput) linkInput.value = previewUrl;
+  if (openLink) openLink.href = previewUrl;
+
+  qrTarget.innerHTML = '';
+  try {
+    if (typeof QRCode !== 'undefined') {
+      qrInstance = new QRCode(qrTarget, {
+        text: previewUrl,
+        width: 170,
+        height: 170,
+        colorDark: "#040711",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    } else {
+      throw new Error('QRCode lib fallback');
+    }
+  } catch (err) {
+    // High-speed API fallback
+    const img = document.createElement('img');
+    img.src = `https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=${encodeURIComponent(previewUrl)}`;
+    img.alt = 'QR Code';
+    img.style.width = '170px';
+    img.style.height = '170px';
+    qrTarget.appendChild(img);
+  }
+
+  modal.classList.add('open');
+}
+
+function closeQrModal(e) {
+  if (e && e.target !== document.getElementById('qrOverlay') && !e.target.classList.contains('mc')) return;
+  const modal = document.getElementById('qrOverlay');
+  if (modal) modal.classList.remove('open');
+}
+
+function copyQrModalLink() {
+  const linkInput = document.getElementById('qrLinkInput');
+  const btn = document.getElementById('btnCopyQr');
+  if (!linkInput || !linkInput.value) return;
+
+  const currentLang = localStorage.getItem('hub_lang') || 'fr';
+  const successMsg = currentLang === 'fr' ? 'Lien copié ! 🔗' : 'Link copied! 🔗';
+
+  navigator.clipboard.writeText(linkInput.value).then(() => {
+    toast(successMsg, 'success');
+    if (btn) {
+      const orig = btn.textContent;
+      btn.textContent = currentLang === 'fr' ? '✓ Copié !' : '✓ Copied!';
+      btn.style.background = 'var(--green)';
+      btn.style.color = '#fff';
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.style.background = '';
+        btn.style.color = '';
+      }, 1500);
+    }
+  }).catch(() => toast('Failed to copy', 'error'));
+}
+
+document.addEventListener('keydown', e => { if (e.key==='Escape') { closeCreate(); closeCmts(); closeLb(); closeQrModal(); } });
 </script>
 </body>
 </html>
