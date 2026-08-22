@@ -5969,131 +5969,188 @@ function renderSocialCardCanvas(post) {
   const w = canvas.width;  // 1200
   const h = canvas.height; // 630
 
-  // 1. Dark Futuristic Cyber Gradient Background
-  const bgGrad = ctx.createLinearGradient(0, 0, w, h);
-  bgGrad.addColorStop(0, '#030712');
-  bgGrad.addColorStop(0.5, '#0f172a');
-  bgGrad.addColorStop(1, '#020617');
-  ctx.fillStyle = bgGrad;
-  ctx.fillRect(0, 0, w, h);
+  function drawBase() {
+    // 1. Dark Futuristic Cyber Gradient Background
+    const bgGrad = ctx.createLinearGradient(0, 0, w, h);
+    bgGrad.addColorStop(0, '#030712');
+    bgGrad.addColorStop(0.4, '#0f172a');
+    bgGrad.addColorStop(1, '#020617');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, w, h);
 
-  // 2. Cyber Grid & Glowing Accents
-  ctx.strokeStyle = 'rgba(124, 58, 237, 0.08)';
-  ctx.lineWidth = 1;
-  const gridSize = 40;
-  for (let x = 0; x < w; x += gridSize) {
-    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
-  }
-  for (let y = 0; y < h; y += gridSize) {
-    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
-  }
-
-  // Glowing Neon Corner Orbs
-  const orb1 = ctx.createRadialGradient(150, 100, 10, 150, 100, 300);
-  orb1.addColorStop(0, 'rgba(124, 58, 237, 0.35)');
-  orb1.addColorStop(1, 'rgba(124, 58, 237, 0)');
-  ctx.fillStyle = orb1; ctx.fillRect(0, 0, w, h);
-
-  const orb2 = ctx.createRadialGradient(w - 200, h - 150, 10, w - 200, h - 150, 350);
-  orb2.addColorStop(0, 'rgba(236, 72, 153, 0.25)');
-  orb2.addColorStop(1, 'rgba(236, 72, 153, 0)');
-  ctx.fillStyle = orb2; ctx.fillRect(0, 0, w, h);
-
-  // Border frame
-  ctx.strokeStyle = 'rgba(124, 58, 237, 0.5)';
-  ctx.lineWidth = 4;
-  ctx.strokeRect(20, 20, w - 40, h - 40);
-
-  // 3. Header Branding
-  ctx.fillStyle = '#c084fc';
-  ctx.font = 'bold 26px Outfit, sans-serif';
-  ctx.textAlign = 'left';
-  ctx.fillText('✦ IA CODE STUDIO COMMUNITY', 60, 80);
-
-  ctx.fillStyle = '#94a3b8';
-  ctx.font = '18px Outfit, sans-serif';
-  ctx.fillText('Explore & Run Interactive 3D WebGL / AI Creations Live', 60, 112);
-
-  // 4. Category Pill
-  const cat = post.category || 'general';
-  ctx.fillStyle = 'rgba(124, 58, 237, 0.3)';
-  ctx.strokeStyle = '#a855f7';
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.roundRect(60, 150, 160, 36, [18]);
-  ctx.fill(); ctx.stroke();
-
-  ctx.fillStyle = '#f3e8ff';
-  ctx.font = 'bold 16px Outfit, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText(`⚡ ${cat.toUpperCase()}`, 140, 174);
-
-  // 5. Post Title / Caption
-  const title = (post.title || post.caption || post.content || 'Interactive 3D WebGL Creation').slice(0, 75);
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 36px Outfit, sans-serif';
-  ctx.textAlign = 'left';
-  ctx.fillText(title, 60, 240);
-
-  // 6. Creator Info
-  const authorName = post.displayName || post.user || 'Creator';
-  ctx.fillStyle = '#fbbf24';
-  ctx.font = 'bold 22px Outfit, sans-serif';
-  ctx.fillText(`👤 Built by @${authorName}`, 60, 290);
-
-  if (post.equippedBadge) {
-    ctx.fillStyle = 'rgba(245, 158, 11, 0.2)';
-    ctx.strokeStyle = '#f59e0b';
+    // 2. Cyber Grid & Glowing Accents
+    ctx.strokeStyle = 'rgba(124, 58, 237, 0.08)';
     ctx.lineWidth = 1;
+    const gridSize = 40;
+    for (let x = 0; x < w; x += gridSize) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+    }
+    for (let y = 0; y < h; y += gridSize) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+    }
+
+    // Glowing Neon Orbs
+    const orb1 = ctx.createRadialGradient(150, 100, 10, 150, 100, 320);
+    orb1.addColorStop(0, 'rgba(124, 58, 237, 0.35)');
+    orb1.addColorStop(1, 'rgba(124, 58, 237, 0)');
+    ctx.fillStyle = orb1; ctx.fillRect(0, 0, w, h);
+
+    const orb2 = ctx.createRadialGradient(w - 200, h - 150, 10, w - 200, h - 150, 350);
+    orb2.addColorStop(0, 'rgba(236, 72, 153, 0.25)');
+    orb2.addColorStop(1, 'rgba(236, 72, 153, 0)');
+    ctx.fillStyle = orb2; ctx.fillRect(0, 0, w, h);
+
+    const orb3 = ctx.createRadialGradient(300, 420, 10, 300, 420, 260);
+    orb3.addColorStop(0, 'rgba(245, 158, 11, 0.2)');
+    orb3.addColorStop(1, 'rgba(245, 158, 11, 0)');
+    ctx.fillStyle = orb3; ctx.fillRect(0, 0, w, h);
+
+    // Border frame
+    ctx.strokeStyle = 'rgba(124, 58, 237, 0.6)';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(20, 20, w - 40, h - 40);
+
+    // 3. Header Branding
+    ctx.fillStyle = '#c084fc';
+    ctx.font = 'bold 26px Outfit, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('✦ IA CODE STUDIO COMMUNITY', 60, 80);
+
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '18px Outfit, sans-serif';
+    ctx.fillText('Explore & Run Interactive 3D WebGL / AI Creations Live', 60, 112);
+
+    // 4. Category Pill
+    const cat = post.category || 'general';
+    ctx.fillStyle = 'rgba(124, 58, 237, 0.3)';
+    ctx.strokeStyle = '#a855f7';
+    ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.roundRect(60, 315, 180, 30, [15]);
+    ctx.roundRect(60, 146, 170, 34, [17]);
     ctx.fill(); ctx.stroke();
-    ctx.fillStyle = '#fcd34d';
+
+    ctx.fillStyle = '#f3e8ff';
+    ctx.font = 'bold 15px Outfit, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`⚡ ${cat.toUpperCase()}`, 145, 169);
+
+    // 5. Post Title / Caption
+    const title = (post.title || post.caption || post.content || 'Interactive 3D WebGL Creation').slice(0, 75);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 36px Outfit, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(title, 60, 232);
+
+    // 6. Creator Info
+    const authorName = post.displayName || post.user || 'Creator';
+    ctx.fillStyle = '#fbbf24';
+    ctx.font = 'bold 22px Outfit, sans-serif';
+    ctx.fillText(`👤 Built by @${authorName}`, 60, 280);
+
+    if (post.equippedBadge) {
+      ctx.fillStyle = 'rgba(245, 158, 11, 0.2)';
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.roundRect(60, 305, 200, 30, [15]);
+      ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#fcd34d';
+      ctx.font = 'bold 14px Outfit, sans-serif';
+      ctx.fillText(post.equippedBadge, 75, 325);
+    }
+
+    // 7. 🪙 Prominent GENIUS IA Coin Showcase Box
+    const coinBoxX = 60;
+    const coinBoxY = 360;
+    const coinBoxW = 540;
+    const coinBoxH = 120;
+
+    const coinBoxGrad = ctx.createLinearGradient(coinBoxX, coinBoxY, coinBoxX + coinBoxW, coinBoxY + coinBoxH);
+    coinBoxGrad.addColorStop(0, 'rgba(245, 158, 11, 0.15)');
+    coinBoxGrad.addColorStop(0.6, 'rgba(124, 58, 237, 0.12)');
+    coinBoxGrad.addColorStop(1, 'rgba(236, 72, 153, 0.12)');
+
+    ctx.fillStyle = coinBoxGrad;
+    ctx.strokeStyle = 'rgba(245, 158, 11, 0.5)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(coinBoxX, coinBoxY, coinBoxW, coinBoxH, [16]);
+    ctx.fill(); ctx.stroke();
+
+    // Text beside coin
+    ctx.fillStyle = '#fbbf24';
+    ctx.font = 'bold 23px Outfit, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('🪙 GENIUS IA COIN', coinBoxX + 115, coinBoxY + 38);
+
+    ctx.fillStyle = '#e2e8f0';
+    ctx.font = '14px Outfit, sans-serif';
+    ctx.fillText('Create • Tip • Play Arcade • Win Mystery Chests', coinBoxX + 115, coinBoxY + 68);
+
+    ctx.fillStyle = '#38bdf8';
     ctx.font = 'bold 14px Outfit, sans-serif';
-    ctx.fillText(post.equippedBadge, 75, 335);
+    ctx.fillText('🎁 Get 100 FREE coins when you join today!', coinBoxX + 115, coinBoxY + 96);
+
+    // 8. Embed Live QR Code
+    const qrBoxX = w - 310;
+    const qrBoxY = 150;
+    const qrBoxW = 240;
+    const qrBoxH = 300;
+
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.5)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(qrBoxX, qrBoxY, qrBoxW, qrBoxH, [16]);
+    ctx.fill(); ctx.stroke();
+
+    ctx.fillStyle = '#38bdf8';
+    ctx.font = 'bold 15px Outfit, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('📱 SCAN TO RUN LIVE', qrBoxX + qrBoxW / 2, qrBoxY + 36);
+
+    // 9. Footer Bar
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.fillRect(40, h - 80, w - 80, 50);
+    ctx.fillStyle = '#cbd5e1';
+    ctx.font = 'bold 16px Outfit, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('🌐 ia-codestudio.com/community', 60, h - 48);
+
+    ctx.fillStyle = '#fbbf24';
+    ctx.font = 'bold 16px Outfit, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText('🪙 Powered by GENIUS IA Ecosystem', w - 60, h - 48);
   }
 
-  // 7. Embed Live QR Code
-  const qrBoxX = w - 300;
-  const qrBoxY = 160;
-  const qrBoxW = 230;
-  const qrBoxH = 290;
+  drawBase();
 
-  ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
-  ctx.strokeStyle = 'rgba(56, 189, 248, 0.5)';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.roundRect(qrBoxX, qrBoxY, qrBoxW, qrBoxH, [16]);
-  ctx.fill(); ctx.stroke();
+  // Load and draw 3D Coin Image
+  const coinImg = new Image();
+  coinImg.crossOrigin = 'anonymous';
+  coinImg.onload = () => {
+    // Draw inside showcase box
+    ctx.drawImage(coinImg, 75, 375, 90, 90);
+    // Draw inside footer
+    ctx.drawImage(coinImg, w - 380, h - 72, 34, 34);
+  };
+  coinImg.src = '../genius-ia-coin.png';
 
-  ctx.fillStyle = '#38bdf8';
-  ctx.font = 'bold 15px Outfit, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('📱 SCAN TO RUN LIVE', qrBoxX + qrBoxW / 2, qrBoxY + 34);
-
+  // Load and draw QR Code
   const qrUrl = `https://ia-codestudio.com/community/?post=${encodeURIComponent(post.id)}`;
   const qrImg = new Image();
   qrImg.crossOrigin = 'anonymous';
   qrImg.onload = () => {
-    ctx.drawImage(qrImg, qrBoxX + 25, qrBoxY + 50, 180, 180);
+    const qrBoxX = w - 310;
+    const qrBoxY = 150;
+    const qrBoxW = 240;
+    ctx.drawImage(qrImg, qrBoxX + 30, qrBoxY + 54, 180, 180);
     ctx.fillStyle = '#94a3b8';
     ctx.font = '13px Outfit, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('Instant 60FPS WebGL Preview', qrBoxX + qrBoxW / 2, qrBoxY + 260);
+    ctx.fillText('Instant 60FPS WebGL Preview', qrBoxX + qrBoxW / 2, qrBoxY + 268);
   };
   qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(qrUrl)}`;
-
-  // 8. Footer Bar
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
-  ctx.fillRect(40, h - 80, w - 80, 50);
-  ctx.fillStyle = '#cbd5e1';
-  ctx.font = 'bold 16px Outfit, sans-serif';
-  ctx.textAlign = 'left';
-  ctx.fillText('🌐 ia-codestudio.com/community', 60, h - 48);
-
-  ctx.fillStyle = '#a855f7';
-  ctx.textAlign = 'right';
-  ctx.fillText('🪙 Powered by GENIUS IA Ecosystem', w - 60, h - 48);
 }
 
 function downloadSocialCard() {
