@@ -1220,15 +1220,16 @@ body, html {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(5, 7, 13, 0.8);
-    backdrop-filter: blur(10px);
+    background: rgba(5, 7, 13, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 1000000 !important;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.25s ease;
 }
 
 .modal-overlay.active {
@@ -2627,7 +2628,7 @@ body.game-mode-active #canvas-container {
     padding: 0 !important;
     border-radius: 0 !important;
     border: none !important;
-    z-index: 99999 !important;
+    z-index: 50 !important;
     background: #000 !important;
 }
 

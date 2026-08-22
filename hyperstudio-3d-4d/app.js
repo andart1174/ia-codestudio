@@ -4529,6 +4529,23 @@
     if (btnCloseHangar) btnCloseHangar.addEventListener('click', () => { playClickSFX(); modalHangar.classList.remove('active'); });
     if (btnCloseHangarFooter) btnCloseHangarFooter.addEventListener('click', () => { playClickSFX(); modalHangar.classList.remove('active'); });
 
+    if (modalGameSettings) {
+        modalGameSettings.addEventListener('click', (e) => {
+            if (e.target === modalGameSettings) {
+                playClickSFX();
+                modalGameSettings.classList.remove('active');
+            }
+        });
+    }
+    if (modalHangar) {
+        modalHangar.addEventListener('click', (e) => {
+            if (e.target === modalHangar) {
+                playClickSFX();
+                modalHangar.classList.remove('active');
+            }
+        });
+    }
+
     // Handle Buying Upgrades
     document.querySelectorAll('.btn-hangar-buy').forEach(btn => {
         btn.addEventListener('click', () => {
