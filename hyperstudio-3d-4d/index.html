@@ -456,105 +456,68 @@
                         <div id="fps-hud-overlay" class="cyber-game-hud" style="display:none;">
                             <!-- Top Cockpit Instrument & Command Bar -->
                             <div class="game-hud-top">
+                                <!-- Left: Exit & Flight/Drive Quick Pill -->
                                 <div class="hud-left-controls">
-                                    <div class="hud-badge">
-                                        <i class="fa-solid fa-rocket"></i> <span id="hud-vehicle-name">🚀 ODYSSEY 3D COSMIC QUEST</span>
-                                    </div>
-
-                                    <!-- Mission / Quest Selector -->
-                                    <div class="hud-select-wrap">
-                                        <label for="hud-mission-select"><i class="fa-solid fa-crosshairs"></i> Mission:</label>
-                                        <select id="hud-mission-select" class="hud-styled-select" title="Select Cosmic Mission / Quest">
-                                            <option value="station">🛰️ 1. Save Orbital Station</option>
-                                            <option value="wormhole">⚡ 2. Quantum Gate Slalom</option>
-                                            <option value="asteroids">☄️ 3. Asteroid Hunt &amp; Mining</option>
-                                            <option value="blackhole">🕳️ 4. Black Hole Escape</option>
-                                            <option value="freeroam">🌌 5. Free Cosmic Roam</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Cosmic World Selector -->
-                                    <div class="hud-select-wrap">
-                                        <label for="hud-world-select"><i class="fa-solid fa-globe"></i> Cosmos:</label>
-                                        <select id="hud-world-select" class="hud-styled-select" title="Choose Cosmic Environment">
-                                            <option value="galaxies">🌌 Galaxies &amp; Solar Planets</option>
-                                            <option value="rings">⚡ Hyper Ring Speed Slalom</option>
-                                            <option value="asteroids">☄️ Deep Asteroid Storm</option>
-                                            <option value="cybercity">🏙️ Cyberpunk Spire Megacity</option>
-                                            <option value="blackhole">🕳️ Black Hole Event Horizon</option>
-                                            <option value="deepspace">✨ Infinite Deep Void</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Synth Radio Selector -->
-                                    <div class="hud-select-wrap">
-                                        <label for="hud-radio-select"><i class="fa-solid fa-radio"></i> Radio:</label>
-                                        <select id="hud-radio-select" class="hud-styled-select" title="Cockpit Space Synth Radio">
-                                            <option value="cosmic">🎵 Deep Cosmic Synth</option>
-                                            <option value="pulse">⚡ Cyber Pulse Beat</option>
-                                            <option value="chill">🪐 Ambient Chill</option>
-                                            <option value="off">🔇 Mute Radio</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Hangar & Mode Buttons -->
-                                    <button id="btn-open-hangar" class="hud-mode-pill hangar" title="Open Ship Upgrades &amp; Customization Hangar">
-                                        <i class="fa-solid fa-wrench"></i> <span>Hangar</span>
+                                    <button id="btn-exit-game-hud" class="btn-hud-exit" title="Exit Game Mode (ESC)">
+                                        <i class="fa-solid fa-xmark"></i> <span>EXIT</span>
                                     </button>
-                                    <button id="hud-btn-mode-toggle" class="hud-mode-pill" title="Toggle 3D Flight / Ground Surface Drive">
-                                        <span id="hud-mode-pill-text">🚀 3D Flight</span>
-                                    </button>
-                                    <button id="btn-hud-fullscreen" class="hud-mode-pill" title="Toggle Fullscreen Mode">
-                                        <i class="fa-solid fa-expand"></i> <span id="hud-fs-text">Fullscreen</span>
-                                    </button>
-                                    <button id="btn-hud-touch-toggle" class="hud-mode-pill active" title="Toggle Virtual Touch Gamepad Controls">
-                                        <i class="fa-solid fa-gamepad"></i> <span>Touch 🎮</span>
+                                    <button id="hud-btn-mode-toggle" class="hud-mode-pill" title="Toggle 3D Flight / Ground Drive">
+                                        <span id="hud-mode-pill-text">🚀 Flight</span>
                                     </button>
                                 </div>
 
+                                <!-- Center: Minimalist Telemetry & Radar -->
                                 <div class="hud-telemetry">
                                     <!-- Shield Gauge -->
-                                    <div class="telemetry-gauge shield-gauge">
+                                    <div class="telemetry-gauge shield-gauge" title="Shield Status">
                                         <span class="telemetry-lbl">SHIELD</span>
                                         <div class="shield-bar-wrap"><div class="shield-bar-fill" id="hud-shield-fill"></div></div>
                                         <span class="telemetry-val-sm" id="hud-shield-val">100%</span>
                                     </div>
 
-                                    <!-- Collected Crystals -->
-                                    <div class="telemetry-gauge">
-                                        <span class="telemetry-lbl">CRYSTALS</span>
-                                        <span class="telemetry-val" id="hud-crystals-val" style="color:#00ffcc;">💎 0</span>
-                                    </div>
-
-                                    <!-- Speed -->
-                                    <div class="telemetry-gauge">
+                                    <!-- Speed KM/H -->
+                                    <div class="telemetry-gauge" title="Current Speed">
                                         <span class="telemetry-lbl">SPEED</span>
                                         <span class="telemetry-val" id="hud-speed-val">000</span>
                                         <span class="telemetry-unit">KM/H</span>
                                     </div>
 
-                                    <!-- Score & Rank -->
-                                    <div class="telemetry-gauge" id="hud-score-container">
-                                        <span class="telemetry-lbl" id="hud-rank-name">CADET</span>
-                                        <span class="telemetry-val" id="hud-score-val" style="color:#ff007f;">0</span>
-                                        <span class="telemetry-unit">PTS</span>
+                                    <!-- Collected Crystals -->
+                                    <div class="telemetry-gauge" title="Collected Crystals">
+                                        <span class="telemetry-lbl">CRYSTALS</span>
+                                        <span class="telemetry-val" id="hud-crystals-val" style="color:#00ffcc;">💎 0</span>
                                     </div>
 
-                                    <!-- Nitro -->
-                                    <div class="telemetry-gauge">
+                                    <!-- Score -->
+                                    <div class="telemetry-gauge" id="hud-score-container" title="Mission Score">
+                                        <span class="telemetry-lbl" id="hud-rank-name">CADET</span>
+                                        <span class="telemetry-val" id="hud-score-val" style="color:#ff007f;">0</span>
+                                    </div>
+
+                                    <!-- Nitro Gauge -->
+                                    <div class="telemetry-gauge nitro-gauge" title="Warp Nitro Energy">
                                         <span class="telemetry-lbl">NITRO</span>
                                         <div class="nitro-bar-wrap"><div class="nitro-bar-fill" id="hud-nitro-fill"></div></div>
                                     </div>
 
                                     <!-- Mini Holographic Radar -->
-                                    <div class="hud-radar-wrap" title="Holographic 3D Tactical Radar (Green=Mission, Yellow=Crystals, Red=Asteroids)">
-                                        <canvas id="hud-radar-canvas" width="70" height="70"></canvas>
+                                    <div class="hud-radar-wrap" title="Holographic 3D Tactical Radar">
+                                        <canvas id="hud-radar-canvas" width="60" height="60"></canvas>
                                     </div>
                                 </div>
 
-                                <button id="btn-exit-game-hud" class="btn-hud-exit" title="Exit Game Mode (ESC)">
-                                    <i class="fa-solid fa-xmark"></i> <span>EXIT (ESC)</span>
-                                </button>
+                                <!-- Right: Game Settings / Missions & Hangar Buttons -->
+                                <div class="hud-right-controls">
+                                    <button id="btn-open-game-settings" class="hud-mode-pill settings-glow" title="Open Game Settings & Missions">
+                                        <i class="fa-solid fa-gear"></i> <span>Missions &amp; Settings</span>
+                                    </button>
+                                    <button id="btn-open-hangar" class="hud-mode-pill hangar" title="Open Ship Upgrades &amp; Customization Hangar">
+                                        <i class="fa-solid fa-wrench"></i> <span>Hangar</span>
+                                    </button>
+                                    <button id="btn-hud-fullscreen" class="hud-mode-pill" title="Toggle Fullscreen Mode">
+                                        <i class="fa-solid fa-expand"></i>
+                                    </button>
+                                </div>
                             </div>
 
                             <!-- Floating Mission Objective Status Bar -->
@@ -1373,6 +1336,86 @@
                 <span style="font-size:0.8rem; color:var(--accent-cyan);"><i class="fa-solid fa-circle-check"></i> Zero configuration required • Copy &amp; paste anywhere</span>
                 <button id="btn-copy-framework" class="btn btn-primary btn-glow-accent">
                     <i class="fa-solid fa-copy"></i> <span data-i18n="btn_copy">Copy 1-Click Code</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Cockpit & Game Mission Settings -->
+    <div class="modal-overlay" id="modal-game-settings">
+        <div class="modal-card gallery-modal" style="max-width:580px; background:linear-gradient(145deg, #0b1120, #040714); border:1px solid rgba(0, 242, 254, 0.35); box-shadow:0 25px 60px rgba(0,0,0,0.8), 0 0 35px rgba(0,242,254,0.15);">
+            <div class="modal-header" style="border-bottom:1px solid rgba(0, 242, 254, 0.2);">
+                <h3 style="color:#00f2fe; font-size:1.25rem;"><i class="fa-solid fa-gamepad"></i> <span>Cockpit &amp; Mission Settings</span></h3>
+                <button class="btn-close-modal" id="btn-close-game-settings"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" style="display:flex; flex-direction:column; gap:16px; padding:20px 24px;">
+                <!-- Mission Selector -->
+                <div class="game-setting-group">
+                    <label style="color:#00f2fe; font-weight:700; font-size:0.88rem; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
+                        <i class="fa-solid fa-crosshairs"></i> <span>Select Cosmic Mission / Quest:</span>
+                    </label>
+                    <select id="hud-mission-select" class="styled-select full-width" style="font-size:0.92rem; background:#0f172a; border:1px solid rgba(0,242,254,0.4); color:#fff; padding:10px 12px; border-radius:10px;">
+                        <option value="station">🛰️ 1. Save Orbital Station (Collect 3 Crystals)</option>
+                        <option value="wormhole">⚡ 2. Quantum Gate Slalom (Speed Rings)</option>
+                        <option value="asteroids">☄️ 3. Asteroid Hunt &amp; Mining (Laser Combat)</option>
+                        <option value="blackhole">🕳️ 4. Black Hole Escape (Survival Flight)</option>
+                        <option value="freeroam">🌌 5. Free Cosmic Roam (Explore Space)</option>
+                    </select>
+                </div>
+
+                <!-- Cosmos Environment Selector -->
+                <div class="game-setting-group">
+                    <label style="color:#ffb703; font-weight:700; font-size:0.88rem; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
+                        <i class="fa-solid fa-globe"></i> <span>Cosmos Environment &amp; Galaxy:</span>
+                    </label>
+                    <select id="hud-world-select" class="styled-select full-width" style="font-size:0.92rem; background:#0f172a; border:1px solid rgba(255,183,3,0.4); color:#fff; padding:10px 12px; border-radius:10px;">
+                        <option value="galaxies">🌌 Galaxies &amp; Solar Planets</option>
+                        <option value="rings">⚡ Hyper Ring Speed Slalom</option>
+                        <option value="asteroids">☄️ Deep Asteroid Storm</option>
+                        <option value="cybercity">🏙️ Cyberpunk Spire Megacity</option>
+                        <option value="blackhole">🕳️ Black Hole Event Horizon</option>
+                        <option value="deepspace">✨ Infinite Deep Void</option>
+                    </select>
+                </div>
+
+                <!-- Synth Radio & Audio -->
+                <div class="game-setting-group">
+                    <label style="color:#ff007f; font-weight:700; font-size:0.88rem; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
+                        <i class="fa-solid fa-radio"></i> <span>Cockpit Synth Radio:</span>
+                    </label>
+                    <select id="hud-radio-select" class="styled-select full-width" style="font-size:0.92rem; background:#0f172a; border:1px solid rgba(255,0,127,0.4); color:#fff; padding:10px 12px; border-radius:10px;">
+                        <option value="cosmic">🎵 Deep Cosmic Synthwave</option>
+                        <option value="pulse">⚡ Cyber Pulse High-Energy Beat</option>
+                        <option value="chill">🪐 Ambient Chill Space Drift</option>
+                        <option value="off">🔇 Mute Radio</option>
+                    </select>
+                </div>
+
+                <!-- Camera Perspective Selector -->
+                <div class="game-setting-group">
+                    <label style="color:#a855f7; font-weight:700; font-size:0.88rem; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
+                        <i class="fa-solid fa-camera"></i> <span>Camera Perspective View:</span>
+                    </label>
+                    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;">
+                        <button class="cam-view-btn active" id="btn-cam-chase" data-cam="chase" style="padding:10px 6px; border-radius:10px; background:rgba(168,85,247,0.22); border:1px solid #a855f7; color:#fff; font-size:0.82rem; font-weight:700; cursor:pointer;">🚀 3rd Person</button>
+                        <button class="cam-view-btn" id="btn-cam-cockpit" data-cam="cockpit" style="padding:10px 6px; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); color:#94a3b8; font-size:0.82rem; font-weight:700; cursor:pointer;">👨‍✈️ Cockpit</button>
+                        <button class="cam-view-btn" id="btn-cam-topdown" data-cam="topdown" style="padding:10px 6px; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); color:#94a3b8; font-size:0.82rem; font-weight:700; cursor:pointer;">🛸 Top-Down</button>
+                    </div>
+                </div>
+
+                <!-- Quick Actions Grid -->
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:4px;">
+                    <button id="btn-modal-open-hangar" class="btn btn-secondary" style="border-color:#ffb703; color:#ffb703; justify-content:center;">
+                        <i class="fa-solid fa-wrench"></i> <span>Ship Hangar</span>
+                    </button>
+                    <button id="btn-modal-exit-game" class="btn btn-secondary" style="border-color:#ff007f; color:#ff007f; justify-content:center;">
+                        <i class="fa-solid fa-arrow-left"></i> <span>Exit Cockpit</span>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer" style="display:flex; justify-content:flex-end; border-top:1px solid rgba(0, 242, 254, 0.2);">
+                <button id="btn-resume-game-modal" class="btn btn-primary btn-glow-accent full-width" style="justify-content:center;">
+                    <i class="fa-solid fa-play"></i> <span>Resume Flight (Închide Meniu)</span>
                 </button>
             </div>
         </div>

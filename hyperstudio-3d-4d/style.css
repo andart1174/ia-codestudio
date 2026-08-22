@@ -2592,3 +2592,159 @@ body, html {
     }
 }
 
+/* ══════════════════════════════════════════════════════════════════════ */
+/* 🚀 FULL IMMERSION CLEAN COCKPIT & GAME MODE STYLES                    */
+/* ══════════════════════════════════════════════════════════════════════ */
+body.game-mode-active {
+    overflow: hidden !important;
+}
+
+body.game-mode-active .app-header,
+body.game-mode-active .viewport-toolbar,
+body.game-mode-active .viewport-footer,
+body.game-mode-active .mobile-workspace-tabs,
+body.game-mode-active #btn-floating-editor-toggle,
+body.game-mode-active .panel-transform-inspector,
+body.game-mode-active .panel-photo-import,
+body.game-mode-active #panel-4d-controls,
+body.game-mode-active #panel-shader-studio,
+body.game-mode-active .pane-editor,
+body.game-mode-active .pane-resizer {
+    display: none !important;
+}
+
+body.game-mode-active .workspace,
+body.game-mode-active .pane-viewport,
+body.game-mode-active .viewport-canvas-stage,
+body.game-mode-active #canvas-container {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    border: none !important;
+    z-index: 99999 !important;
+    background: #000 !important;
+}
+
+body.game-mode-active #webgl-canvas {
+    width: 100vw !important;
+    height: 100vh !important;
+    display: block !important;
+}
+
+/* Streamlined Cockpit Header */
+.game-hud-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: max(10px, env(safe-area-inset-top)) 16px 8px;
+    background: linear-gradient(180deg, rgba(6, 10, 24, 0.85) 0%, rgba(6, 10, 24, 0.4) 70%, transparent 100%);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 40;
+    pointer-events: auto;
+    gap: 10px;
+}
+
+.hud-left-controls, .hud-right-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-hud-exit {
+    background: rgba(255, 0, 80, 0.22);
+    border: 1.5px solid #ff0055;
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.84rem;
+    padding: 7px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 0 14px rgba(255, 0, 80, 0.35);
+    transition: all 0.2s ease;
+}
+
+.btn-hud-exit:hover, .btn-hud-exit:active {
+    background: #ff0055;
+    box-shadow: 0 0 20px #ff0055;
+    transform: scale(1.04);
+}
+
+.hud-mode-pill.settings-glow {
+    background: linear-gradient(135deg, rgba(0, 242, 254, 0.2), rgba(255, 183, 3, 0.2));
+    border: 1.5px solid #00f2fe;
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.84rem;
+    box-shadow: 0 0 14px rgba(0, 242, 254, 0.3);
+}
+
+.hud-mode-pill.settings-glow:hover, .hud-mode-pill.settings-glow:active {
+    background: linear-gradient(135deg, #00f2fe, #ffb703);
+    color: #000;
+    box-shadow: 0 0 20px #00f2fe;
+}
+
+/* Compact Floating Mission Tracker */
+.hud-mission-tracker {
+    position: absolute;
+    top: 66px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(10, 18, 38, 0.82);
+    border: 1px solid rgba(0, 242, 254, 0.4);
+    border-radius: 14px;
+    padding: 6px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 242, 254, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 30;
+    pointer-events: none;
+    max-width: 90vw;
+}
+
+/* Cam mode active button */
+.cam-view-btn.active {
+    background: rgba(168, 85, 247, 0.35) !important;
+    border-color: #a855f7 !important;
+    color: #fff !important;
+    box-shadow: 0 0 14px rgba(168, 85, 247, 0.4);
+}
+
+@media (max-width: 768px) {
+    .game-hud-top {
+        padding: max(6px, env(safe-area-inset-top)) 8px 6px;
+        gap: 6px;
+    }
+    .hud-mission-tracker {
+        top: 56px;
+        padding: 4px 10px;
+        gap: 8px;
+    }
+    .hud-mission-tracker .mission-desc {
+        display: none;
+    }
+    .hud-telemetry .telemetry-gauge:not(.shield-gauge) {
+        display: none;
+    }
+    .hud-mode-pill.settings-glow span {
+        display: none;
+    }
+}
+

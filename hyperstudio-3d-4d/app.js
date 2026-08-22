@@ -3912,6 +3912,8 @@
     }
 
     // ── Pilot / Drive Mode Toggle ─────────────────────────────────────────
+    let activeCameraMode = 'chase'; // 'chase', 'cockpit', 'topdown'
+
     function togglePilotGameMode(forcedState) {
         isPilotGameActive = (typeof forcedState === 'boolean') ? forcedState : !isPilotGameActive;
         const hud = document.getElementById('fps-hud-overlay');
@@ -3921,6 +3923,8 @@
         if (isPilotGameActive) {
             playRunSFX();
             initCosmicRadio();
+            document.body.classList.add('game-mode-active');
+
             pilotPhysics.targetObj = findPrimaryVehicleObject();
             if (!pilotPhysics.targetObj) {
                 const fallbackFighter = createProceduralModelGroup('space_fighter', '#00f2fe', 'neon');
@@ -3935,12 +3939,8 @@
             isSpaceFlightMode = !isGroundVehicle;
             pilotPhysics.vehicleType = isSpaceFlightMode ? 'air' : 'car';
 
-            const vehicleTitle = isSpaceFlightMode ? '🚀 ODYSSEY 3D COSMIC QUEST' : '🏎️ CYBER DRIVE SIMULATOR';
-            const hudTitleEl = document.getElementById('hud-vehicle-name');
-            if (hudTitleEl) hudTitleEl.textContent = vehicleTitle;
-
             const modePillText = document.getElementById('hud-mode-pill-text');
-            if (modePillText) modePillText.textContent = isSpaceFlightMode ? '🚀 3D Flight' : '🏎️ Ground Drive';
+            if (modePillText) modePillText.textContent = isSpaceFlightMode ? '🚀 Flight' : '🏎️ Drive';
 
             // Apply Upgrades
             maxShieldHP = unlockedUpgrades.shield ? 200 : 100;
@@ -3964,8 +3964,16 @@
             if (hud) hud.style.display = 'flex';
             if (btn) btn.classList.add('active');
             if (btnText) btnText.textContent = '🕹️ In Game (ESC to Exit)';
+
+            if (typeof window.onViewportResize === 'function') {
+                setTimeout(window.onViewportResize, 50);
+            }
         } else {
             playClickSFX();
+            document.body.classList.remove('game-mode-active');
+            const settingsModal = document.getElementById('modal-game-settings');
+            if (settingsModal) settingsModal.classList.remove('active');
+
             if (synthRadioGain && audioCtx) synthRadioGain.gain.setValueAtTime(0, audioCtx.currentTime);
             if (missionInterval) clearInterval(missionInterval);
 
@@ -3984,6 +3992,9 @@
             activeLasers = [];
 
             if (camera) { camera.fov = 45; camera.updateProjectionMatrix(); }
+            if (typeof window.onViewportResize === 'function') {
+                setTimeout(window.onViewportResize, 50);
+            }
         }
     }
 
@@ -4249,22 +4260,55 @@
             });
         }
 
-        // Smooth 3rd-Person Chase Camera
-        const camDist = isSpaceFlightMode ? 6.8 : 5.4;
-        const camH = isSpaceFlightMode ? 2.2 : 1.8;
-        const desiredCamX = obj.position.x - sinYaw * camDist;
-        const desiredCamY = obj.position.y + camH - sinPitch * 2.0;
-        const desiredCamZ = obj.position.z - cosYaw * camDist;
+        // Camera View Modes: Chase, Cockpit, or Top-Down
+        if (activeCameraMode === 'cockpit') {
+            // First-Person Cockpit View
+            const desiredCamX = obj.position.x + forwardX * 0.4;
+            const desiredCamY = obj.position.y + 0.35;
+            const desiredCamZ = obj.position.z + forwardZ * 0.4;
 
-        camera.position.x = THREE.MathUtils.lerp(camera.position.x, desiredCamX, 0.18);
-        camera.position.y = THREE.MathUtils.lerp(camera.position.y, desiredCamY, 0.18);
-        camera.position.z = THREE.MathUtils.lerp(camera.position.z, desiredCamZ, 0.18);
+            camera.position.x = THREE.MathUtils.lerp(camera.position.x, desiredCamX, 0.25);
+            camera.position.y = THREE.MathUtils.lerp(camera.position.y, desiredCamY, 0.25);
+            camera.position.z = THREE.MathUtils.lerp(camera.position.z, desiredCamZ, 0.25);
 
-        camera.lookAt(
-            obj.position.x + forwardX * 2.0,
-            obj.position.y + 0.6,
-            obj.position.z + forwardZ * 2.0
-        );
+            camera.lookAt(
+                obj.position.x + forwardX * 30.0,
+                obj.position.y + forwardY * 30.0 + 0.2,
+                obj.position.z + forwardZ * 30.0
+            );
+        } else if (activeCameraMode === 'topdown') {
+            // Tactical Top-Down Drone Cam
+            const desiredCamX = obj.position.x;
+            const desiredCamY = obj.position.y + 18.0;
+            const desiredCamZ = obj.position.z - 3.0;
+
+            camera.position.x = THREE.MathUtils.lerp(camera.position.x, desiredCamX, 0.15);
+            camera.position.y = THREE.MathUtils.lerp(camera.position.y, desiredCamY, 0.15);
+            camera.position.z = THREE.MathUtils.lerp(camera.position.z, desiredCamZ, 0.15);
+
+            camera.lookAt(
+                obj.position.x,
+                obj.position.y,
+                obj.position.z + forwardZ * 6.0
+            );
+        } else {
+            // Smooth 3rd-Person Chase Camera (Default)
+            const camDist = isSpaceFlightMode ? 6.8 : 5.4;
+            const camH = isSpaceFlightMode ? 2.2 : 1.8;
+            const desiredCamX = obj.position.x - sinYaw * camDist;
+            const desiredCamY = obj.position.y + camH - sinPitch * 2.0;
+            const desiredCamZ = obj.position.z - cosYaw * camDist;
+
+            camera.position.x = THREE.MathUtils.lerp(camera.position.x, desiredCamX, 0.18);
+            camera.position.y = THREE.MathUtils.lerp(camera.position.y, desiredCamY, 0.18);
+            camera.position.z = THREE.MathUtils.lerp(camera.position.z, desiredCamZ, 0.18);
+
+            camera.lookAt(
+                obj.position.x + forwardX * 2.0,
+                obj.position.y + 0.6,
+                obj.position.z + forwardZ * 2.0
+            );
+        }
 
         // Update Cyber Cockpit Telemetry
         const speedKMH = Math.round(Math.abs(pilotPhysics.speed) * 340);
@@ -4399,11 +4443,60 @@
             isSpaceFlightMode = !isSpaceFlightMode;
             pilotPhysics.vehicleType = isSpaceFlightMode ? 'air' : 'car';
             const pillText = document.getElementById('hud-mode-pill-text');
-            if (pillText) pillText.textContent = isSpaceFlightMode ? '🚀 3D Flight' : '🏎️ Ground Drive';
-            const hudTitleEl = document.getElementById('hud-vehicle-name');
-            if (hudTitleEl) hudTitleEl.textContent = isSpaceFlightMode ? '🚀 ODYSSEY 3D COSMIC QUEST' : '🏎️ CYBER DRIVE SIMULATOR';
+            if (pillText) pillText.textContent = isSpaceFlightMode ? '🚀 Flight' : '🏎️ Drive';
         });
     }
+
+    // Cockpit Game Settings & Missions Modal
+    const modalGameSettings = document.getElementById('modal-game-settings');
+    const btnOpenGameSettings = document.getElementById('btn-open-game-settings');
+    const btnCloseGameSettings = document.getElementById('btn-close-game-settings');
+    const btnResumeGameModal = document.getElementById('btn-resume-game-modal');
+    const btnModalOpenHangar = document.getElementById('btn-modal-open-hangar');
+    const btnModalExitGame = document.getElementById('btn-modal-exit-game');
+
+    if (btnOpenGameSettings && modalGameSettings) {
+        btnOpenGameSettings.addEventListener('click', () => {
+            playClickSFX();
+            modalGameSettings.classList.add('active');
+        });
+    }
+    if (btnCloseGameSettings && modalGameSettings) {
+        btnCloseGameSettings.addEventListener('click', () => {
+            playClickSFX();
+            modalGameSettings.classList.remove('active');
+        });
+    }
+    if (btnResumeGameModal && modalGameSettings) {
+        btnResumeGameModal.addEventListener('click', () => {
+            playClickSFX();
+            modalGameSettings.classList.remove('active');
+        });
+    }
+    if (btnModalOpenHangar && modalGameSettings) {
+        btnModalOpenHangar.addEventListener('click', () => {
+            playClickSFX();
+            modalGameSettings.classList.remove('active');
+            openHangarModal();
+        });
+    }
+    if (btnModalExitGame && modalGameSettings) {
+        btnModalExitGame.addEventListener('click', () => {
+            playClickSFX();
+            modalGameSettings.classList.remove('active');
+            togglePilotGameMode(false);
+        });
+    }
+
+    // Camera Perspective Selector buttons
+    document.querySelectorAll('.cam-view-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            playClickSFX();
+            document.querySelectorAll('.cam-view-btn').forEach(b => b.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+            activeCameraMode = e.currentTarget.getAttribute('data-cam') || 'chase';
+        });
+    });
 
     // Hangar Modal Open & Upgrade Management
     const modalHangar = document.getElementById('modal-cosmic-hangar');
