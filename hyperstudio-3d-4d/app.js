@@ -5483,7 +5483,6 @@
     const socialCaptionArea = document.getElementById('social-caption-area');
     const btnRegenSocialCaption = document.getElementById('btn-regen-social-caption');
     const btnCopySocialCaption = document.getElementById('btn-copy-social-caption');
-    const btnRecordVideo = document.getElementById('btn-record-video');
     const recordStatusText = document.getElementById('record-status-text');
 
     function generateAICaptionAndHashtags() {
@@ -5611,6 +5610,14 @@
         return `🚀 ${modelTitle}\n\n${mainDescription}${hashtagStr}`;
     }
 
+    // 🎬 Social Media Publisher Hook
+    const btnSocialRecTrigger = document.getElementById('btn-social-record-clip');
+    if (btnSocialRecTrigger) {
+        btnSocialRecTrigger.addEventListener('click', () => {
+            if (typeof toggleVideoRecording === 'function') toggleVideoRecording();
+        });
+    }
+
     if (btnOpenSocialStudio && modalSocialPublisher) {
         btnOpenSocialStudio.addEventListener('click', () => {
             playClickSFX();
@@ -5639,63 +5646,6 @@
             socialCaptionArea.select();
             document.execCommand('copy');
             alert("Caption and viral hashtags copied to clipboard! 📋");
-        });
-    }
-
-    // 🎬 MediaRecorder WebGL 10-Second Video Recorder Engine
-    let mediaRecorder = null;
-    let recordedChunks = [];
-
-    if (btnRecordVideo) {
-        btnRecordVideo.addEventListener('click', () => {
-            playClickSFX();
-            const canvas = document.getElementById('webgl-canvas');
-            if (!canvas || typeof canvas.captureStream !== 'function') {
-                alert('Video recording is not supported in this browser.');
-                return;
-            }
-
-            try {
-                const stream = canvas.captureStream(60);
-                recordedChunks = [];
-                mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
-
-                mediaRecorder.ondataavailable = (e) => {
-                    if (e.data.size > 0) recordedChunks.push(e.data);
-                };
-
-                mediaRecorder.onstop = () => {
-                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'hyperstudio-3d-viral-reels.webm';
-                    a.click();
-                    if (recordStatusText) recordStatusText.textContent = "✅ Video Recording Completed & Downloaded!";
-                    btnRecordVideo.disabled = false;
-                };
-
-                mediaRecorder.start();
-                btnRecordVideo.disabled = true;
-
-                let countdown = 10;
-                if (recordStatusText) recordStatusText.textContent = `🔴 Recording WebGL Video... ${countdown}s remaining`;
-
-                const timer = setInterval(() => {
-                    countdown--;
-                    if (recordStatusText) recordStatusText.textContent = `🔴 Recording WebGL Video... ${countdown}s remaining`;
-                    if (countdown <= 0) {
-                        clearInterval(timer);
-                        if (mediaRecorder && mediaRecorder.state === 'recording') {
-                            mediaRecorder.stop();
-                        }
-                    }
-                }, 1000);
-
-            } catch (err) {
-                console.error("Recording error:", err);
-                alert("Recording failed: " + err.message);
-            }
         });
     }
 
@@ -6963,10 +6913,9 @@ onUnmounted(() => {
     <\/script>`;
         }
 
-        let watermarkHTML = '';
-        if (agencyWatermark) {
-            watermarkHTML = `<div style="position:absolute; bottom:14px; right:16px; background:rgba(0,0,0,0.6); backdrop-filter:blur(8px); border:1px solid rgba(0,242,254,0.4); color:#00f2fe; font-size:11px; font-weight:600; padding:4px 10px; border-radius:12px; pointer-events:none; z-index:10;">✨ ${agencyWatermark}</div>`;
-        }
+        let watermarkHTML = agencyWatermark
+            ? `<div style="position:absolute; bottom:14px; right:16px; background:rgba(0,0,0,0.6); backdrop-filter:blur(8px); border:1px solid rgba(0,242,254,0.4); color:#00f2fe; font-size:11px; font-weight:600; padding:4px 10px; border-radius:12px; pointer-events:none; z-index:10;">✨ ${agencyWatermark}</div>`
+            : `<a href="https://ia-codestudio.com/" target="_blank" rel="noopener" style="position:absolute; bottom:14px; right:16px; background:rgba(10,15,30,0.88); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid rgba(0,242,254,0.5); color:#00f2fe; font-size:11px; font-weight:700; font-family:system-ui,-apple-system,sans-serif; padding:5px 12px; border-radius:20px; text-decoration:none; z-index:9999; display:inline-flex; align-items:center; gap:6px; box-shadow:0 4px 15px rgba(0,0,0,0.5), 0 0 10px rgba(0,242,254,0.3); transition:transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='scale(1.05)';this.style.boxShadow='0 0 16px rgba(0,242,254,0.6)';" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 15px rgba(0,0,0,0.5), 0 0 10px rgba(0,242,254,0.3)';">⚡ Powered by IA Code Studio</a>`;
 
         return `<!DOCTYPE html>
 <html>
@@ -8215,6 +8164,161 @@ onUnmounted(() => {
         link.download = 'hyperstudio-model.obj';
         link.click();
     });
+
+    // ══════════════════════════════════════════════════════════════════════
+    // 🎥 1-CLICK TIKTOK & SHORTS 3D VIDEO / GIF RECORDER ENGINE
+    // ══════════════════════════════════════════════════════════════════════
+    let tiktokRecorder = null;
+    let tiktokRecordedChunks = [];
+    let isRecordingTiktokVideo = false;
+    let tiktokRecordingTimer = null;
+
+    const modalVideoRecorder = document.getElementById('modal-video-recorder');
+    const hudRecordingOverlay = document.getElementById('hud-recording-overlay');
+    const recordingStatusText = document.getElementById('recording-status-text');
+    const recordedVideoPlayer = document.getElementById('recorded-video-player');
+    const btnDownloadVideoFile = document.getElementById('btn-download-video-file');
+    const btnRecordVideo = document.getElementById('btn-record-video');
+    const btnHudRecord = document.getElementById('btn-hud-record');
+    const btnCloseVideoModal = document.getElementById('btn-close-video-modal');
+    const btnCloseVideoModalFooter = document.getElementById('btn-close-video-modal-footer');
+
+    function toggleVideoRecording() {
+        if (isRecordingTiktokVideo) {
+            stopVideoRecording();
+        } else {
+            startVideoRecording(10);
+        }
+    }
+
+    function startVideoRecording(duration = 10) {
+        if (isRecordingTiktokVideo) return;
+        const canvas = document.getElementById('webgl-canvas');
+        if (!canvas) return;
+
+        playClickSFX();
+        tiktokRecordedChunks = [];
+
+        let stream;
+        try {
+            stream = canvas.captureStream ? canvas.captureStream(60) : canvas.mozCaptureStream(60);
+        } catch (e) {
+            console.warn('Canvas stream capture error:', e);
+        }
+
+        if (!stream) {
+            alert('Video recording is not supported in this browser.');
+            return;
+        }
+
+        const mimeTypes = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm', 'video/mp4'];
+        let chosenMime = '';
+        for (let m of mimeTypes) {
+            if (MediaRecorder.isTypeSupported(m)) {
+                chosenMime = m;
+                break;
+            }
+        }
+
+        try {
+            tiktokRecorder = chosenMime ? new MediaRecorder(stream, { mimeType: chosenMime }) : new MediaRecorder(stream);
+        } catch (e) {
+            console.error('MediaRecorder fallback:', e);
+            tiktokRecorder = new MediaRecorder(stream);
+        }
+
+        tiktokRecorder.ondataavailable = (e) => {
+            if (e.data && e.data.size > 0) {
+                tiktokRecordedChunks.push(e.data);
+            }
+        };
+
+        tiktokRecorder.onstop = () => {
+            clearInterval(tiktokRecordingTimer);
+            isRecordingTiktokVideo = false;
+            if (hudRecordingOverlay) hudRecordingOverlay.style.display = 'none';
+            if (btnRecordVideo) btnRecordVideo.innerHTML = '<i class="fa-solid fa-video"></i> <span>TikTok / 3D Clip 🎥</span>';
+            if (btnHudRecord) btnHudRecord.innerHTML = '<i class="fa-solid fa-video"></i> <span>Rec Clip 🎥</span>';
+
+            const blob = new Blob(tiktokRecordedChunks, { type: chosenMime || 'video/webm' });
+            const videoUrl = URL.createObjectURL(blob);
+
+            if (recordedVideoPlayer) {
+                recordedVideoPlayer.src = videoUrl;
+                recordedVideoPlayer.play();
+            }
+            if (btnDownloadVideoFile) {
+                btnDownloadVideoFile.href = videoUrl;
+                btnDownloadVideoFile.download = `ia-codestudio-3d-${Date.now()}.webm`;
+            }
+
+            if (modalVideoRecorder) {
+                playClickSFX();
+                modalVideoRecorder.classList.add('active');
+            }
+        };
+
+        tiktokRecorder.start(100);
+        isRecordingTiktokVideo = true;
+
+        if (hudRecordingOverlay) hudRecordingOverlay.style.display = 'flex';
+        if (recordingStatusText) recordingStatusText.textContent = `REC 00:00 / 00:${duration < 10 ? '0' + duration : duration} (TikTok 9:16 HD)`;
+        if (btnRecordVideo) btnRecordVideo.innerHTML = '<i class="fa-solid fa-stop"></i> <span>Stop REC ⏹️</span>';
+        if (btnHudRecord) btnHudRecord.innerHTML = '<i class="fa-solid fa-stop"></i> <span>Stop REC ⏹️</span>';
+
+        let elapsed = 0;
+        tiktokRecordingTimer = setInterval(() => {
+            elapsed++;
+            const secStr = elapsed < 10 ? '0' + elapsed : elapsed;
+            const durStr = duration < 10 ? '0' + duration : duration;
+            if (recordingStatusText) recordingStatusText.textContent = `REC 00:${secStr} / 00:${durStr} (TikTok 9:16 HD)`;
+
+            if (elapsed >= duration) {
+                stopVideoRecording();
+            }
+        }, 1000);
+    }
+
+    function stopVideoRecording() {
+        if (tiktokRecorder && tiktokRecorder.state !== 'inactive') {
+            tiktokRecorder.stop();
+        }
+        clearInterval(tiktokRecordingTimer);
+    }
+
+    if (btnRecordVideo) btnRecordVideo.addEventListener('click', toggleVideoRecording);
+    if (btnHudRecord) btnHudRecord.addEventListener('click', toggleVideoRecording);
+    if (btnCloseVideoModal) btnCloseVideoModal.addEventListener('click', () => {
+        playClickSFX();
+        if (recordedVideoPlayer) recordedVideoPlayer.pause();
+        if (modalVideoRecorder) modalVideoRecorder.classList.remove('active');
+    });
+    if (btnCloseVideoModalFooter) btnCloseVideoModalFooter.addEventListener('click', () => {
+        playClickSFX();
+        if (recordedVideoPlayer) recordedVideoPlayer.pause();
+        if (modalVideoRecorder) modalVideoRecorder.classList.remove('active');
+    });
+
+    const shareRecordedClip = (platform) => {
+        const text = encodeURIComponent('🚀 Check out this 3D WebGL creation made with IA Code Studio! Try it free: https://ia-codestudio.com #threejs #webgl #coding #ai');
+        const url = encodeURIComponent('https://ia-codestudio.com/hyperstudio-3d-4d/');
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText('https://ia-codestudio.com/hyperstudio-3d-4d/');
+        }
+        if (platform === 'tiktok') window.open('https://www.tiktok.com/upload?lang=en', '_blank');
+        else if (platform === 'youtube') window.open('https://studio.youtube.com/channel/UC/videos/upload?d=ud', '_blank');
+        else if (platform === 'instagram') window.open('https://www.instagram.com/', '_blank');
+        else if (platform === 'whatsapp') window.open(`https://api.whatsapp.com/send?text=${text}%20${url}`, '_blank');
+    };
+
+    const btnShareClipTiktok = document.getElementById('btn-share-clip-tiktok');
+    if (btnShareClipTiktok) btnShareClipTiktok.addEventListener('click', () => shareRecordedClip('tiktok'));
+    const btnShareClipYoutube = document.getElementById('btn-share-clip-youtube');
+    if (btnShareClipYoutube) btnShareClipYoutube.addEventListener('click', () => shareRecordedClip('youtube'));
+    const btnShareClipInstagram = document.getElementById('btn-share-clip-instagram');
+    if (btnShareClipInstagram) btnShareClipInstagram.addEventListener('click', () => shareRecordedClip('instagram'));
+    const btnShareClipWhatsapp = document.getElementById('btn-share-clip-whatsapp');
+    if (btnShareClipWhatsapp) btnShareClipWhatsapp.addEventListener('click', () => shareRecordedClip('whatsapp'));
 
     window.addEventListener('DOMContentLoaded', () => {
         init3DEngine();

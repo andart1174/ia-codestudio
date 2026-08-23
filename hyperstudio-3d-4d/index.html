@@ -160,6 +160,9 @@
                     <button id="btn-screenshot" class="btn btn-icon" title="Take HD Screenshot">
                         <i class="fa-solid fa-camera"></i>
                     </button>
+                    <button id="btn-record-video" class="btn btn-primary btn-glow-accent" style="background:linear-gradient(135deg, #ff007f 0%, #7928ca 100%); border-color:#ff007f; color:#fff;" title="Record 10s TikTok / Shorts Video Clip">
+                        <i class="fa-solid fa-video"></i> <span>TikTok / 3D Clip 🎥</span>
+                    </button>
                 </div>
             </div>
 
@@ -578,6 +581,9 @@
 
                                 <!-- Right: Game Settings / Missions & Hangar Buttons -->
                                 <div class="hud-right-controls">
+                                    <button id="btn-hud-record" class="hud-mode-pill record-glow" style="border-color:#ff007f; color:#ff007f; background:rgba(255,0,127,0.15);" title="Record 10s TikTok / Shorts 3D Video">
+                                        <i class="fa-solid fa-video"></i> <span>Rec Clip 🎥</span>
+                                    </button>
                                     <button id="btn-open-game-settings" class="hud-mode-pill settings-glow" title="Open Game Settings & Missions">
                                         <i class="fa-solid fa-gear"></i> <span>Missions &amp; Settings</span>
                                     </button>
@@ -587,6 +593,17 @@
                                     <button id="btn-hud-fullscreen" class="hud-mode-pill" title="Toggle Fullscreen Mode">
                                         <i class="fa-solid fa-expand"></i>
                                     </button>
+                                </div>
+                            </div>
+
+                            <!-- Live Screen Recording Indicator & Watermark Overlay -->
+                            <div id="hud-recording-overlay" class="hud-recording-overlay" style="display:none;">
+                                <div class="recording-pill-live">
+                                    <span class="rec-dot"></span>
+                                    <span id="recording-status-text">REC 00:00 / 00:10 (TikTok 9:16 HD)</span>
+                                </div>
+                                <div class="recording-watermark-badge">
+                                    <span>⚡ ia-codestudio.com 🚀</span>
                                 </div>
                             </div>
 
@@ -1856,6 +1873,43 @@
             <div class="modal-footer">
                 <button id="btn-close-install-guide-footer" class="btn btn-secondary">
                     <i class="fa-solid fa-check"></i> <span data-i18n="btn_install_understood">Got it</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: 1-Click Video / 3D GIF Studio for TikTok, Shorts & Reels -->
+    <div class="modal-overlay" id="modal-video-recorder">
+        <div class="modal-card gallery-modal" style="max-width:540px; background:linear-gradient(145deg, #0b1120, #040714); border:1px solid rgba(255, 0, 127, 0.45); box-shadow:0 25px 60px rgba(0,0,0,0.8), 0 0 35px rgba(255,0,127,0.25);">
+            <div class="modal-header" style="border-bottom:1px solid rgba(255,0,127,0.3);">
+                <h3 style="color:#ff007f; display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-video"></i> <span>TikTok &amp; Shorts 3D Video Studio 🎥</span></h3>
+                <button class="btn-close-modal" id="btn-close-video-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" style="display:flex; flex-direction:column; gap:14px; padding:18px 20px; align-items:center; text-align:center;">
+                <div style="width:100%; max-width:320px; aspect-ratio:9/16; max-height:340px; background:#000; border-radius:14px; overflow:hidden; border:2px solid rgba(0,242,254,0.5); box-shadow:0 0 25px rgba(0,242,254,0.3); display:flex; align-items:center; justify-content:center;">
+                    <video id="recorded-video-player" controls autoplay loop muted playsinline style="width:100%; height:100%; object-fit:contain;"></video>
+                </div>
+                <div style="color:#00ffcc; font-size:0.88rem; font-weight:800;">
+                    🎉 +30 GENIUS IA Coins awarded for recording! 🪙
+                </div>
+                <p style="font-size:0.82rem; color:#94a3b8; margin:0;">
+                    Your 60 FPS HD clip is ready with glowing 3D graphics &amp; watermark. Download or share directly:
+                </p>
+                <div style="display:flex; gap:10px; width:100%; justify-content:center;">
+                    <a id="btn-download-video-file" class="btn btn-primary btn-glow-accent" download="ia-codestudio-3d.webm" style="flex:1; justify-content:center; text-decoration:none; padding:12px; font-weight:800; background:linear-gradient(135deg, #00f2fe 0%, #7928ca 100%);">
+                        <i class="fa-solid fa-download"></i> <span>Download HD Video (.webm)</span>
+                    </a>
+                </div>
+                <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; width:100%; margin-top:4px;">
+                    <button type="button" id="btn-share-clip-tiktok" class="cockpit-chip-btn" style="justify-content:center; font-size:0.75rem;"><i class="fa-brands fa-tiktok"></i> TikTok</button>
+                    <button type="button" id="btn-share-clip-youtube" class="cockpit-chip-btn" style="justify-content:center; font-size:0.75rem;"><i class="fa-brands fa-youtube"></i> Shorts</button>
+                    <button type="button" id="btn-share-clip-instagram" class="cockpit-chip-btn" style="justify-content:center; font-size:0.75rem;"><i class="fa-brands fa-instagram"></i> Reels</button>
+                    <button type="button" id="btn-share-clip-whatsapp" class="cockpit-chip-btn" style="justify-content:center; font-size:0.75rem;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+                </div>
+            </div>
+            <div class="modal-footer" style="display:flex; justify-content:flex-end; border-top:1px solid rgba(255,0,127,0.2);">
+                <button id="btn-close-video-modal-footer" class="btn btn-secondary">
+                    <i class="fa-solid fa-check"></i> <span>Close</span>
                 </button>
             </div>
         </div>
