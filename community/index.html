@@ -2252,13 +2252,14 @@
     <span class="hdr-coin-tag">GENIUS IA</span>
   </div>
 
+  <!-- DIRECT COMMS & CYBER CALLS BUTTON (PERMANENT IN NAVBAR) -->
+  <button class="btn-header-comms" id="btnOpenDms" onclick="openDmModal()" title="Direct Messages & Cyber Phone Calls" style="margin-left:8px;display:inline-flex;">
+    <span style="font-size:1.05rem;">💬</span>
+    <span id="lbl-header-comms">Messages & 📞 Call</span>
+    <span class="dm-badge-count" id="dmUnreadBadge" style="display:none;">0</span>
+  </button>
+
   <div class="header-actions" id="hdrActions">
-    <!-- DIRECT COMMS & CALLS BUTTON -->
-    <button class="btn-header-comms" id="btnOpenDms" onclick="openDmModal()" title="Direct Messages & Cyber Calls">
-      <span>💬</span>
-      <span id="lbl-header-comms">Messages</span>
-      <span class="dm-badge-count" id="dmUnreadBadge" style="display:none;">0</span>
-    </button>
     <button class="btn-google" onclick="signInGoogle()">
       <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
       Sign in with Google
@@ -2278,7 +2279,8 @@
         <button onclick="openEditProfileModal()" title="Edit Name" style="background:none;border:none;color:#a855f7;cursor:pointer;font-size:0.85rem;padding:2px 4px;border-radius:4px;transition:all 0.2s;">✏️</button>
       </div>
       <div class="u-email" id="slEmail"></div>
-      <button onclick="openEditProfileModal()" id="btn-edit-profile-card" style="width:100%;margin:8px 0 10px;padding:5px 8px;border-radius:8px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);color:#c084fc;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s;">✏️ Edit Display Name</button>
+      <button onclick="openEditProfileModal()" id="btn-edit-profile-card" style="width:100%;margin:8px 0 6px;padding:5px 8px;border-radius:8px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);color:#c084fc;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s;">✏️ Edit Display Name</button>
+      <button onclick="openDmModal()" id="btn-sidebar-comms" style="width:100%;margin:0 0 10px;padding:7px 10px;border-radius:8px;background:linear-gradient(135deg,rgba(56,189,248,0.15),rgba(124,58,237,0.15));border:1px solid rgba(56,189,248,0.35);color:#38bdf8;font-size:0.76rem;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.2s;">💬 <span id="lbl-sidebar-comms">Messages & 📞 Call</span></button>
       <div class="u-stats">
         <div class="u-stat"><div class="u-stat-n" id="uPosts">0</div><div class="u-stat-l">Posts</div></div>
         <div class="u-stat"><div class="u-stat-n" id="uLikes">0</div><div class="u-stat-l">Likes</div></div>
@@ -3612,6 +3614,10 @@ function renderPost(p) {
         <img src="../genius-ia-coin.png" alt="🪙">
         <span>${currentLang === 'fr' ? 'Pourboire' : 'Tip'}</span>
         ${p.tipsTotal ? `<span style="opacity:0.85;font-size:0.75rem;font-weight:700;">(${p.tipsTotal}🪙)</span>` : ''}
+      </button>
+      <button class="btn-action-pill" onclick="openDmWithUser('${esc(p.uid || p.userEmail || p.email)}', '${esc(displayName).replace(/'/g, "\\'")}', '${esc(a)}')" title="Message or Call Creator">
+        <span>💬</span>
+        <span>${currentLang === 'fr' ? 'Message / 📞 Appel' : 'Chat / 📞 Call'}</span>
       </button>` : ''}
       ${isPostAuthor ? `
       <button class="btn-boost-post" onclick="openBoostModal('${p.id}')">
