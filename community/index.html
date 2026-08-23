@@ -3397,6 +3397,7 @@ function loadFeed() {
     
     const promises = [];
     snap.forEach(doc => {
+      if (doc.id.startsWith('dm_') || doc.id.startsWith('active_calls')) return;
       const p = { id:doc.id, ...doc.data() };
       posts.push(p);
       
@@ -7237,7 +7238,7 @@ function initCallListener(currentUser) {
   const targets = new Set([myNormalized, myUid, myEmail].filter(Boolean));
 
   targets.forEach(tgt => {
-    const un = db.collection('devsocial_calls')
+    const un = db.collection('devsocial_posts').doc('active_calls_hub').collection('calls')
       .where('receiverId', '==', tgt)
       .where('status', '==', 'ringing')
       .onSnapshot(snap => {
@@ -7290,7 +7291,7 @@ function handleIncomingCallNotification(callData) {
 
 function listenToCallStatus(callId) {
   if (activeCallDocUnsub) activeCallDocUnsub();
-  activeCallDocUnsub = db.collection('devsocial_calls').doc(callId).onSnapshot(doc => {
+  activeCallDocUnsub = db.collection('devsocial_posts').doc('active_calls_hub').collection('calls').doc(callId).onSnapshot(doc => {
     if (!doc.exists) {
       endActiveCallLocally();
       return;
@@ -7406,8 +7407,8 @@ async function initiateCyberCall(receiverUid, receiverName, receiverPhoto, callT
   try {
     const targetNormalized = normalizeUserId(receiverUid);
 
-    // Create call in Firestore
-    const callDoc = await db.collection('devsocial_calls').add({
+    // Create call in Firestore under devsocial_posts subcollection
+    const callDoc = await db.collection('devsocial_posts').doc('active_calls_hub').collection('calls').add({
       callerId: myNormalized,
       callerUid: user.uid,
       callerEmail: user.email || '',
@@ -7463,7 +7464,7 @@ async function acceptIncomingCall() {
     if (localVid && activeLocalStream) localVid.srcObject = activeLocalStream;
 
     if (!activeCallId.startsWith('ai_bot_call_')) {
-      await db.collection('devsocial_calls').doc(activeCallId).update({
+      await db.collection('devsocial_posts').doc('active_calls_hub').collection('calls').doc(activeCallId).update({
         status: 'accepted'
       });
     }
@@ -7478,7 +7479,7 @@ async function acceptIncomingCall() {
 function rejectIncomingCall() {
   stopRingtone();
   if (activeCallId && !activeCallId.startsWith('ai_bot_call_')) {
-    db.collection('devsocial_calls').doc(activeCallId).update({ status: 'declined' }).catch(()=>{});
+    db.collection('devsocial_posts').doc('active_calls_hub').collection('calls').doc(activeCallId).update({ status: 'declined' }).catch(()=>{});
   }
   endActiveCallLocally();
 }
@@ -7486,7 +7487,7 @@ function rejectIncomingCall() {
 function cancelOutgoingCall() {
   stopRingtone();
   if (activeCallId && !activeCallId.startsWith('ai_bot_call_')) {
-    db.collection('devsocial_calls').doc(activeCallId).update({ status: 'ended' }).catch(()=>{});
+    db.collection('devsocial_posts').doc('active_calls_hub').collection('calls').doc(activeCallId).update({ status: 'ended' }).catch(()=>{});
   }
   endActiveCallLocally();
 }
@@ -7494,7 +7495,7 @@ function cancelOutgoingCall() {
 function endActiveCall() {
   if ('speechSynthesis' in window) window.speechSynthesis.cancel();
   if (activeCallId && !activeCallId.startsWith('ai_bot_call_')) {
-    db.collection('devsocial_calls').doc(activeCallId).update({ status: 'ended' }).catch(()=>{});
+    db.collection('devsocial_posts').doc('active_calls_hub').collection('calls').doc(activeCallId).update({ status: 'ended' }).catch(()=>{});
   }
   endActiveCallLocally();
 }
@@ -7762,8 +7763,8 @@ function listenToDmMessages() {
 
   area.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:0.8rem;"><div class="spinner" style="margin:0 auto 10px;"></div>Loading conversation...</div>';
 
-  dmConvoListenerUnsub = db.collection('devsocial_dms')
-    .doc(convoId)
+  dmConvoListenerUnsub = db.collection('devsocial_posts')
+    .doc('dm_' + convoId)
     .collection('messages')
     .orderBy('createdAt', 'asc')
     .limit(50)
@@ -7903,7 +7904,7 @@ async function sendDmText() {
   const convoId = getDmConvoId(user, activeDmTargetUid);
 
   try {
-    await db.collection('devsocial_dms').doc(convoId).collection('messages').add({
+    await db.collection('devsocial_posts').doc('dm_' + convoId).collection('messages').add({
       senderId: myNormalized,
       senderUid: user.uid,
       senderEmail: user.email || '',
@@ -7959,7 +7960,7 @@ function handleDmPhotoSelect(e) {
       const convoId = getDmConvoId(user, activeDmTargetUid);
 
       try {
-        await db.collection('devsocial_dms').doc(convoId).collection('messages').add({
+        await db.collection('devsocial_posts').doc('dm_' + convoId).collection('messages').add({
           senderId: myNormalized,
           senderUid: user.uid,
           senderEmail: user.email || '',
@@ -8009,7 +8010,7 @@ async function confirmSendDmCode() {
   const convoId = getDmConvoId(user, activeDmTargetUid);
 
   try {
-    await db.collection('devsocial_dms').doc(convoId).collection('messages').add({
+    await db.collection('devsocial_posts').doc('dm_' + convoId).collection('messages').add({
       senderId: myNormalized,
       senderUid: user.uid,
       senderEmail: user.email || '',
