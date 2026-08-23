@@ -1793,30 +1793,35 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 6px 12px;
-      border-radius: 8px;
-      background: rgba(56, 189, 248, 0.1);
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      color: #38bdf8;
-      font-size: 0.78rem;
-      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.2));
+      border: 1px solid rgba(16, 185, 129, 0.5);
+      color: #34d399;
+      font-size: 0.82rem;
+      font-weight: 800;
       cursor: pointer;
       transition: all 0.2s;
       font-family: inherit;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.15);
     }
     .dm-call-btn:hover {
-      background: rgba(56, 189, 248, 0.25);
-      border-color: #38bdf8;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.35), rgba(6, 182, 212, 0.35));
+      border-color: #10b981;
       transform: translateY(-1px);
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.35);
     }
     .dm-call-btn.video {
-      background: rgba(168, 85, 247, 0.1);
-      border-color: rgba(168, 85, 247, 0.3);
-      color: #c084fc;
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.2));
+      border-color: rgba(168, 85, 247, 0.5);
+      color: #e879f9;
+      box-shadow: 0 0 10px rgba(168, 85, 247, 0.15);
     }
     .dm-call-btn.video:hover {
-      background: rgba(168, 85, 247, 0.25);
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.35), rgba(236, 72, 153, 0.35));
       border-color: #c084fc;
+      transform: translateY(-1px);
+      box-shadow: 0 0 15px rgba(168, 85, 247, 0.35);
     }
 
     .dm-messages {
@@ -7301,6 +7306,47 @@ async function initiateCyberCall(receiverUid, receiverName, receiverPhoto, callT
 
   playRingtone();
 
+  // SPECIAL INTERACTIVE AI BOT CALL (Simulated Live Voice & Video connection)
+  if (receiverUid === 'GENIUS_AI_BOT') {
+    activeCallId = 'ai_bot_call_' + Date.now();
+    activeCallData = { id: activeCallId, type: callType, receiverName: '🤖 GENIUS AI', receiverPhoto: receiverPhoto, callerId: myUid };
+    
+    // Acquire local stream for camera/mic test
+    try {
+      activeLocalStream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: callType === 'video'
+      });
+      const localVid = document.getElementById('localVideo');
+      if (localVid) localVid.srcObject = activeLocalStream;
+    } catch(e) {
+      console.warn("Local media note:", e);
+    }
+
+    // Simulate AI answering after 2.2 seconds of ringing
+    setTimeout(() => {
+      if (!activeCallId) return;
+      stopRingtone();
+      setupActiveCallUI(activeCallData);
+      
+      // AI Voice greeting
+      try {
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+          const currentLang = getCommunityLang();
+          const greeting = currentLang === 'fr' 
+            ? "Bonjour ! Je suis GENIUS IA. Votre ligne cyber audio et vidéo est chiffrée et parfaitement active !" 
+            : "Hello! I am GENIUS AI. Your Cyber Phone voice and video line is encrypted, crystal clear, and 100% active!";
+          const utter = new SpeechSynthesisUtterance(greeting);
+          utter.lang = currentLang === 'fr' ? 'fr-FR' : 'en-US';
+          utter.rate = 1.05;
+          window.speechSynthesis.speak(utter);
+        }
+      } catch(e) {}
+    }, 2200);
+    return;
+  }
+
   try {
     // Acquire local media
     activeLocalStream = await navigator.mediaDevices.getUserMedia({
@@ -7324,7 +7370,7 @@ async function initiateCyberCall(receiverUid, receiverName, receiverPhoto, callT
     });
 
     activeCallId = callDoc.id;
-    activeCallData = { id: callDoc.id, type: callType, receiverName, receiverPhoto };
+    activeCallData = { id: callDoc.id, type: callType, receiverName, receiverPhoto, callerId: myUid };
     listenToCallStatus(callDoc.id);
 
     // Auto timeout after 45s if unanswered
@@ -7369,7 +7415,7 @@ async function acceptIncomingCall() {
 
 function rejectIncomingCall() {
   stopRingtone();
-  if (activeCallId) {
+  if (activeCallId && !activeCallId.startsWith('ai_bot_call_')) {
     db.collection('devsocial_calls').doc(activeCallId).update({ status: 'declined' }).catch(()=>{});
   }
   endActiveCallLocally();
@@ -7377,14 +7423,15 @@ function rejectIncomingCall() {
 
 function cancelOutgoingCall() {
   stopRingtone();
-  if (activeCallId) {
+  if (activeCallId && !activeCallId.startsWith('ai_bot_call_')) {
     db.collection('devsocial_calls').doc(activeCallId).update({ status: 'ended' }).catch(()=>{});
   }
   endActiveCallLocally();
 }
 
 function endActiveCall() {
-  if (activeCallId) {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  if (activeCallId && !activeCallId.startsWith('ai_bot_call_')) {
     db.collection('devsocial_calls').doc(activeCallId).update({ status: 'ended' }).catch(()=>{});
   }
   endActiveCallLocally();
@@ -7392,6 +7439,7 @@ function endActiveCall() {
 
 function endActiveCallLocally() {
   stopRingtone();
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
   if (activeCallDocUnsub) { activeCallDocUnsub(); activeCallDocUnsub = null; }
   if (activeCallTimerInterval) { clearInterval(activeCallTimerInterval); activeCallTimerInterval = null; }
   
@@ -7424,8 +7472,9 @@ function setupActiveCallUI(callData) {
   document.getElementById('activeVideoStage').style.display = isVideo ? 'block' : 'none';
   document.getElementById('activeAudioStage').style.display = isVideo ? 'none' : 'block';
 
-  const otherName = (callData.callerId === (user ? user.uid : '')) ? callData.receiverName : callData.callerName;
-  const otherPhoto = (callData.callerId === (user ? user.uid : '')) ? callData.receiverPhoto : callData.callerPhoto;
+  const myUid = user ? (user.uid || user.email) : '';
+  const otherName = (callData.callerId === myUid) ? callData.receiverName : (callData.callerName || 'Member');
+  const otherPhoto = (callData.callerId === myUid) ? callData.receiverPhoto : (callData.callerPhoto || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(otherName)}`);
 
   document.getElementById('activePeerName').textContent = otherName || 'Connected';
   document.getElementById('activePeerPhoto').src = otherPhoto || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(otherName || 'User')}`;
@@ -7508,9 +7557,9 @@ function selectDmUser(uid, name, photo) {
   document.getElementById('dmActiveName').textContent = activeDmTargetName;
   document.getElementById('dmActiveAvatar').src = activeDmTargetPhoto;
 
-  const isAi = uid === 'GENIUS_AI_BOT';
+  // Make call buttons ALWAYS visible for any contact (including AI test call)
   const callActions = document.getElementById('dmHeaderCallActions');
-  if (callActions) callActions.style.display = isAi ? 'none' : 'flex';
+  if (callActions) callActions.style.display = 'flex';
 
   // Highlight active in list
   document.querySelectorAll('.dm-convo-item').forEach(el => el.classList.remove('active'));
@@ -7530,7 +7579,6 @@ function showDmSidebarMobile() {
 }
 
 function initiateCallFromDm(type) {
-  if (activeDmTargetUid === 'GENIUS_AI_BOT') return;
   initiateCyberCall(activeDmTargetUid, activeDmTargetName, activeDmTargetPhoto, type);
 }
 
@@ -7541,14 +7589,58 @@ async function loadDmConversations() {
   if (!listEl) return;
 
   try {
-    const snap = await db.collection('devsocial_users').limit(20).get();
-    const usersList = [];
-    snap.forEach(doc => {
-      const d = doc.data();
-      if (doc.id !== myUid && doc.id !== user.email) {
-        usersList.push({ uid: doc.id, ...d });
-      }
-    });
+    const userMap = new Map();
+
+    // 1. Load users collection
+    try {
+      const snap1 = await db.collection('users').limit(25).get();
+      snap1.forEach(doc => {
+        if (doc.id !== myUid && doc.id !== user.email) {
+          const d = doc.data();
+          userMap.set(doc.id, {
+            uid: doc.id,
+            displayName: d.displayName || d.email?.split('@')[0] || 'Member',
+            photoURL: d.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(d.displayName || doc.id)}`,
+            email: d.email || ''
+          });
+        }
+      });
+    } catch(e) {}
+
+    // 2. Load devsocial_users collection
+    try {
+      const snap2 = await db.collection('devsocial_users').limit(25).get();
+      snap2.forEach(doc => {
+        if (doc.id !== myUid && doc.id !== user.email) {
+          const d = doc.data();
+          userMap.set(doc.id, {
+            uid: doc.id,
+            displayName: d.displayName || d.email?.split('@')[0] || 'Member',
+            photoURL: d.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(d.displayName || doc.id)}`,
+            email: d.email || ''
+          });
+        }
+      });
+    } catch(e) {}
+
+    // 3. Load post authors as active contacts
+    try {
+      const snap3 = await db.collection('devsocial_posts').limit(25).get();
+      snap3.forEach(doc => {
+        const p = doc.data();
+        const pUid = p.uid || p.userEmail || p.email;
+        if (pUid && pUid !== myUid && pUid !== user.email && !userMap.has(pUid)) {
+          userMap.set(pUid, {
+            uid: pUid,
+            displayName: p.author || p.userName || p.displayName || pUid.split('@')[0],
+            photoURL: p.avatar || p.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(p.author || pUid)}`,
+            email: p.userEmail || p.email || ''
+          });
+        }
+      });
+    } catch(e) {}
+
+    const usersList = Array.from(userMap.values());
 
     // Render items
     let html = `
@@ -7559,7 +7651,7 @@ async function loadDmConversations() {
         </div>
         <div class="dm-convo-meta">
           <div class="dm-convo-name" style="color:#c084fc;">🤖 GENIUS AI</div>
-          <div class="dm-convo-last">Always online • Ask or test code</div>
+          <div class="dm-convo-last">Always online • AI Voice & Chat</div>
         </div>
       </div>
     `;
