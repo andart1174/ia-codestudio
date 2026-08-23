@@ -1622,6 +1622,555 @@
       }
     }
 
+    /* 📞 5. CYBER PHONE & DIRECT MESSAGING (DMs) */
+    .btn-header-comms {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(124, 58, 237, 0.15));
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #38bdf8;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .btn-header-comms:hover {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.3), rgba(124, 58, 237, 0.3));
+      border-color: #38bdf8;
+      transform: translateY(-1px);
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+    }
+    .dm-badge-count {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #f43f5e;
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 900;
+      padding: 2px 6px;
+      border-radius: 10px;
+      border: 2px solid #030712;
+      animation: pulseGlowBadge 2s infinite;
+    }
+
+    /* DM Modal Container */
+    .dm-container {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      height: 620px;
+      max-height: 80vh;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #090d16;
+    }
+    .dm-sidebar {
+      background: rgba(15, 23, 42, 0.8);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .dm-search-bar {
+      padding: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .dm-search-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 8px 12px;
+      color: #fff;
+      font-size: 0.8rem;
+      outline: none;
+      font-family: inherit;
+    }
+    .dm-convos-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .dm-convo-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: transparent;
+      border: 1px solid transparent;
+    }
+    .dm-convo-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .dm-convo-item.active {
+      background: rgba(124, 58, 237, 0.15);
+      border-color: rgba(124, 58, 237, 0.4);
+    }
+    .dm-avatar-wrap {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+    }
+    .dm-avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid rgba(255,255,255,0.1);
+    }
+    .dm-status-dot {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #10b981;
+      border: 2px solid #090d16;
+    }
+    .dm-status-dot.offline {
+      background: #64748b;
+    }
+    .dm-convo-meta {
+      flex: 1;
+      min-width: 0;
+    }
+    .dm-convo-name {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .dm-convo-last {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+
+    /* DM Main Chat Area */
+    .dm-main {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      background: #070b13;
+    }
+    .dm-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(15, 23, 42, 0.5);
+    }
+    .dm-header-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .dm-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dm-call-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: #38bdf8;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .dm-call-btn:hover {
+      background: rgba(56, 189, 248, 0.25);
+      border-color: #38bdf8;
+      transform: translateY(-1px);
+    }
+    .dm-call-btn.video {
+      background: rgba(168, 85, 247, 0.1);
+      border-color: rgba(168, 85, 247, 0.3);
+      color: #c084fc;
+    }
+    .dm-call-btn.video:hover {
+      background: rgba(168, 85, 247, 0.25);
+      border-color: #c084fc;
+    }
+
+    .dm-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .dm-msg {
+      display: flex;
+      flex-direction: column;
+      max-width: 75%;
+      animation: fadeIn 0.2s ease-out;
+    }
+    .dm-msg.outgoing {
+      align-self: flex-end;
+      align-items: flex-end;
+    }
+    .dm-msg.incoming {
+      align-self: flex-start;
+      align-items: flex-start;
+    }
+    .dm-bubble {
+      padding: 10px 14px;
+      border-radius: 16px;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+    .dm-msg.outgoing .dm-bubble {
+      background: linear-gradient(135deg, #7c3aed, #6366f1);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+    .dm-msg.incoming .dm-bubble {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #e2e8f0;
+      border-bottom-left-radius: 4px;
+    }
+    .dm-msg-time {
+      font-size: 0.68rem;
+      color: #64748b;
+      margin-top: 4px;
+      padding: 0 4px;
+    }
+    .dm-photo-preview {
+      max-width: 280px;
+      max-height: 220px;
+      border-radius: 12px;
+      cursor: pointer;
+      object-fit: cover;
+      margin-bottom: 6px;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: transform 0.2s;
+    }
+    .dm-photo-preview:hover {
+      transform: scale(1.02);
+    }
+    .dm-code-box {
+      background: #020617;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 6px;
+      width: 100%;
+      max-width: 480px;
+    }
+    .dm-code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 12px;
+      background: rgba(124, 58, 237, 0.15);
+      border-bottom: 1px solid rgba(124, 58, 237, 0.2);
+    }
+    .dm-code-pre {
+      padding: 10px 12px;
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: 0.75rem;
+      color: #38bdf8;
+      overflow-x: auto;
+      max-height: 180px;
+      margin: 0;
+      white-space: pre-wrap;
+    }
+    .dm-code-btns {
+      display: flex;
+      gap: 6px;
+    }
+    .dm-code-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .dm-code-btn:hover {
+      background: rgba(255,255,255,0.25);
+    }
+    .dm-code-btn.run {
+      background: #10b981;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    /* DM Compose Bar */
+    .dm-compose {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(15, 23, 42, 0.6);
+    }
+    .dm-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 10px 14px;
+      color: #fff;
+      font-size: 0.85rem;
+      outline: none;
+      font-family: inherit;
+      resize: none;
+      max-height: 90px;
+    }
+    .dm-btn-icon {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.2s;
+    }
+    .dm-btn-icon:hover {
+      background: rgba(124, 58, 237, 0.2);
+      border-color: #a855f7;
+      color: #fff;
+      transform: translateY(-1px);
+    }
+    .dm-btn-send {
+      background: linear-gradient(135deg, #7c3aed, #38bdf8);
+      border: none;
+      color: #fff;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+    .dm-btn-send:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 15px rgba(124, 58, 237, 0.4);
+    }
+
+    /* 📞 CALLING MODAL & SCREENS */
+    .call-overlay-box {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.94);
+      backdrop-filter: blur(20px);
+      z-index: 999999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .call-overlay-box.active {
+      display: flex !important;
+    }
+    .call-card {
+      background: linear-gradient(145deg, #0f172a, #020617);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 28px;
+      width: 100%;
+      max-width: 520px;
+      padding: 36px 28px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(56, 189, 248, 0.15);
+      animation: zoomIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .call-avatar-pulse {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      margin: 0 auto 20px;
+    }
+    .call-avatar-pulse img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #38bdf8;
+      position: relative;
+      z-index: 2;
+    }
+    .call-pulse-ring {
+      position: absolute;
+      inset: -12px;
+      border-radius: 50%;
+      border: 2px solid rgba(56, 189, 248, 0.6);
+      animation: pulseRing 1.8s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+      z-index: 1;
+    }
+    .call-pulse-ring:nth-child(2) {
+      animation-delay: 0.6s;
+    }
+    @keyframes pulseRing {
+      0% { transform: scale(0.8); opacity: 1; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+    .call-name {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.4rem;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .call-status-lbl {
+      font-size: 0.85rem;
+      color: #38bdf8;
+      margin-bottom: 28px;
+      font-weight: 600;
+    }
+    .call-actions-grid {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+    }
+    .btn-call-circle {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+    .btn-call-circle:hover {
+      transform: scale(1.1);
+    }
+    .btn-call-circle:active {
+      transform: scale(0.95);
+    }
+    .btn-call-accept {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.4);
+      animation: callBounce 1.5s infinite;
+    }
+    .btn-call-decline {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: #fff;
+      box-shadow: 0 0 25px rgba(239, 68, 68, 0.4);
+    }
+    @keyframes callBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    /* Active Video Grid */
+    .active-video-stage {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      background: #020617;
+      border-radius: 18px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    #remoteVideo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    #localVideo {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      width: 120px;
+      height: 90px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 2px solid rgba(56, 189, 248, 0.8);
+      background: #000;
+      z-index: 10;
+    }
+    .call-controls-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      margin-top: 10px;
+    }
+    .call-ctrl-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .call-ctrl-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.08);
+    }
+    .call-ctrl-btn.off {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: #ef4444;
+      color: #f87171;
+    }
+    .call-timer-chip {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: #38bdf8;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
     /* RESPONSIVE */
     @media(max-width:1024px) { .wrap { grid-template-columns:1fr; } .sl,.sr { display:none; } }
     @media(max-width:640px) {
@@ -1632,6 +2181,9 @@
       .overlay { align-items:flex-end; padding:0; }
       .modal { border-radius:16px 16px 0 0; max-height:92vh; }
       .c-reply { margin-left:20px; }
+      .dm-container { grid-template-columns: 1fr; height: 85vh; }
+      .dm-sidebar.hidden-mobile { display: none; }
+      .dm-main.hidden-mobile { display: none; }
     }
   </style>
   <script type="application/ld+json">
@@ -1701,6 +2253,12 @@
   </div>
 
   <div class="header-actions" id="hdrActions">
+    <!-- DIRECT COMMS & CALLS BUTTON -->
+    <button class="btn-header-comms" id="btnOpenDms" onclick="openDmModal()" title="Direct Messages & Cyber Calls">
+      <span>💬</span>
+      <span id="lbl-header-comms">Messages</span>
+      <span class="dm-badge-count" id="dmUnreadBadge" style="display:none;">0</span>
+    </button>
     <button class="btn-google" onclick="signInGoogle()">
       <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
       Sign in with Google
@@ -2395,6 +2953,198 @@
   </div>
 </div>
 
+<!-- DIRECT MESSAGES (DMs) MODAL -->
+<div class="overlay" id="dmModalOverlay" onclick="closeDmModal(event)">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:860px;padding:0;overflow:hidden;">
+    <div class="mh" style="padding:14px 20px;">
+      <div class="mt" style="display:flex;align-items:center;gap:8px;">
+        <span>💬</span> <span id="lbl-dm-modal-title">Direct Messages & Cyber Calls</span>
+      </div>
+      <button class="mc" onclick="closeDmModal()">✕</button>
+    </div>
+    <div class="dm-container">
+      <!-- LEFT: CONVERSATIONS LIST -->
+      <div class="dm-sidebar" id="dmSidebar">
+        <div class="dm-search-bar">
+          <input type="text" class="dm-search-input" id="dmSearchInput" placeholder="Search members..." oninput="filterDmConversations()">
+        </div>
+        <div class="dm-convos-list" id="dmConvosList">
+          <!-- Pinned AI Bot Contact -->
+          <div class="dm-convo-item active" onclick="selectDmUser('GENIUS_AI_BOT', '🤖 GENIUS AI', 'https://api.dicebear.com/7.x/bottts/svg?seed=GENIUS_AI_BOT')">
+            <div class="dm-avatar-wrap">
+              <img src="https://api.dicebear.com/7.x/bottts/svg?seed=GENIUS_AI_BOT" class="dm-avatar-img" alt="GENIUS AI">
+              <div class="dm-status-dot"></div>
+            </div>
+            <div class="dm-convo-meta">
+              <div class="dm-convo-name" style="color:#c084fc;">🤖 GENIUS AI</div>
+              <div class="dm-convo-last" id="lbl-ai-convo-sub">Always online • Ask or test code</div>
+            </div>
+          </div>
+          <!-- Dynamic conversations rendered here -->
+        </div>
+      </div>
+
+      <!-- RIGHT: CHAT WINDOW -->
+      <div class="dm-main" id="dmMain">
+        <!-- Chat Header -->
+        <div class="dm-header">
+          <div class="dm-header-user">
+            <button class="mc" id="btnBackToConvos" style="display:none;width:26px;height:26px;font-size:0.9rem;" onclick="showDmSidebarMobile()">←</button>
+            <div class="dm-avatar-wrap" style="width:36px;height:36px;">
+              <img src="https://api.dicebear.com/7.x/bottts/svg?seed=GENIUS_AI_BOT" class="dm-avatar-img" id="dmActiveAvatar" alt="User">
+              <div class="dm-status-dot" id="dmActiveStatusDot"></div>
+            </div>
+            <div>
+              <div class="dm-convo-name" id="dmActiveName">🤖 GENIUS AI</div>
+              <div style="font-size:0.7rem;color:#38bdf8;" id="dmActiveStatus">Online</div>
+            </div>
+          </div>
+          <div class="dm-header-actions" id="dmHeaderCallActions">
+            <button class="dm-call-btn" onclick="initiateCallFromDm('audio')" title="Start Voice Call">
+              <span>📞</span> <span id="lbl-dm-call-voice">Call</span>
+            </button>
+            <button class="dm-call-btn video" onclick="initiateCallFromDm('video')" title="Start Video Call">
+              <span>📹</span> <span id="lbl-dm-call-video">Video</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Messages scrollable area -->
+        <div class="dm-messages" id="dmMessagesArea">
+          <div style="text-align:center;padding:30px 10px;color:var(--muted);font-size:0.8rem;" id="lbl-dm-start-hint">
+            🔒 Direct P2P encrypted chat. Send messages, photos, and live 3D HTML code snippets!
+          </div>
+        </div>
+
+        <!-- Compose bar -->
+        <div class="dm-compose">
+          <!-- Hidden File input for compressed photos -->
+          <input type="file" id="dmPhotoFileInput" accept="image/*" style="display:none;" onchange="handleDmPhotoSelect(event)">
+          <button class="dm-btn-icon" onclick="triggerDmPhotoUpload()" title="Send Photo">📷</button>
+          <button class="dm-btn-icon" onclick="openDmCodeModal()" title="Send HTML/JS Code Snippet">💻</button>
+          
+          <textarea class="dm-input" id="dmTextInput" placeholder="Type a message..." rows="1"
+            oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight, 80)+'px'"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDmText()}"></textarea>
+          
+          <button class="dm-btn-send" onclick="sendDmText()" title="Send">➤</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CODE INSERTION SNIPPET MODAL -->
+<div class="overlay" id="dmCodeModal" onclick="closeDmCodeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:540px;">
+    <div class="mh">
+      <div class="mt" style="display:flex;align-items:center;gap:6px;">
+        <span>💻</span> <span id="lbl-insert-code-title">Share HTML / Three.js Code</span>
+      </div>
+      <button class="mc" onclick="closeDmCodeModal()">✕</button>
+    </div>
+    <div class="mb">
+      <div style="font-size:0.82rem;color:#94a3b8;margin-bottom:10px;" id="lbl-insert-code-sub">
+        Paste standalone HTML, CSS, or Three.js code. The receiver can run it live in 3D with 1-click!
+      </div>
+      <div style="margin-bottom:12px;">
+        <input type="text" class="adm-input" id="dmCodeSnippetTitle" placeholder="Snippet Title (e.g. Glowing 3D Matrix Cube)...">
+      </div>
+      <div style="margin-bottom:14px;">
+        <textarea class="adm-input" id="dmCodeSnippetContent" rows="7" style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;" placeholder="<!DOCTYPE html><html>..."></textarea>
+      </div>
+      <button class="shop-btn buy" style="width:100%;padding:10px;" onclick="confirmSendDmCode()" id="btn-send-code-snippet">
+        🚀 Send Code Snippet
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- STANDALONE LIVE CODE RUNNER MODAL -->
+<div class="overlay" id="codeRunnerOverlay" onclick="closeCodeRunnerModal(event)">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:900px;width:95vw;height:85vh;padding:0;overflow:hidden;display:flex;flex-direction:column;">
+    <div class="mh" style="padding:12px 18px;">
+      <div class="mt" style="display:flex;align-items:center;gap:8px;">
+        <span>▶️</span> <span id="codeRunnerTitle">Live 3D Preview</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="dm-call-btn" onclick="copyRunningCode()" id="btnCopyRunnerCode">📋 Copy</button>
+        <button class="mc" onclick="closeCodeRunnerModal()">✕</button>
+      </div>
+    </div>
+    <iframe id="codeRunnerFrame" sandbox="allow-scripts allow-same-origin allow-pointer-lock" style="width:100%;flex:1;border:none;background:#000;"></iframe>
+  </div>
+</div>
+
+<!-- 📞 CYBER PHONE (CALLING OVERLAY) -->
+<div class="call-overlay-box" id="callOverlayBox">
+  <div class="call-card">
+    
+    <!-- 1. INCOMING CALL SCREEN -->
+    <div id="callScreenIncoming" style="display:none;">
+      <div class="call-avatar-pulse">
+        <div class="call-pulse-ring"></div>
+        <div class="call-pulse-ring"></div>
+        <img src="" id="incomingCallerPhoto" alt="Caller">
+      </div>
+      <div class="call-name" id="incomingCallerName">Caller Name</div>
+      <div class="call-status-lbl" id="incomingCallType">Incoming Voice Call...</div>
+      
+      <div class="call-actions-grid">
+        <button class="btn-call-circle btn-call-decline" onclick="rejectIncomingCall()" title="Decline Call">
+          🔴
+        </button>
+        <button class="btn-call-circle btn-call-accept" onclick="acceptIncomingCall()" title="Answer Call">
+          🟢
+        </button>
+      </div>
+    </div>
+
+    <!-- 2. OUTGOING CALLING SCREEN -->
+    <div id="callScreenOutgoing" style="display:none;">
+      <div class="call-avatar-pulse">
+        <div class="call-pulse-ring"></div>
+        <div class="call-pulse-ring"></div>
+        <img src="" id="outgoingCalleePhoto" alt="Receiver">
+      </div>
+      <div class="call-name" id="outgoingCalleeName">Calling...</div>
+      <div class="call-status-lbl" id="outgoingCallStatus">Ringing...</div>
+      
+      <div class="call-actions-grid">
+        <button class="btn-call-circle btn-call-decline" onclick="cancelOutgoingCall()" title="End Call">
+          🔴
+        </button>
+      </div>
+    </div>
+
+    <!-- 3. ACTIVE CALL SCREEN (AUDIO & VIDEO) -->
+    <div id="callScreenActive" style="display:none;">
+      <div class="call-timer-chip" id="activeCallTimer">00:00</div>
+      
+      <div class="active-video-stage" id="activeVideoStage" style="display:none;">
+        <video id="remoteVideo" autoplay playsinline></video>
+        <video id="localVideo" autoplay playsinline muted></video>
+      </div>
+
+      <div id="activeAudioStage" style="margin: 20px 0;">
+        <div class="call-avatar-pulse" style="width:80px;height:80px;">
+          <img src="" id="activePeerPhoto" alt="Peer">
+        </div>
+        <div class="call-name" id="activePeerName">Connected</div>
+        <div style="color:#10b981;font-size:0.85rem;font-weight:700;margin-top:4px;" id="lbl-call-encrypted">🔒 P2P Encrypted Audio HD</div>
+      </div>
+
+      <!-- Controls -->
+      <div class="call-controls-bar">
+        <button class="call-ctrl-btn" id="btnToggleMic" onclick="toggleCallMic()" title="Mute Microphone">🎤</button>
+        <button class="call-ctrl-btn" id="btnToggleCam" onclick="toggleCallCam()" title="Toggle Camera">📹</button>
+        <button class="call-ctrl-btn off" onclick="endActiveCall()" title="Hang Up" style="background:#ef4444;border-color:#ef4444;color:#fff;">📞</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <!-- FLYING COINS PARTICLES CONTAINER -->
 <div id="flying-coins-container"></div>
 
@@ -2492,6 +3242,7 @@ auth.onAuthStateChanged(async u => {
     initReferralSystem();
     loadStreakState();
     checkAndApplyReferralBonus();
+    initCallListener(u.uid);
   } else {
     // Check if user is logged in via Premium Session on the main site
     try {
@@ -2521,6 +3272,7 @@ auth.onAuthStateChanged(async u => {
           initReferralSystem();
           loadStreakState();
           checkAndApplyReferralBonus();
+          initCallListener(user.uid);
           loadFeed();
           if (isAdmin) loadStats();
           return;
@@ -3827,7 +4579,31 @@ const I18N = {
     btnCopyImage: '📋 Copy Image',
     btnDownloadImage: '📥 Download PNG',
     imageCopiedToast: '✨ Social card copied to clipboard!',
-    downloadStartedToast: '📥 Download started!'
+    downloadStartedToast: '📥 Download started!',
+    // DMs & Cyber Calls
+    headerComms: 'Messages',
+    dmModalTitle: 'Direct Messages & Cyber Calls',
+    dmSearchPh: 'Search members...',
+    dmStartHint: '🔒 Direct P2P encrypted chat. Send messages, photos, and live 3D HTML code snippets!',
+    dmTypePh: 'Type a message...',
+    dmCallVoice: 'Call',
+    dmCallVideo: 'Video',
+    insertCodeTitle: 'Share HTML / Three.js Code',
+    insertCodeSub: 'Paste standalone HTML, CSS, or Three.js code. The receiver can run it live in 3D with 1-click!',
+    btnSendCodeSnippet: '🚀 Send Code Snippet',
+    btnRun3D: '▶️ Run 3D',
+    btnCopyCode: '📋 Copy',
+    btnExplainAI: '🪄 Explain with AI',
+    incomingVoiceCall: 'Incoming Voice Call...',
+    incomingVideoCall: 'Incoming Video Call...',
+    outgoingCalling: 'Calling...',
+    outgoingRinging: 'Ringing...',
+    callConnected: 'Connected',
+    callEncrypted: '🔒 P2P Encrypted Audio HD',
+    callEndedToast: '📞 Call ended',
+    callDeclinedToast: '🔴 Call declined',
+    photoSentToast: '📷 Photo sent!',
+    codeSentToast: '💻 Code snippet sent!'
   },
   fr: {
     communityBrand: '✦ Communauté',
@@ -3898,98 +4674,122 @@ const I18N = {
     questsTitle: '🎯 Quêtes du Jour (Réinitialisation 24h)',
     questsSub: 'Complétez les quêtes ci-dessous pour gagner des pièces GENIUS IA gratuites !',
     qPublishTitle: 'Créateur du Jour',
-    qPublishDesc: 'Publiez 1 nouveau projet ou code dans la communauté',
+    qPublishDesc: 'Publier 1 nouvelle création ou code dans la communauté',
     qQrTitle: 'Explorateur Mobile',
-    qQrDesc: 'Scannez le code QR et testez un projet sur mobile',
+    qQrDesc: 'Scanner le QR code et tester un projet sur mobile',
     qLikeTitle: 'Communauté Active',
-    qLikeDesc: 'Aimez 3 créations dans la communauté',
-    qCommentTitle: 'Maître du Feedback',
-    qCommentDesc: 'Laissez 2 commentaires constructifs sur d\'autres posts',
+    qLikeDesc: 'Liker 3 créations dans la communauté',
+    qCommentTitle: 'Maître des Retours',
+    qCommentDesc: 'Laisser 2 commentaires constructifs',
     btnClaim: 'Réclamer',
     btnClaimed: '✓ Réclamé',
     questClaimedToast: '🎉 Récompense réclamée : +{n} GENIUS IA !',
     // Leaderboard & Bounties
-    lbTitle: '🏆 Classement de la Communauté',
-    lbSub: 'Top créateurs et détenteurs de pièces',
-    lbHoldersBtn: '👑 Top Balances',
+    lbTitle: '🏆 Classement Communautaire',
+    lbSub: 'Les meilleurs créateurs et détenteurs de pièces',
+    lbHoldersBtn: '👑 Top Porteurs',
     lbTippersBtn: '💖 Top Donateurs',
     bountyTitle: '⚔️ Défi de la Semaine : Maîtrise des Shaders 3D',
-    bountyDesc: 'Créez et publiez une scène Three.js WebGL interactive avec éclairages dynamiques.',
-    btnJoinBounty: '🚀 Soumettre Création',
+    bountyDesc: 'Créez et publiez une scène interactive Three.js WebGL avec éclairage sur-mesure.',
+    btnJoinBounty: '🚀 Participer au Défi',
     // Wallet
     balanceHeroLbl: 'Solde GENIUS IA Disponible',
-    txHistoryLbl: 'Historique des Transactions & Récompenses',
+    txHistoryLbl: 'Historique des Transactions & Gains',
     noTx: 'Aucune transaction récente.',
     // Boost Post
     boostModalTitle: 'Booster & Mettre en Avant',
-    boostModalSub: 'Épinglez votre post en haut du fil avec un cadre lumineux exclusif pour maximiser vos vues et pourboires !',
-    boostStdTitle: 'Mis en Avant Standard (12h)',
-    boostStdDesc: 'Badge en vedette & lueur violette dans le fil',
-    boostUltraTitle: 'Ultra Épinglé en Top 1 (24h)',
-    boostUltraDesc: 'Emplacement N°1 + bordure dorée scintillante animée',
+    boostModalSub: 'Épinglez votre post en haut du fil avec un cadre lumineux exclusif pour maximiser vues et pourboires !',
+    boostStdTitle: 'Standard Vedette (12h)',
+    boostStdDesc: 'Badge Vedette & lueur violette dans le fil',
+    boostUltraTitle: 'Ultra Épinglé en Tête (24h)',
+    boostUltraDesc: 'Top 1 du fil + bordure animée dorée arc-en-ciel',
     boostSuccessToast: '🚀 Post boosté avec succès !',
     // Tips
     tipModalTitle: 'Envoyer un Pourboire',
     tipModalSub: 'Envoyer des pièces GENIUS IA à',
     tipCustomLbl: 'Ou entrez un montant personnalisé',
     btnSendTip: '🪙 Envoyer le Pourboire',
-    tipSuccessToast: '🪙 Vous avez envoyé {n} GENIUS IA à @{name} !',
+    tipSuccessToast: '🪙 {n} GENIUS IA envoyés avec succès à @{name} !',
     tipBtnLbl: 'Pourboire',
     // Admin Bank
     adminBankTitle: '🏛️ Banque Centrale GENIUS IA',
-    adminAccSub: 'Contrôles Admin : <strong style="color:#fcd34d;">Solde Personnalisé & Minutage</strong>',
-    adminMintTitle: '⚡ Définir le Solde / Minuter',
-    adminMintBtn: '+ Mint',
+    adminAccSub: 'Contrôles Admin : <strong style="color:#fcd34d;">Solde & Frappe Personnalisés</strong>',
+    adminMintTitle: '⚡ Définir Solde / Frapper des Pièces',
+    adminMintBtn: '+ Frapper',
     adminSetBalBtn: 'Définir',
-    adminSetBalSuccess: '⚡ Solde admin mis à jour à {n} GENIUS IA !',
-    adminMintSuccess: '⚡ +{n} GENIUS IA générées sur votre compte !',
-    adminEditUserTitle: '👤 Modifier Membre (Pseudo/Solde)',
+    adminSetBalSuccess: '⚡ Solde admin défini à {n} GENIUS IA !',
+    adminMintSuccess: '⚡ +{n} GENIUS IA générés sur votre compte !',
+    adminEditUserTitle: '👤 Modifier Pseudo / Pièces d\'un Membre',
     adminUpdateUserBtn: '👤 Mettre à Jour',
-    adminUpdateUserSuccess: '✅ Profil et solde du membre mis à jour !',
+    adminUpdateUserSuccess: '✅ Profil et pièces du membre mis à jour !',
     adminSendTitle: '🎁 Envoyer des Pièces à un Membre',
-    adminSendTargetPh: 'Email ou Nom du membre...',
+    adminSendTargetPh: 'Email ou Pseudo du membre...',
     adminSendReasonPh: 'Motif (ex: Récompense)',
-    adminSendBtn: '🎁 Envoyer Récompense',
-    adminSendSuccess: '🎁 {n} GENIUS IA envoyées à {target} !',
+    adminSendBtn: '🎁 Envoyer la Récompense',
+    adminSendSuccess: '🎁 {n} GENIUS IA envoyés à {target} !',
     adminAirdropTitle: '🌧️ Airdrop Global (Tous les Membres)',
-    adminAirdropMsgPh: 'Message Airdrop...',
+    adminAirdropMsgPh: 'Message de l\'Airdrop...',
     adminAirdropBtn: '🌧️ Lancer l\'Airdrop Global',
-    adminAirdropSuccess: '🌧️ Airdrop de {n} GENIUS IA envoyé aux {count} membres !',
-    adminAirdropConfirm: 'Êtes-vous sûr de vouloir envoyer {n} GENIUS IA à tous les membres ?',
+    adminAirdropSuccess: '🌧️ {n} GENIUS IA envoyés à l\'ensemble des {count} membres !',
+    adminAirdropConfirm: 'Êtes-vous sûr de vouloir envoyer {n} GENIUS IA à tous les membres enregistrés ?',
     // Mobile Test
     mobileTestBtn: '📱 Tester sur Mobile',
     editInStudioBtn: '⚡ Éditer dans le Studio',
-    qrTitle: 'Test en Direct sur Mobile',
-    qrDesc: 'Scannez ce code QR avec l\'appareil photo de votre téléphone pour exécuter ce projet 3D / WebGL en plein écran à 60 FPS sans rien installer !',
-    qrOpenTab: '🚀 Ouvrir en Plein Écran (Nouvel Onglet)',
+    qrTitle: 'Aperçu Mobile Live',
+    qrDesc: 'Scannez ce QR code avec l\'appareil photo de votre téléphone pour exécuter ce projet 3D / WebGL en plein écran à 60 FPS sans rien installer !',
+    qrOpenTab: '🚀 Ouvrir dans un Onglet Dédié',
     copiedToast: 'Lien copié ! 🔗',
     copyBtn: '📋 Copier',
     copySuccessBtn: '✓ Copié !',
     // General
-    insufficientFunds: 'Solde insuffisant ! Vous avez besoin de {n} GENIUS IA.',
-    enterValidAmount: 'Veuillez entrer un montant valide',
+    insufficientFunds: 'Solde insuffisant ! Il vous faut {n} GENIUS IA.',
+    enterValidAmount: 'Veuillez saisir un montant valide',
     fillUserAndAmt: 'Veuillez renseigner le membre et le montant',
     // Daily Streak
-    streakTitle: 'Série de Connexion (7 Jours)',
-    streakSub: 'Connectez-vous chaque jour pour gagner des pièces croissantes et des coffres gratuits !',
+    streakTitle: 'Série de Connexion 7 Jours',
+    streakSub: 'Connectez-vous chaque jour pour des récompenses croissantes et des Coffres Mystères gratuits !',
     btnClaimStreak: '🎁 Réclamer Aujourd\'hui',
     streakClaimedToast: '🔥 Série Jour #{day} réclamée : +{n} GENIUS IA !',
-    streakChestUnlocked: '🎁 BONUS ! Vous avez débloqué un Coffre Diamant Gratuit !',
+    streakChestUnlocked: '🎁 BONUS ! Vous avez débloqué un Coffre de Diamant Gratuit !',
     streakDayLbl: 'Jour {n}',
     streakClaimedLbl: 'Réclamé',
     // Referral
-    refTitle: '👥 Invitez des Amis & Gagnez 100 🪙',
-    refSub: 'Vous et votre ami recevez chacun 100 GENIUS IA dès son inscription !',
+    refTitle: '👥 Parrainez des Amis & Gagnez 100 🪙',
+    refSub: 'Vous et votre ami recevez chacun 100 GENIUS IA à son inscription !',
     refStatsLbl: '{n} Amis Invités',
     refLinkCopiedToast: '📋 Lien de parrainage copié !',
     refRewardToast: '🎁 Bonus de Bienvenue ! Vous avez reçu +100 GENIUS IA grâce au parrainage !',
     // Social Card
-    socialCardTitle: 'Carte de Partage Social',
-    socialCardSub: 'Téléchargez ou copiez votre carte de projet 3D avec QR Code en direct pour vos réseaux sociaux.',
+    socialCardTitle: 'Carte Sociale',
+    socialCardSub: 'Téléchargez ou copiez votre carte graphique de présentation 3D avec QR Code en direct pour vos réseaux sociaux.',
     btnCopyImage: '📋 Copier l\'Image',
     btnDownloadImage: '📥 Télécharger PNG',
-    imageCopiedToast: '✨ Carte copiée dans le presse-papiers !',
-    downloadStartedToast: '📥 Téléchargement lancé !'
+    imageCopiedToast: '✨ Carte sociale copiée dans le presse-papiers !',
+    downloadStartedToast: '📥 Téléchargement lancé !',
+    // DMs & Cyber Calls
+    headerComms: 'Messages',
+    dmModalTitle: 'Messages Privés & Appels Cyber',
+    dmSearchPh: 'Rechercher des membres...',
+    dmStartHint: '🔒 Chat chiffré direct P2P. Envoyez messages, photos et code 3D HTML exécutable !',
+    dmTypePh: 'Écrivez un message...',
+    dmCallVoice: 'Appel',
+    dmCallVideo: 'Vidéo',
+    insertCodeTitle: 'Partager du Code HTML / Three.js',
+    insertCodeSub: 'Collez du code HTML, CSS ou Three.js autonome. Le destinataire peut le lancer en 3D en 1 clic !',
+    btnSendCodeSnippet: '🚀 Envoyer le Code',
+    btnRun3D: '▶️ Lancer 3D',
+    btnCopyCode: '📋 Copier',
+    btnExplainAI: '🪄 Expliquer par IA',
+    incomingVoiceCall: 'Appel Vocal Entrant...',
+    incomingVideoCall: 'Appel Vidéo Entrant...',
+    outgoingCalling: 'Appel en cours...',
+    outgoingRinging: 'Sonnerie...',
+    callConnected: 'Connecté',
+    callEncrypted: '🔒 Audio HD Chiffré P2P',
+    callEndedToast: '📞 Appel terminé',
+    callDeclinedToast: '🔴 Appel refusé',
+    photoSentToast: '📷 Photo envoyée !',
+    codeSentToast: '💻 Extrait de code envoyé !'
   }
 };
 
@@ -4082,6 +4882,19 @@ function applyCommunityLanguage(lang) {
   const scS = document.getElementById('lbl-social-card-sub'); if (scS) scS.textContent = t.socialCardSub;
   const scCopyB = document.getElementById('btn-copy-social-card'); if (scCopyB) scCopyB.textContent = t.btnCopyImage;
   const scDlB = document.getElementById('btn-download-social-card'); if (scDlB) scDlB.textContent = t.btnDownloadImage;
+
+  // DMs & Cyber Calls
+  const hdrComms = document.getElementById('lbl-header-comms'); if (hdrComms) hdrComms.textContent = t.headerComms;
+  const dmModalT = document.getElementById('lbl-dm-modal-title'); if (dmModalT) dmModalT.textContent = t.dmModalTitle;
+  const dmSearchInp = document.getElementById('dmSearchInput'); if (dmSearchInp) dmSearchInp.placeholder = t.dmSearchPh;
+  const dmStartH = document.getElementById('lbl-dm-start-hint'); if (dmStartH) dmStartH.textContent = t.dmStartHint;
+  const dmTextInp = document.getElementById('dmTextInput'); if (dmTextInp) dmTextInp.placeholder = t.dmTypePh;
+  const dmCallV = document.getElementById('lbl-dm-call-voice'); if (dmCallV) dmCallV.textContent = t.dmCallVoice;
+  const dmCallVid = document.getElementById('lbl-dm-call-video'); if (dmCallVid) dmCallVid.textContent = t.dmCallVideo;
+  const insCodeT = document.getElementById('lbl-insert-code-title'); if (insCodeT) insCodeT.textContent = t.insertCodeTitle;
+  const insCodeS = document.getElementById('lbl-insert-code-sub'); if (insCodeS) insCodeS.textContent = t.insertCodeSub;
+  const insCodeB = document.getElementById('btn-send-code-snippet'); if (insCodeB) insCodeB.textContent = t.btnSendCodeSnippet;
+  const callEnc = document.getElementById('lbl-call-encrypted'); if (callEnc) callEnc.textContent = t.callEncrypted;
 
   // Lucky Wheel
   const wTitle = document.getElementById('lbl-wheel-title'); if (wTitle) wTitle.textContent = t.wheelTitle;
@@ -6307,6 +7120,776 @@ function switchVaultTab(tabName) {
   }
 }
 
+// ══════════════════════════════════════════
+// 📞 13. CYBER PHONE & WEBRTC CALLING ENGINE
+// ══════════════════════════════════════════
+
+// Synthesized dual-tone telephone ringtone (440Hz + 480Hz)
+let ringtoneAudioCtx = null;
+let ringtoneInterval = null;
+
+function playRingtone() {
+  stopRingtone();
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    ringtoneAudioCtx = new AudioContext();
+
+    function ringCycle() {
+      if (!ringtoneAudioCtx || ringtoneAudioCtx.state === 'closed') return;
+      const t = ringtoneAudioCtx.currentTime;
+      const osc1 = ringtoneAudioCtx.createOscillator();
+      const osc2 = ringtoneAudioCtx.createOscillator();
+      const gain = ringtoneAudioCtx.createGain();
+
+      osc1.frequency.value = 440;
+      osc2.frequency.value = 480;
+
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.3, t + 0.05);
+      gain.gain.setValueAtTime(0.3, t + 1.8);
+      gain.gain.linearRampToValueAtTime(0, t + 2.0);
+
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(ringtoneAudioCtx.destination);
+
+      osc1.start(t);
+      osc2.start(t);
+      osc1.stop(t + 2.0);
+      osc2.stop(t + 2.0);
+    }
+
+    ringCycle();
+    ringtoneInterval = setInterval(ringCycle, 4000);
+  } catch (e) {
+    console.warn("Ringtone audio note:", e);
+  }
+}
+
+function stopRingtone() {
+  if (ringtoneInterval) {
+    clearInterval(ringtoneInterval);
+    ringtoneInterval = null;
+  }
+  if (ringtoneAudioCtx) {
+    try { ringtoneAudioCtx.close(); } catch(e) {}
+    ringtoneAudioCtx = null;
+  }
+}
+
+// WebRTC Configuration
+const rtcConfig = {
+  iceServers: [
+    { urls: 'stun:stun.l.google.com:19302' },
+    { urls: 'stun:stun1.l.google.com:19302' },
+    { urls: 'stun:stun2.l.google.com:19302' }
+  ]
+};
+
+let activePeerConnection = null;
+let activeLocalStream = null;
+let activeCallId = null;
+let activeCallData = null;
+let activeCallTimerInterval = null;
+let activeCallStartTime = 0;
+let callListenerUnsub = null;
+let activeCallDocUnsub = null;
+let isMicMuted = false;
+let isCamOff = false;
+
+function initCallListener(currentUid) {
+  if (!db || !currentUid) return;
+  if (callListenerUnsub) callListenerUnsub();
+
+  // Listen for incoming calls
+  callListenerUnsub = db.collection('devsocial_calls')
+    .where('receiverId', '==', currentUid)
+    .where('status', '==', 'ringing')
+    .onSnapshot(snap => {
+      snap.docChanges().forEach(change => {
+        if (change.type === 'added') {
+          const data = change.doc.data();
+          data.id = change.doc.id;
+          handleIncomingCallNotification(data);
+        }
+      });
+    });
+}
+
+function handleIncomingCallNotification(callData) {
+  if (activeCallId) return; // already in call
+  activeCallId = callData.id;
+  activeCallData = callData;
+
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+
+  // Show incoming call screen
+  const callerPhoto = callData.callerPhoto || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(callData.callerName || 'User')}`;
+  document.getElementById('incomingCallerPhoto').src = callerPhoto;
+  document.getElementById('incomingCallerName').textContent = callData.callerName || 'Member';
+  document.getElementById('incomingCallType').textContent = callData.type === 'video' ? t.incomingVideoCall : t.incomingVoiceCall;
+
+  document.getElementById('callScreenIncoming').style.display = 'block';
+  document.getElementById('callScreenOutgoing').style.display = 'none';
+  document.getElementById('callScreenActive').style.display = 'none';
+  document.getElementById('callOverlayBox').classList.add('active');
+
+  playRingtone();
+
+  // Send desktop notification if supported
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification(`📞 ${callData.callerName}`, {
+      body: callData.type === 'video' ? t.incomingVideoCall : t.incomingVoiceCall,
+      icon: callerPhoto
+    });
+  } else if ('Notification' in window && Notification.permission !== 'denied') {
+    Notification.requestPermission();
+  }
+
+  // Listen for caller cancellation
+  listenToCallStatus(callData.id);
+}
+
+function listenToCallStatus(callId) {
+  if (activeCallDocUnsub) activeCallDocUnsub();
+  activeCallDocUnsub = db.collection('devsocial_calls').doc(callId).onSnapshot(doc => {
+    if (!doc.exists) {
+      endActiveCallLocally();
+      return;
+    }
+    const data = doc.data();
+    if (data.status === 'declined' || data.status === 'ended') {
+      const lang = getCommunityLang();
+      const t = I18N[lang] || I18N.en;
+      toast(data.status === 'declined' ? t.callDeclinedToast : t.callEndedToast, 'info');
+      endActiveCallLocally();
+    } else if (data.status === 'accepted' && document.getElementById('callScreenOutgoing').style.display === 'block') {
+      stopRingtone();
+      setupActiveCallUI(data);
+    }
+  });
+}
+
+async function initiateCyberCall(receiverUid, receiverName, receiverPhoto, callType = 'audio') {
+  if (!user) { signInGoogle(); return; }
+  if (activeCallId) return;
+
+  const myUid = user.uid || user.email;
+  const myName = user.displayName || user.email.split('@')[0] || 'User';
+  const myPhoto = user.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
+
+  const lang = getCommunityLang();
+  const t = I18N[lang] || I18N.en;
+
+  // Show outgoing screen
+  document.getElementById('outgoingCalleePhoto').src = receiverPhoto || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(receiverName)}`;
+  document.getElementById('outgoingCalleeName').textContent = receiverName;
+  document.getElementById('outgoingCallStatus').textContent = t.outgoingRinging;
+
+  document.getElementById('callScreenIncoming').style.display = 'none';
+  document.getElementById('callScreenOutgoing').style.display = 'block';
+  document.getElementById('callScreenActive').style.display = 'none';
+  document.getElementById('callOverlayBox').classList.add('active');
+
+  playRingtone();
+
+  try {
+    // Acquire local media
+    activeLocalStream = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: callType === 'video'
+    });
+
+    const localVid = document.getElementById('localVideo');
+    if (localVid) localVid.srcObject = activeLocalStream;
+
+    // Create call in Firestore
+    const callDoc = await db.collection('devsocial_calls').add({
+      callerId: myUid,
+      callerName: myName,
+      callerPhoto: myPhoto,
+      receiverId: receiverUid,
+      receiverName: receiverName,
+      type: callType,
+      status: 'ringing',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    activeCallId = callDoc.id;
+    activeCallData = { id: callDoc.id, type: callType, receiverName, receiverPhoto };
+    listenToCallStatus(callDoc.id);
+
+    // Auto timeout after 45s if unanswered
+    setTimeout(() => {
+      if (activeCallId === callDoc.id && document.getElementById('callScreenOutgoing').style.display === 'block') {
+        cancelOutgoingCall();
+      }
+    }, 45000);
+
+  } catch(e) {
+    console.error("Initiate call error:", e);
+    toast("Microphone/Camera permission required", "error");
+    endActiveCallLocally();
+  }
+}
+
+async function acceptIncomingCall() {
+  stopRingtone();
+  if (!activeCallId || !activeCallData) return;
+
+  try {
+    // Acquire local media
+    activeLocalStream = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: activeCallData.type === 'video'
+    });
+
+    const localVid = document.getElementById('localVideo');
+    if (localVid) localVid.srcObject = activeLocalStream;
+
+    await db.collection('devsocial_calls').doc(activeCallId).update({
+      status: 'accepted'
+    });
+
+    setupActiveCallUI(activeCallData);
+  } catch(e) {
+    console.error("Accept call error:", e);
+    toast("Could not access microphone/camera", "error");
+    rejectIncomingCall();
+  }
+}
+
+function rejectIncomingCall() {
+  stopRingtone();
+  if (activeCallId) {
+    db.collection('devsocial_calls').doc(activeCallId).update({ status: 'declined' }).catch(()=>{});
+  }
+  endActiveCallLocally();
+}
+
+function cancelOutgoingCall() {
+  stopRingtone();
+  if (activeCallId) {
+    db.collection('devsocial_calls').doc(activeCallId).update({ status: 'ended' }).catch(()=>{});
+  }
+  endActiveCallLocally();
+}
+
+function endActiveCall() {
+  if (activeCallId) {
+    db.collection('devsocial_calls').doc(activeCallId).update({ status: 'ended' }).catch(()=>{});
+  }
+  endActiveCallLocally();
+}
+
+function endActiveCallLocally() {
+  stopRingtone();
+  if (activeCallDocUnsub) { activeCallDocUnsub(); activeCallDocUnsub = null; }
+  if (activeCallTimerInterval) { clearInterval(activeCallTimerInterval); activeCallTimerInterval = null; }
+  
+  if (activeLocalStream) {
+    activeLocalStream.getTracks().forEach(track => track.stop());
+    activeLocalStream = null;
+  }
+  if (activePeerConnection) {
+    activePeerConnection.close();
+    activePeerConnection = null;
+  }
+
+  activeCallId = null;
+  activeCallData = null;
+  isMicMuted = false;
+  isCamOff = false;
+
+  document.getElementById('callOverlayBox').classList.remove('active');
+  document.getElementById('callScreenIncoming').style.display = 'none';
+  document.getElementById('callScreenOutgoing').style.display = 'none';
+  document.getElementById('callScreenActive').style.display = 'none';
+}
+
+function setupActiveCallUI(callData) {
+  document.getElementById('callScreenIncoming').style.display = 'none';
+  document.getElementById('callScreenOutgoing').style.display = 'none';
+  document.getElementById('callScreenActive').style.display = 'block';
+
+  const isVideo = callData.type === 'video';
+  document.getElementById('activeVideoStage').style.display = isVideo ? 'block' : 'none';
+  document.getElementById('activeAudioStage').style.display = isVideo ? 'none' : 'block';
+
+  const otherName = (callData.callerId === (user ? user.uid : '')) ? callData.receiverName : callData.callerName;
+  const otherPhoto = (callData.callerId === (user ? user.uid : '')) ? callData.receiverPhoto : callData.callerPhoto;
+
+  document.getElementById('activePeerName').textContent = otherName || 'Connected';
+  document.getElementById('activePeerPhoto').src = otherPhoto || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(otherName || 'User')}`;
+
+  // Start Call Timer
+  activeCallStartTime = Date.now();
+  if (activeCallTimerInterval) clearInterval(activeCallTimerInterval);
+  activeCallTimerInterval = setInterval(() => {
+    const elapsedSec = Math.floor((Date.now() - activeCallStartTime) / 1000);
+    const mins = String(Math.floor(elapsedSec / 60)).padStart(2, '0');
+    const secs = String(elapsedSec % 60).padStart(2, '0');
+    const timerEl = document.getElementById('activeCallTimer');
+    if (timerEl) timerEl.textContent = `${mins}:${secs}`;
+  }, 1000);
+}
+
+function toggleCallMic() {
+  if (!activeLocalStream) return;
+  const audioTrack = activeLocalStream.getAudioTracks()[0];
+  if (audioTrack) {
+    audioTrack.enabled = !audioTrack.enabled;
+    isMicMuted = !audioTrack.enabled;
+    const btn = document.getElementById('btnToggleMic');
+    if (btn) btn.classList.toggle('off', isMicMuted);
+  }
+}
+
+function toggleCallCam() {
+  if (!activeLocalStream) return;
+  const videoTrack = activeLocalStream.getVideoTracks()[0];
+  if (videoTrack) {
+    videoTrack.enabled = !videoTrack.enabled;
+    isCamOff = !videoTrack.enabled;
+    const btn = document.getElementById('btnToggleCam');
+    if (btn) btn.classList.toggle('off', isCamOff);
+  }
+}
+
+// ══════════════════════════════════════════
+// 💬 14. DIRECT MESSAGING (DMs) ENGINE
+// ══════════════════════════════════════════
+
+let activeDmTargetUid = 'GENIUS_AI_BOT';
+let activeDmTargetName = '🤖 GENIUS AI';
+let activeDmTargetPhoto = 'https://api.dicebear.com/7.x/bottts/svg?seed=GENIUS_AI_BOT';
+let dmConvoListenerUnsub = null;
+let currentRunningCodeSnippet = '';
+
+function openDmModal(targetUid, targetName, targetPhoto) {
+  if (!user) { signInGoogle(); return; }
+  document.getElementById('dmModalOverlay').classList.add('open');
+  loadDmConversations();
+
+  if (targetUid) {
+    selectDmUser(targetUid, targetName, targetPhoto);
+  } else {
+    selectDmUser('GENIUS_AI_BOT', '🤖 GENIUS AI', 'https://api.dicebear.com/7.x/bottts/svg?seed=GENIUS_AI_BOT');
+  }
+}
+
+function closeDmModal(e) {
+  if (e && e.target !== document.getElementById('dmModalOverlay') && !e.target.classList.contains('mc')) return;
+  document.getElementById('dmModalOverlay').classList.remove('open');
+  if (dmConvoListenerUnsub) { dmConvoListenerUnsub(); dmConvoListenerUnsub = null; }
+}
+
+function openDmWithUser(targetUid, targetName, targetPhoto) {
+  openDmModal(targetUid, targetName, targetPhoto);
+}
+
+function getDmConvoId(uid1, uid2) {
+  return [uid1, uid2].sort().join('__');
+}
+
+function selectDmUser(uid, name, photo) {
+  activeDmTargetUid = uid;
+  activeDmTargetName = name || 'Member';
+  activeDmTargetPhoto = photo || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(activeDmTargetName)}`;
+
+  document.getElementById('dmActiveName').textContent = activeDmTargetName;
+  document.getElementById('dmActiveAvatar').src = activeDmTargetPhoto;
+
+  const isAi = uid === 'GENIUS_AI_BOT';
+  const callActions = document.getElementById('dmHeaderCallActions');
+  if (callActions) callActions.style.display = isAi ? 'none' : 'flex';
+
+  // Highlight active in list
+  document.querySelectorAll('.dm-convo-item').forEach(el => el.classList.remove('active'));
+
+  // Mobile layout switch
+  document.getElementById('dmSidebar').classList.add('hidden-mobile');
+  document.getElementById('dmMain').classList.remove('hidden-mobile');
+  document.getElementById('btnBackToConvos').style.display = 'inline-flex';
+
+  listenToDmMessages();
+}
+
+function showDmSidebarMobile() {
+  document.getElementById('dmSidebar').classList.remove('hidden-mobile');
+  document.getElementById('dmMain').classList.add('hidden-mobile');
+  document.getElementById('btnBackToConvos').style.display = 'none';
+}
+
+function initiateCallFromDm(type) {
+  if (activeDmTargetUid === 'GENIUS_AI_BOT') return;
+  initiateCyberCall(activeDmTargetUid, activeDmTargetName, activeDmTargetPhoto, type);
+}
+
+async function loadDmConversations() {
+  if (!db || !user) return;
+  const myUid = user.uid || user.email;
+  const listEl = document.getElementById('dmConvosList');
+  if (!listEl) return;
+
+  try {
+    const snap = await db.collection('devsocial_users').limit(20).get();
+    const usersList = [];
+    snap.forEach(doc => {
+      const d = doc.data();
+      if (doc.id !== myUid && doc.id !== user.email) {
+        usersList.push({ uid: doc.id, ...d });
+      }
+    });
+
+    // Render items
+    let html = `
+      <div class="dm-convo-item ${activeDmTargetUid==='GENIUS_AI_BOT'?'active':''}" onclick="selectDmUser('GENIUS_AI_BOT', '🤖 GENIUS AI', 'https://api.dicebear.com/7.x/bottts/svg?seed=GENIUS_AI_BOT')">
+        <div class="dm-avatar-wrap">
+          <img src="https://api.dicebear.com/7.x/bottts/svg?seed=GENIUS_AI_BOT" class="dm-avatar-img" alt="GENIUS AI">
+          <div class="dm-status-dot"></div>
+        </div>
+        <div class="dm-convo-meta">
+          <div class="dm-convo-name" style="color:#c084fc;">🤖 GENIUS AI</div>
+          <div class="dm-convo-last">Always online • Ask or test code</div>
+        </div>
+      </div>
+    `;
+
+    usersList.forEach(u => {
+      const uName = u.displayName || u.email?.split('@')[0] || 'Creator';
+      const uPhoto = u.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(uName)}`;
+      html += `
+        <div class="dm-convo-item ${activeDmTargetUid===u.uid?'active':''}" onclick="selectDmUser('${esc(u.uid)}', '${esc(uName).replace(/'/g, "\\'")}', '${esc(uPhoto)}')">
+          <div class="dm-avatar-wrap">
+            <img src="${esc(uPhoto)}" class="dm-avatar-img" alt="${esc(uName)}">
+            <div class="dm-status-dot"></div>
+          </div>
+          <div class="dm-convo-meta">
+            <div class="dm-convo-name">${esc(uName)}</div>
+            <div class="dm-convo-last">${u.email ? esc(u.email) : 'Member'}</div>
+          </div>
+        </div>
+      `;
+    });
+
+    listEl.innerHTML = html;
+  } catch(e) {
+    console.warn("Load conversations note:", e);
+  }
+}
+
+function listenToDmMessages() {
+  if (dmConvoListenerUnsub) { dmConvoListenerUnsub(); dmConvoListenerUnsub = null; }
+  const area = document.getElementById('dmMessagesArea');
+  if (!area) return;
+
+  const myUid = user ? (user.uid || user.email) : 'guest';
+
+  if (activeDmTargetUid === 'GENIUS_AI_BOT') {
+    // Load local AI conversation
+    renderAiConversation();
+    return;
+  }
+
+  const convoId = getDmConvoId(myUid, activeDmTargetUid);
+  dmConvoListenerUnsub = db.collection('devsocial_dms')
+    .doc(convoId)
+    .collection('messages')
+    .orderBy('createdAt', 'asc')
+    .limit(50)
+    .onSnapshot(snap => {
+      if (snap.empty) {
+        area.innerHTML = `
+          <div style="text-align:center;padding:40px 10px;color:var(--muted);font-size:0.8rem;">
+            🔒 Direct P2P encrypted chat. Send messages, photos, and live 3D HTML code snippets!
+          </div>
+        `;
+        return;
+      }
+      let msgsHtml = '';
+      snap.forEach(doc => {
+        const m = doc.data();
+        const isOutgoing = m.senderId === myUid;
+        msgsHtml += renderDmBubbleHtml(m, isOutgoing, doc.id);
+      });
+      area.innerHTML = msgsHtml;
+      area.scrollTop = area.scrollHeight;
+    });
+}
+
+function renderDmBubbleHtml(m, isOutgoing, msgId) {
+  const time = m.createdAt ? new Date(m.createdAt.toDate ? m.createdAt.toDate() : m.createdAt).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' }) : '';
+  
+  let contentHtml = '';
+  if (m.text) {
+    contentHtml += `<div>${esc(m.text)}</div>`;
+  }
+  if (m.image) {
+    contentHtml += `<img src="${esc(m.image)}" class="dm-photo-preview" onclick="openLb('${esc(m.image)}')">`;
+  }
+  if (m.code) {
+    const safeTitle = esc(m.codeTitle || 'HTML / Three.js Code');
+    contentHtml += `
+      <div class="dm-code-box">
+        <div class="dm-code-header">
+          <span style="font-size:0.75rem;color:#c084fc;font-weight:700;">💻 ${safeTitle}</span>
+          <div class="dm-code-btns">
+            <button class="dm-code-btn" onclick="explainDmCodeWithAI('${esc(m.code).replace(/'/g, "\\'")}', 'ai-exp-${msgId}')">🪄 AI</button>
+            <button class="dm-code-btn" onclick="copyDmSnippet('${esc(m.code).replace(/'/g, "\\'")}')">📋 Copy</button>
+            <button class="dm-code-btn run" onclick="openCodeRunnerModal('${esc(m.code).replace(/'/g, "\\'")}', '${safeTitle}')">▶️ Run 3D</button>
+          </div>
+        </div>
+        <pre class="dm-code-pre"><code>${esc(m.code.slice(0, 300))}${m.code.length > 300 ? '\n... (Click Run 3D to see full)' : ''}</code></pre>
+        <div id="ai-exp-${msgId}" style="display:none;padding:8px 12px;background:rgba(124,58,237,0.1);font-size:0.75rem;color:#e9d5ff;border-top:1px solid rgba(124,58,237,0.2);"></div>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="dm-msg ${isOutgoing ? 'outgoing' : 'incoming'}">
+      <div class="dm-bubble">
+        ${contentHtml}
+      </div>
+      <div class="dm-msg-time">${time}</div>
+    </div>
+  `;
+}
+
+// AI Bot Local Conversation
+let localAiMessages = [
+  { isAi: true, text: "Hello! I am GENIUS AI Copilot 🤖. You can chat with me, ask for 3D Three.js code, or test interactive HTML5 widgets anytime!" }
+];
+
+function renderAiConversation() {
+  const area = document.getElementById('dmMessagesArea');
+  if (!area) return;
+  let html = '';
+  localAiMessages.forEach((m, idx) => {
+    html += `
+      <div class="dm-msg ${m.isAi ? 'incoming' : 'outgoing'}">
+        <div class="dm-bubble">
+          ${m.text ? `<div>${esc(m.text)}</div>` : ''}
+          ${m.code ? `
+            <div class="dm-code-box">
+              <div class="dm-code-header">
+                <span style="font-size:0.75rem;color:#c084fc;font-weight:700;">💻 ${esc(m.codeTitle||'3D WebGL')}</span>
+                <div class="dm-code-btns">
+                  <button class="dm-code-btn run" onclick="openCodeRunnerModal('${esc(m.code).replace(/'/g, "\\'")}', '${esc(m.codeTitle||'3D WebGL')}')">▶️ Run 3D</button>
+                </div>
+              </div>
+              <pre class="dm-code-pre"><code>${esc(m.code)}</code></pre>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  });
+  area.innerHTML = html;
+  area.scrollTop = area.scrollHeight;
+}
+
+async function sendDmText() {
+  if (!user) { signInGoogle(); return; }
+  const input = document.getElementById('dmTextInput');
+  if (!input) return;
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  input.style.height = 'auto';
+
+  if (activeDmTargetUid === 'GENIUS_AI_BOT') {
+    localAiMessages.push({ isAi: false, text });
+    renderAiConversation();
+
+    // AI Response Simulation
+    setTimeout(() => {
+      let aiReply = "That's awesome! Let me generate a dynamic 3D snippet for that.";
+      let aiCode = null;
+      let aiTitle = "Interactive 3D WebGL";
+
+      if (text.toLowerCase().includes('cube') || text.toLowerCase().includes('box')) {
+        aiReply = "Here is an interactive rotating 3D Cyber Cube in Three.js!";
+        aiTitle = "3D Cyber Cube";
+        aiCode = `<!DOCTYPE html><html><head><style>body{margin:0;overflow:hidden;background:#030712;}</style><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script></head><body><script>const scene=new THREE.Scene();const camera=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setSize(window.innerWidth,window.innerHeight);document.body.appendChild(renderer.domElement);const geometry=new THREE.BoxGeometry(2,2,2);const material=new THREE.MeshNormalMaterial({wireframe:false});const cube=new THREE.Mesh(geometry,material);scene.add(cube);camera.position.z=5;function animate(){requestAnimationFrame(animate);cube.rotation.x+=0.01;cube.rotation.y+=0.015;renderer.render(scene,camera);}animate();window.onresize=()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight);};<\/script></body></html>`;
+      } else {
+        aiReply = `I understand! How can I assist your coding today on IA Code Studio? You can ask for Three.js shaders, 3D particles, or WebGL widgets.`;
+      }
+
+      localAiMessages.push({ isAi: true, text: aiReply, code: aiCode, codeTitle: aiTitle });
+      renderAiConversation();
+    }, 600);
+    return;
+  }
+
+  const myUid = user.uid || user.email;
+  const myName = user.displayName || user.email.split('@')[0] || 'User';
+  const convoId = getDmConvoId(myUid, activeDmTargetUid);
+
+  try {
+    await db.collection('devsocial_dms').doc(convoId).collection('messages').add({
+      senderId: myUid,
+      senderName: myName,
+      text: text,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+  } catch(e) {
+    console.error("Send DM error:", e);
+    toast("Failed to send message", "error");
+  }
+}
+
+// Photo Upload Compression (Client-side HTML5 Canvas)
+function triggerDmPhotoUpload() {
+  const fileInput = document.getElementById('dmPhotoFileInput');
+  if (fileInput) fileInput.click();
+}
+
+function handleDmPhotoSelect(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    const img = new Image();
+    img.onload = async function() {
+      // Compress to max 800px width/height and 75% quality
+      const maxDim = 800;
+      let w = img.width;
+      let h = img.height;
+      if (w > maxDim || h > maxDim) {
+        if (w > h) { h = (h / w) * maxDim; w = maxDim; }
+        else { w = (w / h) * maxDim; h = maxDim; }
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+
+      const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.75);
+
+      if (activeDmTargetUid === 'GENIUS_AI_BOT') {
+        localAiMessages.push({ isAi: false, image: compressedDataUrl, text: "Shared photo" });
+        renderAiConversation();
+        return;
+      }
+
+      const myUid = user.uid || user.email;
+      const myName = user.displayName || user.email.split('@')[0] || 'User';
+      const convoId = getDmConvoId(myUid, activeDmTargetUid);
+
+      try {
+        await db.collection('devsocial_dms').doc(convoId).collection('messages').add({
+          senderId: myUid,
+          senderName: myName,
+          image: compressedDataUrl,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        const lang = getCommunityLang();
+        const t = I18N[lang] || I18N.en;
+        toast(t.photoSentToast, 'success');
+      } catch(err) {
+        console.error("Send photo error:", err);
+      }
+    };
+    img.src = evt.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// Code Snippet Modals
+function openDmCodeModal() {
+  document.getElementById('dmCodeModal').classList.add('open');
+}
+
+function closeDmCodeModal(e) {
+  if (e && e.target !== document.getElementById('dmCodeModal') && !e.target.classList.contains('mc')) return;
+  document.getElementById('dmCodeModal').classList.remove('open');
+}
+
+async function confirmSendDmCode() {
+  const title = document.getElementById('dmCodeSnippetTitle').value.trim() || 'HTML / Three.js Code';
+  const code = document.getElementById('dmCodeSnippetContent').value.trim();
+  if (!code) { toast("Please paste code content", "warning"); return; }
+
+  closeDmCodeModal();
+  document.getElementById('dmCodeSnippetContent').value = '';
+  document.getElementById('dmCodeSnippetTitle').value = '';
+
+  if (activeDmTargetUid === 'GENIUS_AI_BOT') {
+    localAiMessages.push({ isAi: false, code, codeTitle: title });
+    renderAiConversation();
+    return;
+  }
+
+  const myUid = user.uid || user.email;
+  const myName = user.displayName || user.email.split('@')[0] || 'User';
+  const convoId = getDmConvoId(myUid, activeDmTargetUid);
+
+  try {
+    await db.collection('devsocial_dms').doc(convoId).collection('messages').add({
+      senderId: myUid,
+      senderName: myName,
+      code: code,
+      codeTitle: title,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    const lang = getCommunityLang();
+    const t = I18N[lang] || I18N.en;
+    toast(t.codeSentToast, 'success');
+  } catch(e) {
+    console.error("Send code error:", e);
+  }
+}
+
+function copyDmSnippet(code) {
+  navigator.clipboard.writeText(code).then(() => {
+    toast("Code copied to clipboard! 📋", "success");
+  }).catch(() => toast("Failed to copy", "error"));
+}
+
+function explainDmCodeWithAI(code, targetElementId) {
+  const el = document.getElementById(targetElementId);
+  if (!el) return;
+  el.style.display = 'block';
+  el.innerHTML = `🪄 <strong>AI Explainer:</strong> This snippet initializes a WebGL Three.js canvas with hardware-accelerated 60 FPS animation and responsive orbital viewport logic.`;
+}
+
+// 1-Click Standalone Code Runner
+function openCodeRunnerModal(code, title) {
+  currentRunningCodeSnippet = code;
+  document.getElementById('codeRunnerTitle').textContent = `▶️ ${title || 'Live 3D Preview'}`;
+  const frame = document.getElementById('codeRunnerFrame');
+  if (frame) frame.srcdoc = code;
+  document.getElementById('codeRunnerOverlay').classList.add('open');
+}
+
+function closeCodeRunnerModal(e) {
+  if (e && e.target !== document.getElementById('codeRunnerOverlay') && !e.target.classList.contains('mc')) return;
+  document.getElementById('codeRunnerOverlay').classList.remove('open');
+  const frame = document.getElementById('codeRunnerFrame');
+  if (frame) frame.srcdoc = '';
+}
+
+function copyRunningCode() {
+  if (!currentRunningCodeSnippet) return;
+  navigator.clipboard.writeText(currentRunningCodeSnippet).then(() => {
+    toast("Code copied to clipboard! 📋", "success");
+  });
+}
+
+function filterDmConversations() {
+  const q = (document.getElementById('dmSearchInput').value || '').toLowerCase();
+  document.querySelectorAll('.dm-convo-item').forEach(el => {
+    const name = el.textContent.toLowerCase();
+    el.style.display = name.includes(q) ? 'flex' : 'none';
+  });
+}
+
 // Initialize on page load
 window.addEventListener('DOMContentLoaded', () => {
   const initialLang = getCommunityLang();
@@ -6328,6 +7911,9 @@ document.addEventListener('keydown', e => {
     closeBoostModal();
     closeChestModal();
     closeSocialCardModal();
+    closeDmModal();
+    closeDmCodeModal();
+    closeCodeRunnerModal();
   } 
 });
 </script>
