@@ -261,6 +261,11 @@
       color: #fff;
     }
     .share-net-btn.whatsapp:hover { background: #25D366; border-color: #25D366; color: #fff; }
+    .share-net-btn.facebook:hover { background: #1877F2; border-color: #1877F2; color: #fff; }
+    .share-net-btn.instagram:hover { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); border-color: #dc2743; color: #fff; }
+    .share-net-btn.tiktok:hover { background: #000; border-color: #00f2fe; color: #fff; box-shadow: -2px -2px 0 #fe2d55, 2px 2px 0 #00f2fe; }
+    .share-net-btn.youtube:hover { background: #FF0000; border-color: #FF0000; color: #fff; }
+    .share-net-btn.pinterest:hover { background: #E60023; border-color: #E60023; color: #fff; }
     .share-net-btn.twitter:hover { background: #1DA1F2; border-color: #1DA1F2; color: #fff; }
     .share-net-btn.telegram:hover { background: #0088cc; border-color: #0088cc; color: #fff; }
     .share-net-btn.linkedin:hover { background: #0A66C2; border-color: #0A66C2; color: #fff; }
@@ -2716,7 +2721,7 @@
     <!-- 🔗 RICH SOCIAL SHARE MODAL          -->
     <!-- ═══════════════════════════════════ -->
     <div id="sharePostModal" style="display:none;position:fixed;inset:0;z-index:9995;background:rgba(3,7,18,0.85);backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:16px;">
-      <div style="background:var(--bg2);border:1px solid rgba(124,58,237,0.4);box-shadow:0 0 35px rgba(124,58,237,0.25);border-radius:20px;padding:24px;width:100%;max-width:480px;position:relative;">
+      <div style="background:var(--bg2);border:1px solid rgba(124,58,237,0.4);box-shadow:0 0 35px rgba(124,58,237,0.25);border-radius:20px;padding:24px;width:100%;max-width:540px;position:relative;">
         <button onclick="closeShareModal()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.06);border:1px solid var(--border2);color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;">✕</button>
         
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
@@ -2727,10 +2732,25 @@
           </div>
         </div>
 
-        <!-- 1-Click Social Networks Grid -->
-        <div class="share-networks-grid">
+        <!-- 1-Click Social Networks Grid (11 Platforms) -->
+        <div class="share-networks-grid" style="grid-template-columns:repeat(auto-fill, minmax(115px, 1fr));gap:8px;max-height:55vh;overflow-y:auto;padding-right:2px;">
           <a id="shareBtnWhatsapp" target="_blank" class="share-net-btn whatsapp">
             <span style="font-size:1.1rem;">💬</span> WhatsApp
+          </a>
+          <a id="shareBtnFacebook" target="_blank" class="share-net-btn facebook">
+            <span style="font-size:1.1rem;">🔵</span> Facebook
+          </a>
+          <a id="shareBtnInstagram" onclick="shareToInstagram()" class="share-net-btn instagram">
+            <span style="font-size:1.1rem;">📸</span> Instagram
+          </a>
+          <a id="shareBtnTiktok" onclick="shareToTiktok()" class="share-net-btn tiktok">
+            <span style="font-size:1.1rem;">🎵</span> TikTok
+          </a>
+          <a id="shareBtnYoutube" onclick="shareToYoutube()" class="share-net-btn youtube">
+            <span style="font-size:1.1rem;">🔴</span> YouTube
+          </a>
+          <a id="shareBtnPinterest" target="_blank" class="share-net-btn pinterest">
+            <span style="font-size:1.1rem;">📌</span> Pinterest
           </a>
           <a id="shareBtnTwitter" target="_blank" class="share-net-btn twitter">
             <span style="font-size:1.1rem;">✖️</span> X (Twitter)
@@ -2764,33 +2784,37 @@
     </div>
 
     <!-- ═══════════════════════════════════ -->
-    <!-- 📱 iOS PWA INSTALL GUIDE MODAL      -->
+    <!-- 📱 UNIVERSAL PWA APP INSTALL MODAL  -->
     <!-- ═══════════════════════════════════ -->
-    <div id="pwaIosModal" style="display:none;position:fixed;inset:0;z-index:9996;background:rgba(3,7,18,0.88);backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:16px;">
-      <div style="background:var(--bg2);border:1px solid rgba(16,185,129,0.4);box-shadow:0 0 35px rgba(16,185,129,0.25);border-radius:20px;padding:26px;width:100%;max-width:440px;position:relative;text-align:center;">
-        <button onclick="closePwaIosModal()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.06);border:1px solid var(--border2);color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;">✕</button>
+    <div id="pwaInstallModal" style="display:none;position:fixed;inset:0;z-index:9996;background:rgba(3,7,18,0.88);backdrop-filter:blur(14px);align-items:center;justify-content:center;padding:16px;">
+      <div style="background:var(--bg2);border:1px solid rgba(16,185,129,0.45);box-shadow:0 0 45px rgba(16,185,129,0.25);border-radius:22px;padding:26px;width:100%;max-width:460px;position:relative;text-align:center;">
+        <button onclick="closePwaInstallModal()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.06);border:1px solid var(--border2);color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:0.95rem;display:flex;align-items:center;justify-content:center;">✕</button>
         
-        <img src="../logo-ia-codestudio.png" style="width:64px;height:64px;border-radius:16px;box-shadow:0 0 20px rgba(124,58,237,0.4);margin-bottom:14px;" alt="IA Code Studio">
-        <h3 style="font-family:'Outfit',sans-serif;font-size:1.2rem;color:#fff;margin-bottom:6px;">Install on iPhone & iPad</h3>
-        <p style="color:var(--muted);font-size:0.85rem;margin-bottom:18px;">Install IA Code Studio to your Home Screen for instant full-screen 60FPS WebGL & offline access!</p>
+        <img src="../logo-ia-codestudio.png" style="width:70px;height:70px;border-radius:18px;box-shadow:0 0 25px rgba(124,58,237,0.5);margin-bottom:12px;" alt="IA Code Studio">
+        <h3 style="font-family:'Outfit',sans-serif;font-size:1.25rem;color:#fff;margin-bottom:4px;">Install IA Code Studio</h3>
+        <p style="color:var(--muted);font-size:0.85rem;margin-bottom:14px;">Instant full-screen 60FPS 3D WebGL, faster load times & offline access!</p>
 
-        <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:14px;padding:14px;text-align:left;font-size:0.85rem;line-height:1.6;color:var(--text);margin-bottom:18px;">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-            <span style="background:rgba(124,58,237,0.2);color:#c084fc;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;">1</span>
-            <span>Tap the <strong>Share button [⎋]</strong> at the bottom of Safari.</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-            <span style="background:rgba(124,58,237,0.2);color:#c084fc;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;">2</span>
-            <span>Scroll down and tap <strong>"Add to Home Screen" ➕</strong>.</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <span style="background:rgba(124,58,237,0.2);color:#c084fc;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;">3</span>
-            <span>Tap <strong>"Add"</strong> in top right. You're all set! 🚀</span>
+        <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.35);padding:5px 12px;border-radius:20px;color:#fcd34d;font-weight:700;font-size:0.82rem;margin-bottom:16px;">
+          🎁 Earn <strong>+20 GENIUS IA Coins</strong> upon install!
+        </div>
+
+        <!-- 1-Click Native Trigger Button -->
+        <button id="btnPwaDirectInstallTrigger" onclick="triggerPwaDirectPrompt()" style="width:100%;padding:13px;border-radius:12px;background:linear-gradient(135deg,#10b981,#059669);border:none;color:#fff;font-weight:800;font-size:0.95rem;cursor:pointer;font-family:'Outfit',sans-serif;box-shadow:0 0 20px rgba(16,185,129,0.35);margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:8px;">
+          <span>📲</span> <span>Install App Now</span>
+        </button>
+
+        <!-- Device-specific step-by-step instructions -->
+        <div id="pwaDeviceInstructions" style="background:var(--bg3);border:1px solid var(--border2);border-radius:14px;padding:14px;text-align:left;font-size:0.84rem;line-height:1.55;color:var(--text);">
+          <div style="font-weight:700;color:#38bdf8;margin-bottom:8px;font-size:0.85rem;" id="pwaInstructionsTitle">📱 How to install on your device:</div>
+          <div id="pwaInstructionsBody">
+            <div style="margin-bottom:8px;">1. Tap the browser menu button <strong>[⋮]</strong> (top right).</div>
+            <div style="margin-bottom:8px;">2. Tap <strong>"Install app"</strong> or <strong>"Add to Home screen" 📲</strong>.</div>
+            <div>3. Open from your home screen for full-screen 3D! 🚀</div>
           </div>
         </div>
 
-        <button onclick="closePwaIosModal()" style="width:100%;padding:11px;border-radius:12px;background:linear-gradient(135deg,#10b981,#059669);border:none;color:#fff;font-weight:700;font-size:0.9rem;cursor:pointer;font-family:'Outfit',sans-serif;">
-          Got it! 👍
+        <button onclick="closePwaInstallModal()" style="width:100%;margin-top:14px;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid var(--border2);color:var(--muted);font-weight:600;font-size:0.85rem;cursor:pointer;">
+          Close
         </button>
       </div>
     </div>
@@ -4792,6 +4816,12 @@ function sharePost(id) {
   const waBtn = document.getElementById('shareBtnWhatsapp');
   if (waBtn) waBtn.href = `https://api.whatsapp.com/send?text=${title}%20${encodedUrl}`;
 
+  const fbBtn = document.getElementById('shareBtnFacebook');
+  if (fbBtn) fbBtn.href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+
+  const pinBtn = document.getElementById('shareBtnPinterest');
+  if (pinBtn) pinBtn.href = `https://pinterest.com/pin/create/button/?url=${encodedUrl}&description=${title}`;
+
   const twBtn = document.getElementById('shareBtnTwitter');
   if (twBtn) twBtn.href = `https://twitter.com/intent/tweet?text=${title}&url=${encodedUrl}&hashtags=ThreeJS,WebGL,AICodeStudio,JavaScript`;
 
@@ -4812,6 +4842,36 @@ function sharePost(id) {
   } else {
     navigator.clipboard.writeText(directUrl).then(() => toast('Project link copied! 🔗', 'success'));
   }
+}
+
+function shareToInstagram() {
+  const directUrl = `${window.location.origin}${window.location.pathname}?post=${currentSharePostId || ''}`;
+  navigator.clipboard.writeText(directUrl).then(() => {
+    toast('📸 Link copied! Opening Instagram so you can paste it in your Story / Bio ✨', 'success');
+    setTimeout(() => {
+      window.open('https://www.instagram.com/', '_blank');
+    }, 800);
+  });
+}
+
+function shareToTiktok() {
+  const directUrl = `${window.location.origin}${window.location.pathname}?post=${currentSharePostId || ''}`;
+  navigator.clipboard.writeText(`Check out my 3D creation on IA Code Studio! 👉 ${directUrl} #threejs #webgl #coding #iacodestudio`).then(() => {
+    toast('🎵 Link & hashtags copied for TikTok! Opening TikTok 🚀', 'success');
+    setTimeout(() => {
+      window.open('https://www.tiktok.com/', '_blank');
+    }, 800);
+  });
+}
+
+function shareToYoutube() {
+  const directUrl = `${window.location.origin}${window.location.pathname}?post=${currentSharePostId || ''}`;
+  navigator.clipboard.writeText(`Interactive 3D WebGL Demo: ${directUrl} (Made with IA Code Studio)`).then(() => {
+    toast('🔴 Link copied for YouTube video / Shorts description! Opening YouTube 🎥', 'success');
+    setTimeout(() => {
+      window.open('https://studio.youtube.com/', '_blank');
+    }, 800);
+  });
 }
 
 function closeShareModal() {
@@ -4862,7 +4922,7 @@ function checkUrlPostHighlight() {
 }
 
 // ══════════════════════════════════════════
-// 📱 PWA INSTALLATION ENGINE
+// 📱 UNIVERSAL PWA APP INSTALLATION ENGINE
 // ══════════════════════════════════════════
 let deferredPwaPrompt = null;
 
@@ -4886,34 +4946,66 @@ window.addEventListener('appinstalled', () => {
 
 function handlePwaInstallClick() {
   const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const isAndroid = /Android/.test(navigator.userAgent);
+  
+  const modal = document.getElementById('pwaInstallModal');
+  const instrTitle = document.getElementById('pwaInstructionsTitle');
+  const instrBody = document.getElementById('pwaInstructionsBody');
 
   if (isIos) {
-    // Show iOS step-by-step installation guide
-    const iosModal = document.getElementById('pwaIosModal');
-    if (iosModal) {
-      iosModal.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
+    if (instrTitle) instrTitle.textContent = '🍏 How to install on iPhone & iPad:';
+    if (instrBody) {
+      instrBody.innerHTML = `
+        <div style="margin-bottom:8px;">1. Tap the <strong>Share button [⎋]</strong> at the bottom of Safari.</div>
+        <div style="margin-bottom:8px;">2. Scroll down and tap <strong>"Add to Home Screen" ➕</strong>.</div>
+        <div>3. Tap <strong>"Add"</strong> in top right. You're all set! 🚀</div>
+      `;
     }
-    return;
+  } else if (isAndroid) {
+    if (instrTitle) instrTitle.textContent = '📱 How to install on Android:';
+    if (instrBody) {
+      instrBody.innerHTML = `
+        <div style="margin-bottom:8px;">1. Click the green <strong>"Install App Now"</strong> button above.</div>
+        <div style="margin-bottom:8px;">2. Or tap the browser menu <strong>[⋮]</strong> in top right.</div>
+        <div style="margin-bottom:8px;">3. Tap <strong>"Install app"</strong> (or <strong>"Add to Home screen"</strong>) 📲.</div>
+        <div>4. Launch IA Code Studio directly from your home screen! 🚀</div>
+      `;
+    }
+  } else {
+    if (instrTitle) instrTitle.textContent = '💻 How to install on PC / Mac:';
+    if (instrBody) {
+      instrBody.innerHTML = `
+        <div style="margin-bottom:8px;">1. Click the green <strong>"Install App Now"</strong> button above.</div>
+        <div style="margin-bottom:8px;">2. Or click the <strong>Install icon (⊕)</strong> in the top right of your browser's address bar.</div>
+        <div>3. Enjoy instant full-screen 3D desktop studio! 🚀</div>
+      `;
+    }
   }
 
+  if (modal) {
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function triggerPwaDirectPrompt() {
   if (deferredPwaPrompt) {
     deferredPwaPrompt.prompt();
     deferredPwaPrompt.userChoice.then((choiceResult) => {
       if (choiceResult.outcome === 'accepted') {
         toast('🎉 Installing IA Code Studio App...', 'success');
+        closePwaInstallModal();
       }
       deferredPwaPrompt = null;
     });
   } else {
-    // Already installed or browser doesn't support deferred prompt
-    toast('📱 App is ready! On Android tap [⋮] -> "Install App", on iOS tap Share [⎋] -> "Add to Home Screen".', 'info');
+    toast('👉 Follow the simple steps shown below to add to your Home Screen!', 'info');
   }
 }
 
-function closePwaIosModal() {
-  const iosModal = document.getElementById('pwaIosModal');
-  if (iosModal) iosModal.style.display = 'none';
+function closePwaInstallModal() {
+  const modal = document.getElementById('pwaInstallModal');
+  if (modal) modal.style.display = 'none';
   document.body.style.overflow = '';
 }
 
@@ -9879,7 +9971,7 @@ document.addEventListener('keydown', e => {
     closeAddStoryModal();
     closeAiRemixModal();
     closeShareModal();
-    closePwaIosModal();
+    closePwaInstallModal();
   } 
 });
 </script>
