@@ -7314,14 +7314,16 @@ function normalizeUserId(idOrUser) {
   return getCanonicalUid(idOrUser).toLowerCase();
 }
 
-// WebRTC Configuration with multiple Google STUN servers
+// WebRTC Configuration: STUN + free public TURN relay for NAT traversal
 const rtcConfig = {
   iceServers: [
     { urls: 'stun:stun.l.google.com:19302' },
     { urls: 'stun:stun1.l.google.com:19302' },
     { urls: 'stun:stun2.l.google.com:19302' },
-    { urls: 'stun:stun3.l.google.com:19302' },
-    { urls: 'stun:stun4.l.google.com:19302' }
+    // Free TURN relay — needed when both sides are behind strict NAT
+    { urls: 'turn:openrelay.metered.ca:80',    username: 'openrelayproject', credential: 'openrelayproject' },
+    { urls: 'turn:openrelay.metered.ca:443',   username: 'openrelayproject', credential: 'openrelayproject' },
+    { urls: 'turn:openrelay.metered.ca:443?transport=tcp', username: 'openrelayproject', credential: 'openrelayproject' }
   ]
 };
 
@@ -7335,6 +7337,9 @@ let callListenerUnsubs = [];
 let activeCallDocUnsub = null;
 let isMicMuted = false;
 let isCamOff = false;
+let isCallCaller = false;             // true = I am the caller, false = I am the callee
+let processedCallerCandidates = 0;   // track how many caller ICE candidates already processed
+let processedCalleeCandidates = 0;   // track how many callee ICE candidates already processed
 
 function initCallListener(currentUser) {
   if (!db || !currentUser) return;
@@ -7372,6 +7377,7 @@ function handleIncomingCallNotification(callData) {
   if (activeCallId) return; // already in call
   activeCallId = callData.id;
   activeCallData = callData;
+  isCallCaller = false;
 
   const lang = getCommunityLang();
   const t = I18N[lang] || I18N.en;
@@ -7402,12 +7408,16 @@ function handleIncomingCallNotification(callData) {
 
 function listenToCallStatus(callId) {
   if (activeCallDocUnsub) activeCallDocUnsub();
+  processedCallerCandidates = 0;
+  processedCalleeCandidates = 0;
+
   activeCallDocUnsub = db.collection('devsocial_posts').doc(callId).onSnapshot(async doc => {
     if (!doc.exists) {
       endActiveCallLocally();
       return;
     }
     const data = doc.data();
+
     if (data.status === 'declined' || data.status === 'ended') {
       const lang = getCommunityLang();
       const t = I18N[lang] || I18N.en;
@@ -7416,35 +7426,42 @@ function listenToCallStatus(callId) {
       return;
     }
 
-    // Caller receives SDP answer from callee
-    if (data.status === 'accepted' && data.answer && activePeerConnection) {
-      stopRingtone();
-      if (activePeerConnection.signalingState === 'have-local-offer') {
-        try {
-          await activePeerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
-        } catch(err) {
-          console.warn("Set remote answer note:", err);
+    if (!activePeerConnection) return;
+
+    // ── CALLER side: receive callee's answer + callee's ICE candidates ──
+    if (isCallCaller) {
+      // Set remote description once answer arrives
+      if (data.status === 'accepted' && data.answer) {
+        stopRingtone();
+        if (activePeerConnection.signalingState === 'have-local-offer') {
+          try {
+            await activePeerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
+            console.log('✅ Caller: remote answer set');
+          } catch(err) { console.warn('Caller setRemoteDescription:', err); }
         }
+        setupActiveCallUI(data);
       }
-      setupActiveCallUI(data);
+      // Add only NEW callee ICE candidates (deduplicate by index)
+      const calleeCands = data.calleeCandidates || [];
+      const newCallee = calleeCands.slice(processedCalleeCandidates);
+      newCallee.forEach(cand => {
+        if (activePeerConnection.remoteDescription) {
+          activePeerConnection.addIceCandidate(new RTCIceCandidate(cand)).catch(() => {});
+        }
+      });
+      processedCalleeCandidates += newCallee.length;
     }
 
-    // Process callee ICE candidates
-    if (activePeerConnection && data.calleeCandidates && Array.isArray(data.calleeCandidates)) {
-      data.calleeCandidates.forEach(cand => {
-        try {
-          activePeerConnection.addIceCandidate(new RTCIceCandidate(cand)).catch(()=>{});
-        } catch(e) {}
+    // ── CALLEE side: receive caller's ICE candidates ──
+    if (!isCallCaller) {
+      const callerCands = data.callerCandidates || [];
+      const newCaller = callerCands.slice(processedCallerCandidates);
+      newCaller.forEach(cand => {
+        if (activePeerConnection.remoteDescription) {
+          activePeerConnection.addIceCandidate(new RTCIceCandidate(cand)).catch(() => {});
+        }
       });
-    }
-
-    // Process caller ICE candidates
-    if (activePeerConnection && data.callerCandidates && Array.isArray(data.callerCandidates)) {
-      data.callerCandidates.forEach(cand => {
-        try {
-          activePeerConnection.addIceCandidate(new RTCIceCandidate(cand)).catch(()=>{});
-        } catch(e) {}
-      });
+      processedCallerCandidates += newCaller.length;
     }
   });
 }
@@ -7498,6 +7515,9 @@ async function initiateCyberCall(receiverUid, receiverName, receiverPhoto, callT
   const myName = user.displayName || user.email?.split('@')[0] || 'User';
   const myPhoto = user.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
   const isVideo = (callType === 'video');
+  isCallCaller = true;
+  processedCallerCandidates = 0;
+  processedCalleeCandidates = 0;
 
   const lang = getCommunityLang();
   const t = I18N[lang] || I18N.en;
@@ -7563,24 +7583,31 @@ async function initiateCyberCall(receiverUid, receiverName, receiverPhoto, callT
     activePeerConnection = new RTCPeerConnection(rtcConfig);
 
     if (activeLocalStream) {
-      activeLocalStream.getTracks().forEach(track => {
-        activePeerConnection.addTrack(track, activeLocalStream);
-      });
+      activeLocalStream.getTracks().forEach(track => activePeerConnection.addTrack(track, activeLocalStream));
     }
 
-    activePeerConnection.ontrack = (event) => {
-      attachStreamToMediaElements(event.streams[0], isVideo);
+    // When we receive remote audio/video → play it
+    activePeerConnection.ontrack = evt => {
+      console.log('✅ Caller ontrack:', evt.streams[0]);
+      attachStreamToMediaElements(evt.streams[0], isVideo);
     };
 
-    activePeerConnection.onicecandidate = (event) => {
-      if (event.candidate && activeCallId) {
-        db.collection('devsocial_posts').doc(activeCallId).update({
-          callerCandidates: firebase.firestore.FieldValue.arrayUnion(event.candidate.toJSON())
-        }).catch(()=>{});
+    // Buffer ICE candidates that arrive before Firestore doc is created
+    const pendingCallerCandidates = [];
+    let callDocId = null;
+    activePeerConnection.onicecandidate = evt => {
+      if (!evt.candidate) return;
+      if (callDocId) {
+        db.collection('devsocial_posts').doc(callDocId).update({
+          callerCandidates: firebase.firestore.FieldValue.arrayUnion(evt.candidate.toJSON())
+        }).catch(() => {});
+      } else {
+        pendingCallerCandidates.push(evt.candidate.toJSON());
       }
     };
 
-    const offer = await activePeerConnection.createOffer();
+    // Create SDP offer explicitly requesting audio (+ video if needed)
+    const offer = await activePeerConnection.createOffer({ offerToReceiveAudio: true, offerToReceiveVideo: isVideo });
     await activePeerConnection.setLocalDescription(offer);
 
     const callDoc = await db.collection('devsocial_posts').add({
@@ -7600,8 +7627,17 @@ async function initiateCyberCall(receiverUid, receiverName, receiverPhoto, callT
       createdAt: Date.now()
     });
 
+    callDocId = callDoc.id;
     activeCallId = callDoc.id;
-    activeCallData = { id: callDoc.id, callType: callType, receiverName, receiverPhoto, callerUid: myUid };
+    activeCallData = { id: callDoc.id, callType, receiverName, receiverPhoto, callerUid: myUid };
+
+    // Flush buffered ICE candidates that arrived before doc was ready
+    if (pendingCallerCandidates.length > 0) {
+      db.collection('devsocial_posts').doc(callDocId).update({
+        callerCandidates: firebase.firestore.FieldValue.arrayUnion(...pendingCallerCandidates)
+      }).catch(() => {});
+    }
+
     listenToCallStatus(callDoc.id);
 
     setTimeout(() => {
@@ -7622,19 +7658,18 @@ async function acceptIncomingCall() {
   if (!activeCallId || !activeCallData) return;
 
   const isVideo = (activeCallData.callType === 'video');
+  isCallCaller = false;
   acquireCallWakeLock();
 
+  // Get microphone
   try {
     activeLocalStream = await navigator.mediaDevices.getUserMedia({
       audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
       video: isVideo ? { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: 'user' } : false
     });
   } catch(mediaErr) {
-    try {
-      activeLocalStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    } catch(audioErr) {
-      console.warn("Could not get mic/cam:", audioErr);
-    }
+    try { activeLocalStream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+    catch(e) { console.warn("Mic unavailable:", e); }
   }
 
   const localVid = document.getElementById('localVideo');
@@ -7643,43 +7678,52 @@ async function acceptIncomingCall() {
   try {
     activePeerConnection = new RTCPeerConnection(rtcConfig);
 
+    // Add our local audio tracks so caller can hear us
     if (activeLocalStream) {
-      activeLocalStream.getTracks().forEach(track => {
-        activePeerConnection.addTrack(track, activeLocalStream);
-      });
+      activeLocalStream.getTracks().forEach(track => activePeerConnection.addTrack(track, activeLocalStream));
     }
 
-    activePeerConnection.ontrack = (event) => {
-      attachStreamToMediaElements(event.streams[0], isVideo);
+    // When we receive caller's audio/video → play it
+    activePeerConnection.ontrack = evt => {
+      console.log('✅ Callee ontrack:', evt.streams[0]);
+      attachStreamToMediaElements(evt.streams[0], isVideo);
     };
 
-    activePeerConnection.onicecandidate = (event) => {
-      if (event.candidate && activeCallId) {
-        db.collection('devsocial_posts').doc(activeCallId).update({
-          calleeCandidates: firebase.firestore.FieldValue.arrayUnion(event.candidate.toJSON())
-        }).catch(()=>{});
-      }
+    // Send our ICE candidates (calleeCandidates) to Firestore
+    activePeerConnection.onicecandidate = evt => {
+      if (!evt.candidate || !activeCallId) return;
+      db.collection('devsocial_posts').doc(activeCallId).update({
+        calleeCandidates: firebase.firestore.FieldValue.arrayUnion(evt.candidate.toJSON())
+      }).catch(() => {});
     };
 
-    if (activeCallData.offer) {
-      await activePeerConnection.setRemoteDescription(new RTCSessionDescription(activeCallData.offer));
+    // Always fetch fresh call doc — activeCallData may be stale (set at ring time)
+    const callSnap = await db.collection('devsocial_posts').doc(activeCallId).get();
+    const freshData = callSnap.exists ? callSnap.data() : activeCallData;
+
+    // Set caller's SDP offer as remote description
+    if (freshData.offer) {
+      await activePeerConnection.setRemoteDescription(new RTCSessionDescription(freshData.offer));
+      console.log('✅ Callee: remote offer set');
     }
 
-    if (activeCallData.callerCandidates && Array.isArray(activeCallData.callerCandidates)) {
-      activeCallData.callerCandidates.forEach(cand => {
-        activePeerConnection.addIceCandidate(new RTCIceCandidate(cand)).catch(()=>{});
-      });
-    }
+    // Add all caller ICE candidates that exist right now
+    const existingCallerCands = freshData.callerCandidates || [];
+    existingCallerCands.forEach(cand => {
+      activePeerConnection.addIceCandidate(new RTCIceCandidate(cand)).catch(() => {});
+    });
+    processedCallerCandidates = existingCallerCands.length; // so listenToCallStatus only adds NEW ones
 
+    // Create our SDP answer
     const answer = await activePeerConnection.createAnswer();
     await activePeerConnection.setLocalDescription(answer);
+    console.log('✅ Callee: local answer set');
 
-    if (!activeCallId.startsWith('ai_bot_call_')) {
-      await db.collection('devsocial_posts').doc(activeCallId).update({
-        status: 'accepted',
-        answer: { sdp: answer.sdp, type: answer.type }
-      });
-    }
+    // Send answer back to caller via Firestore
+    await db.collection('devsocial_posts').doc(activeCallId).update({
+      status: 'accepted',
+      answer: { sdp: answer.sdp, type: answer.type }
+    });
 
     setupActiveCallUI(activeCallData);
   } catch(e) {
