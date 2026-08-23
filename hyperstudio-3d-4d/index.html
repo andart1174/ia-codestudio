@@ -520,8 +520,8 @@
                                 </div>
                             </div>
 
-                            <!-- Floating Mission Objective Status Bar -->
-                            <div id="hud-mission-tracker" class="hud-mission-tracker">
+                            <!-- Floating Mission Objective Status Bar (Clickable on Mobile & Desktop to Change Mission) -->
+                            <div id="hud-mission-tracker" class="hud-mission-tracker" title="Tap to Choose Cosmic Missions & Settings 🚀">
                                 <div class="mission-icon"><i class="fa-solid fa-crosshairs"></i></div>
                                 <div class="mission-info">
                                     <span class="mission-title" id="hud-mission-title">🎯 MISSION 1: Save Orbital Station</span>
@@ -529,6 +529,7 @@
                                 </div>
                                 <div class="mission-badge" id="hud-mission-progress">0 / 3 💎</div>
                                 <div class="mission-timer" id="hud-mission-timer" style="display:none;">⏱️ 00:60</div>
+                                <div class="mission-action-hint"><i class="fa-solid fa-gear"></i> <span>Missions ⚙️</span></div>
                             </div>
 
                             <!-- Laser Blaster Center Crosshair -->
@@ -581,8 +582,9 @@
                                     </div>
                                 </div>
                                 <div class="touch-cluster center">
-                                    <button class="touch-btn sm" id="tbtn-reset" title="Reset Position"><i class="fa-solid fa-rotate-right"></i><span class="t-sub">RESET</span></button>
+                                    <button class="touch-btn sm missions" id="tbtn-missions" title="Choose Cosmic Missions & Settings"><i class="fa-solid fa-crosshairs"></i><span class="t-sub">MISSIONS</span></button>
                                     <button class="touch-btn sm hangar" id="tbtn-hangar" title="Open Hangar Upgrades"><i class="fa-solid fa-wrench"></i><span class="t-sub">UPGRADE</span></button>
+                                    <button class="touch-btn sm reset" id="tbtn-reset" title="Reset Position"><i class="fa-solid fa-rotate-right"></i><span class="t-sub">RESET</span></button>
                                     <button class="touch-btn sm fullscreen" id="tbtn-fullscreen" title="Toggle Fullscreen Mode"><i class="fa-solid fa-expand"></i><span class="t-sub">FULL</span></button>
                                 </div>
                                 <div class="touch-cluster right">

@@ -4498,11 +4498,20 @@
     const btnModalOpenHangar = document.getElementById('btn-modal-open-hangar');
     const btnModalExitGame = document.getElementById('btn-modal-exit-game');
 
-    if (btnOpenGameSettings && modalGameSettings) {
-        btnOpenGameSettings.addEventListener('click', () => {
-            playClickSFX();
-            modalGameSettings.classList.add('active');
-        });
+    function openGameSettingsModal(e) {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        playClickSFX();
+        if (modalGameSettings) modalGameSettings.classList.add('active');
+    }
+
+    if (btnOpenGameSettings) {
+        btnOpenGameSettings.addEventListener('click', openGameSettingsModal);
+    }
+
+    const hudMissionTrackerEl = document.getElementById('hud-mission-tracker');
+    if (hudMissionTrackerEl) {
+        hudMissionTrackerEl.addEventListener('click', openGameSettingsModal);
+        hudMissionTrackerEl.addEventListener('touchend', openGameSettingsModal);
     }
     if (btnCloseGameSettings && modalGameSettings) {
         btnCloseGameSettings.addEventListener('click', () => {
@@ -4722,6 +4731,16 @@
         tbtnFire.addEventListener('mousedown', startLaserFiring);
         tbtnFire.addEventListener('mouseup', stopLaserFiring);
         tbtnFire.addEventListener('mouseleave', stopLaserFiring);
+    }
+
+    const tbtnMissions = document.getElementById('tbtn-missions');
+    if (tbtnMissions) {
+        tbtnMissions.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            openGameSettingsModal(e);
+        }, { passive: false });
+        tbtnMissions.addEventListener('click', openGameSettingsModal);
     }
 
     const tbtnHangar = document.getElementById('tbtn-hangar');
