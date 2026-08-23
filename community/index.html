@@ -80,7 +80,37 @@
     body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.6; min-height: 100vh; }
     body::before { content:''; position:fixed; inset:0; background: radial-gradient(ellipse at 10% 20%, rgba(124,58,237,0.06) 0%, transparent 50%), radial-gradient(ellipse at 90% 80%, rgba(168,85,247,0.04) 0%, transparent 50%); pointer-events:none; z-index:0; }
 
+    /* ═══════════════════ STORIES 24H ═══════════════════ */
+    .story-item { display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;flex-shrink:0;user-select:none; }
+    .story-ring { width:68px;height:68px;border-radius:50%;padding:3px;background:linear-gradient(135deg,#f59e0b,#ec4899,#8b5cf6);transition:transform .2s; }
+    .story-ring:hover { transform:scale(1.08); }
+    .story-ring-add { background:var(--bg3);border:2px dashed rgba(124,58,237,0.5); }
+    .story-ring-seen { background:var(--bg3);border:2px solid rgba(255,255,255,0.15); }
+    .story-avatar-wrap { width:100%;height:100%;border-radius:50%;overflow:hidden;background:var(--bg2);position:relative;border:2px solid var(--bg); }
+    .story-avatar { width:100%;height:100%;object-fit:cover;border-radius:50%; }
+    .story-add-plus { position:absolute;bottom:0;right:0;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:1rem;font-weight:900;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg);line-height:1; }
+    .story-name { font-size:.72rem;color:var(--text);max-width:68px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+    #storyProgressBar .prog-seg { flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,0.3); }
+    #storyProgressBar .prog-seg.done { background:#fff; }
+    #storyProgressBar .prog-seg.active { background:#fff;animation:storyProgAnim 5s linear forwards; }
+    @keyframes storyProgAnim { from { width:0%; } to { width:100%; } }
+
+    /* ═══════════════════ FOLLOW SYSTEM ═══════════════════ */
+    .btn-follow { display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:20px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;font-size:.78rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit;white-space:nowrap; }
+    .btn-follow:hover { transform:translateY(-1px);box-shadow:0 4px 14px rgba(124,58,237,0.45); }
+    .btn-follow.following { background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);color:var(--muted); }
+    .btn-follow.following:hover { background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.3);color:#f87171; }
+    .follow-count-chip { display:inline-flex;align-items:center;gap:4px;font-size:.75rem;color:var(--muted);padding:4px 10px;background:rgba(255,255,255,0.04);border-radius:20px;border:1px solid var(--border2); }
+    .follow-count-chip strong { color:var(--text); }
+
+    /* Push Notification bell */
+    .btn-notif-bell { position:relative;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid var(--border2);color:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s; }
+    .btn-notif-bell:hover { background:rgba(124,58,237,0.2);border-color:var(--accent); }
+    .btn-notif-bell .notif-dot { position:absolute;top:4px;right:4px;width:9px;height:9px;border-radius:50%;background:#ef4444;border:2px solid var(--bg);display:none; }
+    .btn-notif-bell .notif-dot.show { display:block; }
+
     /* HEADER */
+
     .header { position:sticky; top:0; z-index:1000; background:rgba(3,7,18,0.92); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); padding:0 24px; height:60px; display:flex; align-items:center; gap:16px; }
     .header-logo { display:flex; align-items:center; gap:10px; text-decoration:none; flex-shrink:0; }
     .header-logo img { height:28px; }
@@ -2264,6 +2294,12 @@
     <span class="dm-badge-count" id="dmUnreadBadge" style="display:none;">0</span>
   </button>
 
+  <!-- 🔔 NOTIFICATION BELL -->
+  <button class="btn-notif-bell" id="btnNotifBell" onclick="requestPushPermission()" title="Enable Notifications">
+    🔔
+    <span class="notif-dot" id="notifDot"></span>
+  </button>
+
   <div class="header-actions" id="hdrActions">
     <button class="btn-google" onclick="signInGoogle()">
       <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
@@ -2294,6 +2330,7 @@
     <div class="scard">
       <div class="stitle" id="lbl-categories-title">Categories</div>
       <button class="cat-btn active" data-cat="all" onclick="filterCat('all',this)" id="catbtn-all">🌐 All Posts</button>
+      <button class="cat-btn" data-cat="following" onclick="filterCat('following',this)" id="catbtn-following">❤️ Following</button>
       <button class="cat-btn" data-cat="showcase" onclick="filterCat('showcase',this)" id="catbtn-showcase">🏆 Showcase</button>
       <button class="cat-btn" data-cat="aiapp" onclick="filterCat('aiapp',this)" id="catbtn-aiapp">🤖 AI Apps</button>
       <button class="cat-btn" data-cat="3ddesign" onclick="filterCat('3ddesign',this)" id="catbtn-3ddesign">🎨 3D Design</button>
@@ -2328,6 +2365,7 @@
     <!-- Filter tabs -->
     <div class="ftabs">
       <button class="ftab active" data-cat="all" onclick="filterTab('all',this)">🌐 All</button>
+      <button class="ftab" data-cat="following" onclick="filterTab('following',this)" id="tab-following">❤️ Following</button>
       <button class="ftab" data-cat="showcase" onclick="filterTab('showcase',this)">🏆 Showcase</button>
       <button class="ftab" data-cat="aiapp" onclick="filterTab('aiapp',this)">🤖 AI Apps</button>
       <button class="ftab" data-cat="3ddesign" onclick="filterTab('3ddesign',this)">🎨 3D Design</button>
@@ -2335,6 +2373,69 @@
       <button class="ftab" data-cat="webdev" onclick="filterTab('webdev',this)">💻 Web Dev</button>
       <button class="ftab" data-cat="tips" onclick="filterTab('tips',this)">💡 Tips</button>
       <button class="ftab" data-cat="general" onclick="filterTab('general',this)">💬 General</button>
+    </div>
+    <!-- ═══════════════════════════════════ -->
+    <!-- 📸 STORIES BAR (24h — disappear)  -->
+    <!-- ═══════════════════════════════════ -->
+    <div id="storiesBar" style="display:none; margin-bottom:12px;">
+      <div id="storiesScroll" style="display:flex;gap:12px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:none;-webkit-overflow-scrolling:touch;">
+        <!-- Add your Story -->
+        <div class="story-item" onclick="openAddStoryModal()" id="myStoryBtn">
+          <div class="story-ring story-ring-add">
+            <div class="story-avatar-wrap">
+              <img src="" id="myStoryAvatar" class="story-avatar" alt="My Story" style="background:var(--bg3);">
+              <div class="story-add-plus">+</div>
+            </div>
+          </div>
+          <div class="story-name" id="lbl-my-story">My Story</div>
+        </div>
+        <!-- Dynamic stories injected here -->
+      </div>
+    </div>
+
+    <!-- Story Viewer Fullscreen -->
+    <div id="storyViewerOverlay" style="display:none;position:fixed;inset:0;z-index:9999;background:#000;flex-direction:column;align-items:center;justify-content:center;">
+      <div style="position:relative;width:100%;max-width:420px;height:100vh;overflow:hidden;">
+        <!-- Progress bar -->
+        <div id="storyProgressBar" style="position:absolute;top:0;left:0;right:0;z-index:2;display:flex;gap:3px;padding:12px 12px 0;"></div>
+        <!-- Header -->
+        <div style="position:absolute;top:20px;left:0;right:0;z-index:3;display:flex;align-items:center;gap:10px;padding:16px 14px 0;">
+          <img id="storyViewerAvatar" src="" style="width:36px;height:36px;border-radius:50%;border:2px solid #fff;" alt="">
+          <div>
+            <div id="storyViewerName" style="color:#fff;font-weight:700;font-size:.9rem;"></div>
+            <div id="storyViewerTime" style="color:rgba(255,255,255,0.6);font-size:.75rem;"></div>
+          </div>
+          <button onclick="closeStoryViewer()" style="margin-left:auto;background:rgba(0,0,0,0.4);border:none;color:#fff;font-size:1.2rem;width:34px;height:34px;border-radius:50%;cursor:pointer;">✕</button>
+        </div>
+        <!-- Story Content -->
+        <div id="storyViewerContent" style="width:100%;height:100vh;display:flex;align-items:center;justify-content:center;"></div>
+        <!-- Nav zones -->
+        <div onclick="prevStory()" style="position:absolute;left:0;top:0;width:40%;height:100%;z-index:1;cursor:pointer;"></div>
+        <div onclick="nextStory()" style="position:absolute;right:0;top:0;width:40%;height:100%;z-index:1;cursor:pointer;"></div>
+        <!-- Reply bar -->
+        <div style="position:absolute;bottom:0;left:0;right:0;z-index:4;padding:16px;display:flex;gap:8px;">
+          <input id="storyReplyInput" placeholder="Reply to story..." style="flex:1;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);border-radius:24px;padding:10px 16px;color:#fff;font-size:.9rem;outline:none;">
+          <button onclick="sendStoryReply()" style="background:var(--accent);border:none;color:#fff;border-radius:50%;width:40px;height:40px;font-size:1rem;cursor:pointer;">➤</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Story Modal -->
+    <div id="addStoryModal" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:28px;width:90%;max-width:420px;position:relative;">
+        <button onclick="closeAddStoryModal()" style="position:absolute;top:14px;right:14px;background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;">✕</button>
+        <h3 style="margin-bottom:18px;font-family:'Outfit',sans-serif;" id="lbl-add-story-title">📸 Add a Story</h3>
+        <div id="storyPreviewArea" style="width:100%;height:240px;background:var(--bg3);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;overflow:hidden;border:2px dashed var(--border);cursor:pointer;" onclick="document.getElementById('storyFileInput').click()">
+          <div id="storyPreviewPlaceholder" style="text-align:center;color:var(--muted);">
+            <div style="font-size:2.5rem;margin-bottom:8px;">📷</div>
+            <div id="lbl-story-tap-photo">Tap to choose a photo</div>
+          </div>
+          <img id="storyPreviewImg" src="" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:10px;" alt="">
+        </div>
+        <input type="file" id="storyFileInput" accept="image/*" style="display:none;" onchange="handleStoryPhotoSelect(event)">
+        <input id="storyTextInput" placeholder="Add a caption... ✨" style="width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;color:var(--text);font-size:.9rem;outline:none;margin-bottom:14px;">
+        <button onclick="publishStory()" style="width:100%;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;border-radius:12px;padding:13px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;" id="lbl-publish-story-btn">🚀 Share Story</button>
+      </div>
     </div>
 
     <div id="feedEl">
@@ -3388,7 +3489,7 @@ function loadFeed() {
 
   if (unsub) unsub();
   let q = db.collection('devsocial_posts').limit(50);
-  if (curCat !== 'all') q = db.collection('devsocial_posts').where('category','==',curCat).limit(50);
+  if (curCat !== 'all' && curCat !== 'following') q = db.collection('devsocial_posts').where('category','==',curCat).limit(50);
   unsub = q.onSnapshot(async snap => {
     if (snap.empty) {
       el.innerHTML = '<div class="empty"><div class="empty-icon">✨</div><div class="empty-title">No posts yet</div><div class="empty-text">Be the first to share something amazing!</div></div>';
@@ -3402,7 +3503,14 @@ function loadFeed() {
     snap.forEach(doc => {
       if (doc.id.startsWith('dm_') || doc.id.startsWith('active_calls')) return;
       const p = { id:doc.id, ...doc.data() };
-      if (p.type === 'dm_msg' || p.type === 'cyber_call') return;
+      if (p.type === 'dm_msg' || p.type === 'cyber_call' || p.type === 'story') return;
+
+      // Filter for Following tab
+      if (curCat === 'following') {
+        const authorId = p.uid || p.userEmail || p.email;
+        if (!myFollowing || !myFollowing.has(authorId)) return;
+      }
+
       posts.push(p);
       
       if (p.compressedCode && !p.code) {
@@ -3416,6 +3524,11 @@ function loadFeed() {
         window.communityPosts[p.id] = p.code;
       }
     });
+
+    if (curCat === 'following' && posts.length === 0) {
+      el.innerHTML = '<div class="empty"><div class="empty-icon">❤️</div><div class="empty-title">No posts from following</div><div class="empty-text">Click the "+ Follow" button on any creator\'s post to see their creations here!</div></div>';
+      return;
+    }
 
     if (promises.length > 0) {
       try {
@@ -3483,6 +3596,9 @@ function renderPost(p) {
   const cEm = catEmoji(p.category), cLbl = catLabel(p.category);
   const currentLang = typeof getCommunityLang === 'function' ? getCommunityLang() : (localStorage.getItem('hub_lang') || 'en');
 
+  const authorUid = p.uid || p.userEmail || p.email || '';
+  const followBtnHtml = (typeof makeFollowBtn === 'function' && !isPostAuthor) ? makeFollowBtn(authorUid, displayName) : '';
+
   // Cosmetics
   const authorFrame = p.equippedFrame ? `avatar-frame-${p.equippedFrame}` : '';
   const authorBadge = p.equippedBadge ? `<span class="badge-pill">${esc(p.equippedBadge)}</span>` : '';
@@ -3533,31 +3649,33 @@ function renderPost(p) {
           <button class="cv-tab" id="tab-full-${p.id}" onclick="switchCvTab('${p.id}', 'full')">${labelFull}</button>
         </div>
         
-        <div class="cv-content-area">
-          <!-- Preview Pane -->
-          <div class="cv-pane pane-preview" id="pane-preview-${p.id}">
-            <div class="p-code-preview" id="${uniqueId}">
-              <div class="code-preview-placeholder">
-                <div class="cpp-icon">🌐</div>
-                <div class="cpp-text">${currentLang === 'fr' ? 'Projet Interactif HTML/JS/3D' : 'Interactive HTML/JS/3D Project'}</div>
-                <button class="btn-run-demo" onclick="runPostDemo('${p.id}')">${lblRunDemo}</button>
+        <div class="cv-content-box">
+          <!-- Live Preview Pane (Default active) -->
+          <div class="cv-pane" id="pane-preview-${p.id}">
+            <div class="cv-preview-wrapper" id="preview-wrapper-${p.id}">
+              <div class="cv-idle-overlay" id="overlay-${p.id}">
+                <div class="cv-play-btn" onclick="runPostDemo('${p.id}', '${uniqueId}')">
+                  <div class="play-icon">▶</div>
+                </div>
+                <div class="cv-hint">${lblRunDemo}</div>
               </div>
+              <div class="cv-iframe-container" id="${uniqueId}"></div>
             </div>
           </div>
           
           <!-- Code Pane - HTML -->
           <div class="cv-pane pane-code" id="pane-html-${p.id}" style="display:none;">
             <div class="cv-code-header">
-              <span>HTML Markup</span>
+              <span>HTML Structure</span>
               <button class="cv-copy-btn" id="btn-copy-html-${p.id}" onclick="copyCvCode('${p.id}', 'html')">${labelCopy}</button>
             </div>
-            <pre class="cv-code-block"><code id="code-html-text-${p.id}">${esc(parts.html)}</code></pre>
+            <pre class="cv-code-block"><code id="code-html-text-${p.id}">${esc(parts.html || '<!-- No HTML structure in this project -->')}</code></pre>
           </div>
           
           <!-- Code Pane - CSS -->
           <div class="cv-pane pane-code" id="pane-css-${p.id}" style="display:none;">
             <div class="cv-code-header">
-              <span>CSS Styles</span>
+              <span>CSS Stylesheet</span>
               <button class="cv-copy-btn" id="btn-copy-css-${p.id}" onclick="copyCvCode('${p.id}', 'css')">${labelCopy}</button>
             </div>
             <pre class="cv-code-block"><code id="code-css-text-${p.id}">${esc(parts.css || '/* No CSS styles in this project */')}</code></pre>
@@ -3599,7 +3717,10 @@ function renderPost(p) {
     <div class="ph">
       <img src="${a}" class="p-avatar ${authorFrame}">
       <div class="pm">
-        <div class="p-author ${authorGlow}">${esc(displayName)} ${authorBadge} ${userTag ? `<span class="user-tag" style="background: rgba(124, 58, 237, 0.15); color: #c084fc; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 6px; font-weight: normal; display: inline-block;">${esc(userTag)}</span>` : ''}</div>
+        <div class="p-author ${authorGlow}" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span>${esc(displayName)}</span> ${authorBadge} ${userTag ? `<span class="user-tag" style="background: rgba(124, 58, 237, 0.15); color: #c084fc; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: normal; display: inline-block;">${esc(userTag)}</span>` : ''}
+          ${followBtnHtml}
+        </div>
         <div class="p-time">${time}</div>
       </div>
       <div style="display:flex;align-items:center;gap:6px;">
@@ -4438,6 +4559,7 @@ const I18N = {
   en: {
     communityBrand: '✦ Community',
     allPosts: '🌐 All Posts',
+    catFollowing: '❤️ Following',
     catGeneral: '💬 General',
     catShowcase: '🏆 Showcase',
     catAiApp: '🤖 AI Apps',
@@ -4445,6 +4567,10 @@ const I18N = {
     catMarketing: '📢 Marketing',
     catWebDev: '💻 Web Dev',
     catTips: '💡 Tips & Tricks',
+    myStory: 'My Story',
+    addStoryTitle: '📸 Add a Story',
+    publishStoryBtn: '🚀 Share Story',
+    tapPhoto: 'Tap to choose a photo',
     sharePrompt: 'Share your creation, idea or tip with the community... ✨',
     btnPublish: '✦ Publish Post',
     btnPublishing: 'Publishing...',
@@ -4624,6 +4750,7 @@ const I18N = {
   fr: {
     communityBrand: '✦ Communauté',
     allPosts: '🌐 Tous les Posts',
+    catFollowing: '❤️ Abonnements',
     catGeneral: '💬 Général',
     catShowcase: '🏆 Créations',
     catAiApp: '🤖 Applications IA',
@@ -4631,6 +4758,10 @@ const I18N = {
     catMarketing: '📢 Marketing',
     catWebDev: '💻 Dév Web',
     catTips: '💡 Astuces & Conseils',
+    myStory: 'Ma Story',
+    addStoryTitle: '📸 Ajouter une Story',
+    publishStoryBtn: '🚀 Partager la Story',
+    tapPhoto: 'Appuyez pour choisir une photo',
     sharePrompt: 'Partagez votre création, idée ou astuce avec la communauté... ✨',
     btnPublish: '✦ Publier le Post',
     btnPublishing: 'Publication...',
@@ -4841,6 +4972,8 @@ function applyCommunityLanguage(lang) {
   const catTitle = document.getElementById('lbl-categories-title');
   if (catTitle) catTitle.textContent = lang === 'fr' ? 'Catégories' : 'Categories';
   const cAll = document.getElementById('catbtn-all'); if (cAll) cAll.textContent = t.allPosts;
+  const cFol = document.getElementById('catbtn-following'); if (cFol) cFol.textContent = t.catFollowing;
+  const tFol = document.getElementById('tab-following'); if (tFol) tFol.textContent = t.catFollowing;
   const cSho = document.getElementById('catbtn-showcase'); if (cSho) cSho.textContent = t.catShowcase;
   const cAi = document.getElementById('catbtn-aiapp'); if (cAi) cAi.textContent = t.catAiApp;
   const c3d = document.getElementById('catbtn-3ddesign'); if (c3d) c3d.textContent = t.cat3d;
@@ -4848,6 +4981,12 @@ function applyCommunityLanguage(lang) {
   const cDev = document.getElementById('catbtn-webdev'); if (cDev) cDev.textContent = t.catWebDev;
   const cTip = document.getElementById('catbtn-tips'); if (cTip) cTip.textContent = t.catTips;
   const cGen = document.getElementById('catbtn-general'); if (cGen) cGen.textContent = t.catGeneral;
+
+  // Stories
+  const myStoryLbl = document.getElementById('lbl-my-story'); if (myStoryLbl) myStoryLbl.textContent = t.myStory;
+  const addStoryT = document.getElementById('lbl-add-story-title'); if (addStoryT) addStoryT.textContent = t.addStoryTitle;
+  const pubStoryB = document.getElementById('lbl-publish-story-btn'); if (pubStoryB) pubStoryB.textContent = t.publishStoryBtn;
+  const tapPhotoL = document.getElementById('lbl-story-tap-photo'); if (tapPhotoL) tapPhotoL.textContent = t.tapPhoto;
 
   // Profile Edit Card & Modal
   const editCardBtn = document.getElementById('btn-edit-profile-card'); if (editCardBtn) editCardBtn.textContent = t.editProfileCardBtn;
@@ -8361,6 +8500,446 @@ function filterDmConversations() {
   });
 }
 
+// ══════════════════════════════════════════════════════
+// 📸 15. STORIES 24H ENGINE
+// ══════════════════════════════════════════════════════
+
+let activeStories = [];          // all active stories from Firestore
+let storyViewerIndex = 0;        // current story index in viewer
+let storyViewerTimer = null;     // auto-advance timer
+let storyPhotoDataUrl = null;    // selected photo for new story
+
+async function loadStories() {
+  if (!db) return;
+  const cutoff = Date.now() - 24 * 60 * 60 * 1000; // 24h ago
+
+  try {
+    const snap = await db.collection('devsocial_posts')
+      .where('type', '==', 'story')
+      .get();
+
+    activeStories = [];
+    snap.forEach(doc => {
+      const d = doc.data();
+      if (d.createdAt && d.createdAt > cutoff) {
+        activeStories.push({ id: doc.id, ...d });
+      }
+    });
+
+    activeStories.sort((a, b) => b.createdAt - a.createdAt);
+    renderStoriesBar();
+  } catch(e) {
+    console.warn('Stories load note:', e);
+  }
+}
+
+function renderStoriesBar() {
+  const bar = document.getElementById('storiesBar');
+  const scroll = document.getElementById('storiesScroll');
+  if (!scroll) return;
+
+  // Set my avatar
+  if (user && user.photoURL) {
+    const myAv = document.getElementById('myStoryAvatar');
+    if (myAv) myAv.src = user.photoURL;
+  }
+
+  // Show bar when logged in
+  if (user && bar) bar.style.display = 'block';
+
+  // Group by author (one bubble per user)
+  const seenUids = new Set();
+  const myUid = user ? (user.uid || '') : '';
+
+  // Remove old dynamic stories (keep first "My Story" item)
+  const myBtn = document.getElementById('myStoryBtn');
+  let sibling = myBtn ? myBtn.nextSibling : null;
+  while (sibling) {
+    const next = sibling.nextSibling;
+    scroll.removeChild(sibling);
+    sibling = next;
+  }
+
+  activeStories.forEach(story => {
+    if (seenUids.has(story.authorUid)) return;
+    seenUids.add(story.authorUid);
+    if (story.authorUid === myUid) return; // skip own story (already shown as "My Story")
+
+    const seen = (localStorage.getItem('story_seen_' + story.id) === '1');
+    const div = document.createElement('div');
+    div.className = 'story-item';
+    div.onclick = () => openStoryViewer(story.authorUid);
+    const photo = story.authorPhoto || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(story.authorName)}`;
+    div.innerHTML = `
+      <div class="story-ring ${seen ? 'story-ring-seen' : ''}">
+        <div class="story-avatar-wrap">
+          <img src="${esc(photo)}" class="story-avatar" alt="${esc(story.authorName)}">
+        </div>
+      </div>
+      <div class="story-name">${esc(story.authorName?.split(' ')[0] || 'Creator')}</div>
+    `;
+    scroll.appendChild(div);
+  });
+}
+
+function openAddStoryModal() {
+  if (!user) { signInGoogle(); return; }
+  storyPhotoDataUrl = null;
+  document.getElementById('storyPreviewImg').style.display = 'none';
+  document.getElementById('storyPreviewPlaceholder').style.display = 'block';
+  document.getElementById('storyTextInput').value = '';
+  document.getElementById('addStoryModal').style.display = 'flex';
+}
+
+function closeAddStoryModal() {
+  document.getElementById('addStoryModal').style.display = 'none';
+}
+
+function handleStoryPhotoSelect(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = evt => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const maxW = 1080; const maxH = 1920;
+      let w = img.width, h = img.height;
+      if (w > maxW) { h = h * maxW / w; w = maxW; }
+      if (h > maxH) { w = w * maxH / h; h = maxH; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      storyPhotoDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+      const preview = document.getElementById('storyPreviewImg');
+      preview.src = storyPhotoDataUrl;
+      preview.style.display = 'block';
+      document.getElementById('storyPreviewPlaceholder').style.display = 'none';
+    };
+    img.src = evt.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function publishStory() {
+  if (!user) return;
+  const caption = document.getElementById('storyTextInput').value.trim();
+  if (!storyPhotoDataUrl && !caption) {
+    toast('Add a photo or caption for your story! 📸', 'warning'); return;
+  }
+
+  const myName = user.displayName || user.email?.split('@')[0] || 'Creator';
+  const myPhoto = user.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
+
+  try {
+    await db.collection('devsocial_posts').add({
+      type: 'story',
+      authorUid: user.uid || user.email,
+      authorName: myName,
+      authorPhoto: myPhoto,
+      caption: caption,
+      image: storyPhotoDataUrl || null,
+      createdAt: Date.now(),
+      expiresAt: Date.now() + 24 * 60 * 60 * 1000,
+      views: 0
+    });
+    toast('🌟 Story shared! It disappears in 24h.', 'success');
+    closeAddStoryModal();
+    await loadStories();
+
+    // Reward 5 coins for posting a story
+    if (typeof creditUserCoins === 'function') creditUserCoins(5, 'story_post');
+  } catch(e) {
+    toast('Failed to share story', 'error');
+    console.error('Publish story error:', e);
+  }
+}
+
+function openStoryViewer(authorUid) {
+  const userStories = activeStories.filter(s => s.authorUid === authorUid);
+  if (!userStories.length) return;
+
+  storyViewerIndex = 0;
+  window._viewerStories = userStories;
+  document.getElementById('storyViewerOverlay').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  showStorySlide(0);
+
+  // Mark as seen
+  userStories.forEach(s => localStorage.setItem('story_seen_' + s.id, '1'));
+  // Track view in Firestore
+  userStories.forEach(s => {
+    db.collection('devsocial_posts').doc(s.id).update({
+      views: firebase.firestore.FieldValue.increment(1)
+    }).catch(() => {});
+  });
+}
+
+function showStorySlide(index) {
+  clearTimeout(storyViewerTimer);
+  const stories = window._viewerStories || [];
+  if (index < 0 || index >= stories.length) { closeStoryViewer(); return; }
+
+  const story = stories[index];
+  storyViewerIndex = index;
+
+  // Progress segments
+  const bar = document.getElementById('storyProgressBar');
+  bar.innerHTML = stories.map((_, i) => `<div class="prog-seg ${i < index ? 'done' : i === index ? 'active' : ''}"></div>`).join('');
+
+  // Meta
+  const timeAgoStr = typeof timeAgo === 'function' ? timeAgo(story.createdAt) : '';
+  document.getElementById('storyViewerAvatar').src = story.authorPhoto || '';
+  document.getElementById('storyViewerName').textContent = story.authorName || 'Creator';
+  document.getElementById('storyViewerTime').textContent = timeAgoStr;
+
+  // Content
+  const content = document.getElementById('storyViewerContent');
+  if (story.image) {
+    content.innerHTML = `
+      <div style="position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#000;">
+        <img src="${esc(story.image)}" style="width:100%;height:100%;object-fit:contain;" alt="">
+        ${story.caption ? `<div style="position:absolute;bottom:80px;left:0;right:0;text-align:center;padding:12px 20px;background:linear-gradient(transparent,rgba(0,0,0,0.7));color:#fff;font-size:1rem;font-weight:600;">${esc(story.caption)}</div>` : ''}
+      </div>`;
+  } else {
+    content.innerHTML = `
+      <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent),var(--accent2));padding:40px;">
+        <div style="color:#fff;font-size:1.6rem;font-weight:700;text-align:center;line-height:1.4;">${esc(story.caption || '')}</div>
+      </div>`;
+  }
+
+  // Auto-advance after 5s
+  storyViewerTimer = setTimeout(() => nextStory(), 5000);
+}
+
+function nextStory() {
+  const stories = window._viewerStories || [];
+  if (storyViewerIndex + 1 < stories.length) {
+    showStorySlide(storyViewerIndex + 1);
+  } else {
+    closeStoryViewer();
+  }
+}
+
+function prevStory() {
+  if (storyViewerIndex > 0) showStorySlide(storyViewerIndex - 1);
+}
+
+function closeStoryViewer() {
+  clearTimeout(storyViewerTimer);
+  document.getElementById('storyViewerOverlay').style.display = 'none';
+  document.body.style.overflow = '';
+  renderStoriesBar(); // refresh seen rings
+}
+
+function sendStoryReply() {
+  const stories = window._viewerStories || [];
+  const story = stories[storyViewerIndex];
+  const text = document.getElementById('storyReplyInput').value.trim();
+  if (!text || !story || !user) return;
+  document.getElementById('storyReplyInput').value = '';
+  // Send as DM to story author
+  openDmWithUser(story.authorUid, story.authorName, story.authorPhoto);
+  toast('💬 Opening chat with ' + story.authorName, 'info');
+  closeStoryViewer();
+}
+
+// ══════════════════════════════════════════════════════
+// ❤️ 16. FOLLOW SYSTEM ENGINE
+// ══════════════════════════════════════════════════════
+
+let myFollowing = new Set(); // set of UIDs I follow
+
+async function loadMyFollowing() {
+  if (!user || !db) return;
+  try {
+    const snap = await db.collection('follows')
+      .where('followerUid', '==', user.uid || user.email)
+      .get();
+    myFollowing = new Set();
+    snap.forEach(doc => myFollowing.add(doc.data().followingUid));
+  } catch(e) {}
+}
+
+async function toggleFollow(targetUid, targetName, btnEl) {
+  if (!user) { signInGoogle(); return; }
+  const myUid = user.uid || user.email || '';
+  if (!targetUid || targetUid === myUid) return;
+
+  const isFollowing = myFollowing.has(targetUid);
+
+  if (isFollowing) {
+    // Unfollow
+    try {
+      const snap = await db.collection('follows')
+        .where('followerUid', '==', myUid)
+        .where('followingUid', '==', targetUid)
+        .get();
+      snap.forEach(doc => doc.ref.delete());
+      myFollowing.delete(targetUid);
+      if (btnEl) {
+        btnEl.classList.remove('following');
+        btnEl.textContent = '+ Follow';
+      }
+      toast(`Unfollowed ${targetName}`, 'info');
+    } catch(e) { toast('Error', 'error'); }
+  } else {
+    // Follow
+    try {
+      await db.collection('follows').add({
+        followerUid: myUid,
+        followerName: user.displayName || user.email,
+        followerPhoto: user.photoURL || '',
+        followingUid: targetUid,
+        followingName: targetName,
+        createdAt: Date.now()
+      });
+      myFollowing.add(targetUid);
+      if (btnEl) {
+        btnEl.classList.add('following');
+        btnEl.textContent = '✓ Following';
+      }
+      toast(`✅ Following ${targetName}!`, 'success');
+      // Send notification to followed user
+      sendFollowNotification(targetUid, targetName);
+    } catch(e) { toast('Error', 'error'); }
+  }
+}
+
+function sendFollowNotification(targetUid, targetName) {
+  if (!db || !user) return;
+  const myName = user.displayName || user.email?.split('@')[0] || 'Someone';
+  db.collection('notifications').add({
+    toUid: targetUid,
+    fromUid: user.uid || user.email,
+    fromName: myName,
+    fromPhoto: user.photoURL || '',
+    type: 'follow',
+    text: `${myName} started following you! ❤️`,
+    read: false,
+    createdAt: Date.now()
+  }).catch(() => {});
+}
+
+function makeFollowBtn(targetUid, targetName) {
+  const myUid = user ? (user.uid || user.email || '') : '';
+  if (!user || targetUid === myUid) return '';
+  const isFollowing = myFollowing.has(targetUid);
+  return `<button class="btn-follow ${isFollowing ? 'following' : ''}" 
+    id="followBtn_${targetUid}"
+    onclick="event.stopPropagation(); toggleFollow('${esc(targetUid)}', '${esc(targetName)}', this)">
+    ${isFollowing ? '✓ Following' : '+ Follow'}
+  </button>`;
+}
+
+async function loadFollowerCount(targetUid) {
+  try {
+    const snap = await db.collection('follows').where('followingUid', '==', targetUid).get();
+    return snap.size;
+  } catch(e) { return 0; }
+}
+
+// ══════════════════════════════════════════════════════
+// 🔔 17. PUSH NOTIFICATIONS ENGINE (Service Worker)
+// ══════════════════════════════════════════════════════
+
+let swRegistration = null;
+
+async function initPushNotifications() {
+  if (!('serviceWorker' in navigator)) return;
+  try {
+    swRegistration = await navigator.serviceWorker.register('/community/sw.js', { scope: '/community/' });
+    console.log('✅ Service Worker registered');
+
+    // Check permission
+    if (Notification.permission === 'granted') {
+      document.getElementById('btnNotifBell').title = '🔔 Notifications ON';
+      document.getElementById('btnNotifBell').style.color = '#10b981';
+    }
+  } catch(e) {
+    console.warn('Service Worker note:', e);
+  }
+}
+
+async function requestPushPermission() {
+  if (!('Notification' in window)) {
+    toast('Your browser does not support notifications', 'warning'); return;
+  }
+
+  if (Notification.permission === 'granted') {
+    toast('✅ Notifications already enabled!', 'success');
+    showLocalNotification('🔔 IA Code Studio', 'Notifications are active! You will be alerted for likes, calls and messages.');
+    return;
+  }
+
+  if (Notification.permission === 'denied') {
+    toast('🚫 Notifications blocked — please enable in browser settings', 'warning'); return;
+  }
+
+  const permission = await Notification.requestPermission();
+  if (permission === 'granted') {
+    document.getElementById('btnNotifBell').style.color = '#10b981';
+    toast('🎉 Notifications enabled!', 'success');
+    showLocalNotification('🔔 IA Code Studio', 'Perfect! You will now be notified for Likes, Comments, Calls & new Stories!');
+    // Save preference
+    if (user) {
+      db.collection('users').doc(user.uid || user.email).set({
+        pushEnabled: true,
+        updatedAt: Date.now()
+      }, { merge: true }).catch(() => {});
+    }
+  } else {
+    toast('Notifications not enabled', 'info');
+  }
+}
+
+function showLocalNotification(title, body, url) {
+  if (Notification.permission !== 'granted') return;
+  if (swRegistration && swRegistration.active) {
+    swRegistration.showNotification(title, {
+      body,
+      icon: '/favicon.ico',
+      badge: '/favicon.ico',
+      vibrate: [200, 100, 200],
+      data: { url: url || '/community/' }
+    });
+  } else {
+    new Notification(title, { body, icon: '/favicon.ico' });
+  }
+}
+
+function notifyNewLike(postTitle, likerName) {
+  showLocalNotification(`❤️ ${likerName} liked your post!`, postTitle || 'Your creation is getting love!');
+  const dot = document.getElementById('notifDot');
+  if (dot) dot.classList.add('show');
+}
+
+function notifyNewComment(commenterName) {
+  showLocalNotification(`💬 ${commenterName} commented on your post!`, 'Check what they said!');
+  const dot = document.getElementById('notifDot');
+  if (dot) dot.classList.add('show');
+}
+
+function listenForMyNotifications() {
+  if (!user || !db) return;
+  const myUid = user.uid || user.email;
+  db.collection('notifications')
+    .where('toUid', '==', myUid)
+    .where('read', '==', false)
+    .onSnapshot(snap => {
+      if (snap.empty) return;
+      snap.docChanges().forEach(change => {
+        if (change.type === 'added') {
+          const n = change.doc.data();
+          showLocalNotification('🌟 ' + (n.fromName || 'Someone'), n.text || 'New notification!');
+          // Mark as read
+          change.doc.ref.update({ read: true }).catch(() => {});
+          const dot = document.getElementById('notifDot');
+          if (dot) dot.classList.add('show');
+        }
+      });
+    }, () => {});
+}
+
 // Initialize on page load
 window.addEventListener('DOMContentLoaded', () => {
   const initialLang = getCommunityLang();
@@ -8369,6 +8948,18 @@ window.addEventListener('DOMContentLoaded', () => {
   loadUserCoins(null, null);
   initReferralSystem();
   loadStreakState();
+  initPushNotifications();
+});
+
+// Initialize after login
+const _origRenderLoggedIn = typeof renderLoggedIn === 'function' ? renderLoggedIn : null;
+
+firebase.auth().onAuthStateChanged(async authUser => {
+  if (authUser) {
+    await loadMyFollowing();
+    loadStories();
+    listenForMyNotifications();
+  }
 });
 
 document.addEventListener('keydown', e => { 
@@ -8385,8 +8976,11 @@ document.addEventListener('keydown', e => {
     closeDmModal();
     closeDmCodeModal();
     closeCodeRunnerModal();
+    closeStoryViewer();
+    closeAddStoryModal();
   } 
 });
 </script>
 </body>
 </html>
+
