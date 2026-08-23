@@ -8,6 +8,15 @@
   <meta name="keywords" content="Three.js community, WebGL code share, 3D web showcase, GENIUS IA coin, AI code studio community, copy Three.js code, free WebGL widgets, mobile 3D preview QR">
   <link rel="canonical" href="https://ia-codestudio.com/community/">
   
+  <!-- PWA & Mobile App Installation Support -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#7c3aed">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="IA Code Studio">
+  <link rel="apple-touch-icon" href="../logo-ia-codestudio.png">
+  <link rel="icon" type="image/png" href="../genius-ia-coin.png">
+
   <!-- OpenGraph / Facebook / LinkedIn / WhatsApp -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ia-codestudio.com/community/">
@@ -188,6 +197,83 @@
     .btn-generate-remix:hover {
       transform: scale(1.03);
       box-shadow: 0 0 20px rgba(124, 58, 237, 0.6);
+    }
+
+    /* ═══════════════════ PWA & SOCIAL SHARE STYLES ═══════════════════ */
+    .btn-install-pwa {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 13px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.2));
+      border: 1px solid rgba(16, 185, 129, 0.5);
+      color: #34d399;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      white-space: nowrap;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.25);
+    }
+    .btn-install-pwa:hover {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.35), rgba(6, 182, 212, 0.35));
+      border-color: #10b981;
+      transform: translateY(-1px) scale(1.03);
+      box-shadow: 0 0 18px rgba(16, 185, 129, 0.45);
+    }
+    @media (max-width: 600px) {
+      .btn-install-pwa .pwa-text { display: none; }
+      .btn-install-pwa { padding: 6px 9px; }
+    }
+
+    .share-networks-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 16px 0;
+    }
+    @media (max-width: 480px) {
+      .share-networks-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .share-net-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border2);
+      background: var(--bg3);
+      color: var(--text);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .share-net-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .share-net-btn.whatsapp:hover { background: #25D366; border-color: #25D366; color: #fff; }
+    .share-net-btn.twitter:hover { background: #1DA1F2; border-color: #1DA1F2; color: #fff; }
+    .share-net-btn.telegram:hover { background: #0088cc; border-color: #0088cc; color: #fff; }
+    .share-net-btn.linkedin:hover { background: #0A66C2; border-color: #0A66C2; color: #fff; }
+    .share-net-btn.reddit:hover { background: #FF4500; border-color: #FF4500; color: #fff; }
+    .share-net-btn.card:hover { background: linear-gradient(135deg,#a855f7,#ec4899); border-color: #ec4899; color: #fff; }
+
+    .post-highlight-pulse {
+      animation: postHighlightGlow 3.5s ease-out forwards !important;
+    }
+    @keyframes postHighlightGlow {
+      0% { box-shadow: 0 0 0 4px #a855f7, 0 0 40px rgba(168,85,247,0.9); border-color: #a855f7; transform: scale(1.02); }
+      50% { box-shadow: 0 0 0 3px #10b981, 0 0 25px rgba(16,185,129,0.7); border-color: #10b981; }
+      100% { box-shadow: none; transform: scale(1); }
     }
 
     /* HEADER */
@@ -2389,6 +2475,12 @@
     <span class="notif-dot" id="notifDot"></span>
   </button>
 
+  <!-- 📲 PWA INSTALL BUTTON -->
+  <button class="btn-install-pwa" id="btnInstallPwa" onclick="handlePwaInstallClick()" title="Install App on Phone / Desktop">
+    <span>📲</span>
+    <span class="pwa-text" id="lbl-install-app">Install App</span>
+  </button>
+
   <div class="header-actions" id="hdrActions">
     <button class="btn-google" onclick="signInGoogle()">
       <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
@@ -2617,6 +2709,89 @@
           </div>
         </div>
 
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════ -->
+    <!-- 🔗 RICH SOCIAL SHARE MODAL          -->
+    <!-- ═══════════════════════════════════ -->
+    <div id="sharePostModal" style="display:none;position:fixed;inset:0;z-index:9995;background:rgba(3,7,18,0.85);backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:16px;">
+      <div style="background:var(--bg2);border:1px solid rgba(124,58,237,0.4);box-shadow:0 0 35px rgba(124,58,237,0.25);border-radius:20px;padding:24px;width:100%;max-width:480px;position:relative;">
+        <button onclick="closeShareModal()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.06);border:1px solid var(--border2);color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;">✕</button>
+        
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🔗</div>
+          <div>
+            <h3 style="font-family:'Outfit',sans-serif;font-size:1.15rem;color:#fff;margin:0;">Share Creation</h3>
+            <p id="shareModalSubtitle" style="color:var(--muted);font-size:0.8rem;margin:2px 0 0;">Spread the word across your favorite networks</p>
+          </div>
+        </div>
+
+        <!-- 1-Click Social Networks Grid -->
+        <div class="share-networks-grid">
+          <a id="shareBtnWhatsapp" target="_blank" class="share-net-btn whatsapp">
+            <span style="font-size:1.1rem;">💬</span> WhatsApp
+          </a>
+          <a id="shareBtnTwitter" target="_blank" class="share-net-btn twitter">
+            <span style="font-size:1.1rem;">✖️</span> X (Twitter)
+          </a>
+          <a id="shareBtnTelegram" target="_blank" class="share-net-btn telegram">
+            <span style="font-size:1.1rem;">📱</span> Telegram
+          </a>
+          <a id="shareBtnLinkedin" target="_blank" class="share-net-btn linkedin">
+            <span style="font-size:1.1rem;">💼</span> LinkedIn
+          </a>
+          <a id="shareBtnReddit" target="_blank" class="share-net-btn reddit">
+            <span style="font-size:1.1rem;">👾</span> Reddit
+          </a>
+          <button id="shareBtnCard" onclick="openShareCardFromModal()" class="share-net-btn card">
+            <span style="font-size:1.1rem;">📸</span> 3D Card
+          </button>
+        </div>
+
+        <!-- Direct Link Box -->
+        <div style="margin-top:14px;">
+          <label style="font-size:0.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;">Direct Link to Project:</label>
+          <div style="display:flex;gap:8px;margin-top:6px;">
+            <input type="text" id="shareDirectLinkInput" readonly style="flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:9px 12px;color:#fff;font-size:0.82rem;font-family:monospace;outline:none;" onclick="this.select()">
+            <button id="btnCopyShareLink" onclick="copyShareDirectLink()" style="background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;padding:9px 16px;border-radius:10px;font-weight:700;font-size:0.82rem;cursor:pointer;white-space:nowrap;font-family:inherit;">
+              📋 Copy
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════ -->
+    <!-- 📱 iOS PWA INSTALL GUIDE MODAL      -->
+    <!-- ═══════════════════════════════════ -->
+    <div id="pwaIosModal" style="display:none;position:fixed;inset:0;z-index:9996;background:rgba(3,7,18,0.88);backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:16px;">
+      <div style="background:var(--bg2);border:1px solid rgba(16,185,129,0.4);box-shadow:0 0 35px rgba(16,185,129,0.25);border-radius:20px;padding:26px;width:100%;max-width:440px;position:relative;text-align:center;">
+        <button onclick="closePwaIosModal()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.06);border:1px solid var(--border2);color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;">✕</button>
+        
+        <img src="../logo-ia-codestudio.png" style="width:64px;height:64px;border-radius:16px;box-shadow:0 0 20px rgba(124,58,237,0.4);margin-bottom:14px;" alt="IA Code Studio">
+        <h3 style="font-family:'Outfit',sans-serif;font-size:1.2rem;color:#fff;margin-bottom:6px;">Install on iPhone & iPad</h3>
+        <p style="color:var(--muted);font-size:0.85rem;margin-bottom:18px;">Install IA Code Studio to your Home Screen for instant full-screen 60FPS WebGL & offline access!</p>
+
+        <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:14px;padding:14px;text-align:left;font-size:0.85rem;line-height:1.6;color:var(--text);margin-bottom:18px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <span style="background:rgba(124,58,237,0.2);color:#c084fc;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;">1</span>
+            <span>Tap the <strong>Share button [⎋]</strong> at the bottom of Safari.</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <span style="background:rgba(124,58,237,0.2);color:#c084fc;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;">2</span>
+            <span>Scroll down and tap <strong>"Add to Home Screen" ➕</strong>.</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="background:rgba(124,58,237,0.2);color:#c084fc;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;">3</span>
+            <span>Tap <strong>"Add"</strong> in top right. You're all set! 🚀</span>
+          </div>
+        </div>
+
+        <button onclick="closePwaIosModal()" style="width:100%;padding:11px;border-radius:12px;background:linear-gradient(135deg,#10b981,#059669);border:none;color:#fff;font-weight:700;font-size:0.9rem;cursor:pointer;font-family:'Outfit',sans-serif;">
+          Got it! 👍
+        </button>
       </div>
     </div>
 
@@ -4597,13 +4772,151 @@ async function adminBroadcast() {
 }
 
 // ══════════════════════════════════════════
-// SHARE & STATS
+// SHARE & DEEP-LINKING SYSTEM
 // ══════════════════════════════════════════
+let currentSharePostId = null;
+
 function sharePost(id) {
-  const url = `${location.origin}/community/?post=${id}`;
-  if (navigator.share) navigator.share({ title:'IA Studio Community', url });
-  else navigator.clipboard.writeText(url).then(() => toast('Link copied! 🔗', 'success'));
+  currentSharePostId = id;
+  const directUrl = `${window.location.origin}${window.location.pathname}?post=${id}`;
+  
+  // Update direct link input
+  const linkInput = document.getElementById('shareDirectLinkInput');
+  if (linkInput) linkInput.value = directUrl;
+
+  // Prepare post text/title for networks
+  const title = encodeURIComponent('Check out this amazing 3D WebGL creation on IA Code Studio! 🚀✨');
+  const encodedUrl = encodeURIComponent(directUrl);
+
+  // Set 1-click network URLs
+  const waBtn = document.getElementById('shareBtnWhatsapp');
+  if (waBtn) waBtn.href = `https://api.whatsapp.com/send?text=${title}%20${encodedUrl}`;
+
+  const twBtn = document.getElementById('shareBtnTwitter');
+  if (twBtn) twBtn.href = `https://twitter.com/intent/tweet?text=${title}&url=${encodedUrl}&hashtags=ThreeJS,WebGL,AICodeStudio,JavaScript`;
+
+  const tgBtn = document.getElementById('shareBtnTelegram');
+  if (tgBtn) tgBtn.href = `https://t.me/share/url?url=${encodedUrl}&text=${title}`;
+
+  const inBtn = document.getElementById('shareBtnLinkedin');
+  if (inBtn) inBtn.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+
+  const rdBtn = document.getElementById('shareBtnReddit');
+  if (rdBtn) rdBtn.href = `https://reddit.com/submit?url=${encodedUrl}&title=${title}`;
+
+  // Open modal
+  const modal = document.getElementById('sharePostModal');
+  if (modal) {
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  } else {
+    navigator.clipboard.writeText(directUrl).then(() => toast('Project link copied! 🔗', 'success'));
+  }
 }
+
+function closeShareModal() {
+  const modal = document.getElementById('sharePostModal');
+  if (modal) modal.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function copyShareDirectLink() {
+  const linkInput = document.getElementById('shareDirectLinkInput');
+  if (!linkInput) return;
+  navigator.clipboard.writeText(linkInput.value).then(() => {
+    const btn = document.getElementById('btnCopyShareLink');
+    if (btn) {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✅ Copied!';
+      setTimeout(() => { btn.innerHTML = orig; }, 2000);
+    }
+    toast('Direct link copied to clipboard! 🔗', 'success');
+  });
+}
+
+function openShareCardFromModal() {
+  closeShareModal();
+  if (currentSharePostId && typeof openSocialCardModal === 'function') {
+    openSocialCardModal(currentSharePostId);
+  }
+}
+
+// Deep-link post highlight when arriving via ?post=XYZ
+function checkUrlPostHighlight() {
+  const params = new URLSearchParams(window.location.search);
+  const targetPostId = params.get('post');
+  if (!targetPostId) return;
+
+  setTimeout(() => {
+    const targetEl = document.getElementById(`iframe-container-${targetPostId}`) || document.getElementById(targetPostId);
+    const postCard = targetEl ? targetEl.closest('.post-card') : null;
+    if (postCard) {
+      postCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      postCard.classList.add('post-highlight-pulse');
+      toast('🎯 Opened shared 3D project!', 'info');
+      setTimeout(() => {
+        postCard.classList.remove('post-highlight-pulse');
+      }, 4000);
+    }
+  }, 700);
+}
+
+// ══════════════════════════════════════════
+// 📱 PWA INSTALLATION ENGINE
+// ══════════════════════════════════════════
+let deferredPwaPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPwaPrompt = e;
+  const pwaBtn = document.getElementById('btnInstallPwa');
+  if (pwaBtn) {
+    pwaBtn.style.display = 'inline-flex';
+    pwaBtn.classList.add('pulse-glow');
+  }
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredPwaPrompt = null;
+  const pwaBtn = document.getElementById('btnInstallPwa');
+  if (pwaBtn) pwaBtn.style.display = 'none';
+  toast('🎉 IA Code Studio App installed! +20 🪙 rewarded!', 'success');
+  if (typeof creditUserCoins === 'function') creditUserCoins(20, 'pwa_installed');
+});
+
+function handlePwaInstallClick() {
+  const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+  if (isIos) {
+    // Show iOS step-by-step installation guide
+    const iosModal = document.getElementById('pwaIosModal');
+    if (iosModal) {
+      iosModal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+    return;
+  }
+
+  if (deferredPwaPrompt) {
+    deferredPwaPrompt.prompt();
+    deferredPwaPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        toast('🎉 Installing IA Code Studio App...', 'success');
+      }
+      deferredPwaPrompt = null;
+    });
+  } else {
+    // Already installed or browser doesn't support deferred prompt
+    toast('📱 App is ready! On Android tap [⋮] -> "Install App", on iOS tap Share [⎋] -> "Add to Home Screen".', 'info');
+  }
+}
+
+function closePwaIosModal() {
+  const iosModal = document.getElementById('pwaIosModal');
+  if (iosModal) iosModal.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
 async function loadStats() {
   if (!isAdmin) return; // Only admin sees real stats
   try {
@@ -5195,9 +5508,11 @@ function applyCommunityLanguage(lang) {
   const flagEl = document.getElementById('langFlag');
   const textEl = document.getElementById('langText');
   const brandEl = document.getElementById('lbl-header-brand');
+  const installAppLbl = document.getElementById('lbl-install-app');
   if (flagEl) flagEl.textContent = lang === 'fr' ? '🇫🇷' : '🇬🇧';
   if (textEl) textEl.textContent = lang === 'fr' ? 'FR' : 'EN';
   if (brandEl) brandEl.textContent = t.communityBrand;
+  if (installAppLbl) installAppLbl.textContent = lang === 'fr' ? "Installer l'App" : "Install App";
 
   // Categories
   const catTitle = document.getElementById('lbl-categories-title');
@@ -9532,6 +9847,7 @@ window.addEventListener('DOMContentLoaded', () => {
   initReferralSystem();
   loadStreakState();
   initPushNotifications();
+  checkUrlPostHighlight();
 });
 
 // Initialize after login
@@ -9562,6 +9878,8 @@ document.addEventListener('keydown', e => {
     closeStoryViewer();
     closeAddStoryModal();
     closeAiRemixModal();
+    closeShareModal();
+    closePwaIosModal();
   } 
 });
 </script>
