@@ -3318,7 +3318,12 @@
     }
 
     function setRadioChannel(chan) {
-        radioChannel = chan;
+        radioChannel = chan || 'cosmic';
+        const hudRadioSelectEl = document.getElementById('hud-radio-select');
+        if (hudRadioSelectEl && hudRadioSelectEl.value !== radioChannel) hudRadioSelectEl.value = radioChannel;
+        document.querySelectorAll('.cockpit-chip-btn.radio-chip').forEach(c => {
+            c.classList.toggle('active', c.dataset.val === radioChannel);
+        });
         if (!audioCtx) initCosmicRadio();
         if (!synthRadioGain) return;
         if (chan === 'off') {
@@ -3489,6 +3494,11 @@
     // ── Cosmic Worlds & Obstacles Spawner ──────────────────────────────────
     function buildCosmosWorld(worldType) {
         activeCosmosWorld = worldType || 'galaxies';
+        const hudWorldSelectEl = document.getElementById('hud-world-select');
+        if (hudWorldSelectEl && hudWorldSelectEl.value !== activeCosmosWorld) hudWorldSelectEl.value = activeCosmosWorld;
+        document.querySelectorAll('.cockpit-chip-btn.world-chip').forEach(c => {
+            c.classList.toggle('active', c.dataset.val === activeCosmosWorld);
+        });
         if (cosmosGroup) {
             scene.remove(cosmosGroup);
             cosmosGroup = null;
@@ -3684,11 +3694,14 @@
         isMissionComplete = false;
         if (missionInterval) clearInterval(missionInterval);
 
-        // Sync dropdown select element
+        // Sync dropdown select element & chips
         const hudMissionSelectEl = document.getElementById('hud-mission-select');
         if (hudMissionSelectEl && hudMissionSelectEl.value !== activeMission) {
             hudMissionSelectEl.value = activeMission;
         }
+        document.querySelectorAll('.cockpit-chip-btn.mission-chip').forEach(c => {
+            c.classList.toggle('active', c.dataset.val === activeMission);
+        });
 
         // Clean up previous mission objects from scene
         if (orbitalStation) { scene.remove(orbitalStation); orbitalStation = null; }
@@ -4405,35 +4418,65 @@
         btnExitGameHud.addEventListener('click', () => togglePilotGameMode(false));
     }
 
-    // Mission Selector in HUD
+    // Mission Selector in HUD & Chips
     const hudMissionSelect = document.getElementById('hud-mission-select');
     if (hudMissionSelect) {
         hudMissionSelect.addEventListener('change', (e) => {
             playClickSFX();
             startMission(e.target.value);
-            e.target.blur();
         });
     }
 
-    // Cosmic World Selector in HUD
+    document.querySelectorAll('.cockpit-chip-btn.mission-chip').forEach(chip => {
+        const handleMissionChip = (e) => {
+            e.preventDefault();
+            playClickSFX();
+            const val = chip.dataset.val;
+            startMission(val);
+        };
+        chip.addEventListener('click', handleMissionChip);
+        chip.addEventListener('touchend', handleMissionChip);
+    });
+
+    // Cosmic World Selector in HUD & Chips
     const hudWorldSelect = document.getElementById('hud-world-select');
     if (hudWorldSelect) {
         hudWorldSelect.addEventListener('change', (e) => {
             playClickSFX();
             buildCosmosWorld(e.target.value);
-            e.target.blur();
         });
     }
 
-    // Synth Radio Selector in HUD
+    document.querySelectorAll('.cockpit-chip-btn.world-chip').forEach(chip => {
+        const handleWorldChip = (e) => {
+            e.preventDefault();
+            playClickSFX();
+            const val = chip.dataset.val;
+            buildCosmosWorld(val);
+        };
+        chip.addEventListener('click', handleWorldChip);
+        chip.addEventListener('touchend', handleWorldChip);
+    });
+
+    // Synth Radio Selector in HUD & Chips
     const hudRadioSelect = document.getElementById('hud-radio-select');
     if (hudRadioSelect) {
         hudRadioSelect.addEventListener('change', (e) => {
             playClickSFX();
             setRadioChannel(e.target.value);
-            e.target.blur();
         });
     }
+
+    document.querySelectorAll('.cockpit-chip-btn.radio-chip').forEach(chip => {
+        const handleRadioChip = (e) => {
+            e.preventDefault();
+            playClickSFX();
+            const val = chip.dataset.val;
+            setRadioChannel(val);
+        };
+        chip.addEventListener('click', handleRadioChip);
+        chip.addEventListener('touchend', handleRadioChip);
+    });
 
     // Flight / Drive Mode Toggle Pill in HUD
     const hudBtnModeToggle = document.getElementById('hud-btn-mode-toggle');
@@ -4711,7 +4754,8 @@
     if (webglCanvas) {
         webglCanvas.addEventListener('touchstart', (e) => {
             if (!isPilotGameActive) return;
-            if (e.target.closest('.mobile-game-touch-controls') || e.target.closest('.game-hud-top') || e.target.closest('.modal-card')) return;
+            if (modalGameSettings?.classList.contains('active') || modalHangar?.classList.contains('active')) return;
+            if (e.target.closest('.mobile-game-touch-controls') || e.target.closest('.game-hud-top') || e.target.closest('.modal-card') || e.target.closest('.modal-overlay')) return;
             const touch = e.touches[0];
             if (touch) {
                 touchFlightStartX = touch.clientX;

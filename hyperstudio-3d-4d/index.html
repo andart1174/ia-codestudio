@@ -1348,14 +1348,21 @@
                 <h3 style="color:#00f2fe; font-size:1.25rem;"><i class="fa-solid fa-gamepad"></i> <span>Cockpit &amp; Mission Settings</span></h3>
                 <button class="btn-close-modal" id="btn-close-game-settings"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="modal-body" style="display:flex; flex-direction:column; gap:16px; padding:20px 24px;">
+            <div class="modal-body" style="display:flex; flex-direction:column; gap:16px; padding:18px 22px; overflow-y:auto; -webkit-overflow-scrolling:touch; touch-action:pan-y; max-height:calc(92vh - 120px);">
                 <!-- Mission Selector -->
                 <div class="game-setting-group">
                     <label style="color:#00f2fe; font-weight:700; font-size:0.88rem; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
                         <i class="fa-solid fa-crosshairs"></i> <span>Select Cosmic Mission / Quest:</span>
                     </label>
-                    <select id="hud-mission-select" class="styled-select full-width" style="font-size:0.92rem; background:#0f172a; border:1px solid rgba(0,242,254,0.4); color:#fff; padding:10px 12px; border-radius:10px;">
-                        <option value="station">🛰️ 1. Save Orbital Station (Collect 3 Crystals)</option>
+                    <div class="cockpit-option-grid" id="cockpit-mission-chips">
+                        <button type="button" class="cockpit-chip-btn mission-chip active" data-val="station"><span>🛰️ 1. Save Station (3 💎)</span></button>
+                        <button type="button" class="cockpit-chip-btn mission-chip" data-val="wormhole"><span>⚡ 2. Quantum Slalom</span></button>
+                        <button type="button" class="cockpit-chip-btn mission-chip" data-val="asteroids"><span>☄️ 3. Asteroid Hunt &amp; Lasers</span></button>
+                        <button type="button" class="cockpit-chip-btn mission-chip" data-val="blackhole"><span>🕳️ 4. Black Hole Escape</span></button>
+                        <button type="button" class="cockpit-chip-btn mission-chip" data-val="freeroam"><span>🌌 5. Free Cosmic Roam</span></button>
+                    </div>
+                    <select id="hud-mission-select" class="styled-select full-width" style="display:none; font-size:0.92rem; background:#0f172a; border:1px solid rgba(0,242,254,0.4); color:#fff; padding:10px 12px; border-radius:10px; margin-top:6px;">
+                        <option value="station" selected>🛰️ 1. Save Orbital Station (Collect 3 Crystals)</option>
                         <option value="wormhole">⚡ 2. Quantum Gate Slalom (Speed Rings)</option>
                         <option value="asteroids">☄️ 3. Asteroid Hunt &amp; Mining (Laser Combat)</option>
                         <option value="blackhole">🕳️ 4. Black Hole Escape (Survival Flight)</option>
@@ -1368,8 +1375,16 @@
                     <label style="color:#ffb703; font-weight:700; font-size:0.88rem; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
                         <i class="fa-solid fa-globe"></i> <span>Cosmos Environment &amp; Galaxy:</span>
                     </label>
-                    <select id="hud-world-select" class="styled-select full-width" style="font-size:0.92rem; background:#0f172a; border:1px solid rgba(255,183,3,0.4); color:#fff; padding:10px 12px; border-radius:10px;">
-                        <option value="galaxies">🌌 Galaxies &amp; Solar Planets</option>
+                    <div class="cockpit-option-grid" id="cockpit-world-chips">
+                        <button type="button" class="cockpit-chip-btn world-chip active" data-val="galaxies"><span>🌌 Solar Planets</span></button>
+                        <button type="button" class="cockpit-chip-btn world-chip" data-val="rings"><span>⚡ Speed Slalom</span></button>
+                        <button type="button" class="cockpit-chip-btn world-chip" data-val="asteroids"><span>☄️ Asteroid Storm</span></button>
+                        <button type="button" class="cockpit-chip-btn world-chip" data-val="cybercity"><span>🏙️ Cyber Megacity</span></button>
+                        <button type="button" class="cockpit-chip-btn world-chip" data-val="blackhole"><span>🕳️ Black Hole Horizon</span></button>
+                        <button type="button" class="cockpit-chip-btn world-chip" data-val="deepspace"><span>✨ Deep Void</span></button>
+                    </div>
+                    <select id="hud-world-select" class="styled-select full-width" style="display:none; font-size:0.92rem; background:#0f172a; border:1px solid rgba(255,183,3,0.4); color:#fff; padding:10px 12px; border-radius:10px; margin-top:6px;">
+                        <option value="galaxies" selected>🌌 Galaxies &amp; Solar Planets</option>
                         <option value="rings">⚡ Hyper Ring Speed Slalom</option>
                         <option value="asteroids">☄️ Deep Asteroid Storm</option>
                         <option value="cybercity">🏙️ Cyberpunk Spire Megacity</option>
@@ -1383,8 +1398,14 @@
                     <label style="color:#ff007f; font-weight:700; font-size:0.88rem; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
                         <i class="fa-solid fa-radio"></i> <span>Cockpit Synth Radio:</span>
                     </label>
-                    <select id="hud-radio-select" class="styled-select full-width" style="font-size:0.92rem; background:#0f172a; border:1px solid rgba(255,0,127,0.4); color:#fff; padding:10px 12px; border-radius:10px;">
-                        <option value="cosmic">🎵 Deep Cosmic Synthwave</option>
+                    <div class="cockpit-option-grid" id="cockpit-radio-chips">
+                        <button type="button" class="cockpit-chip-btn radio-chip active" data-val="cosmic"><span>🎵 Synthwave</span></button>
+                        <button type="button" class="cockpit-chip-btn radio-chip" data-val="pulse"><span>⚡ Cyber Beat</span></button>
+                        <button type="button" class="cockpit-chip-btn radio-chip" data-val="chill"><span>🪐 Space Chill</span></button>
+                        <button type="button" class="cockpit-chip-btn radio-chip" data-val="off"><span>🔇 Mute Radio</span></button>
+                    </div>
+                    <select id="hud-radio-select" class="styled-select full-width" style="display:none; font-size:0.92rem; background:#0f172a; border:1px solid rgba(255,0,127,0.4); color:#fff; padding:10px 12px; border-radius:10px; margin-top:6px;">
+                        <option value="cosmic" selected>🎵 Deep Cosmic Synthwave</option>
                         <option value="pulse">⚡ Cyber Pulse High-Energy Beat</option>
                         <option value="chill">🪐 Ambient Chill Space Drift</option>
                         <option value="off">🔇 Mute Radio</option>
@@ -1397,24 +1418,24 @@
                         <i class="fa-solid fa-camera"></i> <span>Camera Perspective View:</span>
                     </label>
                     <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;">
-                        <button class="cam-view-btn active" id="btn-cam-chase" data-cam="chase" style="padding:10px 6px; border-radius:10px; background:rgba(168,85,247,0.22); border:1px solid #a855f7; color:#fff; font-size:0.82rem; font-weight:700; cursor:pointer;">🚀 3rd Person</button>
-                        <button class="cam-view-btn" id="btn-cam-cockpit" data-cam="cockpit" style="padding:10px 6px; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); color:#94a3b8; font-size:0.82rem; font-weight:700; cursor:pointer;">👨‍✈️ Cockpit</button>
-                        <button class="cam-view-btn" id="btn-cam-topdown" data-cam="topdown" style="padding:10px 6px; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); color:#94a3b8; font-size:0.82rem; font-weight:700; cursor:pointer;">🛸 Top-Down</button>
+                        <button type="button" class="cam-view-btn active" id="btn-cam-chase" data-cam="chase" style="padding:10px 6px; border-radius:10px; background:rgba(168,85,247,0.22); border:1px solid #a855f7; color:#fff; font-size:0.82rem; font-weight:700; cursor:pointer;">🚀 3rd Person</button>
+                        <button type="button" class="cam-view-btn" id="btn-cam-cockpit" data-cam="cockpit" style="padding:10px 6px; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); color:#94a3b8; font-size:0.82rem; font-weight:700; cursor:pointer;">👨‍✈️ Cockpit</button>
+                        <button type="button" class="cam-view-btn" id="btn-cam-topdown" data-cam="topdown" style="padding:10px 6px; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); color:#94a3b8; font-size:0.82rem; font-weight:700; cursor:pointer;">🛸 Top-Down</button>
                     </div>
                 </div>
 
                 <!-- Quick Actions Grid -->
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:4px;">
-                    <button id="btn-modal-open-hangar" class="btn btn-secondary" style="border-color:#ffb703; color:#ffb703; justify-content:center;">
+                    <button type="button" id="btn-modal-open-hangar" class="btn btn-secondary" style="border-color:#ffb703; color:#ffb703; justify-content:center;">
                         <i class="fa-solid fa-wrench"></i> <span>Ship Hangar</span>
                     </button>
-                    <button id="btn-modal-exit-game" class="btn btn-secondary" style="border-color:#ff007f; color:#ff007f; justify-content:center;">
+                    <button type="button" id="btn-modal-exit-game" class="btn btn-secondary" style="border-color:#ff007f; color:#ff007f; justify-content:center;">
                         <i class="fa-solid fa-arrow-left"></i> <span>Exit Cockpit</span>
                     </button>
                 </div>
             </div>
             <div class="modal-footer" style="display:flex; justify-content:flex-end; border-top:1px solid rgba(0, 242, 254, 0.2);">
-                <button id="btn-resume-game-modal" class="btn btn-primary btn-glow-accent full-width" style="justify-content:center;">
+                <button type="button" id="btn-resume-game-modal" class="btn btn-primary btn-glow-accent full-width" style="justify-content:center;">
                     <i class="fa-solid fa-play"></i> <span>Resume Flight (Închide Meniu)</span>
                 </button>
             </div>

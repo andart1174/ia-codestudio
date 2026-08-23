@@ -2199,6 +2199,97 @@ body, html {
 }
 
 /* ══════════════════════════════════════════════════════════════════════ */
+/* 🎮 MOBILE TOUCH-FRIENDLY COCKPIT & MISSION SELECTOR STYLES           */
+/* ══════════════════════════════════════════════════════════════════════ */
+
+#modal-game-settings .modal-card {
+    max-width: 640px;
+    width: 95vw;
+    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#modal-game-settings .modal-body {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    max-height: calc(92vh - 120px);
+    padding: 16px 20px;
+}
+
+.cockpit-option-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.cockpit-chip-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #94a3b8;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    font-family: inherit;
+}
+
+.cockpit-chip-btn:hover {
+    background: rgba(30, 41, 59, 0.95);
+    border-color: rgba(0, 242, 254, 0.5);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.cockpit-chip-btn.active {
+    background: linear-gradient(135deg, rgba(0, 242, 254, 0.25), rgba(121, 40, 202, 0.25)) !important;
+    border-color: #00f2fe !important;
+    color: #fff !important;
+    box-shadow: 0 0 16px rgba(0, 242, 254, 0.35);
+    transform: scale(1.02);
+}
+
+.cockpit-chip-btn.mission-chip.active {
+    border-color: #00f2fe !important;
+    box-shadow: 0 0 18px rgba(0, 242, 254, 0.4);
+}
+
+.cockpit-chip-btn.world-chip.active {
+    border-color: #ffb703 !important;
+    box-shadow: 0 0 18px rgba(255, 183, 3, 0.4);
+}
+
+.cockpit-chip-btn.radio-chip.active {
+    border-color: #ff007f !important;
+    box-shadow: 0 0 18px rgba(255, 0, 127, 0.4);
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    #modal-game-settings .modal-card {
+        max-height: 96vh;
+    }
+    #modal-game-settings .modal-body {
+        max-height: calc(96vh - 100px);
+        padding: 10px 16px;
+        gap: 10px !important;
+    }
+    .cockpit-chip-btn {
+        padding: 7px 9px;
+        font-size: 0.76rem;
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════════════ */
 /* 🌌 COSMIC QUEST, RADAR, LASERS & SHIP HANGAR STYLES                  */
 /* ══════════════════════════════════════════════════════════════════════ */
 
