@@ -7141,6 +7141,24 @@ let ringtoneAudioCtx = null;
 let ringtoneInterval = null;
 let ringtoneHtmlAudio = null;
 let cachedRingWavUrl = null;
+let callWakeLock = null;
+
+async function acquireCallWakeLock() {
+  try {
+    if ('wakeLock' in navigator) {
+      callWakeLock = await navigator.wakeLock.request('screen');
+    }
+  } catch(e) {}
+}
+
+function releaseCallWakeLock() {
+  try {
+    if (callWakeLock) {
+      callWakeLock.release();
+      callWakeLock = null;
+    }
+  } catch(e) {}
+}
 
 function getRingWavUrl() {
   if (cachedRingWavUrl) return cachedRingWavUrl;
@@ -7203,7 +7221,7 @@ function playRingtone() {
     if (ringUrl) {
       ringtoneHtmlAudio = new Audio(ringUrl);
       ringtoneHtmlAudio.loop = true;
-      ringtoneHtmlAudio.volume = 0.85;
+      ringtoneHtmlAudio.volume = 0.9;
       ringtoneHtmlAudio.play().catch(()=>{});
     }
   } catch(e) {}
@@ -7211,47 +7229,53 @@ function playRingtone() {
   // 2. Play Web Audio API synthesized ringtone
   try {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContext) return;
-    ringtoneAudioCtx = new AudioContext();
-    if (ringtoneAudioCtx.state === 'suspended') {
-      ringtoneAudioCtx.resume().catch(()=>{});
-    }
-
-    function ringCycle() {
-      if (!ringtoneAudioCtx || ringtoneAudioCtx.state === 'closed') return;
+    if (AudioContext) {
+      ringtoneAudioCtx = new AudioContext();
       if (ringtoneAudioCtx.state === 'suspended') {
         ringtoneAudioCtx.resume().catch(()=>{});
       }
-      const t = ringtoneAudioCtx.currentTime;
-      const osc1 = ringtoneAudioCtx.createOscillator();
-      const osc2 = ringtoneAudioCtx.createOscillator();
-      const gain = ringtoneAudioCtx.createGain();
 
-      osc1.type = 'sine';
-      osc2.type = 'sine';
-      osc1.frequency.setValueAtTime(440, t);
-      osc2.frequency.setValueAtTime(480, t);
+      function ringCycle() {
+        if (!ringtoneAudioCtx || ringtoneAudioCtx.state === 'closed') return;
+        if (ringtoneAudioCtx.state === 'suspended') {
+          ringtoneAudioCtx.resume().catch(()=>{});
+        }
+        const t = ringtoneAudioCtx.currentTime;
+        const osc1 = ringtoneAudioCtx.createOscillator();
+        const osc2 = ringtoneAudioCtx.createOscillator();
+        const gain = ringtoneAudioCtx.createGain();
 
-      gain.gain.setValueAtTime(0, t);
-      gain.gain.linearRampToValueAtTime(0.5, t + 0.05);
-      gain.gain.setValueAtTime(0.5, t + 1.1);
-      gain.gain.linearRampToValueAtTime(0, t + 1.2);
+        osc1.type = 'sine';
+        osc2.type = 'sine';
+        osc1.frequency.setValueAtTime(440, t);
+        osc2.frequency.setValueAtTime(480, t);
 
-      osc1.connect(gain);
-      osc2.connect(gain);
-      gain.connect(ringtoneAudioCtx.destination);
+        gain.gain.setValueAtTime(0, t);
+        gain.gain.linearRampToValueAtTime(0.5, t + 0.05);
+        gain.gain.setValueAtTime(0.5, t + 1.1);
+        gain.gain.linearRampToValueAtTime(0, t + 1.2);
 
-      osc1.start(t);
-      osc2.start(t);
-      osc1.stop(t + 1.2);
-      osc2.stop(t + 1.2);
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(ringtoneAudioCtx.destination);
+
+        osc1.start(t);
+        osc2.start(t);
+        osc1.stop(t + 1.2);
+        osc2.stop(t + 1.2);
+      }
+
+      ringCycle();
+      ringtoneInterval = setInterval(ringCycle, 2200);
     }
+  } catch (e) {}
 
-    ringCycle();
-    ringtoneInterval = setInterval(ringCycle, 2200);
-  } catch (e) {
-    console.warn("Ringtone audio note:", e);
-  }
+  // 3. Trigger device vibration on supported mobile devices
+  try {
+    if ('vibrate' in navigator) {
+      navigator.vibrate([400, 200, 400, 200, 800]);
+    }
+  } catch(e) {}
 }
 
 function stopRingtone() {
@@ -7270,21 +7294,31 @@ function stopRingtone() {
     try { ringtoneAudioCtx.close(); } catch(e) {}
     ringtoneAudioCtx = null;
   }
+  try {
+    if ('vibrate' in navigator) navigator.vibrate(0);
+  } catch(e) {}
+}
+
+function getCanonicalUid(idOrUser) {
+  if (!idOrUser) return '';
+  if (typeof idOrUser === 'object') {
+    return (idOrUser.uid || idOrUser.id || idOrUser.email || '').trim();
+  }
+  return String(idOrUser).trim();
 }
 
 function normalizeUserId(idOrUser) {
-  if (!idOrUser) return '';
-  if (typeof idOrUser === 'object') {
-    return (idOrUser.email || idOrUser.uid || '').trim().toLowerCase();
-  }
-  return String(idOrUser).trim().toLowerCase();
+  return getCanonicalUid(idOrUser).toLowerCase();
 }
 
+// WebRTC Configuration with multiple Google STUN servers
 const rtcConfig = {
   iceServers: [
     { urls: 'stun:stun.l.google.com:19302' },
     { urls: 'stun:stun1.l.google.com:19302' },
-    { urls: 'stun:stun2.l.google.com:19302' }
+    { urls: 'stun:stun2.l.google.com:19302' },
+    { urls: 'stun:stun3.l.google.com:19302' },
+    { urls: 'stun:stun4.l.google.com:19302' }
   ]
 };
 
@@ -7304,20 +7338,21 @@ function initCallListener(currentUser) {
   callListenerUnsubs.forEach(un => un());
   callListenerUnsubs = [];
 
-  const myNormalized = normalizeUserId(currentUser);
-  const myUid = typeof currentUser === 'object' ? currentUser.uid : currentUser;
-  const myEmail = (typeof currentUser === 'object' && currentUser.email) ? currentUser.email : null;
+  const myUid = currentUser.uid || '';
+  const myEmail = (currentUser.email || '').toLowerCase();
+  const myNorm = normalizeUserId(currentUser);
 
-  const targets = new Set([myNormalized, myUid, myEmail].filter(Boolean));
+  const targetIds = new Set([myUid, myEmail, myNorm].filter(Boolean));
 
-  targets.forEach(tgt => {
+  targetIds.forEach(tgt => {
     const un = db.collection('devsocial_posts')
-      .where('receiverId', '==', tgt)
+      .where('receiverUid', '==', tgt)
       .onSnapshot(snap => {
         snap.docChanges().forEach(change => {
           if (change.type === 'added') {
             const data = change.doc.data();
             if (data && data.type === 'cyber_call' && data.status === 'ringing') {
+              if (data.createdAt && (Date.now() - data.createdAt > 90000)) return;
               data.id = change.doc.id;
               handleIncomingCallNotification(data);
             }
@@ -7331,7 +7366,7 @@ function initCallListener(currentUser) {
 }
 
 function handleIncomingCallNotification(callData) {
-  if (activeCallId) return;
+  if (activeCallId) return; // already in call
   activeCallId = callData.id;
   activeCallData = callData;
 
@@ -7364,7 +7399,7 @@ function handleIncomingCallNotification(callData) {
 
 function listenToCallStatus(callId) {
   if (activeCallDocUnsub) activeCallDocUnsub();
-  activeCallDocUnsub = db.collection('devsocial_posts').doc(callId).onSnapshot(doc => {
+  activeCallDocUnsub = db.collection('devsocial_posts').doc(callId).onSnapshot(async doc => {
     if (!doc.exists) {
       endActiveCallLocally();
       return;
@@ -7375,38 +7410,63 @@ function listenToCallStatus(callId) {
       const t = I18N[lang] || I18N.en;
       toast(data.status === 'declined' ? t.callDeclinedToast : t.callEndedToast, 'info');
       endActiveCallLocally();
-    } else if (data.status === 'accepted' && document.getElementById('callScreenOutgoing').style.display === 'block') {
+      return;
+    }
+
+    // Caller receives SDP answer from callee
+    if (data.status === 'accepted' && data.answer && activePeerConnection) {
       stopRingtone();
+      if (activePeerConnection.signalingState === 'have-local-offer') {
+        try {
+          await activePeerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
+        } catch(err) {
+          console.warn("Set remote answer note:", err);
+        }
+      }
       setupActiveCallUI(data);
+    }
+
+    // Process callee ICE candidates
+    if (activePeerConnection && data.calleeCandidates && Array.isArray(data.calleeCandidates)) {
+      data.calleeCandidates.forEach(cand => {
+        try {
+          activePeerConnection.addIceCandidate(new RTCIceCandidate(cand)).catch(()=>{});
+        } catch(e) {}
+      });
+    }
+
+    // Process caller ICE candidates
+    if (activePeerConnection && data.callerCandidates && Array.isArray(data.callerCandidates)) {
+      data.callerCandidates.forEach(cand => {
+        try {
+          activePeerConnection.addIceCandidate(new RTCIceCandidate(cand)).catch(()=>{});
+        } catch(e) {}
+      });
     }
   });
 }
 
-function createVirtualCyberStream() {
-  try {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (AudioContext) {
-      const ctx = new AudioContext();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      gain.gain.value = 0.0001;
-      const dst = ctx.createMediaStreamDestination();
-      osc.connect(gain);
-      gain.connect(dst);
-      osc.start();
-      return dst.stream;
-    }
-  } catch(e) {}
-  return null;
+function attachStreamToMediaElements(stream, isVideo) {
+  const rVideo = document.getElementById('remoteVideo');
+  const rAudio = document.getElementById('remoteAudio');
+  if (rAudio) {
+    rAudio.srcObject = stream;
+    rAudio.play().catch(()=>{});
+  }
+  if (rVideo) {
+    rVideo.srcObject = stream;
+    if (isVideo) rVideo.play().catch(()=>{});
+  }
 }
 
 async function initiateCyberCall(receiverUid, receiverName, receiverPhoto, callType = 'audio') {
   if (!user) { signInGoogle(); return; }
   if (activeCallId) return;
 
-  const myNormalized = normalizeUserId(user);
+  const myUid = user.uid || user.email || '';
   const myName = user.displayName || user.email?.split('@')[0] || 'User';
   const myPhoto = user.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
+  const isVideo = (callType === 'video');
 
   const lang = getCommunityLang();
   const t = I18N[lang] || I18N.en;
@@ -7421,34 +7481,12 @@ async function initiateCyberCall(receiverUid, receiverName, receiverPhoto, callT
   document.getElementById('callOverlayBox').classList.add('active');
 
   playRingtone();
+  acquireCallWakeLock();
 
-  try {
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      try {
-        activeLocalStream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
-          video: callType === 'video'
-        });
-      } catch(mediaErr) {
-        try {
-          activeLocalStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        } catch(audioErr) {
-          activeLocalStream = createVirtualCyberStream();
-        }
-      }
-    } else {
-      activeLocalStream = createVirtualCyberStream();
-    }
-  } catch(e) {
-    activeLocalStream = createVirtualCyberStream();
-  }
-
-  const localVid = document.getElementById('localVideo');
-  if (localVid && activeLocalStream) localVid.srcObject = activeLocalStream;
-
+  // SPECIAL GENIUS AI BOT CALL (Simulated Live Voice)
   if (receiverUid === 'GENIUS_AI_BOT') {
     activeCallId = 'ai_bot_call_' + Date.now();
-    activeCallData = { id: activeCallId, callType: callType, receiverName: '🤖 GENIUS AI', receiverPhoto: receiverPhoto, callerId: myNormalized };
+    activeCallData = { id: activeCallId, callType: callType, receiverName: '🤖 GENIUS AI', receiverPhoto: receiverPhoto, callerUid: myUid };
 
     setTimeout(() => {
       if (!activeCallId) return;
@@ -7460,8 +7498,8 @@ async function initiateCyberCall(receiverUid, receiverName, receiverPhoto, callT
           window.speechSynthesis.cancel();
           const currentLang = getCommunityLang();
           const greeting = currentLang === 'fr' 
-            ? "Bonjour ! Je suis GENIUS IA. Votre ligne cyber audio et vidéo est chiffrée et parfaitement active !" 
-            : "Hello! I am GENIUS AI. Your Cyber Phone voice and video line is encrypted, crystal clear, and 100% active!";
+            ? "Bonjour ! Je suis GENIUS IA. Votre ligne cyber audio et vidéo WebRTC est chiffrée et parfaitement connectée !" 
+            : "Hello! I am GENIUS AI. Your Cyber Phone WebRTC voice and video line is encrypted, crystal clear, and 100% active!";
           const utter = new SpeechSynthesisUtterance(greeting);
           utter.lang = currentLang === 'fr' ? 'fr-FR' : 'en-US';
           utter.rate = 1.05;
@@ -7472,26 +7510,67 @@ async function initiateCyberCall(receiverUid, receiverName, receiverPhoto, callT
     return;
   }
 
+  // Get local media
   try {
-    const targetNormalized = normalizeUserId(receiverUid);
+    activeLocalStream = await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+      video: isVideo ? { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: 'user' } : false
+    });
+  } catch(mediaErr) {
+    try {
+      activeLocalStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch(audioErr) {
+      console.warn("Could not get mic/cam:", audioErr);
+      toast("Microphone access is required for calls", "warning");
+    }
+  }
+
+  const localVid = document.getElementById('localVideo');
+  if (localVid && activeLocalStream) localVid.srcObject = activeLocalStream;
+
+  try {
+    activePeerConnection = new RTCPeerConnection(rtcConfig);
+
+    if (activeLocalStream) {
+      activeLocalStream.getTracks().forEach(track => {
+        activePeerConnection.addTrack(track, activeLocalStream);
+      });
+    }
+
+    activePeerConnection.ontrack = (event) => {
+      attachStreamToMediaElements(event.streams[0], isVideo);
+    };
+
+    activePeerConnection.onicecandidate = (event) => {
+      if (event.candidate && activeCallId) {
+        db.collection('devsocial_posts').doc(activeCallId).update({
+          callerCandidates: firebase.firestore.FieldValue.arrayUnion(event.candidate.toJSON())
+        }).catch(()=>{});
+      }
+    };
+
+    const offer = await activePeerConnection.createOffer();
+    await activePeerConnection.setLocalDescription(offer);
 
     const callDoc = await db.collection('devsocial_posts').add({
       type: 'cyber_call',
-      callerId: myNormalized,
-      callerUid: user.uid || '',
+      callerUid: myUid,
       callerEmail: user.email || '',
       callerName: myName,
       callerPhoto: myPhoto,
-      receiverId: targetNormalized,
       receiverUid: receiverUid,
       receiverName: receiverName,
+      receiverPhoto: receiverPhoto || '',
       callType: callType,
       status: 'ringing',
+      offer: { sdp: offer.sdp, type: offer.type },
+      callerCandidates: [],
+      calleeCandidates: [],
       createdAt: Date.now()
     });
 
     activeCallId = callDoc.id;
-    activeCallData = { id: callDoc.id, callType: callType, receiverName, receiverPhoto, callerId: myNormalized };
+    activeCallData = { id: callDoc.id, callType: callType, receiverName, receiverPhoto, callerUid: myUid };
     listenToCallStatus(callDoc.id);
 
     setTimeout(() => {
@@ -7501,7 +7580,9 @@ async function initiateCyberCall(receiverUid, receiverName, receiverPhoto, callT
     }, 45000);
 
   } catch(e) {
-    console.warn("Call signaling note:", e);
+    console.error("Initiate call error:", e);
+    toast("Call connection failed", "error");
+    endActiveCallLocally();
   }
 }
 
@@ -7509,36 +7590,69 @@ async function acceptIncomingCall() {
   stopRingtone();
   if (!activeCallId || !activeCallData) return;
 
+  const isVideo = (activeCallData.callType === 'video');
+  acquireCallWakeLock();
+
   try {
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      try {
-        activeLocalStream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
-          video: activeCallData.callType === 'video'
-        });
-      } catch(mediaErr) {
-        try {
-          activeLocalStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        } catch(audioErr) {
-          activeLocalStream = createVirtualCyberStream();
-        }
-      }
-    } else {
-      activeLocalStream = createVirtualCyberStream();
+    activeLocalStream = await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+      video: isVideo ? { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: 'user' } : false
+    });
+  } catch(mediaErr) {
+    try {
+      activeLocalStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch(audioErr) {
+      console.warn("Could not get mic/cam:", audioErr);
+    }
+  }
+
+  const localVid = document.getElementById('localVideo');
+  if (localVid && activeLocalStream) localVid.srcObject = activeLocalStream;
+
+  try {
+    activePeerConnection = new RTCPeerConnection(rtcConfig);
+
+    if (activeLocalStream) {
+      activeLocalStream.getTracks().forEach(track => {
+        activePeerConnection.addTrack(track, activeLocalStream);
+      });
     }
 
-    const localVid = document.getElementById('localVideo');
-    if (localVid && activeLocalStream) localVid.srcObject = activeLocalStream;
+    activePeerConnection.ontrack = (event) => {
+      attachStreamToMediaElements(event.streams[0], isVideo);
+    };
+
+    activePeerConnection.onicecandidate = (event) => {
+      if (event.candidate && activeCallId) {
+        db.collection('devsocial_posts').doc(activeCallId).update({
+          calleeCandidates: firebase.firestore.FieldValue.arrayUnion(event.candidate.toJSON())
+        }).catch(()=>{});
+      }
+    };
+
+    if (activeCallData.offer) {
+      await activePeerConnection.setRemoteDescription(new RTCSessionDescription(activeCallData.offer));
+    }
+
+    if (activeCallData.callerCandidates && Array.isArray(activeCallData.callerCandidates)) {
+      activeCallData.callerCandidates.forEach(cand => {
+        activePeerConnection.addIceCandidate(new RTCIceCandidate(cand)).catch(()=>{});
+      });
+    }
+
+    const answer = await activePeerConnection.createAnswer();
+    await activePeerConnection.setLocalDescription(answer);
 
     if (!activeCallId.startsWith('ai_bot_call_')) {
       await db.collection('devsocial_posts').doc(activeCallId).update({
-        status: 'accepted'
+        status: 'accepted',
+        answer: { sdp: answer.sdp, type: answer.type }
       });
     }
 
     setupActiveCallUI(activeCallData);
   } catch(e) {
-    console.warn("Accept call stream note:", e);
+    console.error("Accept call error:", e);
     setupActiveCallUI(activeCallData);
   }
 }
@@ -7569,6 +7683,7 @@ function endActiveCall() {
 
 function endActiveCallLocally() {
   stopRingtone();
+  releaseCallWakeLock();
   if ('speechSynthesis' in window) window.speechSynthesis.cancel();
   if (activeCallDocUnsub) { activeCallDocUnsub(); activeCallDocUnsub = null; }
   if (activeCallTimerInterval) { clearInterval(activeCallTimerInterval); activeCallTimerInterval = null; }
@@ -7581,6 +7696,11 @@ function endActiveCallLocally() {
     activePeerConnection.close();
     activePeerConnection = null;
   }
+
+  const rVideo = document.getElementById('remoteVideo');
+  const rAudio = document.getElementById('remoteAudio');
+  if (rVideo) rVideo.srcObject = null;
+  if (rAudio) rAudio.srcObject = null;
 
   activeCallId = null;
   activeCallData = null;
@@ -7602,9 +7722,9 @@ function setupActiveCallUI(callData) {
   document.getElementById('activeVideoStage').style.display = isVideo ? 'block' : 'none';
   document.getElementById('activeAudioStage').style.display = isVideo ? 'none' : 'block';
 
-  const myNormalized = normalizeUserId(user);
-  const otherName = (callData.callerId === myNormalized) ? callData.receiverName : (callData.callerName || 'Member');
-  const otherPhoto = (callData.callerId === myNormalized) ? callData.receiverPhoto : (callData.callerPhoto || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(otherName)}`);
+  const myUid = user ? (user.uid || user.email || '') : '';
+  const otherName = (callData.callerUid === myUid) ? callData.receiverName : (callData.callerName || 'Member');
+  const otherPhoto = (callData.callerUid === myUid) ? callData.receiverPhoto : (callData.callerPhoto || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(otherName)}`);
 
   document.getElementById('activePeerName').textContent = otherName || 'Connected';
   document.getElementById('activePeerPhoto').src = otherPhoto || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(otherName || 'User')}`;
@@ -7675,8 +7795,8 @@ function openDmWithUser(targetUid, targetName, targetPhoto) {
 }
 
 function getDmConvoId(u1, u2) {
-  const id1 = normalizeUserId(u1);
-  const id2 = normalizeUserId(u2);
+  const id1 = getCanonicalUid(u1).toLowerCase();
+  const id2 = getCanonicalUid(u2).toLowerCase();
   return [id1, id2].sort().join('__');
 }
 
@@ -7712,59 +7832,52 @@ function initiateCallFromDm(type) {
 
 async function loadDmConversations() {
   if (!db || !user) return;
-  const myNormalized = normalizeUserId(user);
+  const myUid = user.uid || '';
+  const myEmail = (user.email || '').toLowerCase();
   const listEl = document.getElementById('dmConvosList');
   if (!listEl) return;
 
   try {
     const userMap = new Map();
 
+    // 1. Scan users collection
     try {
-      const snap1 = await db.collection('users').limit(25).get();
+      const snap1 = await db.collection('users').limit(40).get();
       snap1.forEach(doc => {
         const d = doc.data();
-        const norm = normalizeUserId(d.email || doc.id);
-        if (norm && norm !== myNormalized) {
-          userMap.set(norm, {
-            uid: norm,
-            displayName: d.displayName || d.email?.split('@')[0] || 'Member',
-            photoURL: d.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(d.displayName || norm)}`,
-            email: d.email || ''
+        const docUid = doc.id;
+        const docEmail = (d.email || '').toLowerCase();
+        if (docUid !== myUid && docEmail !== myEmail) {
+          const uName = d.displayName || d.name || docEmail.split('@')[0] || 'Member';
+          const uPhoto = d.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(uName)}`;
+          userMap.set(docUid, {
+            uid: docUid,
+            displayName: uName,
+            photoURL: uPhoto,
+            email: docEmail
           });
         }
       });
     } catch(e) {}
 
+    // 2. Scan recent posts for authors
     try {
-      const snap2 = await db.collection('devsocial_users').limit(25).get();
+      const snap2 = await db.collection('devsocial_posts').limit(40).get();
       snap2.forEach(doc => {
-        const d = doc.data();
-        const norm = normalizeUserId(d.email || doc.id);
-        if (norm && norm !== myNormalized) {
-          userMap.set(norm, {
-            uid: norm,
-            displayName: d.displayName || d.email?.split('@')[0] || 'Member',
-            photoURL: d.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(d.displayName || norm)}`,
-            email: d.email || ''
-          });
-        }
-      });
-    } catch(e) {}
-
-    try {
-      const snap3 = await db.collection('devsocial_posts').limit(25).get();
-      snap3.forEach(doc => {
         const p = doc.data();
         if (p.type === 'dm_msg' || p.type === 'cyber_call') return;
-        const pId = p.userEmail || p.email || p.uid;
-        const norm = normalizeUserId(pId);
-        if (norm && norm !== myNormalized && !userMap.has(norm)) {
-          userMap.set(norm, {
-            uid: norm,
-            displayName: p.author || p.userName || p.displayName || norm.split('@')[0],
-            photoURL: p.avatar || p.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(p.author || norm)}`,
-            email: p.userEmail || p.email || ''
-          });
+        const authorUid = p.uid || p.userEmail || p.email;
+        if (authorUid && authorUid !== myUid && authorUid !== myEmail) {
+          const aName = p.displayName || p.user || p.author || 'Creator';
+          const aPhoto = p.photoURL || p.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(aName)}`;
+          if (!userMap.has(authorUid)) {
+            userMap.set(authorUid, {
+              uid: authorUid,
+              displayName: aName,
+              photoURL: aPhoto,
+              email: p.userEmail || p.email || ''
+            });
+          }
         }
       });
     } catch(e) {}
@@ -7788,7 +7901,7 @@ async function loadDmConversations() {
       const uName = u.displayName || u.email?.split('@')[0] || 'Creator';
       const uPhoto = u.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(uName)}`;
       html += `
-        <div class="dm-convo-item ${normalizeUserId(activeDmTargetUid)===u.uid?'active':''}" onclick="selectDmUser('${esc(u.uid)}', '${esc(uName).replace(/'/g, "\\'")}', '${esc(uPhoto)}')">
+        <div class="dm-convo-item ${activeDmTargetUid===u.uid?'active':''}" onclick="selectDmUser('${esc(u.uid)}', '${esc(uName).replace(/'/g, "\\'")}', '${esc(uPhoto)}')">
           <div class="dm-avatar-wrap">
             <img src="${esc(uPhoto)}" class="dm-avatar-img" alt="${esc(uName)}">
             <div class="dm-status-dot"></div>
@@ -7803,7 +7916,7 @@ async function loadDmConversations() {
 
     listEl.innerHTML = html;
   } catch(e) {
-    console.warn("Load conversations note:", e);
+    console.warn("Load conversations error:", e);
   }
 }
 
@@ -7817,7 +7930,8 @@ function listenToDmMessages() {
     return;
   }
 
-  const myNormalized = normalizeUserId(user);
+  const myUid = user.uid || user.email || '';
+  const myEmail = (user.email || '').toLowerCase();
   const convoId = getDmConvoId(user, activeDmTargetUid);
 
   area.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:0.8rem;"><div class="spinner" style="margin:0 auto 10px;"></div>Loading conversation...</div>';
@@ -7846,13 +7960,13 @@ function listenToDmMessages() {
 
       let msgsHtml = '';
       msgs.forEach(m => {
-        const isOutgoing = (m.senderId === myNormalized || m.senderUid === user?.uid || m.senderEmail === user?.email);
+        const isOutgoing = (m.senderUid === myUid || (m.senderEmail && m.senderEmail.toLowerCase() === myEmail));
         msgsHtml += renderDmBubbleHtml(m, isOutgoing, m.id);
       });
       area.innerHTML = msgsHtml;
       area.scrollTop = area.scrollHeight;
     }, err => {
-      console.warn("DMs listener note:", err);
+      console.warn("DMs listener error:", err);
       area.innerHTML = `
         <div style="text-align:center;padding:30px 10px;color:var(--muted);font-size:0.8rem;">
           🔒 Direct chat ready. Type a message below to start!
@@ -7900,6 +8014,7 @@ function renderDmBubbleHtml(m, isOutgoing, msgId) {
   `;
 }
 
+// AI Bot Local Conversation
 let localAiMessages = [
   { isAi: true, text: "Hello! I am GENIUS AI Copilot 🤖. You can chat with me, ask for 3D Three.js code, or test interactive HTML5 widgets anytime!" }
 ];
@@ -7964,7 +8079,7 @@ async function sendDmText() {
     return;
   }
 
-  const myNormalized = normalizeUserId(user);
+  const myUid = user.uid || user.email || '';
   const myName = user.displayName || user.email?.split('@')[0] || 'User';
   const convoId = getDmConvoId(user, activeDmTargetUid);
 
@@ -7972,12 +8087,14 @@ async function sendDmText() {
     await db.collection('devsocial_posts').add({
       type: 'dm_msg',
       convoId: convoId,
-      senderId: myNormalized,
-      senderUid: user.uid || '',
+      senderUid: myUid,
       senderEmail: user.email || '',
       senderName: myName,
+      senderPhoto: user.photoURL || '',
+      receiverUid: activeDmTargetUid,
+      receiverName: activeDmTargetName,
       text: text,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      createdAt: Date.now()
     });
   } catch(e) {
     console.error("Send DM error:", e);
@@ -8022,7 +8139,7 @@ function handleDmPhotoSelect(e) {
         return;
       }
 
-      const myNormalized = normalizeUserId(user);
+      const myUid = user.uid || user.email || '';
       const myName = user.displayName || user.email?.split('@')[0] || 'User';
       const convoId = getDmConvoId(user, activeDmTargetUid);
 
@@ -8030,10 +8147,12 @@ function handleDmPhotoSelect(e) {
         await db.collection('devsocial_posts').add({
           type: 'dm_msg',
           convoId: convoId,
-          senderId: myNormalized,
-          senderUid: user.uid || '',
+          senderUid: myUid,
           senderEmail: user.email || '',
           senderName: myName,
+          senderPhoto: user.photoURL || '',
+          receiverUid: activeDmTargetUid,
+          receiverName: activeDmTargetName,
           image: compressedDataUrl,
           createdAt: Date.now()
         });
@@ -8074,7 +8193,7 @@ async function confirmSendDmCode() {
     return;
   }
 
-  const myNormalized = normalizeUserId(user);
+  const myUid = user.uid || user.email || '';
   const myName = user.displayName || user.email?.split('@')[0] || 'User';
   const convoId = getDmConvoId(user, activeDmTargetUid);
 
@@ -8082,10 +8201,12 @@ async function confirmSendDmCode() {
     await db.collection('devsocial_posts').add({
       type: 'dm_msg',
       convoId: convoId,
-      senderId: myNormalized,
-      senderUid: user.uid || '',
+      senderUid: myUid,
       senderEmail: user.email || '',
       senderName: myName,
+      senderPhoto: user.photoURL || '',
+      receiverUid: activeDmTargetUid,
+      receiverName: activeDmTargetName,
       code: code,
       codeTitle: title,
       createdAt: Date.now()
