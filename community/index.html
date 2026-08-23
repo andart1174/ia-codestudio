@@ -9274,135 +9274,147 @@ function triggerAiRemixGeneration() {
 function mutateCodeWithAi(srcCode, preset, customPrompt) {
   let mutated = srcCode;
 
-  // Ensure HTML wrapper if raw snippet
+  // Ensure HTML wrapper
   if (!mutated.includes('<html') && !mutated.includes('<!DOCTYPE')) {
-    mutated = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{margin:0;overflow:hidden;background:#000;}</style></head><body>${mutated}</body></html>`;
+    mutated = '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{margin:0;overflow:hidden;background:#000;}</style></head><body>' + mutated + '</body></html>';
   }
 
-  // Preset specific 3D shader and styling mutations
-  let styleAdditions = '';
-  let jsMutations = '';
+  // 1. Direct Regex Code Shifting
+  const customLower = (customPrompt || '').toLowerCase();
+  
+  if (preset === 'matrix' || customLower.includes('wireframe') || customLower.includes('matrix')) {
+    mutated = mutated.replace(/wireframe\s*:\s*false/gi, 'wireframe: true');
+    mutated = mutated.replace(/0x[0-9a-fA-F]{6}/gi, '0x00ff41');
+    mutated = mutated.replace(/#[0-9a-fA-F]{6}/gi, '#00ff41');
+  } else if (preset === 'lava' || customLower.includes('fire') || customLower.includes('lava') || customLower.includes('red')) {
+    const lavaColors = ['0xff3700', '0xff7700', '0xff0044', '0xffaa00', '0xff2200'];
+    let cIdx = 0;
+    mutated = mutated.replace(/0x[0-9a-fA-F]{6}/gi, () => lavaColors[(cIdx++) % lavaColors.length]);
+  } else if (preset === 'ice' || customLower.includes('ice') || customLower.includes('crystal') || customLower.includes('cyan')) {
+    const iceColors = ['0x00f0ff', '0x80e5ff', '0xdffff', '0x0088cc', '0xffffff'];
+    let cIdx = 0;
+    mutated = mutated.replace(/0x[0-9a-fA-F]{6}/gi, () => iceColors[(cIdx++) % iceColors.length]);
+  } else if (preset === 'gold' || customLower.includes('gold') || customLower.includes('yellow')) {
+    const goldColors = ['0xffd700', '0xffae00', '0xffe680', '0xd4af37', '0xffc107'];
+    let cIdx = 0;
+    mutated = mutated.replace(/0x[0-9a-fA-F]{6}/gi, () => goldColors[(cIdx++) % goldColors.length]);
+  } else if (preset === 'galaxy' || customLower.includes('space') || customLower.includes('galaxy') || customLower.includes('purple')) {
+    const galaxyColors = ['0xb800ff', '0x00e5ff', '0x7928ca', '0x4d00ff', '0xff007f'];
+    let cIdx = 0;
+    mutated = mutated.replace(/0x[0-9a-fA-F]{6}/gi, () => galaxyColors[(cIdx++) % galaxyColors.length]);
+  } else { // Cyberpunk default
+    const cyberColors = ['0x00f0ff', '0xff007f', '0x7928ca', '0x00ffcc', '0xff0055'];
+    let cIdx = 0;
+    mutated = mutated.replace(/0x[0-9a-fA-F]{6}/gi, () => cyberColors[(cIdx++) % cyberColors.length]);
+  }
 
+  // Speed multiplier
+  if (customLower.includes('fast') || customLower.includes('speed')) {
+    mutated = mutated.replace(/(\+\=\s*0\.0\d+)/g, '+= 0.05');
+  }
+
+  // 2. CSS Visual FX Filter Layer
+  let canvasFilter = '';
   if (preset === 'cyberpunk') {
-    styleAdditions = `
-      body { background: radial-gradient(circle at center, #180033 0%, #030712 100%) !important; }
-      canvas { filter: drop-shadow(0 0 25px rgba(0,240,255,0.6)) drop-shadow(0 0 45px rgba(255,0,128,0.4)); }
-    `;
-    jsMutations = `
-      if (typeof scene !== 'undefined') {
-        scene.background = new THREE.Color(0x030712);
-        if (typeof THREE !== 'undefined') {
-          const pLight1 = new THREE.PointLight(0x00f0ff, 4, 100);
-          pLight1.position.set(10, 15, 10);
-          scene.add(pLight1);
-          const pLight2 = new THREE.PointLight(0xff007f, 4, 100);
-          pLight2.position.set(-10, -10, 10);
-          scene.add(pLight2);
-        }
-      }
-    `;
+    canvasFilter = 'filter: hue-rotate(180deg) saturate(260%) contrast(135%) drop-shadow(0 0 25px rgba(0,240,255,0.8)) !important;';
   } else if (preset === 'lava') {
-    styleAdditions = `
-      body { background: radial-gradient(circle at center, #2e0500 0%, #080000 100%) !important; }
-      canvas { filter: drop-shadow(0 0 35px rgba(255,60,0,0.8)) drop-shadow(0 0 60px rgba(255,180,0,0.5)); }
-    `;
-    jsMutations = `
-      if (typeof scene !== 'undefined' && typeof THREE !== 'undefined') {
-        scene.background = new THREE.Color(0x0a0100);
-        const lavaLight = new THREE.PointLight(0xff3700, 6, 80);
-        lavaLight.position.set(0, 5, 10);
-        scene.add(lavaLight);
-      }
-    `;
+    canvasFilter = 'filter: sepia(70%) hue-rotate(325deg) saturate(380%) contrast(150%) brightness(1.2) drop-shadow(0 0 35px rgba(255,60,0,0.9)) !important;';
   } else if (preset === 'ice') {
-    styleAdditions = `
-      body { background: radial-gradient(circle at center, #001f3f 0%, #000814 100%) !important; }
-      canvas { filter: drop-shadow(0 0 30px rgba(0,229,255,0.8)) brightness(1.15) contrast(1.1); }
-    `;
-    jsMutations = `
-      if (typeof scene !== 'undefined' && typeof THREE !== 'undefined') {
-        scene.background = new THREE.Color(0x000d1a);
-        const iceLight = new THREE.PointLight(0x80e5ff, 5, 80);
-        iceLight.position.set(5, 15, 15);
-        scene.add(iceLight);
-      }
-    `;
+    canvasFilter = 'filter: hue-rotate(145deg) saturate(220%) contrast(140%) brightness(1.3) drop-shadow(0 0 30px rgba(0,229,255,0.9)) !important;';
   } else if (preset === 'galaxy') {
-    styleAdditions = `
-      body { background: radial-gradient(circle at center, #11002e 0%, #010005 100%) !important; }
-      canvas { filter: drop-shadow(0 0 30px rgba(184,0,255,0.7)); }
-    `;
-    jsMutations = `
-      if (typeof scene !== 'undefined' && typeof THREE !== 'undefined') {
-        scene.background = new THREE.Color(0x020008);
-        const cosmicLight1 = new THREE.PointLight(0xb800ff, 4, 100);
-        cosmicLight1.position.set(15, 10, 15);
-        scene.add(cosmicLight1);
-        const cosmicLight2 = new THREE.PointLight(0x00e5ff, 3, 100);
-        cosmicLight2.position.set(-15, -10, 15);
-        scene.add(cosmicLight2);
-      }
-    `;
+    canvasFilter = 'filter: hue-rotate(240deg) saturate(300%) contrast(135%) drop-shadow(0 0 35px rgba(184,0,255,0.9)) !important;';
   } else if (preset === 'gold') {
-    styleAdditions = `
-      body { background: radial-gradient(circle at center, #241900 0%, #080500 100%) !important; }
-      canvas { filter: drop-shadow(0 0 35px rgba(255,215,0,0.7)) brightness(1.2); }
-    `;
-    jsMutations = `
-      if (typeof scene !== 'undefined' && typeof THREE !== 'undefined') {
-        scene.background = new THREE.Color(0x0a0700);
-        const goldLight = new THREE.PointLight(0xffd700, 5, 80);
-        goldLight.position.set(10, 20, 15);
-        scene.add(goldLight);
-      }
-    `;
+    canvasFilter = 'filter: sepia(100%) saturate(500%) hue-rotate(5deg) contrast(140%) brightness(1.2) drop-shadow(0 0 30px rgba(255,215,0,0.9)) !important;';
   } else if (preset === 'matrix') {
-    styleAdditions = `
-      body { background: #000 !important; }
-      canvas { filter: drop-shadow(0 0 25px rgba(0,255,65,0.8)); }
-    `;
-    jsMutations = `
-      if (typeof scene !== 'undefined' && typeof THREE !== 'undefined') {
-        scene.background = new THREE.Color(0x000800);
-        const matrixLight = new THREE.PointLight(0x00ff41, 5, 90);
-        matrixLight.position.set(0, 10, 15);
-        scene.add(matrixLight);
-        scene.traverse(obj => {
-          if (obj.isMesh && obj.material) {
-            obj.material.wireframe = true;
-            if (obj.material.color) obj.material.color.setHex(0x00ff41);
-          }
-        });
-      }
-    `;
+    canvasFilter = 'filter: grayscale(100%) sepia(100%) hue-rotate(85deg) saturate(800%) contrast(190%) brightness(0.95) !important;';
   }
 
-  // Inject Custom Style
-  if (styleAdditions) {
-    if (mutated.includes('</' + 'head>')) {
-      mutated = mutated.replace('</' + 'head>', '<style>' + styleAdditions + '</style></head>');
-    } else {
-      mutated = '<style>' + styleAdditions + '</style>' + mutated;
-    }
+  const styleTag = '<style>\n' +
+    'html, body { margin:0; padding:0; overflow:hidden; width:100%; height:100%; background:#000 !important; }\n' +
+    'canvas:not(#geniusAiOverlayCanvas) { ' + canvasFilter + ' }\n' +
+    '#geniusAiOverlayCanvas { position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:9999; }\n' +
+    '</style>';
+
+  // 3. Live Atmospheric Particles & Shaders Hook
+  const overlayScript = '<' + 'script>\n' +
+    '(function() {\n' +
+    '  window.addEventListener("DOMContentLoaded", function() {\n' +
+    '    var cvs = document.createElement("canvas");\n' +
+    '    cvs.id = "geniusAiOverlayCanvas";\n' +
+    '    document.body.appendChild(cvs);\n' +
+    '    var ctx = cvs.getContext("2d");\n' +
+    '    function resize() { cvs.width = window.innerWidth; cvs.height = window.innerHeight; }\n' +
+    '    resize();\n' +
+    '    window.addEventListener("resize", resize);\n' +
+    '    var preset = "' + preset + '";\n' +
+    '    var pts = [];\n' +
+    '    var count = preset === "matrix" ? 60 : 70;\n' +
+    '    for (var i = 0; i < count; i++) {\n' +
+    '      pts.push({\n' +
+    '        x: Math.random() * cvs.width,\n' +
+    '        y: Math.random() * cvs.height,\n' +
+    '        vx: (Math.random() - 0.5) * (preset === "lava" ? 1.5 : 2),\n' +
+    '        vy: preset === "lava" ? -(Math.random() * 3 + 1) : (preset === "matrix" ? (Math.random() * 5 + 2) : (Math.random() - 0.5) * 2),\n' +
+    '        sz: Math.random() * (preset === "gold" ? 4 : 3) + 1,\n' +
+    '        alpha: Math.random() * 0.8 + 0.2,\n' +
+    '        char: String.fromCharCode(0x30A0 + Math.floor(Math.random() * 96))\n' +
+    '      });\n' +
+    '    }\n' +
+    '    function anim() {\n' +
+    '      ctx.clearRect(0, 0, cvs.width, cvs.height);\n' +
+    '      for (var i = 0; i < pts.length; i++) {\n' +
+    '        var p = pts[i];\n' +
+    '        p.x += p.vx; p.y += p.vy;\n' +
+    '        if (p.y < 0) p.y = cvs.height;\n' +
+    '        if (p.y > cvs.height) p.y = 0;\n' +
+    '        if (p.x < 0) p.x = cvs.width;\n' +
+    '        if (p.x > cvs.width) p.x = 0;\n' +
+    '        ctx.save();\n' +
+    '        if (preset === "matrix") {\n' +
+    '          ctx.fillStyle = "rgba(0, 255, 65, " + p.alpha + ")";\n' +
+    '          ctx.font = (p.sz * 4 + 8) + "px monospace";\n' +
+    '          ctx.fillText(p.char, p.x, p.y);\n' +
+    '        } else if (preset === "lava") {\n' +
+    '          ctx.fillStyle = "rgba(255, " + Math.floor(Math.random()*120+60) + ", 0, " + p.alpha + ")";\n' +
+    '          ctx.shadowColor = "#ff3700"; ctx.shadowBlur = 12;\n' +
+    '          ctx.beginPath(); ctx.arc(p.x, p.y, p.sz, 0, Math.PI * 2); ctx.fill();\n' +
+    '        } else if (preset === "ice") {\n' +
+    '          ctx.fillStyle = "rgba(180, 240, 255, " + p.alpha + ")";\n' +
+    '          ctx.shadowColor = "#00f0ff"; ctx.shadowBlur = 15;\n' +
+    '          ctx.beginPath(); ctx.arc(p.x, p.y, p.sz, 0, Math.PI * 2); ctx.fill();\n' +
+    '        } else if (preset === "gold") {\n' +
+    '          ctx.fillStyle = "rgba(255, 215, 0, " + p.alpha + ")";\n' +
+    '          ctx.shadowColor = "#ffd700"; ctx.shadowBlur = 15;\n' +
+    '          ctx.fillRect(p.x, p.y, p.sz * 1.5, p.sz * 1.5);\n' +
+    '        } else if (preset === "galaxy") {\n' +
+    '          ctx.fillStyle = (i % 2 === 0) ? "rgba(184, 0, 255, " + p.alpha + ")" : "rgba(0, 229, 255, " + p.alpha + ")";\n' +
+    '          ctx.shadowColor = "#b800ff"; ctx.shadowBlur = 15;\n' +
+    '          ctx.beginPath(); ctx.arc(p.x, p.y, p.sz, 0, Math.PI * 2); ctx.fill();\n' +
+    '        } else {\n' +
+    '          ctx.fillStyle = (i % 2 === 0) ? "rgba(0, 240, 255, " + p.alpha + ")" : "rgba(255, 0, 128, " + p.alpha + ")";\n' +
+    '          ctx.shadowColor = "#00f0ff"; ctx.shadowBlur = 15;\n' +
+    '          ctx.beginPath(); ctx.arc(p.x, p.y, p.sz, 0, Math.PI * 2); ctx.fill();\n' +
+    '        }\n' +
+    '        ctx.restore();\n' +
+    '      }\n' +
+    '      requestAnimationFrame(anim);\n' +
+    '    }\n' +
+    '    anim();\n' +
+    '  });\n' +
+    '})();\n' +
+    '<' + '/script>';
+
+  // Inject into Head & Body
+  if (mutated.includes('</' + 'head>')) {
+    mutated = mutated.replace('</' + 'head>', styleTag + '</head>');
+  } else {
+    mutated = styleTag + mutated;
   }
 
-  // Inject Script Mutation
-  if (jsMutations) {
-    const hook = '<' + 'script>\n' +
-      'window.addEventListener("DOMContentLoaded", () => {\n' +
-      '  setTimeout(() => {\n' +
-      '    try {\n' +
-      jsMutations + '\n' +
-      '    } catch(e) { console.warn("Remix hook note:", e); }\n' +
-      '  }, 150);\n' +
-      '});\n' +
-      '<' + '/script>';
-
-    if (mutated.includes('</' + 'body>')) {
-      mutated = mutated.replace('</' + 'body>', hook + '</body>');
-    } else {
-      mutated += hook;
-    }
+  if (mutated.includes('</' + 'body>')) {
+    mutated = mutated.replace('</' + 'body>', overlayScript + '</body>');
+  } else {
+    mutated += overlayScript;
   }
 
   return mutated;
