@@ -323,8 +323,10 @@
       background: #020617;
       border: 1px solid var(--border);
       border-radius: 12px;
-      margin: 12px 0;
-      height: 320px;
+      margin: 8px 0 10px;
+      height: 420px;
+      min-height: 420px;
+      width: 100%;
       position: relative;
       overflow: hidden;
       display: flex;
@@ -376,10 +378,16 @@
     .preview-iframe-post {
       width: 100%;
       height: 100%;
+      min-height: 420px;
       border: none;
       background: #000;
       border-radius: 12px;
+      display: block;
       z-index: 5;
+    }
+    @media (max-width: 640px) {
+      .p-code-preview { height: 320px; min-height: 320px; }
+      .preview-iframe-post { min-height: 320px; }
     }
     .p-code-actions {
       display: flex;
@@ -3503,7 +3511,7 @@ function loadFeed() {
     snap.forEach(doc => {
       if (doc.id.startsWith('dm_') || doc.id.startsWith('active_calls')) return;
       const p = { id:doc.id, ...doc.data() };
-      if (p.type === 'dm_msg' || p.type === 'cyber_call' || p.type === 'story') return;
+      if (p.type === 'dm_msg' || p.type === 'cyber_call' || p.type === 'story' || p.type === 'follow' || p.type === 'social_notification') return;
 
       // Filter for Following tab
       if (curCat === 'following') {
@@ -3649,17 +3657,15 @@ function renderPost(p) {
           <button class="cv-tab" id="tab-full-${p.id}" onclick="switchCvTab('${p.id}', 'full')">${labelFull}</button>
         </div>
         
-        <div class="cv-content-box">
+        <div class="cv-content-area">
           <!-- Live Preview Pane (Default active) -->
-          <div class="cv-pane" id="pane-preview-${p.id}">
-            <div class="cv-preview-wrapper" id="preview-wrapper-${p.id}">
-              <div class="cv-idle-overlay" id="overlay-${p.id}">
-                <div class="cv-play-btn" onclick="runPostDemo('${p.id}', '${uniqueId}')">
-                  <div class="play-icon">▶</div>
-                </div>
-                <div class="cv-hint">${lblRunDemo}</div>
+          <div class="cv-pane pane-preview" id="pane-preview-${p.id}">
+            <div class="p-code-preview" id="${uniqueId}">
+              <div class="code-preview-placeholder" id="placeholder-${p.id}">
+                <div class="cpp-icon">🌐</div>
+                <div class="cpp-text">${currentLang === 'fr' ? 'Projet Interactif HTML/JS/3D' : 'Interactive HTML/JS/3D Project'}</div>
+                <button class="btn-run-demo" onclick="runPostDemo('${p.id}', '${uniqueId}')">${lblRunDemo}</button>
               </div>
-              <div class="cv-iframe-container" id="${uniqueId}"></div>
             </div>
           </div>
           
@@ -3709,6 +3715,11 @@ function renderPost(p) {
         </a>
       </div>
     `;
+
+    // Auto-launch interactive 3D demo so it's live immediately
+    setTimeout(() => {
+      runPostDemo(p.id, uniqueId);
+    }, 120);
   }
 
   const postCaption = p.content || p.caption || (currentLang === 'fr' ? (p.caption_fr || p.caption_en) : (p.caption_en || p.caption_fr)) || '';
@@ -3962,13 +3973,14 @@ function showPaywallModal() {
   modal.style.display = 'flex';
 }
 
-function runPostDemo(id) {
-  const container = document.getElementById(`iframe-container-${id}`);
+function runPostDemo(id, containerId) {
+  const container = document.getElementById(containerId || `iframe-container-${id}`);
   if (!container) return;
   const code = window.communityPosts ? window.communityPosts[id] : '';
   if (!code) return;
   const iframe = document.createElement('iframe');
   iframe.className = 'preview-iframe-post';
+  iframe.loading = 'lazy';
   iframe.srcdoc = code;
   iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
   iframe.setAttribute('allowfullscreen', 'true');
@@ -8752,12 +8764,19 @@ let myFollowing = new Set(); // set of UIDs I follow
 async function loadMyFollowing() {
   if (!user || !db) return;
   try {
-    const snap = await db.collection('follows')
-      .where('followerUid', '==', user.uid || user.email)
+    const myUid = user.uid || user.email;
+    const snap = await db.collection('devsocial_posts')
+      .where('type', '==', 'follow')
+      .where('followerUid', '==', myUid)
       .get();
     myFollowing = new Set();
-    snap.forEach(doc => myFollowing.add(doc.data().followingUid));
-  } catch(e) {}
+    snap.forEach(doc => {
+      const d = doc.data();
+      if (d.followingUid) myFollowing.add(d.followingUid);
+    });
+  } catch(e) {
+    console.warn('loadMyFollowing note:', e);
+  }
 }
 
 async function toggleFollow(targetUid, targetName, btnEl) {
@@ -8770,22 +8789,28 @@ async function toggleFollow(targetUid, targetName, btnEl) {
   if (isFollowing) {
     // Unfollow
     try {
-      const snap = await db.collection('follows')
+      const snap = await db.collection('devsocial_posts')
+        .where('type', '==', 'follow')
         .where('followerUid', '==', myUid)
         .where('followingUid', '==', targetUid)
         .get();
-      snap.forEach(doc => doc.ref.delete());
+      snap.forEach(doc => doc.ref.delete().catch(() => {}));
       myFollowing.delete(targetUid);
       if (btnEl) {
         btnEl.classList.remove('following');
         btnEl.textContent = '+ Follow';
       }
       toast(`Unfollowed ${targetName}`, 'info');
-    } catch(e) { toast('Error', 'error'); }
+      if (curCat === 'following') loadFeed();
+    } catch(e) { 
+      console.error('Unfollow error:', e);
+      toast('Error unfollowing', 'error'); 
+    }
   } else {
     // Follow
     try {
-      await db.collection('follows').add({
+      await db.collection('devsocial_posts').add({
+        type: 'follow',
         followerUid: myUid,
         followerName: user.displayName || user.email,
         followerPhoto: user.photoURL || '',
@@ -8801,19 +8826,24 @@ async function toggleFollow(targetUid, targetName, btnEl) {
       toast(`✅ Following ${targetName}!`, 'success');
       // Send notification to followed user
       sendFollowNotification(targetUid, targetName);
-    } catch(e) { toast('Error', 'error'); }
+      if (curCat === 'following') loadFeed();
+    } catch(e) { 
+      console.error('Follow error:', e);
+      toast('Error following creator', 'error'); 
+    }
   }
 }
 
 function sendFollowNotification(targetUid, targetName) {
   if (!db || !user) return;
   const myName = user.displayName || user.email?.split('@')[0] || 'Someone';
-  db.collection('notifications').add({
+  db.collection('devsocial_posts').add({
+    type: 'social_notification',
     toUid: targetUid,
     fromUid: user.uid || user.email,
     fromName: myName,
     fromPhoto: user.photoURL || '',
-    type: 'follow',
+    notifType: 'follow',
     text: `${myName} started following you! ❤️`,
     read: false,
     createdAt: Date.now()
@@ -8822,7 +8852,7 @@ function sendFollowNotification(targetUid, targetName) {
 
 function makeFollowBtn(targetUid, targetName) {
   const myUid = user ? (user.uid || user.email || '') : '';
-  if (!user || targetUid === myUid) return '';
+  if (!user || !targetUid || targetUid === myUid) return '';
   const isFollowing = myFollowing.has(targetUid);
   return `<button class="btn-follow ${isFollowing ? 'following' : ''}" 
     id="followBtn_${targetUid}"
@@ -8833,7 +8863,10 @@ function makeFollowBtn(targetUid, targetName) {
 
 async function loadFollowerCount(targetUid) {
   try {
-    const snap = await db.collection('follows').where('followingUid', '==', targetUid).get();
+    const snap = await db.collection('devsocial_posts')
+      .where('type', '==', 'follow')
+      .where('followingUid', '==', targetUid)
+      .get();
     return snap.size;
   } catch(e) { return 0; }
 }
@@ -8922,7 +8955,8 @@ function notifyNewComment(commenterName) {
 function listenForMyNotifications() {
   if (!user || !db) return;
   const myUid = user.uid || user.email;
-  db.collection('notifications')
+  db.collection('devsocial_posts')
+    .where('type', '==', 'social_notification')
     .where('toUid', '==', myUid)
     .where('read', '==', false)
     .onSnapshot(snap => {
