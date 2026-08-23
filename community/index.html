@@ -3653,21 +3653,48 @@ async function decompressString(base64) {
 // ══════════════════════════════════════════
 // FEED
 // ══════════════════════════════════════════
+let postViewportObserver = null;
+
+function initPostViewportObserver() {
+  if (postViewportObserver) postViewportObserver.disconnect();
+  if (!('IntersectionObserver' in window)) return;
+
+  postViewportObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const target = entry.target;
+      const postId = target.dataset.postId;
+      const uniqueId = target.dataset.uniqueId;
+      if (!postId || !uniqueId) return;
+
+      if (entry.isIntersecting) {
+        // Visible in viewport: run 3D scene smoothly
+        const container = document.getElementById(uniqueId);
+        if (container && !container.querySelector('iframe')) {
+          runPostDemo(postId, uniqueId);
+        }
+      } else {
+        // Scrolled far away: unload off-screen WebGL to free GPU RAM
+        const container = document.getElementById(uniqueId);
+        if (container && container.querySelector('iframe')) {
+          const rect = target.getBoundingClientRect();
+          if (rect.top < -900 || rect.top > window.innerHeight + 900) {
+            container.innerHTML = `
+              <div class="code-preview-placeholder" id="placeholder-${postId}">
+                <div class="cpp-icon">🌐</div>
+                <div class="cpp-text">Interactive 3D Project</div>
+                <button class="btn-run-demo" onclick="runPostDemo('${postId}', '${uniqueId}')">▶️ Run Live Demo</button>
+              </div>
+            `;
+          }
+        }
+      }
+    });
+  }, { rootMargin: '300px 0px 300px 0px', threshold: 0.05 });
+}
+
 function loadFeed() {
   const el = document.getElementById('feedEl');
   el.innerHTML = '<div class="feed-loading"><div class="spinner"></div><div>Loading posts...</div></div>';
-  
-  // Temporary database cleanup for seed posts (runs once to clean old Firestore seeds)
-  if (typeof db !== 'undefined') {
-    db.collection('devsocial_posts').get().then(snap => {
-      snap.forEach(doc => {
-        const data = doc.data();
-        if (data.uid && data.uid.startsWith('seed_')) {
-          db.collection('devsocial_posts').doc(doc.id).delete().catch(err => console.error(err));
-        }
-      });
-    }).catch(err => console.error(err));
-  }
 
   if (unsub) unsub();
   let q = db.collection('devsocial_posts').limit(50);
@@ -3748,6 +3775,7 @@ function loadFeed() {
       return (scoreB + tB) - (scoreA + tA);
     });
     
+    initPostViewportObserver();
     posts.forEach(p => el.appendChild(renderPost(p)));
   }, e => { el.innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-title">Error</div><div class="empty-text">'+e.message+'</div></div>'; });
 }
@@ -3890,10 +3918,19 @@ function renderPost(p) {
       </div>
     `;
 
-    // Auto-launch interactive 3D demo so it's live immediately
+    // Smart Viewport Lazy-Runner (Only runs when visible on screen)
     setTimeout(() => {
-      runPostDemo(p.id, uniqueId);
-    }, 120);
+      const container = document.getElementById(uniqueId);
+      if (container) {
+        container.dataset.postId = p.id;
+        container.dataset.uniqueId = uniqueId;
+        if (postViewportObserver) {
+          postViewportObserver.observe(container);
+        } else {
+          runPostDemo(p.id, uniqueId);
+        }
+      }
+    }, 40);
   }
 
   const postCaption = p.content || p.caption || (currentLang === 'fr' ? (p.caption_fr || p.caption_en) : (p.caption_en || p.caption_fr)) || '';
