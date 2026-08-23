@@ -9379,27 +9379,27 @@ function mutateCodeWithAi(srcCode, preset, customPrompt) {
 
   // Inject Custom Style
   if (styleAdditions) {
-    if (mutated.includes('</head>')) {
-      mutated = mutated.replace('</head>', `<style>${styleAdditions}</style></head>`);
+    if (mutated.includes('</' + 'head>')) {
+      mutated = mutated.replace('</' + 'head>', '<style>' + styleAdditions + '</style></head>');
     } else {
-      mutated = `<style>${styleAdditions}</style>` + mutated;
+      mutated = '<style>' + styleAdditions + '</style>' + mutated;
     }
   }
 
   // Inject Script Mutation
   if (jsMutations) {
-    const hook = `<script>
-      window.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => {
-          try {
-            ${jsMutations}
-          } catch(e) { console.warn('Remix hook note:', e); }
-        }, 150);
-      });
-    </script>`;
+    const hook = '<' + 'script>\n' +
+      'window.addEventListener("DOMContentLoaded", () => {\n' +
+      '  setTimeout(() => {\n' +
+      '    try {\n' +
+      jsMutations + '\n' +
+      '    } catch(e) { console.warn("Remix hook note:", e); }\n' +
+      '  }, 150);\n' +
+      '});\n' +
+      '<' + '/script>';
 
-    if (mutated.includes('</body>')) {
-      mutated = mutated.replace('</body>', `${hook}</body>`);
+    if (mutated.includes('</' + 'body>')) {
+      mutated = mutated.replace('</' + 'body>', hook + '</body>');
     } else {
       mutated += hook;
     }
