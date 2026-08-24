@@ -564,7 +564,7 @@
 
         var html = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Scratch Card Ad</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Outfit:wght@800&display=swap" rel="stylesheet"><style>' + css + '</style></head><body>';
         html += '<div class="container">';
-        html += '<div class="card"><h1>' + S.offerHead + '</h1><p>' + S.offerSub + '</p><a href="' + S.btnUrl + '" target="_blank">' + S.btnText + '</a></div>';
+        html += '<div class="card"><h1>' + S.offerHead + '</h1><p>' + S.offerSub + '</p><a href="' + S.btnUrl + '" target="_blank">' + S.btnText + '</a><div style="margin-top:14px;font-size:11px;opacity:0.7;"><a href="https://ia-codestudio.com" target="_blank" rel="noopener" style="background:transparent;padding:0;box-shadow:none;font-size:11px;color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">⚡ Powered by IA Code Studio</a></div></div>';
         html += '<canvas id="scratch" width="320" height="460"></canvas>';
         html += '</div>';
         html += '<script>' + js + '</script></body></html>';

@@ -3,30 +3,44 @@
 
   <!-- ===== PAGE PRINCIPALE ===== -->
   <url>
-    <loc>https://ia-codestudio.com/?lang=fr</loc>
-    <lastmod>2026-08-23</lastmod>
+    <loc>https://ia-codestudio.com/</loc>
+    <lastmod>2026-08-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://ia-codestudio.com/?lang=en</loc>
-    <lastmod>2026-08-23</lastmod>
+    <loc>https://ia-codestudio.com/?lang=fr</loc>
+    <lastmod>2026-08-24</lastmod>
     <changefreq>daily</changefreq>
-    <priority>1.0</priority>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/?lang=en</loc>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
   </url>
 
   <!-- ===== HYPERSTUDIO 3D/4D & FLIGHT SIMULATOR (FLAGSHIP 3D ENGINE) ===== -->
   <url>
     <loc>https://ia-codestudio.com/hyperstudio-3d-4d/</loc>
-    <lastmod>2026-08-23</lastmod>
+    <lastmod>2026-08-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- ===== IA ARCHITECTE STUDIO PRO — FLAGSHIP (SEO Landing Page) ===== -->
+  <!-- ===== CYBER ARCADE 3D ARENA & AR REALITY (FLAGSHIP 9-GAME SUITE) ===== -->
+  <url>
+    <loc>https://ia-codestudio.com/cyber-arcade/</loc>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- ===== IA ARCHITECTE STUDIO PRO — FLAGSHIP (AI Web IDE) ===== -->
   <url>
     <loc>https://ia-codestudio.com/ia-architecte-studio-pro/</loc>
-    <lastmod>2026-08-23</lastmod>
+    <lastmod>2026-08-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -34,23 +48,9 @@
   <!-- ===== COMMUNITY & GENIUS IA COIN VAULT ===== -->
   <url>
     <loc>https://ia-codestudio.com/community/</loc>
-    <lastmod>2026-08-23</lastmod>
+    <lastmod>2026-08-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-  </url>
-
-  <!-- ===== IA ARCHITECTE STUDIO PRO ===== -->
-  <url>
-    <loc>https://ia-codestudio.com/IA%20ARCHITECTE%20cea%20bunaultra%20mod111/index.html?lang=fr</loc>
-    <lastmod>2026-08-23</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/IA%20ARCHITECTE%20cea%20bunaultra%20mod111/index.html?lang=en</loc>
-    <lastmod>2026-08-23</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
   </url>
 
   <!-- ===== STUDIO 3D/4D PRO ===== -->

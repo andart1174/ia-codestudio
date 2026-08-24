@@ -583,6 +583,9 @@
     <div class="cert-container">
         ${canvasEl.innerHTML}
     </div>
+    <div style="position:fixed;bottom:12px;font-family:sans-serif;font-size:11px;opacity:0.75;z-index:99;">
+        <a href="https://ia-codestudio.com" target="_blank" rel="noopener" style="color:#94a3b8;text-decoration:none;">⚡ Verified by <span style="color:#fbbf24;font-weight:600;">IA Code Studio</span></a>
+    </div>
 </body>
 </html>`;
 

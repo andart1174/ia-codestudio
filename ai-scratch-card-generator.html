@@ -376,8 +376,77 @@
         }
     </style>
 
-    <!-- Google Structured Data (FAQ Schema) -->
-    <script type="application/ld+json" id="faq-schema"></script>
+    <!-- Static Schema.org FAQPage for Google Rich Snippets -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Qu'est-ce qu'un générateur de cartes à gratter IA ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "C'est un outil intelligent qui permet de créer des jeux de grattage numériques en HTML5 et WebGL. Vous pouvez personnaliser les prix, les graphismes et le comportement des cartes sans toucher à une seule ligne de code."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Comment intégrer la carte à gratter sur mon site web ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Une fois votre création terminée dans le studio AD-GENIUS, vous pouvez copier le code iframe fourni ou télécharger le code HTML autonome et le coller dans WordPress, Shopify, Wix, Squarespace ou Webflow."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Les cartes à gratter fonctionnent-elles sur smartphone et tablette ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Absolument. Nos cartes à gratter utilisent HTML5 Canvas et WebGL. Elles sont 100% responsives et offrent une expérience de grattage tactile ultra-fluide sur mobile, tablette et ordinateur."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Puis-je personnaliser les gains et taux de réduction ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Oui, vous pouvez définir le titre de l'offre, le code promo caché (ex: PROMO30), la couleur du vernis (Or, Argent ou personnalisé) et le lien du bouton d'action."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Schema.org HowTo Schema for Step-by-Step Rich Snippets -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Create an Interactive Scratch Card Widget for Your Website",
+      "description": "Step-by-step tutorial on generating an interactive HTML5 scratch-and-win card in under 2 minutes using IA Code Studio.",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Choose your offer and secret discount code",
+          "text": "Open the AD-GENIUS Studio and set your discount percentage, headline and promo coupon code."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Customize the scratch coating surface",
+          "text": "Choose between luxury Gold foil, metallic Silver texture or custom brand color."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Export and embed on your website",
+          "text": "Download the standalone HTML5 code or copy the iframe embed snippet into your Shopify, WordPress or Webflow site."
+        }
+      ]
+    }
+    </script>
 </head>
 <body>
 
@@ -418,6 +487,26 @@
                 <a href="ad-genius-ai/index.html?studio=scratch-card" class="cta-gradient-btn" id="cta-button" data-i18n="cta_text">
                     Lancer le Studio de Cartes à Gratter ⚡
                 </a>
+            </div>
+        <!-- AEO / AI Overview Quick Definition & How-To -->
+        <section style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(139, 92, 246, 0.25); border-radius: 16px; padding: 2rem; margin: 2.5rem 0; backdrop-filter: blur(12px);">
+            <h2 style="font-size: 1.35rem; color: #a78bfa; margin-bottom: 0.8rem; font-family: 'Outfit', sans-serif;">⚡ Quick Overview: What is the AI Scratch Card Generator?</h2>
+            <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.2rem;">
+                The <strong>AI Scratch Card Generator</strong> by <em>IA Code Studio</em> is a free, no-code web widget creator that generates responsive HTML5 & WebGL digital scratch-off cards. E-commerce owners, agencies, and marketers use it to reveal discount codes, coupons, or surprise prizes, boosting conversion rates and user engagement without coding.
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; color: #94a3b8; font-size: 0.9rem;">
+                <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 10px; border-left: 3px solid #8b5cf6;">
+                    <strong style="color: #fff; display: block; margin-bottom: 4px;">1. Customize</strong>
+                    Select scratch texture (Gold/Silver/Color), promo code, and brand styling.
+                </div>
+                <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 10px; border-left: 3px solid #06b6d4;">
+                    <strong style="color: #fff; display: block; margin-bottom: 4px;">2. Preview Live</strong>
+                    Test touch scratching in real-time on desktop and mobile browsers.
+                </div>
+                <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 10px; border-left: 3px solid #10b981;">
+                    <strong style="color: #fff; display: block; margin-bottom: 4px;">3. Embed Code</strong>
+                    Export standalone HTML or embed via iframe on Shopify, WordPress, or Wix.
+                </div>
             </div>
         </section>
 

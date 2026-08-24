@@ -317,6 +317,10 @@ END:VCARD`;
             <div class="qr-text">${t.scan}</div>
         </div>
 
+        <div style="text-align:center;margin-top:14px;margin-bottom:8px;font-size:11px;opacity:0.75;" class="animate-item delay-4">
+            <a href="https://ia-codestudio.com" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">⚡ Powered by <strong>IA Code Studio</strong></a>
+        </div>
+
         <!-- Smart Web Share API functionality -->
         <button class="fab-share animate-item delay-4" onclick="shareCard()" title="Share">🚀</button>
     </div>

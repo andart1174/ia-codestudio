@@ -55,6 +55,99 @@
     }
     </script>
 
+    <!-- BreadcrumbList Schema for Google Search -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "IA Code Studio",
+          "item": "https://ia-codestudio.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Design Tools",
+          "item": "https://ia-codestudio.com/#tools"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Certificate Generator Online",
+          "item": "https://ia-codestudio.com/certificate-generator-online.html"
+        }
+      ]
+    }
+    </script>
+
+    <!-- Static Schema.org FAQPage for Google Rich Snippets -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Qu'est-ce qu'un générateur de certificat en ligne ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "C'est un outil de conception qui permet de créer des certificats de réussite, diplômes de formation et attestations professionnelles avec mise en page automatique et sceaux dorés."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Puis-je exporter mes diplômes en haute résolution ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Oui, vous pouvez exporter vos certificats en format image PNG haute définition, PDF imprimable ou sous forme de code HTML5 vectoriel autonome."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Comment personnaliser le modèle de certificat ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Vous pouvez modifier les noms des récipiendaires, dates, titres d'honneur, importer des logos d'entreprise et choisir des typographies calligraphiques de luxe."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Schema.org HowTo Schema for Step-by-Step Rich Snippets -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Create a Professional Certificate Online",
+      "description": "Step-by-step guide to generating and exporting high-resolution customized training certificates.",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Select Certificate Style & Frame",
+          "text": "Pick from luxury Gold borders, modern corporate layouts or classic academic themes."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Customize Recipient & Honors",
+          "text": "Type the student name, organization title, course name, and award date."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Export High-Res PNG or HTML",
+          "text": "Download your finished certificate in crystal-clear print resolution or vector HTML."
+        }
+      ]
+    }
+    </script>
+
+
     <!-- Fonts & CSS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -257,8 +350,6 @@
             .container { padding: 2rem 1rem; }
         }
     </style>
-
-    <script type="application/ld+json" id="faq-schema"></script>
 </head>
 <body>
 
@@ -295,6 +386,26 @@
                 <a href="ad-genius-ai/index.html?studio=certificate-studio" class="cta-gradient-btn" id="cta-button" data-i18n="cta_text">
                     Lancer le Studio de Certificats ⚡
                 </a>
+            </div>
+        <!-- AEO / AI Overview Quick Definition & How-To -->
+        <section style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(139, 92, 246, 0.25); border-radius: 16px; padding: 2rem; margin: 2.5rem 0; backdrop-filter: blur(12px);">
+            <h2 style="font-size: 1.35rem; color: #a78bfa; margin-bottom: 0.8rem; font-family: 'Outfit', sans-serif;">⚡ Quick Overview: What is the Online Certificate Generator?</h2>
+            <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.2rem;">
+                The <strong>Online Certificate Generator</strong> by <em>IA Code Studio</em> is a professional web app designed to generate authentic training diplomas, course completion awards, and corporate appreciation certificates. It features intelligent text alignment, golden seal graphics, luxury calligraphy fonts, and crystal-clear print exports.
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; color: #94a3b8; font-size: 0.9rem;">
+                <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 10px; border-left: 3px solid #8b5cf6;">
+                    <strong style="color: #fff; display: block; margin-bottom: 4px;">1. Template Selection</strong>
+                    Choose from academic borders, corporate frames, and golden ribbon emblems.
+                </div>
+                <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 10px; border-left: 3px solid #06b6d4;">
+                    <strong style="color: #fff; display: block; margin-bottom: 4px;">2. Dynamic Text & Logos</strong>
+                    Customize student names, course dates, instructor signatures, and company badges.
+                </div>
+                <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 10px; border-left: 3px solid #10b981;">
+                    <strong style="color: #fff; display: block; margin-bottom: 4px;">3. Print & Code Export</strong>
+                    Download print-ready high-DPI PNGs or copy standalone vector HTML5 code.
+                </div>
             </div>
         </section>
 

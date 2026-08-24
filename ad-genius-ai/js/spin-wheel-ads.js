@@ -678,6 +678,9 @@
 </head>
 <body>
     <script>${standaloneJS}</script>
+    <div style="position:fixed;bottom:12px;left:50%;transform:translateX(-50%);font-size:11px;font-family:-apple-system,BlinkMacSystemFont,sans-serif;opacity:0.75;z-index:99;">
+        <a href="https://ia-codestudio.com" target="_blank" rel="noopener" style="color:#94a3b8;text-decoration:none;display:inline-flex;align-items:center;gap:4px;background:rgba(15,23,42,0.7);padding:4px 10px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);">⚡ Powered by <span style="color:#38bdf8;font-weight:600;">IA Code Studio</span></a>
+    </div>
 </body>
 </html>`;
 

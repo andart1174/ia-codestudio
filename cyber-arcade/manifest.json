@@ -1,0 +1,8 @@
+{
+  "name": "CYBER ARCADE 3D ARENA",
+  "short_name": "CyberArcade 3D",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#050714",
+  "theme_color": "#00f2fe"
+}

@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CYBER ARCADE 3D ARENA — 9 Epic WebGL &amp; AR Games</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Play 9 epic 3D WebGL and Augmented Reality games in browser! Cyber Racer, Titan Mech, Beat Slicer, Cosmic Surfer, AR Alien Invasion, and Starfighter combat!">
+    <meta name="keywords" content="Cyber Racer 3D, Titan Mech Arena, Beat Saber WebGL, Cosmic Surfer, AR Games, 3D Web Games, IA Code Studio">
+    <link rel="canonical" href="https://ia-codestudio.com/cyber-arcade/">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#00f2fe">
+
+    <!-- Open Graph / WhatsApp / Social Preview -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="🎮 CYBER ARCADE 3D: 9 Epic 3D &amp; AR Games in Browser!">
+    <meta property="og:description" content="Race cybercars, control giant mechs, slice rhythm beats, surf cosmic waves, and battle aliens in real life! Zero install needed!">
+    <meta property="og:image" content="https://ia-codestudio.com/og-social-banner.png">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Outfit:wght@400;600;800;900&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Three.js 3D WebGL Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="arcade-body">
+
+    <!-- Fullscreen Video Element for Real-World AR Camera Feed -->
+    <video id="ar-camera-video" playsinline autoplay muted></video>
+
+    <!-- Animated Cyber Aura Background (Hidden in AR mode) -->
+    <div class="cyber-aura-bg" id="cyber-aura-bg">
+        <div class="cyber-orb orb-cyan"></div>
+        <div class="cyber-orb orb-pink"></div>
+        <div class="cyber-grid-overlay"></div>
+    </div>
+
+    <!-- Top Navigation Header -->
+    <header class="arcade-header">
+        <div class="header-left">
+            <div class="arcade-brand" id="btn-nav-home">
+                <div class="brand-icon-box">⚡</div>
+                <div class="brand-text">
+                    <h1>CYBER ARCADE <span class="brand-accent">3D</span></h1>
+                    <span class="brand-sub">BY IA CODE STUDIO</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <!-- Rules Button -->
+            <button id="btn-open-rules" class="header-nav-btn" title="Game Rules &amp; Controls">
+                <i class="fa-solid fa-book-open"></i> <span data-i18n="nav_rules">RULES &amp; CONTROLS 📖</span>
+            </button>
+
+            <!-- Hangar & Shop Button -->
+            <button id="btn-open-shop-nav" class="header-nav-btn shop-btn" title="Custom Hangar &amp; Cyber Shop">
+                <i class="fa-solid fa-store"></i> <span data-i18n="nav_shop">HANGAR &amp; SHOP 🏪</span>
+            </button>
+
+            <!-- Viral Referral Bounty Program -->
+            <button id="btn-open-bounty" class="header-nav-btn bounty-btn" title="Refer Friends &amp; Earn Free Coins">
+                <i class="fa-solid fa-gift"></i> <span data-i18n="nav_rewards">FREE COINS &amp; REWARDS 🎁</span>
+            </button>
+        </div>
+
+        <div class="header-right">
+            <!-- Unified Site User Authentication Status Badge -->
+            <div id="btn-pilot-profile" class="pilot-auth-badge" title="IA Code Studio Account Status">
+                <span class="auth-status-dot" id="auth-status-dot"></span>
+                <span id="pilot-username-display">Checking Account...</span>
+            </div>
+
+            <!-- Coin Vault Balance -->
+            <div class="coin-balance-badge" title="GENIUS IA Virtual Coins">
+                <span class="coin-icon">🪙</span>
+                <span id="header-coin-count">200</span>
+                <span class="coin-label">Coins</span>
+            </div>
+
+            <!-- Language Switcher (EN / FR Only) -->
+            <div class="lang-selector">
+                <button type="button" class="lang-btn active" data-lang="en">EN</button>
+                <button type="button" class="lang-btn" data-lang="fr">FR</button>
+            </div>
+
+            <!-- Audio SFX Toggle -->
+            <button id="btn-toggle-sound" class="icon-action-btn" title="Toggle Sound FX">
+                <i class="fa-solid fa-volume-high"></i>
+            </button>
+
+            <!-- Fullscreen -->
+            <button id="btn-toggle-fullscreen" class="icon-action-btn" title="Toggle Fullscreen">
+                <i class="fa-solid fa-expand"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="arcade-main-container">
+
+        <!-- ══════════════════════════════════════════════════════════════════ -->
+        <!-- VIEW 1: ARCADE HUB (9 GAMES & CATEGORY BROWSER)                  -->
+        <!-- ══════════════════════════════════════════════════════════════════ -->
+        <section id="view-arcade-hub" class="arcade-view active">
+            
+            <!-- Hero Rival Challenge Banner -->
+            <div id="hero-challenge-banner" class="hero-challenge-banner" style="display:none;">
+                <div class="challenge-banner-glow"></div>
+                <div class="challenge-banner-content">
+                    <div class="banner-badge">🔥 ACTIVE CHALLENGE ⚔️</div>
+                    <h2 id="banner-challenger-title">ALEX HAS CHALLENGED YOU!</h2>
+                    <p id="banner-challenger-desc">Target score to beat: <strong id="banner-target-score" class="accent-gold">14,500 Points</strong>. Beat Alex to win <strong class="accent-green">+50 GENIUS Coins</strong>!</p>
+                    <div class="banner-actions">
+                        <button id="btn-accept-hero-challenge" class="btn-play-hero pulse-btn">
+                            <i class="fa-solid fa-gamepad"></i> <span>ACCEPT CHALLENGE &amp; PLAY!</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 📱 SPECIAL VIRAL BANNER: AR REALITY INVASION -->
+            <div class="ar-featured-banner" id="ar-featured-banner">
+                <div class="ar-banner-glow"></div>
+                <div class="ar-banner-inner">
+                    <div class="ar-badge-live"><span class="live-dot"></span> 📱 AUGMENTED REALITY (AR) MODE</div>
+                    <h2>PLAY IN REALITY: ALIEN INVASION IN YOUR ROOM!</h2>
+                    <p>Use your phone camera &amp; 360° gyroscope to battle 3D aliens in your house! Record TikTok clips, open dimensional portals, use cyber night-vision, or land your starfighter on your table!</p>
+                    <div class="ar-banner-btn-row">
+                        <button class="btn-play-ar pulse-btn" data-start-game="ar">
+                            <i class="fa-solid fa-camera"></i> <span>LAUNCH AR REALITY 📱</span>
+                        </button>
+                        <button class="btn-secondary-glow" id="btn-quick-land-table">
+                            <i class="fa-solid fa-table"></i> <span>LAND ON TABLE 🚀</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Hub Welcome & Quick Stats -->
+            <div class="hub-hero-section">
+                <h2 class="hub-title" data-i18n="hub_title">9 EPIC 3D &amp; <span class="neon-text">AR GAMES ARENA</span></h2>
+                <p class="hub-subtitle" data-i18n="hub_subtitle">Race cybercars, pilot giant battle mechs, slice rhythm beats, surf cosmic waves, and fight alien invaders in WebGL &amp; AR! 100% Free for all registered IA Code Studio members!</p>
+
+                <div class="player-stats-bar">
+                    <div class="stat-pill">
+                        <i class="fa-solid fa-trophy" style="color:#ffb703;"></i>
+                        <div class="stat-meta">
+                            <span class="stat-label" data-i18n="stat_high_score">Personal Record</span>
+                            <span class="stat-value" id="hub-personal-highscore">0 pts</span>
+                        </div>
+                    </div>
+                    <div class="stat-pill">
+                        <i class="fa-solid fa-ranking-star" style="color:#00f2fe;"></i>
+                        <div class="stat-meta">
+                            <span class="stat-label" data-i18n="stat_rank">Global Rank</span>
+                            <span class="stat-value" id="hub-personal-rank">#42 Cadet</span>
+                        </div>
+                    </div>
+                    <div class="stat-pill">
+                        <i class="fa-solid fa-shuttle-space" style="color:#ff007f;"></i>
+                        <div class="stat-meta">
+                            <span class="stat-label" data-i18n="stat_ship">Active Craft</span>
+                            <span class="stat-value" id="hub-active-ship-name">Apex Starfighter FX-9</span>
+                        </div>
+                    </div>
+                    <div class="stat-actions">
+                        <button id="btn-open-hangar" class="btn-secondary-glow">
+                            <i class="fa-solid fa-wrench"></i> <span data-i18n="btn_hangar">Custom Hangar 🚀</span>
+                        </button>
+                        <button id="btn-open-leaderboard" class="btn-secondary-glow">
+                            <i class="fa-solid fa-trophy"></i> <span data-i18n="btn_leaderboard">Leaderboard 🏆</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Filter Tabs -->
+            <div class="arcade-category-tabs">
+                <button type="button" class="category-tab active" data-filter="all"><i class="fa-solid fa-fire"></i> ALL GAMES (9)</button>
+                <button type="button" class="category-tab" data-filter="ar"><i class="fa-solid fa-camera"></i> 📱 AR REALITY</button>
+                <button type="button" class="category-tab" data-filter="action"><i class="fa-solid fa-jet-fighter"></i> 🚀 FLIGHT &amp; SPACE</button>
+                <button type="button" class="category-tab" data-filter="race-mech"><i class="fa-solid fa-car-burst"></i> 🏎️ RACING &amp; MECHS</button>
+                <button type="button" class="category-tab" data-filter="rhythm-surf"><i class="fa-solid fa-music"></i> 🎵 RHYTHM &amp; SURF</button>
+            </div>
+
+            <!-- 🎮 GAMES GRID (9 FULL 3D & AR GAME COMPARTMENTS) -->
+            <div class="games-grid nine-games" id="arena-games-grid">
+                
+                <!-- GAME 0: AR REALITY INVASION -->
+                <div class="game-card feature-game highlight-ar" data-game="ar" data-category="ar">
+                    <div class="card-badge ar-badge">📱 REAL WORLD AR</div>
+                    <div class="game-card-media ar-bg">
+                        <div class="game-3d-preview-overlay"><span class="game-icon-big">📱</span></div>
+                    </div>
+                    <div class="game-card-content">
+                        <h3 class="game-name">AR Reality: Room Alien Invasion</h3>
+                        <p class="game-desc" data-i18n="ar_desc">Turn on your phone camera! 3D alien saucers appear floating in your room. Move 360° to aim, record 10s TikTok clips, or land your ship on your table!</p>
+                        <div class="game-tags">
+                            <span class="tag">📱 Camera AR</span>
+                            <span class="tag">🌀 360° Gyro</span>
+                            <span class="tag">🎥 10s Video REC</span>
+                        </div>
+                        <div class="game-card-footer">
+                            <button class="btn-play-game btn-ar pulse-btn" data-start-game="ar">
+                                <i class="fa-solid fa-camera"></i> <span data-i18n="btn_play_ar">START AR REALITY 📱</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GAME 1: 🏎️ CYBER RACER 2077 -->
+                <div class="game-card feature-game highlight-racer" data-game="racer" data-category="race-mech">
+                    <div class="card-badge racer-badge">🏎️ NEON DRIFT</div>
+                    <div class="game-card-media racer-bg">
+                        <div class="game-3d-preview-overlay"><span class="game-icon-big">🏎️</span></div>
+                    </div>
+                    <div class="game-card-content">
+                        <h3 class="game-name">Cyber Racer 2077: Drift Highway</h3>
+                        <p class="game-desc" data-i18n="racer_desc">Pilot high-speed cyber hovercars on suspended skyways! Power-drift through tight neon corners, trigger Nitro Boost gates, and blast rival racers with EMPs!</p>
+                        <div class="game-tags">
+                            <span class="tag">🏎️ 3D Supercars</span>
+                            <span class="tag">⚡ Power Drift</span>
+                            <span class="tag">🔥 400 KM/H Nitro</span>
+                        </div>
+                        <div class="game-card-footer">
+                            <button class="btn-play-game btn-racer pulse-btn" data-start-game="racer">
+                                <i class="fa-solid fa-gauge-high"></i> <span data-i18n="btn_play_racer">START RACE 🏎️</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GAME 2: 🤖 CYBER MECH: TITAN ARENA 3D -->
+                <div class="game-card feature-game highlight-mech" data-game="mech" data-category="race-mech">
+                    <div class="card-badge mech-badge">🤖 TITAN ROBOT</div>
+                    <div class="game-card-media mech-bg">
+                        <div class="game-3d-preview-overlay"><span class="game-icon-big">🤖</span></div>
+                    </div>
+                    <div class="game-card-content">
+                        <h3 class="game-name">Cyber Mech: Titan Arena 3D</h3>
+                        <p class="game-desc" data-i18n="mech_desc">Control a massive 30-meter War Mech! Fire dual Gatling tracer rounds, launch shoulder missile swarms, and slash giant enemy robots with your Energy Blade!</p>
+                        <div class="game-tags">
+                            <span class="tag">🤖 War Mecha</span>
+                            <span class="tag">⚔️ Energy Blade</span>
+                            <span class="tag">🎯 Missile Swarm</span>
+                        </div>
+                        <div class="game-card-footer">
+                            <button class="btn-play-game btn-mech pulse-btn" data-start-game="mech">
+                                <i class="fa-solid fa-robot"></i> <span data-i18n="btn_play_mech">LAUNCH TITAN MECH 🤖</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GAME 3: 🎵 CYBER BEAT SLICER 3D -->
+                <div class="game-card feature-game highlight-beatslicer" data-game="beatslicer" data-category="rhythm-surf">
+                    <div class="card-badge beatslicer-badge">🎵 RHYTHM SABER</div>
+                    <div class="game-card-media beatslicer-bg">
+                        <div class="game-3d-preview-overlay"><span class="game-icon-big">🎵</span></div>
+                    </div>
+                    <div class="game-card-content">
+                        <h3 class="game-name">Cyber Beat Slicer 3D: Neon Saber</h3>
+                        <p class="game-desc" data-i18n="beatslicer_desc">Slice incoming musical rhythm blocks in 3D with dual cyan &amp; magenta laser sabers to synthwave beats! Build massive combo multipliers with precision cuts!</p>
+                        <div class="game-tags">
+                            <span class="tag">🎵 Synthwave Beats</span>
+                            <span class="tag">⚔️ Dual Sabers</span>
+                            <span class="tag">🔥 x10 Combo</span>
+                        </div>
+                        <div class="game-card-footer">
+                            <button class="btn-play-game btn-beatslicer pulse-btn" data-start-game="beatslicer">
+                                <i class="fa-solid fa-music"></i> <span data-i18n="btn_play_beatslicer">PLAY BEAT SLICER 🎵</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GAME 4: 🏄 CYBER SURF: COSMIC WAVE RIDER -->
+                <div class="game-card feature-game highlight-surf" data-game="surf" data-category="rhythm-surf">
+                    <div class="card-badge surf-badge">🏄 COSMIC SURF</div>
+                    <div class="game-card-media surf-bg">
+                        <div class="game-3d-preview-overlay"><span class="game-icon-big">🏄</span></div>
+                    </div>
+                    <div class="game-card-content">
+                        <h3 class="game-name">Cyber Surf: Cosmic Wave Rider</h3>
+                        <p class="game-desc" data-i18n="surf_desc">Surf on starlight waves through planetary rings on a glowing plasma hoverboard! Perform 360 backflips, grind energy rails, and collect cosmic fuel orbs!</p>
+                        <div class="game-tags">
+                            <span class="tag">🏄 Space Hoverboard</span>
+                            <span class="tag">🌀 360 Acrobatics</span>
+                            <span class="tag">✨ Starlight Rails</span>
+                        </div>
+                        <div class="game-card-footer">
+                            <button class="btn-play-game btn-surf pulse-btn" data-start-game="surf">
+                                <i class="fa-solid fa-water"></i> <span data-i18n="btn_play_surf">START COSMIC SURF 🏄</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GAME 5: 🏙️ CYBER CITY SIEGE 3D -->
+                <div class="game-card" data-game="city" data-category="action">
+                    <div class="card-badge city-badge">🏙️ CITY FLIGHT</div>
+                    <div class="game-card-media city-bg">
+                        <div class="game-3d-preview-overlay"><span class="game-icon-big">🏙️</span></div>
+                    </div>
+                    <div class="game-card-content">
+                        <h3 class="game-name">Cyber City Siege 3D: Alien Defense</h3>
+                        <p class="game-desc" data-i18n="city_desc">Fly your starfighter at high speed through a 3D neon megacity between skyscrapers, hover traffic &amp; sky-bridges! Destroy alien assault dropships!</p>
+                        <div class="game-tags">
+                            <span class="tag">🏙️ 3D Megacity</span>
+                            <span class="tag">🛸 Urban Warfare</span>
+                            <span class="tag">🚗 Sky Traffic</span>
+                        </div>
+                        <div class="game-card-footer">
+                            <button class="btn-play-game btn-city" data-start-game="city">
+                                <i class="fa-solid fa-play"></i> <span data-i18n="btn_play_now">PLAY CITY SIEGE 🏙️</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GAME 6: 🚀 ALIEN INCURSION & SPACE BLASTER -->
+                <div class="game-card" data-game="blaster" data-category="action">
+                    <div class="card-badge hot-badge">👽 DEEP SPACE</div>
+                    <div class="game-card-media blaster-bg">
+                        <div class="game-3d-preview-overlay"><span class="game-icon-big">🚀</span></div>
+                    </div>
+                    <div class="game-card-content">
+                        <h3 class="game-name">Alien Incursion &amp; Space Blaster</h3>
+                        <p class="game-desc" data-i18n="blaster_desc">Shoot down swarms of alien saucers, heavy dreadnoughts and asteroids! Features 3 lives, auto-healing shield, lock-on missiles, and Mega-Beam!</p>
+                        <div class="game-tags">
+                            <span class="tag">👽 Alien Swarms</span>
+                            <span class="tag">❤️ 3 Lives</span>
+                            <span class="tag">⚡ Mega-Beam</span>
+                        </div>
+                        <div class="game-card-footer">
+                            <button class="btn-play-game btn-blaster" data-start-game="blaster">
+                                <i class="fa-solid fa-play"></i> <span data-i18n="btn_play_now">PLAY NOW 🚀</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GAME 7: 🌀 QUANTUM SLALOM: ALIEN INTERCEPTORS -->
+                <div class="game-card" data-game="slalom" data-category="action">
+                    <div class="card-badge speed-badge">⚡ TUNNEL COMBAT</div>
+                    <div class="game-card-media slalom-bg">
+                        <div class="game-3d-preview-overlay"><span class="game-icon-big">🌀</span></div>
+                    </div>
+                    <div class="game-card-content">
+                        <h3 class="game-name">Quantum Slalom: Alien Interceptors</h3>
+                        <p class="game-desc" data-i18n="slalom_desc">Fly at hyper-speed through a glowing neon tunnel while dodging and blasting alien patrol drones guarding quantum gates!</p>
+                        <div class="game-tags">
+                            <span class="tag">🛸 Tunnel Aliens</span>
+                            <span class="tag">🌀 Quantum Gates</span>
+                            <span class="tag">⚡ Hyperspeed</span>
+                        </div>
+                        <div class="game-card-footer">
+                            <button class="btn-play-game btn-slalom" data-start-game="slalom">
+                                <i class="fa-solid fa-play"></i> <span data-i18n="btn_play_now">PLAY NOW ⚡</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GAME 8: 🕳️ BLACK HOLE ALIEN SIEGE -->
+                <div class="game-card" data-game="blackhole" data-category="action">
+                    <div class="card-badge extreme-badge">🕳️ GRAVITY SIEGE</div>
+                    <div class="game-card-media blackhole-bg">
+                        <div class="game-3d-preview-overlay"><span class="game-icon-big">🌌</span></div>
+                    </div>
+                    <div class="game-card-content">
+                        <h3 class="game-name">Black Hole: Alien Hunter Siege</h3>
+                        <p class="game-desc" data-i18n="blackhole_desc">Alien hunter craft try to tractor-beam you into the singularity. Blast through their blockade, collect fuel cells and slingshot to freedom!</p>
+                        <div class="game-tags">
+                            <span class="tag">🕳️ Gravity Pull</span>
+                            <span class="tag">🛸 Alien Hunters</span>
+                            <span class="tag">🚀 Turbo Boost</span>
+                        </div>
+                        <div class="game-card-footer">
+                            <button class="btn-play-game btn-blackhole" data-start-game="blackhole">
+                                <i class="fa-solid fa-play"></i> <span data-i18n="btn_play_now">PLAY NOW 🕳️</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Global Leaderboard Quick View Table -->
+            <div class="hub-leaderboard-section">
+                <div class="section-hdr">
+                    <h3 class="section-title"><i class="fa-solid fa-trophy" style="color:#ffb703;"></i> <span data-i18n="leaderboard_title">Top Champions This Week</span></h3>
+                    <div class="weekly-timer-badge">
+                        <i class="fa-solid fa-clock"></i> <span data-i18n="reset_timer">Reset in 4 days (5,000 Coins Prize Pool)</span>
+                    </div>
+                </div>
+                
+                <div class="leaderboard-table-wrapper">
+                    <table class="cyber-table" id="hub-leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th># RANK</th>
+                                <th>PILOT</th>
+                                <th>GAME</th>
+                                <th>SCORE</th>
+                                <th>REWARD</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-table-body">
+                            <!-- Injected by leaderboard.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ══════════════════════════════════════════════════════════════════ -->
+        <!-- VIEW 2: ACTIVE 3D & AR GAME STAGE VIEWPORT                       -->
+        <!-- ══════════════════════════════════════════════════════════════════ -->
+        <section id="view-game-stage" class="game-stage-view" style="display:none;">
+            
+            <!-- 🌟 DEDICATED AR PROMINENT CONTROL BAR (ALWAYS VISIBLE IN AR) -->
+            <div class="ar-prominent-control-bar" id="ar-prominent-control-bar">
+                <button type="button" id="btn-ar-bar-record" class="ar-bar-btn rec-btn pulse-rec">
+                    <i class="fa-solid fa-circle"></i> <span id="ar-rec-btn-text">REC VIDEO (10s)</span>
+                </button>
+                <button type="button" id="btn-ar-bar-ship-toggle" class="ar-bar-btn ship-btn">
+                    <i class="fa-solid fa-shuttle-space"></i> <span id="ar-ship-toggle-text">SHOW 3D SHIP</span>
+                </button>
+                <button type="button" id="btn-ar-bar-table-land" class="ar-bar-btn land-btn">
+                    <i class="fa-solid fa-table"></i> <span>LAND ON TABLE</span>
+                </button>
+                <button type="button" id="btn-ar-bar-scanner" class="ar-bar-btn scan-btn">
+                    <i class="fa-solid fa-glasses"></i> <span>NIGHT VISION</span>
+                </button>
+                <button type="button" id="btn-ar-bar-exit" class="ar-bar-btn exit-btn">
+                    <i class="fa-solid fa-xmark"></i> <span>EXIT</span>
+                </button>
+            </div>
+
+            <!-- Three.js Canvas Container -->
+            <div class="canvas-viewport" id="canvas-viewport">
+                <canvas id="arcade-webgl-canvas"></canvas>
+
+                <!-- 🧭 360° Directional Proximity Warning Indicators (In Room) -->
+                <div class="ar-directional-arrow left" id="ar-arrow-left" style="display:none;">
+                    <i class="fa-solid fa-angle-left"></i>
+                    <span>ENEMY 120°</span>
+                </div>
+                <div class="ar-directional-arrow right" id="ar-arrow-right" style="display:none;">
+                    <span>ENEMY 140°</span>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+                <div class="ar-warning-behind-badge" id="ar-warning-behind" style="display:none;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span>ENEMY BEHIND YOU! TURN 180°</span>
+                </div>
+
+                <!-- Table Landing Mode Overlay -->
+                <div class="table-landing-overlay" id="table-landing-overlay" style="display:none;">
+                    <div class="table-landing-card">
+                        <h3>🚀 STARFIGHTER LANDED ON TABLE</h3>
+                        <p>Walk around your desk with your phone to inspect the 3D ship in real life! Tap colors to customize.</p>
+                        <div class="landing-action-row">
+                            <button type="button" id="btn-cycle-desk-color" class="btn-secondary-glow">
+                                <i class="fa-solid fa-palette"></i> <span>CHANGE COLOR</span>
+                            </button>
+                            <button type="button" id="btn-takeoff-table" class="btn-play-hero pulse-btn">
+                                <i class="fa-solid fa-plane-departure"></i> <span>TAKEOFF &amp; BATTLE!</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- In-Game 3D HUD Overlay -->
+                <div class="game-hud-overlay" id="game-hud-overlay">
+                    
+                    <!-- HUD Top Row -->
+                    <div class="hud-top-bar" id="game-hud-top-bar">
+                        
+                        <!-- Left: Live Score, Wave, Lives & Power-up Multipliers -->
+                        <div class="hud-stat-cluster left">
+                            <div class="hud-score-display">
+                                <span class="hud-label" data-i18n="hud_score">SCORE</span>
+                                <span class="hud-val-number" id="in-game-score">00000</span>
+                            </div>
+
+                            <!-- 3 Lives Display -->
+                            <div class="hud-lives-container" title="Energy Lives Cores">
+                                <span class="life-core" id="life-1">❤️</span>
+                                <span class="life-core" id="life-2">❤️</span>
+                                <span class="life-core" id="life-3">❤️</span>
+                            </div>
+
+                            <div class="hud-wave-badge" id="hud-wave-badge">
+                                <span id="wave-badge-text">WAVE 1</span>
+                            </div>
+                            <div class="hud-combo-badge" id="in-game-combo" style="display:none;">
+                                <span id="combo-multiplier-text">x2 COMBO!</span>
+                            </div>
+                            <div class="hud-missile-count" id="hud-missile-counter" title="Homing Missiles (Press E / Missile button)">
+                                <span>🎯</span> <span id="in-game-missiles">4</span>
+                            </div>
+                            <div class="hud-crystal-count">
+                                <span>💎</span> <span id="in-game-crystals">0</span>
+                            </div>
+                            <div class="hud-powerup-pill" id="hud-powerup-pill" style="display:none;">
+                                <span id="powerup-pill-text">⚡ TRIPLE LASERS (8s)</span>
+                            </div>
+                        </div>
+
+                        <!-- Center: Rival Ghost Progress Tracker -->
+                        <div class="hud-rival-tracker" id="hud-rival-tracker" style="display:none;">
+                            <div class="rival-tracker-header">
+                                <span class="rival-name"><i class="fa-solid fa-skull"></i> Target: <strong id="hud-rival-target-name">Alex</strong></span>
+                                <span class="rival-target-score" id="hud-rival-target-val">14,500 pts</span>
+                            </div>
+                            <div class="rival-progress-bar-bg">
+                                <div class="rival-progress-fill" id="hud-rival-progress-fill" style="width: 0%;"></div>
+                                <div class="rival-ghost-marker" id="hud-rival-ghost-marker" style="left: 100%;">⚔️</div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Shield Health, Overdrive Gauge & Controls -->
+                        <div class="hud-stat-cluster right">
+                            
+                            <!-- Shield Gauge -->
+                            <div class="hud-shield-container">
+                                <div class="hud-shield-meta">
+                                    <span><i class="fa-solid fa-shield-halved"></i> <span data-i18n="hud_shield">SHIELD</span></span>
+                                    <span id="shield-percent-text" style="font-family:var(--font-code); font-weight:700;">100%</span>
+                                </div>
+                                <div class="shield-bar-bg">
+                                    <div class="shield-bar-fill" id="in-game-shield-fill" style="width:100%;"></div>
+                                </div>
+                            </div>
+
+                            <!-- Overdrive Mega-Beam Gauge -->
+                            <div class="hud-overdrive-container" id="hud-overdrive-container" title="Mega-Beam Overdrive (Press Q/F or Overdrive button)">
+                                <div class="hud-overdrive-meta">
+                                    <span>⚡ OVERDRIVE</span>
+                                    <span id="overdrive-status-txt">READY!</span>
+                                </div>
+                                <div class="overdrive-bar-bg">
+                                    <div class="overdrive-bar-fill" id="in-game-overdrive-fill" style="width:100%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="hud-actions-group">
+                                <button id="btn-toggle-camera" class="hud-btn" title="Toggle 1st / 3rd Person Camera (C)"><i class="fa-solid fa-video"></i></button>
+                                <button id="btn-pause-game" class="hud-btn" title="Pause (P)"><i class="fa-solid fa-pause"></i></button>
+                                <button id="btn-exit-game" class="hud-btn exit-btn" title="Exit to Hub (ESC)"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Holographic Cockpit / AR HUD Overlay -->
+                    <div class="cockpit-hud-overlay" id="cockpit-hud-overlay" style="display:none;">
+                        <div class="cockpit-frame-top"></div>
+                        <div class="cockpit-flight-reticle">
+                            <div class="reticle-horizon-line"></div>
+                            <div class="reticle-pitch-ladder"></div>
+                            <div class="reticle-lock-ring"></div>
+                        </div>
+                        <div class="cockpit-left-mfd">
+                            <span class="mfd-title">360° RADAR</span>
+                            <div class="radar-circle">
+                                <div class="radar-sweep"></div>
+                                <div class="radar-blip" id="radar-blip-1"></div>
+                            </div>
+                        </div>
+                        <div class="cockpit-right-mfd">
+                            <span class="mfd-title">AR SYSTEMS</span>
+                            <div class="mfd-status-row"><span>CAMERA:</span> <strong style="color:#00ffcc;">ONLINE</strong></div>
+                            <div class="mfd-status-row"><span>GYRO 360:</span> <strong style="color:#00f2fe;">ACTIVE</strong></div>
+                            <div class="mfd-status-row"><span>LOCK-ON:</span> <strong style="color:#ffb703;">AUTO</strong></div>
+                        </div>
+                    </div>
+
+                    <!-- Center Laser Crosshair & Targeting (for 3rd Person) -->
+                    <div class="hud-center-crosshair" id="hud-center-crosshair">
+                        <div class="crosshair-circle"></div>
+                        <div class="crosshair-dot"></div>
+                    </div>
+
+                    <!-- Near-Miss Alert Banner -->
+                    <div class="near-miss-banner" id="near-miss-banner" style="display:none;">
+                        ⚡ NEAR MISS! +250 PTS 🔥
+                    </div>
+
+                    <!-- Wave Announcement Banner -->
+                    <div class="wave-announcement-banner" id="wave-announcement-banner" style="display:none;">
+                        <h2 id="wave-banner-title">WAVE 1: ALIEN INVASION</h2>
+                        <p id="wave-banner-sub">Destroy all alien fighters &amp; dodge plasma beams!</p>
+                    </div>
+
+                    <!-- Boss Warning Alert Overlay -->
+                    <div class="boss-warning-overlay" id="boss-warning-overlay" style="display:none;">
+                        <div class="boss-alert-box">
+                            <div class="alert-icon">⚠️</div>
+                            <div class="alert-text">
+                                <h3>WARNING: DREADNOUGHT MOTHERSHIP INCOMING!</h3>
+                                <p>Destroy the reactor core before it overcharges plasma shields!</p>
+                            </div>
+                        </div>
+                        <div class="boss-health-bar-container">
+                            <div class="boss-health-bar-fill" id="boss-health-fill" style="width:100%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Touch Mobile Virtual Controls -->
+                    <div class="touch-controls-container" id="touch-controls-container">
+                        <!-- Left Joystick Zone -->
+                        <div class="touch-joystick-zone" id="touch-joystick-zone">
+                            <div class="joystick-base" id="joystick-base">
+                                <div class="joystick-stick" id="joystick-stick"></div>
+                            </div>
+                        </div>
+
+                        <!-- Right Fire, Missile, Overdrive & Boost Cluster -->
+                        <div class="touch-action-cluster">
+                            <div class="touch-sub-row">
+                                <button type="button" id="tbtn-overdrive" class="touch-action-btn overdrive-btn pulse-glow" title="Fire Overdrive Mega-Beam">
+                                    <i class="fa-solid fa-bolt-lightning"></i>
+                                    <span>BEAM ⚡</span>
+                                </button>
+                                <button type="button" id="tbtn-missile" class="touch-action-btn missile-btn" title="Fire Lock-on Homing Missile">
+                                    <i class="fa-solid fa-crosshairs"></i>
+                                    <span>MISSILE 🎯</span>
+                                </button>
+                                <button type="button" id="tbtn-boost" class="touch-action-btn boost-btn" title="Turbo Boost">
+                                    <i class="fa-solid fa-forward-fast"></i>
+                                    <span>BOOST</span>
+                                </button>
+                            </div>
+                            <button type="button" id="tbtn-fire" class="touch-action-btn fire-btn" title="Fire Plasma Lasers">
+                                <i class="fa-solid fa-gun"></i>
+                                <span>FIRE LASERS 🔥</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <!-- MODAL 1: 📖 GAME RULES & CONTROLS GUIDE (EN & FR)                -->
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <div class="modal-backdrop" id="modal-game-rules">
+        <div class="modal-cyber-card rules-card">
+            <div class="modal-hdr-row">
+                <h3><i class="fa-solid fa-book-open" style="color:var(--accent-cyan);"></i> <span data-i18n="rules_modal_title">CYBER ARCADE 3D — OFFICIAL PILOT GUIDE &amp; RULES</span></h3>
+                <button class="btn-close-modal" id="btn-close-rules"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Rules Navigation Tabs -->
+            <div class="rules-tabs-nav">
+                <button type="button" class="rule-tab-btn active" data-rule-tab="controls"><i class="fa-solid fa-gamepad"></i> <span data-i18n="rtab_controls">Controls (PC &amp; Mobile)</span></button>
+                <button type="button" class="rule-tab-btn" data-rule-tab="weapons"><i class="fa-solid fa-bolt"></i> <span data-i18n="rtab_weapons">Weapons &amp; Overdrive</span></button>
+                <button type="button" class="rule-tab-btn" data-rule-tab="modes"><i class="fa-solid fa-cubes"></i> <span data-i18n="rtab_modes">9 Game Modes</span></button>
+                <button type="button" class="rule-tab-btn" data-rule-tab="scoring"><i class="fa-solid fa-trophy"></i> <span data-i18n="rtab_scoring">Scoring &amp; Rewards</span></button>
+            </div>
+
+            <!-- Rules Tab Contents -->
+            <div class="rules-body-scroll">
+                
+                <!-- TAB 1: CONTROLS -->
+                <div class="rules-tab-panel active" id="rtab-content-controls">
+                    <div class="rules-two-col">
+                        <div class="rules-col-box">
+                            <h4><i class="fa-solid fa-desktop" style="color:var(--accent-cyan);"></i> <span data-i18n="pc_controls_title">PC / Laptop Controls (Keyboard &amp; Mouse)</span></h4>
+                            <ul class="control-key-list">
+                                <li><span class="key-badge">W / A / S / D</span> or <span class="key-badge">↑ / ← / ↓ / →</span> — <span data-i18n="ctrl_steer">Steer / Move Craft &amp; Aim</span></li>
+                                <li><span class="key-badge">SPACE / ENTER</span> — <span data-i18n="ctrl_fire">Fire Plasma Lasers / Gatling / Slice</span></li>
+                                <li><span class="key-badge">E / M</span> — <span data-i18n="ctrl_missile">Fire Lock-on Homing Missile</span></li>
+                                <li><span class="key-badge">Q / F</span> — <span data-i18n="ctrl_beam">Overdrive Mega-Beam / Energy Sword</span></li>
+                                <li><span class="key-badge">SHIFT</span> — <span data-i18n="ctrl_boost">Turbo Boost / Nitro Speed (400 km/h)</span></li>
+                                <li><span class="key-badge">C</span> — <span data-i18n="ctrl_cam">Toggle 1st Person Cockpit / 3rd Person</span></li>
+                                <li><span class="key-badge">V</span> — <span data-i18n="ctrl_scan">Toggle Cyber Night-Vision Scanner</span></li>
+                                <li><span class="key-badge">ESC / P</span> — <span data-i18n="ctrl_pause">Pause / Exit to Hub</span></li>
+                            </ul>
+                        </div>
+                        <div class="rules-col-box">
+                            <h4><i class="fa-solid fa-mobile-screen" style="color:var(--accent-pink);"></i> <span data-i18n="mobile_controls_title">Mobile &amp; Tablet Controls (Touch &amp; Gyro)</span></h4>
+                            <ul class="control-key-list">
+                                <li><span class="key-badge">🕹️ Left Joystick</span> — <span data-i18n="ctrl_m_joy">Touch &amp; drag anywhere on the left to steer smoothly.</span></li>
+                                <li><span class="key-badge">🔥 FIRE</span> — <span data-i18n="ctrl_m_fire">Tap to shoot dual lasers / Gatling rounds.</span></li>
+                                <li><span class="key-badge">🎯 MISSILE</span> — <span data-i18n="ctrl_m_missile">Tap to launch auto-homing explosive missiles.</span></li>
+                                <li><span class="key-badge">⚡ BEAM</span> — <span data-i18n="ctrl_m_beam">Fires screen-clearing Overdrive Mega-Beam!</span></li>
+                                <li><span class="key-badge">⏩ BOOST</span> — <span data-i18n="ctrl_m_boost">Hold for hyper-speed acceleration.</span></li>
+                                <li><span class="key-badge">📱 360° GYRO (AR)</span> — <span data-i18n="ctrl_m_gyro">Physically turn phone in your room to aim at aliens!</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: WEAPONS -->
+                <div class="rules-tab-panel" id="rtab-content-weapons">
+                    <div class="weapons-grid-guide">
+                        <div class="weapon-card-guide">
+                            <div class="w-icon">⚡</div>
+                            <h4>Dual Plasma Lasers</h4>
+                            <p data-i18n="w_laser_desc">Rapid-fire energy bolts. Customize colors (Cyan, Magenta, Emerald, Gold) in the Ship Hangar!</p>
+                        </div>
+                        <div class="weapon-card-guide">
+                            <div class="w-icon">🎯</div>
+                            <h4>Lock-on Homing Missiles</h4>
+                            <p data-i18n="w_missile_desc">Heat-seeking warheads that track the nearest alien dreadnought, combat walker or asteroid automatically.</p>
+                        </div>
+                        <div class="weapon-card-guide">
+                            <div class="w-icon">💥</div>
+                            <h4>Overdrive Mega-Beam</h4>
+                            <p data-i18n="w_beam_desc">Charges automatically over time. Unleashes a massive 180-meter laser column that vaporizes everything in its path!</p>
+                        </div>
+                        <div class="weapon-card-guide">
+                            <div class="w-icon">🛡️</div>
+                            <h4>Auto-Healing Shield &amp; 3 Lives</h4>
+                            <p data-i18n="w_shield_desc">Shield regenerates after 3s of dodging damage. If depleted, your energy life core revives you with invulnerability!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: 9 GAME MODES -->
+                <div class="rules-tab-panel" id="rtab-content-modes">
+                    <div class="modes-rules-grid">
+                        <div class="mode-rule-row">
+                            <span class="m-icon">📱</span>
+                            <div><strong>AR Reality Invasion:</strong> <span data-i18n="m_rule_ar">Move in your physical room, aim 360°, land ships on your desk, and record 10s viral video clips!</span></div>
+                        </div>
+                        <div class="mode-rule-row">
+                            <span class="m-icon">🏎️</span>
+                            <div><strong>Cyber Racer 2077:</strong> <span data-i18n="m_rule_racer">Drift on skyways, hit Nitro Gates at 400 km/h, and blast rival racers off the track!</span></div>
+                        </div>
+                        <div class="mode-rule-row">
+                            <span class="m-icon">🤖</span>
+                            <div><strong>Cyber Mech Titan Arena:</strong> <span data-i18n="m_rule_mech">Control a 30m Mech, spin dual 6-barrel Gatlings, and slice enemy walkers with your Energy Blade!</span></div>
+                        </div>
+                        <div class="mode-rule-row">
+                            <span class="m-icon">🎵</span>
+                            <div><strong>Cyber Beat Slicer 3D:</strong> <span data-i18n="m_rule_beatslicer">Slice incoming rhythmic blocks with dual laser sabers to build x10 synthwave multipliers!</span></div>
+                        </div>
+                        <div class="mode-rule-row">
+                            <span class="m-icon">🏄</span>
+                            <div><strong>Cyber Surf Cosmic Wave:</strong> <span data-i18n="m_rule_surf">Hoverboard surfing on starlight waves, 360° backflips, and rail grinding in planetary rings!</span></div>
+                        </div>
+                        <div class="mode-rule-row">
+                            <span class="m-icon">🏙️</span>
+                            <div><strong>Cyber City Siege 3D:</strong> <span data-i18n="m_rule_city">Weave between procedural skyscrapers, dodge hover traffic, and shoot down alien assault dropships!</span></div>
+                        </div>
+                        <div class="mode-rule-row">
+                            <span class="m-icon">🚀</span>
+                            <div><strong>Alien Space Blaster:</strong> <span data-i18n="m_rule_blaster">Deep space dogfights against heavy dreadnought motherships and asteroid belts!</span></div>
+                        </div>
+                        <div class="mode-rule-row">
+                            <span class="m-icon">🌀</span>
+                            <div><strong>Quantum Slalom:</strong> <span data-i18n="m_rule_slalom">Hyperspeed neon tunnel slalom while blasting alien interceptor patrol drones!</span></div>
+                        </div>
+                        <div class="mode-rule-row">
+                            <span class="m-icon">🕳️</span>
+                            <div><strong>Black Hole Siege:</strong> <span data-i18n="m_rule_blackhole">Evade the singularity's gravitational pull and destroy alien hunter gunships!</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 4: SCORING -->
+                <div class="rules-tab-panel" id="rtab-content-scoring">
+                    <div class="scoring-rules-box">
+                        <h4><i class="fa-solid fa-coins" style="color:var(--accent-gold);"></i> <span data-i18n="scoring_title">How to Win Coins &amp; Climb the Leaderboard</span></h4>
+                        <ul>
+                            <li><strong class="accent-cyan">Continuous Combos:</strong> Destroying multiple enemies quickly increases your combo multiplier up to <strong class="accent-pink">x10</strong>!</li>
+                            <li><strong class="accent-gold">GENIUS Virtual Coins:</strong> Earned by scoring points, collecting crystals, beating rival scores, and completing AR missions.</li>
+                            <li><strong class="accent-green">Weekly Prize Pool:</strong> Top 3 pilots on the Global Leaderboard win <strong class="accent-gold">5,000 Coins</strong> every Monday!</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer-row">
+                <button type="button" id="btn-close-rules-footer" class="btn-modal-action primary">
+                    <i class="fa-solid fa-check"></i> <span data-i18n="btn_got_it">I'M READY TO PLAY! 🚀</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <!-- MODAL 2: 🔒 UNIFIED IA CODE STUDIO LOGIN REQUIRED MODAL          -->
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <div class="modal-backdrop" id="modal-site-auth-required">
+        <div class="modal-cyber-card auth-card">
+            <div class="modal-hdr-row">
+                <h3><i class="fa-solid fa-shield-halved" style="color:var(--accent-cyan);"></i> <span data-i18n="site_auth_modal_title">IA CODE STUDIO ACCOUNT REQUIRED</span></h3>
+                <button class="btn-close-modal" id="btn-close-auth"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="auth-card-body">
+                <div class="auth-welcome-badge">
+                    <span>✨ <strong class="accent-cyan">100% FREE ACCESS</strong> FOR ALL REGISTERED USERS!</span>
+                </div>
+                <p class="auth-sub" data-i18n="site_auth_sub">To play the 9 3D &amp; AR Arcade Games, save your high scores, and climb the Global Leaderboard, please log in with your IA Code Studio account.</p>
+
+                <div class="site-auth-status-box" id="site-auth-status-box">
+                    <i class="fa-solid fa-circle-user auth-large-icon"></i>
+                    <h4 id="site-auth-status-title">You are not logged in to IA Code Studio</h4>
+                    <p id="site-auth-status-desc">Use your existing site credentials or register for free on the platform. No duplicate accounts needed!</p>
+                </div>
+
+                <div class="auth-actions-row">
+                    <!-- Connect via Site -->
+                    <button type="button" id="btn-goto-site-login" class="btn-play-hero pulse-btn">
+                        <i class="fa-solid fa-arrow-right-to-bracket"></i> <span data-i18n="btn_site_login">LOG IN / REGISTER ON IA CODE STUDIO</span>
+                    </button>
+                    
+                    <!-- Quick Login if Testing Standalone -->
+                    <div class="standalone-login-box">
+                        <span class="or-divider">── OR QUICK SIGN IN ──</span>
+                        <div class="quick-input-row">
+                            <input type="text" id="quick-pilot-name" placeholder="Enter your site username / email">
+                            <button type="button" id="btn-quick-site-connect" class="btn-secondary-glow">
+                                <i class="fa-solid fa-bolt"></i> <span>CONNECT</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <!-- MODAL 3: 🎁 VIRAL REFERRAL & SOCIAL BOUNTY REWARDS CENTER       -->
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <div class="modal-backdrop" id="modal-viral-bounty">
+        <div class="modal-cyber-card bounty-card">
+            <div class="modal-hdr-row">
+                <h3><i class="fa-solid fa-gift" style="color:var(--accent-gold);"></i> <span data-i18n="bounty_title">FREE COINS &amp; VIRAL BOUNTY PROGRAM</span></h3>
+                <button class="btn-close-modal" id="btn-close-bounty"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="bounty-card-body">
+                <div class="bounty-perk-box">
+                    <h4>🔥 1. Invite Friends via WhatsApp / TikTok</h4>
+                    <p data-i18n="referral_desc">Share your personal pilot referral link. When a friend clicks and plays, <strong class="accent-gold">YOU GET +100 COINS</strong> and <strong class="accent-cyan">THEY GET +100 COINS</strong>!</p>
+                    <div class="referral-link-box">
+                        <input type="text" id="bounty-referral-url" readonly value="https://ia-codestudio.com/cyber-arcade/?ref=Pilot">
+                        <button type="button" id="btn-copy-bounty-link" class="btn-copy">
+                            <i class="fa-solid fa-copy"></i> <span data-i18n="btn_copy">Copy Link</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bounty-perk-box">
+                    <h4>🎥 2. TikTok / Shorts Video Bounty (+500 Coins 🪙)</h4>
+                    <p data-i18n="tiktok_bounty_desc">Post your AR video clip on TikTok or Instagram with <strong>#IACodeStudio #CyberArcade3D</strong> to earn the <strong class="accent-pink">VIP Gold Pilot Badge</strong> and 500 Coins!</p>
+                    <button type="button" id="btn-bounty-share-wa" class="btn-social-share whatsapp full-width">
+                        <i class="fa-brands fa-whatsapp"></i> <span data-i18n="btn_share_wa_earn">SHARE ON WHATSAPP &amp; EARN +100 COINS 🪙</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <!-- MODAL 4: GAME OVER / VICTORY & VIRAL CHALLENGE CREATOR           -->
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <div class="modal-backdrop" id="modal-game-over">
+        <div class="modal-cyber-card gameover-card">
+            <div class="gameover-card-glow"></div>
+            
+            <div class="gameover-header">
+                <div class="result-badge-anim" id="gameover-status-badge">🏆 MISSION COMPLETE</div>
+                <h2 id="gameover-headline">OUTSTANDING SCORE!</h2>
+            </div>
+
+            <!-- Rival Challenge Result Alert -->
+            <div id="rival-result-box" class="rival-result-box" style="display:none;">
+                <div class="rival-result-icon" id="rival-result-icon">🎉</div>
+                <div class="rival-result-text">
+                    <h4 id="rival-result-title">YOU DEFEATED ALEX!</h4>
+                    <p id="rival-result-sub">You smashed the 14,500 pts record and won <strong>+50 GENIUS Coins</strong>! 🪙</p>
+                </div>
+            </div>
+
+            <!-- Score Summary Grid -->
+            <div class="gameover-stats-grid">
+                <div class="stat-box primary-score">
+                    <span class="stat-title" data-i18n="modal_final_score">FINAL SCORE</span>
+                    <span class="stat-number-big" id="modal-final-score-val">18,450</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-title" data-i18n="modal_crystals">CRYSTALS</span>
+                    <span class="stat-number" id="modal-final-crystals-val">💎 24</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-title" data-i18n="modal_coins_earned">COINS EARNED</span>
+                    <span class="stat-number accent-gold" id="modal-final-coins-val">🪙 +45</span>
+                </div>
+            </div>
+
+            <!-- 🔥 VIRAL CHALLENGE A FRIEND SECTION -->
+            <div class="challenge-friend-card">
+                <div class="challenge-friend-hdr">
+                    <span class="fire-icon">🔥</span>
+                    <div>
+                        <h4 data-i18n="challenge_friend_title">CHALLENGE A FRIEND TO BEAT YOUR SCORE!</h4>
+                        <p data-i18n="challenge_friend_sub">Send your challenge link on WhatsApp or TikTok. If they beat you, both get bonus coins!</p>
+                    </div>
+                </div>
+
+                <div class="challenge-input-group">
+                    <div class="name-input-wrapper">
+                        <label for="challenger-name-input" data-i18n="your_name">Your Name:</label>
+                        <input type="text" id="challenger-name-input" value="Cyber Pilot" maxlength="16">
+                    </div>
+                    <div class="share-link-wrapper">
+                        <input type="text" id="challenge-share-url" readonly value="https://ia-codestudio.com/cyber-arcade/?challenge=18450&challenger=Pilot">
+                        <button type="button" id="btn-copy-challenge-link" class="btn-copy">
+                            <i class="fa-solid fa-copy"></i> <span data-i18n="btn_copy">Copy Link</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 1-Click Social Share Buttons -->
+                <div class="social-share-buttons-grid">
+                    <button type="button" class="btn-social-share whatsapp" id="btn-share-whatsapp">
+                        <i class="fa-brands fa-whatsapp"></i> <span>WhatsApp</span>
+                    </button>
+                    <button type="button" class="btn-social-share tiktok" id="btn-share-tiktok">
+                        <i class="fa-brands fa-tiktok"></i> <span>TikTok</span>
+                    </button>
+                    <button type="button" class="btn-social-share telegram" id="btn-share-telegram">
+                        <i class="fa-brands fa-telegram"></i> <span>Telegram</span>
+                    </button>
+                    <button type="button" class="btn-social-share discord" id="btn-share-discord">
+                        <i class="fa-brands fa-discord"></i> <span>Discord</span>
+                    </button>
+                    <button type="button" class="btn-social-share twitter" id="btn-share-twitter">
+                        <i class="fa-brands fa-x-twitter"></i> <span>X / Twitter</span>
+                    </button>
+                    <button type="button" class="btn-social-share facebook" id="btn-share-facebook">
+                        <i class="fa-brands fa-facebook"></i> <span>Facebook</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="gameover-modal-footer">
+                <button type="button" id="btn-modal-replay" class="btn-modal-action primary">
+                    <i class="fa-solid fa-rotate-right"></i> <span data-i18n="btn_replay">PLAY AGAIN</span>
+                </button>
+                <button type="button" id="btn-modal-back-hub" class="btn-modal-action secondary">
+                    <i class="fa-solid fa-house"></i> <span data-i18n="btn_hub">ARCADE HUB</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <!-- MODAL 5: 🚀 CYBER HANGAR & SHOP (5 COMPLETE CATEGORIES)          -->
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <div class="modal-backdrop" id="modal-hangar-view">
+        <div class="modal-cyber-card hangar-card">
+            <div class="modal-hdr-row">
+                <h3><i class="fa-solid fa-store" style="color:var(--accent-gold);"></i> <span data-i18n="hangar_shop_title">CYBER HANGAR &amp; CYBER SHOP</span></h3>
+                <div class="hangar-coin-pill">
+                    <span>🪙</span> <strong id="shop-coin-balance">200</strong> <span>Coins</span>
+                </div>
+                <button class="btn-close-modal" id="btn-close-hangar"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <!-- Hangar & Shop Navigation Tabs -->
+            <div class="hangar-tabs-nav">
+                <button type="button" class="hangar-tab-btn active" data-hangar-tab="crafts">
+                    <i class="fa-solid fa-shuttle-space"></i> <span data-i18n="htab_crafts">Crafts &amp; Skins 🚀</span>
+                </button>
+                <button type="button" class="hangar-tab-btn" data-hangar-tab="lasers">
+                    <i class="fa-solid fa-bolt"></i> <span data-i18n="htab_lasers">Lasers &amp; Trails ⚡</span>
+                </button>
+                <button type="button" class="hangar-tab-btn" data-hangar-tab="upgrades">
+                    <i class="fa-solid fa-shield-halved"></i> <span data-i18n="htab_upgrades">Tech Upgrades 🛡️</span>
+                </button>
+                <button type="button" class="hangar-tab-btn" data-hangar-tab="titles">
+                    <i class="fa-solid fa-award"></i> <span data-i18n="htab_titles">Titles &amp; Avatars 🥇</span>
+                </button>
+                <button type="button" class="hangar-tab-btn crate-tab" data-hangar-tab="crate">
+                    <i class="fa-solid fa-box-open"></i> <span data-i18n="htab_crate">Mystery Crate 🎁</span>
+                </button>
+            </div>
+
+            <!-- Hangar Tab Contents -->
+            <div class="hangar-body-scroll">
+                
+                <!-- TAB 1: CRAFTS & SKINS -->
+                <div class="hangar-tab-panel active" id="htab-content-crafts">
+                    <div class="shop-cards-grid">
+                        
+                        <!-- Craft 1: Apex FX-9 (Default) -->
+                        <div class="shop-item-card active" data-item-id="apex" data-category="craft">
+                            <div class="item-icon-box">🚀</div>
+                            <div class="item-meta">
+                                <h4>Apex Starfighter FX-9</h4>
+                                <p data-i18n="c_apex_desc">Balanced interceptor with dual plasma cannons &amp; aerodynamic wings.</p>
+                                <div class="item-stats-bars">
+                                    <div class="stat-row"><span>Speed:</span><div class="s-bar"><div style="width:80%;"></div></div></div>
+                                    <div class="stat-row"><span>Shield:</span><div class="s-bar"><div style="width:75%;"></div></div></div>
+                                    <div class="stat-row"><span>Firepower:</span><div class="s-bar"><div style="width:85%;"></div></div></div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-shop-action equipped" data-buy-item="apex" data-cost="0">
+                                <i class="fa-solid fa-check"></i> <span data-i18n="btn_equipped">EQUIPPED</span>
+                            </button>
+                        </div>
+
+                        <!-- Craft 2: Hyperion GT (Supercar) -->
+                        <div class="shop-item-card" data-item-id="hyperion" data-category="craft">
+                            <div class="item-icon-box">🏎️</div>
+                            <div class="item-meta">
+                                <h4>Hyperion Neon GT 2077</h4>
+                                <p data-i18n="c_hyperion_desc">Ultra-aerodynamic cybercar with Mag-Lev rims &amp; twin plasma exhausts.</p>
+                                <div class="item-stats-bars">
+                                    <div class="stat-row"><span>Speed:</span><div class="s-bar"><div style="width:98%;"></div></div></div>
+                                    <div class="stat-row"><span>Drift:</span><div class="s-bar"><div style="width:95%;"></div></div></div>
+                                    <div class="stat-row"><span>Boost:</span><div class="s-bar"><div style="width:100%;"></div></div></div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-shop-action unlock" data-buy-item="hyperion" data-cost="250">
+                                <span>UNLOCK (250 🪙)</span>
+                            </button>
+                        </div>
+
+                        <!-- Craft 3: Titan Phoenix Mech -->
+                        <div class="shop-item-card" data-item-id="phoenix_mech" data-category="craft">
+                            <div class="item-icon-box">🤖</div>
+                            <div class="item-meta">
+                                <h4>Titan Phoenix War Mech</h4>
+                                <p data-i18n="c_mech_desc">Heavy armored 30m War Mech with 6-barrel Gatling &amp; Energy Katana.</p>
+                                <div class="item-stats-bars">
+                                    <div class="stat-row"><span>Armor:</span><div class="s-bar"><div style="width:100%;"></div></div></div>
+                                    <div class="stat-row"><span>Gatling:</span><div class="s-bar"><div style="width:90%;"></div></div></div>
+                                    <div class="stat-row"><span>Blade:</span><div class="s-bar"><div style="width:95%;"></div></div></div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-shop-action unlock" data-buy-item="phoenix_mech" data-cost="300">
+                                <span>UNLOCK (300 🪙)</span>
+                            </button>
+                        </div>
+
+                        <!-- Craft 4: Solar Dragon Destroyer -->
+                        <div class="shop-item-card" data-item-id="solar_dragon" data-category="craft">
+                            <div class="item-icon-box">🐲</div>
+                            <div class="item-meta">
+                                <h4>Solar Dragon Destroyer</h4>
+                                <p data-i18n="c_dragon_desc">Legendary dreadnought forged in stellar solar flares with heavy plasma cannons.</p>
+                                <div class="item-stats-bars">
+                                    <div class="stat-row"><span>Speed:</span><div class="s-bar"><div style="width:88%;"></div></div></div>
+                                    <div class="stat-row"><span>Shield:</span><div class="s-bar"><div style="width:98%;"></div></div></div>
+                                    <div class="stat-row"><span>Firepower:</span><div class="s-bar"><div style="width:100%;"></div></div></div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-shop-action unlock" data-buy-item="solar_dragon" data-cost="500">
+                                <span>UNLOCK (500 🪙)</span>
+                            </button>
+                        </div>
+
+                        <!-- Craft 5: Lightning Surf Board -->
+                        <div class="shop-item-card" data-item-id="lightning_board" data-category="craft">
+                            <div class="item-icon-box">🏄</div>
+                            <div class="item-meta">
+                                <h4>Lightning Starlight Board</h4>
+                                <p data-i18n="c_surf_desc">Plasma hoverboard leaving blue electric lightning trails during 360 backflips.</p>
+                                <div class="item-stats-bars">
+                                    <div class="stat-row"><span>Agility:</span><div class="s-bar"><div style="width:100%;"></div></div></div>
+                                    <div class="stat-row"><span>Stunt Bonus:</span><div class="s-bar"><div style="width:95%;"></div></div></div>
+                                    <div class="stat-row"><span>Speed:</span><div class="s-bar"><div style="width:90%;"></div></div></div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-shop-action unlock" data-buy-item="lightning_board" data-cost="200">
+                                <span>UNLOCK (200 🪙)</span>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- TAB 2: LASERS & TRAILS -->
+                <div class="hangar-tab-panel" id="htab-content-lasers">
+                    <h4 class="shop-sub-hdr"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="hdr_laser_colors">Plasma Laser Beam Colors</span></h4>
+                    <div class="laser-palettes-grid">
+                        <div class="laser-chip-card active" data-laser-color="#00f2fe">
+                            <div class="laser-preview-line" style="background:#00f2fe; box-shadow:0 0 12px #00f2fe;"></div>
+                            <span>Cyan Plasma</span>
+                            <small class="badge-free">DEFAULT</small>
+                        </div>
+                        <div class="laser-chip-card" data-laser-color="#ff007f">
+                            <div class="laser-preview-line" style="background:#ff007f; box-shadow:0 0 12px #ff007f;"></div>
+                            <span>Neon Magenta</span>
+                            <small class="badge-unlocked">UNLOCKED</small>
+                        </div>
+                        <div class="laser-chip-card" data-laser-color="#00ffcc">
+                            <div class="laser-preview-line" style="background:#00ffcc; box-shadow:0 0 12px #00ffcc;"></div>
+                            <span>Emerald Ray</span>
+                            <small class="badge-unlocked">UNLOCKED</small>
+                        </div>
+                        <div class="laser-chip-card" data-laser-color="#ffb703">
+                            <div class="laser-preview-line" style="background:#ffb703; box-shadow:0 0 12px #ffb703;"></div>
+                            <span>Solar Gold</span>
+                            <small class="badge-unlocked">UNLOCKED</small>
+                        </div>
+                        <div class="laser-chip-card" data-laser-color="rainbow" data-cost="150">
+                            <div class="laser-preview-line rainbow-anim"></div>
+                            <span>Dynamic RGB Rainbow</span>
+                            <small class="badge-price">150 🪙</small>
+                        </div>
+                    </div>
+
+                    <h4 class="shop-sub-hdr" style="margin-top:24px;"><i class="fa-solid fa-fire-burner"></i> <span data-i18n="hdr_thrusters">Thruster Trail FX</span></h4>
+                    <div class="shop-cards-grid">
+                        <div class="shop-item-card active" data-item-id="trail_plasma">
+                            <div class="item-icon-box">🔥</div>
+                            <div class="item-meta">
+                                <h4>Cyan Plasma Jet</h4>
+                                <p data-i18n="t_plasma_desc">Standard high-thrust ionization beam.</p>
+                            </div>
+                            <button type="button" class="btn-shop-action equipped"><i class="fa-solid fa-check"></i> <span>EQUIPPED</span></button>
+                        </div>
+                        <div class="shop-item-card" data-item-id="trail_gold" data-cost="120">
+                            <div class="item-icon-box">✨</div>
+                            <div class="item-meta">
+                                <h4>Golden Stardust Trail</h4>
+                                <p data-i18n="t_gold_desc">Emanates radiant golden star sparks during boost.</p>
+                            </div>
+                            <button type="button" class="btn-shop-action unlock" data-buy-item="trail_gold" data-cost="120"><span>UNLOCK (120 🪙)</span></button>
+                        </div>
+                        <div class="shop-item-card" data-item-id="trail_matrix" data-cost="180">
+                            <div class="item-icon-box">💻</div>
+                            <div class="item-meta">
+                                <h4>Matrix Binary Cascade</h4>
+                                <p data-i18n="t_matrix_desc">Streams glowing green 0101 binary code in your slipstream!</p>
+                            </div>
+                            <button type="button" class="btn-shop-action unlock" data-buy-item="trail_matrix" data-cost="180"><span>UNLOCK (180 🪙)</span></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: UPGRADES & PERKS -->
+                <div class="hangar-tab-panel" id="htab-content-upgrades">
+                    <div class="shop-cards-grid">
+                        
+                        <div class="shop-item-card" data-item-id="upg_magnet" data-cost="180">
+                            <div class="item-icon-box">🧲</div>
+                            <div class="item-meta">
+                                <h4>Crystal &amp; Fuel Magnet</h4>
+                                <p data-i18n="upg_magnet_desc">Automatically pulls nearby crystals &amp; power-ups toward your craft!</p>
+                            </div>
+                            <button type="button" class="btn-shop-action unlock" data-buy-item="upg_magnet" data-cost="180"><span>UNLOCK (180 🪙)</span></button>
+                        </div>
+
+                        <div class="shop-item-card" data-item-id="upg_shield" data-cost="220">
+                            <div class="item-icon-box">🛡️</div>
+                            <div class="item-meta">
+                                <h4>Titan Overshield (+50%)</h4>
+                                <p data-i18n="upg_shield_desc">Increases total shield hull health by 50% for maximum durability.</p>
+                            </div>
+                            <button type="button" class="btn-shop-action unlock" data-buy-item="upg_shield" data-cost="220"><span>UNLOCK (220 🪙)</span></button>
+                        </div>
+
+                        <div class="shop-item-card" data-item-id="upg_missiles" data-cost="160">
+                            <div class="item-icon-box">🎯</div>
+                            <div class="item-meta">
+                                <h4>Heavy Missile Silos (8x)</h4>
+                                <p data-i18n="upg_missiles_desc">Start every battle with 8 lock-on homing missiles instead of 4.</p>
+                            </div>
+                            <button type="button" class="btn-shop-action unlock" data-buy-item="upg_missiles" data-cost="160"><span>UNLOCK (160 🪙)</span></button>
+                        </div>
+
+                        <div class="shop-item-card" data-item-id="upg_nitro" data-cost="200">
+                            <div class="item-icon-box">⚡</div>
+                            <div class="item-meta">
+                                <h4>Fast Nitro Recharger (2x)</h4>
+                                <p data-i18n="upg_nitro_desc">Turbo Boost &amp; Nitro gates recharge twice as fast in Cyber Racer &amp; Space.</p>
+                            </div>
+                            <button type="button" class="btn-shop-action unlock" data-buy-item="upg_nitro" data-cost="200"><span>UNLOCK (200 🪙)</span></button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- TAB 4: TITLES & AVATARS -->
+                <div class="hangar-tab-panel" id="htab-content-titles">
+                    <h4 class="shop-sub-hdr"><i class="fa-solid fa-crown"></i> <span data-i18n="hdr_titles">Honorary Pilot Titles</span></h4>
+                    <div class="titles-selection-grid">
+                        <div class="title-badge-card active" data-title-name="Cadet Pilot">
+                            <span>🧑‍🚀 Cadet Pilot</span>
+                            <small class="badge-free">EQUIPPED</small>
+                        </div>
+                        <div class="title-badge-card" data-title-name="Speed Master 2077" data-cost="100">
+                            <span>🏎️ Speed Master 2077</span>
+                            <button type="button" class="btn-title-buy" data-buy-item="title_speed" data-cost="100">100 🪙</button>
+                        </div>
+                        <div class="title-badge-card" data-title-name="Titan Slayer" data-cost="150">
+                            <span>🤖 Titan Slayer</span>
+                            <button type="button" class="btn-title-buy" data-buy-item="title_titan" data-cost="150">150 🪙</button>
+                        </div>
+                        <div class="title-badge-card" data-title-name="Galaxy Legend 🌌" data-cost="300">
+                            <span>👑 Galaxy Legend 🌌</span>
+                            <button type="button" class="btn-title-buy" data-buy-item="title_legend" data-cost="300">300 🪙</button>
+                        </div>
+                    </div>
+
+                    <h4 class="shop-sub-hdr" style="margin-top:24px;"><i class="fa-solid fa-user-astronaut"></i> <span data-i18n="hdr_avatars">3D Pilot Avatars</span></h4>
+                    <div class="avatars-selection-grid">
+                        <div class="avatar-card active" data-avatar="🧑‍🚀"><span>🧑‍🚀</span></div>
+                        <div class="avatar-card" data-avatar="🤖"><span>🤖</span></div>
+                        <div class="avatar-card" data-avatar="🦾"><span>🦾</span></div>
+                        <div class="avatar-card" data-avatar="👽"><span>👽</span></div>
+                        <div class="avatar-card" data-avatar="⚡"><span>⚡</span></div>
+                        <div class="avatar-card" data-avatar="👑"><span>👑</span></div>
+                    </div>
+                </div>
+
+                <!-- TAB 5: MYSTERY LOOT CRATE -->
+                <div class="hangar-tab-panel" id="htab-content-crate">
+                    <div class="mystery-crate-stage">
+                        <div class="crate-3d-box" id="crate-3d-box">
+                            <div class="crate-icon-glow">🎁</div>
+                        </div>
+                        <h3 data-i18n="crate_title">CYBER MYSTERY LOOT CRATE</h3>
+                        <p data-i18n="crate_desc">Open to unlock rare craft skins, legendary laser colors, or win the <strong class="accent-gold">1,000 COIN JACKPOT</strong>!</p>
+                        
+                        <div class="crate-result-display" id="crate-result-display" style="display:none;">
+                            <div class="crate-result-icon" id="crate-res-icon">🎉</div>
+                            <h4 id="crate-res-title">YOU WON 500 COINS!</h4>
+                        </div>
+
+                        <button type="button" id="btn-open-mystery-crate" class="btn-play-hero pulse-btn">
+                            <i class="fa-solid fa-key"></i> <span data-i18n="btn_open_crate">OPEN CRATE (150 🪙)</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer-row">
+                <button type="button" id="btn-close-hangar-footer" class="btn-modal-action primary">
+                    <i class="fa-solid fa-check"></i> <span data-i18n="btn_done">SAVE &amp; CONTINUE</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <!-- MODAL 6: 🎥 VIRAL AR VIDEO CLIP RECORDER MODAL                  -->
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <div class="modal-backdrop" id="modal-ar-video-recorder">
+        <div class="modal-cyber-card video-modal-card">
+            <div class="modal-hdr-row">
+                <h3><i class="fa-solid fa-video" style="color:#ff007f;"></i> <span>YOUR VIRAL AR VIDEO CLIP IS READY!</span></h3>
+                <button class="btn-close-modal" id="btn-close-ar-video"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="video-preview-wrapper">
+                <video id="ar-recorded-preview" autoplay loop muted playsinline></video>
+                <div class="video-watermark-overlay">⚡ ia-codestudio.com</div>
+            </div>
+
+            <div class="video-reward-badge">
+                🎉 +50 GENIUS Coins bonus for creating your AR Clip! 🪙
+            </div>
+
+            <div class="video-modal-actions">
+                <a id="btn-download-ar-video" class="btn-modal-action primary" download="cyber-arcade-ar-clip.webm">
+                    <i class="fa-solid fa-download"></i> <span>DOWNLOAD CLIP (.WEBM)</span>
+                </a>
+                <button type="button" id="btn-share-ar-whatsapp" class="btn-modal-action secondary whatsapp">
+                    <i class="fa-brands fa-whatsapp"></i> <span>SHARE ON WHATSAPP</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="arcade-engine.js"></script>
+    <script src="challenge-system.js"></script>
+    <script src="leaderboard.js"></script>
+</body>
+</html>

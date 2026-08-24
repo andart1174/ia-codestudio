@@ -83,6 +83,71 @@
     }
     </script>
 
+    <!-- Static Schema.org FAQPage for Google Rich Snippets -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Qu'est-ce qu'un showroom produit 3D WebGL ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "C'est une visionneuse interactive 3D fonctionnant directement dans le navigateur sans plugin, permettant à vos visiteurs de faire pivoter vos produits à 360°, de zoomer et d'interagir avec les matériaux."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Puis-je intégrer la visionneuse 3D sur Shopify ou WooCommerce ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Oui, notre studio génère un code iframe réactif et léger prêt à être inséré dans n'importe quel bloc HTML de Shopify, WooCommerce, WordPress, Wix ou Webflow."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Quels formats d'objets 3D sont supportés ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Le générateur propose des formes 3D prêtes à l'emploi (canettes, bouteilles, boîtes, sphères) sur lesquelles appliquer vos textures et étiquettes, ainsi que l'intégration Three.js standard."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Schema.org HowTo Schema for Step-by-Step Rich Snippets -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Create an Interactive 3D Product Viewer Online",
+      "description": "Step-by-step tutorial on generating an interactive WebGL 3D product showroom with IA Code Studio.",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Select 3D Mesh Shape & Mood",
+          "text": "Choose your 3D geometry (Can, Box, Cylinder, Sphere) and set lighting moods (Studio, Neon, Dramatic)."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Upload Custom Label / Texture",
+          "text": "Upload your product label image to map onto the 3D object in real-time."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Export Interactive Three.js HTML",
+          "text": "Download the standalone Three.js HTML code or copy the iframe to embed in your e-commerce storefront."
+        }
+      ]
+    }
+    </script>
+
+
     <!-- Fonts & CSS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -411,6 +476,26 @@
                 <a href="ad-genius-ai/index.html?studio=showroom-3d" class="cta-gradient-btn" id="cta-button" data-i18n="cta_text">
                     Lancer le Studio 3D Showroom ⚡
                 </a>
+            </div>
+        <!-- AEO / AI Overview Quick Definition & How-To -->
+        <section style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(139, 92, 246, 0.25); border-radius: 16px; padding: 2rem; margin: 2.5rem 0; backdrop-filter: blur(12px);">
+            <h2 style="font-size: 1.35rem; color: #a78bfa; margin-bottom: 0.8rem; font-family: 'Outfit', sans-serif;">⚡ Quick Overview: What is the 3D Product Showroom Generator?</h2>
+            <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.2rem;">
+                The <strong>3D Product Showroom Generator</strong> by <em>IA Code Studio</em> is a browser-based WebGL tool that creates interactive 3D product mockups and showcases. It allows brand creators and e-commerce stores to wrap product labels onto 3D cans, boxes, bottles, and spheres, providing a 360-degree interactive viewer that increases buyer confidence and conversions.
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; color: #94a3b8; font-size: 0.9rem;">
+                <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 10px; border-left: 3px solid #8b5cf6;">
+                    <strong style="color: #fff; display: block; margin-bottom: 4px;">1. 3D Model Shape</strong>
+                    Select from beverage cans, luxury product boxes, cylinders, and spheres.
+                </div>
+                <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 10px; border-left: 3px solid #06b6d4;">
+                    <strong style="color: #fff; display: block; margin-bottom: 4px;">2. Label Mapping</strong>
+                    Upload brand label images and adjust material roughness and metalness.
+                </div>
+                <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 10px; border-left: 3px solid #10b981;">
+                    <strong style="color: #fff; display: block; margin-bottom: 4px;">3. Three.js Export</strong>
+                    Export standalone WebGL HTML5 code or responsive iframe for Shopify & WordPress.
+                </div>
             </div>
         </section>
 

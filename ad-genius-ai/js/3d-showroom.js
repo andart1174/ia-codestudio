@@ -490,6 +490,7 @@
  
         var html = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>' + S.headline + '</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;900&display=swap" rel="stylesheet"><style>' + css + '</style></head><body>';
         html += '<div id="overlay"><h1>' + S.headline + '</h1><p>' + S.subhead + '</p></div>';
+        html += '<div style="position:fixed;bottom:15px;right:15px;z-index:999;font-family:sans-serif;font-size:11px;opacity:0.8;"><a href="https://ia-codestudio.com" target="_blank" rel="noopener" style="color:white;text-decoration:none;background:rgba(0,0,0,0.6);padding:6px 12px;border-radius:20px;border:1px solid rgba(255,255,255,0.2);display:inline-flex;align-items:center;gap:5px;">⚡ 3D by <span style="color:#38bdf8;font-weight:bold;">IA Code Studio</span></a></div>';
         html += '<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>';
         html += '<script>' + inlineJS + '</script></body></html>';
  

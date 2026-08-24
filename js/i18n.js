@@ -3,6 +3,8 @@ const translations = {
     nav_title: "IA CODE STUDIO — Générateur de Widgets 3D & IDE Web IA",
     hero_title: "L'Avenir de l'Intelligence Artificielle",
     hero_subtitle: "Découvrez notre plateforme phare propulsée par l'IA. Conception structurelle avancée et génération intelligente dans un studio de développement complet.",
+    app_arcade_title: "CYBER ARCADE 3D ARENA & RÉALITÉ AR (9 JEUX)",
+    app_arcade_desc: "Arène de 9 jeux WebGL 3D & Réalité Augmentée : Cyber Racer 2077, Titan Mech Arena, Beat Slicer, Cosmic Surfer, AR Alien Invasion, et combats spatiaux intenses. Hangar & Magasin d'armes, monnaie virtuelle et 100% gratuit !",
     app1_title: "IA ARCHITECTE STUDIO PRO",
     app1_desc: "Une suite complète de développement propulsée par l'IA et un IDE web professionnel. Générez des applications web (HTML/CSS/JS) par prompts, concevez des API, bâtissez des SaaS, auditez la cybersécurité et prévisualisez en direct.",
     app2_title: "STUDIO 3D/4D PRO",
