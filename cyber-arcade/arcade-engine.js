@@ -135,6 +135,16 @@ class CyberArcadeEngine {
         window.addEventListener('keydown', (e) => this.handleKeyDown(e));
         window.addEventListener('keyup', (e) => this.handleKeyUp(e));
         this.initTouchControls();
+
+        const btnQuickBack = document.getElementById('btn-quick-back-hub');
+        if (btnQuickBack) {
+            btnQuickBack.onclick = (e) => { if(e) e.preventDefault(); this.exitToHub(); };
+        }
+
+        const btnToggleAR = document.getElementById('btn-toggle-ar-menu');
+        if (btnToggleAR) {
+            btnToggleAR.onclick = (e) => { if(e) e.preventDefault(); this.toggleARMenu(); };
+        }
         this.initDeviceOrientation();
 
         const btnPause = document.getElementById('btn-pause-game');
@@ -2682,6 +2692,22 @@ class CyberArcadeEngine {
                 ? '<i class="fa-solid fa-play"></i>' 
                 : '<i class="fa-solid fa-pause"></i>';
         }
+    }
+
+    toggleARMenu() {
+        const arBar = document.getElementById('ar-prominent-control-bar');
+        const toggleBtn = document.getElementById('btn-toggle-ar-menu');
+        if (arBar) {
+            arBar.classList.toggle('open');
+            if (toggleBtn) toggleBtn.classList.toggle('active');
+        }
+    }
+
+    closeARMenu() {
+        const arBar = document.getElementById('ar-prominent-control-bar');
+        const toggleBtn = document.getElementById('btn-toggle-ar-menu');
+        if (arBar) arBar.classList.remove('open');
+        if (toggleBtn) toggleBtn.classList.remove('active');
     }
 
     exitToHub() {

@@ -430,25 +430,25 @@
             
             <!-- 🌟 DEDICATED AR PROMINENT CONTROL BAR (ALWAYS VISIBLE IN AR) -->
             <!-- 🌟 COMPACT FLOATING AR MENU TOGGLE (OPENS/CLOSES ON TAP) -->
-            <button type="button" id="btn-toggle-ar-menu" class="ar-menu-toggle-btn" style="display:none;">
+            <button type="button" id="btn-toggle-ar-menu" class="ar-menu-toggle-btn" onclick="if(window.arcadeEngine)window.arcadeEngine.toggleARMenu()" style="display:none;">
                 <i class="fa-solid fa-sliders"></i> <span id="ar-menu-toggle-label">AR MENU ▾</span>
             </button>
 
             <!-- 🌟 DEDICATED AR CONTROL DROPDOWN (COLLAPSED BY DEFAULT) -->
             <div class="ar-prominent-control-bar" id="ar-prominent-control-bar">
-                <button type="button" id="btn-ar-bar-record" class="ar-bar-btn rec-btn pulse-rec">
+                <button type="button" id="btn-ar-bar-record" class="ar-bar-btn rec-btn pulse-rec" onclick="if(window.arcadeEngine){window.arcadeEngine.toggleARRecording();window.arcadeEngine.closeARMenu();}">
                     <i class="fa-solid fa-circle"></i> <span id="ar-rec-btn-text">REC VIDEO (10s)</span>
                 </button>
-                <button type="button" id="btn-ar-bar-ship-toggle" class="ar-bar-btn ship-btn">
+                <button type="button" id="btn-ar-bar-ship-toggle" class="ar-bar-btn ship-btn" onclick="if(window.arcadeEngine){window.arcadeEngine.toggleARShipView();window.arcadeEngine.closeARMenu();}">
                     <i class="fa-solid fa-shuttle-space"></i> <span id="ar-ship-toggle-text">SHOW 3D SHIP</span>
                 </button>
-                <button type="button" id="btn-ar-bar-table-land" class="ar-bar-btn land-btn">
+                <button type="button" id="btn-ar-bar-table-land" class="ar-bar-btn land-btn" onclick="if(window.arcadeEngine){window.arcadeEngine.startTableLandingMode();window.arcadeEngine.closeARMenu();}">
                     <i class="fa-solid fa-table"></i> <span>LAND ON TABLE</span>
                 </button>
-                <button type="button" id="btn-ar-bar-scanner" class="ar-bar-btn scan-btn">
+                <button type="button" id="btn-ar-bar-scanner" class="ar-bar-btn scan-btn" onclick="if(window.arcadeEngine){window.arcadeEngine.toggleCyberScan();window.arcadeEngine.closeARMenu();}">
                     <i class="fa-solid fa-glasses"></i> <span>NIGHT VISION</span>
                 </button>
-                <button type="button" id="btn-ar-bar-exit" class="ar-bar-btn exit-btn">
+                <button type="button" id="btn-ar-bar-exit" class="ar-bar-btn exit-btn" onclick="if(window.arcadeEngine){window.arcadeEngine.exitToHub();window.arcadeEngine.closeARMenu();}">
                     <i class="fa-solid fa-xmark"></i> <span>EXIT</span>
                 </button>
             </div>
@@ -494,7 +494,7 @@
                     <div class="hud-top-bar" id="game-hud-top-bar">
                         
                         <!-- 🔙 UNIVERSAL QUICK BACK BUTTON (RETURNS TO ARCADE HUB) -->
-                        <button type="button" id="btn-quick-back-hub" class="btn-quick-back-hub" title="Return to Arcade Games Menu">
+                        <button type="button" id="btn-quick-back-hub" class="btn-quick-back-hub" onclick="if(window.arcadeEngine)window.arcadeEngine.exitToHub()" title="Return to Arcade Games Menu">
                             <i class="fa-solid fa-arrow-left"></i>
                             <span data-i18n="btn_hub">BACK</span>
                         </button>
@@ -568,9 +568,9 @@
                             </div>
 
                             <div class="hud-actions-group">
-                                <button id="btn-toggle-camera" class="hud-btn" title="Toggle 1st / 3rd Person Camera (C)"><i class="fa-solid fa-video"></i></button>
-                                <button id="btn-pause-game" class="hud-btn" title="Pause (P)"><i class="fa-solid fa-pause"></i></button>
-                                <button id="btn-exit-game" class="hud-btn exit-btn" title="Exit to Hub (ESC)"><i class="fa-solid fa-xmark"></i></button>
+                                <button id="btn-toggle-camera" class="hud-btn" onclick="if(window.arcadeEngine)window.arcadeEngine.toggleCameraView()" title="Toggle 1st / 3rd Person Camera (C)"><i class="fa-solid fa-video"></i></button>
+                                <button id="btn-pause-game" class="hud-btn" onclick="if(window.arcadeEngine)window.arcadeEngine.togglePause()" title="Pause (P)"><i class="fa-solid fa-pause"></i></button>
+                                <button id="btn-exit-game" class="hud-btn exit-btn" onclick="if(window.arcadeEngine)window.arcadeEngine.exitToHub()" title="Exit to Hub (ESC)"><i class="fa-solid fa-xmark"></i></button>
                             </div>
                         </div>
 
@@ -642,20 +642,20 @@
                         <!-- Right Fire, Missile, Overdrive & Boost Cluster -->
                         <div class="touch-action-cluster">
                             <div class="touch-sub-row">
-                                <button type="button" id="tbtn-overdrive" class="touch-action-btn overdrive-btn pulse-glow" title="Fire Overdrive Mega-Beam">
+                                <button type="button" id="tbtn-overdrive" class="touch-action-btn overdrive-btn pulse-glow" onclick="if(window.arcadeEngine)window.arcadeEngine.fireOverdriveMegaBeam()" title="Fire Overdrive Mega-Beam">
                                     <i class="fa-solid fa-bolt-lightning"></i>
                                     <span>BEAM ⚡</span>
                                 </button>
-                                <button type="button" id="tbtn-missile" class="touch-action-btn missile-btn" title="Fire Lock-on Homing Missile">
+                                <button type="button" id="tbtn-missile" class="touch-action-btn missile-btn" onclick="if(window.arcadeEngine)window.arcadeEngine.fireHomingMissile()" title="Fire Lock-on Homing Missile">
                                     <i class="fa-solid fa-crosshairs"></i>
                                     <span>MISSILE 🎯</span>
                                 </button>
-                                <button type="button" id="tbtn-boost" class="touch-action-btn boost-btn" title="Turbo Boost">
+                                <button type="button" id="tbtn-boost" class="touch-action-btn boost-btn" onpointerdown="if(window.arcadeEngine)window.arcadeEngine.isBoosting=true" onpointerup="if(window.arcadeEngine)window.arcadeEngine.isBoosting=false" title="Turbo Boost">
                                     <i class="fa-solid fa-forward-fast"></i>
                                     <span>BOOST</span>
                                 </button>
                             </div>
-                            <button type="button" id="tbtn-fire" class="touch-action-btn fire-btn" title="Fire Plasma Lasers">
+                            <button type="button" id="tbtn-fire" class="touch-action-btn fire-btn" onclick="if(window.arcadeEngine)window.arcadeEngine.fireLaser()" title="Fire Plasma Lasers">
                                 <i class="fa-solid fa-gun"></i>
                                 <span>FIRE LASERS 🔥</span>
                             </button>
