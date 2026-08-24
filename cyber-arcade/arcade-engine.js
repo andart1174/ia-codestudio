@@ -1837,13 +1837,34 @@ class CyberArcadeEngine {
         laserGeo.rotateX(Math.PI / 2);
 
         if (this.isARMode) {
-            const camDir = new THREE.Vector3(0, 0, -1).applyQuaternion(this.camera.quaternion).normalize();
+            let camDir = new THREE.Vector3(0, 0, -1).applyQuaternion(this.camera.quaternion).normalize();
+
+            // 🎯 AR Smart Auto-Aim Assist: lock onto closest alien within reticle cone
+            let targetAlien = null;
+            let minAngle = 0.45; // ~25 degrees
+            for (let alien of this.alienShips) {
+                const toAlien = alien.position.clone().normalize();
+                const angle = camDir.angleTo(toAlien);
+                if (angle < minAngle) {
+                    minAngle = angle;
+                    targetAlien = alien;
+                }
+            }
+
+            if (targetAlien) {
+                camDir = targetAlien.position.clone().normalize();
+            }
+
             const laser = new THREE.Mesh(laserGeo, laserMat);
             laser.position.copy(this.camera.position);
             laser.quaternion.copy(this.camera.quaternion);
-            laser.velocity = camDir.multiplyScalar(220);
+            laser.velocity = camDir.multiplyScalar(280);
+            laser.isARLaser = true;
             this.lasers.push(laser);
             this.scene.add(laser);
+
+            // Muzzle flash particle
+            this.createExplosion(this.camera.position.clone().add(camDir.clone().multiplyScalar(1.5)), 0x00f2fe);
             return;
         }
 
@@ -2443,10 +2464,11 @@ class CyberArcadeEngine {
                 this.fireAlienLaser(alien.position);
             }
 
-            // Laser Hits
+            // Laser Hits (Enhanced for AR and Fast Ships)
             for (let j = this.lasers.length - 1; j >= 0; j--) {
                 const l = this.lasers[j];
-                if (l.position.distanceTo(alien.position) < 3.2) {
+                const hitRadius = (this.isARMode || l.isARLaser) ? 5.5 : 3.6;
+                if (l.position.distanceTo(alien.position) < hitRadius) {
                     this.scene.remove(l);
                     this.lasers.splice(j, 1);
 
@@ -2719,24 +2741,28 @@ class CyberArcadeEngine {
     initTouchControls() {
         const joystickZone = document.getElementById('touch-joystick-zone');
         const stick = document.getElementById('joystick-stick');
-        let touchId = null;
-        let startX = 0, startY = 0;
+        const canvas = this.canvas;
+        let joyTouchId = null;
+        let joyStartX = 0, joyStartY = 0;
 
+        // 🕹️ 1. Dynamic Joystick Handler
         if (joystickZone) {
-            joystickZone.addEventListener('touchstart', (e) => {
+            const handleJoyStart = (e) => {
+                e.preventDefault();
                 const touch = e.changedTouches[0];
-                touchId = touch.identifier;
+                joyTouchId = touch.identifier;
                 const rect = joystickZone.getBoundingClientRect();
-                startX = rect.left + rect.width / 2;
-                startY = rect.top + rect.height / 2;
-            }, { passive: false });
+                joyStartX = rect.left + rect.width / 2;
+                joyStartY = rect.top + rect.height / 2;
+            };
 
-            joystickZone.addEventListener('touchmove', (e) => {
+            const handleJoyMove = (e) => {
+                e.preventDefault();
                 for (let i = 0; i < e.changedTouches.length; i++) {
                     const touch = e.changedTouches[i];
-                    if (touch.identifier === touchId) {
-                        const dx = touch.clientX - startX;
-                        const dy = touch.clientY - startY;
+                    if (touch.identifier === joyTouchId) {
+                        const dx = touch.clientX - joyStartX;
+                        const dy = touch.clientY - joyStartY;
                         const dist = Math.hypot(dx, dy);
                         const maxDist = 45;
 
@@ -2752,25 +2778,112 @@ class CyberArcadeEngine {
                         break;
                     }
                 }
-            }, { passive: false });
+            };
 
-            const resetJoystick = () => {
-                touchId = null;
+            const resetJoystick = (e) => {
+                if (e) e.preventDefault();
+                joyTouchId = null;
                 if (stick) stick.style.transform = 'translate(-50%, -50%)';
                 this.input.x = 0;
                 this.input.y = 0;
             };
 
-            joystickZone.addEventListener('touchend', resetJoystick);
-            joystickZone.addEventListener('touchcancel', resetJoystick);
+            joystickZone.addEventListener('touchstart', handleJoyStart, { passive: false });
+            joystickZone.addEventListener('touchmove', handleJoyMove, { passive: false });
+            joystickZone.addEventListener('touchend', resetJoystick, { passive: false });
+            joystickZone.addEventListener('touchcancel', resetJoystick, { passive: false });
         }
 
+        // 📱 2. Universal Canvas Screen Drag (Steer Anywhere on Mobile & 360° AR Pan)
+        if (canvas) {
+            let canvasDragTouchId = null;
+            let lastDragX = 0, lastDragY = 0;
+
+            canvas.addEventListener('touchstart', (e) => {
+                for (let i = 0; i < e.changedTouches.length; i++) {
+                    const touch = e.changedTouches[i];
+                    // If touch is on the screen and not part of the joystick or action cluster
+                    if (touch.clientX < window.innerWidth * 0.7) {
+                        canvasDragTouchId = touch.identifier;
+                        lastDragX = touch.clientX;
+                        lastDragY = touch.clientY;
+                        break;
+                    }
+                }
+            }, { passive: true });
+
+            canvas.addEventListener('touchmove', (e) => {
+                for (let i = 0; i < e.changedTouches.length; i++) {
+                    const touch = e.changedTouches[i];
+                    if (touch.identifier === canvasDragTouchId) {
+                        const deltaX = touch.clientX - lastDragX;
+                        const deltaY = touch.clientY - lastDragY;
+                        lastDragX = touch.clientX;
+                        lastDragY = touch.clientY;
+
+                        if (this.isARMode) {
+                            // Smooth 360° AR touch pan
+                            this.camera.rotation.y -= deltaX * 0.008;
+                            this.camera.rotation.x -= deltaY * 0.006;
+                        } else {
+                            // Direct ship / vehicle steering
+                            const moveScale = 0.06;
+                            this.input.x = THREE.MathUtils.clamp(this.input.x + deltaX * moveScale, -1, 1);
+                            this.input.y = THREE.MathUtils.clamp(this.input.y - deltaY * moveScale, -1, 1);
+
+                            if (this.playerShip) {
+                                this.playerShip.position.x = THREE.MathUtils.clamp(this.playerShip.position.x + deltaX * 0.12, -16, 16);
+                                if (this.activeGame !== 'racer' && this.activeGame !== 'mech') {
+                                    this.playerShip.position.y = THREE.MathUtils.clamp(this.playerShip.position.y - deltaY * 0.12, -11, 11);
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }, { passive: true });
+
+            const resetCanvasDrag = (e) => {
+                for (let i = 0; i < e.changedTouches.length; i++) {
+                    if (e.changedTouches[i].identifier === canvasDragTouchId) {
+                        canvasDragTouchId = null;
+                        this.input.x = 0;
+                        this.input.y = 0;
+                        break;
+                    }
+                }
+            };
+
+            canvas.addEventListener('touchend', resetCanvasDrag);
+            canvas.addEventListener('touchcancel', resetCanvasDrag);
+        }
+
+        // 🔥 3. Action Buttons with Rapid Fire Support
         const btnFire = document.getElementById('tbtn-fire');
+        let fireInterval = null;
         if (btnFire) {
-            btnFire.addEventListener('touchstart', (e) => {
+            const startFiring = (e) => {
                 e.preventDefault();
                 this.fireLaser();
-            });
+                if (!fireInterval) {
+                    fireInterval = setInterval(() => {
+                        if (this.gameRunning) this.fireLaser();
+                    }, 180);
+                }
+            };
+            const stopFiring = (e) => {
+                if (e) e.preventDefault();
+                if (fireInterval) {
+                    clearInterval(fireInterval);
+                    fireInterval = null;
+                }
+            };
+
+            btnFire.addEventListener('touchstart', startFiring, { passive: false });
+            btnFire.addEventListener('touchend', stopFiring, { passive: false });
+            btnFire.addEventListener('touchcancel', stopFiring, { passive: false });
+            btnFire.addEventListener('mousedown', startFiring);
+            btnFire.addEventListener('mouseup', stopFiring);
         }
 
         const btnMissile = document.getElementById('tbtn-missile');
@@ -2778,7 +2891,8 @@ class CyberArcadeEngine {
             btnMissile.addEventListener('touchstart', (e) => {
                 e.preventDefault();
                 this.fireHomingMissile();
-            });
+            }, { passive: false });
+            btnMissile.addEventListener('click', () => { this.fireHomingMissile(); });
         }
 
         const btnOverdrive = document.getElementById('tbtn-overdrive');
@@ -2786,7 +2900,8 @@ class CyberArcadeEngine {
             btnOverdrive.addEventListener('touchstart', (e) => {
                 e.preventDefault();
                 this.fireOverdriveMegaBeam();
-            });
+            }, { passive: false });
+            btnOverdrive.addEventListener('click', () => { this.fireOverdriveMegaBeam(); });
         }
 
         const btnBoost = document.getElementById('tbtn-boost');
@@ -2794,8 +2909,13 @@ class CyberArcadeEngine {
             btnBoost.addEventListener('touchstart', (e) => {
                 e.preventDefault();
                 this.isBoosting = true;
-            });
-            btnBoost.addEventListener('touchend', () => { this.isBoosting = false; });
+            }, { passive: false });
+            btnBoost.addEventListener('touchend', (e) => {
+                if (e) e.preventDefault();
+                this.isBoosting = false;
+            }, { passive: false });
+            btnBoost.addEventListener('mousedown', () => { this.isBoosting = true; });
+            btnBoost.addEventListener('mouseup', () => { this.isBoosting = false; });
         }
     }
 }
