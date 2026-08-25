@@ -14,11 +14,8 @@ class CyberLeaderboard {
     constructor() {
         this.currentLang = localStorage.getItem('cyber_lang') || 'en';
         
-        // 2,500 Free Coins for Testing & Unlocking Everything
-        let storedCoins = parseInt(localStorage.getItem('cyber_coins') || '2500', 10);
-        if (storedCoins < 2500) storedCoins = 2500;
-        this.coins = storedCoins;
-        localStorage.setItem('cyber_coins', this.coins.toString());
+        // 🪙 Global Unified GENIUS IA Coins Sync with Community & Website
+        this.coins = this.getInitialCoins();
 
         this.siteUser = this.getWebsiteSession();
         this.highScores = JSON.parse(localStorage.getItem('cyber_highscores') || '{}');
@@ -230,6 +227,7 @@ class CyberLeaderboard {
     init() {
         this.updateCoinDisplay();
         this.updateAuthDisplay();
+        this.initFirebaseSync();
         this.renderWeeklyTable();
         this.initLanguageControls();
         this.initCategoryTabs();
@@ -692,9 +690,20 @@ class CyberLeaderboard {
     }
 
     addCoins(amount) {
-        this.coins += amount;
+        this.coins = Math.max(0, this.coins + amount);
+        localStorage.setItem('genius_coins', this.coins.toString());
         localStorage.setItem('cyber_coins', this.coins.toString());
         this.updateCoinDisplay();
+
+        // Sync with Firebase Firestore if logged in
+        if (this.siteUser && this.siteUser.email && typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length) {
+            try {
+                const db = firebase.firestore();
+                db.collection('users').doc(this.siteUser.email).update({
+                    geniusCoins: this.coins
+                }).catch(err => console.log('Firestore coin update notice:', err));
+            } catch (e) {}
+        }
     }
 
     recordHighScore(game, score) {

@@ -29,6 +29,23 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <link rel="stylesheet" href="style.css">
+    <!-- Firebase SDK (Compat for Global GENIUS Coins Sync) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyBXJ0LstZF7c3-GI2eDtv6V7vsx0scgXHk",
+          authDomain: "ia-codestudio.firebaseapp.com",
+          projectId: "ia-codestudio",
+          storageBucket: "ia-codestudio.firebasestorage.app",
+          messagingSenderId: "977495027432",
+          appId: "1:977495027432:web:fb93e8ae7712c70df2635d",
+          measurementId: "G-YVNWE5Q6KB"
+        };
+        if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+    </script>
 </head>
 <body class="arcade-body">
 
@@ -82,7 +99,7 @@
             <div class="coin-balance-badge" title="GENIUS IA Virtual Coins">
                 <span class="coin-icon">🪙</span>
                 <span id="header-coin-count">200</span>
-                <span class="coin-label">Coins</span>
+                <span class="coin-label">GENIUS IA</span>
             </div>
 
             <!-- Language Switcher (EN / FR Only) -->
