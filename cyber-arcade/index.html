@@ -214,6 +214,19 @@
             </div>
 
             <!-- Audio SFX Toggle -->
+            
+            <!-- 📻 Cyberpunk Synthwave Radio Toggle -->
+            <button id="btn-toggle-radio" class="header-nav-btn radio-header-btn" title="Cyber Synthwave Radio 📻">
+                <span class="radio-live-dot"></span>
+                <i class="fa-solid fa-radio"></i>
+                <span id="header-radio-status-text">CYBER RADIO 📻</span>
+                <div class="mini-eq-bars">
+                    <span class="mini-bar eq-bar"></span>
+                    <span class="mini-bar eq-bar"></span>
+                    <span class="mini-bar eq-bar"></span>
+                </div>
+            </button>
+    
             <button id="btn-toggle-sound" class="icon-action-btn" title="Toggle Sound FX">
                 <i class="fa-solid fa-volume-high"></i>
             </button>
@@ -848,6 +861,56 @@
         <button type="button" class="btn-floating-nav lb-nav" id="btn-scroll-to-leaderboard" title="View Weekly Champions">
             <i class="fa-solid fa-trophy"></i> <span>LEADERBOARD 🏆</span>
         </button>
+    </div>
+    
+    
+    <!-- 📻 CYBERPUNK SYNTHWAVE RADIO FLOATING POPUP (V32) -->
+    <div class="cyber-radio-widget-panel" id="cyber-radio-widget-panel" style="display:none;">
+        <div class="radio-panel-header">
+            <div class="radio-brand">
+                <i class="fa-solid fa-broadcast-tower"></i>
+                <span>CYBER RADIO 3D</span>
+            </div>
+            <button type="button" id="btn-close-radio-panel" class="btn-close-radio" title="Minimize Radio">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="radio-screen-box">
+            <div class="radio-station-title" id="radio-station-name">NEON DRIFT FM 80s</div>
+            <div class="radio-meta-row">
+                <span class="radio-genre" id="radio-station-genre">Retro Synthwave</span>
+                <span class="radio-bpm" id="radio-station-bpm">120 BPM</span>
+            </div>
+            <div class="radio-visualizer-bars">
+                <span class="eq-bar"></span>
+                <span class="eq-bar"></span>
+                <span class="eq-bar"></span>
+                <span class="eq-bar"></span>
+                <span class="eq-bar"></span>
+                <span class="eq-bar"></span>
+                <span class="eq-bar"></span>
+                <span class="eq-bar"></span>
+            </div>
+        </div>
+
+        <div class="radio-controls-row">
+            <button type="button" id="btn-radio-prev" class="radio-ctrl-btn" title="Previous Station">
+                <i class="fa-solid fa-backward-step"></i>
+            </button>
+            <button type="button" id="btn-radio-play" class="radio-play-btn" title="Play / Pause Radio">
+                <i class="fa-solid fa-play"></i> PLAY
+            </button>
+            <button type="button" id="btn-radio-next" class="radio-ctrl-btn" title="Next Station">
+                <i class="fa-solid fa-forward-step"></i>
+            </button>
+        </div>
+
+        <div class="radio-volume-row">
+            <i class="fa-solid fa-volume-low"></i>
+            <input type="range" id="radio-volume-slider" min="0" max="1" step="0.05" value="0.35">
+            <i class="fa-solid fa-volume-high"></i>
+        </div>
     </div>
     
     </main>
@@ -1491,5 +1554,6 @@
     <script src="arcade-engine.js"></script>
     <script src="challenge-system.js"></script>
     <script src="leaderboard.js"></script>
+    <script src="cyber-radio.js"></script>
 </body>
 </html>
