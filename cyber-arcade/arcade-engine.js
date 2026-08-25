@@ -457,15 +457,82 @@ class CyberArcadeEngine {
         this.playSFX('respawn');
     }
 
+    
+    takeARSnapshot() {
+        const flash = document.getElementById('ar-camera-flash');
+        if (flash) {
+            flash.style.display = 'block';
+            setTimeout(() => { flash.style.display = 'none'; }, 400);
+        }
+
+        this.playSFX('laser');
+        if (navigator.vibrate) navigator.vibrate([100, 30, 150]);
+
+        try {
+            const canvas = document.getElementById('arcade-webgl-canvas');
+            const video = document.getElementById('ar-camera-video');
+            const offCanvas = document.createElement('canvas');
+            offCanvas.width = canvas.width;
+            offCanvas.height = canvas.height;
+            const ctx = offCanvas.getContext('2d');
+
+            if (video && video.videoWidth) {
+                ctx.drawImage(video, 0, 0, offCanvas.width, offCanvas.height);
+            }
+            ctx.drawImage(canvas, 0, 0);
+
+            // Watermark
+            ctx.fillStyle = '#00f2fe';
+            ctx.font = 'bold 20px Orbitron, sans-serif';
+            ctx.fillText('⚡ CYBER ARCADE 3D — AR MODE', 24, offCanvas.height - 30);
+
+            const link = document.createElement('a');
+            link.download = 'CyberArcade-AR-Snapshot-' + Date.now() + '.jpg';
+            link.href = offCanvas.toDataURL('image/jpeg', 0.92);
+            link.click();
+        } catch(e) {
+            console.warn('Snapshot download handled:', e);
+        }
+    }
+    
     toggleCyberScan() {
         this.isCyberScanActive = !this.isCyberScanActive;
-        this.playSFX('laser');
-        const viewport = document.getElementById('canvas-viewport');
-        const btnScanner = document.getElementById('btn-ar-bar-scanner');
+        
+        // High-tech Military NV boot sound
+        try {
+            if (this.audioCtx) {
+                const osc = this.audioCtx.createOscillator();
+                const gain = this.audioCtx.createGain();
+                osc.type = 'sawtooth';
+                const now = this.audioCtx.currentTime;
+                osc.frequency.setValueAtTime(this.isCyberScanActive ? 350 : 1200, now);
+                osc.frequency.exponentialRampToValueAtTime(this.isCyberScanActive ? 1600 : 250, now + 0.22);
+                gain.gain.setValueAtTime(0.18, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
+                osc.connect(gain);
+                gain.connect(this.audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.23);
+            }
+        } catch(e) {}
 
-        document.body.classList.toggle('cyber-scan-active', this.isCyberScanActive);
-        if (viewport) viewport.classList.toggle('cyber-scan-active', this.isCyberScanActive);
-        if (btnScanner) btnScanner.classList.toggle('active', this.isCyberScanActive);
+        const nvOverlay = document.getElementById('night-vision-tactical-overlay');
+        const btnHudNv = document.getElementById('btn-hud-night-vision');
+        const hudNvText = document.getElementById('hud-nv-text');
+        const btnBarScanner = document.getElementById('btn-ar-bar-scanner');
+
+        if (nvOverlay) nvOverlay.style.display = this.isCyberScanActive ? 'block' : 'none';
+        if (btnHudNv) {
+            btnHudNv.classList.toggle('active', this.isCyberScanActive);
+            if (hudNvText) hudNvText.textContent = this.isCyberScanActive ? '🟢 NV ON' : 'NIGHT VISION';
+        }
+        if (btnBarScanner) btnBarScanner.classList.toggle('active', this.isCyberScanActive);
+
+        if (this.nightVisionLight) {
+            this.nightVisionLight.intensity = this.isCyberScanActive ? 3.0 : 0;
+        }
+
+        if (navigator.vibrate) navigator.vibrate(this.isCyberScanActive ? [60, 40, 80] : [40]);
         this.closeARMenu();
     }
 
@@ -706,6 +773,13 @@ class CyberArcadeEngine {
         }
         this.isARMode = false;
         document.body.classList.remove('ar-active-mode');
+        const arDirectActions = document.getElementById('hud-ar-direct-actions');
+        if (arDirectActions) arDirectActions.style.display = 'none';
+        const nvOverlay = document.getElementById('night-vision-tactical-overlay');
+        if (nvOverlay) nvOverlay.style.display = 'none';
+        const targetHud = document.getElementById('ar-target-scanner-hud');
+        if (targetHud) targetHud.style.display = 'none';
+        this.isCyberScanActive = false;
     }
 
     async startGame(gameType = 'blaster', rivalTarget = 0, rivalName = '') {
@@ -814,6 +888,8 @@ class CyberArcadeEngine {
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
         this.scene.add(ambientLight);
+        this.nightVisionLight = new THREE.AmbientLight(0x00ff88, 0);
+        this.scene.add(this.nightVisionLight);
 
         const dirLight = new THREE.DirectionalLight(0x00f2fe, 1.5);
         dirLight.position.set(15, 30, 20);
@@ -1527,6 +1603,60 @@ class CyberArcadeEngine {
         }
     }
 
+    
+    createARPortal(position) {
+        const portalGroup = new THREE.Group();
+        
+        const outerRingGeo = new THREE.TorusGeometry(2.6, 0.15, 12, 32);
+        const outerRingMat = new THREE.MeshBasicMaterial({ color: 0x00f2fe, wireframe: true });
+        const outerRing = new THREE.Mesh(outerRingGeo, outerRingMat);
+        portalGroup.add(outerRing);
+
+        const innerRingGeo = new THREE.TorusGeometry(2.0, 0.2, 12, 32);
+        const innerRingMat = new THREE.MeshBasicMaterial({ color: 0xff007f });
+        const innerRing = new THREE.Mesh(innerRingGeo, innerRingMat);
+        portalGroup.add(innerRing);
+
+        const vortexGeo = new THREE.CircleGeometry(1.9, 24);
+        const vortexMat = new THREE.MeshBasicMaterial({
+            color: 0x7928ca,
+            transparent: true,
+            opacity: 0.85,
+            side: THREE.DoubleSide
+        });
+        const vortex = new THREE.Mesh(vortexGeo, vortexMat);
+        portalGroup.add(vortex);
+
+        portalGroup.position.copy(position);
+        portalGroup.lookAt(0, 0, 0);
+        portalGroup.scale.set(0.1, 0.1, 0.1);
+        portalGroup.life = 1.2;
+
+        this.scene.add(portalGroup);
+        if (!this.arPortals) this.arPortals = [];
+        this.arPortals.push(portalGroup);
+        this.playSFX('powerup');
+    }
+
+    createARShockwave(origin) {
+        const waveGeo = new THREE.RingGeometry(0.5, 1.2, 32);
+        waveGeo.rotateX(Math.PI / 2);
+        const waveMat = new THREE.MeshBasicMaterial({
+            color: 0x00ffcc,
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 0.95
+        });
+        const wave = new THREE.Mesh(waveGeo, waveMat);
+        wave.position.copy(origin || this.camera.position);
+        wave.scale.set(1, 1, 1);
+        wave.life = 1.5;
+        this.scene.add(wave);
+        this.arShockwaves.push(wave);
+        this.playSFX('overdrive');
+        if (navigator.vibrate) navigator.vibrate([150, 50, 250]);
+    }
+    
     spawnARAlien() {
         const alienGroup = new THREE.Group();
         const isHeavy = Math.random() > 0.6;
@@ -1568,6 +1698,7 @@ class CyberArcadeEngine {
 
         this.alienShips.push(alienGroup);
         this.scene.add(alienGroup);
+        this.createARPortal(alienGroup.position);
     }
 
     buildCyberCity() {
@@ -2737,7 +2868,68 @@ class CyberArcadeEngine {
         this.updateEntities(delta);
 
         if (this.renderer && this.scene && this.camera) {
-            this.renderer.render(this.scene, this.camera);
+            
+        // 🛰️ Update AR Target Scanner & Shockwaves
+        if (this.isARMode && this.alienShips.length > 0) {
+            let closestAlien = null;
+            let minDist = 999;
+            this.alienShips.forEach(alien => {
+                const d = alien.position.distanceTo(this.camera.position);
+                if (d < minDist) {
+                    minDist = d;
+                    closestAlien = alien;
+                }
+            });
+
+            const targetHud = document.getElementById('ar-target-scanner-hud');
+            const targetDistVal = document.getElementById('target-dist-val');
+            const targetLockLabel = document.getElementById('target-lock-label');
+
+            if (closestAlien && targetHud) {
+                targetHud.style.display = 'block';
+                const screenVec = closestAlien.position.clone().project(this.camera);
+                const screenX = (screenVec.x * 0.5 + 0.5) * window.innerWidth;
+                const screenY = (-(screenVec.y * 0.5) + 0.5) * window.innerHeight;
+
+                targetHud.style.left = Math.max(60, Math.min(window.innerWidth - 60, screenX)) + 'px';
+                targetHud.style.top = Math.max(80, Math.min(window.innerHeight - 80, screenY)) + 'px';
+
+                if (targetDistVal) targetDistVal.textContent = (minDist * 0.45).toFixed(1) + 'm';
+                
+                const isCentered = Math.abs(screenVec.x) < 0.25 && Math.abs(screenVec.y) < 0.25;
+                targetHud.classList.toggle('locked', isCentered);
+                if (targetLockLabel) targetLockLabel.textContent = isCentered ? '🎯 LOCKED' : 'TRACKING';
+            }
+        }
+
+        // Update AR Portals & Shockwaves
+        if (this.arPortals) {
+            for (let i = this.arPortals.length - 1; i >= 0; i--) {
+                const p = this.arPortals[i];
+                p.life -= delta;
+                p.scale.addScalar(0.04);
+                p.rotation.z += 4 * delta;
+                if (p.life <= 0) {
+                    this.scene.remove(p);
+                    this.arPortals.splice(i, 1);
+                }
+            }
+        }
+
+        if (this.arShockwaves) {
+            for (let i = this.arShockwaves.length - 1; i >= 0; i--) {
+                const w = this.arShockwaves[i];
+                w.life -= delta;
+                w.scale.addScalar(18 * delta);
+                w.material.opacity = Math.max(0, w.life / 1.5);
+                if (w.life <= 0) {
+                    this.scene.remove(w);
+                    this.arShockwaves.splice(i, 1);
+                }
+            }
+        }
+    
+        this.renderer.render(this.scene, this.camera);
         }
     }
 

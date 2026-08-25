@@ -36,14 +36,39 @@
     -webkit-tap-highlight-color: transparent;
 }
 
+html {
+    overflow-x: hidden;
+    overflow-y: auto !important;
+    height: auto;
+    min-height: 100%;
+}
+
 body.arcade-body {
     background-color: var(--bg-primary);
     color: var(--text-main);
     font-family: var(--font-body);
-    min-height: 100vh;
+    min-height: 100%;
+    height: auto;
     overflow-x: hidden;
+    overflow-y: auto !important;
     position: relative;
     user-select: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Custom Cyber Neon Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-track {
+    background: rgba(5, 7, 20, 0.95);
+}
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--accent-cyan), var(--accent-pink));
+    border-radius: 5px;
+    border: 2px solid #050714;
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
 }
 
 /* 🌌 Cyber Aura Background */
@@ -3738,4 +3763,263 @@ body.cyber-scan-active::after {
 @keyframes lockPulse {
     0% { transform: translate(-50%, -50%) scale(1); }
     100% { transform: translate(-50%, -50%) scale(1.15); }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════ */
+/* 📜 UNIVERSAL IFRAME SCROLL & QUICK NAVIGATION (V29)                   */
+/* ══════════════════════════════════════════════════════════════════════ */
+
+html, body.arcade-body {
+    overflow-x: hidden !important;
+    overflow-y: scroll !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+
+.arcade-main-container {
+    min-height: 100% !important;
+    overflow: visible !important;
+    padding-bottom: 120px !important;
+}
+
+#view-arcade-hub {
+    overflow: visible !important;
+    min-height: 100% !important;
+}
+
+/* Floating Quick Navigation Bar */
+.floating-hub-nav-pill {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: auto;
+}
+
+.btn-floating-nav {
+    background: rgba(15, 23, 42, 0.95);
+    border: 1.5px solid var(--accent-cyan);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-size: 0.78rem;
+    font-weight: 800;
+    padding: 8px 14px;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0, 242, 254, 0.45);
+    backdrop-filter: blur(12px);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-floating-nav:hover {
+    background: var(--accent-cyan);
+    color: #050714;
+    transform: scale(1.06);
+    box-shadow: 0 0 25px var(--accent-cyan);
+}
+
+.btn-floating-nav.lb-nav {
+    border-color: #ffb703;
+    box-shadow: 0 4px 20px rgba(255, 183, 3, 0.4);
+}
+
+.btn-floating-nav.lb-nav:hover {
+    background: #ffb703;
+    color: #050714;
+}
+
+body.ar-active-mode .floating-hub-nav-pill,
+#view-game-stage[style*="display: block"] ~ .floating-hub-nav-pill {
+    display: none !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════ */
+/* 🌟 AR SUPER UPGRADES V30: NIGHT VISION, SCANNER & PHOTO               */
+/* ══════════════════════════════════════════════════════════════════════ */
+
+.hud-ar-direct-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 12px;
+}
+
+.btn-hud-ar-action {
+    background: rgba(15, 23, 42, 0.9);
+    border: 1.5px solid var(--accent-cyan);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+    backdrop-filter: blur(8px);
+    transition: all 0.2s ease;
+}
+
+.btn-hud-ar-action.nv-btn {
+    border-color: #00ff88;
+    color: #00ff88;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+}
+
+.btn-hud-ar-action.nv-btn.active {
+    background: #00ff88;
+    color: #050714;
+    box-shadow: 0 0 25px rgba(0, 255, 136, 0.9);
+    animation: nvBtnPulse 1.2s infinite alternate;
+}
+
+@keyframes nvBtnPulse {
+    from { box-shadow: 0 0 15px rgba(0, 255, 136, 0.6); }
+    to { box-shadow: 0 0 30px rgba(0, 255, 136, 1); }
+}
+
+.btn-hud-ar-action.photo-btn {
+    border-color: #ff007f;
+    color: #ff007f;
+}
+
+.btn-hud-ar-action.photo-btn:active {
+    transform: scale(0.92);
+    background: #ff007f;
+    color: #fff;
+}
+
+/* 🕶️ Fullscreen Tactical Night Vision Overlay */
+.night-vision-tactical-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 860;
+    pointer-events: none;
+    background: radial-gradient(circle at center, rgba(0, 255, 100, 0.22) 0%, rgba(0, 35, 10, 0.8) 100%),
+                repeating-linear-gradient(0deg, rgba(0, 255, 80, 0.12) 0px, rgba(0, 255, 80, 0.12) 2px, transparent 2px, transparent 4px);
+    box-shadow: inset 0 0 100px rgba(0, 20, 5, 0.9);
+}
+
+.nv-scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(0, 255, 120, 0.7);
+    box-shadow: 0 0 15px #00ff78;
+    animation: nvScanMove 3.5s linear infinite;
+}
+
+@keyframes nvScanMove {
+    0% { top: 0%; opacity: 0.8; }
+    50% { opacity: 1; }
+    100% { top: 100%; opacity: 0.8; }
+}
+
+.nv-header-badge {
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 30, 10, 0.85);
+    border: 1px solid #00ff88;
+    color: #00ff88;
+    font-family: var(--font-code);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    padding: 4px 14px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.6);
+}
+
+.nv-corner {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-color: #00ff88;
+    border-style: solid;
+    border-width: 0;
+}
+.nv-corner.top-left { top: 20px; left: 20px; border-top-width: 3px; border-left-width: 3px; }
+.nv-corner.top-right { top: 20px; right: 20px; border-top-width: 3px; border-right-width: 3px; }
+.nv-corner.bottom-left { bottom: 20px; left: 20px; border-bottom-width: 3px; border-left-width: 3px; }
+.nv-corner.bottom-right { bottom: 20px; right: 20px; border-bottom-width: 3px; border-right-width: 3px; }
+
+/* 🎯 Floating 3D AR Target Distance Scanner */
+.ar-target-scanner-hud {
+    position: fixed;
+    z-index: 915;
+    pointer-events: none;
+    transform: translate(-50%, -100%);
+    transition: left 0.05s linear, top 0.05s linear;
+}
+
+.target-bracket-box {
+    background: rgba(5, 7, 20, 0.85);
+    border: 1.5px solid #00f2fe;
+    border-radius: 8px;
+    padding: 6px 12px;
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.6);
+    backdrop-filter: blur(6px);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.ar-target-scanner-hud.locked .target-bracket-box {
+    border-color: #ff0055;
+    box-shadow: 0 0 25px #ff0055;
+    background: rgba(40, 5, 15, 0.9);
+}
+
+.target-info-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-family: var(--font-heading);
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #fff;
+}
+
+.target-dist {
+    color: #00f2fe;
+    font-family: var(--font-code);
+    font-weight: 900;
+}
+
+.target-status-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.65rem;
+    font-family: var(--font-code);
+    color: #ffb703;
+}
+
+/* 📸 Camera Flash Effect */
+.ar-camera-flash {
+    position: fixed;
+    inset: 0;
+    background: #ffffff;
+    z-index: 999999;
+    pointer-events: none;
+    animation: flashFade 0.5s ease-out forwards;
+}
+
+@keyframes flashFade {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
 }

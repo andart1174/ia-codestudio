@@ -566,6 +566,35 @@
 
             <!-- Three.js Canvas Container -->
             <div class="canvas-viewport" id="canvas-viewport">
+
+                <!-- 🕶️ Tactical Night Vision Predator HUD Overlay Layer (V30) -->
+                <div class="night-vision-tactical-overlay" id="night-vision-tactical-overlay" style="display:none;">
+                    <div class="nv-corner top-left"></div>
+                    <div class="nv-corner top-right"></div>
+                    <div class="nv-corner bottom-left"></div>
+                    <div class="nv-corner bottom-right"></div>
+                    <div class="nv-header-badge">PREDATOR IR-THERMAL // NIGHT VISION ON [850nm]</div>
+                    <div class="nv-scan-line"></div>
+                </div>
+
+                <!-- 🎯 Floating 3D AR Target Distance Scanner HUD (V30) -->
+                <div class="ar-target-scanner-hud" id="ar-target-scanner-hud" style="display:none;">
+                    <div class="target-bracket-box">
+                        <span class="target-bracket-top"></span>
+                        <div class="target-info-line">
+                            <span class="target-name">👾 ALIEN SAUCER</span>
+                            <span class="target-dist" id="target-dist-val">2.4m</span>
+                        </div>
+                        <div class="target-status-line">
+                            <span class="target-threat">THREAT: HIGH ⚠️</span>
+                            <span class="target-lock-label" id="target-lock-label">TRACKING</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 📸 AR Photo Flash Animation Layer -->
+                <div class="ar-camera-flash" id="ar-camera-flash" style="display:none;"></div>
+    
                 <canvas id="arcade-webgl-canvas"></canvas>
 
                 <!-- 🧭 360° Directional Proximity Warning Indicators (In Room) -->
@@ -611,6 +640,17 @@
                         </button>
                         
                         <!-- Left: Live Score, Wave, Lives & Power-up Multipliers -->
+                        
+                        <!-- 👓 Direct 1-Tap AR Night Vision & Photo Buttons (V30) -->
+                        <div class="hud-ar-direct-actions" id="hud-ar-direct-actions" style="display:none;">
+                            <button type="button" id="btn-hud-night-vision" class="btn-hud-ar-action nv-btn" onclick="if(window.arcadeEngine)window.arcadeEngine.toggleCyberScan()" title="Toggle Predator Night Vision">
+                                <i class="fa-solid fa-glasses"></i> <span id="hud-nv-text">NIGHT VISION</span>
+                            </button>
+                            <button type="button" id="btn-hud-ar-photo" class="btn-hud-ar-action photo-btn" onclick="if(window.arcadeEngine)window.arcadeEngine.takeARSnapshot()" title="Take Instant AR Photo">
+                                <i class="fa-solid fa-camera"></i> <span>PHOTO 📸</span>
+                            </button>
+                        </div>
+    
                         <div class="hud-stat-cluster left">
                             <div class="hud-score-display">
                                 <span class="hud-label" data-i18n="hud_score">SCORE</span>
@@ -777,6 +817,17 @@
             </div>
         </section>
 
+    
+    <!-- 📜 Floating Quick Scroll Navigation -->
+    <div class="floating-hub-nav-pill" id="floating-hub-nav-pill">
+        <button type="button" class="btn-floating-nav" id="btn-scroll-to-games" title="Scroll Down to 9 Games">
+            <i class="fa-solid fa-gamepad"></i> <span>ALL 9 GAMES ⬇</span>
+        </button>
+        <button type="button" class="btn-floating-nav lb-nav" id="btn-scroll-to-leaderboard" title="View Weekly Champions">
+            <i class="fa-solid fa-trophy"></i> <span>LEADERBOARD 🏆</span>
+        </button>
+    </div>
+    
     </main>
 
     <!-- ══════════════════════════════════════════════════════════════════ -->

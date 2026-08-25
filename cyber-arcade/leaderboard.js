@@ -305,6 +305,25 @@ class CyberLeaderboard {
         this.initRulesModal();
         this.initSiteAuthModal();
         this.initBountyModal();
+
+        // 📜 Smooth Scroll Handlers
+        const btnScrollGames = document.getElementById('btn-scroll-to-games');
+        if (btnScrollGames) {
+            btnScrollGames.addEventListener('click', () => {
+                const grid = document.getElementById('arena-games-grid');
+                if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        }
+
+        const btnScrollLb = document.getElementById('btn-scroll-to-leaderboard');
+        const btnOpenLb = document.getElementById('btn-open-leaderboard');
+        const scrollToLb = () => {
+            const lb = document.getElementById('leaderboard-section');
+            if (lb) lb.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+        if (btnScrollLb) btnScrollLb.addEventListener('click', scrollToLb);
+        if (btnOpenLb) btnOpenLb.addEventListener('click', scrollToLb);
+
         this.applyLanguage(this.currentLang);
         this.updatePersonalBest();
         this.updateActiveCraftDisplay();
@@ -451,6 +470,8 @@ class CyberLeaderboard {
 
                 if (typeof confetti === 'function') confetti({ particleCount: 120, spread: 80 });
                 if (window.arcadeEngine) window.arcadeEngine.playSFX('respawn');
+                const grid = document.getElementById('arena-games-grid');
+                if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             });
         }
     }
