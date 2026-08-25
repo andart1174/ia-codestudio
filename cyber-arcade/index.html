@@ -146,6 +146,17 @@
     <!-- Fullscreen Video Element for Real-World AR Camera Feed -->
     <video id="ar-camera-video" playsinline autoplay muted></video>
 
+    <!-- 🕶️ MASTER PREDATOR GREEN NIGHT VISION FILTER (GUARANTEED COLOR ON ALL PHONES) -->
+    <div id="ar-night-vision-master-filter" class="ar-night-vision-master-filter" style="display:none;">
+        <div class="nv-corner top-left"></div>
+        <div class="nv-corner top-right"></div>
+        <div class="nv-corner bottom-left"></div>
+        <div class="nv-corner bottom-right"></div>
+        <div class="nv-header-badge">PREDATOR IR-THERMAL // NIGHT VISION ON [850nm]</div>
+        <div class="nv-scan-line"></div>
+    </div>
+    
+
     <!-- Animated Cyber Aura Background (Hidden in AR mode) -->
     <div class="cyber-aura-bg" id="cyber-aura-bg">
         <div class="cyber-orb orb-cyan"></div>
@@ -541,6 +552,17 @@
             
             <!-- 🌟 DEDICATED AR PROMINENT CONTROL BAR (ALWAYS VISIBLE IN AR) -->
             <!-- 🌟 COMPACT FLOATING AR MENU TOGGLE (OPENS/CLOSES ON TAP) -->
+            
+            <!-- 🌟 PERMANENT DIRECT AR HUD BUTTONS (ALWAYS VISIBLE NEXT TO AR MENU) -->
+            <div class="ar-top-floating-bar" id="ar-top-floating-bar" style="display:none;">
+                <button type="button" id="btn-quick-ar-night-vision" class="ar-quick-action-btn nv-btn" onclick="if(window.arcadeEngine)window.arcadeEngine.toggleCyberScan()" title="Toggle Predator Green Night Vision">
+                    <i class="fa-solid fa-glasses"></i> <span id="ar-quick-nv-label">NIGHT VISION 🕶️</span>
+                </button>
+                <button type="button" id="btn-quick-ar-drone" class="ar-quick-action-btn drone-btn" onclick="if(window.arcadeEngine)window.arcadeEngine.summonARDrone()" title="Summon Autonomous 3D Support Drone">
+                    <i class="fa-solid fa-robot"></i> <span id="ar-quick-drone-label">DRONE 🛰️</span>
+                </button>
+            </div>
+    
             <button type="button" id="btn-toggle-ar-menu" class="ar-menu-toggle-btn" onclick="if(window.arcadeEngine)window.arcadeEngine.toggleARMenu()" style="display:none;">
                 <i class="fa-solid fa-sliders"></i> <span id="ar-menu-toggle-label">AR MENU ▾</span>
             </button>

@@ -4023,3 +4023,90 @@ body.ar-active-mode .floating-hub-nav-pill,
     0% { opacity: 1; }
     100% { opacity: 0; }
 }
+
+
+/* ══════════════════════════════════════════════════════════════════════ */
+/* 🕶️ AR PREDATOR NIGHT VISION MASTER FILTER & SENTRY DRONE (V31)       */
+/* ══════════════════════════════════════════════════════════════════════ */
+
+.ar-night-vision-master-filter {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 10 !important;
+    pointer-events: none !important;
+    background: rgba(0, 255, 80, 0.46) !important;
+    mix-blend-mode: color !important;
+}
+
+.ar-night-vision-master-filter::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: radial-gradient(circle at center, rgba(0, 255, 100, 0.18) 0%, rgba(0, 30, 8, 0.85) 100%),
+                repeating-linear-gradient(0deg, rgba(0, 255, 80, 0.2) 0px, rgba(0, 255, 80, 0.2) 2px, transparent 2px, transparent 4px) !important;
+    mix-blend-mode: hard-light !important;
+    pointer-events: none !important;
+}
+
+/* Permanent AR Top Action Buttons */
+.ar-top-floating-bar {
+    position: fixed !important;
+    top: 14px !important;
+    right: 135px !important;
+    z-index: 99999 !important;
+    display: flex !important;
+    gap: 8px !important;
+    pointer-events: auto !important;
+}
+
+.ar-quick-action-btn {
+    background: rgba(5, 7, 20, 0.92) !important;
+    border: 1.5px solid #00ff88 !important;
+    color: #00ff88 !important;
+    font-family: var(--font-heading) !important;
+    font-size: 0.72rem !important;
+    font-weight: 800 !important;
+    padding: 6px 12px !important;
+    border-radius: 20px !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.5) !important;
+    backdrop-filter: blur(10px) !important;
+    transition: all 0.2s ease !important;
+}
+
+.ar-quick-action-btn.active {
+    background: #00ff88 !important;
+    color: #050714 !important;
+    box-shadow: 0 0 25px #00ff88 !important;
+    animation: nvBtnPulse 1.2s infinite alternate !important;
+}
+
+.ar-quick-action-btn.drone-btn {
+    border-color: #00f2fe !important;
+    color: #00f2fe !important;
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.5) !important;
+}
+
+.ar-quick-action-btn.drone-btn.active {
+    background: #00f2fe !important;
+    color: #050714 !important;
+    box-shadow: 0 0 25px #00f2fe !important;
+}
+
+@media (max-width: 600px) {
+    .ar-top-floating-bar {
+        top: 65px !important;
+        right: 14px !important;
+        gap: 6px !important;
+    }
+    .ar-quick-action-btn {
+        font-size: 0.65rem !important;
+        padding: 5px 10px !important;
+    }
+}

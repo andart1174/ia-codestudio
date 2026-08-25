@@ -458,6 +458,61 @@ class CyberArcadeEngine {
     }
 
     
+    
+    summonARDrone() {
+        if (this.arDrone) {
+            // Toggle drone
+            this.arDrone.visible = !this.arDrone.visible;
+            const btn = document.getElementById('btn-quick-ar-drone');
+            const lbl = document.getElementById('ar-quick-drone-label');
+            if (btn) btn.classList.toggle('active', this.arDrone.visible);
+            if (lbl) lbl.textContent = this.arDrone.visible ? '🛰️ DRONE ON' : 'DRONE 🛰️';
+            this.playSFX(this.arDrone.visible ? 'powerup' : 'laser');
+            return;
+        }
+
+        const droneGroup = new THREE.Group();
+
+        // Drone Body (Spherical High-Tech Core)
+        const coreGeo = new THREE.SphereGeometry(0.5, 16, 16);
+        const coreMat = new THREE.MeshStandardMaterial({ color: 0x050714, metalness: 0.9, roughness: 0.2 });
+        const core = new THREE.Mesh(coreGeo, coreMat);
+        droneGroup.add(core);
+
+        // Neon Glow Ring
+        const ringGeo = new THREE.TorusGeometry(0.75, 0.06, 12, 24);
+        const ringMat = new THREE.MeshBasicMaterial({ color: 0x00f2fe });
+        const ring = new THREE.Mesh(ringGeo, ringMat);
+        droneGroup.add(ring);
+        droneGroup.ring = ring;
+
+        // Dual Plasma Blasters
+        const gunGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.6, 8);
+        gunGeo.rotateX(Math.PI / 2);
+        const gunMat = new THREE.MeshBasicMaterial({ color: 0xff007f });
+        const gunLeft = new THREE.Mesh(gunGeo, gunMat);
+        gunLeft.position.set(-0.55, -0.1, 0.3);
+        const gunRight = new THREE.Mesh(gunGeo, gunMat);
+        gunRight.position.set(0.55, -0.1, 0.3);
+        droneGroup.add(gunLeft);
+        droneGroup.add(gunRight);
+
+        // Position drone right beside player
+        droneGroup.position.set(1.6, -0.2, -2.5);
+        droneGroup.shootCooldown = 0;
+        droneGroup.hoverSeed = Math.random() * 100;
+
+        this.scene.add(droneGroup);
+        this.arDrone = droneGroup;
+
+        const btn = document.getElementById('btn-quick-ar-drone');
+        const lbl = document.getElementById('ar-quick-drone-label');
+        if (btn) btn.classList.add('active');
+        if (lbl) lbl.textContent = '🛰️ DRONE ON';
+        this.playSFX('powerup');
+        if (navigator.vibrate) navigator.vibrate([80, 40, 120]);
+    }
+    
     takeARSnapshot() {
         const flash = document.getElementById('ar-camera-flash');
         if (flash) {
@@ -522,6 +577,12 @@ class CyberArcadeEngine {
         const btnBarScanner = document.getElementById('btn-ar-bar-scanner');
 
         if (nvOverlay) nvOverlay.style.display = this.isCyberScanActive ? 'block' : 'none';
+        const masterFilter = document.getElementById('ar-night-vision-master-filter');
+        if (masterFilter) masterFilter.style.display = this.isCyberScanActive ? 'block' : 'none';
+        const quickNvBtn = document.getElementById('btn-quick-ar-night-vision');
+        const quickNvLabel = document.getElementById('ar-quick-nv-label');
+        if (quickNvBtn) quickNvBtn.classList.toggle('active', this.isCyberScanActive);
+        if (quickNvLabel) quickNvLabel.textContent = this.isCyberScanActive ? '🟢 NV ACTIVE' : 'NIGHT VISION 🕶️';
         if (btnHudNv) {
             btnHudNv.classList.toggle('active', this.isCyberScanActive);
             if (hudNvText) hudNvText.textContent = this.isCyberScanActive ? '🟢 NV ON' : 'NIGHT VISION';
@@ -775,6 +836,11 @@ class CyberArcadeEngine {
         document.body.classList.remove('ar-active-mode');
         const arDirectActions = document.getElementById('hud-ar-direct-actions');
         if (arDirectActions) arDirectActions.style.display = 'none';
+        const topFloatingBar = document.getElementById('ar-top-floating-bar');
+        if (topFloatingBar) topFloatingBar.style.display = 'none';
+        const masterFilter = document.getElementById('ar-night-vision-master-filter');
+        if (masterFilter) masterFilter.style.display = 'none';
+        if (this.arDrone) this.arDrone.visible = false;
         const nvOverlay = document.getElementById('night-vision-tactical-overlay');
         if (nvOverlay) nvOverlay.style.display = 'none';
         const targetHud = document.getElementById('ar-target-scanner-hud');
@@ -1977,6 +2043,25 @@ class CyberArcadeEngine {
         this.scene.add(missile);
     }
 
+    
+    fireDronePlasmaBolt(origin, targetPos) {
+        const boltGeo = new THREE.CylinderGeometry(0.08, 0.08, 1.4, 8);
+        boltGeo.rotateX(Math.PI / 2);
+        const boltMat = new THREE.MeshBasicMaterial({ color: 0x00f2fe });
+        const bolt = new THREE.Mesh(boltGeo, boltMat);
+        bolt.position.copy(origin);
+        bolt.lookAt(targetPos);
+        
+        const dir = new THREE.Vector3().subVectors(targetPos, origin).normalize();
+        bolt.velocity = dir.multiplyScalar(65);
+        bolt.life = 1.2;
+        bolt.isARLaser = true;
+
+        this.scene.add(bolt);
+        this.lasers.push(bolt);
+        this.playSFX('laser');
+    }
+    
     fireLaser() {
         if (this.shield <= 0) return;
 
@@ -2869,6 +2954,34 @@ class CyberArcadeEngine {
 
         if (this.renderer && this.scene && this.camera) {
             
+        
+        // 🛰️ Update Autonomous AR Sentry Drone
+        if (this.isARMode && this.arDrone && this.arDrone.visible) {
+            this.arDrone.ring.rotation.z += 5 * delta;
+            this.arDrone.ring.rotation.x += 3 * delta;
+            this.arDrone.position.y = -0.2 + Math.sin(Date.now() * 0.004 + this.arDrone.hoverSeed) * 0.15;
+
+            // Target tracking and auto-fire
+            let targetAlien = null;
+            let minDist = 999;
+            this.alienShips.forEach(alien => {
+                const d = alien.position.distanceTo(this.arDrone.position);
+                if (d < minDist) {
+                    minDist = d;
+                    targetAlien = alien;
+                }
+            });
+
+            if (targetAlien) {
+                this.arDrone.lookAt(targetAlien.position);
+                this.arDrone.shootCooldown = (this.arDrone.shootCooldown || 0) - delta;
+                if (this.arDrone.shootCooldown <= 0) {
+                    this.arDrone.shootCooldown = 1.2; // Fires every 1.2s
+                    this.fireDronePlasmaBolt(this.arDrone.position, targetAlien.position);
+                }
+            }
+        }
+    
         // 🛰️ Update AR Target Scanner & Shockwaves
         if (this.isARMode && this.alienShips.length > 0) {
             let closestAlien = null;
