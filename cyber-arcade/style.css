@@ -4366,3 +4366,28 @@ body.ar-active-mode .floating-hub-nav-pill,
         width: 260px;
     }
 }
+
+
+.radio-selector-container {
+    margin-bottom: 10px;
+}
+
+.radio-station-select {
+    width: 100%;
+    background: rgba(5, 7, 20, 0.95);
+    border: 1.5px solid var(--accent-cyan);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-size: 0.76rem;
+    font-weight: 800;
+    padding: 8px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+    outline: none;
+}
+
+.radio-station-select option {
+    background: #050714;
+    color: #fff;
+}
