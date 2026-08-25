@@ -29,12 +29,25 @@
     <priority>1.0</priority>
   </url>
 
+  
   <!-- ===== CYBER ARCADE 3D ARENA & AR REALITY (FLAGSHIP 9-GAME SUITE) ===== -->
   <url>
     <loc>https://ia-codestudio.com/cyber-arcade/</loc>
-    <lastmod>2026-08-24</lastmod>
+    <lastmod>2026-08-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/cyber-arcade/?lang=en</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/cyber-arcade/?lang=fr</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
   </url>
 
   <!-- ===== IA ARCHITECTE STUDIO PRO — FLAGSHIP (AI Web IDE) ===== -->
