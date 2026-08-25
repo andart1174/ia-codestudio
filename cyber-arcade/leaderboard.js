@@ -207,19 +207,58 @@ class CyberLeaderboard {
     }
 
     getWebsiteSession() {
+        let user = null;
         const geniusSession = localStorage.getItem('genius_session');
         if (geniusSession) {
             try {
-                const user = JSON.parse(geniusSession);
-                if (user && (user.email || user.name)) {
-                    return {
-                        name: user.name || (user.email ? user.email.split('@')[0] : 'Pilot'),
-                        email: user.email || '',
-                        role: user.role || 'Member',
-                        isSiteUser: true
-                    };
-                }
+                user = JSON.parse(geniusSession);
             } catch (e) {}
+        }
+
+        // Try active Firebase Auth user
+        if (!user && typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) {
+            const fbUser = firebase.auth().currentUser;
+            user = {
+                name: fbUser.displayName || fbUser.email.split('@')[0],
+                email: fbUser.email,
+                uid: fbUser.uid
+            };
+        }
+
+        // Try other stored user session keys across site
+        if (!user) {
+            const possibleKeys = ['ia_user', 'genius_user', 'user_session', 'ia_auth_user'];
+            for (let k of possibleKeys) {
+                const item = localStorage.getItem(k);
+                if (item) {
+                    try { const parsed = JSON.parse(item); if (parsed && (parsed.email || parsed.name)) { user = parsed; break; } } catch (e) {}
+                }
+            }
+        }
+
+        if (user && (user.email || user.name || user.displayName || user.username)) {
+            const email = (user.email || '').trim();
+            let customName = (email ? localStorage.getItem('custom_display_name_' + email) : null) ||
+                             localStorage.getItem('hub_custom_name') ||
+                             localStorage.getItem('genius_user_name') ||
+                             user.displayName ||
+                             user.username ||
+                             user.name ||
+                             (email ? email.split('@')[0] : 'Pilot');
+
+            const ADMIN_EMAILS = ['andart1174@gmail.com', 'andart1174@yahoo.com'];
+            const isAdmin = ADMIN_EMAILS.includes(email.toLowerCase()) || 
+                            (user.role && user.role.toLowerCase() === 'admin') || 
+                            customName.toUpperCase().includes('NEXUS111');
+
+            return {
+                name: customName,
+                email: email,
+                uid: user.uid || email,
+                role: isAdmin ? 'Admin' : (user.role || 'Member'),
+                isAdmin: isAdmin,
+                isSiteUser: true
+            };
         }
         return null;
     }
@@ -228,6 +267,7 @@ class CyberLeaderboard {
         this.updateCoinDisplay();
         this.updateAuthDisplay();
         this.initFirebaseSync();
+        this.initStorageListener();
         this.renderWeeklyTable();
         this.initLanguageControls();
         this.initCategoryTabs();
@@ -244,12 +284,21 @@ class CyberLeaderboard {
         const display = document.getElementById('pilot-username-display');
         const dot = document.getElementById('auth-status-dot');
 
+        this.siteUser = this.getWebsiteSession();
+
         if (this.siteUser && this.siteUser.isSiteUser) {
-            if (display) display.textContent = `Pilot: ${this.siteUser.name}`;
-            if (dot) dot.classList.add('online');
+            const roleBadge = this.siteUser.isAdmin ? ' <span style="background:linear-gradient(135deg,#ff8c00,#ff007f); color:#fff; font-size:10px; font-weight:900; padding:2px 8px; border-radius:10px; margin-left:6px; letter-spacing:0.5px; box-shadow:0 0 10px rgba(255,140,0,0.6);">ADMIN</span>' : '';
+            if (display) display.innerHTML = `Pilot: <strong>${this.siteUser.name}</strong>${roleBadge}`;
+            if (dot) {
+                dot.style.background = '#00ffcc';
+                dot.style.boxShadow = '0 0 12px #00ffcc';
+            }
         } else {
             if (display) display.textContent = (this.currentLang === 'fr') ? 'Connexion Requise 🔒' : 'Site Login Required 🔒';
-            if (dot) dot.classList.remove('online');
+            if (dot) {
+                dot.style.background = '#ff0055';
+                dot.style.boxShadow = '0 0 10px #ff0055';
+            }
         }
     }
 
