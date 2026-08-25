@@ -132,12 +132,41 @@ body.arcade-body {
     z-index: 1000;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 12px 24px;
-    background: rgba(5, 7, 20, 0.85);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-bottom: 1px solid rgba(0, 242, 254, 0.15);
+    justify-content: flex-start;
+    gap: 14px;
+    padding: 10px 16px;
+    background: rgba(5, 7, 20, 0.94);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(0, 242, 254, 0.25);
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    white-space: nowrap !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-x !important;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-cyan) rgba(5, 7, 20, 0.6);
+}
+
+.arcade-header::-webkit-scrollbar {
+    height: 3px;
+}
+.arcade-header::-webkit-scrollbar-track {
+    background: rgba(5, 7, 20, 0.6);
+}
+.arcade-header::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, var(--accent-cyan), var(--accent-pink));
+    border-radius: 2px;
+}
+
+.header-left,
+.header-center,
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
 }
 
 .header-left {
