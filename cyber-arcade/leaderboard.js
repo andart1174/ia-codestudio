@@ -1,10 +1,11 @@
 /**
  * ══════════════════════════════════════════════════════════════════════
- * 🏆 CYBER ARCADE 3D ARENA — MASTER LEADERBOARD, SHOP & UNIFIED SSO (V16)
+ * 🏆 CYBER ARCADE 3D ARENA — MASTER LEADERBOARD, SHOP & UNIFIED SSO (V24)
  * ══════════════════════════════════════════════════════════════════════
- * - 🎁 2,500 Starter Coins Bonus for Instant Testing!
+ * - 🪙 Global Unified GENIUS IA Coins Sync with Community & Website
+ * - 👑 Real-Time Recognition for Admin (NEXUS111) & All Registered Users
  * - 🏪 Cyber Hangar & Shop (Instant Buy, Equip, Audio & Visual Feedback)
- * - 🔒 Unified Website SSO: Uses IA Code Studio 'genius_session'
+ * - 🔒 Unified Website SSO: Uses IA Code Studio 'genius_session' + Firebase
  * - ⚡ 100% Free Access for All Registered Website Members
  * - 📖 Interactive Game Rules & Pilot Guide (EN / FR)
  * ══════════════════════════════════════════════════════════════════════
@@ -115,38 +116,38 @@ class CyberLeaderboard {
                 t_gold_desc: "Emanates radiant golden star sparks during boost.",
                 t_matrix_desc: "Streams glowing green 0101 binary code in your slipstream!",
                 upg_magnet_desc: "Automatically pulls nearby crystals & power-ups toward your craft!",
-                upg_shield_desc: "Increases total shield hull health by 50% for maximum durability.",
+                upg_shield_desc: "Increases overall shield durability by 50% for maximum survival.",
                 upg_missiles_desc: "Start every battle with 8 lock-on homing missiles instead of 4.",
-                upg_nitro_desc: "Turbo Boost & Nitro gates recharge twice as fast in Cyber Racer & Space."
+                upg_nitro_desc: "Turbo boost and Nitro gates recharge twice as fast."
             },
             fr: {
                 brand_title: "CYBER ARCADE 3D",
                 brand_sub: "PAR IA CODE STUDIO",
                 nav_rules: "RÈGLES & CONTRÔLES 📖",
-                nav_shop: "HANGAR & MAGASIN 🏪",
-                nav_rewards: "PIÈCES GRATUITES 🎁",
-                hub_title: "ARÈNE DE 9 JEUX ÉPIQUES 3D & <span class='neon-text'>RÉALITÉ AUGMENTÉE</span>",
-                hub_subtitle: "Pilotez des bolides cybernétiques, contrôlez des robots titans géants, tranchez les rythmes musicaux, surfez l'espace et combattez les aliens en RA ! 100% Gratuit pour tous les membres enregistrés !",
+                nav_shop: "HANGAR & BOUTIQUE 🏪",
+                nav_rewards: "PIÈCES GRATUITES & BONUS 🎁",
+                hub_title: "ARÈNE 3D & <span class='neon-text'>RÉALITÉ AUGMENTÉE (9 JEUX)</span>",
+                hub_subtitle: "Pilotez des bolides cyber, contrôlez des mechas géants, tranchez des rythmes, surfez les vagues cosmiques et combattez les extraterrestres en 3D & RA ! 100% Gratuit pour tous les membres de IA Code Studio !",
                 stat_high_score: "Record Personnel",
                 stat_rank: "Rang Mondial",
                 stat_ship: "Vaisseau Actif",
-                btn_hangar: "Hangar & Armes 🚀",
+                btn_hangar: "Hangar Cyber 🚀",
                 btn_leaderboard: "Classement 🏆",
                 btn_play_now: "JOUER 🚀",
-                btn_play_ar: "LANCER RÉALITÉ AR 📱",
-                btn_play_racer: "LANCER COURSE 🏎️",
-                btn_play_mech: "LANCER TITAN MECH 🤖",
-                btn_play_beatslicer: "JOUER AU RYTHME 🎵",
-                btn_play_surf: "SURFER L'ESPACE 🏄",
-                ar_desc: "Allumez la caméra de votre téléphone ! Des soucoupes aliens 3D flottent dans votre salon. Tournez à 360° pour viser, enregistrez des clips TikTok de 10s ou posez votre vaisseau sur votre table !",
-                racer_desc: "Pilotez des bolides à sustentation sur des autoroutes célestes ! Driftez dans les virages néon, activez le Nitro Boost et dépassez vos rivaux !",
-                mech_desc: "Contrôlez un Mecha de guerre de 30 mètres ! Tirez avec les doubles Gatlings, lancez des salves de missiles et tranchez les robots ennemis avec votre lame laser !",
-                beatslicer_desc: "Tranchez des cubes musicaux néon en 3D avec vos doubles sabres laser cyan et magenta au rythme de musiques Synthwave !",
-                surf_desc: "Surfez sur des vagues de lumière stellaire sur un hoverboard de plasma ! Réalisez des saltos 360° et glissez sur les rails d'énergie cosmique !",
-                city_desc: "Volez à toute vitesse entre les gratte-ciels néon, le trafic aérien et les ponts suspendus ! Détruisez les vaisseaux d'assaut aliens !",
-                blaster_desc: "Abattez des escadrons d'aliens, des dreadnoughts lourds et des astéroïdes ! 3 vies, bouclier auto-régénérant, missiles à guidage et Méga-Rayon !",
-                slalom_desc: "Foncez à vitesse supraluminique dans un tunnel néon tout en esquivant et détruisant les drones aliens patrouillant les portes quantiques !",
-                blackhole_desc: "Des chasseurs aliens tentent de vous aspirer dans la singularité. Forcez le blocus, récoltez l'énergie et échappez-vous !",
+                btn_play_ar: "RÉALITÉ AR (CHAMBRE) 📱",
+                btn_play_racer: "PILOTER LE BOLIDE 🏎️",
+                btn_play_mech: "LANCER LE MECHA 🤖",
+                btn_play_beatslicer: "JOUER BEAT SLICER 🎵",
+                btn_play_surf: "SURF COSMIQUE 🏄",
+                ar_desc: "Allumez la caméra de votre smartphone ! Des soucoupes volantes 3D apparaissent dans votre salon. Tournez à 360° pour viser, filmez des clips TikTok de 10s ou atterrissez sur votre bureau !",
+                racer_desc: "Pilotez des supercars à lévitation magnétique sur des autoroutes célestes ! Driftez dans les virages néon serrés, prenez les portes Nitro et tirez sur vos rivaux !",
+                mech_desc: "Contrôlez un Mecha de guerre blindé de 30 mètres ! Tirez avec des doubles Gatlings, lancez des salves de missiles et tranchez avec votre Katana d'Énergie !",
+                beatslicer_desc: "Tranchez des cubes musicaux au rythme de la Synthwave avec deux sabres laser néon (Cyan et Magenta) ! Enchaînez les combos avec des coupes parfaites !",
+                surf_desc: "Surfez sur les vagues de lumière stellaire à travers les anneaux planétaires sur un hoverboard de plasma ! Réalisez des saltos 360° et récoltez du carburant cosmique !",
+                city_desc: "Pilotez à pleine vitesse dans une mégalopole 3D cyberpunk entre les gratte-ciel, le trafic aérien et les passerelles géantes ! Détruisez les vaisseaux de débarquement !",
+                blaster_desc: "Abattez des vagues d'ovnis extraterrestres, des croiseurs de guerre et des astéroïdes ! 3 vies, bouclier à régénération, missiles à tête chercheuse et Méga-Rayon !",
+                slalom_desc: "Volez à vitesse supersonique dans un tunnel néon tout en esquivant et détruisant les drones de patrouille protégeant les portes quantiques !",
+                blackhole_desc: "Des chasseurs ennemis tentent de vous aspirer dans un trou noir. Brisez leur blocus, récoltez les cellules d'énergie et propulsez-vous vers la liberté !",
                 leaderboard_title: "Les Meilleurs Champions de la Semaine",
                 reset_timer: "Réinitialisation dans 4 jours (Cagnotte de 5 000 Pièces)",
                 hud_score: "SCORE",
@@ -206,6 +207,18 @@ class CyberLeaderboard {
         this.init();
     }
 
+    getInitialCoins() {
+        const savedGenius = localStorage.getItem('genius_coins');
+        if (savedGenius !== null && !isNaN(parseInt(savedGenius, 10))) {
+            return parseInt(savedGenius, 10);
+        }
+        const savedCyber = localStorage.getItem('cyber_coins');
+        if (savedCyber !== null && !isNaN(parseInt(savedCyber, 10))) {
+            return parseInt(savedCyber, 10);
+        }
+        return 0;
+    }
+
     getWebsiteSession() {
         let user = null;
         const geniusSession = localStorage.getItem('genius_session');
@@ -231,7 +244,13 @@ class CyberLeaderboard {
             for (let k of possibleKeys) {
                 const item = localStorage.getItem(k);
                 if (item) {
-                    try { const parsed = JSON.parse(item); if (parsed && (parsed.email || parsed.name)) { user = parsed; break; } } catch (e) {}
+                    try { 
+                        const parsed = JSON.parse(item); 
+                        if (parsed && (parsed.email || parsed.name)) { 
+                            user = parsed; 
+                            break; 
+                        } 
+                    } catch (e) {}
                 }
             }
         }
@@ -264,6 +283,8 @@ class CyberLeaderboard {
     }
 
     init() {
+        this.siteUser = this.getWebsiteSession();
+        this.coins = this.getInitialCoins();
         this.updateCoinDisplay();
         this.updateAuthDisplay();
         this.initFirebaseSync();
@@ -299,6 +320,69 @@ class CyberLeaderboard {
                 dot.style.background = '#ff0055';
                 dot.style.boxShadow = '0 0 10px #ff0055';
             }
+        }
+    }
+
+    initFirebaseSync() {
+        // Listen to Firebase Auth state
+        if (typeof firebase !== 'undefined' && firebase.auth) {
+            try {
+                firebase.auth().onAuthStateChanged((fbUser) => {
+                    this.siteUser = this.getWebsiteSession();
+                    this.updateAuthDisplay();
+                    if (fbUser && fbUser.email) {
+                        this.subscribeToUserDoc(fbUser.email);
+                    } else if (this.siteUser && this.siteUser.email) {
+                        this.subscribeToUserDoc(this.siteUser.email);
+                    }
+                });
+            } catch (e) {}
+        } else if (this.siteUser && this.siteUser.email) {
+            this.subscribeToUserDoc(this.siteUser.email);
+        }
+    }
+
+    subscribeToUserDoc(targetId) {
+        if (!targetId || typeof firebase === 'undefined' || !firebase.firestore) return;
+        try {
+            const db = firebase.firestore();
+            db.collection('users').doc(targetId).onSnapshot((doc) => {
+                if (doc.exists) {
+                    const data = doc.data() || {};
+                    if (typeof data.geniusCoins === 'number') {
+                        this.coins = data.geniusCoins;
+                        localStorage.setItem('genius_coins', this.coins.toString());
+                        localStorage.setItem('cyber_coins', this.coins.toString());
+                        this.updateCoinDisplay();
+                    }
+                    if (data.displayName) {
+                        if (this.siteUser) this.siteUser.name = data.displayName;
+                        this.updateAuthDisplay();
+                    }
+                }
+            }, (err) => {
+                console.log('Firebase user snapshot notice:', err);
+            });
+        } catch (e) {
+            console.log('Firebase subscribe note:', e);
+        }
+    }
+
+    initStorageListener() {
+        if (typeof window !== 'undefined' && window.addEventListener) {
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'genius_coins' || e.key === 'cyber_coins') {
+                    this.coins = this.getInitialCoins();
+                    this.updateCoinDisplay();
+                }
+                if (e.key === 'genius_session' || e.key === 'hub_custom_name' || (e.key && e.key.startsWith('custom_display_name_'))) {
+                    this.siteUser = this.getWebsiteSession();
+                    this.updateAuthDisplay();
+                    if (this.siteUser && this.siteUser.email) {
+                        this.subscribeToUserDoc(this.siteUser.email);
+                    }
+                }
+            });
         }
     }
 
@@ -436,203 +520,164 @@ class CyberLeaderboard {
                         if (typeof confetti === 'function') confetti({ particleCount: 90, spread: 60 });
                     } else {
                         const needed = cost - this.coins;
-                        alert((this.currentLang === 'fr') 
-                            ? `Il vous manque ${needed} pièces pour débloquer ce laser !` 
-                            : `You need ${needed} more coins to unlock this laser!`);
+                        alert(this.currentLang === 'fr' 
+                            ? `Il vous manque ${needed} Pièces pour débloquer ce laser !` 
+                            : `You need ${needed} more Coins to unlock this laser!`);
                         return;
                     }
                 }
 
-                laserChips.forEach(c => c.classList.remove('active'));
-                chip.classList.add('active');
                 this.equippedLaser = color;
                 localStorage.setItem('cyber_equipped_laser', color);
-
                 if (window.arcadeEngine) {
-                    window.arcadeEngine.laserColor = (color === 'rainbow') ? '#00f2fe' : color;
-                    window.arcadeEngine.playSFX('crystal');
+                    window.arcadeEngine.setLaserColor(color);
+                    window.arcadeEngine.playSFX('laser');
                 }
-            });
-        });
-
-        // Craft & Upgrade Purchases
-        const buyBtns = document.querySelectorAll('[data-buy-item]');
-        buyBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const itemId = btn.getAttribute('data-buy-item');
-                const cost = parseInt(btn.getAttribute('data-cost') || '0', 10);
-
-                const isCraft = ['apex', 'hyperion', 'phoenix_mech', 'solar_dragon', 'lightning_board'].includes(itemId);
-                const isOwned = isCraft 
-                    ? (this.inventory.crafts.includes(itemId) || itemId === 'apex')
-                    : (this.inventory.upgrades.includes(itemId));
-
-                if (!isOwned && cost > 0) {
-                    if (this.coins >= cost) {
-                        this.addCoins(-cost);
-                        if (isCraft) {
-                            this.inventory.crafts.push(itemId);
-                        } else {
-                            this.inventory.upgrades.push(itemId);
-                        }
-                        localStorage.setItem('cyber_inventory', JSON.stringify(this.inventory));
-                        if (typeof confetti === 'function') confetti({ particleCount: 120, spread: 75 });
-                        if (window.arcadeEngine) window.arcadeEngine.playSFX('powerup');
-                    } else {
-                        const needed = cost - this.coins;
-                        alert((this.currentLang === 'fr') 
-                            ? `Il vous manque ${needed} pièces pour débloquer cet élément !` 
-                            : `You need ${needed} more coins to unlock this item!`);
-                        return;
-                    }
-                }
-
-                // Equip Craft
-                if (isCraft && (this.inventory.crafts.includes(itemId) || itemId === 'apex')) {
-                    this.equippedCraft = itemId;
-                    localStorage.setItem('cyber_equipped_craft', itemId);
-                    
-                    const cardTitle = btn.closest('.shop-item-card') ? btn.closest('.shop-item-card').querySelector('h4').textContent : itemId;
-                    const shipNameEl = document.getElementById('hub-active-ship-name');
-                    if (shipNameEl) shipNameEl.textContent = cardTitle;
-
-                    if (window.arcadeEngine) window.arcadeEngine.playSFX('respawn');
-                }
-
                 this.updateShopUI();
             });
         });
 
-        // Mystery Crate Opener
+        // Mystery Loot Crate Opener
         const btnOpenCrate = document.getElementById('btn-open-mystery-crate');
         const crateBox = document.getElementById('crate-3d-box');
         const crateResult = document.getElementById('crate-result-display');
-        const crateResIcon = document.getElementById('crate-res-icon');
         const crateResTitle = document.getElementById('crate-res-title');
+        const crateResIcon = document.getElementById('crate-res-icon');
 
         if (btnOpenCrate) {
             btnOpenCrate.addEventListener('click', () => {
-                if (this.coins < 150) {
-                    const needed = 150 - this.coins;
-                    alert((this.currentLang === 'fr') 
-                        ? `Il vous manque ${needed} pièces pour ouvrir la Caisse Mystère !` 
-                        : `You need ${needed} more coins to open the Mystery Crate!`);
+                const crateCost = 150;
+                if (this.coins < crateCost) {
+                    alert(this.currentLang === 'fr' 
+                        ? `Il vous faut ${crateCost} Pièces pour ouvrir une Caisse Mystère !` 
+                        : `You need ${crateCost} Coins to open a Mystery Crate!`);
                     return;
                 }
 
-                this.addCoins(-150);
-                if (window.arcadeEngine) window.arcadeEngine.playSFX('nitro');
-
-                if (crateBox) {
-                    crateBox.style.transform = 'scale(1.3) rotate(360deg)';
-                    setTimeout(() => { crateBox.style.transform = 'scale(1)'; }, 500);
-                }
+                this.addCoins(-crateCost);
+                if (crateBox) crateBox.classList.add('opening');
 
                 setTimeout(() => {
-                    const prizes = [
-                        { type: 'coins', amount: 500, icon: '🪙', titleEn: 'JACKPOT: YOU WON 500 COINS! 🪙', titleFr: 'JACKPOT : VOUS GAGNEZ 500 PIÈCES ! 🪙' },
-                        { type: 'coins', amount: 250, icon: '✨', titleEn: 'YOU WON 250 BONUS COINS! ✨', titleFr: 'VOUS GAGNEZ 250 PIÈCES BONUS ! ✨' },
-                        { type: 'coins', amount: 1000, icon: '👑', titleEn: 'MEGA JACKPOT: 1,000 COINS! 👑', titleFr: 'MÉGA JACKPOT : 1 000 PIÈCES ! 👑' }
+                    if (crateBox) crateBox.classList.remove('opening');
+                    
+                    const rewards = [
+                        { icon: '🪙', title: 'JACKPOT: +500 COINS!', coins: 500 },
+                        { icon: '💎', title: '+200 COINS & VIP PILOT BADGE!', coins: 200 },
+                        { icon: '⚡', title: 'RAINBOW RGB LASER UNLOCKED!', laser: 'rainbow' },
+                        { icon: '👑', title: 'LEGENDARY GOLD AVATAR UNLOCKED!', avatar: '👑' }
                     ];
+                    const chosen = rewards[Math.floor(Math.random() * rewards.length)];
 
-                    const prize = prizes[Math.floor(Math.random() * prizes.length)];
-                    this.addCoins(prize.amount);
+                    if (chosen.coins) this.addCoins(chosen.coins);
+                    if (chosen.laser && !this.inventory.lasers.includes(chosen.laser)) {
+                        this.inventory.lasers.push(chosen.laser);
+                        localStorage.setItem('cyber_inventory', JSON.stringify(this.inventory));
+                    }
+                    if (chosen.avatar) {
+                        this.inventory.avatar = chosen.avatar;
+                        localStorage.setItem('cyber_inventory', JSON.stringify(this.inventory));
+                    }
 
-                    if (crateResult && crateResIcon && crateResTitle) {
-                        crateResIcon.textContent = prize.icon;
-                        crateResTitle.textContent = (this.currentLang === 'fr') ? prize.titleFr : prize.titleEn;
+                    if (crateResult && crateResTitle && crateResIcon) {
+                        crateResIcon.textContent = chosen.icon;
+                        crateResTitle.textContent = chosen.title;
                         crateResult.style.display = 'block';
                     }
 
-                    if (typeof confetti === 'function') confetti({ particleCount: 160, spread: 90 });
-                    if (window.arcadeEngine) window.arcadeEngine.playSFX('combo');
-                }, 600);
+                    if (typeof confetti === 'function') confetti({ particleCount: 150, spread: 90 });
+                    if (window.arcadeEngine) window.arcadeEngine.playSFX('respawn');
+                    this.updateShopUI();
+                }, 1200);
             });
         }
     }
 
     updateShopUI() {
-        const coinEl = document.getElementById('shop-coin-balance');
-        if (coinEl) coinEl.textContent = this.coins;
+        const balanceEl = document.getElementById('shop-coin-balance');
+        if (balanceEl) balanceEl.textContent = this.coins;
 
-        // Update Craft item cards
-        document.querySelectorAll('.shop-item-card[data-category="craft"]').forEach(card => {
-            const id = card.getAttribute('data-item-id');
-            const btn = card.querySelector('.btn-shop-action');
-            if (!btn) return;
+        // Update Craft selection buttons
+        const craftCards = document.querySelectorAll('.shop-item-card[data-craft-id]');
+        craftCards.forEach(card => {
+            const craftId = card.getAttribute('data-craft-id');
+            const btn = card.querySelector('.btn-buy-equip');
+            if (btn) {
+                if (this.equippedCraft === craftId) {
+                    btn.textContent = (this.currentLang === 'fr') ? 'ÉQUIPÉ' : 'EQUIPPED';
+                    btn.className = 'btn-buy-equip equipped';
+                } else if (this.inventory.crafts.includes(craftId)) {
+                    btn.textContent = (this.currentLang === 'fr') ? 'ÉQUIPER' : 'EQUIP';
+                    btn.className = 'btn-buy-equip unlocked';
+                } else {
+                    const cost = card.getAttribute('data-cost') || '0';
+                    btn.textContent = `${cost} 🪙`;
+                    btn.className = 'btn-buy-equip buy';
+                }
+            }
+        });
 
-            const isOwned = this.inventory.crafts.includes(id) || id === 'apex';
-            const isEquipped = (this.equippedCraft === id);
-
-            if (isEquipped) {
-                card.classList.add('active');
-                btn.className = 'btn-shop-action equipped';
-                btn.innerHTML = '<i class="fa-solid fa-check"></i> ' + ((this.currentLang === 'fr') ? 'ÉQUIPÉ' : 'EQUIPPED');
-            } else if (isOwned) {
-                card.classList.remove('active');
-                btn.className = 'btn-shop-action equip';
-                btn.innerHTML = '<i class="fa-solid fa-arrow-up-right-from-square"></i> ' + ((this.currentLang === 'fr') ? 'ÉQUIPER' : 'EQUIP');
-            } else {
-                card.classList.remove('active');
-                btn.className = 'btn-shop-action unlock';
-                const cost = btn.getAttribute('data-cost') || '250';
-                btn.innerHTML = `<span>${(this.currentLang === 'fr' ? 'DÉBLOQUER' : 'UNLOCK')} (${cost} 🪙)</span>`;
+        // Update Laser selection chips
+        const laserChips = document.querySelectorAll('.laser-chip-card');
+        laserChips.forEach(chip => {
+            const color = chip.getAttribute('data-laser-color');
+            const isEquipped = (this.equippedLaser === color);
+            chip.classList.toggle('active', isEquipped);
+            
+            const cost = parseInt(chip.getAttribute('data-cost') || '0', 10);
+            const isOwned = cost === 0 || this.inventory.lasers.includes(color);
+            const label = chip.querySelector('.chip-status');
+            if (label) {
+                if (isEquipped) {
+                    label.textContent = (this.currentLang === 'fr') ? 'ÉQUIPÉ' : 'EQUIPPED';
+                } else if (isOwned) {
+                    label.textContent = (this.currentLang === 'fr') ? 'DÉBLOQUÉ' : 'UNLOCKED';
+                } else {
+                    label.textContent = `${cost} 🪙`;
+                }
             }
         });
     }
 
     initBountyModal() {
-        const btnOpenBounty = document.getElementById('btn-open-bounty');
-        const modalBounty = document.getElementById('modal-viral-bounty');
-        const btnCloseBounty = document.getElementById('btn-close-bounty');
-        const btnCopyLink = document.getElementById('btn-copy-bounty-link');
-        const btnShareWA = document.getElementById('btn-bounty-share-wa');
+        const btnOpen = document.getElementById('btn-open-bounty');
+        const modal = document.getElementById('modal-viral-bounty');
+        const btnClose = document.getElementById('btn-close-bounty');
+        const btnCopy = document.getElementById('btn-copy-referral');
+        const inputRef = document.getElementById('referral-link-input');
 
-        if (btnOpenBounty && modalBounty) {
-            btnOpenBounty.addEventListener('click', () => {
-                const pilotName = this.siteUser ? this.siteUser.name : 'Pilot';
-                const inputUrl = document.getElementById('bounty-referral-url');
-                if (inputUrl) inputUrl.value = `https://ia-codestudio.com/cyber-arcade/?ref=${encodeURIComponent(pilotName)}`;
-                modalBounty.classList.add('active');
-            });
+        if (btnOpen && modal) {
+            btnOpen.addEventListener('click', () => modal.classList.add('active'));
         }
-        if (btnCloseBounty && modalBounty) {
-            btnCloseBounty.addEventListener('click', () => modalBounty.classList.remove('active'));
+        if (btnClose && modal) {
+            btnClose.addEventListener('click', () => modal.classList.remove('active'));
         }
 
-        if (btnCopyLink) {
-            btnCopyLink.addEventListener('click', () => {
-                const inputUrl = document.getElementById('bounty-referral-url');
-                if (inputUrl) {
-                    inputUrl.select();
-                    navigator.clipboard.writeText(inputUrl.value);
-                    btnCopyLink.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
-                    setTimeout(() => { btnCopyLink.innerHTML = '<i class="fa-solid fa-copy"></i> Copy Link'; }, 2000);
-                }
-            });
+        if (inputRef && this.siteUser) {
+            inputRef.value = `https://ia-codestudio.com/cyber-arcade/?ref=${encodeURIComponent(this.siteUser.name)}`;
         }
 
-        if (btnShareWA) {
-            btnShareWA.addEventListener('click', () => {
-                const pilotName = this.siteUser ? this.siteUser.name : 'Pilot';
-                const msg = encodeURIComponent(`🚀 Play 9 epic 3D & AR games with me on Cyber Arcade! Free coins bonus: https://ia-codestudio.com/cyber-arcade/?ref=${pilotName}`);
-                window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
-                this.addCoins(100);
+        if (btnCopy && inputRef) {
+            btnCopy.addEventListener('click', () => {
+                inputRef.select();
+                navigator.clipboard.writeText(inputRef.value).then(() => {
+                    const original = btnCopy.innerHTML;
+                    btnCopy.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+                    setTimeout(() => btnCopy.innerHTML = original, 2000);
+                });
             });
         }
     }
 
     initCategoryTabs() {
-        const tabs = document.querySelectorAll('.category-tab');
-        const cards = document.querySelectorAll('.games-grid .game-card');
+        const catTabs = document.querySelectorAll('.category-tab');
+        const cards = document.querySelectorAll('.game-launch-card');
 
-        tabs.forEach(tab => {
+        catTabs.forEach(tab => {
             tab.addEventListener('click', () => {
-                tabs.forEach(t => t.classList.remove('active'));
+                catTabs.forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
 
-                const filter = tab.getAttribute('data-filter');
-
+                const filter = tab.getAttribute('data-category');
                 cards.forEach(card => {
                     const cat = card.getAttribute('data-category');
                     if (filter === 'all' || cat === filter) {
