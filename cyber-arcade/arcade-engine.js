@@ -241,6 +241,16 @@ class CyberArcadeEngine {
         }, true);
     }
 
+    setShipType(type) {
+        this.activeShipType = type;
+        localStorage.setItem('cyber_equipped_craft', type);
+    }
+
+    setLaserColor(color) {
+        this.laserColor = color;
+        localStorage.setItem('cyber_equipped_laser', color);
+    }
+
     initAudio() {
         if (!this.audioCtx) {
             const AudioContext = window.AudioContext || window.webkitAudioContext;

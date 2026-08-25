@@ -1,11 +1,11 @@
 /**
  * ══════════════════════════════════════════════════════════════════════
- * 🏆 CYBER ARCADE 3D ARENA — MASTER LEADERBOARD, SHOP & UNIFIED SSO (V24)
+ * 🏆 CYBER ARCADE 3D ARENA — MASTER LEADERBOARD, SHOP & UNIFIED SSO (V25)
  * ══════════════════════════════════════════════════════════════════════
  * - 🪙 Global Unified GENIUS IA Coins Sync with Community & Website
  * - 👑 Real-Time Recognition for Admin (NEXUS111) & All Registered Users
- * - 🏪 Cyber Hangar & Shop (Instant Buy, Equip, Audio & Visual Feedback)
- * - 🔒 Unified Website SSO: Uses IA Code Studio 'genius_session' + Firebase
+ * - 🏪 Cyber Hangar & Shop: Instant 1-Click Buy, Equip & Active Craft Switching
+ * - 🔒 Unified Website SSO: Uses IA Code Studio 'genius_session' + Firebase Auth
  * - ⚡ 100% Free Access for All Registered Website Members
  * - 📖 Interactive Game Rules & Pilot Guide (EN / FR)
  * ══════════════════════════════════════════════════════════════════════
@@ -20,9 +20,17 @@ class CyberLeaderboard {
 
         this.siteUser = this.getWebsiteSession();
         this.highScores = JSON.parse(localStorage.getItem('cyber_highscores') || '{}');
-        this.inventory = JSON.parse(localStorage.getItem('cyber_inventory') || '{"crafts":["apex"],"lasers":["#00f2fe"],"upgrades":[],"titles":["Cadet Pilot"],"avatar":"🧑‍🚀"}');
-        this.equippedCraft = localStorage.getItem('cyber_equipped_craft') || 'apex';
+        this.inventory = JSON.parse(localStorage.getItem('cyber_inventory') || '{"crafts":["apex_starfighter"],"lasers":["#00f2fe"],"trails":["trail_plasma"],"upgrades":[],"titles":["Cadet Pilot"],"avatar":"🧑‍🚀"}');
+        if (!Array.isArray(this.inventory.crafts)) this.inventory.crafts = ['apex_starfighter'];
+        if (!Array.isArray(this.inventory.lasers)) this.inventory.lasers = ['#00f2fe'];
+        if (!Array.isArray(this.inventory.trails)) this.inventory.trails = ['trail_plasma'];
+        if (!Array.isArray(this.inventory.upgrades)) this.inventory.upgrades = [];
+        if (!Array.isArray(this.inventory.titles)) this.inventory.titles = ['Cadet Pilot'];
+
+        this.equippedCraft = localStorage.getItem('cyber_equipped_craft') || 'apex_starfighter';
         this.equippedLaser = localStorage.getItem('cyber_equipped_laser') || '#00f2fe';
+        this.equippedTrail = localStorage.getItem('cyber_equipped_trail') || 'trail_plasma';
+        this.equippedTitle = localStorage.getItem('cyber_equipped_title') || 'Cadet Pilot';
         
         // Mock Weekly Global Leaderboard Data (9 Games)
         this.weeklyLeaderboard = [
@@ -299,6 +307,7 @@ class CyberLeaderboard {
         this.initBountyModal();
         this.applyLanguage(this.currentLang);
         this.updatePersonalBest();
+        this.updateActiveCraftDisplay();
     }
 
     updateAuthDisplay() {
@@ -324,20 +333,29 @@ class CyberLeaderboard {
     }
 
     initFirebaseSync() {
-        // Listen to Firebase Auth state
-        if (typeof firebase !== 'undefined' && firebase.auth) {
+        if (typeof firebase === 'undefined') return;
+
+        // Auto sign-in anonymously if needed to grant full Firestore read permissions
+        if (firebase.auth && !firebase.auth().currentUser) {
+            firebase.auth().signInAnonymously().catch(() => {});
+        }
+
+        if (firebase.auth) {
             try {
                 firebase.auth().onAuthStateChanged((fbUser) => {
                     this.siteUser = this.getWebsiteSession();
                     this.updateAuthDisplay();
-                    if (fbUser && fbUser.email) {
-                        this.subscribeToUserDoc(fbUser.email);
-                    } else if (this.siteUser && this.siteUser.email) {
+                    if (this.siteUser && this.siteUser.email) {
                         this.subscribeToUserDoc(this.siteUser.email);
+                    }
+                    if (fbUser && fbUser.uid && fbUser.uid !== (this.siteUser ? this.siteUser.email : '')) {
+                        this.subscribeToUserDoc(fbUser.uid);
                     }
                 });
             } catch (e) {}
-        } else if (this.siteUser && this.siteUser.email) {
+        }
+
+        if (this.siteUser && this.siteUser.email) {
             this.subscribeToUserDoc(this.siteUser.email);
         }
     }
@@ -505,7 +523,28 @@ class CyberLeaderboard {
             });
         });
 
-        // Laser Color Palette Selection
+        // 🚀 1. Crafts, Ships & Vehicles (Purchase & Equip)
+        const buyButtons = document.querySelectorAll('[data-buy-item]');
+        buyButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const itemId = btn.getAttribute('data-buy-item');
+                const cost = parseInt(btn.getAttribute('data-cost') || '0', 10);
+                this.handleItemPurchaseOrEquip(itemId, cost);
+            });
+        });
+
+        const craftCards = document.querySelectorAll('.shop-item-card[data-item-id]');
+        craftCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const itemId = card.getAttribute('data-item-id');
+                const btn = card.querySelector('[data-buy-item]');
+                const cost = btn ? parseInt(btn.getAttribute('data-cost') || '0', 10) : 0;
+                this.handleItemPurchaseOrEquip(itemId, cost);
+            });
+        });
+
+        // ⚡ 2. Laser Color Palette Selection
         const laserChips = document.querySelectorAll('.laser-chip-card');
         laserChips.forEach(chip => {
             chip.addEventListener('click', () => {
@@ -516,8 +555,14 @@ class CyberLeaderboard {
                     if (this.coins >= cost) {
                         this.addCoins(-cost);
                         this.inventory.lasers.push(color);
+                        this.equippedLaser = color;
                         localStorage.setItem('cyber_inventory', JSON.stringify(this.inventory));
+                        localStorage.setItem('cyber_equipped_laser', color);
                         if (typeof confetti === 'function') confetti({ particleCount: 90, spread: 60 });
+                        if (window.arcadeEngine) {
+                            window.arcadeEngine.setLaserColor(color);
+                            window.arcadeEngine.playSFX('laser');
+                        }
                     } else {
                         const needed = cost - this.coins;
                         alert(this.currentLang === 'fr' 
@@ -525,19 +570,58 @@ class CyberLeaderboard {
                             : `You need ${needed} more Coins to unlock this laser!`);
                         return;
                     }
-                }
-
-                this.equippedLaser = color;
-                localStorage.setItem('cyber_equipped_laser', color);
-                if (window.arcadeEngine) {
-                    window.arcadeEngine.setLaserColor(color);
-                    window.arcadeEngine.playSFX('laser');
+                } else {
+                    this.equippedLaser = color;
+                    localStorage.setItem('cyber_equipped_laser', color);
+                    if (window.arcadeEngine) {
+                        window.arcadeEngine.setLaserColor(color);
+                        window.arcadeEngine.playSFX('laser');
+                    }
                 }
                 this.updateShopUI();
             });
         });
 
-        // Mystery Loot Crate Opener
+        // 👑 3. Pilot Titles & Avatars
+        const titleCards = document.querySelectorAll('.title-badge-card');
+        titleCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const titleName = card.getAttribute('data-title-name');
+                const cost = parseInt(card.getAttribute('data-cost') || '0', 10);
+                if (cost > 0 && !this.inventory.titles.includes(titleName)) {
+                    if (this.coins >= cost) {
+                        this.addCoins(-cost);
+                        this.inventory.titles.push(titleName);
+                        this.equippedTitle = titleName;
+                        localStorage.setItem('cyber_inventory', JSON.stringify(this.inventory));
+                        localStorage.setItem('cyber_equipped_title', titleName);
+                        if (typeof confetti === 'function') confetti({ particleCount: 80, spread: 60 });
+                    } else {
+                        const needed = cost - this.coins;
+                        alert(this.currentLang === 'fr' 
+                            ? `Il vous manque ${needed} Pièces pour ce titre !` 
+                            : `You need ${needed} more Coins for this title!`);
+                        return;
+                    }
+                } else {
+                    this.equippedTitle = titleName;
+                    localStorage.setItem('cyber_equipped_title', titleName);
+                }
+                this.updateShopUI();
+            });
+        });
+
+        const avatarCards = document.querySelectorAll('.avatar-card');
+        avatarCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const av = card.getAttribute('data-avatar');
+                this.inventory.avatar = av;
+                localStorage.setItem('cyber_inventory', JSON.stringify(this.inventory));
+                this.updateShopUI();
+            });
+        });
+
+        // 🎁 4. Mystery Loot Crate Opener
         const btnOpenCrate = document.getElementById('btn-open-mystery-crate');
         const crateBox = document.getElementById('crate-3d-box');
         const crateResult = document.getElementById('crate-result-display');
@@ -592,31 +676,159 @@ class CyberLeaderboard {
         }
     }
 
+    handleItemPurchaseOrEquip(itemId, cost) {
+        if (!itemId) return;
+
+        // Is it a craft?
+        const isCraft = ['apex_starfighter', 'hyperion_gt', 'phoenix_mech', 'solar_dragon', 'lightning_board'].includes(itemId);
+        // Is it a trail?
+        const isTrail = itemId.startsWith('trail_');
+        // Is it an upgrade?
+        const isUpgrade = itemId.startsWith('upg_');
+
+        if (isCraft) {
+            if (!this.inventory.crafts.includes(itemId)) {
+                if (this.coins >= cost) {
+                    this.addCoins(-cost);
+                    this.inventory.crafts.push(itemId);
+                    this.equippedCraft = itemId;
+                    localStorage.setItem('cyber_inventory', JSON.stringify(this.inventory));
+                    localStorage.setItem('cyber_equipped_craft', itemId);
+                    if (typeof confetti === 'function') confetti({ particleCount: 120, spread: 80 });
+                    if (window.arcadeEngine) {
+                        if (window.arcadeEngine.setShipType) window.arcadeEngine.setShipType(itemId);
+                        window.arcadeEngine.playSFX('respawn');
+                    }
+                } else {
+                    const needed = cost - this.coins;
+                    alert(this.currentLang === 'fr' 
+                        ? `Il vous manque ${needed} Pièces pour débloquer ce bolide !` 
+                        : `You need ${needed} more Coins to unlock this craft!`);
+                    return;
+                }
+            } else {
+                this.equippedCraft = itemId;
+                localStorage.setItem('cyber_equipped_craft', itemId);
+                if (window.arcadeEngine) {
+                    if (window.arcadeEngine.setShipType) window.arcadeEngine.setShipType(itemId);
+                    window.arcadeEngine.playSFX('respawn');
+                }
+            }
+            this.updateActiveCraftDisplay();
+        } else if (isTrail) {
+            if (!this.inventory.trails.includes(itemId)) {
+                if (this.coins >= cost) {
+                    this.addCoins(-cost);
+                    this.inventory.trails.push(itemId);
+                    this.equippedTrail = itemId;
+                    localStorage.setItem('cyber_inventory', JSON.stringify(this.inventory));
+                    localStorage.setItem('cyber_equipped_trail', itemId);
+                    if (typeof confetti === 'function') confetti({ particleCount: 90, spread: 60 });
+                } else {
+                    const needed = cost - this.coins;
+                    alert(this.currentLang === 'fr' 
+                        ? `Il vous manque ${needed} Pièces pour cette traînée !` 
+                        : `You need ${needed} more Coins for this trail!`);
+                    return;
+                }
+            } else {
+                this.equippedTrail = itemId;
+                localStorage.setItem('cyber_equipped_trail', itemId);
+            }
+        } else if (isUpgrade) {
+            if (!this.inventory.upgrades.includes(itemId)) {
+                if (this.coins >= cost) {
+                    this.addCoins(-cost);
+                    this.inventory.upgrades.push(itemId);
+                    localStorage.setItem('cyber_inventory', JSON.stringify(this.inventory));
+                    if (typeof confetti === 'function') confetti({ particleCount: 100, spread: 70 });
+                } else {
+                    const needed = cost - this.coins;
+                    alert(this.currentLang === 'fr' 
+                        ? `Il vous manque ${needed} Pièces pour cette amélioration !` 
+                        : `You need ${needed} more Coins for this upgrade!`);
+                    return;
+                }
+            }
+        }
+
+        this.updateShopUI();
+    }
+
+    updateActiveCraftDisplay() {
+        const craftNames = {
+            'apex_starfighter': 'Apex Starfighter FX-9',
+            'hyperion_gt': 'Hyperion Neon GT 2077',
+            'phoenix_mech': 'Titan Phoenix War Mech',
+            'solar_dragon': 'Solar Dragon Destroyer',
+            'lightning_board': 'Lightning Starlight Board'
+        };
+        const activeEl = document.getElementById('hub-active-ship-name');
+        if (activeEl) {
+            activeEl.textContent = craftNames[this.equippedCraft] || this.equippedCraft;
+        }
+    }
+
     updateShopUI() {
         const balanceEl = document.getElementById('shop-coin-balance');
         if (balanceEl) balanceEl.textContent = this.coins;
 
-        // Update Craft selection buttons
-        const craftCards = document.querySelectorAll('.shop-item-card[data-craft-id]');
-        craftCards.forEach(card => {
-            const craftId = card.getAttribute('data-craft-id');
-            const btn = card.querySelector('.btn-buy-equip');
+        // 1. Update Craft & Trail & Upgrade Cards
+        const shopCards = document.querySelectorAll('.shop-item-card[data-item-id]');
+        shopCards.forEach(card => {
+            const itemId = card.getAttribute('data-item-id');
+            const btn = card.querySelector('.btn-shop-action');
             if (btn) {
-                if (this.equippedCraft === craftId) {
-                    btn.textContent = (this.currentLang === 'fr') ? 'ÉQUIPÉ' : 'EQUIPPED';
-                    btn.className = 'btn-buy-equip equipped';
-                } else if (this.inventory.crafts.includes(craftId)) {
-                    btn.textContent = (this.currentLang === 'fr') ? 'ÉQUIPER' : 'EQUIP';
-                    btn.className = 'btn-buy-equip unlocked';
-                } else {
-                    const cost = card.getAttribute('data-cost') || '0';
-                    btn.textContent = `${cost} 🪙`;
-                    btn.className = 'btn-buy-equip buy';
+                const isCraft = ['apex_starfighter', 'hyperion_gt', 'phoenix_mech', 'solar_dragon', 'lightning_board'].includes(itemId);
+                const isTrail = itemId.startsWith('trail_');
+                const isUpgrade = itemId.startsWith('upg_');
+
+                if (isCraft) {
+                    if (this.equippedCraft === itemId) {
+                        btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>' + ((this.currentLang === 'fr') ? 'ÉQUIPÉ' : 'EQUIPPED') + '</span>';
+                        btn.className = 'btn-shop-action equipped';
+                        card.classList.add('active');
+                    } else if (this.inventory.crafts.includes(itemId)) {
+                        btn.innerHTML = '<span>' + ((this.currentLang === 'fr') ? 'ÉQUIPER' : 'EQUIP') + '</span>';
+                        btn.className = 'btn-shop-action unlocked';
+                        card.classList.remove('active');
+                    } else {
+                        const cost = card.getAttribute('data-cost') || btn.getAttribute('data-cost') || '0';
+                        btn.innerHTML = '<span>' + ((this.currentLang === 'fr') ? `DÉBLOQUER (${cost} 🪙)` : `UNLOCK (${cost} 🪙)`) + '</span>';
+                        btn.className = 'btn-shop-action unlock';
+                        card.classList.remove('active');
+                    }
+                } else if (isTrail) {
+                    if (this.equippedTrail === itemId) {
+                        btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>' + ((this.currentLang === 'fr') ? 'ÉQUIPÉ' : 'EQUIPPED') + '</span>';
+                        btn.className = 'btn-shop-action equipped';
+                        card.classList.add('active');
+                    } else if (this.inventory.trails.includes(itemId)) {
+                        btn.innerHTML = '<span>' + ((this.currentLang === 'fr') ? 'ÉQUIPER' : 'EQUIP') + '</span>';
+                        btn.className = 'btn-shop-action unlocked';
+                        card.classList.remove('active');
+                    } else {
+                        const cost = card.getAttribute('data-cost') || btn.getAttribute('data-cost') || '0';
+                        btn.innerHTML = '<span>' + ((this.currentLang === 'fr') ? `DÉBLOQUER (${cost} 🪙)` : `UNLOCK (${cost} 🪙)`) + '</span>';
+                        btn.className = 'btn-shop-action unlock';
+                        card.classList.remove('active');
+                    }
+                } else if (isUpgrade) {
+                    if (this.inventory.upgrades.includes(itemId)) {
+                        btn.innerHTML = '<i class="fa-solid fa-shield"></i> <span>' + ((this.currentLang === 'fr') ? 'ACTIVÉ' : 'ACTIVATED') + '</span>';
+                        btn.className = 'btn-shop-action equipped';
+                        card.classList.add('active');
+                    } else {
+                        const cost = card.getAttribute('data-cost') || btn.getAttribute('data-cost') || '0';
+                        btn.innerHTML = '<span>' + ((this.currentLang === 'fr') ? `DÉBLOQUER (${cost} 🪙)` : `UNLOCK (${cost} 🪙)`) + '</span>';
+                        btn.className = 'btn-shop-action unlock';
+                        card.classList.remove('active');
+                    }
                 }
             }
         });
 
-        // Update Laser selection chips
+        // 2. Update Laser selection chips
         const laserChips = document.querySelectorAll('.laser-chip-card');
         laserChips.forEach(chip => {
             const color = chip.getAttribute('data-laser-color');
@@ -625,16 +837,57 @@ class CyberLeaderboard {
             
             const cost = parseInt(chip.getAttribute('data-cost') || '0', 10);
             const isOwned = cost === 0 || this.inventory.lasers.includes(color);
-            const label = chip.querySelector('.chip-status');
+            const label = chip.querySelector('small');
             if (label) {
                 if (isEquipped) {
                     label.textContent = (this.currentLang === 'fr') ? 'ÉQUIPÉ' : 'EQUIPPED';
+                    label.className = 'badge-free';
                 } else if (isOwned) {
                     label.textContent = (this.currentLang === 'fr') ? 'DÉBLOQUÉ' : 'UNLOCKED';
+                    label.className = 'badge-unlocked';
                 } else {
                     label.textContent = `${cost} 🪙`;
+                    label.className = 'badge-price';
                 }
             }
+        });
+
+        // 3. Update Title badges
+        const titleCards = document.querySelectorAll('.title-badge-card');
+        titleCards.forEach(card => {
+            const titleName = card.getAttribute('data-title-name');
+            const isEquipped = (this.equippedTitle === titleName);
+            card.classList.toggle('active', isEquipped);
+            const btn = card.querySelector('button');
+            const small = card.querySelector('small');
+            if (isEquipped) {
+                if (btn) btn.style.display = 'none';
+                if (!small) {
+                    const sm = document.createElement('small');
+                    sm.className = 'badge-free';
+                    sm.textContent = (this.currentLang === 'fr') ? 'ÉQUIPÉ' : 'EQUIPPED';
+                    card.appendChild(sm);
+                } else {
+                    small.textContent = (this.currentLang === 'fr') ? 'ÉQUIPÉ' : 'EQUIPPED';
+                }
+            } else if (this.inventory.titles.includes(titleName)) {
+                if (btn) btn.style.display = 'none';
+                if (!small) {
+                    const sm = document.createElement('small');
+                    sm.className = 'badge-unlocked';
+                    sm.textContent = (this.currentLang === 'fr') ? 'DÉBLOQUÉ' : 'UNLOCKED';
+                    card.appendChild(sm);
+                } else {
+                    small.textContent = (this.currentLang === 'fr') ? 'DÉBLOQUÉ' : 'UNLOCKED';
+                }
+            }
+        });
+
+        // 4. Update Avatar cards
+        const avatarCards = document.querySelectorAll('.avatar-card');
+        avatarCards.forEach(card => {
+            const av = card.getAttribute('data-avatar');
+            card.classList.toggle('active', this.inventory.avatar === av);
         });
     }
 
