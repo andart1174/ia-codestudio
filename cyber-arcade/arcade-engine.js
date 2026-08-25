@@ -38,7 +38,7 @@ class CyberArcadeEngine {
         this.deviceOrientation = { alpha: 0, beta: 0, gamma: 0, active: false };
         this.isCyberScanActive = false;
         this.isTableLandingMode = false;
-        this.arShow3DShip = true;
+        this.arShow3DShip = false;
         this.dimensionalPortal = null;
         this.lastSonarPingTime = 0;
 
@@ -747,12 +747,16 @@ class CyberArcadeEngine {
 
         if (gameType === 'ar') {
             await this.startARCamera();
+            this.arShow3DShip = false;
             if (this.playerShip) {
-                this.playerShip.visible = true;
-                this.playerShip.position.set(0, -1.2, -4.5);
+                this.playerShip.visible = false;
             }
             const shipBtn = document.getElementById('btn-ar-bar-ship-toggle');
-            if (shipBtn) shipBtn.classList.add('active');
+            if (shipBtn) shipBtn.classList.remove('active');
+            const arBar = document.getElementById('ar-prominent-control-bar');
+            if (arBar) arBar.classList.remove('open');
+            const toggleBtn = document.getElementById('btn-toggle-ar-menu');
+            if (toggleBtn) toggleBtn.classList.remove('active');
         } else {
             this.stopARCamera();
             this.cameraMode = 'third';
