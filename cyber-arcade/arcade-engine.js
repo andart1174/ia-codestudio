@@ -124,6 +124,7 @@ class CyberArcadeEngine {
         this.laserColor = '#00f2fe';
         this.activeShipType = 'apex';
         this.deskColorIndex = 0;
+        this.arReticleScreenPos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 
         this.audioCtx = null;
         this.soundEnabled = true;
@@ -458,12 +459,14 @@ class CyberArcadeEngine {
 
     toggleCyberScan() {
         this.isCyberScanActive = !this.isCyberScanActive;
-        this.playSFX('nightvision');
+        this.playSFX('laser');
         const viewport = document.getElementById('canvas-viewport');
         const btnScanner = document.getElementById('btn-ar-bar-scanner');
 
+        document.body.classList.toggle('cyber-scan-active', this.isCyberScanActive);
         if (viewport) viewport.classList.toggle('cyber-scan-active', this.isCyberScanActive);
         if (btnScanner) btnScanner.classList.toggle('active', this.isCyberScanActive);
+        this.closeARMenu();
     }
 
     startTableLandingMode() {
@@ -1861,34 +1864,74 @@ class CyberArcadeEngine {
         laserGeo.rotateX(Math.PI / 2);
 
         if (this.isARMode) {
-            let camDir = new THREE.Vector3(0, 0, -1).applyQuaternion(this.camera.quaternion).normalize();
+            // Calculate 3D Ray from the movable reticle on screen
+            const ndcX = (this.arReticleScreenPos.x / window.innerWidth) * 2 - 1;
+            const ndcY = -(this.arReticleScreenPos.y / window.innerHeight) * 2 + 1;
 
-            // 🎯 AR Smart Auto-Aim Assist: lock onto closest alien within reticle cone
+            const raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera({ x: ndcX, y: ndcY }, this.camera);
+            let aimDir = raycaster.ray.direction.clone().normalize();
+
+            // Check lock-on on nearby alien
             let targetAlien = null;
-            let minAngle = 0.45; // ~25 degrees
+            let minAngle = 0.45;
             for (let alien of this.alienShips) {
-                const toAlien = alien.position.clone().normalize();
-                const angle = camDir.angleTo(toAlien);
+                const toAlien = alien.position.clone().sub(this.camera.position).normalize();
+                const angle = aimDir.angleTo(toAlien);
                 if (angle < minAngle) {
                     minAngle = angle;
                     targetAlien = alien;
                 }
             }
-
             if (targetAlien) {
-                camDir = targetAlien.position.clone().normalize();
+                aimDir = targetAlien.position.clone().sub(this.camera.position).normalize();
             }
 
-            const laser = new THREE.Mesh(laserGeo, laserMat);
-            laser.position.copy(this.camera.position);
-            laser.quaternion.copy(this.camera.quaternion);
-            laser.velocity = camDir.multiplyScalar(280);
-            laser.isARLaser = true;
-            this.lasers.push(laser);
-            this.scene.add(laser);
+            // Target Point in room
+            const targetPoint = this.camera.position.clone().add(aimDir.clone().multiplyScalar(60));
 
-            // Muzzle flash particle
-            this.createExplosion(this.camera.position.clone().add(camDir.clone().multiplyScalar(1.5)), 0x00f2fe);
+            // Camera right and down vectors for dual side cannons
+            const camRight = new THREE.Vector3(1, 0, 0).applyQuaternion(this.camera.quaternion);
+            const camUp = new THREE.Vector3(0, 1, 0).applyQuaternion(this.camera.quaternion);
+            const camFwd = new THREE.Vector3(0, 0, -1).applyQuaternion(this.camera.quaternion);
+
+            // Left & Right Muzzle origins (bottom corners of view)
+            const leftOrigin = this.camera.position.clone()
+                .add(camRight.clone().multiplyScalar(-0.45))
+                .add(camUp.clone().multiplyScalar(-0.35))
+                .add(camFwd.clone().multiplyScalar(0.7));
+
+            const rightOrigin = this.camera.position.clone()
+                .add(camRight.clone().multiplyScalar(0.45))
+                .add(camUp.clone().multiplyScalar(-0.35))
+                .add(camFwd.clone().multiplyScalar(0.7));
+
+            const dirLeft = targetPoint.clone().sub(leftOrigin).normalize();
+            const dirRight = targetPoint.clone().sub(rightOrigin).normalize();
+
+            // Large, glowing cylindrical plasma bolts
+            const arLaserGeo = new THREE.CylinderGeometry(0.18, 0.18, 4.5, 8);
+            arLaserGeo.rotateX(Math.PI / 2);
+
+            const laserLeft = new THREE.Mesh(arLaserGeo, laserMat);
+            laserLeft.position.copy(leftOrigin);
+            laserLeft.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, -1), dirLeft);
+            laserLeft.velocity = dirLeft.multiplyScalar(220);
+            laserLeft.isARLaser = true;
+            this.lasers.push(laserLeft);
+            this.scene.add(laserLeft);
+
+            const laserRight = new THREE.Mesh(arLaserGeo, laserMat);
+            laserRight.position.copy(rightOrigin);
+            laserRight.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, -1), dirRight);
+            laserRight.velocity = dirRight.multiplyScalar(220);
+            laserRight.isARLaser = true;
+            this.lasers.push(laserRight);
+            this.scene.add(laserRight);
+
+            // Screen Muzzle Flash FX
+            this.createExplosion(leftOrigin.add(dirLeft.clone().multiplyScalar(0.5)), 0x00f2fe);
+            this.createExplosion(rightOrigin.add(dirRight.clone().multiplyScalar(0.5)), 0x00f2fe);
             return;
         }
 
@@ -2832,6 +2875,34 @@ class CyberArcadeEngine {
             joystickZone.addEventListener('touchmove', handleJoyMove, { passive: false });
             joystickZone.addEventListener('touchend', resetJoystick, { passive: false });
             joystickZone.addEventListener('touchcancel', resetJoystick, { passive: false });
+        }
+
+        // 📱 Touch drag & reticle mover for AR and games
+        const crosshair = document.getElementById('hud-center-crosshair');
+        if (crosshair) {
+            crosshair.classList.add('ar-movable');
+        }
+
+        const moveReticleTo = (clientX, clientY) => {
+            this.arReticleScreenPos.x = clientX;
+            this.arReticleScreenPos.y = clientY;
+            if (crosshair && this.isARMode) {
+                crosshair.style.left = clientX + 'px';
+                crosshair.style.top = clientY + 'px';
+            }
+        };
+
+        if (canvas) {
+            canvas.addEventListener('pointerdown', (e) => {
+                if (this.isARMode) {
+                    moveReticleTo(e.clientX, e.clientY);
+                }
+            });
+            canvas.addEventListener('pointermove', (e) => {
+                if (this.isARMode && e.buttons > 0) {
+                    moveReticleTo(e.clientX, e.clientY);
+                }
+            });
         }
 
         // 📱 2. Universal Canvas Screen Drag (Steer Anywhere on Mobile & 360° AR Pan)
