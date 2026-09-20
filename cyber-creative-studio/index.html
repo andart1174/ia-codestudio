@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Creative Studio — 3D Video Intro & Synthwave Beat Maker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Outfit:wght@400;600;800;900&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <!-- Paywall & Premium Protection -->
+    <script src="js/premium-lock.js"></script>
+    <link rel="stylesheet" href="style.css?v=58">
+</head>
+<body>
+
+    <div class="cyber-bg-glow"></div>
+
+    <!-- Header Navigation -->
+    <header class="app-header">
+        <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+            <a href="../index.html" class="nav-portal-btn" style="text-decoration:none;border:1px solid rgba(239,68,68,0.4);color:#f87171;background:rgba(239,68,68,0.12);display:inline-flex;align-items:center;gap:6px;padding:6px 12px;font-size:12px;font-weight:700;border-radius:8px;transition:all 0.2s;white-space:nowrap;" title="Return to Portal / Retour au Portail">
+                <span>⬅</span>
+                <span data-i18n="btn_return_portal">Portal</span>
+            </a>
+            <a href="../community/" class="nav-portal-btn" style="text-decoration:none;border:1px solid rgba(139,92,246,0.4);color:#c4b5fd;background:rgba(139,92,246,0.12);display:inline-flex;align-items:center;gap:6px;padding:6px 12px;font-size:12px;font-weight:700;border-radius:8px;transition:all 0.2s;white-space:nowrap;" title="Community Feed / Communauté">
+                <span>🌐</span>
+                <span data-i18n="btn_community">Community</span>
+            </a>
+        </div>
+
+        <div class="brand-box">
+            <div class="brand-logo"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+            <div class="brand-text">
+                <h1 data-i18n="app_title">CYBER CREATIVE STUDIO</h1>
+                <span class="sub" data-i18n="app_subtitle">BY IA CODE STUDIO</span>
+            </div>
+        </div>
+
+        <div class="module-tabs">
+            <button type="button" class="tab-btn active" data-tab="intro">
+                <i class="fa-solid fa-clapperboard"></i> <span data-i18n="tab_intro">🎬 3D CINEMATIC INTRO & VIDEO FX</span>
+            </button>
+            <button type="button" class="tab-btn" data-tab="beat">
+                <i class="fa-solid fa-music"></i> <span data-i18n="tab_beat">🎹 CYBER BEAT & FULL SYNTH STUDIO</span>
+            </button>
+        </div>
+
+        <div class="header-actions">
+            <!-- 🎬 1-CLICK AI MOVIE TRAILER GENERATOR MASTER BUTTON -->
+            <button type="button" id="btn-master-ai-trailer" class="master-ai-trailer-btn" title="1-Click AI Movie Trailer Generator">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="btn_master_ai_trailer">🎬 1-CLICK AI MOVIE TRAILER</span>
+            </button>
+
+            <div class="lang-selector">
+                <button type="button" class="lang-btn active" data-lang="en">EN</button>
+                <button type="button" class="lang-btn" data-lang="fr">FR</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <main class="studio-workspace">
+
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <!-- 🎬 MODULE 1: 3D CINEMATIC VIDEO & INTRO GENERATOR            -->
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <section id="module-intro" class="module-section active">
+            <div class="hero-header">
+                <h2 data-i18n="intro_heading">3D CINEMATIC VIDEO & INTRO GENERATOR</h2>
+                <p data-i18n="intro_sub">Create pro 3D motion intros with talking AI robot hosts, custom logo badges, audio-reactive lasers, and 60FPS video export!</p>
+            </div>
+
+            <div class="intro-creator-layout">
+                <!-- 3D Viewport Area -->
+                <div class="viewport-container aspect-16-9" id="viewport-container">
+                    <!-- 🎬 Top Director Camera Toolbar -->
+                    <div class="viewport-director-bar">
+                        <span class="director-label"><i class="fa-solid fa-video"></i> <span data-i18n="director_title">🎬 DIRECTOR CAMERA:</span></span>
+                        <button type="button" class="director-cam-btn active" data-cam="action" data-i18n="cam_action">📐 Full Action</button>
+                        <button type="button" class="director-cam-btn" data-cam="hero" data-i18n="cam_hero">🎥 Hero Epic</button>
+                        <button type="button" class="director-cam-btn" data-cam="face" data-i18n="cam_face">🔍 Face Zoom</button>
+                        <button type="button" class="director-cam-btn" data-cam="orbit" data-i18n="cam_orbit">🔄 Orbit 360°</button>
+                        <button type="button" class="director-cam-btn" id="btn-cam-trailer" data-cam="trailer" data-i18n="cam_trailer">🎬 Movie Trailer Cuts</button>
+                        <button type="button" class="director-cam-btn" id="btn-bullet-time" data-cam="bullet" data-i18n="btn_bullet_time">⏱️ Bullet-Time Slow-Mo</button>
+                    </div>
+
+                    <!-- 💥 Cyber Superpowers FX Action Bar -->
+                    <div class="viewport-fx-bar">
+                        <button type="button" id="btn-mecha-fusion" class="fx-trigger-btn mecha-fusion-btn" title="Combine all 3 robots into Titan Prime">
+                            <i class="fa-solid fa-atom"></i> <span data-i18n="btn_mecha_fusion">⚡ MECHA FUSION</span>
+                        </button>
+                        <button type="button" id="btn-fx-laser" class="fx-trigger-btn" title="Fire Chest Laser Cannon Blast">
+                            <i class="fa-solid fa-burst"></i> <span data-i18n="fx_laser">💥 Laser Cannon</span>
+                        </button>
+                        <button type="button" id="btn-fx-tesla" class="fx-trigger-btn" title="Discharge Tesla Lightning Storm">
+                            <i class="fa-solid fa-bolt"></i> <span data-i18n="fx_tesla">⚡ Tesla Storm</span>
+                        </button>
+                        <button type="button" id="btn-fx-glitch" class="fx-trigger-btn" title="Holographic Glitch Teleport">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="fx_glitch">🌀 Teleport</span>
+                        </button>
+                    </div>
+
+                    <!-- 🎙️ Live Interactive Mic Talkback Floating Button -->
+                    <button type="button" id="btn-live-mic" class="viewport-mic-btn" title="Click to speak with 3D Robot Host">
+                        <i class="fa-solid fa-microphone"></i> <span data-i18n="btn_mic_talkback">🎙️ LIVE MIC TALKBACK</span>
+                    </button>
+
+                    <button type="button" id="btn-intro-theater" class="theater-toggle-btn" title="Toggle Fullscreen / Theater Mode">
+                        <i class="fa-solid fa-expand"></i>
+                    </button>
+                    <div class="laser-scan-line"></div>
+                    <canvas id="intro-3d-canvas"></canvas>
+                </div>
+
+                <!-- Customization Panel -->
+                <div class="studio-control-panel">
+                    
+                    <!-- 🚀 MASTER ACTION & EXPORT SUITE (RIGHT CONTROL PANEL - ALWAYS VISIBLE) -->
+                    <div class="export-suite-card" id="export-suite-card">
+                        <div class="export-card-title">
+                            <i class="fa-solid fa-rocket"></i> <span data-i18n="export_section_title">RENDER & EXPORT STUDIO</span>
+                        </div>
+                        <div class="export-buttons-group">
+                            <button type="button" id="btn-intro-preview" class="action-btn-glow preview-btn-full">
+                                <i class="fa-solid fa-play"></i> <span data-i18n="btn_play_preview">▶ PREVIEW INTRO</span>
+                            </button>
+                            <button type="button" id="btn-intro-export" class="action-btn-glow export-btn export-btn-full">
+                                <i class="fa-solid fa-video"></i> <span data-i18n="btn_record_video">🎥 EXPORT VIDEO + SPEECH (MP4/WebM)</span>
+                            </button>
+                            <div class="export-secondary-row">
+                                <button type="button" id="btn-intro-export-html" class="action-btn-glow btn-html-export">
+                                    <i class="fa-solid fa-code"></i> <span data-i18n="btn_export_html">🌐 EXPORT 3D HTML</span>
+                                </button>
+                                <button type="button" id="btn-intro-snapshot" class="action-btn-glow btn-snapshot-export">
+                                    <i class="fa-solid fa-camera"></i> <span data-i18n="btn_snapshot">📸 4K SNAPSHOT</span>
+                                </button>
+                            </div>
+                            <div class="export-secondary-row">
+                                <button type="button" id="btn-sync-beat-intro" class="action-btn-glow btn-sync-beat">
+                                    <i class="fa-solid fa-bolt"></i> <span data-i18n="btn_sync_beat">🔥 SYNC WITH BEAT MAKER</span>
+                                </button>
+                                <button type="button" id="btn-intro-embed-code" class="action-btn-glow btn-embed-widget">
+                                    <i class="fa-solid fa-clone"></i> <span data-i18n="btn_embed_widget">📋 3D EMBED</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 🤖 3D AI ROBOT HOST CONFIGURATION CARD -->
+                    <div class="robot-config-card">
+                        <div class="robot-card-header">
+                            <div class="robot-card-title">
+                                <i class="fa-solid fa-robot"></i> <span data-i18n="robot_section_title">🤖 3D AI ROBOT HOST (GENIUS IA)</span>
+                            </div>
+                            <label class="toggle-switch-wrapper">
+                                <input type="checkbox" id="robot-toggle-enable" checked style="display:none;">
+                                <div class="toggle-switch"></div>
+                            </label>
+                        </div>
+
+                        <!-- 🤖 Robot Host Selection Dropdown (Robot 1, Robot 2, Robot 3, Duo Host, Trio Squad, None) -->
+                        <div class="control-group">
+                            <label data-i18n="label_robot_host_mode">Robot Host Selection:</label>
+                            <select id="robot-select-host" class="studio-select" style="border-color: var(--accent-cyan); font-weight: 800;">
+                                <option value="robot1" data-i18n="host_robot1" selected>🤖 Robot 1: Genius IA Mecha</option>
+                                <option value="robot2" data-i18n="host_robot2">⚡ Robot 2: Nexus-9 Vanguard</option>
+                                <option value="robot3" data-i18n="host_robot3">🛡️ Robot 3: Aegis-X Heavy Titan</option>
+                                <option value="duo" data-i18n="host_duo">👥 Duo Host: Both Robots Active</option>
+                                <option value="trio" data-i18n="host_trio">🤖🤖🤖 TRIO SQUAD: All 3 Robots Active</option>
+                                <option value="titan_prime" data-i18n="host_titan_prime">⚡ MECHA COMBINER: Titan Prime Ultra</option>
+                                <option value="none" data-i18n="host_none">🚫 None: Hide Robots</option>
+                            </select>
+                        </div>
+
+                        <!-- 🦾 Robot Mecha Skins -->
+                        <div class="control-group">
+                            <label data-i18n="label_robot_skin">3D Mecha Armor Skin</label>
+                            <select id="robot-select-skin" class="studio-select">
+                                <option value="classic" data-i18n="skin_classic" selected>🔷 Classic Cyber (Navy / Gold / Cyan)</option>
+                                <option value="gold" data-i18n="skin_gold">🥇 24K Gold Emperor (Full Gold & Luxe)</option>
+                                <option value="matrix" data-i18n="skin_matrix">🟢 Matrix Phantom (Carbon & Emerald Code)</option>
+                                <option value="crimson" data-i18n="skin_crimson">🔴 Crimson Berserker (Ruby & Fire Reactor)</option>
+                                <option value="diamond" data-i18n="skin_diamond">💎 Diamond Hologram (Chrome & Neon Glass)</option>
+                            </select>
+                        </div>
+
+                        <!-- 🕺 Action Emotes Bar -->
+                        <div class="control-group">
+                            <label data-i18n="label_robot_emotes">Robot Action Gestures & Emotes</label>
+                            <div class="robot-emotes-grid">
+                                <button type="button" class="btn-robot-emote active" data-emote="idle" data-i18n="emote_idle">🚶 Default</button>
+                                <button type="button" class="btn-robot-emote" data-emote="wave" data-i18n="emote_wave">👋 Wave</button>
+                                <button type="button" class="btn-robot-emote" data-emote="point" data-i18n="emote_point">🫵 Point</button>
+                                <button type="button" class="btn-robot-emote" data-emote="charge" data-i18n="emote_charge">⚡ Charge</button>
+                                <button type="button" class="btn-robot-emote" data-emote="jetpack" data-i18n="emote_jetpack">🚀 Jetpack</button>
+                                <button type="button" class="btn-robot-emote" data-emote="dance" data-i18n="emote_dance">🕺 Dance</button>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label data-i18n="label_robot_script">Robot Voice Speech Script (EN / FR)</label>
+                            <textarea id="robot-input-script" class="studio-textarea" data-i18n-placeholder="placeholder_robot_script" placeholder="Type what the robot will say in English or French...">Welcome to Cyber Arena! Experience the future of 3D WebGL gaming and generative AI.</textarea>
+                        </div>
+
+                        <div class="preset-scripts-row">
+                            <button type="button" id="btn-script-preset-1" class="preset-script-btn" data-i18n="btn_preset_script_1">💬 Intro: Welcome</button>
+                            <button type="button" id="btn-script-preset-2" class="preset-script-btn" data-i18n="btn_preset_script_2">💬 Outro: Subscribe</button>
+                            <button type="button" id="btn-script-preset-3" class="preset-script-btn" data-i18n="btn_preset_script_3">💬 Epic: Level Up</button>
+                        </div>
+
+                        <!-- 👥 Robot 2 Speech Script (Active in Duo Mode) -->
+                        <div id="robot2-dialog-group" class="control-group" style="display: none; border-left: 3px solid var(--accent-pink); padding-left: 10px; margin-top: 10px; background: rgba(255, 0, 127, 0.05); border-radius: 6px;">
+                            <label data-i18n="label_robot2_script" style="color: var(--accent-pink);">Robot 2 Voice Script (Duo Mode)</label>
+                            <textarea id="robot-input-script-2" class="studio-textarea" data-i18n-placeholder="placeholder_robot2_script" placeholder="Target locked! Systems initialized and ready for action.">Target locked! Systems initialized and ready for action.</textarea>
+                            <div class="preset-scripts-row" style="margin-top: 6px;">
+                                <button type="button" id="btn-duo-preset-1" class="preset-script-btn" data-i18n="btn_preset_duo_1">💬 Duo: Welcome & Launch</button>
+                                <button type="button" id="btn-duo-preset-2" class="preset-script-btn" data-i18n="btn_preset_duo_2">💬 Duo: Mission Complete</button>
+                                <button type="button" id="btn-duo-preset-3" class="preset-script-btn" data-i18n="btn_preset_duo_3">💬 Duo: Boss Fight Warning</button>
+                            </div>
+                        </div>
+
+                        <!-- 🛡️ Robot 3 Speech Script (Active in Trio Mode) -->
+                        <div id="robot3-dialog-group" class="control-group trio-dialog-box" style="display: none;">
+                            <label data-i18n="label_robot3_script" style="color: #f59e0b;">Robot 3 Voice Script (Trio Mode)</label>
+                            <textarea id="robot-input-script-3" class="studio-textarea" data-i18n-placeholder="placeholder_robot3_script" placeholder="Heavy defense systems locked. Sector is secure, Commander.">Heavy defense systems locked. Sector is secure, Commander.</textarea>
+                            <div class="preset-scripts-row" style="margin-top: 6px;">
+                                <button type="button" id="btn-trio-preset-1" class="preset-script-btn" data-i18n="btn_preset_trio_1">💬 Trio: Full Squad Assault</button>
+                                <button type="button" id="btn-trio-preset-2" class="preset-script-btn" data-i18n="btn_preset_trio_2">💬 Trio: Tactical Defense Lock</button>
+                            </div>
+                        </div>
+
+                        <!-- 🎙️ AI Voice Tone Filter -->
+                        <div class="control-group">
+                            <label data-i18n="label_voice_fx">AI Voice FX Tone Filter</label>
+                            <select id="robot-voice-fx" class="studio-select">
+                                <option value="standard" data-i18n="voice_fx_standard" selected>🤖 Standard Cyber Voice</option>
+                                <option value="optimus" data-i18n="voice_fx_optimus">🦾 Optimus Deep Mecha Bass</option>
+                                <option value="glitch" data-i18n="voice_fx_glitch">📻 Radio Walkie-Glitch</option>
+                                <option value="siren" data-i18n="voice_fx_siren">👩‍🎤 Cyber AI Siren (Melodic)</option>
+                                <option value="overlord" data-i18n="voice_fx_overlord">👾 Dark Synth Overlord</option>
+                            </select>
+                        </div>
+
+                        <div class="control-group" style="display:flex; flex-direction:row; gap:8px;">
+                            <button type="button" id="btn-robot-speak-test" class="action-btn-glow" style="flex:1; padding:7px 12px; font-size:0.75rem; background:linear-gradient(135deg, var(--accent-gold), #ff007f);">
+                                <i class="fa-solid fa-volume-high"></i> <span data-i18n="btn_speak_test">🗣️ TEST ROBOT VOICE</span>
+                            </button>
+                        </div>
+
+                        <div class="control-group">
+                            <label data-i18n="label_robot_position">Robot Position on Screen</label>
+                            <select id="robot-select-position" class="studio-select">
+                                <option value="right" data-i18n="pos_right" selected>Right Anchor</option>
+                                <option value="left" data-i18n="pos_left">Left Anchor</option>
+                                <option value="center" data-i18n="pos_center">Center Stage</option>
+                                <option value="float" data-i18n="pos_float">Floating High</option>
+                            </select>
+                        </div>
+
+                        <!-- 🖼️ Custom Chest / Medallion Logo -->
+                        <div class="control-group">
+                            <label data-i18n="label_custom_logo">Custom 3D Logo / Chest Badge (Optional)</label>
+                            <div style="display:flex; gap:8px;">
+                                <label for="robot-file-logo-custom" class="file-upload-btn" style="flex:2; margin:0; padding:8px 12px; font-size:0.75rem;">
+                                    <i class="fa-solid fa-image"></i> <span data-i18n="btn_upload_logo">📁 Upload Custom Logo</span>
+                                </label>
+                                <input type="file" id="robot-file-logo-custom" accept="image/png, image/jpeg" style="display:none;">
+                                <button type="button" id="btn-reset-robot-logo" class="action-btn-glow" style="flex:1; padding:8px 10px; font-size:0.72rem; background:#1e293b; border:1px solid #475569;" title="Reset to GENIUS IA Medallion">
+                                    <i class="fa-solid fa-rotate-left"></i> <span data-i18n="btn_reset_logo">🔄 Reset</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label data-i18n="label_robot_armor_color">Robot Armor & Core Colors</label>
+                            <div class="color-pickers-row">
+                                <div class="color-box">
+                                    <input type="color" id="robot-color-armor" value="#2a2f45">
+                                    <span>Armor</span>
+                                </div>
+                                <div class="color-box">
+                                    <input type="color" id="robot-color-core" value="#00f2fe">
+                                    <span>Visor</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 🛡️ Cyber Accessories & Holographic Gear (Optional) -->
+                        <div class="control-group">
+                            <label data-i18n="label_gear">Cyber Accessories & Holographic Gear (Optional)</label>
+                            <div class="gear-badges-grid">
+                                <button type="button" class="gear-badge" data-gear="katana" data-i18n="gear_katana">⚔️ Cyber Katana</button>
+                                <button type="button" class="gear-badge" data-gear="visor" data-i18n="gear_visor">🥽 HUD Visor</button>
+                                <button type="button" class="gear-badge" data-gear="wings" data-i18n="gear_wings">🚀 Thrusters</button>
+                                <button type="button" class="gear-badge" data-gear="shield" data-i18n="gear_shield">🛡️ Hex Shield</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 📦 CUSTOM 3D MODEL STUDIO (.GLB / .GLTF) CARD -->
+                    <div class="robot-config-card" style="border-color:var(--accent-gold);">
+                        <div class="robot-card-header">
+                            <div class="robot-card-title">
+                                <i class="fa-solid fa-cube"></i> <span data-i18n="custom_model_section_title">📦 CUSTOM 3D MODEL STUDIO (.GLB)</span>
+                            </div>
+                            <label class="toggle-switch-wrapper">
+                                <input type="checkbox" id="custom-model-toggle-enable" style="display:none;">
+                                <div class="toggle-switch"></div>
+                            </label>
+                        </div>
+
+                        <!-- Upload .GLB / .GLTF Button -->
+                        <div class="control-group">
+                            <label data-i18n="label_upload_model">Import 3D Model (.GLB / .GLTF / Blender / Mixamo)</label>
+                            <div style="display:flex; gap:8px;">
+                                <label for="custom-model-file-input" class="file-upload-btn" style="flex:2; margin:0; padding:8px 12px; font-size:0.75rem; background:linear-gradient(135deg, rgba(255, 183, 3, 0.2), rgba(0, 242, 254, 0.2)); border-color:var(--accent-gold);">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="btn_upload_model">📁 Upload .GLB / .GLTF</span>
+                                </label>
+                                <input type="file" id="custom-model-file-input" accept=".glb, .gltf" style="display:none;">
+                                <button type="button" id="btn-reset-custom-model" class="action-btn-glow" style="flex:1; padding:8px 10px; font-size:0.72rem; background:#1e293b; border:1px solid #475569;" title="Remove Custom 3D Model">
+                                    <i class="fa-solid fa-trash-can"></i> <span data-i18n="btn_remove_model">🗑️ Clear</span>
+                                </button>
+                            </div>
+                            <div id="custom-model-filename" style="font-size:0.72rem; color:var(--accent-cyan); margin-top:4px; font-family:var(--font-mono); display:none;"></div>
+                        </div>
+
+                        <!-- 3D Placement Preset -->
+                        <div class="control-group">
+                            <label data-i18n="label_model_placement">Stage Placement (Next to Robot / Alone)</label>
+                            <select id="custom-model-select-placement" class="studio-select">
+                                <option value="companion" data-i18n="place_companion" selected>👥 Next to Robot (Companion Partner)</option>
+                                <option value="center" data-i18n="place_center">🎯 Center Stage (Solo Hero)</option>
+                                <option value="left" data-i18n="place_left">👈 Left Stage</option>
+                                <option value="right" data-i18n="place_right">👉 Right Stage</option>
+                                <option value="float" data-i18n="place_float">🚀 Floating Overhead</option>
+                            </select>
+                        </div>
+
+                        <!-- Fine Transform Sliders -->
+                        <div class="control-group">
+                            <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:2px;">
+                                <span data-i18n="label_model_scale">📏 Scale / Size:</span>
+                                <span id="label-val-scale" style="color:var(--accent-gold); font-weight:800;">100%</span>
+                            </div>
+                            <input type="range" id="custom-model-slider-scale" min="20" max="300" value="100" class="studio-slider">
+                        </div>
+
+                        <div class="control-group" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                            <div>
+                                <div style="display:flex; justify-content:space-between; font-size:0.72rem; margin-bottom:2px;">
+                                    <span data-i18n="label_model_x">↔️ Pos X:</span>
+                                    <span id="label-val-x" style="color:var(--accent-cyan);">-5.0</span>
+                                </div>
+                                <input type="range" id="custom-model-slider-x" min="-15" max="15" step="0.5" value="-5" class="studio-slider">
+                            </div>
+                            <div>
+                                <div style="display:flex; justify-content:space-between; font-size:0.72rem; margin-bottom:2px;">
+                                    <span data-i18n="label_model_y">↕️ Pos Y:</span>
+                                    <span id="label-val-y" style="color:var(--accent-cyan);">0.0</span>
+                                </div>
+                                <input type="range" id="custom-model-slider-y" min="-5" max="10" step="0.5" value="0" class="studio-slider">
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:2px;">
+                                <span data-i18n="label_model_rotation">🔄 Rotation Y:</span>
+                                <span id="label-val-rot" style="color:var(--accent-gold);">0°</span>
+                            </div>
+                            <input type="range" id="custom-model-slider-rot" min="0" max="360" value="0" class="studio-slider">
+                        </div>
+
+                        <!-- Embedded Animation Selector (Populated if model has animations) -->
+                        <div class="control-group" id="custom-model-anim-group" style="display:none;">
+                            <label data-i18n="label_model_animation">Embedded 3D Animations</label>
+                            <select id="custom-model-select-anim" class="studio-select"></select>
+                        </div>
+
+                        <!-- Color Tint & Hologram Overlay -->
+                        <div class="control-group">
+                            <label data-i18n="label_model_tint">Model Color Tint & Hologram (Optional)</label>
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <div class="color-box" style="flex:1;">
+                                    <input type="color" id="custom-model-color-tint" value="#ffffff">
+                                    <span>Color Tint</span>
+                                </div>
+                                <label style="flex:1; display:flex; align-items:center; gap:8px; font-size:0.75rem; color:var(--text-muted); cursor:pointer;">
+                                    <input type="checkbox" id="custom-model-toggle-wireframe">
+                                    <span data-i18n="label_wireframe_mode">🌐 Wireframe Hologram</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 🌌 SCI-FI CINEMATICS & HUD CARD -->
+                    <div class="robot-config-card" style="border-color:var(--accent-cyan);">
+                        <div class="robot-card-header">
+                            <div class="robot-card-title">
+                                <i class="fa-solid fa-vr-cardboard"></i> <span data-i18n="cinematics_section_title">🌌 SCI-FI CINEMATICS & HUD</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:4px 0;">
+                            <label style="font-size:0.78rem; font-weight:800; color:var(--accent-cyan); display:flex; align-items:center; gap:8px;" data-i18n="label_hud_enable">
+                                <i class="fa-solid fa-crosshairs"></i> Holographic 3D HUD & Radar Dials
+                            </label>
+                            <label class="toggle-switch-wrapper">
+                                <input type="checkbox" id="toggle-holographic-hud" checked style="display:none;">
+                                <div class="toggle-switch"></div>
+                            </label>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:4px 0;">
+                            <label style="font-size:0.78rem; font-weight:800; color:var(--accent-pink); display:flex; align-items:center; gap:8px;" data-i18n="label_weather_enable">
+                                <i class="fa-solid fa-cloud-bolt"></i> Cyber Digital Rain / Warp Storm
+                            </label>
+                            <label class="toggle-switch-wrapper">
+                                <input type="checkbox" id="toggle-cyber-weather" checked style="display:none;">
+                                <div class="toggle-switch"></div>
+                            </label>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:4px 0;">
+                            <label style="font-size:0.78rem; font-weight:800; color:var(--accent-gold); display:flex; align-items:center; gap:8px;" data-i18n="label_bass_glow">
+                                <i class="fa-solid fa-wave-square"></i> Audio-Reactive Bass Glow (Pulsing 3D)
+                            </label>
+                            <label class="toggle-switch-wrapper">
+                                <input type="checkbox" id="toggle-bass-glow" checked style="display:none;">
+                                <div class="toggle-switch"></div>
+                            </label>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:4px 0;">
+                            <label style="font-size:0.78rem; font-weight:800; color:#38bdf8; display:flex; align-items:center; gap:8px;" data-i18n="label_volumetric_lights">
+                                <i class="fa-solid fa-lightbulb"></i> Volumetric Concert Spotlights
+                            </label>
+                            <label class="toggle-switch-wrapper">
+                                <input type="checkbox" id="toggle-volumetric-lights" checked style="display:none;">
+                                <div class="toggle-switch"></div>
+                            </label>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:4px 0;">
+                            <label style="font-size:0.78rem; font-weight:800; color:#00ff88; display:flex; align-items:center; gap:8px;" data-i18n="label_cyber_podium">
+                                <i class="fa-solid fa-circle-dot"></i> Holographic Cyber Podium
+                            </label>
+                            <label class="toggle-switch-wrapper">
+                                <input type="checkbox" id="toggle-cyber-podium" checked style="display:none;">
+                                <div class="toggle-switch"></div>
+                            </label>
+                        </div>
+                        <div class="control-group" style="margin-top:6px;">
+                            <label data-i18n="label_particle_style">Particle Ambience Style</label>
+                            <select id="intro-select-particle-style" class="studio-select">
+                                <option value="rain" data-i18n="part_rain" selected>🌧️ Cyber Digital Rain</option>
+                                <option value="matrix" data-i18n="part_matrix">🟢 Matrix Data Stream</option>
+                                <option value="gold" data-i18n="part_gold">✨ Golden Fireflies & Sparks</option>
+                                <option value="tesla" data-i18n="part_tesla">⚡ Tesla Lightning Arcs</option>
+                                <option value="nebula" data-i18n="part_nebula">🌌 Cosmic Nebula Stardust</option>
+                            </select>
+                        </div>
+
+                        <!-- 🌪️ Cosmic Cataclysms Selector -->
+                        <div class="control-group" style="margin-top:6px;">
+                            <label data-i18n="label_cataclysms">🌪️ Cosmic Cataclysms & Extreme FX</label>
+                            <select id="intro-select-cataclysm" class="studio-select" style="border-color: #a855f7; font-weight:800;">
+                                <option value="none" data-i18n="cataclysm_none" selected>✨ Normal Orbit</option>
+                                <option value="blackhole" data-i18n="cataclysm_blackhole">🕳️ Black Hole Gravitational Vortex</option>
+                                <option value="solarflare" data-i18n="cataclysm_solarflare">☀️ Solar Flare EMP Shockwave</option>
+                                <option value="matrixblizzard" data-i18n="cataclysm_matrixblizzard">🟢 Matrix Cyber Blizzard</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 💥 INTERACTIVE 3D COMBAT SUPERPOWERS CARD -->
+                    <div class="robot-config-card" style="border-color: #ef4444;">
+                        <div class="robot-card-header">
+                            <div class="robot-card-title" style="color: #ef4444;">
+                                <i class="fa-solid fa-shield-halved"></i> <span data-i18n="combat_fx_title">💥 INTERACTIVE 3D COMBAT SUPERPOWERS</span>
+                            </div>
+                        </div>
+                        <div class="combat-fx-grid">
+                            <button type="button" id="btn-fx-overload" class="combat-trigger-btn" title="Charged Plasma Beam Blast">
+                                <i class="fa-solid fa-bolt"></i> <span data-i18n="btn_fx_overload">⚡ Overload Cannon</span>
+                            </button>
+                            <button type="button" id="btn-fx-hexdome" class="combat-trigger-btn" title="Geodesic Energy Shield Dome">
+                                <i class="fa-solid fa-shield-virus"></i> <span data-i18n="btn_fx_hexdome">🛡️ Hex Dome Shield</span>
+                            </button>
+                            <button type="button" id="btn-fx-warp" class="combat-trigger-btn" title="Sub-Orbital Meteor Jump & Slam">
+                                <i class="fa-solid fa-meteor"></i> <span data-i18n="btn_fx_warp">🚀 Warp Meteor Slam</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Main Text Controls -->
+                    <div class="control-group">
+                        <label data-i18n="label_title_text">Main Title / Brand Name</label>
+                        <input type="text" id="intro-input-title" class="studio-input" value="CYBER ARENA" maxlength="24">
+                    </div>
+
+                    <div class="control-group">
+                        <label data-i18n="label_subtitle_text">Subtitle / Tagline</label>
+                        <input type="text" id="intro-input-sub" class="studio-input" value="BY IA CODE STUDIO" maxlength="32">
+                    </div>
+
+                    <!-- Custom Logo Upload -->
+                    <div class="control-group">
+                        <label data-i18n="label_upload_logo">Upload Custom Logo / Icon</label>
+                        <label for="intro-file-logo" class="file-upload-btn">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="label_btn_upload">📁 Upload 3D Logo Badge</span>
+                        </label>
+                        <input type="file" id="intro-file-logo" accept="image/png, image/jpeg" style="display:none;">
+                    </div>
+
+                    <div class="control-group">
+                        <label data-i18n="label_aspect">Format / Aspect Ratio</label>
+                        <select id="intro-select-aspect" class="studio-select">
+                            <option value="16:9" data-i18n="aspect_landscape" selected>16:9 Landscape (YouTube / PC)</option>
+                            <option value="9:16" data-i18n="aspect_portrait">9:16 Vertical (TikTok / Shorts / Reels)</option>
+                            <option value="1:1" data-i18n="aspect_square">1:1 Square (Instagram / Discord)</option>
+                            <option value="4:5" data-i18n="aspect_social_portrait">4:5 Social Portrait (Instagram / FB)</option>
+                            <option value="21:9" data-i18n="aspect_ultrawide">21:9 UltraWide Cinema (Gaming / 21:9)</option>
+                            <option value="full" data-i18n="aspect_fullscreen">🖥️ Fullscreen / Fill Window</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label data-i18n="label_preset">Cinematic 3D World Preset</label>
+                        <select id="intro-select-preset" class="studio-select">
+                            <option value="cyberpunk" data-i18n="preset_cyberpunk">🌆 Cyberpunk 2077 Neon City</option>
+                            <option value="cosmic" data-i18n="preset_cosmic">✨ Quantum Supernova Particle Blast</option>
+                            <option value="titan" data-i18n="preset_titan">🤖 Titan Mech Heavy Metal & Sparks</option>
+                            <option value="sunset" data-i18n="preset_sunset">🌅 80s Outrun Synthwave Sunset</option>
+                            <option value="hyperspace" data-i18n="preset_hyperspace">🚀 Hyperspace Warp Speed Vortex</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label data-i18n="label_camera_anim">Cinematic Camera Motion</label>
+                        <select id="intro-select-anim" class="studio-select">
+                            <option value="flyin" data-i18n="anim_flyin">Cinematic Fly-In Blast</option>
+                            <option value="orbit" data-i18n="anim_orbit">360° Smooth Orbital Scan</option>
+                            <option value="zoom_blast" data-i18n="anim_zoom_blast">Hyper-Speed Sonic Zoom</option>
+                            <option value="matrix_scan" data-i18n="anim_matrix_scan">Matrix Glitch Tactical Sweep</option>
+                            <option value="trailer" data-i18n="cam_trailer">🎬 Movie Trailer Director Cuts</option>
+                        </select>
+                    </div> 
+
+                    <div class="control-group">
+                        <label data-i18n="label_duration">Video Clip Duration</label>
+                        <select id="intro-select-duration" class="studio-select">
+                            <option value="10" data-i18n="dur_10s">10 Seconds (Quick Intro)</option>
+                            <option value="15" data-i18n="dur_15s" selected>15 Seconds (Story & Reels)</option>
+                            <option value="20" data-i18n="dur_20s">20 Seconds (Full Promo)</option>
+                            <option value="30" data-i18n="dur_30s">30 Seconds (Extended Cinematic)</option>
+                        </select>
+                    </div>
+
+                    
+
+                    <!-- Custom Music / Audio Track Upload -->
+                    <div class="control-group">
+                        <label data-i18n="label_custom_audio">Custom Music / Voiceover (.MP3 / .WAV)</label>
+                        <div style="display:flex; gap:8px;">
+                            <label for="intro-file-audio" class="file-upload-btn" style="flex:2; margin:0; padding:8px 12px; font-size:0.75rem;">
+                                <i class="fa-solid fa-music"></i> <span data-i18n="btn_upload_audio">📁 Upload Audio Track</span>
+                            </label>
+                            <input type="file" id="intro-file-audio" accept="audio/mp3, audio/wav, audio/mpeg" style="display:none;">
+                            <button type="button" id="btn-reset-audio" class="action-btn-glow" style="flex:1; padding:8px 10px; font-size:0.72rem; background:#1e293b; border:1px solid #475569;" title="Reset Audio">
+                                <i class="fa-solid fa-rotate-left"></i> <span data-i18n="btn_reset_audio">🔄 Default</span>
+                            </button>
+                        </div>
+                        <div id="intro-audio-filename" style="font-size:0.72rem; color:var(--accent-gold); margin-top:4px; font-family:var(--font-mono); display:none;"></div>
+                    </div>
+
+                    <div class="control-group">
+                        <label data-i18n="label_color_primary">Glow & Lighting Colors</label>
+                        <div class="color-pickers-row">
+                            <div class="color-box">
+                                <input type="color" id="intro-color-primary" value="#00f2fe">
+                                <span>Neon 1</span>
+                            </div>
+                            <div class="color-box">
+                                <input type="color" id="intro-color-secondary" value="#ff007f">
+                                <span>Neon 2</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <!-- MODULE 2: CYBER BEAT MAKER & FULL SYNTH STUDIO                -->
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <section id="module-beat" class="module-section">
+            <div class="hero-header">
+                <h2 data-i18n="beat_heading">FULL SYNTHWAVE & BEAT MAKER STUDIO</h2>
+                <p data-i18n="beat_sub">16-step drum machine & multi-octave synth with 4-pattern song arrangement and DJ filter sweeps. Export HD WAV!</p>
+            </div>
+
+            <div class="beat-maker-layout">
+                <!-- 🌊 Neon Oscilloscope & Audio Spectrum Visualizer -->
+                <div class="beat-visualizer-card" style="position: relative;">
+                    <canvas id="beat-visualizer-canvas" height="60" class="beat-visualizer-canvas"></canvas>
+                    <button type="button" id="btn-toggle-3d-viz" class="action-btn-glow" style="position: absolute; right: 10px; top: 10px; font-size: 0.68rem; padding: 4px 10px; background: rgba(15, 23, 42, 0.85); border: 1px solid var(--accent-cyan);">
+                        <i class="fa-solid fa-cube"></i> <span data-i18n="btn_toggle_3d_viz">🌐 3D CYBER TUNNEL</span>
+                    </button>
+                </div>
+
+                <!-- 4-Pattern Switcher Bar -->
+                <div class="pattern-tabs-bar">
+                    <span style="font-family:var(--font-heading); font-size:0.76rem; color:var(--accent-cyan);"><i class="fa-solid fa-layer-group"></i> SONG ARRANGEMENT:</span>
+                    <button type="button" class="pattern-tab active" data-pattern="0" data-i18n="pattern_1">Pattern 1 (Intro)</button>
+                    <button type="button" class="pattern-tab" data-pattern="1" data-i18n="pattern_2">Pattern 2 (Verse)</button>
+                    <button type="button" class="pattern-tab" data-pattern="2" data-i18n="pattern_3">Pattern 3 (Drop)</button>
+                    <button type="button" class="pattern-tab" data-pattern="3" data-i18n="pattern_4">Pattern 4 (Outro)</button>
+                    <div style="margin-left:auto; display:flex; align-items:center; gap:6px;">
+                        <span style="font-size:0.72rem; color:var(--text-muted);" data-i18n="label_play_mode">Play Mode:</span>
+                        <select id="beat-select-play-mode" class="studio-select" style="padding:2px 8px; font-size:0.72rem; border-color:var(--accent-cyan);">
+                            <option value="song" data-i18n="mode_song" selected>🎼 Full Song Progression (1 ➔ 2 ➔ 3 ➔ 4)</option>
+                            <option value="pattern" data-i18n="mode_pattern">🔁 Loop Active Pattern Only</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Top Controls Bar -->
+                <div class="beat-top-bar">
+                    <div class="beat-actions-row">
+                        <button type="button" id="btn-beat-play" class="action-btn-glow">
+                            <i class="fa-solid fa-play"></i> <span data-i18n="btn_play_beat">▶ PLAY SONG</span>
+                        </button>
+                        <button type="button" id="btn-beat-hit-song" class="action-btn-glow" style="background: linear-gradient(135deg, #ffb703, #ff007f); color:#050714; font-weight:900;" title="Instantly compose a complete 4-part radio-ready song">
+                            <i class="fa-solid fa-crown"></i> <span data-i18n="btn_hit_song">👑 COMPLETE SONG</span>
+                        </button>
+                        <button type="button" id="btn-beat-ai-gen" class="action-btn-glow" style="background: linear-gradient(135deg, #00ff88, #00f2fe); color:#050714;">
+                            <i class="fa-solid fa-bolt"></i> <span data-i18n="btn_ai_generate">⚡ AI AUTO-GEN</span>
+                        </button>
+                        <button type="button" id="btn-beat-evolve" class="action-btn-glow" style="background: linear-gradient(135deg, #ff007f, #7928ca); color:#fff;" title="Subtly mutate beat with ghost hits & rolls">
+                            <i class="fa-solid fa-dice"></i> <span data-i18n="btn_evolve_beat">🎲 EVOLVE BEAT</span>
+                        </button>
+                        <div class="remix-cluster" style="display:flex; align-items:center; gap:4px;">
+                            <select id="beat-select-remix" class="studio-select" style="padding:4px 8px; font-size:0.72rem; border-color:var(--accent-pink);">
+                                <option value="phonk">🥋 Remix as Phonk</option>
+                                <option value="dnb">⚡ Remix as DnB</option>
+                                <option value="darksynth">🌆 Remix as Darksynth</option>
+                                <option value="trap">🎤 Remix as Trap</option>
+                                <option value="synthwave">🏎️ Remix as Synthwave</option>
+                                <option value="electro_house">🚀 Remix as House</option>
+                            </select>
+                            <button type="button" id="btn-beat-remix" class="action-btn-glow" style="background:linear-gradient(135deg, #ff007f, #ffb703); color:#050714; font-size:0.72rem; padding:6px 10px;" title="Remix active composition into new genre">
+                                <i class="fa-solid fa-fire"></i> <span data-i18n="btn_remix">🔥 REMIX</span>
+                            </button>
+                        </div>
+                        <button type="button" id="btn-beat-clear" class="action-btn-glow" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:#cbd5e1;">
+                            <i class="fa-solid fa-trash"></i> <span data-i18n="btn_clear_grid">CLEAR</span>
+                        </button>
+                        <button type="button" id="btn-beat-export" class="action-btn-glow export-btn">
+                            <i class="fa-solid fa-file-audio"></i> <span data-i18n="btn_export_audio">💾 EXPORT FULL SONG (WAV)</span>
+                        </button>
+                    </div>
+
+                    <div class="beat-knob-cluster">
+                        <div class="knob-item">
+                            <label data-i18n="label_genre_preset">Genre:</label>
+                            <select id="beat-select-genre" class="studio-select" style="padding: 4px 10px; font-size: 0.76rem;">
+                                <option value="darksynth" data-i18n="genre_darksynth" selected>🌆 Cyberpunk 2077 Darksynth (134 BPM)</option>
+                                <option value="synthwave" data-i18n="genre_synthwave">🏎️ 80s Synthwave Outrun (120 BPM)</option>
+                                <option value="phonk" data-i18n="genre_phonk">🥋 Titan Drift Phonk (142 BPM)</option>
+                                <option value="electro_house" data-i18n="genre_electro_house">🚀 French Electro House (126 BPM)</option>
+                                <option value="cinematic" data-i18n="genre_cinematic">🌌 Cinematic Sci-Fi Odyssey (105 BPM)</option>
+                                <option value="dnb" data-i18n="genre_dnb">⚡ Hyper Drum & Bass (170 BPM)</option>
+                                <option value="techno" data-i18n="genre_techno">🎛️ Berghain Cyber Techno (132 BPM)</option>
+                                <option value="lofi" data-i18n="genre_lofi">🌴 Cyber Lo-Fi Chillwave (88 BPM)</option>
+                                <option value="chiptune" data-i18n="genre_chiptune">👾 Retro 8-Bit Arcade (140 BPM)</option>
+                                <option value="trap" data-i18n="genre_trap">🎤 Cyber Trap 808 (138 BPM)</option>
+                                <option value="ambient" data-i18n="genre_ambient">🪐 Deep Space Ambient (72 BPM)</option>
+                                <option value="metal" data-i18n="genre_metal">🎸 Mecha Cyber Metal (150 BPM)</option>
+                            </select>
+                        </div>
+                        <div class="knob-item" style="flex:1.4;">
+                            <label data-i18n="label_smart_chords">Smart Chords:</label>
+                            <div style="display:flex; gap:4px;">
+                                <select id="beat-select-chord" class="studio-select" style="padding: 4px 8px; font-size: 0.74rem;">
+                                    <option value="none" data-i18n="chord_none">Manual / Custom</option>
+                                    <option value="dark_cyber" data-i18n="chord_dark_cyber">🌌 Dark Cyberpunk</option>
+                                    <option value="neon_drive" data-i18n="chord_neon_drive">🏎️ Neon Drive</option>
+                                    <option value="titan_phonk" data-i18n="chord_titan_phonk">💥 Titan Phonk</option>
+                                    <option value="heroic_anthem" data-i18n="chord_heroic_anthem">🚀 Heroic Anthem</option>
+                                    <option value="dreamwave" data-i18n="chord_dreamwave">✨ Dreamwave</option>
+                                </select>
+                                <button type="button" id="btn-apply-chord" class="action-btn-glow" style="padding:4px 8px; font-size:0.72rem; background:var(--accent-gold); color:#050714; font-weight:800;" title="Apply harmonic progression">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="knob-item">
+                            <label data-i18n="label_bpm">BPM:</label>
+                            <input type="range" id="beat-bpm-slider" min="70" max="180" value="120">
+                            <span id="beat-bpm-val" class="knob-val">120</span>
+                        </div>
+                        <div class="knob-item">
+                            <label data-i18n="label_filter_cutoff">DJ Filter:</label>
+                            <input type="range" id="beat-filter-slider" min="300" max="5000" step="100" value="2500">
+                        </div>
+                        <div class="knob-item">
+                            <label data-i18n="label_8d_audio">8D Binaural:</label>
+                            <button type="button" id="toggle-8d-audio" class="action-btn-glow stem-toggle-btn" style="padding: 4px 10px; font-size: 0.74rem;">
+                                <i class="fa-solid fa-headphones"></i> <span id="label-8d-status">8D OFF</span>
+                            </button>
+                        </div>
+                        <div class="knob-item">
+                            <label data-i18n="label_mastering">AI Mastering:</label>
+                            <select id="beat-select-mastering" class="studio-select" style="padding: 4px 8px; font-size: 0.74rem;">
+                                <option value="off" data-i18n="master_off">🔘 Bypass / Clean</option>
+                                <option value="radio" data-i18n="master_radio" selected>📻 Radio Hit</option>
+                                <option value="club" data-i18n="master_club">🎧 Club Sub-Boost</option>
+                                <option value="imax" data-i18n="master_imax">🌌 Cosmic IMAX</option>
+                                <option value="tape" data-i18n="master_tape">📼 Vintage Cassette</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ✨ AI INFINITE MELODY MAESTRO TOOLBAR -->
+                <div class="ai-maestro-container">
+                    <div class="ai-maestro-header">
+                        <span class="ai-maestro-title">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="label_ai_maestro">✨ AI INFINITE MELODY MAESTRO:</span>
+                        </span>
+                        <div class="ai-maestro-selectors">
+                            <div class="ai-select-group">
+                                <label data-i18n="label_ai_mood">Mood:</label>
+                                <select id="ai-select-mood" class="studio-select" style="padding: 4px 8px; font-size: 0.74rem;">
+                                    <option value="surprise" data-i18n="mood_surprise" selected>🎲 Eclectic Surprise</option>
+                                    <option value="cyberpunk" data-i18n="mood_cyberpunk">🌆 Dark Cyberpunk</option>
+                                    <option value="synthwave" data-i18n="mood_synthwave">🏎️ Retro 80s Dream</option>
+                                    <option value="phonk" data-i18n="mood_phonk">🥋 Titan Drift Phonk</option>
+                                    <option value="cinema" data-i18n="mood_cinema">🌌 Epic Sci-Fi Cinema</option>
+                                    <option value="club" data-i18n="mood_club">🚀 Festival Club EDM</option>
+                                </select>
+                            </div>
+                            <div class="ai-select-group">
+                                <label data-i18n="label_ai_density">Density:</label>
+                                <select id="ai-select-density" class="studio-select" style="padding: 4px 8px; font-size: 0.74rem;">
+                                    <option value="sparse" data-i18n="density_sparse">🍃 Minimalist / Chill</option>
+                                    <option value="balanced" data-i18n="density_balanced" selected>⚡ Balanced / Groovy</option>
+                                    <option value="virtuoso" data-i18n="density_virtuoso">🔥 Virtuoso / Fast Arp</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 💬 AI PROMPT-TO-SONG COMPOSER -->
+                    <div class="ai-prompt-box">
+                        <div class="ai-prompt-input-row">
+                            <i class="fa-solid fa-brain" style="color: var(--accent-gold);"></i>
+                            <input type="text" id="ai-prompt-input" class="studio-input" data-i18n-placeholder="prompt_placeholder" placeholder="Describe a scene or vibe (e.g., Tokyo night drift, Cyber battle, Miami sunset...)">
+                            <button type="button" id="btn-ai-prompt-compose" class="action-btn-glow" style="background: var(--accent-gold); color: #050714; font-weight: 800; font-size: 0.78rem; padding: 6px 14px; white-space: nowrap;">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="btn_prompt_compose">🚀 COMPOSE</span>
+                            </button>
+                        </div>
+                        <div class="ai-prompt-chips">
+                            <span class="prompt-chip" data-prompt="Tokyo Midnight Drift"><span data-i18n="prompt_chip_tokyo">🏎️ Tokyo Drift</span></span>
+                            <span class="prompt-chip" data-prompt="Cyber Mainframe Battle"><span data-i18n="prompt_chip_battle">⚔️ Mainframe Battle</span></span>
+                            <span class="prompt-chip" data-prompt="Miami Sunset 1984"><span data-i18n="prompt_chip_miami">🌴 Miami Sunset 1984</span></span>
+                            <span class="prompt-chip" data-prompt="Dungeon Boss 16-Bit Fight"><span data-i18n="prompt_chip_dungeon">👾 16-Bit Boss Fight</span></span>
+                            <span class="prompt-chip" data-prompt="Cosmic Deep Space Odyssey"><span data-i18n="prompt_chip_space">🪐 Cosmic Deep Space</span></span>
+                        </div>
+                    </div>
+
+                    <div class="ai-maestro-buttons">
+                        <button type="button" id="btn-ai-infinite-song" class="action-btn-glow ai-btn-primary" title="AI composes a complete 4-part unique song with fresh melody and drums">
+                            <i class="fa-solid fa-music"></i> <span data-i18n="btn_ai_infinite_song">✨ GENERATE UNIQUE SONG</span>
+                        </button>
+                        <button type="button" id="btn-ai-roll-melody" class="action-btn-glow ai-btn-secondary" title="Roll a brand new unique lead melody and bassline while keeping your drum groove">
+                            <i class="fa-solid fa-dice-d20"></i> <span data-i18n="btn_ai_roll_melody">🎲 ROLL NEW MELODY</span>
+                        </button>
+                        <button type="button" id="btn-ai-mutate-melody" class="action-btn-glow ai-btn-tertiary" title="Organic melodic mutation and variation">
+                            <i class="fa-solid fa-dna"></i> <span data-i18n="btn_ai_mutate_melody">🧬 MUTATE HOOK</span>
+                        </button>
+                        <button type="button" id="btn-ai-buildup" class="action-btn-glow ai-btn-buildup" title="Construct an accelerating snare roll and riser leading into a massive drop">
+                            <i class="fa-solid fa-bomb"></i> <span data-i18n="btn_buildup_drop">💥 AI BUILDUP & DROP</span>
+                        </button>
+                        <button type="button" id="btn-ai-tap-rhythm" class="action-btn-glow ai-btn-tap" title="Tap repeatedly with mouse or Spacebar to set BPM and build rhythm">
+                            <i class="fa-solid fa-drum"></i> <span data-i18n="btn_tap_rhythm">🥁 TAP RHYTHM</span> <span id="tap-bpm-counter" class="tap-counter-badge">TAP</span>
+                        </button>
+                        <button type="button" id="btn-ai-mic-beatbox" class="action-btn-glow" style="background: linear-gradient(135deg, #ff007f, #7928ca); color: #fff; font-weight: 800; font-size: 0.76rem; padding: 8px 16px; border-radius: 8px; box-shadow: 0 0 14px rgba(255, 0, 127, 0.4);" title="Speak or beatbox into your microphone to generate drums">
+                            <i class="fa-solid fa-microphone"></i> <span data-i18n="btn_mic_beatbox">🎤 MIC BEATBOX</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 📁 AI AUDIO LAB & MP3 STEM REMAKER -->
+                <div class="audio-lab-container">
+                    <div class="audio-lab-header">
+                        <span class="audio-lab-title">
+                            <i class="fa-solid fa-file-audio"></i> <span data-i18n="audio_lab_title">📁 AI AUDIO LAB & MP3 STEM REMAKER:</span>
+                        </span>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <label style="font-size: 0.72rem; color: var(--accent-cyan);" data-i18n="audio_target_genre">Remake Style:</label>
+                            <select id="audio-select-remake-genre" class="studio-select" style="padding: 3px 8px; font-size: 0.74rem;">
+                                <option value="phonk">🥋 Tokyo Phonk</option>
+                                <option value="synthwave" selected>🏎️ 80s Synthwave</option>
+                                <option value="cyberpunk">🌆 Dark Cyberpunk</option>
+                                <option value="club">🚀 Festival EDM</option>
+                                <option value="cinema">🌌 Sci-Fi Cinema</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="audio-dropzone" id="audio-dropzone">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <p data-i18n="audio_upload_drop">Drop an MP3, WAV or OGG file here, or click to browse</p>
+                        <input type="file" id="audio-file-input" accept="audio/*" style="display: none;">
+                    </div>
+
+                    <div class="audio-analysis-panel" id="audio-analysis-panel">
+                        <canvas id="audio-waveform-canvas" class="audio-waveform-canvas"></canvas>
+                        <div class="audio-stats-bar">
+                            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                <span style="color: var(--text-muted);" data-i18n="audio_detected_info">Detected Audio DNA:</span>
+                                <span id="stat-audio-bpm" class="stat-badge">-- BPM</span>
+                                <span id="stat-audio-key" class="stat-badge gold">-- Key</span>
+                                <span id="stat-audio-duration" class="stat-badge">0:00</span>
+                                <button type="button" id="btn-play-original-audio" class="action-btn-glow" style="font-size: 0.72rem; padding: 4px 10px; background: rgba(0, 242, 254, 0.2); border: 1px solid var(--accent-cyan); color: var(--accent-cyan);">
+                                    <i class="fa-solid fa-play"></i> <span data-i18n="btn_play_audio_file">▶ PLAY MP3</span>
+                                </button>
+                            </div>
+                            <button type="button" id="btn-ai-remake-audio" class="action-btn-glow ai-btn-primary" style="font-size: 0.76rem; padding: 6px 14px;">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="btn_ai_remake_audio">✨ AI REMAKE SONG FROM AUDIO</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 🎛️ 4-PAD LIVE AUDIO SAMPLER -->
+                    <div class="sampler-pads-container">
+                        <span class="sampler-title"><i class="fa-solid fa-bolt"></i> <span data-i18n="audio_sampler_title">🎛️ LIVE AUDIO SAMPLER PADS (HOTKEYS 1-4):</span></span>
+                        <div class="sampler-pads-grid">
+                            <button type="button" class="sampler-pad" id="sampler-pad-1" data-slice="0"><span data-i18n="pad_sample_1">⚡ 1. INTRO CHOP</span></button>
+                            <button type="button" class="sampler-pad" id="sampler-pad-2" data-slice="1"><span data-i18n="pad_sample_2">🎵 2. HOOK SLICE</span></button>
+                            <button type="button" class="sampler-pad" id="sampler-pad-3" data-slice="2"><span data-i18n="pad_sample_3">💥 3. DROP CHOP</span></button>
+                            <button type="button" class="sampler-pad" id="sampler-pad-4" data-slice="3"><span data-i18n="pad_sample_4">🗣️ 4. VOCAL ACCENT</span></button>
+                        </div>
+                    </div>
+
+                    <!-- 🧬 DNA MORPH SLIDER -->
+                    <div class="dna-morph-bar">
+                        <span style="font-size: 0.72rem; color: var(--accent-cyan); white-space: nowrap;" data-i18n="label_dna_morph">Audio DNA Morph:</span>
+                        <div style="flex: 1;">
+                            <input type="range" id="slider-dna-morph" min="0" max="100" value="50" style="width: 100%;">
+                            <div class="dna-labels">
+                                <span data-i18n="dna_uploaded">MP3 Audio</span>
+                                <span id="dna-morph-val">50% Hybrid</span>
+                                <span data-i18n="dna_synth">Cyber Synth</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 16-Step Sequencer Grid -->
+                <div class="sequencer-container">
+                    <div class="sequencer-grid" id="sequencer-grid"></div>
+                </div>
+
+                <!-- 🎛️ Live DJ Kaoss FX Pads Bar -->
+                <div class="dj-fx-pads-container">
+                    <span class="dj-fx-title"><i class="fa-solid fa-sliders"></i> <span data-i18n="label_dj_fx">LIVE DJ KAOSS FX PADS:</span></span>
+                    <div class="dj-fx-pads-grid">
+                        <button type="button" class="dj-fx-pad" id="pad-fx-tape" data-fx="tape">
+                            <i class="fa-solid fa-compact-disc"></i> <span data-i18n="fx_tape_stop">📼 TAPE STOP</span>
+                        </button>
+                        <button type="button" class="dj-fx-pad" id="pad-fx-stutter" data-fx="stutter">
+                            <i class="fa-solid fa-repeat"></i> <span data-i18n="fx_beat_roll">🔁 1/16 ROLL</span>
+                        </button>
+                        <button type="button" class="dj-fx-pad" id="pad-fx-reverb" data-fx="reverb">
+                            <i class="fa-solid fa-water"></i> <span data-i18n="fx_space_wash">🌌 SPACE WASH</span>
+                        </button>
+                        <button type="button" class="dj-fx-pad" id="pad-fx-crush" data-fx="crush">
+                            <i class="fa-solid fa-microchip"></i> <span data-i18n="fx_bitcrush">⚡ 8-BIT CRUSH</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 💽 DJ Performance Console: Vinyl Scratch & XY Kaoss Pad -->
+                <div class="dj-stems-master-container" style="margin-top: 14px; margin-bottom: 14px; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(0, 242, 254, 0.25); border-radius: 10px; padding: 12px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+                        <span class="dj-fx-title" style="margin:0;"><i class="fa-solid fa-sliders"></i> <span data-i18n="label_dj_turntable">🎛️ HOLOGRAPHIC DJ DECK & LIVE STEMS:</span></span>
+                        <div class="dj-deck-actions-row" style="display:flex; gap:6px;">
+                            <button type="button" id="btn-dj-tapestop" class="action-btn-glow dj-deck-btn" style="font-size:0.72rem; padding:5px 10px; background:rgba(239,68,68,0.25); border:1px solid #ef4444;" title="Vinyl motor stop simulation">
+                                <i class="fa-solid fa-compact-disc"></i> <span data-i18n="btn_dj_tapestop">📼 TAPE STOP</span>
+                            </button>
+                            <button type="button" id="btn-dj-reverse" class="action-btn-glow dj-deck-btn" style="font-size:0.72rem; padding:5px 10px; background:rgba(168,85,247,0.25); border:1px solid #a855f7;" title="Reverse pattern play direction">
+                                <i class="fa-solid fa-backward"></i> <span data-i18n="btn_dj_reverse">⏪ REVERSE</span>
+                            </button>
+                            <button type="button" id="btn-dj-dubdelay" class="action-btn-glow dj-deck-btn" style="font-size:0.72rem; padding:5px 10px; background:rgba(0,242,254,0.25); border:1px solid var(--accent-cyan);" title="Cosmic dub feedback delay">
+                                <i class="fa-solid fa-wave-square"></i> <span data-i18n="btn_dj_dubdelay">🌌 DUB DELAY</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="stems-mute-bar" id="stems-mute-bar" style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <button type="button" class="stem-toggle-btn active" id="btn-stem-drums" data-stem="drums" style="flex:1; min-width:110px;">
+                            <i class="fa-solid fa-drum"></i> <span data-i18n="stems_mute_drums">DRUMS [ON]</span>
+                        </button>
+                        <button type="button" class="stem-toggle-btn active" id="btn-stem-bass" data-stem="bass" style="flex:1; min-width:110px;">
+                            <i class="fa-solid fa-wave-square"></i> <span data-i18n="stems_mute_bass">BASS [ON]</span>
+                        </button>
+                        <button type="button" class="stem-toggle-btn active" id="btn-stem-synths" data-stem="synths" style="flex:1; min-width:110px;">
+                            <i class="fa-solid fa-keyboard"></i> <span data-i18n="stems_mute_synths">SYNTHS [ON]</span>
+                        </button>
+                        <button type="button" class="stem-toggle-btn active" id="btn-stem-vocals" data-stem="vocals" style="flex:1; min-width:110px;">
+                            <i class="fa-solid fa-microphone-lines"></i> <span data-i18n="stems_mute_vocals">VOCALS [ON]</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="dj-performance-console">
+                    <div class="dj-deck-col">
+                        <span class="dj-fx-title"><i class="fa-solid fa-compact-disc"></i> <span data-i18n="label_scratch_wheel">💽 VINYL SCRATCH WHEEL (DRAG & SPIN):</span></span>
+                        <div class="vinyl-wheel-wrapper">
+                            <canvas id="vinyl-scratch-canvas" width="180" height="180"></canvas>
+                        </div>
+                    </div>
+                    <div class="dj-deck-col" style="flex:1.5;">
+                        <span class="dj-fx-title"><i class="fa-solid fa-crosshairs"></i> <span data-i18n="label_kaoss_pad">🎯 XY KAOSS FILTER & SPACE WASH (TOUCH/MOVE):</span></span>
+                        <div class="kaoss-pad-wrapper">
+                            <canvas id="kaoss-pad-canvas" width="280" height="180"></canvas>
+                            <span class="kaoss-pad-hint" data-i18n="kaoss_hint">← Lowpass Cutoff → | ↑ Cosmic Reverb Space ↑</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🎙️ Cyber Vocal Hooks & Voice Chops Bar -->
+                <div class="cyber-vocal-container">
+                    <span class="cyber-vocal-title"><i class="fa-solid fa-microphone-lines"></i> <span data-i18n="label_vocal_hooks">CYBER VOCAL CHOPS & HOOKS:</span></span>
+                    <div class="cyber-vocal-grid">
+                        <button type="button" class="cyber-vocal-btn" data-vocal="drop_bass" data-i18n="vocal_drop_bass">🗣️ DROP THE BASS</button>
+                        <button type="button" class="cyber-vocal-btn" data-vocal="cyber_arena" data-i18n="vocal_cyber_arena">🗣️ CYBER ARENA</button>
+                        <button type="button" class="cyber-vocal-btn" data-vocal="system_overload" data-i18n="vocal_system_overload">🗣️ SYSTEM OVERLOAD</button>
+                        <button type="button" class="cyber-vocal-btn" data-vocal="genius_ia" data-i18n="vocal_genius_ia">🗣️ GENIUS IA</button>
+                        <button type="button" class="cyber-vocal-btn" data-vocal="pump_it" data-i18n="vocal_pump_it">🗣️ PUMP IT</button>
+                    </div>
+
+                    <!-- Custom Text-to-Cyber-Vocoder -->
+                    <div class="vocoder-custom-box" style="margin-top:12px; padding-top:10px; border-top:1px dashed rgba(255,0,127,0.3);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                            <div style="display:inline-flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                                <span class="cyber-vocal-title" style="font-size:0.74rem; color:var(--accent-cyan);"><i class="fa-solid fa-comment-dots"></i> <span data-i18n="vocoder_title">CUSTOM TEXT-TO-CYBER-VOCODER:</span></span>
+                                <label style="display:inline-flex; align-items:center; gap:6px; cursor:pointer; background:rgba(0,0,0,0.4); padding:3px 10px; border-radius:12px; border:1px solid rgba(0,242,254,0.3);">
+                                    <input type="checkbox" id="vocoder-toggle-enable" checked style="accent-color:#00f2fe; width:15px; height:15px; cursor:pointer;">
+                                    <span id="vocoder-toggle-label" style="font-size:0.72rem; color:var(--accent-cyan); font-weight:800;" data-i18n="vocoder_toggle_on">🎤 VOCAL ACTIVE</span>
+                                </label>
+                            </div>
+                            <span id="vocoder-status-badge" class="vocoder-badge-interactive" style="font-size:0.72rem; color:var(--accent-gold); display:none; font-weight:800; background:rgba(255,183,3,0.1); padding:2px 8px; border-radius:4px; border:1px solid rgba(255,183,3,0.3); cursor:pointer;" title="Click to mute/unmute vocals in song">
+                                <i class="fa-solid fa-circle-check"></i> <span data-i18n="vocoder_status_injected">INJECTED IN SONG (DROPS ON BEAT)</span>
+                                <i class="fa-solid fa-volume-xmark" style="margin-left:6px; opacity:0.8;" title="Mute vocal"></i>
+                            </span>
+                        </div>
+                        <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
+                            <input type="text" id="vocoder-custom-text" class="studio-input" style="flex:2; min-width:180px; font-size:0.78rem; padding:6px 12px;" placeholder="Type lyrics e.g. 'Cyber Studio Activate'..." data-i18n-placeholder="vocoder_placeholder">
+                            <select id="vocoder-voice-style" class="studio-select" style="flex:1; min-width:130px; font-size:0.76rem; padding:4px 8px;">
+                                <option value="daft" data-i18n="voice_daft">🤖 Daft Robot</option>
+                                <option value="phonk" data-i18n="voice_phonk">🥋 Deep Phonk Demon</option>
+                                <option value="cyborg" data-i18n="voice_cyborg">👾 Cyborg Glitch</option>
+                                <option value="angel" data-i18n="voice_angel">🌌 Ethereal Angel</option>
+                            </select>
+                            <select id="vocoder-trigger-mode" class="studio-select" style="flex:1; min-width:140px; font-size:0.74rem; padding:4px 8px; border-color:var(--accent-gold);">
+                                <option value="drop" selected data-i18n="vocoder_trigger_drop">💥 Drop Only (Pattern 3)</option>
+                                <option value="verse_drop" data-i18n="vocoder_trigger_verse">⚡ Verse + Drop</option>
+                                <option value="all" data-i18n="vocoder_trigger_all">🔁 Every Section</option>
+                                <option value="none" data-i18n="vocoder_trigger_none">🚫 Off / No Vocals (Muted)</option>
+                            </select>
+                            <select id="vocoder-melody-scale" class="studio-select" style="flex:1; min-width:130px; font-size:0.74rem; padding:4px 8px; border-color:var(--accent-purple);">
+                                <option value="aminor">A Minor (Cyber Phonk)</option>
+                                <option value="cmajor">C Major (Outrun Synth)</option>
+                                <option value="dminor">D Minor (Sci-Fi Epic)</option>
+                                <option value="fmajor">F Major (Dream Pop)</option>
+                                <option value="pentatonic">Pentatonic (Neon Lead)</option>
+                            </select>
+                            <button type="button" id="btn-vocoder-sing" class="action-btn-glow" style="background:linear-gradient(135deg, #7928ca, #ff007f); color:#fff; font-weight:800; font-size:0.74rem; padding:6px 14px;">
+                                <i class="fa-solid fa-music"></i> <span data-i18n="btn_vocoder_sing">🎵 SING MELODY</span>
+                            </button>
+                            <button type="button" id="btn-vocoder-inject" class="action-btn-glow" style="background:linear-gradient(135deg, #00f2fe, #ff007f); color:#050714; font-weight:800; font-size:0.74rem; padding:6px 14px;">
+                                <i class="fa-solid fa-bullhorn"></i> <span data-i18n="btn_inject_vocal">🗣️ INJECT VOCAL</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Virtual Piano Keyboard -->
+                <div class="synth-keyboard-card">
+                    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+                        <div>
+                            <h3 data-i18n="synth_keyboard_title" style="font-family:var(--font-heading); font-size:1.1rem; color:var(--accent-pink);">🎹 INTERACTIVE SYNTHWAVE PIANO ROLL</h3>
+                            <p data-i18n="synth_keyboard_sub" style="color:var(--text-muted); font-size:0.85rem; margin-top:2px;">Play live lead notes, rich chords or cascades that are included in the WAV export!</p>
+                        </div>
+                        <div class="piano-mode-bar" style="display:flex; gap:6px;">
+                            <button type="button" class="piano-mode-btn active" data-mode="single" data-i18n="piano_mode_single">🎵 Single Note</button>
+                            <button type="button" class="piano-mode-btn" data-mode="chord" data-i18n="piano_mode_chord">🎼 Rich Chord (Triad)</button>
+                            <button type="button" class="piano-mode-btn" data-mode="arp" data-i18n="piano_mode_arp">⚡ Auto-Arp 1/16</button>
+                        </div>
+                    </div>
+                    <div class="piano-keys-wrapper" id="piano-keys-wrapper" style="margin-top:12px;"></div>
+                </div>
+
+                <!-- ══════════════════════════════════════════════════════════════ -->
+                <!-- 🏛️ CYBER MUSIC VAULT & AI HIT DATABASE                      -->
+                <!-- ══════════════════════════════════════════════════════════════ -->
+                <div class="music-vault-card" id="cyber-music-vault">
+                    <div class="vault-header-row">
+                        <div class="vault-title-block">
+                            <div class="vault-icon-badge"><i class="fa-solid fa-compact-disc"></i></div>
+                            <div>
+                                <h3 data-i18n="vault_title">CYBER MUSIC VAULT & AI HIT DATABASE</h3>
+                                <p data-i18n="vault_sub">Curated collection of unique 4-part AI master tracks and persistent user cloud storage.</p>
+                            </div>
+                        </div>
+                        <div class="vault-top-actions">
+                            <button type="button" id="btn-save-to-vault" class="action-btn-glow vault-save-btn">
+                                <i class="fa-solid fa-floppy-disk"></i> <span data-i18n="btn_save_to_vault">💾 SAVE ACTIVE BEAT TO VAULT</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 👑 1. ORIGINAL AI MASTER VAULT (EXCLUSIVE TRACKS) -->
+                    <div class="vault-section-title">
+                        <i class="fa-solid fa-crown" style="color:var(--accent-gold);"></i>
+                        <span data-i18n="label_built_in_vault">ORIGINAL AI MASTER VAULT (EXCLUSIVE TRACKS)</span>
+                    </div>
+
+                    <div class="vault-track-grid" id="built-in-vault-grid">
+                        <!-- Track 1: Tokyo Ghost Protocol -->
+                        <div class="vault-track-card" data-vault-id="1">
+                            <div class="vault-card-header">
+                                <div class="vault-track-num">01</div>
+                                <div class="vault-track-info">
+                                    <h4 data-i18n="vault_track_1_title">TOKYO GHOST PROTOCOL</h4>
+                                    <div class="vault-badges-row">
+                                        <span class="vault-badge badge-genre">🥋 DRIFT PHONK</span>
+                                        <span class="vault-badge badge-bpm">142 BPM</span>
+                                        <span class="vault-badge badge-key">D MINOR</span>
+                                        <span class="vault-badge badge-parts">4 PARTS</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="vault-track-desc" data-i18n="vault_track_1_desc">Night drift in Neo-Tokyo rain with heavy 808s and aggressive cowbell rolls.</p>
+                            <div class="vault-tags-row">
+                                <span class="vault-tag"><i class="fa-solid fa-drum"></i> 808 Sub Kick</span>
+                                <span class="vault-tag"><i class="fa-solid fa-bell"></i> Phonk Cowbells</span>
+                                <span class="vault-tag"><i class="fa-solid fa-robot"></i> Demon Vocoder</span>
+                            </div>
+                            <div class="vault-actions-row">
+                                <button type="button" class="action-btn-glow btn-vault-preview" data-vault-id="1">
+                                    <i class="fa-solid fa-play"></i> <span data-i18n="btn_preview_vault_song">▶ PREVIEW</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-load" data-vault-id="1" style="background:linear-gradient(135deg, #00f260, #0575e6); color:#050714; font-weight:800;">
+                                    <i class="fa-solid fa-bolt"></i> <span data-i18n="btn_load_vault_song">⚡ LOAD TO STUDIO</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-sync" data-vault-id="1" style="background:linear-gradient(135deg, #ff007f, #7928ca); color:#fff; font-size:0.72rem;">
+                                    <i class="fa-solid fa-clapperboard"></i> <span data-i18n="btn_sync_vault_intro">🎬 SYNC TO 3D ARENA</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Track 2: Chrono Titan Awakening -->
+                        <div class="vault-track-card" data-vault-id="2">
+                            <div class="vault-card-header">
+                                <div class="vault-track-num">02</div>
+                                <div class="vault-track-info">
+                                    <h4 data-i18n="vault_track_2_title">CHRONO TITAN AWAKENING</h4>
+                                    <div class="vault-badges-row">
+                                        <span class="vault-badge badge-genre">🌆 DARKSYNTH</span>
+                                        <span class="vault-badge badge-bpm">140 BPM</span>
+                                        <span class="vault-badge badge-key">A MINOR</span>
+                                        <span class="vault-badge badge-parts">4 PARTS</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="vault-track-desc" data-i18n="vault_track_2_desc">Colossal mecha resurrection with industrial kicks and overdrive synth lead.</p>
+                            <div class="vault-tags-row">
+                                <span class="vault-tag"><i class="fa-solid fa-industry"></i> Industrial Kick</span>
+                                <span class="vault-tag"><i class="fa-solid fa-bolt"></i> Overdrive Lead</span>
+                                <span class="vault-tag"><i class="fa-solid fa-microchip"></i> Glitch Vocals</span>
+                            </div>
+                            <div class="vault-actions-row">
+                                <button type="button" class="action-btn-glow btn-vault-preview" data-vault-id="2">
+                                    <i class="fa-solid fa-play"></i> <span data-i18n="btn_preview_vault_song">▶ PREVIEW</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-load" data-vault-id="2" style="background:linear-gradient(135deg, #00f260, #0575e6); color:#050714; font-weight:800;">
+                                    <i class="fa-solid fa-bolt"></i> <span data-i18n="btn_load_vault_song">⚡ LOAD TO STUDIO</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-sync" data-vault-id="2" style="background:linear-gradient(135deg, #ff007f, #7928ca); color:#fff; font-size:0.72rem;">
+                                    <i class="fa-solid fa-clapperboard"></i> <span data-i18n="btn_sync_vault_intro">🎬 SYNC TO 3D ARENA</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Track 3: Neon Horizon 1984 -->
+                        <div class="vault-track-card" data-vault-id="3">
+                            <div class="vault-card-header">
+                                <div class="vault-track-num">03</div>
+                                <div class="vault-track-info">
+                                    <h4 data-i18n="vault_track_3_title">NEON HORIZON 1984</h4>
+                                    <div class="vault-badges-row">
+                                        <span class="vault-badge badge-genre">🏎️ SYNTHWAVE</span>
+                                        <span class="vault-badge badge-bpm">120 BPM</span>
+                                        <span class="vault-badge badge-key">C MAJOR</span>
+                                        <span class="vault-badge badge-parts">4 PARTS</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="vault-track-desc" data-i18n="vault_track_3_desc">Retro sunset cruising with lush dreamwave chords and vintage gated snares.</p>
+                            <div class="vault-tags-row">
+                                <span class="vault-tag"><i class="fa-solid fa-wave-square"></i> Gated Snare</span>
+                                <span class="vault-tag"><i class="fa-solid fa-sun"></i> Dream Arp</span>
+                                <span class="vault-tag"><i class="fa-solid fa-car"></i> Outrun Bass</span>
+                            </div>
+                            <div class="vault-actions-row">
+                                <button type="button" class="action-btn-glow btn-vault-preview" data-vault-id="3">
+                                    <i class="fa-solid fa-play"></i> <span data-i18n="btn_preview_vault_song">▶ PREVIEW</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-load" data-vault-id="3" style="background:linear-gradient(135deg, #00f260, #0575e6); color:#050714; font-weight:800;">
+                                    <i class="fa-solid fa-bolt"></i> <span data-i18n="btn_load_vault_song">⚡ LOAD TO STUDIO</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-sync" data-vault-id="3" style="background:linear-gradient(135deg, #ff007f, #7928ca); color:#fff; font-size:0.72rem;">
+                                    <i class="fa-solid fa-clapperboard"></i> <span data-i18n="btn_sync_vault_intro">🎬 SYNC TO 3D ARENA</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Track 4: Quantum Warp Vortex -->
+                        <div class="vault-track-card" data-vault-id="4">
+                            <div class="vault-card-header">
+                                <div class="vault-track-num">04</div>
+                                <div class="vault-track-info">
+                                    <h4 data-i18n="vault_track_4_title">QUANTUM WARP VORTEX</h4>
+                                    <div class="vault-badges-row">
+                                        <span class="vault-badge badge-genre">⚡ DRUM & BASS</span>
+                                        <span class="vault-badge badge-bpm">172 BPM</span>
+                                        <span class="vault-badge badge-key">E MINOR</span>
+                                        <span class="vault-badge badge-parts">4 PARTS</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="vault-track-desc" data-i18n="vault_track_4_desc">Hyperspeed black hole event horizon plunge with fast 172 BPM breaks.</p>
+                            <div class="vault-tags-row">
+                                <span class="vault-tag"><i class="fa-solid fa-forward-fast"></i> Amen Break 172</span>
+                                <span class="vault-tag"><i class="fa-solid fa-volume-high"></i> Reese Bass</span>
+                                <span class="vault-tag"><i class="fa-solid fa-atom"></i> Warp Stabs</span>
+                            </div>
+                            <div class="vault-actions-row">
+                                <button type="button" class="action-btn-glow btn-vault-preview" data-vault-id="4">
+                                    <i class="fa-solid fa-play"></i> <span data-i18n="btn_preview_vault_song">▶ PREVIEW</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-load" data-vault-id="4" style="background:linear-gradient(135deg, #00f260, #0575e6); color:#050714; font-weight:800;">
+                                    <i class="fa-solid fa-bolt"></i> <span data-i18n="btn_load_vault_song">⚡ LOAD TO STUDIO</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-sync" data-vault-id="4" style="background:linear-gradient(135deg, #ff007f, #7928ca); color:#fff; font-size:0.72rem;">
+                                    <i class="fa-solid fa-clapperboard"></i> <span data-i18n="btn_sync_vault_intro">🎬 SYNC TO 3D ARENA</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Track 5: Daft Cyber Revolution -->
+                        <div class="vault-track-card" data-vault-id="5">
+                            <div class="vault-card-header">
+                                <div class="vault-track-num">05</div>
+                                <div class="vault-track-info">
+                                    <h4 data-i18n="vault_track_5_title">DAFT CYBER REVOLUTION</h4>
+                                    <div class="vault-badges-row">
+                                        <span class="vault-badge badge-genre">🚀 FRENCH HOUSE</span>
+                                        <span class="vault-badge badge-bpm">126 BPM</span>
+                                        <span class="vault-badge badge-key">F MAJOR</span>
+                                        <span class="vault-badge badge-parts">4 PARTS</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="vault-track-desc" data-i18n="vault_track_5_desc">French touch disco house groove with filtered chords and vocoder funk.</p>
+                            <div class="vault-tags-row">
+                                <span class="vault-tag"><i class="fa-solid fa-compact-disc"></i> 4x4 French Kick</span>
+                                <span class="vault-tag"><i class="fa-solid fa-sliders"></i> Filter Chords</span>
+                                <span class="vault-tag"><i class="fa-solid fa-robot"></i> Daft Vocoder</span>
+                            </div>
+                            <div class="vault-actions-row">
+                                <button type="button" class="action-btn-glow btn-vault-preview" data-vault-id="5">
+                                    <i class="fa-solid fa-play"></i> <span data-i18n="btn_preview_vault_song">▶ PREVIEW</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-load" data-vault-id="5" style="background:linear-gradient(135deg, #00f260, #0575e6); color:#050714; font-weight:800;">
+                                    <i class="fa-solid fa-bolt"></i> <span data-i18n="btn_load_vault_song">⚡ LOAD TO STUDIO</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-sync" data-vault-id="5" style="background:linear-gradient(135deg, #ff007f, #7928ca); color:#fff; font-size:0.72rem;">
+                                    <i class="fa-solid fa-clapperboard"></i> <span data-i18n="btn_sync_vault_intro">🎬 SYNC TO 3D ARENA</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Track 6: Deep Cosmic Odyssey -->
+                        <div class="vault-track-card" data-vault-id="6">
+                            <div class="vault-card-header">
+                                <div class="vault-track-num">06</div>
+                                <div class="vault-track-info">
+                                    <h4 data-i18n="vault_track_6_title">DEEP COSMIC ODYSSEY</h4>
+                                    <div class="vault-badges-row">
+                                        <span class="vault-badge badge-genre">🌌 CINEMATIC SF</span>
+                                        <span class="vault-badge badge-bpm">92 BPM</span>
+                                        <span class="vault-badge badge-key">G MINOR</span>
+                                        <span class="vault-badge badge-parts">4 PARTS</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="vault-track-desc" data-i18n="vault_track_6_desc">Ethereal space ambient odyssey with deep sub bass and celestial AI siren.</p>
+                            <div class="vault-tags-row">
+                                <span class="vault-tag"><i class="fa-solid fa-water"></i> Deep Sub Drone</span>
+                                <span class="vault-tag"><i class="fa-solid fa-meteor"></i> Cosmic Arps</span>
+                                <span class="vault-tag"><i class="fa-solid fa-microphone-lines"></i> Angel Siren</span>
+                            </div>
+                            <div class="vault-actions-row">
+                                <button type="button" class="action-btn-glow btn-vault-preview" data-vault-id="6">
+                                    <i class="fa-solid fa-play"></i> <span data-i18n="btn_preview_vault_song">▶ PREVIEW</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-load" data-vault-id="6" style="background:linear-gradient(135deg, #00f260, #0575e6); color:#050714; font-weight:800;">
+                                    <i class="fa-solid fa-bolt"></i> <span data-i18n="btn_load_vault_song">⚡ LOAD TO STUDIO</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-sync" data-vault-id="6" style="background:linear-gradient(135deg, #ff007f, #7928ca); color:#fff; font-size:0.72rem;">
+                                    <i class="fa-solid fa-clapperboard"></i> <span data-i18n="btn_sync_vault_intro">🎬 SYNC TO 3D ARENA</span>
+                                </button>
+                            </div>
+                        </div>
+                    
+                        <!-- Track 7: Rio Cyber Ghost -->
+                        <div class="vault-track-card" data-vault-id="7">
+                            <div class="vault-card-header">
+                                <div class="vault-track-num">07</div>
+                                <div class="vault-track-info">
+                                    <h4 data-i18n="vault_track_7_title">RIO CYBER GHOST</h4>
+                                    <div class="vault-badges-row">
+                                        <span class="vault-badge badge-genre">🥋 BRAZILIAN PHONK</span>
+                                        <span class="vault-badge badge-bpm">138 BPM</span>
+                                        <span class="vault-badge badge-key">A MINOR</span>
+                                        <span class="vault-badge badge-parts">4 PARTS</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="vault-track-desc" data-i18n="vault_track_7_desc">Viral Brazilian Phonk with ultra-distorted 808 sub bass, aggressive cowbell montagem, and drift slides.</p>
+                            <div class="vault-tags-row">
+                                <span class="vault-tag"><i class="fa-solid fa-drum"></i> 808 Montagem</span>
+                                <span class="vault-tag"><i class="fa-solid fa-bell"></i> Phonk Bell Roll</span>
+                                <span class="vault-tag"><i class="fa-solid fa-fire"></i> Viral Drift</span>
+                            </div>
+                            <div class="vault-actions-row">
+                                <button type="button" class="action-btn-glow btn-vault-preview" data-vault-id="7">
+                                    <i class="fa-solid fa-play"></i> <span data-i18n="btn_preview_vault_song">▶ PREVIEW</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-load" data-vault-id="7" style="background:linear-gradient(135deg, #00f260, #0575e6); color:#050714; font-weight:800;">
+                                    <i class="fa-solid fa-bolt"></i> <span data-i18n="btn_load_vault_song">⚡ LOAD TO STUDIO</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-sync" data-vault-id="7" style="background:linear-gradient(135deg, #ff007f, #7928ca); color:#fff; font-size:0.72rem;">
+                                    <i class="fa-solid fa-clapperboard"></i> <span data-i18n="btn_sync_vault_intro">🎬 SYNC TO 3D ARENA</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Track 8: Quantum Singularity -->
+                        <div class="vault-track-card" data-vault-id="8">
+                            <div class="vault-card-header">
+                                <div class="vault-track-num">08</div>
+                                <div class="vault-track-info">
+                                    <h4 data-i18n="vault_track_8_title">QUANTUM SINGULARITY</h4>
+                                    <div class="vault-badges-row">
+                                        <span class="vault-badge badge-genre">🌌 INTERSTELLAR BASS</span>
+                                        <span class="vault-badge badge-bpm">112 BPM</span>
+                                        <span class="vault-badge badge-key">D MINOR</span>
+                                        <span class="vault-badge badge-parts">4 PARTS</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="vault-track-desc" data-i18n="vault_track_8_desc">Hans Zimmer inspired interstellar cinematic bass with ticking clock build and colossal sub-gravity drop.</p>
+                            <div class="vault-tags-row">
+                                <span class="vault-tag"><i class="fa-solid fa-clock"></i> Ticking Relativism</span>
+                                <span class="vault-tag"><i class="fa-solid fa-water"></i> Gravitational Sub</span>
+                                <span class="vault-tag"><i class="fa-solid fa-atom"></i> Zimmer Drop</span>
+                            </div>
+                            <div class="vault-actions-row">
+                                <button type="button" class="action-btn-glow btn-vault-preview" data-vault-id="8">
+                                    <i class="fa-solid fa-play"></i> <span data-i18n="btn_preview_vault_song">▶ PREVIEW</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-load" data-vault-id="8" style="background:linear-gradient(135deg, #00f260, #0575e6); color:#050714; font-weight:800;">
+                                    <i class="fa-solid fa-bolt"></i> <span data-i18n="btn_load_vault_song">⚡ LOAD TO STUDIO</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-sync" data-vault-id="8" style="background:linear-gradient(135deg, #ff007f, #7928ca); color:#fff; font-size:0.72rem;">
+                                    <i class="fa-solid fa-clapperboard"></i> <span data-i18n="btn_sync_vault_intro">🎬 SYNC TO 3D ARENA</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Track 9: Neural Override -->
+                        <div class="vault-track-card" data-vault-id="9">
+                            <div class="vault-card-header">
+                                <div class="vault-track-num">09</div>
+                                <div class="vault-track-info">
+                                    <h4 data-i18n="vault_track_9_title">NEURAL OVERRIDE</h4>
+                                    <div class="vault-badges-row">
+                                        <span class="vault-badge badge-genre">🌆 MIDTEMPO BASS</span>
+                                        <span class="vault-badge badge-bpm">100 BPM</span>
+                                        <span class="vault-badge badge-key">E MINOR</span>
+                                        <span class="vault-badge badge-parts">4 PARTS</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="vault-track-desc" data-i18n="vault_track_9_desc">Hypnotic 100 BPM midtempo cyberpunk groove with crushing industrial growls and glitch laser stabs.</p>
+                            <div class="vault-tags-row">
+                                <span class="vault-tag"><i class="fa-solid fa-industry"></i> Industrial Growl</span>
+                                <span class="vault-tag"><i class="fa-solid fa-burst"></i> Cyber Glitch</span>
+                                <span class="vault-tag"><i class="fa-solid fa-headphones"></i> Rezz Pulse</span>
+                            </div>
+                            <div class="vault-actions-row">
+                                <button type="button" class="action-btn-glow btn-vault-preview" data-vault-id="9">
+                                    <i class="fa-solid fa-play"></i> <span data-i18n="btn_preview_vault_song">▶ PREVIEW</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-load" data-vault-id="9" style="background:linear-gradient(135deg, #00f260, #0575e6); color:#050714; font-weight:800;">
+                                    <i class="fa-solid fa-bolt"></i> <span data-i18n="btn_load_vault_song">⚡ LOAD TO STUDIO</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-sync" data-vault-id="9" style="background:linear-gradient(135deg, #ff007f, #7928ca); color:#fff; font-size:0.72rem;">
+                                    <i class="fa-solid fa-clapperboard"></i> <span data-i18n="btn_sync_vault_intro">🎬 SYNC TO 3D ARENA</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Track 10: Supersonic Night Run -->
+                        <div class="vault-track-card" data-vault-id="10">
+                            <div class="vault-card-header">
+                                <div class="vault-track-num">10</div>
+                                <div class="vault-track-info">
+                                    <h4 data-i18n="vault_track_10_title">SUPERSONIC NIGHT RUN</h4>
+                                    <div class="vault-badges-row">
+                                        <span class="vault-badge badge-genre">🏎️ INITIAL EUROBEAT</span>
+                                        <span class="vault-badge badge-bpm">156 BPM</span>
+                                        <span class="vault-badge badge-key">C MAJOR</span>
+                                        <span class="vault-badge badge-parts">4 PARTS</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="vault-track-desc" data-i18n="vault_track_10_desc">High-octane anime Eurobeat with fast 156 BPM cascades, soaring brass leads, and midnight energy.</p>
+                            <div class="vault-tags-row">
+                                <span class="vault-tag"><i class="fa-solid fa-gauge-high"></i> 156 Eurobeat</span>
+                                <span class="vault-tag"><i class="fa-solid fa-forward"></i> Anime Cascade</span>
+                                <span class="vault-tag"><i class="fa-solid fa-car-side"></i> Togue Drift</span>
+                            </div>
+                            <div class="vault-actions-row">
+                                <button type="button" class="action-btn-glow btn-vault-preview" data-vault-id="10">
+                                    <i class="fa-solid fa-play"></i> <span data-i18n="btn_preview_vault_song">▶ PREVIEW</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-load" data-vault-id="10" style="background:linear-gradient(135deg, #00f260, #0575e6); color:#050714; font-weight:800;">
+                                    <i class="fa-solid fa-bolt"></i> <span data-i18n="btn_load_vault_song">⚡ LOAD TO STUDIO</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-sync" data-vault-id="10" style="background:linear-gradient(135deg, #ff007f, #7928ca); color:#fff; font-size:0.72rem;">
+                                    <i class="fa-solid fa-clapperboard"></i> <span data-i18n="btn_sync_vault_intro">🎬 SYNC TO 3D ARENA</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Track 11: Gotham Protocol -->
+                        <div class="vault-track-card" data-vault-id="11">
+                            <div class="vault-card-header">
+                                <div class="vault-track-num">11</div>
+                                <div class="vault-track-info">
+                                    <h4 data-i18n="vault_track_11_title">GOTHAM PROTOCOL</h4>
+                                    <div class="vault-badges-row">
+                                        <span class="vault-badge badge-genre">🏙️ CYBER DRILL 2088</span>
+                                        <span class="vault-badge badge-bpm">142 BPM</span>
+                                        <span class="vault-badge badge-key">G MINOR</span>
+                                        <span class="vault-badge badge-parts">4 PARTS</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="vault-track-desc" data-i18n="vault_track_11_desc">Futuristic dark cyber drill with sliding 808 sub bends, syncopated ghost snares, and ominous bells.</p>
+                            <div class="vault-tags-row">
+                                <span class="vault-tag"><i class="fa-solid fa-arrow-trend-up"></i> Sliding 808 Glide</span>
+                                <span class="vault-tag"><i class="fa-solid fa-ghost"></i> Ghost Drill Snare</span>
+                                <span class="vault-tag"><i class="fa-solid fa-city"></i> Dark Syndicate</span>
+                            </div>
+                            <div class="vault-actions-row">
+                                <button type="button" class="action-btn-glow btn-vault-preview" data-vault-id="11">
+                                    <i class="fa-solid fa-play"></i> <span data-i18n="btn_preview_vault_song">▶ PREVIEW</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-load" data-vault-id="11" style="background:linear-gradient(135deg, #00f260, #0575e6); color:#050714; font-weight:800;">
+                                    <i class="fa-solid fa-bolt"></i> <span data-i18n="btn_load_vault_song">⚡ LOAD TO STUDIO</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-sync" data-vault-id="11" style="background:linear-gradient(135deg, #ff007f, #7928ca); color:#fff; font-size:0.72rem;">
+                                    <i class="fa-solid fa-clapperboard"></i> <span data-i18n="btn_sync_vault_intro">🎬 SYNC TO 3D ARENA</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Track 12: Katana of Light -->
+                        <div class="vault-track-card" data-vault-id="12">
+                            <div class="vault-card-header">
+                                <div class="vault-track-num">12</div>
+                                <div class="vault-track-info">
+                                    <h4 data-i18n="vault_track_12_title">KATANA OF LIGHT</h4>
+                                    <div class="vault-badges-row">
+                                        <span class="vault-badge badge-genre">⚔️ SAMURAI DUBSTEP</span>
+                                        <span class="vault-badge badge-bpm">130 BPM</span>
+                                        <span class="vault-badge badge-key">D MINOR</span>
+                                        <span class="vault-badge badge-parts">4 PARTS</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="vault-track-desc" data-i18n="vault_track_12_desc">Cyber Samurai trap with ancient Japanese koto melodies crashing into heavyweight dubstep bass growls.</p>
+                            <div class="vault-tags-row">
+                                <span class="vault-tag"><i class="fa-solid fa-fan"></i> Koto Pentatonic</span>
+                                <span class="vault-tag"><i class="fa-solid fa-volume-high"></i> Cyber Wobble</span>
+                                <span class="vault-tag"><i class="fa-solid fa-hand-fist"></i> Shogun Drop</span>
+                            </div>
+                            <div class="vault-actions-row">
+                                <button type="button" class="action-btn-glow btn-vault-preview" data-vault-id="12">
+                                    <i class="fa-solid fa-play"></i> <span data-i18n="btn_preview_vault_song">▶ PREVIEW</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-load" data-vault-id="12" style="background:linear-gradient(135deg, #00f260, #0575e6); color:#050714; font-weight:800;">
+                                    <i class="fa-solid fa-bolt"></i> <span data-i18n="btn_load_vault_song">⚡ LOAD TO STUDIO</span>
+                                </button>
+                                <button type="button" class="action-btn-glow btn-vault-sync" data-vault-id="12" style="background:linear-gradient(135deg, #ff007f, #7928ca); color:#fff; font-size:0.72rem;">
+                                    <i class="fa-solid fa-clapperboard"></i> <span data-i18n="btn_sync_vault_intro">🎬 SYNC TO 3D ARENA</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 📁 2. MY SAVED VAULT TRACKS -->
+                    <div class="vault-section-title" style="margin-top:28px;">
+                        <i class="fa-solid fa-folder-open" style="color:var(--accent-cyan);"></i>
+                        <span data-i18n="label_user_vault_tracks">MY SAVED VAULT TRACKS</span>
+                    </div>
+
+                    <div class="vault-track-grid" id="user-vault-grid">
+                        <!-- Populated dynamically from localStorage -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 🌐 MODAL: EXPORT STANDALONE 3D HTML PLAYER -->
+    <div id="modal-html-export" class="modal-overlay" style="display:none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div>
+                    <h3 data-i18n="modal_html_title"><i class="fa-solid fa-code"></i> STANDALONE 3D WEBGL HTML PLAYER</h3>
+                    <p data-i18n="modal_html_sub">Self-contained single-file 3D intro with robot speech and shaders. Embed on any website or open directly in any browser!</p>
+                </div>
+                <button type="button" id="btn-close-html-modal" class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-actions-bar">
+                    <button type="button" id="btn-download-html-file" class="action-btn-glow" style="background:linear-gradient(135deg, #00f2fe, #4facfe);">
+                        <i class="fa-solid fa-download"></i> <span data-i18n="btn_download_html">⬇️ Download Standalone .HTML</span>
+                    </button>
+                    <button type="button" id="btn-copy-html-code" class="action-btn-glow" style="background:linear-gradient(135deg, var(--accent-gold), #ff007f);">
+                        <i class="fa-solid fa-copy"></i> <span data-i18n="btn_copy_html">📋 Copy HTML Code</span>
+                    </button>
+                </div>
+                <textarea id="html-code-preview" class="modal-code-textarea" readonly spellcheck="false"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- 📋 MODAL: 3D EMBED WIDGET (CODE STUDIO PRO & WEBSITES) -->
+    <div id="modal-embed-widget" class="modal-overlay" style="display:none;">
+        <div class="modal-card" style="max-width:880px;">
+            <div class="modal-header">
+                <div>
+                    <h3 style="color:var(--accent-gold);"><i class="fa-solid fa-cube"></i> 3D EMBED WIDGET (CODE STUDIO PRO & WEBSITES)</h3>
+                    <p>Integrate this interactive 3D robot into Code Studio Pro, WordPress, or any web project without "Content Blocked" errors!</p>
+                </div>
+                <button type="button" id="btn-close-embed-modal" class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Tabs Selector -->
+                <div class="pattern-tabs-bar" style="margin-bottom:0; display:flex; gap:6px;">
+                    <button type="button" id="tab-embed-direct" class="pattern-tab active" style="font-weight:900;">
+                        🌟 1. NATIVE EMBED (NO IFRAME - 100% UNBLOCKED)
+                    </button>
+                    <button type="button" id="tab-embed-iframe-file" class="pattern-tab">
+                        🌐 2. IFRAME VIA .HTML FILE
+                    </button>
+                    <button type="button" id="tab-embed-srcdoc" class="pattern-tab">
+                        📦 3. IFRAME SRCDOC
+                    </button>
+                </div>
+
+                <div id="embed-explanation" style="padding:10px 14px; background:rgba(0,242,254,0.1); border-left:3px solid var(--accent-cyan); border-radius:6px; font-size:0.82rem; color:#e2e8f0;">
+                    ✨ <strong>Recommended for Code Studio Pro:</strong> Paste this code directly into your container. It does not use restricted iframes, so it <strong>will never be blocked by your browser</strong> and renders 3D instantly!
+                </div>
+
+                <div class="modal-actions-bar">
+                    <button type="button" id="btn-copy-embed-active" class="action-btn-glow" style="background:linear-gradient(135deg, var(--accent-gold), #00f260); color:#000; font-weight:900;">
+                        <i class="fa-solid fa-copy"></i> <span id="label-copy-embed-active">📋 COPY ACTIVE CODE TO CLIPBOARD</span>
+                    </button>
+                </div>
+
+                <textarea id="embed-code-preview" class="modal-code-textarea" readonly spellcheck="false" style="height:320px;"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔔 FLOATING TOAST NOTIFICATION -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="i18n.js?v=58"></script>
+    <script src="speakGenerator.js"></script>
+    <script src="intro-creator.js?v=58"></script>
+    <script src="beat-maker.js?v=58"></script>
+    <script src="app.js?v=58"></script>
+</body>
+</html>
