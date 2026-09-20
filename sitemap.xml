@@ -21,6 +21,46 @@
     <priority>0.9</priority>
   </url>
 
+  <!-- ===== IA ARCHITECTE STUDIO ULTRA v2.0 (FLAGSHIP AI WEB IDE & REAL APPS) ===== -->
+  <url>
+    <loc>https://ia-codestudio.com/ia-architecte-studio-ultra/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/ia-architecte-studio-ultra/?lang=en</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/ia-architecte-studio-ultra/?lang=fr</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- ===== CYBER CREATIVE STUDIO (3D VIDEO INTRO & SYNTHWAVE BEAT MAKER) ===== -->
+  <url>
+    <loc>https://ia-codestudio.com/cyber-creative-studio/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/cyber-creative-studio/?lang=en</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/cyber-creative-studio/?lang=fr</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+
   <!-- ===== HYPERSTUDIO 3D/4D & FLIGHT SIMULATOR (FLAGSHIP 3D ENGINE) ===== -->
   <url>
     <loc>https://ia-codestudio.com/hyperstudio-3d-4d/</loc>
@@ -372,6 +412,18 @@
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-
+  <!-- ===== SEO TUTORIALS & GUIDES (ORGANIC LONG-TAIL ACQUISITION) ===== -->
+  <url>
+    <loc>https://ia-codestudio.com/how-to-create-3d-video-intro-ai-robot.html</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/how-to-build-web-apps-with-ai-prompts.html</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
 
 </urlset>
