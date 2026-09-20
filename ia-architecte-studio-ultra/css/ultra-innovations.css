@@ -1,0 +1,680 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   IA ARCHITECTE STUDIO ULTRA — 7 REVOLUTIONARY INNOVATIONS STYLES
+   1. Multi-Agent Software Agency Command Center
+   2. Multimodal Vision-to-App Dropzone
+   3. Surgical In-Place AI Popover & Laser Outline
+   4. Zero-Backend Micro-SaaS Engine & Cloud Sync
+   5. 1-Click Cloud Deployer & Store Packager
+   6. Instant Serverless Multiplayer (P2P WebRTC)
+   7. Autonomous AI QA Bot & Self-Healing Audit Card
+   Strictly Bilingual EN / FR Compatible
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. MULTI-AGENT AGENCY COMMAND CENTER ─────────────────────────────────── */
+.agency-modal-box {
+  max-width: 860px !important;
+  width: 94% !important;
+}
+
+.agency-header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(139, 92, 246, 0.16);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  color: #c084fc;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.agency-agents-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.agent-card {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(12px);
+}
+
+.agent-card.active {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.35);
+  transform: translateY(-2px);
+}
+
+.agent-card.completed {
+  border-color: #10b981;
+}
+
+.agent-avatar-wrap {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  position: relative;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  font-size: 1.6rem;
+}
+
+.agent-card.active .agent-avatar-wrap {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 14px rgba(139, 92, 246, 0.6);
+  animation: agentPulse 1.8s infinite;
+}
+
+.agent-card.completed .agent-avatar-wrap {
+  border-color: #10b981;
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.4);
+}
+
+@keyframes agentPulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.6); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(139, 92, 246, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
+}
+
+.agent-name {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.agent-role {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.agent-status-pill {
+  font-size: 0.68rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #64748b;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.agent-card.active .agent-status-pill {
+  background: rgba(139, 92, 246, 0.2);
+  color: #c084fc;
+}
+
+.agent-card.completed .agent-status-pill {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.agency-terminal {
+  background: #060913;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 10px;
+  padding: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: #e2e8f0;
+  height: 160px;
+  overflow-y: auto;
+  line-height: 1.6;
+  margin-top: 10px;
+}
+
+.agency-terminal-line {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.agency-terminal-agent {
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.agency-terminal-agent.pm { color: #38bdf8; }
+.agency-terminal-agent.ux { color: #ec4899; }
+.agency-terminal-agent.dev { color: #a78bfa; }
+.agency-terminal-agent.qa { color: #34d399; }
+
+/* ── 1.1 AGENCY 20 REAL APPS CATALOG ──────────────────────────────────────── */
+.agency-catalog-section {
+  background: rgba(2, 6, 23, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 14px;
+  margin: 14px 0;
+}
+
+.agency-catalog-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.agency-catalog-title {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.agency-search-inp {
+  background: #0b0f19;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  width: 240px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.agency-search-inp:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+}
+
+.agency-chips-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.agency-cat-chip {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.agency-cat-chip:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.agency-cat-chip.active {
+  background: rgba(139, 92, 246, 0.2);
+  border-color: #8b5cf6;
+  color: #c084fc;
+  font-weight: 700;
+}
+
+.agency-apps-container {
+  max-height: 250px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 4px;
+}
+
+.agency-apps-container::-webkit-scrollbar {
+  width: 5px;
+}
+.agency-apps-container::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.4);
+  border-radius: 4px;
+}
+
+.agency-app-row {
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.agency-app-row:hover {
+  background: rgba(30, 41, 59, 0.7);
+  border-color: rgba(139, 92, 246, 0.4);
+  transform: translateX(3px);
+}
+
+.agency-app-row.selected {
+  background: rgba(139, 92, 246, 0.15);
+  border-color: #8b5cf6;
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.25);
+}
+
+.agency-app-icon {
+  font-size: 1.6rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+}
+
+.agency-app-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.agency-app-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.agency-app-name {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.agency-app-badge {
+  font-size: 0.65rem;
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  font-weight: 700;
+}
+
+.agency-app-desc {
+  font-size: 0.74rem;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.agency-app-tags {
+  display: flex;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.agency-app-tag {
+  font-size: 0.62rem;
+  color: #64748b;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.agency-btn-pick {
+  background: rgba(139, 92, 246, 0.15);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  color: #c084fc;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: 0.2s;
+}
+
+.agency-app-row:hover .agency-btn-pick,
+.agency-app-row.selected .agency-btn-pick {
+  background: #8b5cf6;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+}
+
+.agency-footer-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.agency-target-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: #94a3b8;
+}
+
+.agency-target-indicator strong {
+  color: #38bdf8;
+  font-weight: 800;
+}
+
+/* ── 2. MULTIMODAL VISION DROPZONE ────────────────────────────────────────── */
+.vision-dropzone {
+  border: 2px dashed rgba(139, 92, 246, 0.45);
+  border-radius: 14px;
+  padding: 30px 20px;
+  text-align: center;
+  background: rgba(139, 92, 246, 0.03);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin: 12px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.vision-dropzone:hover, .vision-dropzone.dragover {
+  border-color: #38bdf8;
+  background: rgba(56, 189, 248, 0.08);
+  transform: scale(1.01);
+}
+
+.vision-preview-box {
+  position: relative;
+  max-height: 220px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  margin-top: 10px;
+  display: none;
+}
+
+.vision-preview-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.vision-remove-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(239, 68, 68, 0.85);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vision-presets-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.vision-preset-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.vision-preset-chip:hover {
+  background: rgba(139, 92, 246, 0.2);
+  border-color: #8b5cf6;
+  color: #fff;
+}
+
+/* ── 3. SURGICAL IN-PLACE AI POPOVER ──────────────────────────────────────── */
+#ultra-surgical-popover {
+  display: none;
+  position: absolute;
+  z-index: 1000;
+  background: #0b1120;
+  border: 1px solid #8b5cf6;
+  border-radius: 12px;
+  padding: 12px;
+  width: 320px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.85), 0 0 20px rgba(139, 92, 246, 0.35);
+  backdrop-filter: blur(14px);
+}
+
+.surgical-pills-row {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin: 6px 0 10px 0;
+}
+
+.surgical-pill {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.surgical-pill:hover {
+  background: #8b5cf6;
+  color: #fff;
+  border-color: #8b5cf6;
+}
+
+/* ── 4. ZERO-BACKEND MICRO-SAAS ENGINE ────────────────────────────────────── */
+.saas-tabs {
+  display: flex;
+  gap: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+}
+
+.saas-tab-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.saas-tab-btn.active {
+  background: rgba(139, 92, 246, 0.2);
+  color: #fff;
+}
+
+.saas-route-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.saas-method-badge {
+  font-size: 0.68rem;
+  font-weight: 900;
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-right: 8px;
+}
+
+.saas-method-badge.get { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+.saas-method-badge.post { background: rgba(56, 189, 248, 0.2); color: #38bdf8; }
+.saas-method-badge.delete { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+
+/* ── 5. 1-CLICK DEPLOYER & PACKAGER ───────────────────────────────────────── */
+.deploy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.deploy-card {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.deploy-card:hover {
+  border-color: rgba(139, 92, 246, 0.4);
+  background: rgba(15, 23, 42, 0.85);
+}
+
+.deploy-live-result {
+  display: none;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 12px;
+  text-align: center;
+}
+
+/* ── 6. INSTANT MULTIPLAYER DUAL SANDBOX ──────────────────────────────────── */
+.multiplayer-dual-container {
+  display: none;
+  width: 100%;
+  height: 100%;
+  gap: 8px;
+  position: absolute;
+  inset: 0;
+  background: #030712;
+  z-index: 50;
+}
+
+.multiplayer-user-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #090e1a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.multiplayer-pane-header {
+  height: 36px;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.multiplayer-pane-header.user-a { border-bottom: 2px solid #38bdf8; }
+.multiplayer-pane-header.user-b { border-bottom: 2px solid #ec4899; }
+
+/* ── 7. AUTONOMOUS AI QA AUDIT ────────────────────────────────────────────── */
+.qa-score-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.qa-metric-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 12px 8px;
+  text-align: center;
+}
+
+.qa-metric-val {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #10b981;
+  margin-bottom: 2px;
+}
+
+.qa-metric-val.warning { color: #f59e0b; }
+.qa-metric-val.danger { color: #ef4444; }
+
+.qa-metric-lbl {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.qa-log-box {
+  max-height: 160px;
+  overflow-y: auto;
+  background: #060913;
+  border-radius: 8px;
+  padding: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.74rem;
+  color: #cbd5e1;
+  line-height: 1.6;
+}
+
+.qa-log-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.qa-log-item.pass { color: #34d399; }
+.qa-log-item.fix { color: #38bdf8; }
+.qa-log-item.warn { color: #fbbf24; }

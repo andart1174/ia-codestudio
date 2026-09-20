@@ -83,16 +83,7 @@
   to = "/studio-3d-4d-pro/:splat"
   status = 301
 
-# Redirect old IA ARCHITECTE URLs to clean ia-architecte-studio-pro
-[[redirects]]
-  from = "/IA%20ARCHITECTE%20cea%20bunaultra%20mod111/*"
-  to = "/ia-architecte-studio-pro/:splat"
-  status = 301
-
-[[redirects]]
-  from = "/IA ARCHITECTE cea bunaultra mod111/*"
-  to = "/ia-architecte-studio-pro/:splat"
-  status = 301
+# Direct access to IA ARCHITECTE cea bunaultra mod111 preserved
 
 [[redirects]]
   from = "/ia-architecte/*"

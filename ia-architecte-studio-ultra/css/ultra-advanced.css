@@ -1,0 +1,450 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   IA ARCHITECTE STUDIO ULTRA v2.0 — NEXT-GEN SUITE STYLES
+   1. iPhone 16 Pro & MacBook Hardware Frames
+   2. Dual-View Live Matrix
+   3. AI Magic Styler Modal & Swatches
+   4. No-Code Logic & Automation Builder
+   5. Confetti Canvas & Sound Toggle
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* ─── 1. HARDWARE DEVICE FRAMES ───────────────────────────────────────────── */
+.preview-outer-wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  position: relative;
+  padding: 12px;
+  background: radial-gradient(circle at center, rgba(139, 92, 246, 0.05) 0%, transparent 70%);
+}
+
+/* iPhone 16 Pro Mockup Frame */
+.device-frame-iphone {
+  width: 393px;
+  height: 852px;
+  max-height: 92vh;
+  background: #09090b;
+  border-radius: 54px;
+  box-shadow:
+    0 0 0 4px #27272a,
+    0 0 0 7px #09090b,
+    0 25px 60px -10px rgba(0, 0, 0, 0.8),
+    0 0 40px rgba(139, 92, 246, 0.25);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+/* Dynamic Island */
+.iphone-dynamic-island {
+  position: absolute;
+  top: 11px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 115px;
+  height: 32px;
+  background: #000;
+  border-radius: 20px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.8);
+  pointer-events: none;
+}
+.dynamic-island-cam {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #1e1b4b, #030712);
+  border: 1px solid #111827;
+}
+.dynamic-island-sensor {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #0a0a0a;
+}
+
+/* Speaker Bar */
+.iphone-speaker {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48px;
+  height: 3px;
+  background: #27272a;
+  border-radius: 3px;
+  z-index: 51;
+  pointer-events: none;
+}
+
+/* Home Indicator Bar */
+.iphone-home-bar {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 134px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 3px;
+  z-index: 50;
+  pointer-events: none;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+
+/* MacBook Pro Window Frame */
+.device-frame-macbook {
+  width: 96%;
+  max-width: 1200px;
+  height: 92%;
+  background: #0d121f;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.8),
+    0 0 35px rgba(56, 189, 248, 0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.macbook-titlebar {
+  height: 36px;
+  background: #090e1c;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.macbook-dots {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+.mac-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.mac-dot.close { background: #ff5f56; border: 1px solid #e0443e; }
+.mac-dot.min { background: #ffbd2e; border: 1px solid #dea123; }
+.mac-dot.max { background: #27c93f; border: 1px solid #1aab29; }
+
+.macbook-address-bar {
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 3px 24px;
+  font-size: 0.74rem;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ─── 2. DUAL-VIEW LIVE MATRIX ────────────────────────────────────────────── */
+.dual-matrix-container {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+  overflow: auto;
+  align-items: center;
+  justify-content: center;
+}
+
+.dual-matrix-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+}
+
+.dual-matrix-col.mobile-col {
+  width: 393px;
+  flex-shrink: 0;
+}
+
+.dual-matrix-col.desktop-col {
+  flex: 1;
+  min-width: 480px;
+  height: 100%;
+}
+
+.dual-matrix-label {
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: #38bdf8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ─── 3. AI MAGIC STYLER MODAL ────────────────────────────────────────────── */
+#modal-magic-styler .modal-box {
+  max-width: 780px;
+}
+
+.styler-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.styler-card {
+  background: #0b1122;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 18px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.styler-card:hover {
+  transform: translateY(-4px);
+  border-color: #8b5cf6;
+  box-shadow: 0 12px 30px rgba(139, 92, 246, 0.3);
+}
+
+.styler-card.active {
+  border-color: #38bdf8;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+  background: rgba(56, 189, 248, 0.06);
+}
+
+.styler-preview-swatch {
+  height: 60px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.4);
+}
+
+.styler-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+}
+
+.styler-desc {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.styler-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.styler-tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #cbd5e1;
+}
+
+/* ─── 4. NO-CODE LOGIC & AUTOMATION BUILDER ───────────────────────────────── */
+#modal-automations .modal-box {
+  max-width: 820px;
+}
+
+.automations-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.automations-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 12px 18px;
+  border-radius: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.automation-rules-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 440px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.rule-card {
+  background: #0b1122;
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  transition: all 0.2s;
+}
+
+.rule-card:hover {
+  border-color: #8b5cf6;
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.15);
+}
+
+.rule-flow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.rule-pill {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rule-pill.trigger {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #fbbf24;
+}
+
+.rule-arrow {
+  color: #94a3b8;
+  font-size: 1.1rem;
+  font-weight: 900;
+}
+
+.rule-pill.action {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #34d399;
+}
+
+.rule-pill.screen {
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #38bdf8;
+}
+
+.rule-btn-del {
+  background: none;
+  border: none;
+  color: #f87171;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.rule-btn-del:hover {
+  background: rgba(239, 68, 68, 0.15);
+}
+
+/* ─── 5. CONFETTI CANVAS & SOUND TOGGLE ────────────────────────────────────── */
+#ultra-confetti-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 999999;
+  display: none;
+}
+
+.btn-sound-toggle {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  padding: 5px 11px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s;
+}
+
+.btn-sound-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: rgba(139, 92, 246, 0.4);
+}
+
+.btn-sound-toggle.muted {
+  color: #64748b;
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+/* ─── 6. TOPBAR BUTTONS (STYLER & AUTOMATIONS) ────────────────────────────── */
+.tb-btn-nocode.styler {
+  background: rgba(168, 85, 247, 0.14) !important;
+  border: 1px solid rgba(168, 85, 247, 0.45) !important;
+  color: #c084fc !important;
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.2);
+}
+.tb-btn-nocode.styler:hover {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.35), rgba(6, 182, 212, 0.3)) !important;
+  border-color: #c084fc !important;
+  color: #fff !important;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.5) !important;
+  transform: translateY(-1px);
+}
+
+.tb-btn-nocode.auto {
+  background: rgba(245, 158, 11, 0.14) !important;
+  border: 1px solid rgba(245, 158, 11, 0.45) !important;
+  color: #fbbf24 !important;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
+}
+.tb-btn-nocode.auto:hover {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.35), rgba(239, 68, 68, 0.3)) !important;
+  border-color: #fbbf24 !important;
+  color: #fff !important;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.5) !important;
+  transform: translateY(-1px);
+}
+
