@@ -232,14 +232,54 @@
     }
     </script>
     
-    <!-- CSS Styles -->
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="css/admin-portal.css">
+    <!-- CSS Styles with Cache-Busters -->
+    <link rel="stylesheet" href="style.css?v=20260922_v2">
+    <link rel="stylesheet" href="css/admin-portal.css?v=20260922_v2">
 
-    <!-- Firebase SDK (Compat - Hosted Locally) -->
-    <script src="js/app-service-core.js?v=601"></script>
-    <script src="js/app-service-auth.js?v=601"></script>
-    <script src="js/app-service-db.js?v=601"></script>
+    <!-- Guaranteed Inline Modal Control & Styles (Always Available) -->
+    <style>
+      .modal-overlay {
+        position: fixed !important;
+        inset: 0 !important;
+        background: rgba(0, 0, 0, 0.85) !important;
+        backdrop-filter: blur(15px) !important;
+        -webkit-backdrop-filter: blur(15px) !important;
+        z-index: 99999 !important;
+        display: none !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 20px !important;
+      }
+      .modal-overlay.active {
+        display: flex !important;
+      }
+    </style>
+    <script>
+      function openModal(id) {
+        var m = document.getElementById('modal-' + id);
+        if (m) {
+          m.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+        if (id === 'admin' && typeof refreshAdminStats === 'function') {
+          refreshAdminStats();
+        }
+      }
+      function closeModal(id) {
+        var m = document.getElementById('modal-' + id);
+        if (m) {
+          m.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      }
+      window.openModal = openModal;
+      window.closeModal = closeModal;
+    </script>
+
+    <!-- Firebase SDK (Compat - Hosted Locally with Cache-Busters) -->
+    <script src="js/app-service-core.js?v=20260922_v2"></script>
+    <script src="js/app-service-auth.js?v=20260922_v2"></script>
+    <script src="js/app-service-db.js?v=20260922_v2"></script>
     <!-- Chart.js for Admin Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -1306,10 +1346,27 @@
         <p data-i18n="footer_text">© 2026 AI CODE STUDIO. Tous droits réservés.</p>
     </footer>
 
-    <!-- Scripts -->
-    <script src="js/i18n.js?v=6"></script>
-    <script src="js/main.js?v=6"></script>
-    <script src="js/admin-portal.js"></script>
+    <!-- Scripts with Cache-Busters -->
+    <script src="js/i18n.js?v=20260922_v2"></script>
+    <script src="js/main.js?v=20260922_v2"></script>
+    <script src="js/admin-portal.js?v=20260922_v2"></script>
+    <script>
+      // Fallback click listener to guarantee login modal opens
+      document.addEventListener('DOMContentLoaded', function() {
+        var btn = document.getElementById('login-nav-btn');
+        if (btn) {
+          btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (typeof openModal === 'function') {
+              openModal('login');
+            } else {
+              var m = document.getElementById('modal-login');
+              if (m) m.classList.add('active');
+            }
+          });
+        }
+      });
+    </script>
 
 
     <!-- 🎁 FLOATING REGISTRATION BONUS PILL -->
