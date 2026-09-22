@@ -3751,10 +3751,10 @@ auth.onAuthStateChanged(async u => {
                            sessionUser.name ||
                            sessionUser.email.split('@')[0];
           user = {
-            uid: sessionUser.email, // Use email as unique identifier for likes/comments
+            uid: sessionUser.uid || sessionUser.email,
             displayName: customName,
             email: sessionUser.email,
-            photoURL: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(customName || 'User')}`,
+            photoURL: sessionUser.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(customName || 'User')}`,
             isCustomSession: true
           };
           isAdmin = ADMIN_EMAILS.includes(sessionUser.email);

@@ -50,24 +50,29 @@
             }
             document.addEventListener('DOMContentLoaded', checkPremiumPortal);
 
-            /* Local Modal Scripts to be sure they work */
+            /* Local Modal Scripts */
             function openModal(id) {
                 const m = document.getElementById('modal-' + id);
-                if(m) {
+                if (m) {
                     m.classList.add('active');
                     document.body.style.overflow = 'hidden';
+                }
+                if (id === 'admin' && typeof refreshAdminStats === 'function') {
+                    refreshAdminStats();
                 }
             }
             function closeModal(id) {
                 const m = document.getElementById('modal-' + id);
-                if(m) {
+                if (m) {
                     m.classList.remove('active');
-                    document.body.style.overflow = 'auto';
+                    document.body.style.overflow = '';
                 }
             }
+            window.openModal = openModal;
+            window.closeModal = closeModal;
 
             /* ============================================================
-               AUTH SYSTEM — Login + Register + Admin Panel
+               AUTH SYSTEM — Login + Register + Google Auth + Admin Panel
                ============================================================ */
 
             // Initialize Firebase
@@ -81,10 +86,13 @@
               measurementId: "G-YVNWE5Q6KB"
             };
 
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
+            if (typeof firebase !== 'undefined') {
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
             }
-            const db = firebase.firestore();
+            const db = (typeof firebase !== 'undefined' && firebase.firestore) ? firebase.firestore() : null;
+            const auth = (typeof firebase !== 'undefined' && firebase.auth) ? firebase.auth() : null;
 
             let isSignUpMode = false;
             let isRecoveryMode = false;
@@ -103,6 +111,115 @@
                 updateAuthUI();
             }
 
+            async function handleGoogleSignIn() {
+                const errBox = document.getElementById('auth-error');
+                if (errBox) errBox.style.display = 'none';
+
+                try {
+                    if (typeof firebase === 'undefined' || typeof firebase.auth !== 'function') {
+                        throw new Error(currentLang === 'fr' ? "Service d'authentification indisponible." : "Authentication service unavailable.");
+                    }
+
+                    const provider = new firebase.auth.GoogleAuthProvider();
+                    provider.setCustomParameters({ prompt: 'select_account' });
+
+                    const result = await firebase.auth().signInWithPopup(provider);
+                    const user = result.user;
+                    if (!user || !user.email) {
+                        throw new Error("No user email returned");
+                    }
+
+                    const email = user.email.toLowerCase();
+                    const isAdmin = email === 'andart1174@gmail.com';
+                    const displayName = user.displayName || email.split('@')[0];
+                    const photoURL = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=7c3aed&color=fff&bold=true`;
+
+                    // Check if banned
+                    if (db) {
+                        try {
+                            const userDoc = await db.collection('users').doc(email).get();
+                            if (userDoc.exists && userDoc.data().banned === true) {
+                                await firebase.auth().signOut();
+                                if (errBox) {
+                                    errBox.textContent = currentLang === 'en' ? "Your account has been banned." : "Votre compte a été banni.";
+                                    errBox.style.display = 'block';
+                                }
+                                return;
+                            }
+                        } catch(e) {
+                            console.log("Ban check warning:", e);
+                        }
+                    }
+
+                    // Save session
+                    const sessionUser = {
+                        email: email,
+                        name: displayName,
+                        role: isAdmin ? 'Admin' : 'User',
+                        photoURL: photoURL,
+                        uid: user.uid,
+                        loginAt: Date.now()
+                    };
+                    localStorage.setItem('genius_session', JSON.stringify(sessionUser));
+                    localStorage.setItem('custom_display_name_' + email, displayName);
+
+                    // Sync with Firestore users collection
+                    if (db) {
+                        const userData = {
+                            email: email,
+                            displayName: displayName,
+                            name: displayName,
+                            photoURL: photoURL,
+                            uid: user.uid,
+                            role: isAdmin ? 'Admin' : 'User',
+                            lastLogin: Date.now(),
+                            lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+                        };
+                        try {
+                            await db.collection('users').doc(email).set(userData, { merge: true });
+                            if (user.uid) {
+                                await db.collection('users').doc(user.uid).set(userData, { merge: true });
+                            }
+                        } catch(e) {
+                            console.log("Firestore user update warning:", e);
+                        }
+                    }
+
+                    // Update local users array
+                    let users = JSON.parse(localStorage.getItem('ia_users') || '[]');
+                    users = users.filter(u => u.email !== email);
+                    users.push(sessionUser);
+                    localStorage.setItem('ia_users', JSON.stringify(users));
+
+                    // Close modal and update UI
+                    closeModal('login');
+                    authCheck();
+
+                    // Sync Firebase and check premium
+                    syncFirebaseWithLocal().then(() => {
+                        if (typeof checkPremiumPortal === 'function') checkPremiumPortal();
+                    }).catch(e => console.log(e));
+
+                    if (isAdmin) {
+                        setTimeout(() => openModal('admin'), 300);
+                    }
+                } catch (err) {
+                    console.error("Google Auth Error:", err);
+                    if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
+                        return;
+                    }
+                    if (errBox) {
+                        let msg = err.message || (currentLang === 'fr' ? "Échec de la connexion avec Google." : "Google sign in failed.");
+                        if (err.code === 'auth/unauthorized-domain') {
+                            msg = currentLang === 'fr' ? "Domaine non autorisé dans Firebase Console." : "Unauthorized domain in Firebase Console.";
+                        }
+                        errBox.textContent = msg;
+                        errBox.style.display = 'block';
+                    }
+                }
+            }
+            window.handleGoogleSignIn = handleGoogleSignIn;
+
             function updateAuthUI() {
                 const nameGroup = document.getElementById('auth-name-group');
                 const title = document.getElementById('auth-title');
@@ -112,45 +229,71 @@
                 const recoveryHint = document.getElementById('recovery-hint');
                 const nameInput = document.getElementById('auth-name');
                 const errBox = document.getElementById('auth-error');
+                const googleBtn = document.getElementById('btn-google-auth');
+                const divider = document.getElementById('auth-divider');
                 
-                errBox.style.display = 'none';
+                if (errBox) errBox.style.display = 'none';
+
+                const lang = (typeof currentLang !== 'undefined') ? currentLang : 'fr';
+                const t = (typeof translations !== 'undefined' && translations[lang]) ? translations[lang] : {};
 
                 if (isRecoveryMode) {
-                    nameGroup.style.display = 'none';
-                    nameInput.required = false;
-                    forgotLink.style.display = 'none';
-                    recoveryHint.style.display = 'block';
-                    title.textContent = translations[currentLang].recovery_title || "Récupération";
-                    title.setAttribute('data-i18n', 'recovery_title');
-                    btn.textContent = translations[currentLang].recovery_btn || "Sauvegarder et Connecter";
-                    btn.setAttribute('data-i18n', 'recovery_btn');
-                    toggleLink.textContent = translations[currentLang].login_has_account || "Déjà un compte ? Connectez-vous";
-                    toggleLink.setAttribute('data-i18n', 'login_has_account');
-                    toggleLink.onclick = (e) => { e.preventDefault(); isRecoveryMode=false; isSignUpMode=false; updateAuthUI(); };
+                    if (nameGroup) { nameGroup.style.display = 'none'; nameInput.required = false; }
+                    if (forgotLink) forgotLink.style.display = 'none';
+                    if (recoveryHint) recoveryHint.style.display = 'block';
+                    if (googleBtn) googleBtn.style.display = 'none';
+                    if (divider) divider.style.display = 'none';
+                    if (title) {
+                        title.textContent = t.recovery_title || "Récupération";
+                        title.setAttribute('data-i18n', 'recovery_title');
+                    }
+                    if (btn) {
+                        btn.textContent = t.recovery_btn || "Sauvegarder et Connecter";
+                        btn.setAttribute('data-i18n', 'recovery_btn');
+                    }
+                    if (toggleLink) {
+                        toggleLink.textContent = t.login_has_account || "Déjà un compte ? Connectez-vous";
+                        toggleLink.setAttribute('data-i18n', 'login_has_account');
+                        toggleLink.onclick = (e) => { e.preventDefault(); isRecoveryMode=false; isSignUpMode=false; updateAuthUI(); };
+                    }
                 } else if (isSignUpMode) {
-                    nameGroup.style.display = 'block';
-                    nameInput.required = true;
-                    forgotLink.style.display = 'none';
-                    recoveryHint.style.display = 'none';
-                    title.textContent = translations[currentLang].signup_title || "Créer un compte";
-                    title.setAttribute('data-i18n', 'signup_title');
-                    btn.textContent = translations[currentLang].signup_btn || "S'inscrire";
-                    btn.setAttribute('data-i18n', 'signup_btn');
-                    toggleLink.textContent = translations[currentLang].login_has_account || "Déjà un compte ? Connectez-vous";
-                    toggleLink.setAttribute('data-i18n', 'login_has_account');
-                    toggleLink.onclick = toggleAuthMode;
+                    if (nameGroup) { nameGroup.style.display = 'block'; nameInput.required = true; }
+                    if (forgotLink) forgotLink.style.display = 'none';
+                    if (recoveryHint) recoveryHint.style.display = 'none';
+                    if (googleBtn) googleBtn.style.display = 'flex';
+                    if (divider) divider.style.display = 'flex';
+                    if (title) {
+                        title.textContent = t.signup_title || "Créer un compte";
+                        title.setAttribute('data-i18n', 'signup_title');
+                    }
+                    if (btn) {
+                        btn.textContent = t.signup_btn || "S'inscrire";
+                        btn.setAttribute('data-i18n', 'signup_btn');
+                    }
+                    if (toggleLink) {
+                        toggleLink.textContent = t.login_has_account || "Déjà un compte ? Connectez-vous";
+                        toggleLink.setAttribute('data-i18n', 'login_has_account');
+                        toggleLink.onclick = toggleAuthMode;
+                    }
                 } else {
-                    nameGroup.style.display = 'none';
-                    nameInput.required = false;
-                    forgotLink.style.display = 'inline-block';
-                    recoveryHint.style.display = 'none';
-                    title.textContent = translations[currentLang].login_title || "Se connecter";
-                    title.setAttribute('data-i18n', 'login_title');
-                    btn.textContent = translations[currentLang].login_btn || "Connexion";
-                    btn.setAttribute('data-i18n', 'login_btn');
-                    toggleLink.textContent = translations[currentLang].login_no_account || "Pas de compte ? Inscrivez-vous";
-                    toggleLink.setAttribute('data-i18n', 'login_no_account');
-                    toggleLink.onclick = toggleAuthMode;
+                    if (nameGroup) { nameGroup.style.display = 'none'; nameInput.required = false; }
+                    if (forgotLink) forgotLink.style.display = 'inline-block';
+                    if (recoveryHint) recoveryHint.style.display = 'none';
+                    if (googleBtn) googleBtn.style.display = 'flex';
+                    if (divider) divider.style.display = 'flex';
+                    if (title) {
+                        title.textContent = t.login_title || "Se connecter";
+                        title.setAttribute('data-i18n', 'login_title');
+                    }
+                    if (btn) {
+                        btn.textContent = t.login_btn || "Connexion";
+                        btn.setAttribute('data-i18n', 'login_btn');
+                    }
+                    if (toggleLink) {
+                        toggleLink.textContent = t.login_no_account || "Pas de compte ? Inscrivez-vous";
+                        toggleLink.setAttribute('data-i18n', 'login_no_account');
+                        toggleLink.onclick = toggleAuthMode;
+                    }
                 }
             }
 
@@ -159,31 +302,57 @@
                 const loginBtn = document.getElementById('login-nav-btn');
                 const userBtn  = document.getElementById('user-nav-btn');
                 const userName = document.getElementById('user-nav-name');
+                const userAvatar = document.getElementById('user-nav-avatar');
                 const adminBadge = document.querySelector('.admin-badge');
                 
                 if (session) {
-                    const user = JSON.parse(session);
-                    
-                    // Force upgrade if they have an old cached session as standard user
-                    if (user.email === 'andart1174@gmail.com' && user.role !== 'Admin') {
-                        user.role = 'Admin';
-                        localStorage.setItem('genius_session', JSON.stringify(user));
-                    }
+                    try {
+                        const user = JSON.parse(session);
+                        
+                        // Force upgrade if they have an old cached session as standard user
+                        if (user.email && user.email.toLowerCase() === 'andart1174@gmail.com' && user.role !== 'Admin') {
+                            user.role = 'Admin';
+                            localStorage.setItem('genius_session', JSON.stringify(user));
+                        }
 
-                    if (loginBtn) loginBtn.style.display = 'none';
-                    if (userBtn)  { userBtn.style.display = 'flex'; }
-                    if (userName) userName.textContent = user.name || 'User';
+                        if (loginBtn) loginBtn.style.display = 'none';
+                        if (userBtn)  { userBtn.style.display = 'flex'; }
+                        if (userName) userName.textContent = user.name || (user.email ? user.email.split('@')[0] : 'User');
 
-                    if (user.role === 'Admin') {
-                        if (adminBadge) adminBadge.style.display = 'inline-block';
-                        userBtn.onclick = () => openModal('admin');
-                    } else {
-                        if (adminBadge) adminBadge.style.display = 'none';
-                        userBtn.onclick = () => {
-                            document.getElementById('user-profile-name').textContent = user.name;
-                            document.getElementById('user-profile-email').textContent = user.email;
-                            openModal('user');
-                        };
+                        if (userAvatar) {
+                            if (user.photoURL) {
+                                userAvatar.innerHTML = `<img src="${user.photoURL}" style="width:20px;height:20px;border-radius:50%;object-fit:cover;vertical-align:middle;" />`;
+                            } else {
+                                userAvatar.textContent = '👤';
+                            }
+                        }
+
+                        if (user.role === 'Admin') {
+                            if (adminBadge) adminBadge.style.display = 'inline-block';
+                            userBtn.onclick = () => openModal('admin');
+                        } else {
+                            if (adminBadge) adminBadge.style.display = 'none';
+                            userBtn.onclick = () => {
+                                const profName = document.getElementById('user-profile-name');
+                                const profEmail = document.getElementById('user-profile-email');
+                                const profAv = document.getElementById('user-profile-avatar');
+                                if (profName) profName.textContent = user.name || 'User';
+                                if (profEmail) profEmail.textContent = user.email || '';
+                                if (profAv) {
+                                    if (user.photoURL) {
+                                        profAv.innerHTML = `<img src="${user.photoURL}" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid #8b5cf6;" />`;
+                                    } else {
+                                        profAv.textContent = '👤';
+                                    }
+                                }
+                                openModal('user');
+                            };
+                        }
+                    } catch(e) {
+                        console.error("authCheck parse error:", e);
+                        localStorage.removeItem('genius_session');
+                        if (loginBtn) loginBtn.style.display = 'flex';
+                        if (userBtn)  userBtn.style.display  = 'none';
                     }
                 } else {
                     if (loginBtn) loginBtn.style.display = 'flex';
@@ -1304,11 +1473,13 @@
 
             function adminLogout() {
                 localStorage.removeItem('genius_session');
-                localStorage.removeItem('ia_premium_users');
-                localStorage.removeItem('ia_users');
-                localStorage.removeItem('ia_messages');
-                
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    try {
+                        firebase.auth().signOut().catch(e => console.log(e));
+                    } catch(e) {}
+                }
                 closeModal('admin');
+                closeModal('user');
                 authCheck();
                 adminLog('Signed out.');
                 if (typeof checkPremiumPortal === 'function') checkPremiumPortal();
@@ -1343,27 +1514,20 @@
                 });
             });
 
-            // Hook openModal to refresh admin stats when panel opens
-            const _origOpenModal = openModal;
-            function openModal(id) {
-                _origOpenModal(id);
-                if (id === 'admin') {
-                    refreshAdminStats();
-                }
-            }
-
             // Real-time Banned Status Verification
             function verifyBannedStatus() {
                 const session = localStorage.getItem('genius_session');
-                if (session) {
+                if (session && db) {
                     try {
                         const user = JSON.parse(session);
-                        db.collection('users').doc(user.email).get().then(doc => {
-                            if (doc.exists && doc.data().banned === true) {
-                                alert(currentLang === 'en' ? "Your account has been banned by the administrator." : "Votre compte a été banni par l'administrateur.");
-                                adminLogout();
-                            }
-                        }).catch(e => console.log("Banned verification error:", e));
+                        if (user && user.email) {
+                            db.collection('users').doc(user.email).get().then(doc => {
+                                if (doc.exists && doc.data().banned === true) {
+                                    alert(currentLang === 'en' ? "Your account has been banned by the administrator." : "Votre compte a été banni par l'administrateur.");
+                                    adminLogout();
+                                }
+                            }).catch(e => console.log("Banned verification error:", e));
+                        }
                     } catch(e) {}
                 }
             }
@@ -1380,5 +1544,31 @@
                         .catch(e => console.log('Startup sync warning:', e));
                 } else {
                     if (typeof checkPremiumPortal === 'function') checkPremiumPortal();
+                }
+
+                // Listen to Firebase Auth state for automatic Google session sync
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    try {
+                        firebase.auth().onAuthStateChanged(authUser => {
+                            if (authUser && !localStorage.getItem('genius_session')) {
+                                const email = authUser.email ? authUser.email.toLowerCase() : '';
+                                const isAdmin = email === 'andart1174@gmail.com';
+                                const displayName = authUser.displayName || email.split('@')[0] || 'User';
+                                const photoURL = authUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=7c3aed&color=fff&bold=true`;
+                                const sessionUser = {
+                                    email: email,
+                                    name: displayName,
+                                    role: isAdmin ? 'Admin' : 'User',
+                                    photoURL: photoURL,
+                                    uid: authUser.uid,
+                                    loginAt: Date.now()
+                                };
+                                localStorage.setItem('genius_session', JSON.stringify(sessionUser));
+                                authCheck();
+                            }
+                        });
+                    } catch(e) {
+                        console.log("Firebase auth listener error:", e);
+                    }
                 }
             });

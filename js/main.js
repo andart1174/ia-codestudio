@@ -13,6 +13,14 @@ function applyTranslations(lang) {
     }
   });
 
+  const placeholders = document.querySelectorAll('[data-i18n-placeholder]');
+  placeholders.forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (translations[lang] && translations[lang][key] !== undefined) {
+      el.placeholder = translations[lang][key];
+    }
+  });
+
   // Update active state of language buttons
   document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.classList.remove('active');
