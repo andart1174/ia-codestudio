@@ -1,8 +1,8 @@
 const translations = {
   fr: {
-    nav_title: "IA CODE STUDIO — Générateur de Widgets 3D & IDE Web IA",
-    hero_title: "L'Avenir de l'Intelligence Artificielle",
-    hero_subtitle: "Découvrez notre plateforme phare propulsée par l'IA. Conception structurelle avancée et génération intelligente dans un studio de développement complet.",
+    nav_title: "IA CODE STUDIO — Générateur 3D Three.js IA & Studio WebGL Gratuit",
+    hero_title: "Générateur 3D Three.js IA & Studio WebGL Gratuit",
+    hero_subtitle: "Générez des scènes 3D interactives, du code WebGL temps réel et des applications web complètes à partir de simples prompts textuels. 100% gratuit dans votre navigateur.",
     app_arcade_title: "CYBER ARCADE 3D ARENA & RÉALITÉ AR (9 JEUX)",
     app_arcade_desc: "Arène de 9 jeux WebGL 3D & Réalité Augmentée : Cyber Racer 2077, Titan Mech Arena, Beat Slicer, Cosmic Surfer, AR Alien Invasion, et combats spatiaux intenses. Hangar & Magasin d'armes, monnaie virtuelle et 100% gratuit !",
     app1_title: "IA ARCHITECTE STUDIO PRO",
@@ -145,9 +145,9 @@ const translations = {
     qa_a7: "Non, jamais. Tous les outils Free Tools fonctionnent 100% côté client (dans votre navigateur). Aucune donnée n'est transmise à un serveur externe."
   },
   en: {
-    nav_title: "IA CODE STUDIO — Free 3D WebGL Widget & AI Web IDE",
-    hero_title: "The Future of Artificial Intelligence",
-    hero_subtitle: "Discover our flagship AI-powered platform. Advanced structural design and intelligent generation in one comprehensive studio.",
+    nav_title: "IA CODE STUDIO — Free AI Three.js Generator & 3D WebGL Studio",
+    hero_title: "Free AI Three.js Generator & 3D WebGL Studio",
+    hero_subtitle: "Generate interactive 3D scenes, real-time WebGL code, and complete web applications from plain text prompts. 100% free in your browser.",
     app1_title: "IA ARCHITECTE STUDIO PRO",
     app1_desc: "A complete AI-powered development suite and professional web IDE. Generate web applications (HTML/CSS/JS) from prompts, design APIs, build SaaS products, audit cybersecurity, and preview in real time.",
     app_ultra_title: "IA ARCHITECTE STUDIO ULTRA",

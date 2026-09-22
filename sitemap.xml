@@ -97,6 +97,12 @@
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
+  <url>
+    <loc>https://ia-codestudio.com/ia-architecte-app/</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
 
   <!-- ===== COMMUNITY & GENIUS IA COIN VAULT ===== -->
   <url>
