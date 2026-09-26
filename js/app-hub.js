@@ -2,6 +2,8 @@
  * ========================================================
  * IA CODE STUDIO - APP HUB / VITRINE ENGINE
  * 10 Ready-to-Use Web & 3D Apps with 1-Click ZIP Exporter
+ * Self-Contained Index.html (Double-Click Inside ZIP Works Instantly!)
+ * Modular style.css & script.js included for developers
  * Free Plan: 1 App Download per Day / Premium ($10/mo): Unlimited
  * Strictly Bilingual: English & French only
  * ========================================================
@@ -12,24 +14,163 @@
 
   // --- CATALOG OF THE 10 READY-MADE APPLICATIONS ---
   const APP_CATALOG = [
+    // ----------------------------------------------------
+    // APP 1: CYBERBEATS 16-STEP DRUM MACHINE
+    // ----------------------------------------------------
     {
       id: "cyberbeats-synth",
       category: "audio",
       icon: "🎛️",
       nameEn: "CyberBeats 16-Step Drum Machine",
       nameFr: "CyberBeats Studio Boîte à Rythmes 16 Pas",
-      descEn: "Interactive 16-step procedural drum sequencer with Web Audio API. 4 custom channels (Kick, Snare, Hi-Hat, Synth) with adjustable BPM tempo and real-time step trigger.",
+      descEn: "Interactive 16-step procedural drum sequencer with Web Audio API. 4 channels (Kick, Snare, Hi-Hat, Synth) with adjustable BPM tempo and real-time step trigger.",
       descFr: "Séquenceur de batterie procédural à 16 pas avec Web Audio API. 4 pistes audio (Kick, Snare, Hi-Hat, Synth) avec réglage BPM et lecture en temps réel.",
       tech: ["Web Audio API", "HTML5", "Vanilla JS", "Cyberpunk UI"],
       getFiles: function (lang) {
-        return {
-          "index.html": `<!DOCTYPE html>
+        const title = lang === "fr" ? "CyberBeats 16-Step Studio — IA Code Studio" : "CyberBeats 16-Step Studio — IA Code Studio";
+        const cssContent = `* { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+body { background: #050714; color: #fff; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.synth-rack { width: 100%; max-width: 900px; background: #0b0f24; border: 2px solid #00f0ff; border-radius: 20px; padding: 25px; box-shadow: 0 0 40px rgba(0, 240, 255, 0.2); }
+.synth-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 20px; }
+.synth-logo { display: flex; align-items: center; gap: 10px; }
+.synth-led { width: 12px; height: 12px; border-radius: 50%; background: #00f0ff; box-shadow: 0 0 10px #00f0ff; animation: pulse 1s infinite alternate; }
+@keyframes pulse { from { opacity: 0.4; } to { opacity: 1; } }
+.synth-controls { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+.btn-ctrl { background: linear-gradient(135deg, #00f0ff, #7928ca); border: none; color: #fff; padding: 8px 18px; border-radius: 8px; font-weight: 800; cursor: pointer; transition: transform 0.1s; }
+.btn-ctrl:active { transform: scale(0.96); }
+.btn-sec { background: rgba(255, 255, 255, 0.1); }
+.control-group { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: #00f0ff; }
+.grid-container { display: flex; flex-direction: column; gap: 12px; }
+.track-row { display: flex; align-items: center; gap: 10px; }
+.track-label { width: 90px; font-size: 12px; font-weight: 700; color: #94a3b8; }
+.step-grid { display: grid; grid-template-columns: repeat(16, 1fr); gap: 6px; flex: 1; }
+.step-btn { height: 38px; border-radius: 6px; background: #131a38; border: 1px solid rgba(255, 255, 255, 0.08); cursor: pointer; transition: all 0.1s; }
+.step-btn.active { background: #00f0ff; box-shadow: 0 0 12px #00f0ff; }
+.step-btn.current { border-color: #ff007f; transform: scale(1.08); box-shadow: 0 0 10px #ff007f; }`;
+
+        const jsContent = `const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let ctx = null;
+let isPlaying = false;
+let currentStep = 0;
+let timerId = null;
+let bpm = 120;
+
+const tracks = [
+  { id: 'kick', name: '🥁 Kick', freq: 150 },
+  { id: 'snare', name: '💥 Snare', freq: 400 },
+  { id: 'hihat', name: '✨ Hi-Hat', freq: 1200 },
+  { id: 'synth', name: '🎹 Synth', freq: 300 }
+];
+
+let matrix = {
+  kick:  [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0],
+  snare: [0,0,1,0, 0,0,1,0, 0,0,1,0, 0,0,1,0],
+  hihat: [1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1],
+  synth: [1,0,0,1, 0,0,1,0, 1,0,0,1, 0,1,0,0]
+};
+
+function playSound(trackId) {
+  if (!ctx) ctx = new AudioCtx();
+  if (ctx.state === 'suspended') ctx.resume();
+  const t = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  const tr = tracks.find(x => x.id === trackId);
+  osc.frequency.setValueAtTime(tr ? tr.freq : 200, t);
+  osc.frequency.exponentialRampToValueAtTime(30, t + 0.15);
+  gain.gain.setValueAtTime(0.4, t);
+  gain.gain.exponentialRampToValueAtTime(0.01, t + 0.15);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(t);
+  osc.stop(t + 0.16);
+}
+
+function renderGrid() {
+  const container = document.getElementById('grid-container');
+  if (!container) return;
+  container.innerHTML = '';
+  tracks.forEach(tr => {
+    const row = document.createElement('div');
+    row.className = 'track-row';
+    row.innerHTML = '<span class="track-label">' + tr.name + '</span><div class="step-grid" id="row-' + tr.id + '"></div>';
+    container.appendChild(row);
+    const grid = row.querySelector('.step-grid');
+    for (let i = 0; i < 16; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'step-btn' + (matrix[tr.id][i] ? ' active' : '');
+      btn.onclick = () => {
+        if (!ctx) ctx = new AudioCtx();
+        if (ctx.state === 'suspended') ctx.resume();
+        matrix[tr.id][i] = matrix[tr.id][i] ? 0 : 1;
+        btn.classList.toggle('active');
+        if (matrix[tr.id][i]) playSound(tr.id);
+      };
+      grid.appendChild(btn);
+    }
+  });
+}
+
+function step() {
+  document.querySelectorAll('.step-btn').forEach(b => b.classList.remove('current'));
+  tracks.forEach(tr => {
+    if (matrix[tr.id][currentStep]) playSound(tr.id);
+    const btn = document.querySelector('#row-' + tr.id + ' .step-btn:nth-child(' + (currentStep + 1) + ')');
+    if (btn) btn.classList.add('current');
+  });
+  currentStep = (currentStep + 1) % 16;
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  renderGrid();
+
+  const btnPlay = document.getElementById('btn-play');
+  if (btnPlay) {
+    btnPlay.onclick = function() {
+      isPlaying = !isPlaying;
+      this.textContent = isPlaying ? '⏹ STOP' : '▶ PLAY';
+      if (isPlaying) {
+        if (!ctx) ctx = new AudioCtx();
+        if (ctx.state === 'suspended') ctx.resume();
+        timerId = setInterval(step, (60 / bpm / 4) * 1000);
+      } else {
+        clearInterval(timerId);
+        currentStep = 0;
+        document.querySelectorAll('.step-btn').forEach(b => b.classList.remove('current'));
+      }
+    };
+  }
+
+  const slider = document.getElementById('bpm-slider');
+  if (slider) {
+    slider.oninput = function(e) {
+      bpm = parseInt(e.target.value);
+      document.getElementById('bpm-val').textContent = bpm;
+      if (isPlaying) {
+        clearInterval(timerId);
+        timerId = setInterval(step, (60 / bpm / 4) * 1000);
+      }
+    };
+  }
+
+  const btnClear = document.getElementById('btn-clear');
+  if (btnClear) {
+    btnClear.onclick = () => {
+      tracks.forEach(tr => matrix[tr.id] = new Array(16).fill(0));
+      renderGrid();
+    };
+  }
+});`;
+
+        const htmlContent = `<!DOCTYPE html>
 <html lang="${lang}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CyberBeats 16-Step Studio — IA Code Studio</title>
-  <link rel="stylesheet" href="style.css">
+  <title>${title}</title>
+  <style>
+${cssContent}
+  </style>
 </head>
 <body>
   <div class="synth-rack">
@@ -49,123 +190,23 @@
     </header>
     <div id="grid-container" class="grid-container"></div>
   </div>
-  <script src="script.js"></script>
+  <script>
+${jsContent}
+  </script>
 </body>
-</html>`,
-          "style.css": `* { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-body { background: #050714; color: #fff; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-.synth-rack { width: 100%; max-width: 900px; background: #0b0f24; border: 2px solid #00f0ff; border-radius: 20px; padding: 25px; box-shadow: 0 0 40px rgba(0, 240, 255, 0.2); }
-.synth-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 20px; }
-.synth-logo { display: flex; align-items: center; gap: 10px; }
-.synth-led { width: 12px; height: 12px; border-radius: 50%; background: #00f0ff; box-shadow: 0 0 10px #00f0ff; }
-.synth-controls { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
-.btn-ctrl { background: linear-gradient(135deg, #00f0ff, #7928ca); border: none; color: #fff; padding: 8px 18px; border-radius: 8px; font-weight: 800; cursor: pointer; }
-.btn-sec { background: rgba(255, 255, 255, 0.1); }
-.control-group { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: #00f0ff; }
-.grid-container { display: flex; flex-direction: column; gap: 12px; }
-.track-row { display: flex; align-items: center; gap: 10px; }
-.track-label { width: 80px; font-size: 12px; font-weight: 700; color: #94a3b8; }
-.step-grid { display: grid; grid-template-columns: repeat(16, 1fr); gap: 6px; flex: 1; }
-.step-btn { height: 38px; border-radius: 6px; background: #131a38; border: 1px solid rgba(255, 255, 255, 0.08); cursor: pointer; transition: all 0.1s; }
-.step-btn.active { background: #00f0ff; box-shadow: 0 0 12px #00f0ff; }
-.step-btn.current { border-color: #ff007f; transform: scale(1.08); }`,
-          "script.js": `const AudioCtx = window.AudioContext || window.webkitAudioContext;
-let ctx = null;
-let isPlaying = false;
-let currentStep = 0;
-let timerId = null;
-let bpm = 120;
+</html>`;
 
-const tracks = [
-  { id: 'kick', name: '🥁 Kick', freq: 150 },
-  { id: 'snare', name: '💥 Snare', freq: 400 },
-  { id: 'hihat', name: '✨ Hi-Hat', freq: 1200 },
-  { id: 'synth', name: '🎹 Synth', freq: 300 }
-];
-
-let matrix = {
-  kick: [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0],
-  snare: [0,0,1,0, 0,0,1,0, 0,0,1,0, 0,0,1,0],
-  hihat: [1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1],
-  synth: [1,0,0,1, 0,0,1,0, 1,0,0,1, 0,1,0,0]
-};
-
-function playSound(trackId) {
-  if (!ctx) ctx = new AudioCtx();
-  const t = ctx.currentTime;
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  const tr = tracks.find(x => x.id === trackId);
-  osc.frequency.setValueAtTime(tr ? tr.freq : 200, t);
-  osc.frequency.exponentialRampToValueAtTime(30, t + 0.15);
-  gain.gain.setValueAtTime(0.4, t);
-  gain.gain.exponentialRampToValueAtTime(0.01, t + 0.15);
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.start(t);
-  osc.stop(t + 0.16);
-}
-
-function renderGrid() {
-  const container = document.getElementById('grid-container');
-  container.innerHTML = '';
-  tracks.forEach(tr => {
-    const row = document.createElement('div');
-    row.className = 'track-row';
-    row.innerHTML = '<span class="track-label">' + tr.name + '</span><div class="step-grid" id="row-' + tr.id + '"></div>';
-    container.appendChild(row);
-    const grid = row.querySelector('.step-grid');
-    for (let i = 0; i < 16; i++) {
-      const btn = document.createElement('button');
-      btn.className = 'step-btn' + (matrix[tr.id][i] ? ' active' : '');
-      btn.onclick = () => { matrix[tr.id][i] = matrix[tr.id][i] ? 0 : 1; btn.classList.toggle('active'); };
-      grid.appendChild(btn);
-    }
-  });
-}
-
-function step() {
-  document.querySelectorAll('.step-btn').forEach(b => b.classList.remove('current'));
-  tracks.forEach(tr => {
-    if (matrix[tr.id][currentStep]) playSound(tr.id);
-    const btn = document.querySelector('#row-' + tr.id + ' .step-btn:nth-child(' + (currentStep + 1) + ')');
-    if (btn) btn.classList.add('current');
-  });
-  currentStep = (currentStep + 1) % 16;
-}
-
-document.getElementById('btn-play').onclick = function() {
-  isPlaying = !isPlaying;
-  this.textContent = isPlaying ? '⏹ STOP' : '▶ PLAY';
-  if (isPlaying) {
-    if (!ctx) ctx = new AudioCtx();
-    timerId = setInterval(step, (60 / bpm / 4) * 1000);
-  } else {
-    clearInterval(timerId);
-    currentStep = 0;
-    document.querySelectorAll('.step-btn').forEach(b => b.classList.remove('current'));
-  }
-};
-
-document.getElementById('bpm-slider').oninput = function(e) {
-  bpm = parseInt(e.target.value);
-  document.getElementById('bpm-val').textContent = bpm;
-  if (isPlaying) {
-    clearInterval(timerId);
-    timerId = setInterval(step, (60 / bpm / 4) * 1000);
-  }
-};
-
-document.getElementById('btn-clear').onclick = () => {
-  tracks.forEach(tr => matrix[tr.id] = new Array(16).fill(0));
-  renderGrid();
-};
-
-renderGrid();`
+        return {
+          "index.html": htmlContent,
+          "style.css": cssContent,
+          "script.js": jsContent
         };
       }
     },
 
+    // ----------------------------------------------------
+    // APP 2: CYBERPUNK 3D SPEED CAR
+    // ----------------------------------------------------
     {
       id: "cyber-car-3d",
       category: "3d",
@@ -176,79 +217,170 @@ renderGrid();`
       descFr: "Simulation 3D temps réel d'un véhicule cyberpunk sous Three.js avec roues lumineuses, grille infinie et rotation caméra interactive.",
       tech: ["Three.js", "WebGL 3D", "60 FPS", "HTML5 Canvas"],
       getFiles: function (lang) {
-        return {
-          "index.html": `<!DOCTYPE html>
+        const title = lang === "fr" ? "Voiture Cyberpunk 3D — IA Code Studio" : "Cyberpunk 3D Speed Car — IA Code Studio";
+        const cssContent = `* { box-sizing: border-box; margin: 0; padding: 0; }
+body { margin: 0; overflow: hidden; background: #050714; font-family: monospace; }
+#webgl-canvas { width: 100vw; height: 100vh; display: block; }
+.hud-overlay { position: absolute; top: 20px; left: 20px; color: #00f0ff; pointer-events: none; z-index: 10; text-shadow: 0 0 10px rgba(0,240,255,0.7); }
+.hud-overlay h1 { font-size: 18px; margin: 0 0 5px 0; }
+.hud-overlay p { font-size: 12px; color: #94a3b8; }`;
+
+        const jsContent = `function start3DCar() {
+  const container = document.body;
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x050714, 0.035);
+
+  const camera = new THREE.PerspectiveCamera(60, W / H, 0.1, 1000);
+  camera.position.set(0, 2.5, 7.5);
+  camera.lookAt(0, 0, 0);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(W, H);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.domElement.id = 'webgl-canvas';
+  container.appendChild(renderer.domElement);
+
+  const light = new THREE.DirectionalLight(0x00f0ff, 1.8);
+  light.position.set(5, 10, 7);
+  scene.add(light);
+  scene.add(new THREE.AmbientLight(0x221144));
+
+  // Car Chassis
+  const bodyGeo = new THREE.BoxGeometry(2.2, 0.5, 4.4);
+  const bodyMat = new THREE.MeshStandardMaterial({ color: 0x00f0ff, metalness: 0.9, roughness: 0.2, wireframe: true });
+  const carBody = new THREE.Mesh(bodyGeo, bodyMat);
+  scene.add(carBody);
+
+  // Wheels
+  const wheelGeo = new THREE.CylinderGeometry(0.45, 0.45, 0.35, 16);
+  const wheelMat = new THREE.MeshBasicMaterial({ color: 0xff007f, wireframe: true });
+  const wheels = [];
+  const positions = [
+    [-1.3, -0.2, 1.4], [1.3, -0.2, 1.4],
+    [-1.3, -0.2, -1.4], [1.3, -0.2, -1.4]
+  ];
+
+  positions.forEach(pos => {
+    const w = new THREE.Mesh(wheelGeo, wheelMat);
+    w.position.set(pos[0], pos[1], pos[2]);
+    w.rotation.z = Math.PI / 2;
+    scene.add(w);
+    wheels.push(w);
+  });
+
+  // Road Grid
+  const grid = new THREE.GridHelper(50, 50, 0x00f0ff, 0x112244);
+  grid.position.y = -0.65;
+  scene.add(grid);
+
+  let mouseX = 0, mouseY = 0;
+  window.addEventListener('mousemove', (e) => {
+    mouseX = (e.clientX / W - 0.5) * 2;
+    mouseY = (e.clientY / H - 0.5) * 2;
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    grid.position.z = (grid.position.z + 0.35) % 2;
+    wheels.forEach(w => w.rotation.x += 0.25);
+    camera.position.x += (mouseX * 2.5 - camera.position.x) * 0.05;
+    camera.position.y += (-mouseY * 1.5 + 2.5 - camera.position.y) * 0.05;
+    camera.lookAt(0, 0, 0);
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    const nW = window.innerWidth;
+    const nH = window.innerHeight;
+    camera.aspect = nW / nH;
+    camera.updateProjectionMatrix();
+    renderer.setSize(nW, nH);
+  });
+}
+
+function initEngine() {
+  if (typeof THREE !== 'undefined') {
+    start3DCar();
+  } else {
+    let tries = 0;
+    const check = setInterval(() => {
+      tries++;
+      if (typeof THREE !== 'undefined') {
+        clearInterval(check);
+        start3DCar();
+      } else if (tries > 30) {
+        clearInterval(check);
+        render2DFallback();
+      }
+    }, 100);
+  }
+}
+
+function render2DFallback() {
+  const c = document.createElement('canvas');
+  c.width = window.innerWidth; c.height = window.innerHeight;
+  document.body.appendChild(c);
+  const ctx = c.getContext('2d');
+  let t = 0;
+  function loop() {
+    ctx.fillStyle = '#050714'; ctx.fillRect(0, 0, c.width, c.height);
+    ctx.strokeStyle = '#00f0ff'; ctx.lineWidth = 2;
+    const cx = c.width / 2, cy = c.height / 2;
+    ctx.strokeRect(cx - 100, cy - 40, 200, 80);
+    ctx.fillStyle = '#ff007f';
+    ctx.beginPath(); ctx.arc(cx - 60, cy + 40, 20, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx + 60, cy + 40, 20, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.font = '16px monospace';
+    ctx.fillText('CYBER CAR 3D [2D SPEED MODE]', cx - 130, cy - 70);
+    t++; requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initEngine);
+} else {
+  initEngine();
+}`;
+
+        const htmlContent = `<!DOCTYPE html>
 <html lang="${lang}">
 <head>
   <meta charset="UTF-8">
-  <title>Cyberpunk 3D Speed Car — IA Code Studio</title>
-  <style>body { margin: 0; overflow: hidden; background: #050714; } canvas { display: block; }</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title}</title>
+  <style>
+${cssContent}
+  </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>if (typeof THREE === 'undefined') document.write('<script src="https://unpkg.com/three@0.128.0/build/three.min.js"><\\/script>');</script>
 </head>
 <body>
-  <script src="script.js"></script>
+  <div class="hud-overlay">
+    <h1>CYBERPUNK 3D SPEED CAR</h1>
+    <p>Move mouse to orbit camera · 60 FPS WebGL</p>
+  </div>
+  <script>
+${jsContent}
+  </script>
 </body>
-</html>`,
-          "script.js": `const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x050714, 0.035);
-const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 2.5, 7.5);
-camera.lookAt(0, 0, 0);
+</html>`;
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
-
-const light = new THREE.DirectionalLight(0x00f0ff, 1.5);
-light.position.set(5, 10, 7);
-scene.add(light);
-scene.add(new THREE.AmbientLight(0x221144));
-
-// Chassis
-const bodyGeo = new THREE.BoxGeometry(2.2, 0.5, 4.4);
-const bodyMat = new THREE.MeshStandardMaterial({ color: 0x00f0ff, metalness: 0.9, roughness: 0.2, wireframe: true });
-const carBody = new THREE.Mesh(bodyGeo, bodyMat);
-scene.add(carBody);
-
-// Wheels
-const wheelGeo = new THREE.CylinderGeometry(0.45, 0.45, 0.35, 16);
-const wheelMat = new THREE.MeshBasicMaterial({ color: 0xff007f, wireframe: true });
-const wheels = [];
-const positions = [
-  [-1.3, -0.2, 1.4], [1.3, -0.2, 1.4],
-  [-1.3, -0.2, -1.4], [1.3, -0.2, -1.4]
-];
-
-positions.forEach(pos => {
-  const w = new THREE.Mesh(wheelGeo, wheelMat);
-  w.position.set(pos[0], pos[1], pos[2]);
-  w.rotation.z = Math.PI / 2;
-  scene.add(w);
-  wheels.push(w);
-});
-
-// Road Grid
-const grid = new THREE.GridHelper(50, 50, 0x00f0ff, 0x112244);
-grid.position.y = -0.65;
-scene.add(grid);
-
-function animate() {
-  requestAnimationFrame(animate);
-  grid.position.z = (grid.position.z + 0.3) % 2;
-  wheels.forEach(w => w.rotation.x += 0.2);
-  renderer.render(scene, camera);
-}
-animate();
-
-window.onresize = () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-};`
+        return {
+          "index.html": htmlContent,
+          "style.css": cssContent,
+          "script.js": jsContent
         };
       }
     },
 
+    // ----------------------------------------------------
+    // APP 3: MATRIX DIGITAL RAIN
+    // ----------------------------------------------------
     {
       id: "matrix-rain",
       category: "canvas",
@@ -259,33 +391,37 @@ window.onresize = () => {
       descFr: "Effet culte de pluie digitale Matrix en HTML5 Canvas avec contrôle de vitesse, streaming haute densité et lueur verte neon.",
       tech: ["HTML5 Canvas", "2D Particles", "Zero Dependencies"],
       getFiles: function (lang) {
-        return {
-          "index.html": `<!DOCTYPE html>
-<html lang="${lang}">
-<head>
-  <meta charset="UTF-8">
-  <title>Matrix Digital Rain — IA Code Studio</title>
-  <style>body { margin: 0; overflow: hidden; background: #000; }</style>
-</head>
-<body>
-  <canvas id="matrix"></canvas>
-  <script src="script.js"></script>
-</body>
-</html>`,
-          "script.js": `const canvas = document.getElementById('matrix');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+        const title = lang === "fr" ? "Pluie Digitale Matrix — IA Code Studio" : "Matrix Digital Rain — IA Code Studio";
+        const cssContent = `* { margin: 0; padding: 0; box-sizing: border-box; }
+body { margin: 0; overflow: hidden; background: #000; font-family: monospace; }
+#matrix { display: block; width: 100vw; height: 100vh; }
+.hint { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); color: rgba(0,255,170,0.6); font-size: 12px; pointer-events: none; letter-spacing: 1px; }`;
 
-const chars = '0123456789ABCDEFｦｱｳｴｵｶｷｹｺｻｼｽｾｿﾀﾂﾃﾅﾆﾇﾈﾊﾋﾎﾏﾐﾑﾒﾓﾔﾕﾗﾘﾜ';
+        const jsContent = `const canvas = document.getElementById('matrix');
+const ctx = canvas.getContext('2d');
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+
+const chars = '0123456789ABCDEFｦｱｳｴｵｶｷｹｺｻｼｽｾｿﾀﾂﾃﾅﾆﾇﾈﾊﾋﾎﾏﾐﾑﾒﾓﾔﾕﾗﾘﾜXYZ';
 const fontSize = 16;
-const cols = Math.floor(canvas.width / fontSize);
-const drops = new Array(cols).fill(1);
+let cols = Math.floor(canvas.width / fontSize);
+let drops = new Array(cols).fill(1);
+
+const themes = ['#00ffaa', '#00f0ff', '#ff007f', '#ffb703'];
+let themeIdx = 0;
+
+canvas.addEventListener('click', () => {
+  themeIdx = (themeIdx + 1) % themes.length;
+});
 
 function draw() {
   ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = '#00ffaa';
+  ctx.fillStyle = themes[themeIdx];
   ctx.font = fontSize + 'px monospace';
 
   for (let i = 0; i < drops.length; i++) {
@@ -299,73 +435,174 @@ function draw() {
 }
 setInterval(draw, 33);
 
-window.onresize = () => {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-};`
+window.addEventListener('resize', () => {
+  resize();
+  cols = Math.floor(canvas.width / fontSize);
+  drops = new Array(cols).fill(1);
+});`;
+
+        const htmlContent = `<!DOCTYPE html>
+<html lang="${lang}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title}</title>
+  <style>
+${cssContent}
+  </style>
+</head>
+<body>
+  <canvas id="matrix"></canvas>
+  <div class="hint">CLICK ANYWHERE TO CYCLE MATRIX COLORS</div>
+  <script>
+${jsContent}
+  </script>
+</body>
+</html>`;
+
+        return {
+          "index.html": htmlContent,
+          "style.css": cssContent,
+          "script.js": jsContent
         };
       }
     },
 
+    // ----------------------------------------------------
+    // APP 4: QUANTUM NEURAL AI GLOBE 3D
+    // ----------------------------------------------------
     {
       id: "neural-ai-globe",
       category: "3d",
       icon: "🧠",
       nameEn: "Quantum Neural AI Globe 3D",
       nameFr: "Sphère Réseau Neuronal 3D IA",
-      descEn: "Three.js 3D sphere with 1,500 pulsing synaptic neural nodes, interactive mouse physics, and holographic core.",
-      descFr: "Sphère 3D sous Three.js avec 1 500 nœuds synaptiques pulsants, physique interactive au curseur et noyau holographique.",
+      descEn: "Three.js 3D sphere with 1,200 pulsing synaptic neural nodes, interactive mouse physics, and holographic core.",
+      descFr: "Sphère 3D sous Three.js avec 1 200 nœuds synaptiques pulsants, physique interactive au curseur et noyau holographique.",
       tech: ["Three.js", "Particles 3D", "WebGL Shader"],
       getFiles: function (lang) {
-        return {
-          "index.html": `<!DOCTYPE html>
+        const title = lang === "fr" ? "Sphère Neuronale IA 3D — IA Code Studio" : "Neural AI Globe 3D — IA Code Studio";
+        const cssContent = `* { margin: 0; padding: 0; box-sizing: border-box; }
+body { margin: 0; overflow: hidden; background: #030511; font-family: monospace; }
+#webgl-canvas { width: 100vw; height: 100vh; display: block; }
+.badge-info { position: absolute; top: 20px; left: 20px; color: #c4b5fd; font-size: 13px; z-index: 10; pointer-events: none; }
+.badge-info h2 { font-size: 16px; color: #fff; margin-bottom: 4px; }`;
+
+        const jsContent = `function startNeuralGlobe() {
+  const W = window.innerWidth, H = window.innerHeight;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, W / H, 0.1, 1000);
+  camera.position.z = 6.5;
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(W, H);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.domElement.id = 'webgl-canvas';
+  document.body.appendChild(renderer.domElement);
+
+  const count = 1200;
+  const geo = new THREE.BufferGeometry();
+  const pos = new Float32Array(count * 3);
+
+  for (let i = 0; i < count; i++) {
+    const theta = Math.acos(2 * Math.random() - 1);
+    const phi = Math.sqrt(count * Math.PI) * theta;
+    pos[i * 3] = 2.4 * Math.sin(theta) * Math.cos(phi);
+    pos[i * 3 + 1] = 2.4 * Math.sin(theta) * Math.sin(phi);
+    pos[i * 3 + 2] = 2.4 * Math.cos(theta);
+  }
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+
+  const mat = new THREE.PointsMaterial({ color: 0x9d4edd, size: 0.08, transparent: true, opacity: 0.85 });
+  const globe = new THREE.Points(geo, mat);
+  scene.add(globe);
+
+  // Inner core
+  const coreGeo = new THREE.SphereGeometry(1.2, 16, 16);
+  const coreMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true, transparent: true, opacity: 0.3 });
+  const core = new THREE.Mesh(coreGeo, coreMat);
+  scene.add(core);
+
+  let mouseX = 0, mouseY = 0;
+  window.addEventListener('mousemove', (e) => {
+    mouseX = (e.clientX / W - 0.5) * 2;
+    mouseY = (e.clientY / H - 0.5) * 2;
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    globe.rotation.y += 0.005 + mouseX * 0.02;
+    globe.rotation.x += 0.002 + mouseY * 0.02;
+    core.rotation.y -= 0.008;
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    const nW = window.innerWidth, nH = window.innerHeight;
+    camera.aspect = nW / nH;
+    camera.updateProjectionMatrix();
+    renderer.setSize(nW, nH);
+  });
+}
+
+function initEngine() {
+  if (typeof THREE !== 'undefined') {
+    startNeuralGlobe();
+  } else {
+    let tries = 0;
+    const check = setInterval(() => {
+      tries++;
+      if (typeof THREE !== 'undefined') {
+        clearInterval(check);
+        startNeuralGlobe();
+      } else if (tries > 30) {
+        clearInterval(check);
+      }
+    }, 100);
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initEngine);
+} else {
+  initEngine();
+}`;
+
+        const htmlContent = `<!DOCTYPE html>
 <html lang="${lang}">
 <head>
   <meta charset="UTF-8">
-  <title>Neural AI Globe 3D — IA Code Studio</title>
-  <style>body { margin: 0; overflow: hidden; background: #030511; }</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title}</title>
+  <style>
+${cssContent}
+  </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>if (typeof THREE === 'undefined') document.write('<script src="https://unpkg.com/three@0.128.0/build/three.min.js"><\\/script>');</script>
 </head>
 <body>
-  <script src="script.js"></script>
+  <div class="badge-info">
+    <h2>QUANTUM NEURAL GLOBE 3D</h2>
+    <p>1,200 Synaptic Nodes · Three.js WebGL</p>
+  </div>
+  <script>
+${jsContent}
+  </script>
 </body>
-</html>`,
-          "script.js": `const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.z = 6;
+</html>`;
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
-
-const count = 1200;
-const geo = new THREE.BufferGeometry();
-const pos = new Float32Array(count * 3);
-
-for (let i = 0; i < count; i++) {
-  const theta = Math.acos(2 * Math.random() - 1);
-  const phi = Math.sqrt(count * Math.PI) * theta;
-  pos[i * 3] = 2.4 * Math.sin(theta) * Math.cos(phi);
-  pos[i * 3 + 1] = 2.4 * Math.sin(theta) * Math.sin(phi);
-  pos[i * 3 + 2] = 2.4 * Math.cos(theta);
-}
-geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-
-const mat = new THREE.PointsMaterial({ color: 0x9d4edd, size: 0.08, transparent: true, opacity: 0.85 });
-const globe = new THREE.Points(geo, mat);
-scene.add(globe);
-
-function animate() {
-  requestAnimationFrame(animate);
-  globe.rotation.y += 0.005;
-  globe.rotation.x += 0.002;
-  renderer.render(scene, camera);
-}
-animate();`
+        return {
+          "index.html": htmlContent,
+          "style.css": cssContent,
+          "script.js": jsContent
         };
       }
     },
 
+    // ----------------------------------------------------
+    // APP 5: HOLOGRAPHIC WIREFRAME EARTH
+    // ----------------------------------------------------
     {
       id: "holographic-earth",
       category: "3d",
@@ -376,49 +613,105 @@ animate();`
       descFr: "Globe terrestre 3D translucide avec halo atmosphérique, anneaux orbitaux et flux de données géographiques.",
       tech: ["Three.js", "Wireframe 3D", "60 FPS"],
       getFiles: function (lang) {
-        return {
-          "index.html": `<!DOCTYPE html>
+        const title = lang === "fr" ? "Terre Holographique 3D — IA Code Studio" : "Holographic Earth 3D — IA Code Studio";
+        const cssContent = `* { margin: 0; padding: 0; box-sizing: border-box; }
+body { margin: 0; overflow: hidden; background: #02030a; font-family: monospace; }
+#webgl-canvas { width: 100vw; height: 100vh; display: block; }
+.info-tag { position: absolute; bottom: 20px; left: 20px; color: #00f0ff; font-size: 12px; pointer-events: none; }`;
+
+        const jsContent = `function startHoloEarth() {
+  const W = window.innerWidth, H = window.innerHeight;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 1000);
+  camera.position.z = 7;
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(W, H);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.domElement.id = 'webgl-canvas';
+  document.body.appendChild(renderer.domElement);
+
+  const earthGeo = new THREE.SphereGeometry(2.5, 32, 32);
+  const earthMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true, transparent: true, opacity: 0.6 });
+  const earth = new THREE.Mesh(earthGeo, earthMat);
+  scene.add(earth);
+
+  const ringGeo = new THREE.TorusGeometry(3.6, 0.03, 16, 100);
+  const ringMat = new THREE.MeshBasicMaterial({ color: 0xff007f });
+  const ring = new THREE.Mesh(ringGeo, ringMat);
+  ring.rotation.x = Math.PI / 2.5;
+  scene.add(ring);
+
+  function animate() {
+    requestAnimationFrame(animate);
+    earth.rotation.y += 0.004;
+    ring.rotation.z += 0.01;
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    const nW = window.innerWidth, nH = window.innerHeight;
+    camera.aspect = nW / nH;
+    camera.updateProjectionMatrix();
+    renderer.setSize(nW, nH);
+  });
+}
+
+function initEngine() {
+  if (typeof THREE !== 'undefined') {
+    startHoloEarth();
+  } else {
+    let tries = 0;
+    const check = setInterval(() => {
+      tries++;
+      if (typeof THREE !== 'undefined') {
+        clearInterval(check);
+        startHoloEarth();
+      } else if (tries > 30) {
+        clearInterval(check);
+      }
+    }, 100);
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initEngine);
+} else {
+  initEngine();
+}`;
+
+        const htmlContent = `<!DOCTYPE html>
 <html lang="${lang}">
 <head>
   <meta charset="UTF-8">
-  <title>Holographic Earth 3D — IA Code Studio</title>
-  <style>body { margin: 0; overflow: hidden; background: #02030a; }</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title}</title>
+  <style>
+${cssContent}
+  </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>if (typeof THREE === 'undefined') document.write('<script src="https://unpkg.com/three@0.128.0/build/three.min.js"><\\/script>');</script>
 </head>
 <body>
-  <script src="script.js"></script>
+  <div class="info-tag">HOLOGRAPHIC EARTH 3D · 60 FPS ORBIT</div>
+  <script>
+${jsContent}
+  </script>
 </body>
-</html>`,
-          "script.js": `const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.z = 7;
+</html>`;
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
-
-const earthGeo = new THREE.SphereGeometry(2.5, 32, 32);
-const earthMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true, transparent: true, opacity: 0.6 });
-const earth = new THREE.Mesh(earthGeo, earthMat);
-scene.add(earth);
-
-const ringGeo = new THREE.TorusGeometry(3.6, 0.03, 16, 100);
-const ringMat = new THREE.MeshBasicMaterial({ color: 0xff007f });
-const ring = new THREE.Mesh(ringGeo, ringMat);
-ring.rotation.x = Math.PI / 2.5;
-scene.add(ring);
-
-function animate() {
-  requestAnimationFrame(animate);
-  earth.rotation.y += 0.004;
-  ring.rotation.z += 0.01;
-  renderer.render(scene, camera);
-}
-animate();`
+        return {
+          "index.html": htmlContent,
+          "style.css": cssContent,
+          "script.js": jsContent
         };
       }
     },
 
+    // ----------------------------------------------------
+    // APP 6: CYBER PONG 2077 RETRO GAME
+    // ----------------------------------------------------
     {
       id: "cyber-pong",
       category: "games",
@@ -429,37 +722,27 @@ animate();`
       descFr: "Jeu de tennis arcade rétro aux effets de néon. Jouez au clavier ou à la souris contre une IA adaptative avec son et score.",
       tech: ["HTML5 Canvas", "Game Physics", "Audio Effects"],
       getFiles: function (lang) {
-        return {
-          "index.html": `<!DOCTYPE html>
-<html lang="${lang}">
-<head>
-  <meta charset="UTF-8">
-  <title>Neon Cyber Pong — IA Code Studio</title>
-  <style>
-    body { margin: 0; background: #070914; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: monospace; }
-    canvas { border: 2px solid #00f0ff; box-shadow: 0 0 25px rgba(0,240,255,0.4); border-radius: 12px; }
-  </style>
-</head>
-<body>
-  <h2>CYBER PONG [PLAYER vs AI]</h2>
-  <canvas id="pong" width="640" height="400"></canvas>
-  <script src="script.js"></script>
-</body>
-</html>`,
-          "script.js": `const canvas = document.getElementById('pong');
+        const title = lang === "fr" ? "Cyber Pong 2077 Arcade — IA Code Studio" : "Cyber Pong 2077 Arcade — IA Code Studio";
+        const cssContent = `* { margin: 0; padding: 0; box-sizing: border-box; }
+body { margin: 0; background: #070914; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: monospace; }
+h2 { color: #00f0ff; margin-bottom: 12px; letter-spacing: 2px; }
+canvas { border: 2px solid #00f0ff; box-shadow: 0 0 25px rgba(0,240,255,0.4); border-radius: 12px; background: #04050d; }
+.help-txt { color: #94a3b8; font-size: 12px; margin-top: 12px; }`;
+
+        const jsContent = `const canvas = document.getElementById('pong');
 const ctx = canvas.getContext('2d');
 
 let pY = 160, aiY = 160;
 let bX = 320, bY = 200, bSpdX = 4, bSpdY = 3;
 let pScore = 0, aiScore = 0;
 
-canvas.onmousemove = (e) => {
+canvas.addEventListener('mousemove', (e) => {
   const rect = canvas.getBoundingClientRect();
   pY = e.clientY - rect.top - 35;
-};
+});
 
 function loop() {
-  ctx.fillStyle = '#070914';
+  ctx.fillStyle = '#04050d';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   // Ball
@@ -467,7 +750,7 @@ function loop() {
   if (bY <= 0 || bY >= canvas.height - 10) bSpdY = -bSpdY;
 
   // AI movement
-  if (aiY + 35 < bY) aiY += 3; else aiY -= 3;
+  if (aiY + 35 < bY) aiY += 3.2; else aiY -= 3.2;
 
   // Paddle bounce
   if (bX <= 25 && bY >= pY && bY <= pY + 70) bSpdX = -bSpdX * 1.05;
@@ -485,15 +768,43 @@ function loop() {
   ctx.fillStyle = '#fff';
   ctx.fillRect(bX, bY, 8, 8);
 
-  ctx.font = '20px monospace';
-  ctx.fillText(pScore + ' : ' + aiScore, 300, 30);
+  ctx.font = '22px monospace';
+  ctx.fillText(pScore + ' : ' + aiScore, 290, 35);
   requestAnimationFrame(loop);
 }
-loop();`
+loop();`;
+
+        const htmlContent = `<!DOCTYPE html>
+<html lang="${lang}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title}</title>
+  <style>
+${cssContent}
+  </style>
+</head>
+<body>
+  <h2>CYBER PONG [PLAYER vs AI]</h2>
+  <canvas id="pong" width="640" height="400"></canvas>
+  <p class="help-txt">Move mouse over the arena to control the cyan paddle</p>
+  <script>
+${jsContent}
+  </script>
+</body>
+</html>`;
+
+        return {
+          "index.html": htmlContent,
+          "style.css": cssContent,
+          "script.js": jsContent
         };
       }
     },
 
+    // ----------------------------------------------------
+    // APP 7: CYBERFOCUS POMODORO TIMER
+    // ----------------------------------------------------
     {
       id: "cyber-pomodoro",
       category: "tools",
@@ -504,30 +815,16 @@ loop();`
       descFr: "Minuteur de productivité Pomodoro avec cercle de progression SVG, modes travail/pause et alertes audio cyberpunk.",
       tech: ["SVG Animation", "Web Audio", "Local Persistence"],
       getFiles: function (lang) {
-        return {
-          "index.html": `<!DOCTYPE html>
-<html lang="${lang}">
-<head>
-  <meta charset="UTF-8">
-  <title>Cyber Pomodoro — IA Code Studio</title>
-  <style>
-    body { background: #080c1d; color: #fff; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: monospace; margin: 0; }
-    .timer-card { background: #0f1530; border: 2px solid #00f0ff; border-radius: 24px; padding: 40px; text-align: center; box-shadow: 0 0 35px rgba(0,240,255,0.25); }
-    .digits { font-size: 54px; font-weight: 800; color: #00f0ff; margin: 20px 0; }
-    button { background: #00f0ff; border: none; color: #000; font-weight: 800; padding: 10px 24px; border-radius: 12px; cursor: pointer; margin: 5px; font-size: 14px; }
-  </style>
-</head>
-<body>
-  <div class="timer-card">
-    <h2>CYBER POMODORO</h2>
-    <div id="display" class="digits">25:00</div>
-    <button id="btn-toggle">START</button>
-    <button id="btn-reset" style="background:#ff007f; color:#fff;">RESET</button>
-  </div>
-  <script src="script.js"></script>
-</body>
-</html>`,
-          "script.js": `let time = 25 * 60;
+        const title = lang === "fr" ? "Chronomètre Pomodoro Cyberpunk — IA Code Studio" : "Cyber Pomodoro Focus Timer — IA Code Studio";
+        const cssContent = `* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #080c1d; color: #fff; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: monospace; }
+.timer-card { background: #0f1530; border: 2px solid #00f0ff; border-radius: 24px; padding: 40px; text-align: center; box-shadow: 0 0 35px rgba(0,240,255,0.25); max-width: 400px; width: 90%; }
+.digits { font-size: 54px; font-weight: 800; color: #00f0ff; margin: 20px 0; text-shadow: 0 0 15px rgba(0,240,255,0.5); }
+.btn-box { display: flex; gap: 10px; justify-content: center; }
+button { background: #00f0ff; border: none; color: #000; font-weight: 800; padding: 10px 24px; border-radius: 12px; cursor: pointer; font-size: 14px; transition: transform 0.1s; }
+button:active { transform: scale(0.96); }`;
+
+        const jsContent = `let time = 25 * 60;
 let running = false;
 let timer = null;
 
@@ -537,29 +834,72 @@ function render() {
   document.getElementById('display').textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
 }
 
-document.getElementById('btn-toggle').onclick = function() {
-  running = !running;
-  this.textContent = running ? 'PAUSE' : 'START';
-  if (running) {
-    timer = setInterval(() => {
-      if (time > 0) { time--; render(); } else { clearInterval(timer); alert('Time up!'); }
-    }, 1000);
-  } else {
-    clearInterval(timer);
-  }
-};
-
-document.getElementById('btn-reset').onclick = () => {
-  clearInterval(timer);
-  running = false;
-  document.getElementById('btn-toggle').textContent = 'START';
-  time = 25 * 60;
+window.addEventListener('DOMContentLoaded', () => {
   render();
-};`
+  const btnToggle = document.getElementById('btn-toggle');
+  const btnReset = document.getElementById('btn-reset');
+
+  if (btnToggle) {
+    btnToggle.onclick = function() {
+      running = !running;
+      this.textContent = running ? 'PAUSE' : 'START';
+      if (running) {
+        timer = setInterval(() => {
+          if (time > 0) { time--; render(); } else { clearInterval(timer); alert('Time up!'); }
+        }, 1000);
+      } else {
+        clearInterval(timer);
+      }
+    };
+  }
+
+  if (btnReset) {
+    btnReset.onclick = () => {
+      clearInterval(timer);
+      running = false;
+      document.getElementById('btn-toggle').textContent = 'START';
+      time = 25 * 60;
+      render();
+    };
+  }
+});`;
+
+        const htmlContent = `<!DOCTYPE html>
+<html lang="${lang}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title}</title>
+  <style>
+${cssContent}
+  </style>
+</head>
+<body>
+  <div class="timer-card">
+    <h2>CYBER POMODORO</h2>
+    <div id="display" class="digits">25:00</div>
+    <div class="btn-box">
+      <button id="btn-toggle">START</button>
+      <button id="btn-reset" style="background:#ff007f; color:#fff;">RESET</button>
+    </div>
+  </div>
+  <script>
+${jsContent}
+  </script>
+</body>
+</html>`;
+
+        return {
+          "index.html": htmlContent,
+          "style.css": cssContent,
+          "script.js": jsContent
         };
       }
     },
 
+    // ----------------------------------------------------
+    // APP 8: QUANTUM PASSWORD VAULT
+    // ----------------------------------------------------
     {
       id: "quantum-pass-vault",
       category: "tools",
@@ -570,17 +910,42 @@ document.getElementById('btn-reset').onclick = () => {
       descFr: "Générateur de mots de passe et jetons ultra-sécurisés avec mesure d'entropie, options de symboles et copie 1-clic.",
       tech: ["Crypto API", "Clipboard API", "Vanilla JS"],
       getFiles: function (lang) {
-        return {
-          "index.html": `<!DOCTYPE html>
+        const title = lang === "fr" ? "Coffre Mots de Passe — IA Code Studio" : "Quantum Password Vault — IA Code Studio";
+        const cssContent = `* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #050711; color: #fff; height: 100vh; display: flex; align-items: center; justify-content: center; font-family: monospace; }
+.vault-box { background: #0c1026; border: 2px solid #00f0ff; border-radius: 18px; padding: 30px; width: 380px; box-shadow: 0 0 30px rgba(0,240,255,0.2); }
+.pass-field { background: #050714; border: 1px solid #1e293b; color: #00ffaa; font-size: 18px; padding: 12px; border-radius: 8px; width: 100%; text-align: center; margin: 15px 0; outline: none; }
+button { background: linear-gradient(135deg, #00f0ff, #7928ca); border: none; color: #fff; font-weight: 800; padding: 12px; border-radius: 10px; width: 100%; cursor: pointer; }`;
+
+        const jsContent = `function genPass() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=';
+  let res = '';
+  for (let i = 0; i < 20; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
+  const el = document.getElementById('pass-out');
+  if (el) el.value = res;
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  genPass();
+  const btn = document.getElementById('btn-gen');
+  if (btn) btn.onclick = genPass;
+  const inp = document.getElementById('pass-out');
+  if (inp) {
+    inp.onclick = () => {
+      navigator.clipboard.writeText(inp.value);
+      alert('Password copied to clipboard!');
+    };
+  }
+});`;
+
+        const htmlContent = `<!DOCTYPE html>
 <html lang="${lang}">
 <head>
   <meta charset="UTF-8">
-  <title>Quantum Password Vault — IA Code Studio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title}</title>
   <style>
-    body { background: #050711; color: #fff; height: 100vh; display: flex; align-items: center; justify-content: center; font-family: monospace; margin: 0; }
-    .vault-box { background: #0c1026; border: 2px solid #00f0ff; border-radius: 18px; padding: 30px; width: 380px; box-shadow: 0 0 30px rgba(0,240,255,0.2); }
-    .pass-field { background: #050714; border: 1px solid #1e293b; color: #00ffaa; font-size: 18px; padding: 12px; border-radius: 8px; width: 100%; box-sizing: border-box; text-align: center; margin: 15px 0; }
-    button { background: linear-gradient(135deg, #00f0ff, #7928ca); border: none; color: #fff; font-weight: 800; padding: 12px; border-radius: 10px; width: 100%; cursor: pointer; }
+${cssContent}
   </style>
 </head>
 <body>
@@ -589,21 +954,23 @@ document.getElementById('btn-reset').onclick = () => {
     <input id="pass-out" class="pass-field" readonly value="Generating...">
     <button id="btn-gen">⚡ GENERATE SECURE PASS</button>
   </div>
-  <script src="script.js"></script>
+  <script>
+${jsContent}
+  </script>
 </body>
-</html>`,
-          "script.js": `function genPass() {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=';
-  let res = '';
-  for (let i = 0; i < 20; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
-  document.getElementById('pass-out').value = res;
-}
-document.getElementById('btn-gen').onclick = genPass;
-genPass();`
+</html>`;
+
+        return {
+          "index.html": htmlContent,
+          "style.css": cssContent,
+          "script.js": jsContent
         };
       }
     },
 
+    // ----------------------------------------------------
+    // APP 9: 3D GLASSMORPHISM CARDS
+    // ----------------------------------------------------
     {
       id: "glass-cards-3d",
       category: "ui",
@@ -614,38 +981,57 @@ genPass();`
       descFr: "Cartes modernes effet verre fumé (Glassmorphism) avec inclinaison 3D perspective au curseur et bordures lumineuses.",
       tech: ["CSS 3D Transforms", "Vanilla JS Tilt", "UI Components"],
       getFiles: function (lang) {
-        return {
-          "index.html": `<!DOCTYPE html>
+        const title = lang === "fr" ? "Cartes 3D Glassmorphism — IA Code Studio" : "3D Glass Cards — IA Code Studio";
+        const cssContent = `* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #050714; color: #fff; height: 100vh; display: flex; align-items: center; justify-content: center; font-family: -apple-system, BlinkMacSystemFont, sans-serif; perspective: 1000px; }
+.card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(0, 240, 255, 0.3); border-radius: 20px; padding: 40px; width: 300px; text-align: center; backdrop-filter: blur(12px); box-shadow: 0 15px 35px rgba(0,0,0,0.5); transform-style: preserve-3d; transition: transform 0.1s; cursor: pointer; }
+.card:hover { border-color: #00f0ff; box-shadow: 0 0 30px rgba(0,240,255,0.4); }
+h2 { color: #00f0ff; font-size: 26px; }
+.price { font-size: 36px; font-weight: 900; margin: 15px 0; color: #fff; }`;
+
+        const jsContent = `window.addEventListener('DOMContentLoaded', () => {
+  const card = document.getElementById('tilt-card');
+  if (!card) return;
+  document.addEventListener('mousemove', (e) => {
+    const x = (window.innerWidth / 2 - e.pageX) / 20;
+    const y = (window.innerHeight / 2 - e.pageY) / 20;
+    card.style.transform = 'rotateX(' + y + 'deg) rotateY(' + (-x) + 'deg)';
+  });
+});`;
+
+        const htmlContent = `<!DOCTYPE html>
 <html lang="${lang}">
 <head>
   <meta charset="UTF-8">
-  <title>3D Glass Cards — IA Code Studio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title}</title>
   <style>
-    body { background: #050714; color: #fff; height: 100vh; display: flex; align-items: center; justify-content: center; font-family: -apple-system, sans-serif; margin: 0; perspective: 1000px; }
-    .card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(0, 240, 255, 0.3); border-radius: 20px; padding: 40px; width: 280px; text-align: center; backdrop-filter: blur(12px); box-shadow: 0 15px 35px rgba(0,0,0,0.5); transform-style: preserve-3d; transition: transform 0.1s; }
-    .card:hover { border-color: #00f0ff; box-shadow: 0 0 30px rgba(0,240,255,0.4); }
-    h2 { color: #00f0ff; font-size: 26px; }
+${cssContent}
   </style>
 </head>
 <body>
   <div class="card" id="tilt-card">
-    <h2>PRO ACCESS</h2>
+    <h2>CYBER PRO</h2>
     <p style="color:#94a3b8; font-size:14px; margin: 15px 0;">Interactive 3D Glass Component with Mouse Tilt.</p>
-    <div style="font-size:32px; font-weight:900; margin:15px 0;">$10<span style="font-size:14px; color:#64748b;">/mo</span></div>
+    <div class="price">$10<span style="font-size:14px; color:#64748b;">/mo</span></div>
   </div>
-  <script src="script.js"></script>
+  <script>
+${jsContent}
+  </script>
 </body>
-</html>`,
-          "script.js": `const card = document.getElementById('tilt-card');
-document.addEventListener('mousemove', (e) => {
-  const x = (window.innerWidth / 2 - e.pageX) / 20;
-  const y = (window.innerHeight / 2 - e.pageY) / 20;
-  card.style.transform = 'rotateX(' + y + 'deg) rotateY(' + (-x) + 'deg)';
-});`
+</html>`;
+
+        return {
+          "index.html": htmlContent,
+          "style.css": cssContent,
+          "script.js": jsContent
         };
       }
     },
 
+    // ----------------------------------------------------
+    // APP 10: CYBER AMBIENT RAIN & LO-FI
+    // ----------------------------------------------------
     {
       id: "ambient-rain-lofi",
       category: "audio",
@@ -656,58 +1042,75 @@ document.addEventListener('mousemove', (e) => {
       descFr: "Générateur sonore procédural simulant la pluie avec bruit brun, fréquences lo-fi relaxantes et onde visuelle.",
       tech: ["Web Audio API", "Noise Synthesis", "Relaxation"],
       getFiles: function (lang) {
-        return {
-          "index.html": `<!DOCTYPE html>
+        const title = lang === "fr" ? "Ambiance Pluie & Lo-Fi — IA Code Studio" : "Cyber Ambient Rain — IA Code Studio";
+        const cssContent = `* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #040612; color: #fff; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: monospace; }
+.rain-card { background: #0c1024; border: 2px solid #00f0ff; border-radius: 20px; padding: 40px; text-align: center; box-shadow: 0 0 35px rgba(0,240,255,0.25); max-width: 420px; width: 90%; }
+button { background: #00f0ff; border: none; color: #000; font-weight: 800; padding: 12px 28px; border-radius: 12px; cursor: pointer; font-size: 15px; margin-top: 15px; }`;
+
+        const jsContent = `let ctx = null;
+let node = null;
+let playing = false;
+
+window.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('btn-rain');
+  if (!btn) return;
+  btn.onclick = function() {
+    playing = !playing;
+    this.textContent = playing ? '⏹ STOP RAIN' : '▶ START RAIN';
+    if (playing) {
+      ctx = new (window.AudioContext || window.webkitAudioContext)();
+      if (ctx.state === 'suspended') ctx.resume();
+      const bufferSize = ctx.sampleRate * 2;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      let lastOut = 0.0;
+      for (let i = 0; i < bufferSize; i++) {
+        const white = Math.random() * 2 - 1;
+        data[i] = (lastOut + (0.02 * white)) / 1.02;
+        lastOut = data[i];
+        data[i] *= 3.5;
+      }
+      node = ctx.createBufferSource();
+      node.buffer = buffer;
+      node.loop = true;
+      const gain = ctx.createGain();
+      gain.gain.value = 0.35;
+      node.connect(gain);
+      gain.connect(ctx.destination);
+      node.start();
+    } else {
+      if (node) node.stop();
+    }
+  };
+});`;
+
+        const htmlContent = `<!DOCTYPE html>
 <html lang="${lang}">
 <head>
   <meta charset="UTF-8">
-  <title>Cyber Ambient Rain — IA Code Studio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title}</title>
   <style>
-    body { background: #040612; color: #fff; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: monospace; margin: 0; }
-    .rain-card { background: #0c1024; border: 2px solid #00f0ff; border-radius: 20px; padding: 40px; text-align: center; box-shadow: 0 0 35px rgba(0,240,255,0.25); }
-    button { background: #00f0ff; border: none; color: #000; font-weight: 800; padding: 12px 28px; border-radius: 12px; cursor: pointer; font-size: 15px; margin-top: 15px; }
+${cssContent}
   </style>
 </head>
 <body>
   <div class="rain-card">
     <h2>🌧️ CYBER RAIN AMBIENCE</h2>
-    <p style="color:#94a3b8; font-size:13px;">Procedural Web Audio Rain Synthesis</p>
+    <p style="color:#94a3b8; font-size:13px; margin: 10px 0;">Procedural Web Audio Rain Synthesis</p>
     <button id="btn-rain">▶ START RAIN</button>
   </div>
-  <script src="script.js"></script>
+  <script>
+${jsContent}
+  </script>
 </body>
-</html>`,
-          "script.js": `let ctx = null;
-let node = null;
-let playing = false;
+</html>`;
 
-document.getElementById('btn-rain').onclick = function() {
-  playing = !playing;
-  this.textContent = playing ? '⏹ STOP RAIN' : '▶ START RAIN';
-  if (playing) {
-    ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const bufferSize = ctx.sampleRate * 2;
-    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-    let lastOut = 0.0;
-    for (let i = 0; i < bufferSize; i++) {
-      const white = Math.random() * 2 - 1;
-      data[i] = (lastOut + (0.02 * white)) / 1.02;
-      lastOut = data[i];
-      data[i] *= 3.5;
-    }
-    node = ctx.createBufferSource();
-    node.buffer = buffer;
-    node.loop = true;
-    const gain = ctx.createGain();
-    gain.gain.value = 0.35;
-    node.connect(gain);
-    gain.connect(ctx.destination);
-    node.start();
-  } else {
-    if (node) node.stop();
-  }
-};`
+        return {
+          "index.html": htmlContent,
+          "style.css": cssContent,
+          "script.js": jsContent
         };
       }
     }
@@ -723,7 +1126,6 @@ document.getElementById('btn-rain').onclick = function() {
     try {
       const data = JSON.parse(localStorage.getItem(key));
       if (data && data.date) {
-        // If date has passed, reset daily count
         if (data.date !== getTodayString()) {
           data.date = getTodayString();
           data.count = 0;
@@ -903,17 +1305,7 @@ document.getElementById('btn-rain').onclick = function() {
     }
 
     const files = app.getFiles(lang);
-    let fullHtml = files["index.html"];
-
-    // Injected inline styling and script for seamless self-contained live preview
-    if (files["style.css"]) {
-      fullHtml = fullHtml.replace("</head>", `<style>${files["style.css"]}</style></head>`);
-    }
-    if (files["script.js"]) {
-      fullHtml = fullHtml.replace("</body>", `<script>${files["script.js"]}<\/script></body>`);
-    }
-
-    iframe.srcdoc = fullHtml;
+    iframe.srcdoc = files["index.html"];
     modal.classList.add("active");
     document.body.style.overflow = "hidden";
   }
@@ -977,9 +1369,9 @@ Technologies: ${app.tech.join(", ")}
 Licence: Libre pour usage personnel et commercial (MIT).
 
 COMMENT LANCER L'APPLICATION :
-1. Décompressez tous les fichiers dans un dossier.
-2. Double-cliquez sur "index.html" pour ouvrir l'application dans n'importe quel navigateur web !
-3. Aucune installation ni serveur requis.
+1. Décompressez tous les fichiers ou double-cliquez directement sur "index.html".
+2. "index.html" est 100% autonome et démarre instantanément dans n'importe quel navigateur !
+3. Des fichiers séparés "style.css" et "script.js" sont également inclus pour votre développement personnel.
 
 Pour modifier ou générer de nouvelles applications 3D avec l'IA :
 Visitez https://ia-codestudio.com
@@ -994,9 +1386,9 @@ Technologies: ${app.tech.join(", ")}
 License: Free for personal and commercial projects (MIT).
 
 HOW TO RUN THIS APPLICATION:
-1. Extract all files to a folder.
-2. Double-click "index.html" to run the app directly in your web browser!
-3. Zero installation or server setup required.
+1. Extract files or double-click "index.html" directly.
+2. "index.html" is 100% standalone and runs instantly in any web browser!
+3. Clean separate "style.css" and "script.js" files are also included for your development needs.
 
 To edit, remix, or generate new 3D apps with AI:
 Visit https://ia-codestudio.com
