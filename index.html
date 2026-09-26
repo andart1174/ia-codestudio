@@ -235,6 +235,7 @@
     <!-- CSS Styles with Cache-Busters -->
     <link rel="stylesheet" href="style.css?v=20260922_v2">
     <link rel="stylesheet" href="css/admin-portal.css?v=20260922_v2">
+    <link rel="stylesheet" href="css/app-hub.css?v=20260926">
 
     <!-- Guaranteed Inline Modal Control & Styles (Always Available) -->
     <style>
@@ -320,6 +321,9 @@
             </div>
             
             <div class="support-menu">
+                <a href="#app-hub-showcase" class="support-btn" style="background: linear-gradient(135deg, rgba(0, 240, 255, 0.25), rgba(121, 40, 202, 0.25)); border-color: rgba(0, 240, 255, 0.6); box-shadow: 0 0 15px rgba(0, 240, 255, 0.25); text-decoration: none;">
+                    <span>📦</span> <span data-i18n="menu_app_hub">Apps Gratuites</span> <span class="new-badge" style="background: linear-gradient(135deg, #00f0ff, #7928ca);" data-i18n="hub_badge_free">1/JOUR</span>
+                </a>
                 <a href="cyber-arcade/index.html" class="support-btn" style="background: linear-gradient(135deg, rgba(0, 242, 254, 0.25), rgba(255, 0, 127, 0.15)); border-color: rgba(0, 242, 254, 0.6); box-shadow: 0 0 15px rgba(0, 242, 254, 0.25); text-decoration: none;">
                     <span>🎮</span> <span>Cyber Arcade 3D</span> <span class="new-badge" style="background: linear-gradient(135deg, #00f2fe, #ff007f);">9 JEUX</span>
                 </a>
@@ -1066,8 +1070,36 @@
         
 
 
-                </section>
+        </section>
 
+        <!-- ===== APP HUB / VITRINE COMPARTMENT (10 READY-MADE APPS) ===== -->
+        <section id="app-hub-showcase" class="app-hub-section reveal">
+            <div class="hub-hero-box">
+                <div class="hub-hero-badge" data-i18n="hub_hero_badge">VITRINE EXCLUSIVE — 10 APPS WEB & 3D PRÊTES À L'EMPLOI</div>
+                <h2 class="hub-hero-title" data-i18n="hub_hero_title">Vitrine d'Applications Web & 3D Prêtes à Exporter</h2>
+                <p class="hub-hero-subtitle" data-i18n="hub_hero_sub">Testez nos applications interactives haute performance (60 FPS) et exportez le code source complet (HTML, CSS, JS) en 1-clic sous forme d'archive ZIP autonome. 100% sans serveur !</p>
+                <div class="hub-quota-bar" id="hub-quota-indicator">
+                    <!-- Populated dynamically by js/app-hub.js -->
+                    <span>⚡</span> <span>1 Téléchargement gratuit / jour</span> <span class="hub-quota-badge">1 / 1 DISPONIBLE</span>
+                </div>
+            </div>
+
+            <!-- Category Filter Tabs -->
+            <div class="hub-filters-container">
+                <button type="button" class="hub-filter-btn active" onclick="filterHubApps('all', this)" data-i18n="hub_filter_all">Toutes les Apps</button>
+                <button type="button" class="hub-filter-btn" onclick="filterHubApps('3d', this)" data-i18n="hub_filter_3d">3D & WebGL</button>
+                <button type="button" class="hub-filter-btn" onclick="filterHubApps('audio', this)" data-i18n="hub_filter_audio">Audio & Synthèse</button>
+                <button type="button" class="hub-filter-btn" onclick="filterHubApps('tools', this)" data-i18n="hub_filter_tools">Outils & Utilitaires</button>
+                <button type="button" class="hub-filter-btn" onclick="filterHubApps('creative', this)" data-i18n="hub_filter_creative">Design & UI 3D</button>
+                <button type="button" class="hub-filter-btn" onclick="filterHubApps('games', this)" data-i18n="hub_filter_games">Jeux & Arcade</button>
+            </div>
+
+            <!-- 10 Apps Grid -->
+            <div id="hub-apps-grid" class="hub-apps-grid">
+                <!-- Dynamically rendered by js/app-hub.js -->
+            </div>
+        </section>
+        <!-- ===== END APP HUB / VITRINE COMPARTMENT ===== -->
 
         <!-- ===== REVIEWS + Q&A SECTION ===== -->
         <section id="user-reviews-qa" style="max-width:1200px; margin:70px auto 40px; padding:0 20px;">
@@ -1347,9 +1379,11 @@
     </footer>
 
     <!-- Scripts with Cache-Busters -->
-    <script src="js/i18n.js?v=20260922_v2"></script>
-    <script src="js/main.js?v=20260922_v2"></script>
-    <script src="js/admin-portal.js?v=20260922_v2"></script>
+    <script src="js/i18n.js?v=20260926"></script>
+    <script src="js/main.js?v=20260926"></script>
+    <script src="js/admin-portal.js?v=20260926"></script>
+    <script src="js/jszip.min.js"></script>
+    <script src="js/app-hub.js?v=20260926"></script>
     <script>
       // Fallback click listener to guarantee login modal opens
       document.addEventListener('DOMContentLoaded', function() {
@@ -1390,6 +1424,50 @@
             <button onclick="claimWelcomeBonus()" style="width:100%; padding:14px; border-radius:14px; background:linear-gradient(135deg,#ffb703,#ff007f); color:#fff; font-size:15px; font-weight:900; border:none; cursor:pointer; box-shadow:0 4px 20px rgba(255,183,3,0.5); transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
                 🚀 RÉCLAMER +2,500 PIÈCES & S'INSCRIRE
             </button>
+        </div>
+    </div>
+
+    <!-- 📦 APP HUB LIVE PREVIEW MODAL -->
+    <div id="modal-app-preview" class="modal-overlay">
+        <div class="hub-preview-modal-dialog">
+            <header class="hub-preview-header">
+                <div class="hub-preview-title-box">
+                    <span style="font-size:1.4rem;">👁️</span>
+                    <h3 id="hub-preview-title" style="margin:0; font-size:16px; font-weight:800; color:#fff;" data-i18n="hub_modal_preview_title">Aperçu en Direct</h3>
+                </div>
+                <button class="modal-close-btn" style="position:static; margin:0;" onclick="closeAppPreview()">×</button>
+            </header>
+            <iframe id="hub-preview-frame" class="hub-preview-iframe" sandbox="allow-scripts allow-same-origin allow-modals"></iframe>
+            <footer class="hub-preview-footer">
+                <button type="button" class="hub-btn-preview" onclick="closeAppPreview()" data-i18n="hub_modal_preview_close" style="padding:10px 20px;">Fermer</button>
+                <button type="button" class="hub-btn-download" id="hub-preview-btn-download">
+                    <span>📦</span> <span data-i18n="hub_modal_preview_dl">Exporter ZIP Gratuit</span>
+                </button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- ⏳ APP HUB DAILY QUOTA LIMIT UPGRADE MODAL ($10/MO) -->
+    <div id="modal-quota-limit" class="modal-overlay">
+        <div class="modal-content hub-quota-modal-dialog">
+            <button class="modal-close-btn" onclick="closeQuotaLimitModal()">×</button>
+            <div style="font-size:3.2rem; margin-bottom:12px;">⏳</div>
+            <h3 class="modal-title" data-i18n="hub_modal_quota_title" style="color:#f59e0b; margin-bottom:10px;">Limite Quotidienne Atteinte</h3>
+            <p style="color:#cbd5e1; font-size:14px; line-height:1.6; margin-bottom:16px;" data-i18n="hub_modal_quota_desc">
+                Vous avez déjà exporté votre application gratuite aujourd'hui ! Votre prochain téléchargement gratuit se débloquera automatiquement à minuit.
+            </p>
+            <div class="hub-countdown-box">
+                <div style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:#94a3b8; margin-bottom:6px;" data-i18n="hub_modal_quota_countdown_label">Temps restant avant la prochaine application gratuite :</div>
+                <div id="hub-quota-countdown-digits" class="hub-countdown-digits">--h : --m : --s</div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px; margin-top:20px;">
+                <button type="button" onclick="triggerPremiumPortal()" style="background:linear-gradient(135deg, #f59e0b, #ec4899); color:#fff; border:none; padding:14px; border-radius:14px; font-weight:800; font-size:14px; cursor:pointer; box-shadow:0 4px 20px rgba(245,158,11,0.4); transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" data-i18n="hub_modal_quota_upgrade_btn">
+                    💎 Débloquer Tout en Illimité ($10/mois)
+                </button>
+                <button type="button" onclick="closeQuotaLimitModal()" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:#94a3b8; padding:10px; border-radius:12px; font-size:13px; font-weight:600; cursor:pointer;" data-i18n="hub_modal_quota_wait_btn">
+                    J'attends demain ⏳
+                </button>
+            </div>
         </div>
     </div>
 
