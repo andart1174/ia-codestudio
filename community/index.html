@@ -2957,6 +2957,345 @@
 
     /* ⚡ DUELS MONT-ROYAL™ WIDGET */
     /* 📱 REAL MONT MOBILE BANNER */
+    /* ⚜️ REAL MONT TRUE SOCIAL NETWORK ENHANCEMENTS */
+
+    /* Neighborhood Badge on Post & Profile */
+    .user-neighborhood-tag {
+      font-size: 0.68rem;
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.35);
+      color: #38bdf8;
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      letter-spacing: 0.02em;
+    }
+    .user-handle-tag {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    /* 📸 MONTREAL DAILY PULSE™ BANNER */
+    .daily-pulse-card {
+      background: linear-gradient(135deg, rgba(251,191,36,0.12), rgba(244,63,94,0.08), rgba(6,182,212,0.06), var(--bg2));
+      border: 1px solid rgba(251,191,36,0.38);
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    }
+    .daily-pulse-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #fbbf24, #f43f5e, #06b6d4);
+    }
+    .dpc-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .dpc-badge-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      box-shadow: 0 0 12px rgba(251,191,36,0.4);
+    }
+    .dpc-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .dpc-live-tag {
+      font-size: 0.62rem;
+      background: #f43f5e;
+      color: #fff;
+      padding: 1px 6px;
+      border-radius: 8px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+    }
+    .dpc-countdown {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+    .dpc-reward-pill {
+      font-size: 0.75rem;
+      background: rgba(251,191,36,0.18);
+      border: 1px solid rgba(251,191,36,0.5);
+      color: #fbbf24;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 800;
+    }
+    .dpc-body {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+    .dpc-theme-icon {
+      font-size: 1.8rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .dpc-theme-title {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+    .dpc-theme-desc {
+      font-size: 0.76rem;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+    .dpc-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .dpc-btn-join {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: #000;
+      border: none;
+      padding: 7px 16px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .dpc-btn-join:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(251,191,36,0.4);
+    }
+    .dpc-btn-join.completed {
+      background: rgba(16,185,129,0.2);
+      border: 1px solid #10b981;
+      color: #34d399;
+      cursor: default;
+    }
+    .dpc-streak-hint {
+      font-size: 0.72rem;
+      color: #cbd5e1;
+      font-weight: 600;
+    }
+
+    /* 💖 EMOTIONAL REACTIONS DOCK & PILLS */
+    .reactions-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+    .reactions-dock-popover {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 0;
+      background: rgba(11, 17, 32, 0.96);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 30px;
+      padding: 4px 8px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.7), 0 0 15px rgba(244,63,94,0.25);
+      z-index: 100;
+      align-items: center;
+      gap: 6px;
+      animation: popoverFadeIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popoverFadeIn {
+      from { opacity: 0; transform: translateY(6px) scale(0.92); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .reactions-dock-popover.open {
+      display: flex !important;
+    }
+    .reaction-dock-btn {
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 50%;
+      transition: transform 0.15s;
+    }
+    .reaction-dock-btn:hover {
+      transform: scale(1.35) translateY(-2px);
+    }
+    .reaction-counter-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 2px 6px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      color: #cbd5e1;
+      font-weight: 700;
+      margin-left: 4px;
+      cursor: pointer;
+    }
+    .reaction-counter-badge.active {
+      border-color: #f43f5e;
+      background: rgba(244,63,94,0.15);
+      color: #f43f5e;
+    }
+
+    /* 🪙 QUICK 1-TAP TIP BUTTON */
+    .btn-quick-tip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: linear-gradient(135deg, rgba(251,191,36,0.15), rgba(245,158,11,0.15));
+      border: 1px solid rgba(251,191,36,0.38);
+      color: #fbbf24;
+      font-size: 0.74rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-quick-tip:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(251,191,36,0.35);
+      background: linear-gradient(135deg, rgba(251,191,36,0.25), rgba(245,158,11,0.25));
+    }
+
+    /* 👤 USER & AUTHOR RICH PROFILE MODAL */
+    .user-profile-modal-card {
+      background: #090d16 !important;
+      border: 1px solid rgba(124, 58, 237, 0.45) !important;
+      border-radius: 22px;
+      width: 95%;
+      max-width: 540px;
+      max-height: 92vh;
+      overflow-y: auto;
+      padding: 0 !important;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.85), 0 0 35px rgba(124,58,237,0.25) !important;
+    }
+    .up-cover-banner {
+      height: 120px;
+      background: linear-gradient(135deg, #1e1b4b, #431407, #0f172a);
+      position: relative;
+      border-radius: 22px 22px 0 0;
+    }
+    .up-cover-grid {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px);
+      background-size: 16px 16px;
+      opacity: 0.4;
+    }
+    .up-profile-header {
+      padding: 0 20px 16px;
+      position: relative;
+      margin-top: -46px;
+    }
+    .up-avatar-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .up-avatar-img {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      border: 4px solid #090d16;
+      background: #0f172a;
+      box-shadow: 0 0 20px rgba(124,58,237,0.5);
+      object-fit: cover;
+    }
+    .up-stats-row {
+      display: flex;
+      gap: 12px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin: 14px 0;
+      justify-content: space-around;
+    }
+    .up-stat-item {
+      text-align: center;
+    }
+    .up-stat-val {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .up-stat-lbl {
+      font-size: 0.68rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 1px;
+    }
+    .up-posts-preview-title {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #cbd5e1;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 14px 0 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .up-author-posts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .up-post-card-mini {
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .up-post-card-mini:hover {
+      border-color: rgba(124,58,237,0.4);
+      background: rgba(124,58,237,0.06);
+    }
+
     .mobile-realmont-banner {
       display: none;
       background: linear-gradient(145deg, rgba(244, 63, 94, 0.09), rgba(6, 182, 212, 0.06), var(--bg2));
@@ -3974,20 +4313,23 @@
   <!-- LEFT SIDEBAR -->
   <aside class="sl">
     <div class="scard" id="userCard" style="display:none">
-      <img src="" alt="" class="u-avatar" id="slAvatar">
+      <img src="" alt="" class="u-avatar" id="slAvatar" onclick="openAuthorProfileModal(user.uid, user.displayName, user.photoURL)" style="cursor:pointer;" title="View Public Profile">
       <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px;">
-        <div class="u-name" id="slName" style="margin-top:0;"></div>
-        <button onclick="openEditProfileModal()" title="Edit Name" style="background:none;border:none;color:#a855f7;cursor:pointer;font-size:0.85rem;padding:2px 4px;border-radius:4px;transition:all 0.2s;">✏️</button>
+        <div class="u-name" id="slName" style="margin-top:0;cursor:pointer;" onclick="openAuthorProfileModal(user.uid, user.displayName, user.photoURL)"></div>
+        <button onclick="openEditProfileModal()" title="Edit Profile" style="background:none;border:none;color:#a855f7;cursor:pointer;font-size:0.85rem;padding:2px 4px;border-radius:4px;transition:all 0.2s;">✏️</button>
       </div>
+      <div class="user-handle-tag" id="slHandle" style="font-size:0.72rem;color:#38bdf8;margin-bottom:2px;text-align:center;">@creator</div>
+      <div style="text-align:center;margin-bottom:4px;"><span class="user-neighborhood-tag" id="slNeighborhood">⚜️ Le Plateau</span></div>
       <div class="u-email" id="slEmail"></div>
-      <button onclick="openEditProfileModal()" id="btn-edit-profile-card" style="width:100%;margin:8px 0 6px;padding:5px 8px;border-radius:8px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);color:#c084fc;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s;">✏️ Edit Display Name</button>
+      <button onclick="openEditProfileModal()" id="btn-edit-profile-card" style="width:100%;margin:8px 0 6px;padding:5px 8px;border-radius:8px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);color:#c084fc;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s;">✏️ Edit Profile</button>
       <button onclick="openDmModal()" id="btn-sidebar-comms" style="width:100%;margin:0 0 10px;padding:7px 10px;border-radius:8px;background:linear-gradient(135deg,rgba(56,189,248,0.15),rgba(124,58,237,0.15));border:1px solid rgba(56,189,248,0.35);color:#38bdf8;font-size:0.76rem;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.2s;">💬 <span id="lbl-sidebar-comms">Messages & 📞 Call</span></button>
       <div class="u-stats">
         <div class="u-stat"><div class="u-stat-n" id="uPosts">0</div><div class="u-stat-l">Posts</div></div>
+        <div class="u-stat"><div class="u-stat-n" id="uFollowers">0</div><div class="u-stat-l">Followers</div></div>
         <div class="u-stat"><div class="u-stat-n" id="uLikes">0</div><div class="u-stat-l">Likes</div></div>
       </div>
     </div>
-
+    
     <!-- ⚜️ REAL MONT MONTREAL HUB -->
     <div class="scard" id="realmontHubCard" style="border-color: rgba(244, 63, 94, 0.3); background: linear-gradient(145deg, rgba(244,63,94,0.06), rgba(6,182,212,0.04), var(--bg2));">
       <div class="stitle" id="lbl-realmont-hub-title" style="display:flex;align-items:center;justify-content:space-between;">
@@ -4099,6 +4441,43 @@
             <span class="vote-team-name" id="mbDuelTeamBName">Fairmount 🥖</span>
           </button>
         </div>
+      </div>
+    </div>
+
+    
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- ⚜️ MONTREAL DAILY PULSE™ (VIRAL DAILY CHALLENGE +25 🪙)     -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="daily-pulse-card" id="montrealDailyPulseCard">
+      <div class="dpc-header">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="dpc-badge-icon">⚜️</div>
+          <div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span class="dpc-title" id="lblDailyPulseTitle">Montreal Daily Pulse™</span>
+              <span class="dpc-live-tag" id="lblDailyPulseTag">TODAY'S MISSION</span>
+            </div>
+            <div class="dpc-countdown" id="lblDailyPulseCountdown">⏱️ Resets at midnight</div>
+          </div>
+        </div>
+        <div class="dpc-reward-pill">
+          <span>🎁 +25 🪙 Reward</span>
+        </div>
+      </div>
+      
+      <div class="dpc-body">
+        <div class="dpc-theme-icon" id="dpcThemeIcon">☕</div>
+        <div style="flex:1;">
+          <div class="dpc-theme-title" id="dpcThemeTitle">Mile End Espresso & Morning Vibes</div>
+          <div class="dpc-theme-desc" id="dpcThemeDesc">Share your morning Montreal spot, bagel break, or creative workspace! Capture and earn +25 🪙 instantly.</div>
+        </div>
+      </div>
+
+      <div class="dpc-actions">
+        <button class="dpc-btn-join" id="btnJoinDailyPulse" onclick="participateInDailyPulse()">
+          <span>📸 Share Daily Pulse (+25 🪙)</span>
+        </button>
+        <span class="dpc-streak-hint" id="dpcStreakHint">🔥 Daily Community Streak Active</span>
       </div>
     </div>
 
@@ -5023,23 +5402,51 @@
 
 <!-- EDIT PROFILE NAME MODAL -->
 <div class="overlay" id="editProfileOverlay" onclick="closeEditProfileModal(event)">
-  <div class="modal" onclick="event.stopPropagation()" style="max-width:400px;">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:440px;">
     <div class="mh">
       <div class="mt" style="display:flex;align-items:center;gap:6px;">
-        <span>✏️</span> <span id="lbl-edit-profile-title">Edit Display Name</span>
+        <span>✏️</span> <span id="lbl-edit-profile-title">Edit Profile</span>
       </div>
       <button class="mc" onclick="closeEditProfileModal()">✕</button>
     </div>
     <div class="mb">
       <div style="font-size:0.82rem;color:#94a3b8;margin-bottom:12px;" id="lbl-edit-profile-sub">
-        Choose your display name visible across community posts, comments, and rankings.
+        Customize your identity across REAL MONT: display name, username handle, Montreal neighborhood, and bio.
       </div>
-      <div style="margin-bottom:14px;">
+      
+      <div style="margin-bottom:12px;">
         <label class="opt-lbl" id="lbl-edit-profile-input">Display Name</label>
         <input type="text" class="adm-input" id="editProfileNameInput" maxlength="30" placeholder="e.g. Alex, CyberDev, Andrei...">
       </div>
-      <button class="shop-btn buy" style="width:100%;padding:9px;font-size:0.88rem;" onclick="saveProfileName()" id="btn-save-profile-name">
-        ✓ Save Changes
+      
+      <div style="margin-bottom:12px;">
+        <label class="opt-lbl" id="lbl-edit-profile-handle">@Username Handle</label>
+        <input type="text" class="adm-input" id="editProfileHandleInput" maxlength="24" placeholder="e.g. alex_mtl, cyber_dev...">
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label class="opt-lbl" id="lbl-edit-profile-neighborhood">Favorite Montreal Neighborhood (Cartier)</label>
+        <select class="adm-input" id="editProfileNeighborhoodSelect" style="width:100%;background:#0f172a;color:#fff;">
+          <option value="Le Plateau-Mont-Royal 🥯">🥯 Le Plateau-Mont-Royal</option>
+          <option value="Mile End ☕">☕ Mile End</option>
+          <option value="Vieux-Montréal ⛵">⛵ Vieux-Montréal</option>
+          <option value="Griffintown & Petite-Bourgogne 🏢">🏢 Griffintown & Petite-Bourgogne</option>
+          <option value="Centre-Ville / Downtown 🏙️">🏙️ Centre-Ville / Downtown</option>
+          <option value="Rosemont - La Petite-Patrie 🍕">🍕 Rosemont - La Petite-Patrie</option>
+          <option value="Côte-des-Neiges / NDG 🌲">🌲 Côte-des-Neiges / NDG</option>
+          <option value="Verdun & Sud-Ouest 🌊">🌊 Verdun & Sud-Ouest</option>
+          <option value="Westmount & Outremont 🏰">🏰 Westmount & Outremont</option>
+          <option value="Laval & Rive-Sud 🌉">🌉 Laval & Rive-Sud</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <label class="opt-lbl" id="lbl-edit-profile-bio">Bio / About You</label>
+        <textarea class="adm-input" id="editProfileBioInput" rows="3" maxlength="160" placeholder="e.g. Montreal creator, 3D WebGL developer, coffee & bagel lover..." style="resize:none;width:100%;height:64px;"></textarea>
+      </div>
+
+      <button class="shop-btn buy" style="width:100%;padding:9px;font-size:0.88rem;background:linear-gradient(135deg,#7c3aed,#06b6d4);" onclick="saveUserProfileFull()" id="btn-save-profile-name">
+        ✓ Save Profile
       </button>
     </div>
   </div>
@@ -6177,7 +6584,7 @@ function renderPost(p) {
       <img src="${a}" class="p-avatar ${authorFrame}">
       <div class="pm">
         <div class="p-author ${authorGlow}" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-          <span>${esc(displayName)}</span> ${authorBadge} ${userTag ? `<span class="user-tag" style="background: rgba(124, 58, 237, 0.15); color: #c084fc; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: normal; display: inline-block;">${esc(userTag)}</span>` : ''}
+          <span style="cursor:pointer;" onclick="openAuthorProfileModal('${esc(authorUid)}', '${esc(displayName).replace(/'/g, "\\'")}', '${esc(a)}')">${esc(displayName)}</span> ${p.neighborhood ? `<span class="user-neighborhood-tag" onclick="event.stopPropagation(); openAuthorProfileModal('${esc(authorUid)}', '${esc(displayName).replace(/'/g, "\\'")}', '${esc(a)}')">⚜️ ${esc(p.neighborhood).replace('⚜️','').trim()}</span>` : ''} ${authorBadge} ${userTag ? `<span class="user-tag" style="background: rgba(124, 58, 237, 0.15); color: #c084fc; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: normal; display: inline-block;">${esc(userTag)}</span>` : ''}
           ${followBtnHtml}
         </div>
         <div class="p-time">
@@ -6212,6 +6619,9 @@ function renderPost(p) {
         <span>${currentLang === 'fr' ? 'IA Remix' : 'AI Remix'}</span>
       </button>` : ''}
       ${!isPostAuthor ? `
+      <button class="btn-quick-tip" onclick="sendQuickTip('${p.id}', '${esc(authorUid)}', '${esc(p.userEmail || p.email || '')}', '${esc(displayName).replace(/'/g, "\\'")}', 5, event)" title="Quick +5 🪙 Tip">
+        <span>🪙 +5 Tip</span>
+      </button>
       <button class="btn-tip-post" onclick="openTipModal('${p.id}', '${esc(p.uid || '')}', '${esc(p.userEmail || p.email || '')}', '${esc(displayName).replace(/'/g, "\\'")}')">
         <img src="../genius-ia-coin.png" alt="🪙">
         <span>${currentLang === 'fr' ? 'Pourboire' : 'Tip'}</span>
@@ -6241,7 +6651,7 @@ function renderPost(p) {
       </button>` : ''}
     </div>
     <div class="reactions-bar" id="rx-bar-${p.id}">
-      ${['🔥', '🚀', '💎', '🤯', '✨', '❤️'].map(emoji => {
+      ${['⚜️', '🔥', '🧠', '❤️', '🚀', '👏'].map(emoji => {
         const count = (p.reactions && p.reactions[emoji]) || 0;
         return `
           <button class="reaction-pill" onclick="reactToPost('${p.id}', '${emoji}', event)">
@@ -6637,6 +7047,7 @@ async function publish() {
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
     toast('Post published! ✨', 'success');
+    if (typeof checkAndAwardDailyPulseReward === 'function') checkAndAwardDailyPulseReward(content);
     if (typeof playSoundFx === 'function') playSoundFx('publish');
     if (typeof clearSparkVoice === 'function') clearSparkVoice();
 
@@ -7793,8 +8204,24 @@ function applyCommunityLanguage(lang) {
   const mbDuelT = document.getElementById('lbl-mb-duel-title'); if (mbDuelT) mbDuelT.textContent = 'Duels Mont-Royal™';
   const mbNavRadar = document.getElementById('btnMbNavRadar'); if (mbNavRadar) mbNavRadar.innerHTML = `<span>${lang === 'fr' ? '🗺️ MONT-RADAR™' : '🗺️ MONT-RADAR™'}</span>`;
   const mbAllDuels = document.getElementById('btnMbAllDuels'); if (mbAllDuels) mbAllDuels.innerHTML = `<span>${lang === 'fr' ? '⚡ Tous les Duels ↗' : '⚡ All Duels ↗'}</span>`;
+  
+  // Montreal Daily Pulse & User Profiles I18N
+  const dpTitle = document.getElementById('lblDailyPulseTitle'); if (dpTitle) dpTitle.textContent = lang === 'fr' ? 'Pulsation Montréal™' : 'Montreal Daily Pulse™';
+  const dpTag = document.getElementById('lblDailyPulseTag'); if (dpTag) dpTag.textContent = lang === 'fr' ? 'MISSION DU JOUR' : "TODAY'S MISSION";
+  const dpStreak = document.getElementById('dpcStreakHint'); if (dpStreak) dpStreak.textContent = lang === 'fr' ? '🔥 Série Communautaire Active' : '🔥 Daily Community Streak Active';
+  const editProfHdr = document.getElementById('lbl-edit-profile-title'); if (editProfHdr) editProfHdr.textContent = lang === 'fr' ? 'Modifier le Profil' : 'Edit Profile';
+  const editProfHandle = document.getElementById('lbl-edit-profile-handle'); if (editProfHandle) editProfHandle.textContent = lang === 'fr' ? 'Identifiant @NomUtilisateur' : '@Username Handle';
+  const editProfNeigh = document.getElementById('lbl-edit-profile-neighborhood'); if (editProfNeigh) editProfNeigh.textContent = lang === 'fr' ? 'Cartier Favori à Montréal' : 'Favorite Montreal Neighborhood (Cartier)';
+  const editProfBio = document.getElementById('lbl-edit-profile-bio'); if (editProfBio) editProfBio.textContent = lang === 'fr' ? 'Biographie / À Propos' : 'Bio / About You';
+  const upRecentT = document.getElementById('lbl-up-recent-creations'); if (upRecentT) upRecentT.textContent = lang === 'fr' ? '⚜️ Publications Récentes' : '⚜️ Recent Montreal Posts';
+  const upPostsLbl = document.getElementById('lbl-up-posts'); if (upPostsLbl) upPostsLbl.textContent = lang === 'fr' ? 'Postes' : 'Posts';
+  const upFollowersLbl = document.getElementById('lbl-up-followers'); if (upFollowersLbl) upFollowersLbl.textContent = lang === 'fr' ? 'Abonnés' : 'Followers';
+  const upFollowingLbl = document.getElementById('lbl-up-following'); if (upFollowingLbl) upFollowingLbl.textContent = lang === 'fr' ? 'Abonnements' : 'Following';
+  const upCoinsLbl = document.getElementById('lbl-up-coins'); if (upCoinsLbl) upCoinsLbl.textContent = lang === 'fr' ? 'Pièces' : 'Coins';
+  if (typeof initDailyPulseUI === 'function') initDailyPulseUI();
   if (typeof renderDuelTabsUI === 'function') renderDuelTabsUI();
   if (typeof updateDuelMeterUI === 'function') updateDuelMeterUI();
+  if (typeof initDailyPulseUI === 'function') initDailyPulseUI();
 
   // Founder Pass VIP #0001
   const founderStatus = document.getElementById('lbl-founder-status'); if (founderStatus) founderStatus.textContent = lang === 'fr' ? 'Fondateur Officiel #0001 • Montréal & CA' : 'Official Founder #0001 • Montreal & CA';
@@ -11147,7 +11574,73 @@ async function sendDmText() {
       if (text.toLowerCase().includes('cube') || text.toLowerCase().includes('box')) {
         aiReply = "Here is an interactive rotating 3D Cyber Cube in Three.js!";
         aiTitle = "3D Cyber Cube";
-        aiCode = `<!DOCTYPE html><html><head><style>body{margin:0;overflow:hidden;background:#030712;}</style><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script></head><body><script>const scene=new THREE.Scene();const camera=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setSize(window.innerWidth,window.innerHeight);document.body.appendChild(renderer.domElement);const geometry=new THREE.BoxGeometry(2,2,2);const material=new THREE.MeshNormalMaterial({wireframe:false});const cube=new THREE.Mesh(geometry,material);scene.add(cube);camera.position.z=5;function animate(){requestAnimationFrame(animate);cube.rotation.x+=0.01;cube.rotation.y+=0.015;renderer.render(scene,camera);}animate();window.onresize=()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight);};<\/script></body></html>`;
+        aiCode = `<!DOCTYPE html><html><head><style>body{margin:0;overflow:hidden;background:#030712;}</style><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script></head><body><script>const scene=new THREE.Scene();const camera=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setSize(window.innerWidth,window.innerHeight);document.body.appendChild(renderer.domElement);const geometry=new THREE.BoxGeometry(2,2,2);const material=new THREE.MeshNormalMaterial({wireframe:false});const cube=new THREE.Mesh(geometry,material);scene.add(cube);camera.position.z=5;function animate(){requestAnimationFrame(animate);cube.rotation.x+=0.01;cube.rotation.y+=0.015;renderer.render(scene,camera);}animate();window.onresize=()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight);};<\/script>
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 👤 USER & AUTHOR RICH PROFILE MODAL (REAL MONT SOCIAL DNA) -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="userProfileModalOverlay" onclick="closeAuthorProfileModal(event)">
+  <div class="modal user-profile-modal-card" onclick="event.stopPropagation()">
+    <!-- Cover Banner -->
+    <div class="up-cover-banner">
+      <div class="up-cover-grid"></div>
+      <button class="mc" onclick="closeAuthorProfileModal()" style="position:absolute;top:12px;right:14px;background:rgba(0,0,0,0.5);border:none;color:#fff;border-radius:50%;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;z-index:2;">✕</button>
+    </div>
+
+    <!-- Header & Details -->
+    <div class="up-profile-header">
+      <div class="up-avatar-row">
+        <img src="" id="upModalAvatar" class="up-avatar-img" alt="Avatar">
+        <div id="upModalActionButtons" style="display:flex;gap:6px;flex-wrap:wrap;">
+          <!-- Dynamically populated: Follow, DM, Tip or Edit -->
+        </div>
+      </div>
+
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <h3 id="upModalDisplayName" style="font-family:'Outfit',sans-serif;font-size:1.25rem;font-weight:900;color:#fff;margin:0;">User</h3>
+          <span class="user-neighborhood-tag" id="upModalNeighborhood">⚜️ Le Plateau</span>
+          <span style="font-size:0.65rem;background:linear-gradient(135deg,#f43f5e,#fbbf24);color:#000;padding:2px 7px;border-radius:10px;font-weight:900;" id="upModalVipBadge">FOUNDER #0001</span>
+        </div>
+        <div class="user-handle-tag" id="upModalHandle" style="margin-top:2px;">@username</div>
+      </div>
+
+      <p id="upModalBio" style="font-size:0.82rem;color:#cbd5e1;line-height:1.45;margin:10px 0 0;">
+        Montreal community creator.
+      </p>
+
+      <!-- Stats Grid -->
+      <div class="up-stats-row">
+        <div class="up-stat-item">
+          <div class="up-stat-val" id="upModalPostsCount">0</div>
+          <div class="up-stat-lbl" id="lbl-up-posts">Posts</div>
+        </div>
+        <div class="up-stat-item">
+          <div class="up-stat-val" id="upModalFollowersCount">0</div>
+          <div class="up-stat-lbl" id="lbl-up-followers">Followers</div>
+        </div>
+        <div class="up-stat-item">
+          <div class="up-stat-val" id="upModalFollowingCount">0</div>
+          <div class="up-stat-lbl" id="lbl-up-following">Following</div>
+        </div>
+        <div class="up-stat-item">
+          <div class="up-stat-val" style="color:#fbbf24;" id="upModalCoinsCount">0 🪙</div>
+          <div class="up-stat-lbl" id="lbl-up-coins">Coins</div>
+        </div>
+      </div>
+
+      <!-- Author's Posts Showcase -->
+      <div class="up-posts-preview-title">
+        <span id="lbl-up-recent-creations">⚜️ Recent Montreal Posts</span>
+        <span id="upModalAuthorPostsCountText" style="font-size:0.72rem;color:var(--muted);">0 posts</span>
+      </div>
+      <div class="up-author-posts-list" id="upModalPostsList">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+  </div>
+</div>
+
+</body></html>`;
       } else {
         aiReply = `I understand! How can I assist your coding today on IA Code Studio? You can ask for Three.js shaders, 3D particles, or WebGL widgets.`;
       }
@@ -12216,12 +12709,356 @@ function openProfileOrVault() {
   openEditProfileModal();
 }
 
-function openAuthorProfileModal(uid, name, photo) {
-  if (user && (user.uid === uid || (user.email && user.email === uid))) {
-    openEditProfileModal();
-  } else {
-    openDmWithUser(uid, name, photo);
+// 1. Full Rich User & Author Profile Modal System
+async function openAuthorProfileModal(uid, name, photo) {
+  const modal = document.getElementById('userProfileModalOverlay');
+  if (!modal) return;
+
+  const lang = getCommunityLang();
+  const isMe = user && (user.uid === uid || (user.email && user.email === uid) || (user.email && name && user.displayName === name));
+
+  const avEl = document.getElementById('upModalAvatar');
+  const nameEl = document.getElementById('upModalDisplayName');
+  const handleEl = document.getElementById('upModalHandle');
+  const neighEl = document.getElementById('upModalNeighborhood');
+  const bioEl = document.getElementById('upModalBio');
+  const postsCountEl = document.getElementById('upModalPostsCount');
+  const followersCountEl = document.getElementById('upModalFollowersCount');
+  const followingCountEl = document.getElementById('upModalFollowingCount');
+  const coinsCountEl = document.getElementById('upModalCoinsCount');
+  const vipBadgeEl = document.getElementById('upModalVipBadge');
+  const actionsEl = document.getElementById('upModalActionButtons');
+  const postsListEl = document.getElementById('upModalPostsList');
+  const postsCountText = document.getElementById('upModalAuthorPostsCountText');
+
+  const defaultPhoto = photo || (user && isMe ? user.photoURL : '') || `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Creator')}&background=7c3aed&color=fff&bold=true`;
+  if (avEl) avEl.src = defaultPhoto;
+  if (nameEl) nameEl.textContent = name || (isMe && user ? user.displayName : 'Montreal Creator');
+
+  // Load handle, neighborhood and bio
+  let userHandle = '@' + (name ? name.toLowerCase().replace(/[^a-z0-9_]/g, '') : 'creator');
+  let userNeighborhood = 'Le Plateau-Mont-Royal 🥯';
+  let userBio = lang === 'fr' 
+    ? 'Créateur montréalais passionné par le WebGL 3D, l\'IA et la vie montréalaise ⚜️' 
+    : 'Montreal creator passionate about 3D WebGL, AI, and Montreal vibes ⚜️';
+
+  if (isMe) {
+    userHandle = localStorage.getItem('hub_user_handle') || userHandle;
+    userNeighborhood = localStorage.getItem('hub_user_neighborhood') || userNeighborhood;
+    userBio = localStorage.getItem('hub_user_bio') || userBio;
   }
+
+  // Check Firestore if available
+  if (uid && typeof db !== 'undefined') {
+    try {
+      const userDoc = await db.collection('users').doc(uid).get();
+      if (userDoc.exists) {
+        const ud = userDoc.data();
+        if (ud.handle) userHandle = ud.handle;
+        if (ud.neighborhood) userNeighborhood = ud.neighborhood;
+        if (ud.bio) userBio = ud.bio;
+      }
+    } catch(e) {}
+  }
+
+  if (handleEl) handleEl.textContent = userHandle;
+  if (neighEl) neighEl.textContent = `⚜️ ${userNeighborhood.replace('⚜️','').trim()}`;
+  if (bioEl) bioEl.textContent = userBio;
+
+  // VIP Badge
+  if (vipBadgeEl) {
+    vipBadgeEl.textContent = isMe ? 'FOUNDER #0001 ⚜️' : 'VERIFIED CREATOR ⚜️';
+  }
+
+  // Load Followers count
+  let followersCount = 0;
+  if (uid && typeof loadFollowerCount === 'function') {
+    followersCount = await loadFollowerCount(uid);
+  }
+  if (followersCountEl) followersCountEl.textContent = followersCount;
+
+  // Load Coins
+  if (coinsCountEl) {
+    if (isMe) {
+      const coins = parseInt(localStorage.getItem('genius_user_coins') || '0', 10);
+      coinsCountEl.textContent = `${coins.toLocaleString()} 🪙`;
+    } else {
+      coinsCountEl.textContent = 'Active 🪙';
+    }
+  }
+
+  // Action buttons
+  if (actionsEl) {
+    if (isMe) {
+      actionsEl.innerHTML = `
+        <button class="shop-btn" onclick="closeAuthorProfileModal(); openEditProfileModal();" style="padding:6px 14px;font-size:0.75rem;background:linear-gradient(135deg,#7c3aed,#06b6d4);cursor:pointer;">
+          <span>✏️ ${lang === 'fr' ? 'Modifier le Profil' : 'Edit Profile'}</span>
+        </button>
+        <button class="shop-btn" onclick="closeAuthorProfileModal(); openFounderPassModal();" style="padding:6px 12px;font-size:0.75rem;background:linear-gradient(135deg,#f59e0b,#ec4899);cursor:pointer;">
+          <span>⚜️ VIP #0001</span>
+        </button>
+      `;
+    } else {
+      const isFollowing = myFollowing.has(uid);
+      actionsEl.innerHTML = `
+        <button class="btn-follow ${isFollowing ? 'following' : ''}" style="padding:6px 14px;font-size:0.75rem;" onclick="toggleFollow('${esc(uid)}', '${esc(name)}', this); const fc = document.getElementById('upModalFollowersCount'); if (fc) fc.textContent = parseInt(fc.textContent||'0',10) + (${isFollowing ? -1 : 1});">
+          <span>${isFollowing ? (lang === 'fr' ? '✓ Abonné' : '✓ Following') : (lang === 'fr' ? '+ S\'abonner' : '+ Follow')}</span>
+        </button>
+        <button class="cat-btn" style="padding:6px 12px;font-size:0.75rem;" onclick="closeAuthorProfileModal(); openDmWithUser('${esc(uid)}', '${esc(name)}', '${esc(defaultPhoto)}');">
+          <span>💬 ${lang === 'fr' ? 'Message' : 'Message'}</span>
+        </button>
+        <button class="btn-quick-tip" style="padding:6px 12px;font-size:0.75rem;" onclick="closeAuthorProfileModal(); openTipModal(null, '${esc(uid)}', null, '${esc(name)}');">
+          <span>🪙 Tip</span>
+        </button>
+      `;
+    }
+  }
+
+  // Load Author's posts
+  if (postsListEl) {
+    postsListEl.innerHTML = `<div style="text-align:center;padding:16px;color:var(--muted);font-size:0.8rem;">Loading posts...</div>`;
+    try {
+      let authorPosts = [];
+      if (typeof db !== 'undefined' && uid) {
+        const snap = await db.collection('devsocial_posts')
+          .where('uid', '==', uid)
+          .limit(8)
+          .get();
+        snap.forEach(doc => authorPosts.push({ id: doc.id, ...doc.data() }));
+      }
+      if (!authorPosts.length) {
+        postsListEl.innerHTML = `<div style="text-align:center;padding:16px;color:var(--muted);font-size:0.8rem;">${lang === 'fr' ? 'Aucune publication pour le moment.' : 'No posts yet.'}</div>`;
+      } else {
+        if (postsCountEl) postsCountEl.textContent = authorPosts.length;
+        if (postsCountText) postsCountText.textContent = `${authorPosts.length} posts`;
+        postsListEl.innerHTML = authorPosts.map(p => {
+          const cap = p.content || p.caption || 'Montreal post';
+          const time = p.createdAt ? timeAgo(safeGetDate(p.createdAt)) : 'recently';
+          return `
+            <div class="up-post-card-mini" onclick="closeAuthorProfileModal(); scrollToPost('${p.id}');">
+              <div style="font-size:0.8rem;color:#fff;font-weight:700;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                ${esc(cap)}
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--muted);">
+                <span>⏱️ ${time}</span>
+                <span>❤️ ${p.likesCount || 0} • 💬 ${p.commentsCount || 0}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    } catch(e) {
+      postsListEl.innerHTML = `<div style="text-align:center;padding:16px;color:var(--muted);font-size:0.8rem;">Ready</div>`;
+    }
+  }
+
+  modal.classList.add('open');
+}
+
+function closeAuthorProfileModal(e) {
+  if (e && e.target !== document.getElementById('userProfileModalOverlay') && !e.target.classList.contains('mc')) return;
+  const modal = document.getElementById('userProfileModalOverlay');
+  if (modal) modal.classList.remove('open');
+}
+
+function scrollToPost(postId) {
+  const el = document.getElementById('post-' + postId);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.style.boxShadow = '0 0 25px rgba(124,58,237,0.7)';
+    setTimeout(() => { el.style.boxShadow = ''; }, 2000);
+  }
+}
+
+// 2. Save Full User Profile (Display Name, @handle, Neighborhood, Bio)
+async function saveUserProfileFull() {
+  const nameInp = document.getElementById('editProfileNameInput');
+  const handleInp = document.getElementById('editProfileHandleInput');
+  const neighSelect = document.getElementById('editProfileNeighborhoodSelect');
+  const bioInp = document.getElementById('editProfileBioInput');
+
+  const newName = (nameInp && nameInp.value.trim()) || '';
+  const newHandle = (handleInp && handleInp.value.trim().replace(/^@/, '')) || '';
+  const newNeighborhood = (neighSelect && neighSelect.value) || 'Le Plateau-Mont-Royal 🥯';
+  const newBio = (bioInp && bioInp.value.trim()) || '';
+
+  const lang = getCommunityLang();
+  if (!newName) {
+    toast(lang === 'fr' ? 'Veuillez saisir votre nom !' : 'Please enter your display name!', 'warning');
+    return;
+  }
+
+  if (user) user.displayName = newName;
+
+  // Local storage persistence
+  localStorage.setItem('hub_custom_name', newName);
+  if (newHandle) localStorage.setItem('hub_user_handle', '@' + newHandle);
+  localStorage.setItem('hub_user_neighborhood', newNeighborhood);
+  if (newBio) localStorage.setItem('hub_user_bio', newBio);
+
+  if (user && user.uid) {
+    localStorage.setItem('custom_display_name_' + user.uid, newName);
+  }
+
+  // Update Left Sidebar
+  const slN = document.getElementById('slName'); if (slN) slN.textContent = newName;
+  const slH = document.getElementById('slHandle'); if (slH) slH.textContent = newHandle ? '@' + newHandle : '@creator';
+  const slNeigh = document.getElementById('slNeighborhood'); if (slNeigh) slNeigh.textContent = `⚜️ ${newNeighborhood.replace('⚜️','').trim()}`;
+  const hdrN = document.getElementById('hdrName'); if (hdrN) hdrN.textContent = newName;
+  const compN = document.getElementById('compName'); if (compN) compN.textContent = newName;
+
+  // Update Auth and Firestore
+  if (auth.currentUser) {
+    try {
+      await auth.currentUser.updateProfile({ displayName: newName });
+    } catch(e) {}
+  }
+
+  const uid = user ? user.uid : (auth.currentUser ? auth.currentUser.uid : null);
+  if (uid && typeof db !== 'undefined') {
+    try {
+      await db.collection('users').doc(uid).set({
+        displayName: newName,
+        handle: newHandle ? '@' + newHandle : '@creator',
+        neighborhood: newNeighborhood,
+        bio: newBio,
+        updatedAt: Date.now()
+      }, { merge: true });
+    } catch(e) {}
+  }
+
+  closeEditProfileModal();
+  playSoundFx('coin');
+  toast(lang === 'fr' ? '🎉 Profil mis à jour avec succès !' : '🎉 Profile updated successfully!', 'success');
+  loadFeed();
+}
+
+// 3. Quick 1-Tap Social Tip Engine (+5 🪙)
+async function sendQuickTip(postId, authorUid, authorEmail, authorName, amount = 5, event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  if (!user) {
+    signInGoogle();
+    return;
+  }
+  const myUid = user.uid || user.email;
+  if (authorUid === myUid || (authorEmail && user.email && authorEmail.toLowerCase() === user.email.toLowerCase())) {
+    toast(getCommunityLang() === 'fr' ? 'Vous ne pouvez pas vous donner de pourboire à vous-même !' : 'You cannot tip yourself!', 'warning');
+    return;
+  }
+
+  const current = parseInt(localStorage.getItem('genius_user_coins') || '0', 10);
+  if (current < amount) {
+    toast(getCommunityLang() === 'fr' ? `Pas assez de pièces ! Il vous faut ${amount} 🪙` : `Not enough coins! You need ${amount} 🪙`, 'warning');
+    return;
+  }
+
+  const lang = getCommunityLang();
+  const desc = lang === 'fr' ? `🪙 Pourboire rapide à @${authorName}` : `🪙 Quick tip to @${authorName}`;
+  const success = await deductCoins(amount, desc);
+  if (!success) return;
+
+  const recTx = lang === 'fr' ? `🪙 Pourboire reçu de @${user.displayName || 'Ami'}` : `🪙 Tip received from @${user.displayName || 'Friend'}`;
+  await creditUserCoins(authorUid, authorEmail, authorName, amount, recTx);
+
+  if (postId && typeof db !== 'undefined') {
+    db.collection('devsocial_posts').doc(postId).update({
+      tipsTotal: firebase.firestore.FieldValue.increment(amount)
+    }).catch(() => {});
+  }
+
+  playSoundFx('coin');
+  const x = event && event.clientX ? event.clientX : window.innerWidth / 2;
+  const y = event && event.clientY ? event.clientY : window.innerHeight / 2;
+  spawnFlyingCoins(x, y, 6);
+
+  toast(lang === 'fr' ? `🎉 +${amount} 🪙 Pourboire envoyé à @${authorName} !` : `🎉 Sent +${amount} 🪙 Tip to @${authorName}!`, 'success');
+}
+
+// 4. Montreal Daily Pulse™ Viral Engine (+25 🪙)
+const DAILY_PULSE_THEMES = [
+  { day: 0, icon: '🥁', titleEn: 'Mont-Royal & Tam-Tams Sun Vibes', titleFr: 'Ambiance Soleil Mont-Royal & Tam-Tams', descEn: 'Share your mountain lookout, park lawn, or drum circle vibe! Earn +25 🪙', descFr: 'Partagez votre vue panoramique, pause pelouse ou tam-tams ! Gagnez +25 🪙', tag: '#MontrealPulse' },
+  { day: 1, icon: '☕', titleEn: 'Mile End Espresso & Bagel Kickstart', titleFr: 'Espresso du Mile End & Bagel Matinal', descEn: 'Capture your morning Montreal coffee, wood-fired bagel or creative desk! Earn +25 🪙', descFr: 'Capturez votre café montréalais, bagel au feu de bois ou bureau créatif ! Gagnez +25 🪙', tag: '#MontrealPulse' },
+  { day: 2, icon: '💻', titleEn: 'Montreal Tech, AI & Studio Setup', titleFr: 'Espace Tech, IA & Studio Montréalais', descEn: 'Show your coding setup, 3D project or Montreal creative studio! Earn +25 🪙', descFr: 'Montrez votre setup de dev, projet 3D ou studio créatif montréalais ! Gagnez +25 🪙', tag: '#MontrealPulse' },
+  { day: 3, icon: '⛵', titleEn: 'Vieux-Port & St. Lawrence River Walk', titleFr: 'Vieux-Port & Promenade Fleuve Saint-Laurent', descEn: 'Cobblestones, Ferris wheel, waterfront breeze or historic charm! Earn +25 🪙', descFr: 'Rues pavées, Grande Roue, brise du fleuve ou charme historique ! Gagnez +25 🪙', tag: '#MontrealPulse' },
+  { day: 4, icon: '🏛️', titleEn: 'Plateau Spiral Stairs & Urban Architecture', titleFr: 'Escaliers en Colimaçon & Architecture du Plateau', descEn: 'Snap iconic Montreal iron stairs, murals or colorful Victorian brick! Earn +25 🪙', descFr: 'Capturez les escaliers en fer forgé, murales ou briques victoriennes ! Gagnez +25 🪙', tag: '#MontrealPulse' },
+  { day: 5, icon: '🍟', titleEn: 'Montreal Comfort Food & Evening Adrenaline', titleFr: 'Poutine Iconique & Adrénaline du Vendredi', descEn: 'Legendary poutine, craft brew, terrace laughs or sunset rooftop! Earn +25 🪙', descFr: 'Poutine légendaire, bière artisanale, terrasse ou coucher de soleil ! Gagnez +25 🪙', tag: '#MontrealPulse' },
+  { day: 6, icon: '🚴', titleEn: 'F1 Track, Cycling Sprint & Weekend Freedom', titleFr: 'Circuit F1, Sprint Vélo & Liberté du Week-end', descEn: 'Riding Circuit Gilles-Villeneuve, cycling Voie Camillien-Houde or festivals! Earn +25 🪙', descFr: 'Balade Circuit Gilles-Villeneuve, montée Camillien-Houde ou festivals ! Gagnez +25 🪙', tag: '#MontrealPulse' }
+];
+
+function initDailyPulseUI() {
+  const today = new Date().getDay();
+  const theme = DAILY_PULSE_THEMES.find(t => t.day === today) || DAILY_PULSE_THEMES[1];
+  const lang = getCommunityLang();
+
+  const iconEl = document.getElementById('dpcThemeIcon');
+  const titleEl = document.getElementById('dpcThemeTitle');
+  const descEl = document.getElementById('dpcThemeDesc');
+  const btnJoin = document.getElementById('btnJoinDailyPulse');
+
+  if (iconEl) iconEl.textContent = theme.icon;
+  if (titleEl) titleEl.textContent = lang === 'fr' ? theme.titleFr : theme.titleEn;
+  if (descEl) descEl.textContent = lang === 'fr' ? theme.descFr : theme.descEn;
+
+  const todayKey = new Date().toISOString().slice(0, 10);
+  const doneDate = localStorage.getItem('realmont_daily_pulse_date');
+  if (btnJoin) {
+    if (doneDate === todayKey) {
+      btnJoin.classList.add('completed');
+      btnJoin.innerHTML = `<span>${lang === 'fr' ? '✓ Défi du Jour Relevé (+25 🪙)' : '✓ Completed Today (+25 🪙 Claimed)'}</span>`;
+      btnJoin.disabled = true;
+    } else {
+      btnJoin.classList.remove('completed');
+      btnJoin.innerHTML = `<span>${lang === 'fr' ? '📸 Publier Défi du Jour (+25 🪙)' : '📸 Share Daily Pulse (+25 🪙)'}</span>`;
+      btnJoin.disabled = false;
+    }
+  }
+}
+
+function participateInDailyPulse() {
+  if (!user) {
+    signInGoogle();
+    return;
+  }
+  const today = new Date().getDay();
+  const theme = DAILY_PULSE_THEMES.find(t => t.day === today) || DAILY_PULSE_THEMES[1];
+  const lang = getCommunityLang();
+
+  openCreate();
+  const postInp = document.getElementById('postContent');
+  if (postInp) {
+    postInp.value = `#MontrealPulse ${theme.icon} ${lang === 'fr' ? theme.titleFr : theme.titleEn} — `;
+    postInp.focus();
+  }
+  toast(lang === 'fr' ? '📸 Ajoutez votre photo ou vidéo et publiez pour recevoir +25 🪙 !' : '📸 Attach your photo or video and publish to earn +25 🪙!', 'info');
+}
+
+function checkAndAwardDailyPulseReward(content) {
+  if (!content || !content.includes('#MontrealPulse')) return;
+  const todayKey = new Date().toISOString().slice(0, 10);
+  const doneDate = localStorage.getItem('realmont_daily_pulse_date');
+  if (doneDate === todayKey) return;
+
+  localStorage.setItem('realmont_daily_pulse_date', todayKey);
+  const lang = getCommunityLang();
+
+  if (typeof addCoinsLocally === 'function') {
+    addCoinsLocally(25, 'Montreal Daily Pulse Challenge');
+  } else if (typeof giveUserCoins === 'function') {
+    giveUserCoins(25, 'Montreal Daily Pulse Challenge');
+  } else {
+    const cur = parseInt(localStorage.getItem('genius_user_coins') || '0', 10);
+    localStorage.setItem('genius_user_coins', cur + 25);
+    const bEl = document.getElementById('hdrCoinBalance');
+    if (bEl) bEl.textContent = cur + 25;
+  }
+
+  playSoundFx('coin');
+  spawnFlyingCoins(window.innerWidth / 2, window.innerHeight / 2, 8);
+  toast(lang === 'fr' ? '🎉 Défi Montreal Daily Pulse complété ! +25 🪙 GENIUS IA' : '🎉 Montreal Daily Pulse completed! +25 🪙 GENIUS IA', 'success');
+  initDailyPulseUI();
 }
 
 function handlePostDoubleTap(e, postId) {
