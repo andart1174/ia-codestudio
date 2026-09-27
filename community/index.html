@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IA Code Studio Community — Share & Copy Three.js WebGL, 3D Scenes & AI Code</title>
-  <meta name="description" content="Explore, run live 60FPS mobile previews, and copy Three.js 3D WebGL scenes, HTML/CSS/JS standalone code, and AI creations. Earn GENIUS IA coins, tip creators, and unlock 3D cosmetics.">
-  <meta name="keywords" content="Three.js community, WebGL code share, 3D web showcase, GENIUS IA coin, AI code studio community, copy Three.js code, free WebGL widgets, mobile 3D preview QR">
+  <title>REAL MONT • Real Moments, 3D Vibes (Montreal & Canada)</title>
+  <meta name="description" content="REAL MONT — The next-gen social experience in Montreal & Canada. Share real moments, live 3D WebGL scenes, 30s Spark Voice, Duels Mont-Royal, and explore MONT-RADAR.">
+  <meta name="keywords" content="REAL MONT, Montreal social network, reseau social montreal, duels mont-royal, mont-radar, three.js 3d webgl, spark voice, genius ia coin, canada creators">
   <link rel="canonical" href="https://ia-codestudio.com/community/">
   
   <!-- PWA & Mobile App Installation Support -->
@@ -13,28 +13,28 @@
   <meta name="theme-color" content="#7c3aed">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="IA Code Studio">
+  <meta name="apple-mobile-web-app-title" content="REAL MONT">
   <link rel="apple-touch-icon" href="../logo-ia-codestudio.png">
   <link rel="icon" type="image/png" href="../genius-ia-coin.png">
 
   <!-- OpenGraph / Facebook / LinkedIn / WhatsApp -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ia-codestudio.com/community/">
-  <meta property="og:title" content="IA Code Studio Community — 3D WebGL Creations & GENIUS IA Rewards">
-  <meta property="og:description" content="Explore live 60FPS 3D WebGL scenes, test code on mobile via QR, earn GENIUS IA coins, and unlock 3D avatar cosmetics.">
+  <meta property="og:title" content="REAL MONT • Real Moments, 3D Vibes (Montreal & Canada)">
+  <meta property="og:description" content="The next-gen Montreal social network. 3D WebGL scenes, Spark Voice, Duels Mont-Royal, MONT-RADAR live map, and local rewards.">
   <meta property="og:image" content="https://ia-codestudio.com/og-social-banner.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="IA Code Studio Community — 3D WebGL & AI Code Hub">
-  <meta property="og:site_name" content="IA Code Studio">
+  <meta property="og:image:alt" content="REAL MONT — Montreal & Canada Social Hub">
+  <meta property="og:site_name" content="REAL MONT">
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://ia-codestudio.com/community/">
-  <meta name="twitter:title" content="IA Code Studio Community — 3D WebGL & AI Code Hub">
-  <meta name="twitter:description" content="Explore live 3D WebGL scenes, test code on mobile via QR, and earn GENIUS IA coins!">
+  <meta name="twitter:title" content="REAL MONT • Real Moments, 3D Vibes (Montreal & Canada)">
+  <meta name="twitter:description" content="Explore real moments, live 3D WebGL scenes, Spark Voice, Duels Mont-Royal, and MONT-RADAR in Montreal!">
   <meta name="twitter:image" content="https://ia-codestudio.com/og-social-banner.png">
-  <meta name="twitter:image:alt" content="IA Code Studio Community">
+  <meta name="twitter:image:alt" content="REAL MONT">
 
   <!-- Schema.org JSON-LD for Community -->
   <script type="application/ld+json">
@@ -2946,6 +2946,693 @@
         color: #fff !important;
         border-color: var(--accent) !important;
       }
+    /* ══════════════════════════════════════════════
+       ⚜️ REAL MONT VIRAL FEATURES (MONTREAL & CANADA)
+       ══════════════════════════════════════════════ */
+
+    /* ⚡ DUELS MONT-ROYAL™ WIDGET */
+    .duel-widget-card {
+      background: linear-gradient(145deg, rgba(244, 63, 94, 0.08), rgba(6, 182, 212, 0.05), var(--bg2)) !important;
+      border: 1px solid rgba(244, 63, 94, 0.28) !important;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    .duel-widget-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #f43f5e, #06b6d4);
+    }
+    .duel-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .duel-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #f43f5e;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .duel-live-pill {
+      font-size: 0.65rem;
+      font-weight: 900;
+      background: #f43f5e;
+      color: #fff;
+      padding: 2px 7px;
+      border-radius: 999px;
+      letter-spacing: 0.05em;
+      animation: pulseLive 2s infinite;
+    }
+    @keyframes pulseLive {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.75; transform: scale(0.96); }
+    }
+    .duel-title-text {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 4px;
+    }
+    .duel-subtitle {
+      font-size: 0.76rem;
+      color: var(--muted);
+      margin: 0 0 12px;
+      line-height: 1.4;
+    }
+    .duel-energy-container {
+      margin-bottom: 8px;
+    }
+    .duel-energy-bar-track {
+      display: flex;
+      height: 24px;
+      background: #000;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      margin-bottom: 10px;
+    }
+    .duel-energy-fill-a {
+      height: 100%;
+      background: linear-gradient(90deg, #ff0844, #f43f5e);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .duel-energy-fill-b {
+      height: 100%;
+      background: linear-gradient(90deg, #06b6d4, #3b82f6);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .duel-vote-buttons-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-duel-vote {
+      flex: 1;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      padding: 8px 6px;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .btn-duel-vote:hover {
+      transform: translateY(-2px);
+    }
+    .btn-duel-vote.vote-a:hover, .btn-duel-vote.vote-a.voted {
+      background: rgba(244, 63, 94, 0.2);
+      border-color: #f43f5e;
+      color: #f43f5e;
+    }
+    .btn-duel-vote.vote-b:hover, .btn-duel-vote.vote-b.voted {
+      background: rgba(6, 182, 212, 0.2);
+      border-color: #06b6d4;
+      color: #06b6d4;
+    }
+    .vote-team-name {
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .vote-num {
+      font-size: 0.7rem;
+      font-weight: 800;
+      opacity: 0.85;
+    }
+    .duel-vs-circle {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #090d16;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fbbf24;
+      font-size: 0.68rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .duel-coin-reward-hint {
+      text-align: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #fbbf24;
+      margin-top: 6px;
+    }
+
+    /* 🗺️ MONT-RADAR™ INTERACTIVE HEATMAP */
+    .mont-radar-modal-card {
+      background: #090d16 !important;
+      border: 1px solid rgba(6, 182, 212, 0.35) !important;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 780px;
+      max-height: 92vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .interactive-map-canvas-wrap {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      background: radial-gradient(circle at center, #0f172a 0%, #030712 100%);
+      overflow: hidden;
+      border-radius: 12px;
+    }
+    .montreal-map-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .map-hotspot-pin {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      z-index: 10;
+      transition: transform 0.2s;
+    }
+    .map-hotspot-pin:hover {
+      transform: translate(-50%, -50%) scale(1.1);
+      z-index: 20;
+    }
+    .hotspot-pulse {
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      background: rgba(244, 63, 94, 0.35);
+      animation: pinPulse 2s infinite ease-out;
+      pointer-events: none;
+    }
+    .hotspot-pulse.pulse-cyan { background: rgba(6, 182, 212, 0.35); }
+    .hotspot-pulse.pulse-gold { background: rgba(245, 158, 11, 0.35); }
+    .hotspot-pulse.pulse-green { background: rgba(16, 185, 129, 0.35); }
+    @keyframes pinPulse {
+      0% { transform: scale(0.5); opacity: 1; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+    .hotspot-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 999px;
+      padding: 4px 10px;
+      white-space: nowrap;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.6);
+    }
+    .hb-icon { font-size: 0.9rem; }
+    .hb-name { font-size: 0.75rem; font-weight: 700; color: #fff; }
+    .hb-count { font-size: 0.7rem; font-weight: 800; color: #34d399; }
+    .badge-secret-drop {
+      border-color: rgba(245, 158, 11, 0.6) !important;
+      background: rgba(30, 20, 5, 0.95) !important;
+    }
+    .badge-secret-drop .hb-status {
+      font-size: 0.7rem; font-weight: 900; color: #fbbf24;
+    }
+    .map-active-spot-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-top: 12px;
+    }
+    .btn-filter-spot {
+      background: linear-gradient(135deg, #06b6d4, #3b82f6);
+      border: none;
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .btn-filter-spot:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(6, 182, 212, 0.5);
+    }
+
+    /* 🎙️ SPARK VOICE™ RECORDER & SOUNDWAVE PLAYER */
+    .voice-studio-container {
+      background: #030712;
+      border: 1px solid var(--border2);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    .voice-visualizer-box {
+      width: 100%;
+      height: 90px;
+      background: #000;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    #voiceVisualizerCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .voice-timer-display {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      font-family: monospace;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #f43f5e;
+      background: rgba(0,0,0,0.7);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .voice-controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    .btn-record-voice {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f43f5e, #e11d48);
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      box-shadow: 0 0 20px rgba(244, 63, 94, 0.5);
+    }
+    .btn-record-voice.recording {
+      animation: recordPulse 1s infinite alternate;
+      background: #ef4444;
+    }
+    @keyframes recordPulse {
+      0% { transform: scale(1); box-shadow: 0 0 15px #ef4444; }
+      100% { transform: scale(1.12); box-shadow: 0 0 35px #ef4444; }
+    }
+    .voice-card-player {
+      background: linear-gradient(135deg, rgba(244, 63, 94, 0.12), rgba(124, 58, 237, 0.08));
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 8px 0;
+    }
+    .btn-play-voice {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f43f5e, #a855f7);
+      border: none;
+      color: #fff;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+    .btn-play-voice:hover {
+      transform: scale(1.08);
+    }
+    .voice-wave-bars {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      height: 32px;
+    }
+    .v-bar {
+      flex: 1;
+      height: 100%;
+      background: rgba(244, 63, 94, 0.4);
+      border-radius: 2px;
+      transform-origin: bottom;
+      transition: height 0.1s;
+    }
+    .voice-card-player.playing .v-bar {
+      animation: waveDance 0.8s ease-in-out infinite alternate;
+    }
+    @keyframes waveDance {
+      0% { transform: scaleY(0.2); }
+      100% { transform: scaleY(1); }
+    }
+
+    /* 🎟️ KIOSQUE DE RÉCOMPENSES MONTRÉAL */
+    .rewards-vouchers-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 420px;
+      overflow-y: auto;
+    }
+    .voucher-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: 14px;
+      padding: 12px 14px;
+      transition: all 0.2s;
+    }
+    .voucher-card:hover {
+      border-color: rgba(245, 158, 11, 0.4);
+      background: rgba(245, 158, 11, 0.04);
+    }
+    .voucher-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      background: rgba(255, 255, 255, 0.06);
+      flex-shrink: 0;
+    }
+    .voucher-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .voucher-info h5 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 0 0 3px;
+    }
+    .voucher-info p {
+      font-size: 0.76rem;
+      color: var(--muted);
+      margin: 0;
+    }
+    .voucher-cost {
+      display: inline-block;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 0.85rem;
+      color: #fbbf24;
+      margin-top: 4px;
+    }
+    .btn-claim-voucher {
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: none;
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 7px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-claim-voucher:hover {
+      transform: scale(1.04);
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.45);
+    }
+    .voucher-qr-coupon {
+      background: #030712;
+      border: 2px dashed rgba(245, 158, 11, 0.5);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      margin-top: 14px;
+    }
+    .voucher-code-badge {
+      display: inline-block;
+      font-family: monospace;
+      font-size: 1rem;
+      font-weight: 800;
+      color: #fbbf24;
+      background: rgba(245, 158, 11, 0.15);
+      padding: 4px 12px;
+      border-radius: 6px;
+      margin-top: 6px;
+      letter-spacing: 0.1em;
+    }
+
+    /* ⚜️ PASSEPORT FONDATEUR VIP #0084 (HOLOGRAPHIC 3D TILT) */
+    .holographic-founder-card {
+      position: relative;
+      width: 100%;
+      border-radius: 18px;
+      padding: 24px;
+      background: linear-gradient(135deg, #090d16 0%, #1e1b4b 50%, #090d16 100%);
+      border: 1px solid rgba(251, 191, 36, 0.5);
+      box-shadow: 0 0 35px rgba(251, 191, 36, 0.25), inset 0 0 20px rgba(0,0,0,0.6);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .holographic-founder-card::before {
+      content: '';
+      position: absolute;
+      inset: -50%;
+      background: linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.15) 50%, transparent 60%);
+      transform: rotate(25deg);
+      pointer-events: none;
+      animation: holoShine 4s infinite linear;
+    }
+    @keyframes holoShine {
+      0% { transform: translateX(-100%) rotate(25deg); }
+      100% { transform: translateX(100%) rotate(25deg); }
+    }
+    .hfc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .hfc-brand {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 900;
+      font-size: 1.1rem;
+      color: #fff;
+    }
+    .hfc-chip {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: #000;
+      font-size: 0.68rem;
+      font-weight: 900;
+      padding: 2px 8px;
+      border-radius: 999px;
+      letter-spacing: 0.05em;
+    }
+    .hfc-middle {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .hfc-avatar-wrap img {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: 2px solid #fbbf24;
+      object-fit: cover;
+      box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
+    }
+    .hfc-user-info h4 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 3px;
+    }
+    .hfc-user-info p {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin: 0 0 4px;
+    }
+    .hfc-edition {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: #38bdf8;
+      letter-spacing: 0.08em;
+    }
+    .hfc-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .hfc-num .lbl { font-size: 0.65rem; color: #94a3b8; letter-spacing: 0.05em; display: block; }
+    .hfc-num .val { font-family: monospace; font-size: 1rem; font-weight: 900; color: #fbbf24; }
+    .hfc-status { font-size: 0.72rem; font-weight: 900; color: #10b981; }
+
+    /* 💬 SALONS DE DISCUSSION MONTRÉAL */
+    .chat-channels-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 6px 0 12px;
+      scrollbar-width: none;
+    }
+    .chat-channels-bar::-webkit-scrollbar { display: none; }
+    .channel-pill {
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: 999px;
+      padding: 6px 12px;
+      color: #cbd5e1;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .channel-pill.active {
+      background: linear-gradient(135deg, #06b6d4, #3b82f6);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 2px 10px rgba(6, 182, 212, 0.4);
+    }
+    .chat-messages-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      height: 320px;
+      overflow-y: auto;
+      padding: 10px;
+      background: #030712;
+      border-radius: 12px;
+      border: 1px solid var(--border2);
+      margin-bottom: 12px;
+    }
+    .chat-msg-row {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .chat-msg-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .chat-msg-bubble {
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: 0 10px 10px 10px;
+      padding: 6px 10px;
+      max-width: 80%;
+    }
+    .chat-msg-author {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #06b6d4;
+      margin-bottom: 2px;
+    }
+    .chat-msg-text {
+      font-size: 0.82rem;
+      color: #f1f5f9;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    /* ✦ AI HOOK GENERATOR IN CREATE MODAL */
+    .btn-ai-hook-sparkle {
+      background: linear-gradient(135deg, #a855f7, #ec4899);
+      border: none;
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+    .btn-ai-hook-sparkle:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+    }
+    .ai-hook-suggestions-box {
+      margin-top: 8px;
+      padding: 10px;
+      background: rgba(168, 85, 247, 0.08);
+      border: 1px solid rgba(168, 85, 247, 0.25);
+      border-radius: 10px;
+    }
+    .ai-hook-chip {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      padding: 6px 10px;
+      color: #e2e8f0;
+      font-size: 0.78rem;
+      cursor: pointer;
+      margin-top: 5px;
+      transition: all 0.18s;
+      font-family: inherit;
+    }
+    .ai-hook-chip:hover {
+      border-color: #c084fc;
+      background: rgba(168, 85, 247, 0.15);
+      color: #fff;
     }
   </style>
   <script type="application/ld+json">
@@ -2999,12 +3686,20 @@
     <span class="lt">IA Code Studio</span>
   </a>
   <div class="header-sep"></div>
-  <span class="header-brand" id="lbl-header-brand">✦ Community</span>
+  <span class="header-brand" id="lbl-header-brand" style="display:inline-flex;align-items:center;gap:6px;">
+    <span>⚜️ REAL MONT</span>
+    <span style="font-size:0.65rem;background:linear-gradient(135deg,#ff3366,#ff6b35);color:#fff;padding:2px 7px;border-radius:12px;font-weight:900;letter-spacing:0.04em;">MTL ⚡ CA</span>
+  </span>
 
   <!-- LANGUAGE TOGGLE -->
   <button class="btn-lang-toggle" id="btnLangToggle" onclick="toggleCommunityLanguage()" title="Switch Language (EN / FR)">
     <span id="langFlag">🇬🇧</span>
     <span id="langText">EN</span>
+  </button>
+
+  <!-- VIP FOUNDER PASS BUTTON -->
+  <button class="hdr-vip-pill" id="hdrVipPill" onclick="openFounderPassModal()" title="Founder VIP Pass #0084" style="display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,rgba(255,215,0,0.15),rgba(244,63,94,0.15));border:1px solid rgba(255,215,0,0.4);border-radius:20px;padding:4px 10px;color:#ffd700;font-size:0.75rem;font-weight:800;cursor:pointer;white-space:nowrap;">
+    <span>⚜️ VIP #0084</span>
   </button>
 
   <!-- GENIUS IA COIN WIDGET -->
@@ -3060,6 +3755,35 @@
         <div class="u-stat"><div class="u-stat-n" id="uLikes">0</div><div class="u-stat-l">Likes</div></div>
       </div>
     </div>
+
+    <!-- ⚜️ REAL MONT MONTREAL HUB -->
+    <div class="scard" id="realmontHubCard" style="border-color: rgba(244, 63, 94, 0.3); background: linear-gradient(145deg, rgba(244,63,94,0.06), rgba(6,182,212,0.04), var(--bg2));">
+      <div class="stitle" id="lbl-realmont-hub-title" style="display:flex;align-items:center;justify-content:space-between;">
+        <span>⚜️ REAL MONT Hub</span>
+        <span style="font-size:0.65rem;background:linear-gradient(135deg,#f43f5e,#06b6d4);color:#fff;padding:2px 7px;border-radius:12px;font-weight:800;">MTL LIVE</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+        <button class="cat-btn" style="display:flex;align-items:center;gap:8px;font-size:0.8rem;justify-content:flex-start;padding:8px 12px;" onclick="openRadarModal()" id="btnNavRadar">
+          <span style="font-size:1.05rem;">🗺️</span> <span id="lblNavRadar">MONT-RADAR™ Live</span>
+        </button>
+        <button class="cat-btn" style="display:flex;align-items:center;gap:8px;font-size:0.8rem;justify-content:flex-start;padding:8px 12px;" onclick="scrollToDuelsWidget()" id="btnNavDuels">
+          <span style="font-size:1.05rem;">⚡</span> <span id="lblNavDuels">Duels Mont-Royal™</span>
+        </button>
+        <button class="cat-btn" style="display:flex;align-items:center;gap:8px;font-size:0.8rem;justify-content:flex-start;padding:8px 12px;" onclick="openVoiceStudioModal()" id="btnNavVoice">
+          <span style="font-size:1.05rem;">🎙️</span> <span id="lblNavVoice">Spark Voice™ 30s</span>
+        </button>
+        <button class="cat-btn" style="display:flex;align-items:center;gap:8px;font-size:0.8rem;justify-content:flex-start;padding:8px 12px;" onclick="openRewardsKioskModal()" id="btnNavRewards">
+          <span style="font-size:1.05rem;">🎟️</span> <span id="lblNavRewards">Rewards Kiosk MTL</span>
+        </button>
+        <button class="cat-btn" style="display:flex;align-items:center;gap:8px;font-size:0.8rem;justify-content:flex-start;padding:8px 12px;" onclick="openFounderPassModal()" id="btnNavFounder">
+          <span style="font-size:1.05rem;">⚜️</span> <span id="lblNavFounder">VIP Pass #0084</span>
+        </button>
+        <button class="cat-btn" style="display:flex;align-items:center;gap:8px;font-size:0.8rem;justify-content:flex-start;padding:8px 12px;" onclick="openChatRoomsModal()" id="btnNavChat">
+          <span style="font-size:1.05rem;">💬</span> <span id="lblNavChat">Montreal Chat Rooms</span>
+        </button>
+      </div>
+    </div>
+
     <div class="scard">
       <div class="stitle" id="lbl-categories-title">Categories</div>
       <button class="cat-btn active" data-cat="all" onclick="filterCat('all',this)" id="catbtn-all">🌐 All Posts</button>
@@ -3442,6 +4166,35 @@
         <button class="adm-btn" style="background:rgba(124,58,237,0.2);border-color:rgba(124,58,237,0.5);color:#c084fc;" onclick="adminGlobalAirdrop()" id="btn-admin-airdrop">🌧️ Launch Global Airdrop</button>
       </div>
     </div>
+    <!-- ⚡ DUELS MONT-ROYAL™ CARD -->
+    <div class="duel-widget-card" id="duelsMontRoyalWidget">
+      <div class="duel-card-header">
+        <span class="duel-badge"><span>⚡</span> <span id="lbl-duel-badge">Duels Mont-Royal™</span></span>
+        <span class="duel-live-pill" id="lbl-duel-live">LIVE MTL</span>
+      </div>
+      <h4 class="duel-title-text" id="duelTitleText">St-Viateur Bagel 🥯 vs Fairmount Bagel 🥖</h4>
+      <p class="duel-subtitle" id="duelSubtitleText">Vote for your Montreal favorite! Earn +15 🪙 GENIUS IA coins instantly.</p>
+      
+      <div class="duel-energy-container">
+        <div class="duel-energy-bar-track">
+          <div class="duel-energy-fill-a" id="duelEnergyFillA" style="width: 54%;">54%</div>
+          <div class="duel-energy-fill-b" id="duelEnergyFillB" style="width: 46%;">46%</div>
+        </div>
+        <div class="duel-vote-buttons-row">
+          <button class="btn-duel-vote vote-a" id="btnDuelVoteA" onclick="voteDuel('A')">
+            <span class="vote-team-name" id="duelTeamAName">St-Viateur 🥯</span>
+            <span class="vote-num" id="duelTeamACount">1,248 votes</span>
+          </button>
+          <div class="duel-vs-circle">VS</div>
+          <button class="btn-duel-vote vote-b" id="btnDuelVoteB" onclick="voteDuel('B')">
+            <span class="vote-team-name" id="duelTeamBName">Fairmount 🥖</span>
+            <span class="vote-num" id="duelTeamBCount">1,072 votes</span>
+          </button>
+        </div>
+      </div>
+      <div class="duel-coin-reward-hint" id="lblDuelRewardHint">🎁 +15 🪙 Reward per vote</div>
+    </div>
+
     <!-- Tools — visible to everyone -->
     <div class="stats-card">
       <div class="sc-title">IA Code Studio Tools</div>
@@ -3464,10 +4217,40 @@
     <div class="mb">
       <div class="comp-hdr">
         <img src="" alt="" class="comp-avatar" id="compAvatar">
-        <div><div class="comp-name" id="compName"></div><div class="comp-sub">Posting to the community</div></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+          <div>
+            <div class="comp-name" id="compName"></div>
+            <div class="comp-sub" id="lbl-comp-sub">Posting to REAL MONT</div>
+          </div>
+          <button type="button" class="btn-ai-hook-gen" onclick="generateViralHook()" id="btnAiHookGen" style="background:rgba(244,63,94,0.15);border:1px solid rgba(244,63,94,0.4);color:#f43f5e;font-size:0.75rem;font-weight:700;padding:5px 10px;border-radius:14px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all 0.2s;">
+            <span>✨</span> <span id="lblAiHook">Generate AI Hook</span>
+          </button>
+        </div>
       </div>
       <textarea class="p-textarea" id="postContent" placeholder="Share your creation, idea or tip with the community... ✨" oninput="updChar()"></textarea>
       <div class="char-count" id="charCnt">0 / 2000</div>
+
+      <!-- 🎙️ SPARK VOICE™ (30s Audio Note) -->
+      <div class="opt-section" id="sparkVoiceSection">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <label class="opt-lbl" id="lbl-spark-voice-title" style="margin-bottom:0;">🎙️ Spark Voice™ (30s Audio Note)</label>
+          <span style="font-size:0.7rem;color:#f43f5e;font-weight:800;" id="voiceStatusBadge">READY</span>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:12px;padding:12px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <button type="button" id="btnRecordVoice" onclick="toggleSparkVoiceRecord()" style="background:linear-gradient(135deg,#f43f5e,#e11d48);border:none;color:#fff;border-radius:50%;width:42px;height:42px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(244,63,94,0.4);flex-shrink:0;">
+              <span id="recordVoiceIcon">🎙️</span>
+            </button>
+            <div style="flex:1;">
+              <div style="font-size:0.82rem;font-weight:700;color:#fff;" id="voiceTimerText">Tap to record 30s voice vibe</div>
+              <div style="font-size:0.72rem;color:var(--muted);" id="voiceSubText">High quality audio with live neon waveform</div>
+            </div>
+            <button type="button" id="btnClearVoice" onclick="clearSparkVoice()" style="display:none;background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;" title="Delete Audio">✕</button>
+          </div>
+          <canvas id="voiceVisualizerCanvas" height="42" style="width:100%;height:42px;background:#050914;border-radius:8px;margin-top:10px;display:none;"></canvas>
+          <audio id="recordedVoiceAudio" controls style="width:100%;height:32px;margin-top:8px;display:none;"></audio>
+        </div>
+      </div>
 
       <div class="opt-section">
         <label class="opt-lbl">Category</label>
@@ -4184,6 +4967,340 @@
   </div>
 </div>
 
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 🗺️ MONT-RADAR™ INTERACTIVE HEATMAP MODAL (MONTREAL & CA)   -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="radarMapModal" onclick="closeRadarModal(event)">
+  <div class="modal mont-radar-modal-card" onclick="event.stopPropagation()">
+    <!-- Header -->
+    <div class="radar-modal-header" style="padding:16px 20px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,0.25);">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#06b6d4,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:1.2rem;box-shadow:0 0 14px rgba(6,182,212,0.4);">🗺️</div>
+        <div>
+          <h3 style="font-family:'Outfit',sans-serif;font-size:1.15rem;font-weight:800;color:#fff;margin:0;display:flex;align-items:center;gap:8px;">
+            <span id="lbl-radar-modal-title">MONT-RADAR™ Live Heatmap</span>
+            <span style="font-size:0.68rem;background:linear-gradient(135deg,#f43f5e,#06b6d4);color:#fff;padding:2px 8px;border-radius:12px;font-weight:900;">MTL LIVE</span>
+          </h3>
+          <p id="lbl-radar-modal-sub" style="color:var(--muted);font-size:0.8rem;margin:2px 0 0;">Explore live hot spots and secret geocache drops in Montreal</p>
+        </div>
+      </div>
+      <button class="mc" onclick="closeRadarModal()">✕</button>
+    </div>
+
+    <!-- Map Stage Container -->
+    <div class="mb" style="padding:16px 20px;">
+      <div class="interactive-map-canvas-wrap" id="radarMapWrap">
+        <!-- Montreal Stylized Vector SVG Map -->
+        <svg class="montreal-map-svg" viewBox="0 0 800 400" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="riverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#0284c7" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="#0369a1" stop-opacity="0.2"/>
+            </linearGradient>
+            <linearGradient id="islandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#0f172a"/>
+              <stop offset="100%" stop-color="#1e293b"/>
+            </linearGradient>
+          </defs>
+          <!-- Grid lines -->
+          <pattern id="radarGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+          </pattern>
+          <rect width="100%" height="100%" fill="url(#radarGrid)" />
+
+          <!-- St. Lawrence River Shape -->
+          <path d="M 0,280 C 180,260 320,320 500,280 C 650,250 720,290 800,270 L 800,400 L 0,400 Z" fill="url(#riverGrad)" />
+
+          <!-- Montreal Island Outline -->
+          <path d="M 40,240 C 100,160 220,110 380,120 C 520,130 640,160 740,210 C 680,270 540,260 420,270 C 260,280 140,290 40,240 Z" fill="url(#islandGrad)" stroke="rgba(6,182,212,0.3)" stroke-width="2"/>
+
+          <!-- Mont-Royal Mountain Relief Contour -->
+          <ellipse cx="380" cy="180" rx="90" ry="45" fill="rgba(16,185,129,0.12)" stroke="rgba(16,185,129,0.35)" stroke-dasharray="4,4"/>
+          <ellipse cx="380" cy="180" rx="55" ry="26" fill="rgba(16,185,129,0.2)" stroke="rgba(16,185,129,0.6)"/>
+          <text x="350" y="184" fill="#34d399" font-size="11" font-weight="bold" font-family="'Outfit', sans-serif">MONT-ROYAL ⛰️</text>
+
+          <!-- Metro Line Visual Trails -->
+          <path d="M 180,230 Q 380,190 620,180" fill="none" stroke="rgba(244,63,94,0.4)" stroke-width="2" stroke-dasharray="6,4"/>
+          <path d="M 280,260 Q 400,220 540,150" fill="none" stroke="rgba(245,158,11,0.4)" stroke-width="2" stroke-dasharray="6,4"/>
+        </svg>
+
+        <!-- Hotspot Pin 1: Mont-Royal Tam-Tams -->
+        <div class="map-hotspot-pin" style="left:48%;top:45%;" onclick="selectRadarSpot('tam-tams')">
+          <div class="hotspot-pulse"></div>
+          <div class="hotspot-badge">
+            <span class="hb-icon">🥁</span>
+            <span class="hb-name">Tam-Tams</span>
+            <span class="hb-count">1.4k</span>
+          </div>
+        </div>
+
+        <!-- Hotspot Pin 2: Crescent Downtown -->
+        <div class="map-hotspot-pin" style="left:38%;top:58%;" onclick="selectRadarSpot('crescent')">
+          <div class="hotspot-pulse pulse-cyan"></div>
+          <div class="hotspot-badge">
+            <span class="hb-icon">🍸</span>
+            <span class="hb-name">Crescent & Centre-Ville</span>
+            <span class="hb-count">2.8k</span>
+          </div>
+        </div>
+
+        <!-- Hotspot Pin 3: Old Port Montreal -->
+        <div class="map-hotspot-pin" style="left:56%;top:64%;" onclick="selectRadarSpot('old-port')">
+          <div class="hotspot-pulse pulse-gold"></div>
+          <div class="hotspot-badge">
+            <span class="hb-icon">⛵</span>
+            <span class="hb-name">Vieux-Port MTL</span>
+            <span class="hb-count">1.9k</span>
+          </div>
+        </div>
+
+        <!-- Hotspot Pin 4: Mile End -->
+        <div class="map-hotspot-pin" style="left:54%;top:32%;" onclick="selectRadarSpot('mile-end')">
+          <div class="hotspot-pulse pulse-green"></div>
+          <div class="hotspot-badge">
+            <span class="hb-icon">🥯</span>
+            <span class="hb-name">Mile End & Plateau</span>
+            <span class="hb-count">870</span>
+          </div>
+        </div>
+
+        <!-- Hotspot Pin 5: Secret Geocache Drop (100 coins) -->
+        <div class="map-hotspot-pin" style="left:68%;top:52%;" onclick="selectRadarSpot('geocache-drop')">
+          <div class="hotspot-pulse pulse-gold" style="animation-duration:1.2s;"></div>
+          <div class="hotspot-badge badge-secret-drop">
+            <span class="hb-icon">💎</span>
+            <span class="hb-name">Secret Drop</span>
+            <span class="hb-status">+100 🪙</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Selected Hotspot Detail Card -->
+      <div class="map-active-spot-card" id="radarSpotDetailsCard">
+        <div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:1.1rem;" id="activeSpotIcon">🥁</span>
+            <h4 style="margin:0;font-size:0.95rem;font-weight:800;color:#fff;" id="activeSpotTitle">Mont-Royal Tam-Tams</h4>
+          </div>
+          <p style="margin:3px 0 0;font-size:0.78rem;color:var(--muted);" id="activeSpotDesc">Sunday drum circles, sun vibes, and creative Montreal gatherings.</p>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="btn-filter-spot" id="btnFilterByRadarSpot" onclick="filterFeedByRadarSpot()">
+            <span>🎯 Filter Feed</span>
+          </button>
+          <button class="btn-filter-spot" id="btnUnlockDropSpot" onclick="claimRadarSecretDrop()" style="display:none;background:linear-gradient(135deg,#f59e0b,#ec4899);">
+            <span>💎 Claim Drop</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 🎟️ KIOSQUE DE RÉCOMPENSES MONTRÉAL (LOCAL VOUCHERS & PASSES)-->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="rewardsModalOverlay" onclick="closeRewardsKioskModal(event)">
+  <div class="modal rewards-modal-card" onclick="event.stopPropagation()" style="max-width:680px;">
+    <!-- Header -->
+    <div class="rewards-modal-header" style="padding:16px 20px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#f59e0b,#ef4444);display:flex;align-items:center;justify-content:center;font-size:1.2rem;box-shadow:0 0 14px rgba(245,158,11,0.4);">🎟️</div>
+        <div>
+          <h3 style="font-family:'Outfit',sans-serif;font-size:1.15rem;font-weight:800;color:#fff;margin:0;display:flex;align-items:center;gap:8px;">
+            <span id="lbl-rewards-modal-title">Montreal Rewards Kiosk</span>
+            <span style="font-size:0.68rem;background:linear-gradient(135deg,#10b981,#06b6d4);color:#000;padding:2px 8px;border-radius:12px;font-weight:900;">REAL MONT</span>
+          </h3>
+          <p id="lbl-rewards-modal-sub" style="color:var(--muted);font-size:0.8rem;margin:2px 0 0;">Redeem your GENIUS IA coins for real Montreal perks & digital vouchers</p>
+        </div>
+      </div>
+      <button class="mc" onclick="closeRewardsKioskModal()">✕</button>
+    </div>
+
+    <div class="mb" style="padding:16px 20px;">
+      <!-- Coin Balance Bar -->
+      <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border2);border-radius:12px;padding:10px 16px;margin-bottom:16px;">
+        <div style="font-size:0.82rem;color:#94a3b8;" id="lbl-kiosk-balance-txt">Your current coin balance:</div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <img src="../genius-ia-coin.png" style="width:20px;height:20px;" alt="">
+          <span style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.05rem;color:#fcd34d;" id="kioskCoinBalance">0</span>
+          <span style="font-size:0.75rem;color:#fbbf24;font-weight:700;">🪙</span>
+        </div>
+      </div>
+
+      <!-- Vouchers Grid -->
+      <div class="rewards-vouchers-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;">
+        <!-- Perk 1: Poutine La Banquise -->
+        <div class="voucher-card" style="background:var(--bg3);border:1px solid var(--border2);border-radius:14px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+              <span style="font-size:1.5rem;">🍟</span>
+              <span style="font-weight:800;color:#fbbf24;font-size:0.95rem;">120 🪙</span>
+            </div>
+            <h4 style="margin:0 0 4px;font-size:0.95rem;color:#fff;" id="lbl-perk-poutine-title">Poutine Classique La Banquise</h4>
+            <p style="margin:0 0 12px;font-size:0.76rem;color:var(--muted);" id="lbl-perk-poutine-desc">Digital coupon valid for 1 free Montreal classic poutine upgrade.</p>
+          </div>
+          <button class="shop-btn buy" style="width:100%;padding:8px;" onclick="claimMontrealPerk('poutine', 120, 'Poutine Classique La Banquise')">
+            <span id="btn-claim-poutine">Claim Coupon (120 🪙)</span>
+          </button>
+        </div>
+
+        <!-- Perk 2: Café & Bagel Chaud St-Viateur -->
+        <div class="voucher-card" style="background:var(--bg3);border:1px solid var(--border2);border-radius:14px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+              <span style="font-size:1.5rem;">🥯</span>
+              <span style="font-weight:800;color:#fbbf24;font-size:0.95rem;">60 🪙</span>
+            </div>
+            <h4 style="margin:0 0 4px;font-size:0.95rem;color:#fff;" id="lbl-perk-bagel-title">St-Viateur Bagel & Espresso</h4>
+            <p style="margin:0 0 12px;font-size:0.76rem;color:var(--muted);" id="lbl-perk-bagel-desc">Hot sesame bagel with cream cheese & double espresso coupon.</p>
+          </div>
+          <button class="shop-btn buy" style="width:100%;padding:8px;" onclick="claimMontrealPerk('bagel', 60, 'St-Viateur Bagel & Espresso')">
+            <span id="btn-claim-bagel">Claim Coupon (60 🪙)</span>
+          </button>
+        </div>
+
+        <!-- Perk 3: 24h Super-Boost Feed -->
+        <div class="voucher-card" style="background:var(--bg3);border:1px solid var(--border2);border-radius:14px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+              <span style="font-size:1.5rem;">🚀</span>
+              <span style="font-weight:800;color:#fbbf24;font-size:0.95rem;">80 🪙</span>
+            </div>
+            <h4 style="margin:0 0 4px;font-size:0.95rem;color:#fff;" id="lbl-perk-boost-title">24h Super-Boost Feed</h4>
+            <p style="margin:0 0 12px;font-size:0.76rem;color:var(--muted);" id="lbl-perk-boost-desc">Highlight your next post with glowing neon frame and top visibility.</p>
+          </div>
+          <button class="shop-btn buy" style="width:100%;padding:8px;" onclick="claimMontrealPerk('boost', 80, '24h Super-Boost Feed')">
+            <span id="btn-claim-boost">Claim Boost (80 🪙)</span>
+          </button>
+        </div>
+
+        <!-- Perk 4: VIP Pass Festival -->
+        <div class="voucher-card" style="background:var(--bg3);border:1px solid var(--border2);border-radius:14px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+              <span style="font-size:1.5rem;">🎟️</span>
+              <span style="font-weight:800;color:#fbbf24;font-size:0.95rem;">250 🪙</span>
+            </div>
+            <h4 style="margin:0 0 4px;font-size:0.95rem;color:#fff;" id="lbl-perk-festival-title">Pass VIP Montreal Festival</h4>
+            <p style="margin:0 0 12px;font-size:0.76rem;color:var(--muted);" id="lbl-perk-festival-desc">Exclusive entry access to partner cultural & electronic events.</p>
+          </div>
+          <button class="shop-btn buy" style="width:100%;padding:8px;" onclick="claimMontrealPerk('festival', 250, 'Pass VIP Montreal Festival')">
+            <span id="btn-claim-festival">Claim Pass (250 🪙)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Generated Coupon Reveal Box -->
+      <div id="rewardCouponCardReveal" style="display:none;margin-top:16px;background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(6,182,212,0.15));border:1px solid rgba(16,185,129,0.4);border-radius:16px;padding:16px;text-align:center;">
+        <div style="font-size:1.8rem;margin-bottom:4px;">🎉</div>
+        <h4 style="color:#34d399;margin:0 0 4px;font-size:1.05rem;" id="couponClaimedTitle">Voucher Claimed!</h4>
+        <p style="color:#cbd5e1;font-size:0.8rem;margin:0 0 12px;" id="lbl-coupon-inst">Present this digital voucher or code to claim your reward:</p>
+        <div style="display:inline-block;padding:8px 18px;background:#000;border:2px dashed #34d399;border-radius:10px;font-family:monospace;font-size:1.25rem;font-weight:900;color:#fcd34d;letter-spacing:0.12em;margin-bottom:12px;" id="generatedCouponCode">MTL-REAL-8492</div>
+        <div id="kioskQrCodeContainer" style="display:flex;justify-content:center;margin-bottom:8px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- ⚜️ PASSEPORT FONDATEUR VIP #0084 (HOLOGRAPHIC 3D PASS)      -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="founderPassModalOverlay" onclick="closeFounderPassModal(event)">
+  <div class="modal founder-pass-modal-card" onclick="event.stopPropagation()" style="max-width:480px;text-align:center;">
+    <div class="mh" style="border:none;justify-content:flex-end;">
+      <button class="mc" onclick="closeFounderPassModal()">✕</button>
+    </div>
+    
+    <div class="mb" style="padding:0 20px 24px;">
+      <!-- 3D Holographic Card Stage -->
+      <div class="founder-hologram-stage" style="perspective:1000px;margin-bottom:16px;">
+        <div class="founder-hologram-card" id="founderCardElement" style="background:linear-gradient(135deg,#1e1b4b,#312e81,#4c1d95,#1e1b4b);border:2px solid rgba(255,215,0,0.6);border-radius:20px;padding:24px 20px;box-shadow:0 0 35px rgba(255,215,0,0.3);position:relative;overflow:hidden;text-align:left;">
+          <!-- Sheen overlay -->
+          <div style="position:absolute;inset:0;background:linear-gradient(105deg,transparent 20%,rgba(255,255,255,0.2) 40%,transparent 60%);pointer-events:none;"></div>
+          
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:1.4rem;">⚜️</span>
+              <span style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1rem;color:#ffd700;letter-spacing:0.06em;">REAL MONT VIP</span>
+            </div>
+            <span style="background:rgba(255,215,0,0.2);border:1px solid #ffd700;color:#ffd700;font-size:0.7rem;font-weight:900;padding:2px 8px;border-radius:12px;">#0084 / 10,000</span>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
+            <img src="../genius-ia-coin.png" id="founderPassAvatar" style="width:54px;height:54px;border-radius:50%;border:2px solid #ffd700;" alt="VIP">
+            <div>
+              <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.1rem;color:#fff;" id="founderPassOwnerName">Founding Creator</div>
+              <div style="font-size:0.75rem;color:#94a3b8;" id="lbl-founder-status">Official Founding Member • Montreal & CA</div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.15);padding-top:12px;font-size:0.75rem;color:#cbd5e1;">
+            <div>
+              <div style="color:var(--muted);font-size:0.68rem;" id="lbl-founder-perks">LIFETIME STATUS</div>
+              <div style="font-weight:800;color:#fcd34d;">2X COIN MULTIPLIER ⚡</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="color:var(--muted);font-size:0.68rem;" id="lbl-founder-edition">GENESIS EDITION</div>
+              <div style="font-weight:800;color:#38bdf8;">VERIFIED BADGE 💎</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="font-family:'Outfit',sans-serif;font-size:1.2rem;color:#fff;margin-bottom:6px;" id="lbl-invite-crew-title">Invite Friends & Earn +50 🪙</h3>
+      <p style="color:var(--muted);font-size:0.82rem;margin-bottom:16px;" id="lbl-invite-crew-sub">Share your exclusive Montreal VIP invite link. Each friend who joins unlocks 50 coins for you!</p>
+
+      <div style="display:flex;gap:10px;justify-content:center;">
+        <button class="shop-btn buy" style="flex:1;padding:10px;" onclick="shareFounderPassWhatsapp()" id="btnFounderWhatsapp">
+          <span>💬 WhatsApp Invite</span>
+        </button>
+        <button class="shop-btn" style="flex:1;padding:10px;background:var(--bg3);border:1px solid var(--border2);color:#fff;" onclick="copyFounderPassLink()" id="btnFounderCopyLink">
+          <span>📋 Copy Link</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 💬 SALONS DE DISCUSSION MONTRÉAL (THEMED LIVE CHAT CHANNELS) -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="chatRoomsModalOverlay" onclick="closeChatRoomsModal(event)">
+  <div class="modal chat-rooms-modal-card" onclick="event.stopPropagation()" style="max-width:720px;height:82vh;display:flex;flex-direction:column;padding:0;overflow:hidden;">
+    <!-- Header -->
+    <div style="padding:14px 20px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,0.25);">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:1.3rem;">💬</span>
+        <div>
+          <h3 style="margin:0;font-size:1.1rem;font-weight:800;color:#fff;" id="lbl-chatrooms-title">Montreal Live Chat Rooms</h3>
+          <p style="margin:2px 0 0;font-size:0.75rem;color:var(--muted);" id="lbl-chatrooms-sub">Real-time themed lounges for creators, foodies & developers</p>
+        </div>
+      </div>
+      <button class="mc" onclick="closeChatRoomsModal()">✕</button>
+    </div>
+
+    <!-- Channels Tabs -->
+    <div class="chat-channels-bar" style="display:flex;gap:8px;padding:10px 16px;background:rgba(0,0,0,0.15);border-bottom:1px solid var(--border2);overflow-x:auto;">
+      <button class="v-tab active" id="cchan-general" onclick="switchChatChannel('general')">#general-mtl 🍁</button>
+      <button class="v-tab" id="cchan-food" onclick="switchChatChannel('food')">#food-poutine 🍟</button>
+      <button class="v-tab" id="cchan-tech" onclick="switchChatChannel('tech')">#tech-ai-3d ⚡</button>
+      <button class="v-tab" id="cchan-music" onclick="switchChatChannel('music')">#musique-beats 🎧</button>
+    </div>
+
+    <!-- Live Messages Box -->
+    <div class="chat-room-messages-box" id="chatRoomMessages" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;">
+      <!-- Dynamic messages injected here -->
+    </div>
+
+    <!-- Chat Compose Bar -->
+    <div style="padding:12px 16px;border-top:1px solid var(--border2);display:flex;gap:8px;background:var(--bg2);">
+      <input type="text" id="chatRoomInput" placeholder="Drop a message in #general-mtl... 🍁" style="flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;color:#fff;font-size:0.85rem;outline:none;" onkeydown="if(event.key==='Enter'){sendRoomMessage();}">
+      <button onclick="sendRoomMessage()" style="background:linear-gradient(135deg,#f43f5e,#06b6d4);border:none;color:#fff;padding:0 18px;border-radius:10px;font-weight:700;cursor:pointer;">➤</button>
+    </div>
+  </div>
+</div>
+
 <!-- FLYING COINS PARTICLES CONTAINER -->
 <div id="flying-coins-container"></div>
 
@@ -4592,6 +5709,21 @@ function renderPost(p) {
     if (emb) vid = `<div class="p-video"><iframe src="${emb}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
   }
 
+  // Voice Note HTML (Spark Voice)
+  let voiceHtml = '';
+  if (p.voiceUrl || p.audioUrl) {
+    const vUrl = p.voiceUrl || p.audioUrl;
+    voiceHtml = `
+      <div class="spark-voice-card-player" style="display:flex;align-items:center;gap:10px;background:rgba(244,63,94,0.08);border:1px solid rgba(244,63,94,0.3);border-radius:12px;padding:8px 12px;margin:8px 0;">
+        <span style="font-size:1.3rem;">🎙️</span>
+        <div style="flex:1;">
+          <div style="font-size:0.75rem;font-weight:700;color:#f43f5e;">Spark Voice™ 30s Note</div>
+          <audio controls src="${vUrl}" style="width:100%;height:32px;margin-top:4px;outline:none;"></audio>
+        </div>
+      </div>
+    `;
+  }
+
   // Code Preview HTML (Bilingual EN/FR)
   let codeHtml = '';
   const lblRunDemo = currentLang === 'fr' ? '▶️ Lancer la Démo Live' : '▶️ Run Live Demo';
@@ -4716,7 +5848,7 @@ function renderPost(p) {
       </div>
     </div>
     ${postCaption ? `<div class="p-content" onclick="this.classList.toggle('expanded')">${esc(postCaption)}</div>` : ''}
-    ${imgs}${vid}${codeHtml}
+    ${imgs}${vid}${voiceHtml}${codeHtml}
     <div class="pf">
       <div class="tiktok-side-avatar-box" onclick="openAuthorProfileModal('${esc(authorUid)}', '${esc(displayName).replace(/'/g, "\\'")}', '${esc(a)}')">
         <img src="${a}" class="tiktok-side-avatar ${authorFrame}" alt="${esc(displayName)}">
@@ -5124,11 +6256,22 @@ async function publish() {
   const category = document.getElementById('postCat').value;
   const videoUrl = document.getElementById('vidUrl').value.trim();
   const imgs = uploadedUrls.filter(Boolean);
-  if (!content && !imgs.length && !videoUrl) { toast('Add some content first', 'error'); return; }
+  const hasVoice = (typeof sparkVoiceBlob !== 'undefined' && sparkVoiceBlob);
+  if (!content && !imgs.length && !videoUrl && !hasVoice) { toast('Add some content or voice note first', 'error'); return; }
   if (content.length > 2000) { toast('Content too long (max 2000)', 'error'); return; }
   const btn = document.getElementById('btnPub');
   btn.disabled = true; btn.textContent = 'Publishing...';
   try {
+    let voiceDataUrl = null;
+    if (hasVoice) {
+      voiceDataUrl = await new Promise(resolve => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = () => resolve(null);
+        reader.readAsDataURL(sparkVoiceBlob);
+      });
+    }
+
     const postRef = db.collection('devsocial_posts').doc();
     const postId = postRef.id;
     await postRef.set({
@@ -5141,6 +6284,7 @@ async function publish() {
       content,
       images: imgs,
       videoUrl: videoUrl || null,
+      voiceUrl: voiceDataUrl || null,
       category,
       likedBy: [],
       likesCount: 0,
@@ -5149,6 +6293,9 @@ async function publish() {
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
     toast('Post published! ✨', 'success');
+    if (typeof playSoundFx === 'function') playSoundFx('publish');
+    if (typeof clearSparkVoice === 'function') clearSparkVoice();
+
     document.getElementById('createOverlay').classList.remove('open');
     document.getElementById('postContent').value = '';
     document.getElementById('postCat').value = 'general';
@@ -5180,6 +6327,7 @@ async function toggleLike(postId, liked) {
       await ref.update({ likedBy: firebase.firestore.FieldValue.arrayUnion(user.uid), likesCount: firebase.firestore.FieldValue.increment(1) });
       btn.classList.add('liked'); btn.querySelector('svg').setAttribute('fill','currentColor');
       cnt.textContent = parseInt(cnt.textContent) + 1;
+      if (typeof playSoundFx === 'function') playSoundFx('like');
       recordQuestProgress('like', 1);
     }
     btn.setAttribute('onclick', `toggleLike('${postId}',${!liked})`);
@@ -6249,6 +7397,27 @@ function applyCommunityLanguage(lang) {
   const cDev = document.getElementById('catbtn-webdev'); if (cDev) cDev.textContent = t.catWebDev;
   const cTip = document.getElementById('catbtn-tips'); if (cTip) cTip.textContent = t.catTips;
   const cGen = document.getElementById('catbtn-general'); if (cGen) cGen.textContent = t.catGeneral;
+
+  // REAL MONT Montréal Hub & Duels
+  const rmHubTitle = document.getElementById('lbl-realmont-hub-title');
+  if (rmHubTitle) rmHubTitle.innerHTML = `<span>${lang === 'fr' ? '⚜️ Hub REAL MONT' : '⚜️ REAL MONT Hub'}</span><span style="font-size:0.65rem;background:linear-gradient(135deg,#f43f5e,#06b6d4);color:#fff;padding:2px 7px;border-radius:12px;font-weight:800;">MTL LIVE</span>`;
+  const navRadar = document.getElementById('lblNavRadar'); if (navRadar) navRadar.textContent = lang === 'fr' ? 'MONT-RADAR™ En Direct' : 'MONT-RADAR™ Live';
+  const navDuels = document.getElementById('lblNavDuels'); if (navDuels) navDuels.textContent = 'Duels Mont-Royal™';
+  const navVoice = document.getElementById('lblNavVoice'); if (navVoice) navVoice.textContent = 'Spark Voice™ 30s';
+  const navRewards = document.getElementById('lblNavRewards'); if (navRewards) navRewards.textContent = lang === 'fr' ? 'Kiosque Récompenses MTL' : 'Rewards Kiosk MTL';
+  const navFounder = document.getElementById('lblNavFounder'); if (navFounder) navFounder.textContent = lang === 'fr' ? 'Pass VIP #0084' : 'VIP Pass #0084';
+  const navChat = document.getElementById('lblNavChat'); if (navChat) navChat.textContent = lang === 'fr' ? 'Salons Discussion MTL' : 'Montreal Chat Rooms';
+
+  // Duels Mont-Royal Widget
+  const duelBadge = document.getElementById('lbl-duel-badge'); if (duelBadge) duelBadge.textContent = 'Duels Mont-Royal™';
+  const duelLive = document.getElementById('lbl-duel-live'); if (duelLive) duelLive.textContent = lang === 'fr' ? 'EN DIRECT MTL' : 'LIVE MTL';
+  const duelSub = document.getElementById('duelSubtitleText'); if (duelSub) duelSub.textContent = lang === 'fr' ? 'Votez pour votre favori montréalais! Gagnez +15 🪙 GENIUS IA immédiatement.' : 'Vote for your Montreal favorite! Earn +15 🪙 GENIUS IA coins instantly.';
+  const duelHint = document.getElementById('lblDuelRewardHint'); if (duelHint) duelHint.textContent = lang === 'fr' ? '🎁 +15 🪙 Récompense par vote' : '🎁 +15 🪙 Reward per vote';
+
+  // AI Hook & Spark Voice in Create Modal
+  const aiHookLbl = document.getElementById('lblAiHook'); if (aiHookLbl) aiHookLbl.textContent = lang === 'fr' ? 'Générer Accroche IA' : 'Generate AI Hook';
+  const compSubLbl = document.getElementById('lbl-comp-sub'); if (compSubLbl) compSubLbl.textContent = lang === 'fr' ? 'Publication sur REAL MONT' : 'Posting to REAL MONT';
+  const spkVoiceLbl = document.getElementById('lbl-spark-voice-title'); if (spkVoiceLbl) spkVoiceLbl.textContent = lang === 'fr' ? '🎙️ Spark Voice™ (Note Vocale 30s)' : '🎙️ Spark Voice™ (30s Audio Note)';
 
   // Mobile Feed Mode Toggle
   const btnModeTiktok = document.getElementById('btnModeTiktok');
@@ -10588,6 +11757,7 @@ window.addEventListener('DOMContentLoaded', () => {
   loadStreakState();
   initPushNotifications();
   checkUrlPostHighlight();
+  if (typeof updateDuelMeterUI === 'function') updateDuelMeterUI();
 });
 
 // Initialize after login
@@ -10621,6 +11791,10 @@ document.addEventListener('keydown', e => {
     closeShareModal();
     closePwaInstallModal();
     closeCategoriesSheet();
+    closeRadarModal();
+    closeRewardsKioskModal();
+    closeFounderPassModal();
+    closeChatRoomsModal();
   } 
 });
 
@@ -10679,6 +11853,625 @@ function handlePostDoubleTap(e, postId) {
   card.appendChild(heart);
   setTimeout(() => { heart.remove(); }, 850);
 }
+
+// ═════════════════════════════════════════════════════════════════
+// ⚜️ REAL MONT — VIRAL MONTREAL & CANADA SOCIAL FEATURES ENGINE
+// ═════════════════════════════════════════════════════════════════
+
+// 1. Web Audio Synthesizer (Zero asset dependency)
+let _realmontAudioCtx = null;
+function getRealmontAudioContext() {
+  if (!_realmontAudioCtx) {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (AudioCtx) _realmontAudioCtx = new AudioCtx();
+  }
+  if (_realmontAudioCtx && _realmontAudioCtx.state === 'suspended') {
+    _realmontAudioCtx.resume();
+  }
+  return _realmontAudioCtx;
+}
+
+function playSoundFx(type) {
+  try {
+    const ctx = getRealmontAudioContext();
+    if (!ctx) return;
+    const t = ctx.currentTime;
+    if (type === 'coin') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(987.77, t);
+      osc.frequency.setValueAtTime(1318.51, t + 0.08);
+      gain.gain.setValueAtTime(0.25, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+      osc.start(t);
+      osc.stop(t + 0.35);
+    } else if (type === 'duel') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(160, t);
+      osc.frequency.exponentialRampToValueAtTime(38, t + 0.3);
+      gain.gain.setValueAtTime(0.35, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.32);
+      osc.start(t);
+      osc.stop(t + 0.32);
+    } else if (type === 'like') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, t);
+      osc.frequency.exponentialRampToValueAtTime(880, t + 0.15);
+      gain.gain.setValueAtTime(0.2, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+      osc.start(t);
+      osc.stop(t + 0.22);
+    } else if (type === 'publish') {
+      [523.25, 659.25, 783.99].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, t + idx * 0.08);
+        gain.gain.setValueAtTime(0.2, t + idx * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + idx * 0.08 + 0.2);
+        osc.start(t + idx * 0.08);
+        osc.stop(t + idx * 0.08 + 0.2);
+      });
+    } else if (type === 'message') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(440, t);
+      osc.frequency.exponentialRampToValueAtTime(659.25, t + 0.09);
+      gain.gain.setValueAtTime(0.18, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
+      osc.start(t);
+      osc.stop(t + 0.14);
+    }
+  } catch (e) {
+    console.warn('Audio note:', e);
+  }
+}
+
+// 2. DUELS MONT-ROYAL™ ENGINE
+let duelVotes = {
+  A: parseInt(localStorage.getItem('duel_votes_a') || '1248', 10),
+  B: parseInt(localStorage.getItem('duel_votes_b') || '1072', 10),
+  userVoted: localStorage.getItem('duel_user_voted') || null
+};
+
+function updateDuelMeterUI() {
+  const total = duelVotes.A + duelVotes.B;
+  const pctA = Math.round((duelVotes.A / total) * 100);
+  const pctB = 100 - pctA;
+  const fillA = document.getElementById('duelEnergyFillA');
+  const fillB = document.getElementById('duelEnergyFillB');
+  const countA = document.getElementById('duelTeamACount');
+  const countB = document.getElementById('duelTeamBCount');
+  const btnA = document.getElementById('btnDuelVoteA');
+  const btnB = document.getElementById('btnDuelVoteB');
+  if (fillA) { fillA.style.width = pctA + '%'; fillA.textContent = pctA + '%'; }
+  if (fillB) { fillB.style.width = pctB + '%'; fillB.textContent = pctB + '%'; }
+  if (countA) countA.textContent = duelVotes.A.toLocaleString() + ' votes';
+  if (countB) countB.textContent = duelVotes.B.toLocaleString() + ' votes';
+  if (btnA) btnA.classList.toggle('voted', duelVotes.userVoted === 'A');
+  if (btnB) btnB.classList.toggle('voted', duelVotes.userVoted === 'B');
+}
+
+function voteDuel(team) {
+  if (duelVotes.userVoted) {
+    toast(getCommunityLang() === 'fr' ? 'Vous avez déjà voté pour ce duel!' : 'You already voted on this duel!', 'info');
+    return;
+  }
+  playSoundFx('duel');
+  duelVotes[team]++;
+  duelVotes.userVoted = team;
+  localStorage.setItem('duel_votes_' + team.toLowerCase(), duelVotes[team]);
+  localStorage.setItem('duel_user_voted', team);
+  updateDuelMeterUI();
+
+  // Award +15 coins
+  if (typeof addCoinsLocally === 'function') {
+    addCoinsLocally(15, 'Duels Mont-Royal Vote');
+  } else if (typeof giveUserCoins === 'function') {
+    giveUserCoins(15, 'Duels Mont-Royal Vote');
+  } else {
+    const cur = parseInt(localStorage.getItem('genius_user_coins') || '0', 10);
+    localStorage.setItem('genius_user_coins', cur + 15);
+    const bEl = document.getElementById('hdrCoinBalance');
+    if (bEl) bEl.textContent = cur + 15;
+  }
+  playSoundFx('coin');
+  toast(getCommunityLang() === 'fr' ? 'Vote enregistré! +15 🪙 GENIUS IA' : 'Vote recorded! +15 🪙 GENIUS IA', 'success');
+}
+
+function scrollToDuelsWidget() {
+  const w = document.getElementById('duelsMontRoyalWidget');
+  if (w) {
+    w.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    w.style.boxShadow = '0 0 25px rgba(244,63,94,0.6)';
+    setTimeout(() => { w.style.boxShadow = ''; }, 1800);
+  }
+}
+
+// 3. MONT-RADAR™ INTERACTIVE HEATMAP & GEOCACHES
+const radarSpotsData = {
+  'tam-tams': {
+    nameEn: 'Mont-Royal Tam-Tams',
+    nameFr: 'Tam-Tams du Mont-Royal',
+    descEn: 'Sunday drum circles, sun vibes, and creative Montreal gatherings.',
+    descFr: 'Cercles de tam-tams du dimanche, ambiance estivale et rencontres créatives.',
+    icon: '🥁',
+    tag: 'Mont-Royal'
+  },
+  'crescent': {
+    nameEn: 'Crescent Street & Downtown',
+    nameFr: 'Rue Crescent & Centre-Ville',
+    descEn: 'Nightlife hub, bustling cyber cafes and digital creative lounges.',
+    descFr: 'Cœur de la vie nocturne, cyber-cafés branchés et salons créatifs.',
+    icon: '🍸',
+    tag: 'Downtown'
+  },
+  'old-port': {
+    nameEn: 'Old Port of Montreal',
+    nameFr: 'Vieux-Port de Montréal',
+    descEn: 'Historic cobblestone streets, Ferris wheel 3D views and riverside art.',
+    descFr: 'Rues pavées historiques, grande roue 3D et art au bord du fleuve.',
+    icon: '⛵',
+    tag: 'Vieux-Port'
+  },
+  'mile-end': {
+    nameEn: 'Mile End & Plateau',
+    nameFr: 'Mile End & Plateau-Mont-Royal',
+    descEn: 'Artistic studios, bagel bakeries, indie game studios & WebGL devs.',
+    descFr: 'Ateliers artistiques, boulangeries de bagels, studios de jeux et dévs WebGL.',
+    icon: '🥯',
+    tag: 'Mile End'
+  },
+  'geocache-drop': {
+    nameEn: 'Secret Geocache Drop 💎',
+    nameFr: 'Drop Géocache Secrète 💎',
+    descEn: 'Exclusive digital cache located in Parc Jean-Drapeau! Claim +100 🪙',
+    descFr: 'Cache numérique exclusive située au Parc Jean-Drapeau! Réclamez +100 🪙',
+    icon: '💎',
+    tag: 'Secret Drop',
+    isDrop: true
+  }
+};
+let activeRadarSpotKey = 'tam-tams';
+
+function openRadarModal() {
+  const m = document.getElementById('radarMapModal');
+  if (m) {
+    m.classList.add('open');
+    selectRadarSpot('tam-tams');
+  }
+}
+function closeRadarModal(e) {
+  if (e && e.target !== document.getElementById('radarMapModal') && !e.target.classList.contains('mc')) return;
+  const m = document.getElementById('radarMapModal');
+  if (m) m.classList.remove('open');
+}
+
+function selectRadarSpot(key) {
+  activeRadarSpotKey = key;
+  const spot = radarSpotsData[key];
+  if (!spot) return;
+  const lang = getCommunityLang();
+  const title = document.getElementById('activeSpotTitle');
+  const desc = document.getElementById('activeSpotDesc');
+  const icon = document.getElementById('activeSpotIcon');
+  const btnFilter = document.getElementById('btnFilterByRadarSpot');
+  const btnDrop = document.getElementById('btnUnlockDropSpot');
+
+  if (title) title.textContent = lang === 'fr' ? spot.nameFr : spot.nameEn;
+  if (desc) desc.textContent = lang === 'fr' ? spot.descFr : spot.descEn;
+  if (icon) icon.textContent = spot.icon;
+
+  if (spot.isDrop) {
+    if (btnFilter) btnFilter.style.display = 'none';
+    if (btnDrop) {
+      btnDrop.style.display = 'inline-flex';
+      const claimed = localStorage.getItem('radar_secret_drop_claimed');
+      btnDrop.disabled = !!claimed;
+      btnDrop.textContent = claimed ? (lang === 'fr' ? '✓ Déjà Réclamé' : '✓ Already Claimed') : (lang === 'fr' ? '💎 Réclamer le Drop' : '💎 Claim Drop');
+    }
+  } else {
+    if (btnFilter) btnFilter.style.display = 'inline-flex';
+    if (btnDrop) btnDrop.style.display = 'none';
+  }
+}
+
+function filterFeedByRadarSpot() {
+  const spot = radarSpotsData[activeRadarSpotKey];
+  if (!spot) return;
+  closeRadarModal();
+  toast((getCommunityLang() === 'fr' ? 'Lieu sélectionné: ' : 'Selected location: ') + (getCommunityLang() === 'fr' ? spot.nameFr : spot.nameEn), 'info');
+}
+
+function claimRadarSecretDrop() {
+  const claimed = localStorage.getItem('radar_secret_drop_claimed');
+  if (claimed) {
+    toast(getCommunityLang() === 'fr' ? 'Drop déjà réclamé pour aujourd\'hui!' : 'Drop already claimed for today!', 'info');
+    return;
+  }
+  localStorage.setItem('radar_secret_drop_claimed', 'true');
+  if (typeof addCoinsLocally === 'function') {
+    addCoinsLocally(100, 'MONT-RADAR Secret Drop');
+  } else if (typeof giveUserCoins === 'function') {
+    giveUserCoins(100, 'MONT-RADAR Secret Drop');
+  } else {
+    const cur = parseInt(localStorage.getItem('genius_user_coins') || '0', 10);
+    localStorage.setItem('genius_user_coins', cur + 100);
+    const bEl = document.getElementById('hdrCoinBalance');
+    if (bEl) bEl.textContent = cur + 100;
+  }
+  playSoundFx('coin');
+  toast(getCommunityLang() === 'fr' ? '🎉 Drop Secret débloqué! +100 🪙 GENIUS IA' : '🎉 Secret Drop Unlocked! +100 🪙 GENIUS IA', 'success');
+  const btnDrop = document.getElementById('btnUnlockDropSpot');
+  if (btnDrop) {
+    btnDrop.disabled = true;
+    btnDrop.textContent = getCommunityLang() === 'fr' ? '✓ Réclamé' : '✓ Claimed';
+  }
+}
+
+// 4. KIOSQUE DE RÉCOMPENSES MONTRÉAL
+function openRewardsKioskModal() {
+  const m = document.getElementById('rewardsModalOverlay');
+  if (m) {
+    m.classList.add('open');
+    const bal = document.getElementById('kioskCoinBalance');
+    const curBal = typeof getUserCoinBalance === 'function' ? getUserCoinBalance() : (parseInt(localStorage.getItem('genius_user_coins') || '0', 10));
+    if (bal) bal.textContent = curBal;
+  }
+}
+function closeRewardsKioskModal(e) {
+  if (e && e.target !== document.getElementById('rewardsModalOverlay') && !e.target.classList.contains('mc')) return;
+  const m = document.getElementById('rewardsModalOverlay');
+  if (m) m.classList.remove('open');
+}
+
+function claimMontrealPerk(perkKey, cost, perkName) {
+  const curBal = typeof getUserCoinBalance === 'function' ? getUserCoinBalance() : (parseInt(localStorage.getItem('genius_user_coins') || '0', 10));
+  const lang = getCommunityLang();
+  if (curBal < cost) {
+    toast(lang === 'fr' ? `Solde insuffisant (${curBal}/${cost} 🪙). Gagnez plus de coins!` : `Insufficient coins (${curBal}/${cost} 🪙). Earn more coins!`, 'error');
+    return;
+  }
+  // Deduct coins
+  if (typeof deductCoinsLocally === 'function') {
+    deductCoinsLocally(cost, perkName);
+  } else if (typeof spendUserCoins === 'function') {
+    spendUserCoins(cost, perkName);
+  } else {
+    const newBal = Math.max(0, curBal - cost);
+    localStorage.setItem('genius_user_coins', newBal);
+    const bEl = document.getElementById('hdrCoinBalance');
+    if (bEl) bEl.textContent = newBal;
+  }
+  const bal = document.getElementById('kioskCoinBalance');
+  if (bal) bal.textContent = Math.max(0, curBal - cost);
+
+  playSoundFx('coin');
+  const couponCode = 'MTL-REAL-' + Math.floor(1000 + Math.random() * 9000);
+  const revealBox = document.getElementById('rewardCouponCardReveal');
+  const titleEl = document.getElementById('couponClaimedTitle');
+  const codeEl = document.getElementById('generatedCouponCode');
+  const qrContainer = document.getElementById('kioskQrCodeContainer');
+
+  if (titleEl) titleEl.textContent = perkName;
+  if (codeEl) codeEl.textContent = couponCode;
+  if (qrContainer) {
+    qrContainer.innerHTML = '';
+    if (typeof QRCode !== 'undefined') {
+      new QRCode(qrContainer, {
+        text: `https://ia-codestudio.com/community/?coupon=${couponCode}&perk=${encodeURIComponent(perkKey)}`,
+        width: 120,
+        height: 120,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    }
+  }
+  if (revealBox) {
+    revealBox.style.display = 'block';
+    revealBox.scrollIntoView({ behavior: 'smooth' });
+  }
+  toast(lang === 'fr' ? `Coupon généré: ${couponCode}! 🎟️` : `Coupon generated: ${couponCode}! 🎟️`, 'success');
+}
+
+// 5. PASSEPORT FONDATEUR VIP #0084
+function openFounderPassModal() {
+  const m = document.getElementById('founderPassModalOverlay');
+  if (m) {
+    m.classList.add('open');
+    const u = (typeof user !== 'undefined' && user) ? user : null;
+    const nameEl = document.getElementById('founderPassOwnerName');
+    const avEl = document.getElementById('founderPassAvatar');
+    if (u && u.displayName && nameEl) nameEl.textContent = u.displayName;
+    if (u && u.photoURL && avEl) avEl.src = u.photoURL;
+  }
+}
+function closeFounderPassModal(e) {
+  if (e && e.target !== document.getElementById('founderPassModalOverlay') && !e.target.classList.contains('mc')) return;
+  const m = document.getElementById('founderPassModalOverlay');
+  if (m) m.classList.remove('open');
+}
+
+function shareFounderPassWhatsapp() {
+  const lang = getCommunityLang();
+  const text = lang === 'fr'
+    ? `Rejoins-moi sur REAL MONT ⚜️ Le nouveau réseau social 3D & créatif à Montréal et au Canada! Utilise mon pass VIP #0084 pour débloquer +50 🪙 instantanément: https://ia-codestudio.com/community/?ref=VIP0084`
+    : `Join me on REAL MONT ⚜️ The new 3D & creative social network in Montreal and Canada! Use my VIP pass #0084 to unlock +50 🪙 instantly: https://ia-codestudio.com/community/?ref=VIP0084`;
+  window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+}
+
+function copyFounderPassLink() {
+  const url = 'https://ia-codestudio.com/community/?ref=VIP0084';
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => {
+      toast(getCommunityLang() === 'fr' ? 'Lien VIP copié!' : 'VIP Invite link copied!', 'success');
+    });
+  }
+}
+
+// 6. SPARK VOICE™ RECORDING STUDIO
+let sparkVoiceRecorder = null;
+let sparkVoiceChunks = [];
+let sparkVoiceBlob = null;
+let sparkVoiceAudioUrl = null;
+let sparkVoiceTimer = null;
+let sparkVoiceSeconds = 0;
+let sparkVoiceAnalyser = null;
+let sparkVoiceAnimFrame = null;
+
+function openVoiceStudioModal() {
+  openCreate();
+  const sec = document.getElementById('sparkVoiceSection');
+  if (sec) {
+    sec.scrollIntoView({ behavior: 'smooth' });
+    sec.style.outline = '2px solid #f43f5e';
+    setTimeout(() => { sec.style.outline = ''; }, 1500);
+  }
+}
+
+async function toggleSparkVoiceRecord() {
+  if (sparkVoiceRecorder && sparkVoiceRecorder.state === 'recording') {
+    stopSparkVoiceRecord();
+  } else {
+    await startSparkVoiceRecord();
+  }
+}
+
+async function startSparkVoiceRecord() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const ctx = getRealmontAudioContext();
+    if (ctx) {
+      const source = ctx.createMediaStreamSource(stream);
+      sparkVoiceAnalyser = ctx.createAnalyser();
+      sparkVoiceAnalyser.fftSize = 64;
+      source.connect(sparkVoiceAnalyser);
+    }
+
+    sparkVoiceChunks = [];
+    sparkVoiceRecorder = new MediaRecorder(stream);
+    sparkVoiceRecorder.ondataavailable = e => { if (e.data.size > 0) sparkVoiceChunks.push(e.data); };
+    sparkVoiceRecorder.onstop = () => {
+      stream.getTracks().forEach(t => t.stop());
+      sparkVoiceBlob = new Blob(sparkVoiceChunks, { type: 'audio/webm' });
+      sparkVoiceAudioUrl = URL.createObjectURL(sparkVoiceBlob);
+      const aud = document.getElementById('recordedVoiceAudio');
+      if (aud) {
+        aud.src = sparkVoiceAudioUrl;
+        aud.style.display = 'block';
+      }
+      const clearBtn = document.getElementById('btnClearVoice');
+      if (clearBtn) clearBtn.style.display = 'block';
+      cancelAnimationFrame(sparkVoiceAnimFrame);
+    };
+
+    sparkVoiceRecorder.start();
+    sparkVoiceSeconds = 0;
+    const timerText = document.getElementById('voiceTimerText');
+    const statusBadge = document.getElementById('voiceStatusBadge');
+    const recIcon = document.getElementById('recordVoiceIcon');
+    const canvas = document.getElementById('voiceVisualizerCanvas');
+    if (canvas) canvas.style.display = 'block';
+    if (statusBadge) { statusBadge.textContent = 'RECORDING'; statusBadge.style.color = '#ef4444'; }
+    if (recIcon) recIcon.textContent = '⏹️';
+
+    sparkVoiceTimer = setInterval(() => {
+      sparkVoiceSeconds++;
+      if (timerText) timerText.textContent = `Recording: ${sparkVoiceSeconds}s / 30s`;
+      if (sparkVoiceSeconds >= 30) {
+        stopSparkVoiceRecord();
+      }
+    }, 1000);
+
+    drawVoiceWaveform();
+  } catch (err) {
+    console.error('Voice record error:', err);
+    toast(getCommunityLang() === 'fr' ? 'Microphone non accessible ou refusé' : 'Microphone access denied or unavailable', 'error');
+  }
+}
+
+function drawVoiceWaveform() {
+  const canvas = document.getElementById('voiceVisualizerCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width;
+  const height = canvas.height;
+  const dataArray = new Uint8Array(sparkVoiceAnalyser ? sparkVoiceAnalyser.frequencyBinCount : 32);
+
+  function render() {
+    sparkVoiceAnimFrame = requestAnimationFrame(render);
+    if (sparkVoiceAnalyser) sparkVoiceAnalyser.getByteFrequencyData(dataArray);
+    ctx.fillStyle = '#050914';
+    ctx.fillRect(0, 0, width, height);
+
+    const barWidth = (width / dataArray.length) * 1.5;
+    let x = 0;
+    for (let i = 0; i < dataArray.length; i++) {
+      const barHeight = (dataArray[i] / 255) * height * 0.9 + 4;
+      const grad = ctx.createLinearGradient(0, height, 0, 0);
+      grad.addColorStop(0, '#f43f5e');
+      grad.addColorStop(1, '#06b6d4');
+      ctx.fillStyle = grad;
+      ctx.fillRect(x, height - barHeight, barWidth - 2, barHeight);
+      x += barWidth;
+    }
+  }
+  render();
+}
+
+function stopSparkVoiceRecord() {
+  if (sparkVoiceRecorder && sparkVoiceRecorder.state === 'recording') {
+    sparkVoiceRecorder.stop();
+  }
+  clearInterval(sparkVoiceTimer);
+  const statusBadge = document.getElementById('voiceStatusBadge');
+  const recIcon = document.getElementById('recordVoiceIcon');
+  const timerText = document.getElementById('voiceTimerText');
+  if (statusBadge) { statusBadge.textContent = 'RECORDED'; statusBadge.style.color = '#10b981'; }
+  if (recIcon) recIcon.textContent = '🎙️';
+  if (timerText) timerText.textContent = `Voice note ready (${sparkVoiceSeconds}s) ✨`;
+  playSoundFx('like');
+}
+
+function clearSparkVoice() {
+  sparkVoiceBlob = null;
+  sparkVoiceAudioUrl = null;
+  sparkVoiceChunks = [];
+  const aud = document.getElementById('recordedVoiceAudio');
+  if (aud) { aud.src = ''; aud.style.display = 'none'; }
+  const canvas = document.getElementById('voiceVisualizerCanvas');
+  if (canvas) canvas.style.display = 'none';
+  const clearBtn = document.getElementById('btnClearVoice');
+  if (clearBtn) clearBtn.style.display = 'none';
+  const statusBadge = document.getElementById('voiceStatusBadge');
+  if (statusBadge) { statusBadge.textContent = 'READY'; statusBadge.style.color = '#f43f5e'; }
+  const timerText = document.getElementById('voiceTimerText');
+  if (timerText) timerText.textContent = 'Tap to record 30s voice vibe';
+}
+
+// 7. ✦ AI VIRAL HOOK GENERATOR (EN / FR)
+const viralHooksEN = [
+  "✨ Montreal sunset meets 3D WebGL vibes! What do you think?",
+  "⚡ Just dropped this real-time Three.js scene from Mile End Montreal! Fork & test it live!",
+  "🔥 The ultimate question: St-Viateur or Fairmount bagels? Let me know in the comments!",
+  "🌌 60 FPS mobile-ready shader built in Montreal. Scan the QR code to run it!",
+  "🍁 Real moments, creative Canadian energy. Check this out!"
+];
+const viralHooksFR = [
+  "✨ Coucher de soleil sur le Mont-Royal avec une touche 3D WebGL! Vous en pensez quoi?",
+  "⚡ Prototype Three.js développé en direct du Mile End à Montréal! Forkez le code!",
+  "🔥 Le grand débat montréalais: Bagels St-Viateur ou Fairmount? Donnez votre avis!",
+  "🌌 Shader WebGL 60 FPS fluide sur mobile. Scannez le QR code pour tester!",
+  "🍁 Moments authentiques et énergie créative du Québec. Découvrez ma création!"
+];
+
+function generateViralHook() {
+  const lang = getCommunityLang();
+  const hooks = lang === 'fr' ? viralHooksFR : viralHooksEN;
+  const randomHook = hooks[Math.floor(Math.random() * hooks.length)];
+  const txt = document.getElementById('postContent');
+  if (txt) {
+    txt.value = (txt.value ? txt.value + "\n\n" : "") + randomHook;
+    if (typeof updChar === 'function') updChar();
+    playSoundFx('like');
+    toast(lang === 'fr' ? 'Accroche virale insérée!' : 'Viral AI hook inserted!', 'success');
+  }
+}
+
+// 8. SALONS DE DISCUSSION MONTRÉAL
+let currentChatChannel = 'general';
+const chatChannelsData = {
+  'general': [
+    { author: 'Guillaume (Plateau)', time: '2m ago', text: 'Bienvenue sur REAL MONT tout le monde! Ambiance incroyable à Montréal 🍁', icon: '⚜️' },
+    { author: 'Sarah_MTL', time: '1m ago', text: 'Love the new 3D feed and TikTok scroll on mobile! So fluid 🚀', icon: '🎨' }
+  ],
+  'food': [
+    { author: 'Marc_Banquise', time: '5m ago', text: 'Poutine à 2h du matin après le show, le classique incontournable 🍟', icon: '🍟' },
+    { author: 'BagelFan99', time: '3m ago', text: 'Fairmount avec du cream cheese chaud, rien ne bat ça!', icon: '🥯' }
+  ],
+  'tech': [
+    { author: 'Alex_Dev', time: '7m ago', text: 'Who is testing Three.js post-processing bloom on mobile WebGL?', icon: '⚡' },
+    { author: 'Andrei_Admin', time: 'Just now', text: 'All shaders running 60FPS standalone without install! 🌌', icon: '👑' }
+  ],
+  'music': [
+    { author: 'DJ_Piknic', time: '10m ago', text: 'Piknic Électronik this weekend was absolute fire 🔥', icon: '🎧' },
+    { author: 'BeatsMontreal', time: '4m ago', text: 'Dropping a fresh synthwave mix in the community soon!', icon: '🎵' }
+  ]
+};
+
+function openChatRoomsModal() {
+  const m = document.getElementById('chatRoomsModalOverlay');
+  if (m) {
+    m.classList.add('open');
+    switchChatChannel(currentChatChannel);
+  }
+}
+function closeChatRoomsModal(e) {
+  if (e && e.target !== document.getElementById('chatRoomsModalOverlay') && !e.target.classList.contains('mc')) return;
+  const m = document.getElementById('chatRoomsModalOverlay');
+  if (m) m.classList.remove('open');
+}
+
+function switchChatChannel(chan) {
+  currentChatChannel = chan;
+  ['general', 'food', 'tech', 'music'].forEach(c => {
+    const btn = document.getElementById('cchan-' + c);
+    if (btn) btn.classList.toggle('active', c === chan);
+  });
+  renderChatChannelMessages();
+}
+
+function renderChatChannelMessages() {
+  const box = document.getElementById('chatRoomMessages');
+  if (!box) return;
+  const msgs = chatChannelsData[currentChatChannel] || [];
+  box.innerHTML = msgs.map(m => `
+    <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:12px;padding:10px 14px;display:flex;flex-direction:column;gap:4px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-weight:700;font-size:0.85rem;color:#f43f5e;display:flex;align-items:center;gap:5px;">
+          <span>${m.icon || '💬'}</span> <span>${m.author}</span>
+        </span>
+        <span style="font-size:0.7rem;color:var(--muted);">${m.time}</span>
+      </div>
+      <div style="font-size:0.84rem;color:#e2e8f0;line-height:1.4;">${m.text}</div>
+    </div>
+  `).join('');
+  box.scrollTop = box.scrollHeight;
+}
+
+function sendRoomMessage() {
+  const input = document.getElementById('chatRoomInput');
+  if (!input || !input.value.trim()) return;
+  const text = input.value.trim();
+  input.value = '';
+  const author = (typeof user !== 'undefined' && user && user.displayName) ? user.displayName : 'Creator';
+  if (!chatChannelsData[currentChatChannel]) chatChannelsData[currentChatChannel] = [];
+  chatChannelsData[currentChatChannel].push({
+    author,
+    time: 'Just now',
+    text,
+    icon: '⚜️'
+  });
+  playSoundFx('message');
+  renderChatChannelMessages();
+}
 </script>
 
 <!-- 📱 TIKTOK MOBILE BOTTOM NAVIGATION (PHOTO 2 STYLE) -->
@@ -10713,6 +12506,28 @@ function handlePostDoubleTap(e, postId) {
       <button class="mc" onclick="closeCategoriesSheet()">✕</button>
     </div>
     <div class="mb" style="padding: 16px;">
+      <!-- ⚜️ REAL MONT Montreal Shortcuts for Mobile -->
+      <div style="margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border2);">
+        <div style="font-size:0.75rem;font-weight:800;color:#f43f5e;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+          <span>⚜️ REAL MONT Hub</span>
+          <span style="font-size:0.65rem;background:#f43f5e;color:#fff;padding:2px 6px;border-radius:10px;">MTL LIVE</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(2, 1fr);gap:8px;">
+          <button class="cat-sheet-btn" onclick="closeCategoriesSheet();openRadarModal();" style="display:flex;align-items:center;gap:6px;font-size:0.8rem;">
+            <span>🗺️</span> <span>MONT-RADAR™</span>
+          </button>
+          <button class="cat-sheet-btn" onclick="closeCategoriesSheet();openRewardsKioskModal();" style="display:flex;align-items:center;gap:6px;font-size:0.8rem;">
+            <span>🎟️</span> <span>Rewards Kiosk</span>
+          </button>
+          <button class="cat-sheet-btn" onclick="closeCategoriesSheet();openFounderPassModal();" style="display:flex;align-items:center;gap:6px;font-size:0.8rem;">
+            <span>⚜️</span> <span>VIP #0084</span>
+          </button>
+          <button class="cat-sheet-btn" onclick="closeCategoriesSheet();openChatRoomsModal();" style="display:flex;align-items:center;gap:6px;font-size:0.8rem;">
+            <span>💬</span> <span>Montreal Chat</span>
+          </button>
+        </div>
+      </div>
+
       <div class="categories-grid-sheet">
         <button class="cat-sheet-btn active" data-cat="all" onclick="selectCategoryFromSheet('all')">🌐 All Posts</button>
         <button class="cat-sheet-btn" data-cat="following" onclick="selectCategoryFromSheet('following')">❤️ Following</button>
