@@ -2400,6 +2400,378 @@
       .dm-sidebar.hidden-mobile { display: none; }
       .dm-main.hidden-mobile { display: none; }
     }
+
+    /* ══════════════════════════════════════════════
+       📱 MOBILE TIKTOK FEED OVERLAY (MAX-WIDTH: 768PX)
+       ══════════════════════════════════════════════ */
+    .mobile-feed-mode-toggle { display: none; }
+    .btn-mobile-touch-toggle { display: none; }
+
+    @media (max-width: 768px) {
+      .mobile-feed-mode-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin: 0 auto 16px auto;
+        background: rgba(15, 23, 42, 0.75);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        padding: 4px;
+        border-radius: 999px;
+        border: 1px solid var(--border2);
+      }
+      .mf-toggle-btn {
+        background: none;
+        border: none;
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 700;
+        padding: 5px 14px;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: inherit;
+      }
+      .mf-toggle-btn.active {
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(124, 58, 237, 0.4);
+      }
+
+      /* TikTok Card Container */
+      .feed:not(.mode-classic) .tiktok-card {
+        position: relative;
+        padding: 0 !important;
+        margin-bottom: 24px;
+        border-radius: 22px;
+        overflow: hidden;
+        background: #020617;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
+        height: min(80vh, 700px);
+        min-height: 520px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+      }
+
+      /* Media Backdrop (Code preview, images, video) */
+      .feed:not(.mode-classic) .tiktok-card .p-code-tab-container,
+      .feed:not(.mode-classic) .tiktok-card .p-images,
+      .feed:not(.mode-classic) .tiktok-card .p-video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        margin: 0 !important;
+        border: none !important;
+        border-radius: 0 !important;
+        background: #020617;
+      }
+      .feed:not(.mode-classic) .tiktok-card .cv-content-area,
+      .feed:not(.mode-classic) .tiktok-card .cv-pane.pane-preview,
+      .feed:not(.mode-classic) .tiktok-card .p-code-preview,
+      .feed:not(.mode-classic) .tiktok-card .preview-iframe-post {
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 100% !important;
+        border: none !important;
+        border-radius: 0 !important;
+        background: #000;
+        margin: 0 !important;
+      }
+      .feed:not(.mode-classic) .tiktok-card .preview-iframe-post {
+        pointer-events: none;
+      }
+      .feed:not(.mode-classic) .tiktok-card .preview-iframe-post.touch-active {
+        pointer-events: auto;
+      }
+
+      /* Images & Video in TikTok mode */
+      .feed:not(.mode-classic) .tiktok-card .p-images img {
+        width: 100%;
+        height: 100%;
+        max-height: none !important;
+        object-fit: cover;
+      }
+      .feed:not(.mode-classic) .tiktok-card .p-video iframe {
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Dark Bottom Gradient for contrast */
+      .feed:not(.mode-classic) .tiktok-card::after {
+        content: '';
+        position: absolute;
+        inset: auto 0 0 0;
+        height: 200px;
+        background: linear-gradient(to top, rgba(2, 6, 23, 0.96) 0%, rgba(2, 6, 23, 0.65) 55%, transparent 100%);
+        z-index: 10;
+        pointer-events: none;
+      }
+
+      /* Top Header (Avatar, Name, Category) */
+      .feed:not(.mode-classic) .tiktok-card .ph {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 20;
+        padding: 12px 14px 24px 14px;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 65%, transparent 100%);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 0;
+      }
+      .feed:not(.mode-classic) .tiktok-card .p-avatar {
+        width: 38px;
+        height: 38px;
+        border-width: 2px;
+      }
+      .feed:not(.mode-classic) .tiktok-card .p-author {
+        font-size: 0.88rem;
+      }
+      .feed:not(.mode-classic) .tiktok-card .p-time {
+        font-size: 0.7rem;
+      }
+
+      /* Floating Code Tabs (under top bar) */
+      .feed:not(.mode-classic) .tiktok-card .cv-tabs {
+        position: absolute;
+        top: 58px;
+        left: 12px;
+        z-index: 22;
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 999px;
+        padding: 3px 6px;
+        gap: 3px;
+        max-width: calc(100% - 130px);
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .feed:not(.mode-classic) .tiktok-card .cv-tabs::-webkit-scrollbar {
+        display: none;
+      }
+      .feed:not(.mode-classic) .tiktok-card .cv-tab {
+        padding: 3px 9px;
+        font-size: 0.68rem;
+        border-radius: 999px;
+      }
+
+      /* Code Edit Button (Top Right) */
+      .feed:not(.mode-classic) .tiktok-card .p-code-actions {
+        position: absolute;
+        top: 58px;
+        right: 12px;
+        z-index: 22;
+        margin: 0 !important;
+        display: flex;
+        gap: 5px;
+      }
+      .feed:not(.mode-classic) .tiktok-card .btn-fork-edit {
+        padding: 4px 10px;
+        font-size: 0.72rem;
+        border-radius: 999px;
+        background: rgba(124, 58, 237, 0.85);
+        backdrop-filter: blur(6px);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 2px 8px rgba(124, 58, 237, 0.4);
+      }
+      .feed:not(.mode-classic) .tiktok-card .btn-mobile-test {
+        display: none !important;
+      }
+
+      /* Code viewing pane over preview */
+      .feed:not(.mode-classic) .tiktok-card .cv-pane.pane-code {
+        position: absolute;
+        inset: 0;
+        z-index: 18;
+        background: #090d16;
+        padding-top: 100px;
+        padding-bottom: 20px;
+      }
+      .feed:not(.mode-classic) .tiktok-card .cv-code-block {
+        height: 100%;
+        max-height: 100% !important;
+        overflow-y: auto;
+      }
+
+      /* 🎮 3D Touch Interaction Toggle Button */
+      .feed:not(.mode-classic) .tiktok-card .btn-mobile-touch-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        position: absolute;
+        bottom: 82px;
+        left: 14px;
+        z-index: 22;
+        background: rgba(15, 23, 42, 0.88);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(124, 58, 237, 0.45);
+        border-radius: 999px;
+        padding: 5px 12px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #fff;
+        cursor: pointer;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+        transition: all 0.2s;
+        font-family: inherit;
+      }
+      .feed:not(.mode-classic) .tiktok-card .btn-mobile-touch-toggle.active {
+        background: linear-gradient(135deg, #10b981, #06b6d4);
+        border-color: transparent;
+        box-shadow: 0 0 16px rgba(16, 185, 129, 0.5);
+      }
+
+      /* 📱 RIGHT FLOATING ACTION COLUMN (TikTok Style) */
+      .feed:not(.mode-classic) .tiktok-card .pf {
+        position: absolute;
+        right: 8px;
+        bottom: 16px;
+        z-index: 25;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        padding: 0 !important;
+        border-top: none !important;
+        background: transparent !important;
+        width: 54px;
+      }
+      .feed:not(.mode-classic) .tiktok-card .pf .act-btn,
+      .feed:not(.mode-classic) .tiktok-card .pf .btn-action-pill,
+      .feed:not(.mode-classic) .tiktok-card .pf .btn-tip-post,
+      .feed:not(.mode-classic) .tiktok-card .pf .btn-boost-post {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        padding: 0 !important;
+        background: none !important;
+        border: none !important;
+        color: #fff !important;
+        min-width: 48px;
+        cursor: pointer;
+        transition: transform 0.15s;
+        box-shadow: none !important;
+      }
+      .feed:not(.mode-classic) .tiktok-card .pf .act-btn:active,
+      .feed:not(.mode-classic) .tiktok-card .pf .btn-action-pill:active,
+      .feed:not(.mode-classic) .tiktok-card .pf .btn-tip-post:active {
+        transform: scale(0.9);
+      }
+      .feed:not(.mode-classic) .tiktok-card .pf .act-btn svg {
+        width: 30px;
+        height: 30px;
+        stroke: #fff;
+        filter: drop-shadow(0 2px 6px rgba(0,0,0,0.8));
+      }
+      .feed:not(.mode-classic) .tiktok-card .pf .act-btn.liked svg {
+        stroke: #f43f5e;
+        fill: #f43f5e;
+        filter: drop-shadow(0 0 10px rgba(244, 63, 94, 0.7));
+      }
+      .feed:not(.mode-classic) .tiktok-card .pf .act-btn span,
+      .feed:not(.mode-classic) .tiktok-card .pf .btn-action-pill span,
+      .feed:not(.mode-classic) .tiktok-card .pf .btn-tip-post span,
+      .feed:not(.mode-classic) .tiktok-card .pf .btn-boost-post span {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #fff;
+        text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+      }
+      .feed:not(.mode-classic) .tiktok-card .pf .btn-ai-remix span:first-child {
+        font-size: 26px;
+        filter: drop-shadow(0 2px 6px rgba(0,0,0,0.8));
+        line-height: 1;
+      }
+      .feed:not(.mode-classic) .tiktok-card .pf .btn-ai-remix span:last-child {
+        color: #c084fc;
+      }
+      .feed:not(.mode-classic) .tiktok-card .pf .btn-tip-post img {
+        width: 28px;
+        height: 28px;
+        filter: drop-shadow(0 2px 6px rgba(0,0,0,0.8));
+      }
+      .feed:not(.mode-classic) .tiktok-card .pf .btn-tip-post span {
+        color: #fbbf24;
+      }
+      .feed:not(.mode-classic) .tiktok-card .pf .share-btn {
+        margin: 0 !important;
+      }
+      .feed:not(.mode-classic) .tiktok-card .pf .share-btn svg {
+        width: 28px;
+        height: 28px;
+      }
+
+      /* Caption text at bottom left */
+      .feed:not(.mode-classic) .tiktok-card .p-content {
+        position: absolute;
+        bottom: 46px;
+        left: 14px;
+        right: 68px;
+        z-index: 20;
+        margin: 0 !important;
+        color: #f1f5f9;
+        font-size: 0.86rem;
+        font-weight: 500;
+        line-height: 1.4;
+        text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+        max-height: 44px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        cursor: pointer;
+      }
+      .feed:not(.mode-classic) .tiktok-card .p-content.expanded {
+        max-height: 120px !important;
+        -webkit-line-clamp: unset !important;
+        overflow-y: auto !important;
+        background: rgba(15, 23, 42, 0.88);
+        padding: 6px 10px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      /* Reactions bar at bottom left */
+      .feed:not(.mode-classic) .tiktok-card .reactions-bar {
+        position: absolute;
+        bottom: 12px;
+        left: 14px;
+        right: 68px;
+        z-index: 20;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        background: transparent !important;
+        display: flex;
+        gap: 4px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .feed:not(.mode-classic) .tiktok-card .reactions-bar::-webkit-scrollbar {
+        display: none;
+      }
+      .feed:not(.mode-classic) .tiktok-card .reaction-pill {
+        padding: 3px 8px;
+        font-size: 0.72rem;
+        background: rgba(15, 23, 42, 0.75);
+        backdrop-filter: blur(6px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 999px;
+      }
+    }
   </style>
   <script type="application/ld+json">
   {
@@ -2559,6 +2931,12 @@
       <button class="ftab" data-cat="webdev" onclick="filterTab('webdev',this)">💻 Web Dev</button>
       <button class="ftab" data-cat="tips" onclick="filterTab('tips',this)">💡 Tips</button>
       <button class="ftab" data-cat="general" onclick="filterTab('general',this)">💬 General</button>
+    </div>
+
+    <!-- Mobile Feed Mode Toggle (Visible on phones <= 768px) -->
+    <div class="mobile-feed-mode-toggle" id="mobileFeedModeToggle">
+      <button class="mf-toggle-btn active" id="btnModeTiktok" onclick="setMobileFeedMode('tiktok')">📱 TikTok View</button>
+      <button class="mf-toggle-btn" id="btnModeClassic" onclick="setMobileFeedMode('classic')">📄 Classic View</button>
     </div>
     <!-- ═══════════════════════════════════ -->
     <!-- 📸 STORIES BAR (24h — disappear)  -->
@@ -3982,6 +4360,9 @@ function loadFeed() {
 function renderPost(p) {
   const el = document.createElement('div');
   el.className = 'post-card';
+  if (p.code || (p.images && p.images.length) || p.videoUrl) {
+    el.classList.add('tiktok-card');
+  }
 
   const now = Date.now();
   const isBoostedUltra = p.boostedUntil && p.boostedUntil > now && p.boostTier === 'ultra';
@@ -4153,7 +4534,7 @@ function renderPost(p) {
         ${canDel?`<button class="del-btn" onclick="delPost('${p.id}')">🗑 Delete</button>`:''}
       </div>
     </div>
-    ${postCaption ? `<div class="p-content">${esc(postCaption)}</div>` : ''}
+    ${postCaption ? `<div class="p-content" onclick="this.classList.toggle('expanded')">${esc(postCaption)}</div>` : ''}
     ${imgs}${vid}${codeHtml}
     <div class="pf">
       <button class="act-btn ${liked?'liked':''}" id="lb-${p.id}" onclick="toggleLike('${p.id}',${liked})">
@@ -4190,7 +4571,7 @@ function renderPost(p) {
       </button>
       <button class="act-btn share-btn" onclick="sharePost('${p.id}')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-        ${currentLang === 'fr' ? 'Partager' : 'Share'}
+        <span>${currentLang === 'fr' ? 'Partager' : 'Share'}</span>
       </button>
     </div>
     <div class="reactions-bar" id="rx-bar-${p.id}">
@@ -4398,13 +4779,72 @@ function runPostDemo(id, containerId) {
   if (!code) return;
   const iframe = document.createElement('iframe');
   iframe.className = 'preview-iframe-post';
+  iframe.id = `iframe-post-${id}`;
   iframe.loading = 'lazy';
   iframe.srcdoc = code;
   iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
   iframe.setAttribute('allowfullscreen', 'true');
   container.innerHTML = '';
   container.appendChild(iframe);
+
+  // Mobile 3D interaction helper
+  const curLang = typeof getCommunityLang === 'function' ? getCommunityLang() : (localStorage.getItem('hub_lang') || 'en');
+  const touchBtn = document.createElement('button');
+  touchBtn.className = 'btn-mobile-touch-toggle';
+  touchBtn.id = `touch-toggle-${id}`;
+  touchBtn.type = 'button';
+  touchBtn.innerHTML = `<span>🎮</span> <span>${curLang === 'fr' ? 'Toucher pour 3D' : 'Tap to Interact'}</span>`;
+  touchBtn.onclick = function(e) {
+    e.stopPropagation();
+    togglePostIframeTouch(id);
+  };
+  container.appendChild(touchBtn);
 }
+
+function togglePostIframeTouch(id) {
+  const iframe = document.getElementById(`iframe-post-${id}`);
+  const btn = document.getElementById(`touch-toggle-${id}`);
+  if (!iframe || !btn) return;
+  const curLang = typeof getCommunityLang === 'function' ? getCommunityLang() : (localStorage.getItem('hub_lang') || 'en');
+  if (iframe.classList.contains('touch-active')) {
+    iframe.classList.remove('touch-active');
+    btn.classList.remove('active');
+    btn.innerHTML = `<span>🎮</span> <span>${curLang === 'fr' ? 'Toucher pour 3D' : 'Tap to Interact'}</span>`;
+  } else {
+    iframe.classList.add('touch-active');
+    btn.classList.add('active');
+    btn.innerHTML = `<span>✓</span> <span>${curLang === 'fr' ? '3D Actif' : '3D Active'}</span>`;
+  }
+}
+
+function setMobileFeedMode(mode) {
+  const feed = document.querySelector('.feed');
+  const btnTiktok = document.getElementById('btnModeTiktok');
+  const btnClassic = document.getElementById('btnModeClassic');
+  if (!feed) return;
+  
+  if (mode === 'classic') {
+    feed.classList.add('mode-classic');
+    if (btnClassic) btnClassic.classList.add('active');
+    if (btnTiktok) btnTiktok.classList.remove('active');
+    localStorage.setItem('community_feed_mode', 'classic');
+  } else {
+    feed.classList.remove('mode-classic');
+    if (btnTiktok) btnTiktok.classList.add('active');
+    if (btnClassic) btnClassic.classList.remove('active');
+    localStorage.setItem('community_feed_mode', 'tiktok');
+  }
+}
+
+// Restore saved mobile feed mode
+(function() {
+  const savedMode = localStorage.getItem('community_feed_mode');
+  if (savedMode === 'classic') {
+    window.addEventListener('DOMContentLoaded', () => {
+      setMobileFeedMode('classic');
+    });
+  }
+})();
 
 // ══════════════════════════════════════════
 // FILTERS
@@ -5619,6 +6059,12 @@ function applyCommunityLanguage(lang) {
   const cDev = document.getElementById('catbtn-webdev'); if (cDev) cDev.textContent = t.catWebDev;
   const cTip = document.getElementById('catbtn-tips'); if (cTip) cTip.textContent = t.catTips;
   const cGen = document.getElementById('catbtn-general'); if (cGen) cGen.textContent = t.catGeneral;
+
+  // Mobile Feed Mode Toggle
+  const btnModeTiktok = document.getElementById('btnModeTiktok');
+  const btnModeClassic = document.getElementById('btnModeClassic');
+  if (btnModeTiktok) btnModeTiktok.textContent = lang === 'fr' ? '📱 Mode TikTok' : '📱 TikTok View';
+  if (btnModeClassic) btnModeClassic.textContent = lang === 'fr' ? '📄 Classique' : '📄 Classic View';
 
   // Stories
   const myStoryLbl = document.getElementById('lbl-my-story'); if (myStoryLbl) myStoryLbl.textContent = t.myStory;
