@@ -2455,14 +2455,27 @@
         display: block !important;
         grid-template-columns: 1fr !important;
         width: 100% !important;
-        height: auto !important;
+        height: calc(100dvh - 104px) !important;
+        height: calc(100vh - 104px) !important;
       }
       .sl, .sr { display: none !important; }
 
-      /* Vertical Scroll Snap Feed */
+      /* Feed container flex wrapper */
       .feed {
         height: 100% !important;
         width: 100% !important;
+        overflow: hidden !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+      }
+
+      /* Vertical Scroll Snap Feed Element (Direct parent of .post-card) */
+      #feedEl {
+        height: 100% !important;
+        width: 100% !important;
+        flex: 1 1 100% !important;
         overflow-y: scroll !important;
         scroll-snap-type: y mandatory !important;
         -webkit-overflow-scrolling: touch !important;
@@ -2470,7 +2483,7 @@
         margin: 0 !important;
         scrollbar-width: none !important;
       }
-      .feed::-webkit-scrollbar { display: none !important; }
+      #feedEl::-webkit-scrollbar { display: none !important; }
 
       /* Hide redundant top clutter on mobile */
       .create-bar { display: none !important; }
@@ -2478,13 +2491,15 @@
       .ftabs { display: none !important; }
       .mobile-feed-mode-toggle { display: none !important; }
       #storiesBar { display: none !important; }
+      .seo-crawler-content { display: none !important; }
 
-      /* 🎯 EXACTLY 1 POST FILLS 100% OF THE SCREEN */
+      /* 🎯 EXACTLY 1 POST FILLS 100% OF THE SCREEN (TIKTOK VERTICAL SNAP) */
       .feed:not(.mode-classic) .post-card,
       .feed:not(.mode-classic) .tiktok-card {
-        height: 100% !important;
-        min-height: 100% !important;
-        max-height: 100% !important;
+        height: calc(100dvh - 104px) !important;
+        height: calc(100vh - 104px) !important;
+        min-height: calc(100dvh - 104px) !important;
+        max-height: calc(100dvh - 104px) !important;
         width: 100% !important;
         scroll-snap-align: start !important;
         scroll-snap-stop: always !important;
@@ -2499,6 +2514,7 @@
         display: flex !important;
         flex-direction: column !important;
         justify-content: flex-end !important;
+        box-sizing: border-box !important;
       }
 
       /* Fullscreen Media Backdrop (3D iframe, images, video) */
@@ -2594,17 +2610,17 @@
       /* 📱 RIGHT FLOATING ACTION COLUMN (Large, Comfortable, Spaced Out) */
       .feed:not(.mode-classic) .tiktok-card .pf {
         position: absolute !important;
-        right: 12px !important;
-        bottom: 24px !important;
+        right: 8px !important;
+        bottom: 12px !important;
         z-index: 30 !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        gap: 16px !important;
+        gap: 8px !important;
         padding: 0 !important;
         border-top: none !important;
         background: transparent !important;
-        width: 60px !important;
+        width: 56px !important;
       }
       .feed:not(.mode-classic) .tiktok-card .pf .act-btn,
       .feed:not(.mode-classic) .tiktok-card .pf .btn-action-pill,
@@ -2615,12 +2631,12 @@
         flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
-        gap: 4px !important;
+        gap: 2px !important;
         padding: 0 !important;
         background: none !important;
         border: none !important;
         color: #fff !important;
-        min-width: 52px !important;
+        min-width: 48px !important;
         cursor: pointer !important;
         transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
         box-shadow: none !important;
@@ -2632,8 +2648,8 @@
         transform: scale(0.85) !important;
       }
       .feed:not(.mode-classic) .tiktok-card .pf .act-btn svg {
-        width: 36px !important;
-        height: 36px !important;
+        width: 32px !important;
+        height: 32px !important;
         stroke: #fff !important;
         filter: drop-shadow(0 2px 8px rgba(0,0,0,0.85)) !important;
       }
@@ -2647,13 +2663,13 @@
       .feed:not(.mode-classic) .tiktok-card .pf .btn-tip-post span,
       .feed:not(.mode-classic) .tiktok-card .pf .btn-boost-post span,
       .feed:not(.mode-classic) .tiktok-card .pf .btn-mobile-code-toggle span {
-        font-size: 0.8rem !important;
+        font-size: 0.72rem !important;
         font-weight: 800 !important;
         color: #fff !important;
         text-shadow: 0 1px 5px rgba(0,0,0,0.95) !important;
       }
       .feed:not(.mode-classic) .tiktok-card .pf .btn-ai-remix span:first-child {
-        font-size: 32px !important;
+        font-size: 28px !important;
         filter: drop-shadow(0 2px 8px rgba(0,0,0,0.85)) !important;
         line-height: 1 !important;
       }
@@ -2661,8 +2677,8 @@
         color: #c084fc !important;
       }
       .feed:not(.mode-classic) .tiktok-card .pf .btn-tip-post img {
-        width: 34px !important;
-        height: 34px !important;
+        width: 30px !important;
+        height: 30px !important;
         filter: drop-shadow(0 2px 8px rgba(0,0,0,0.85)) !important;
       }
       .feed:not(.mode-classic) .tiktok-card .pf .btn-tip-post span {
@@ -2672,22 +2688,22 @@
         margin: 0 !important;
       }
       .feed:not(.mode-classic) .tiktok-card .pf .share-btn svg {
-        width: 32px !important;
-        height: 32px !important;
+        width: 28px !important;
+        height: 28px !important;
       }
 
       /* TikTok Right Avatar with '+' Follow Badge */
       .feed:not(.mode-classic) .tiktok-card .pf .tiktok-side-avatar-box {
         display: block !important;
         position: relative !important;
-        width: 48px !important;
-        height: 48px !important;
-        margin-bottom: 8px !important;
+        width: 44px !important;
+        height: 44px !important;
+        margin-bottom: 4px !important;
         cursor: pointer !important;
       }
       .feed:not(.mode-classic) .tiktok-card .pf .tiktok-side-avatar {
-        width: 48px !important;
-        height: 48px !important;
+        width: 44px !important;
+        height: 44px !important;
         border-radius: 50% !important;
         border: 2px solid #fff !important;
         object-fit: cover !important;
@@ -2695,15 +2711,15 @@
       }
       .feed:not(.mode-classic) .tiktok-card .pf .tiktok-side-follow-plus {
         position: absolute !important;
-        bottom: -5px !important;
+        bottom: -4px !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
-        width: 22px !important;
-        height: 22px !important;
+        width: 20px !important;
+        height: 20px !important;
         border-radius: 50% !important;
         background: #f43f5e !important;
         color: #fff !important;
-        font-size: 15px !important;
+        font-size: 14px !important;
         font-weight: 900 !important;
         display: flex !important;
         align-items: center !important;
@@ -2720,15 +2736,15 @@
       /* Caption text at bottom left */
       .feed:not(.mode-classic) .tiktok-card .p-content {
         position: absolute !important;
-        bottom: 54px !important;
+        bottom: 48px !important;
         left: 14px !important;
-        right: 80px !important;
+        right: 72px !important;
         z-index: 20 !important;
         margin: 0 !important;
         color: #f8fafc !important;
-        font-size: 0.94rem !important;
+        font-size: 0.92rem !important;
         font-weight: 500 !important;
-        line-height: 1.45 !important;
+        line-height: 1.4 !important;
         text-shadow: 0 2px 6px rgba(0,0,0,0.95) !important;
         max-height: 52px !important;
         overflow: hidden !important;
@@ -2750,9 +2766,9 @@
       /* Reactions bar at bottom left */
       .feed:not(.mode-classic) .tiktok-card .reactions-bar {
         position: absolute !important;
-        bottom: 14px !important;
+        bottom: 12px !important;
         left: 14px !important;
-        right: 80px !important;
+        right: 72px !important;
         z-index: 20 !important;
         margin: 0 !important;
         padding: 0 !important;
@@ -2779,7 +2795,7 @@
         align-items: center !important;
         gap: 5px !important;
         position: absolute !important;
-        bottom: 114px !important;
+        bottom: 104px !important;
         left: 14px !important;
         z-index: 22 !important;
         background: rgba(15, 23, 42, 0.88) !important;
@@ -4389,6 +4405,7 @@ function initPostViewportObserver() {
   if (postViewportObserver) postViewportObserver.disconnect();
   if (!('IntersectionObserver' in window)) return;
 
+  const rootEl = window.innerWidth <= 768 ? document.getElementById('feedEl') : null;
   postViewportObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       const target = entry.target;
@@ -4408,18 +4425,19 @@ function initPostViewportObserver() {
         if (container && container.querySelector('iframe')) {
           const rect = target.getBoundingClientRect();
           if (rect.top < -900 || rect.top > window.innerHeight + 900) {
+            const curLang = typeof getCommunityLang === 'function' ? getCommunityLang() : (localStorage.getItem('hub_lang') || 'en');
             container.innerHTML = `
               <div class="code-preview-placeholder" id="placeholder-${postId}">
                 <div class="cpp-icon">🌐</div>
-                <div class="cpp-text">Interactive 3D Project</div>
-                <button class="btn-run-demo" onclick="runPostDemo('${postId}', '${uniqueId}')">▶️ Run Live Demo</button>
+                <div class="cpp-text">${curLang === 'fr' ? 'Projet Interactif HTML/JS/3D' : 'Interactive HTML/JS/3D Project'}</div>
+                <button class="btn-run-demo" onclick="runPostDemo('${postId}', '${uniqueId}')">${curLang === 'fr' ? '▶️ Lancer la Démo Live' : '▶️ Run Live Demo'}</button>
               </div>
             `;
           }
         }
       }
     });
-  }, { rootMargin: '300px 0px 300px 0px', threshold: 0.05 });
+  }, { root: rootEl, rootMargin: '200px 0px 200px 0px', threshold: 0.05 });
 }
 
 function loadFeed() {
@@ -4512,11 +4530,8 @@ function loadFeed() {
 
 function renderPost(p) {
   const el = document.createElement('div');
-  el.className = 'post-card';
+  el.className = 'post-card tiktok-card';
   el.id = 'post-' + p.id;
-  if (p.code || (p.images && p.images.length) || p.videoUrl) {
-    el.classList.add('tiktok-card');
-  }
 
   let lastTap = 0;
   el.addEventListener('touchend', function(e) {
@@ -10631,7 +10646,7 @@ function selectCategoryFromSheet(cat) {
 }
 
 function scrollToTopFeed() {
-  const feed = document.querySelector('.feed');
+  const feed = document.getElementById('feedEl') || document.querySelector('.feed');
   if (feed) feed.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
