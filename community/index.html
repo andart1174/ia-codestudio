@@ -78,9 +78,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
   
-  <!-- LEAFLET.JS REAL INTERACTIVE MAP ENGINE -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <!-- LEAFLET.JS REAL INTERACTIVE MAP ENGINE (100% FREE NO API KEY) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -2956,6 +2956,100 @@
        ══════════════════════════════════════════════ */
 
     /* ⚡ DUELS MONT-ROYAL™ WIDGET */
+    /* 📱 REAL MONT MOBILE BANNER */
+    .mobile-realmont-banner {
+      display: none;
+      background: linear-gradient(145deg, rgba(244, 63, 94, 0.09), rgba(6, 182, 212, 0.06), var(--bg2));
+      border: 1px solid rgba(244, 63, 94, 0.32);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.35);
+    }
+    .mobile-realmont-banner::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #f43f5e, #06b6d4);
+    }
+    @media (max-width: 1024px) {
+      .mobile-realmont-banner {
+        display: block !important;
+      }
+    }
+    .mrb-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .mrb-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .mrb-live-tag {
+      font-size: 0.6rem;
+      background: #f43f5e;
+      color: #fff;
+      padding: 1px 6px;
+      border-radius: 8px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      animation: pulseLive 2s infinite;
+    }
+    .mrb-quick-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .mrb-radar-btn {
+      background: rgba(6,182,212,0.18);
+      border: 1px solid rgba(6,182,212,0.45);
+      color: #38bdf8;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .mrb-all-duels-btn {
+      background: rgba(244,63,94,0.18);
+      border: 1px solid rgba(244,63,94,0.45);
+      color: #fb7185;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .mrb-duel-card {
+      cursor: pointer;
+      background: rgba(0,0,0,0.32);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+    .mrb-duel-title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
     .duel-widget-card {
       background: linear-gradient(145deg, rgba(244, 63, 94, 0.08), rgba(6, 182, 212, 0.05), var(--bg2)) !important;
       border: 1px solid rgba(244, 63, 94, 0.28) !important;
@@ -3127,19 +3221,36 @@
       box-shadow: 0 20px 50px rgba(0,0,0,0.85), 0 0 30px rgba(6,182,212,0.2) !important;
     }
     #realMontrealMap {
-      width: 100%;
-      height: 400px;
+      width: 100% !important;
+      height: 400px !important;
+      min-height: 360px !important;
       border-radius: 14px;
       overflow: hidden;
       background: #060b14;
-      border: 1px solid rgba(6, 182, 212, 0.35);
+      border: 1px solid rgba(6, 182, 212, 0.4);
       position: relative;
       z-index: 1;
+      display: block !important;
       box-shadow: inset 0 0 35px rgba(0,0,0,0.85);
     }
     @media (max-width: 640px) {
-      #realMontrealMap { height: 310px; }
+      #realMontrealMap { height: 320px !important; min-height: 300px !important; }
       .mont-radar-modal-card { max-height: 95vh; padding: 0 !important; }
+    }
+    /* 100% Free Cyberpunk Dark Mode via CSS filter on standard tiles */
+    .dark-leaflet-tiles .leaflet-tile {
+      filter: brightness(0.65) invert(1) contrast(2.8) hue-rotate(200deg) saturate(0.25) brightness(0.75) !important;
+    }
+    .map-layer-btn {
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .map-layer-btn:hover {
+      transform: translateY(-1px);
+    }
+    .map-layer-btn.active {
+      background: linear-gradient(135deg, #06b6d4, #3b82f6) !important;
+      color: #fff !important;
+      box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
     }
     .radar-cat-pills-bar {
       display: flex;
@@ -3950,6 +4061,47 @@
       <button class="ftab" data-cat="general" onclick="filterTab('general',this)">💬 General</button>
     </div>
     <!-- ═══════════════════════════════════ -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- 📱 REAL MONT LIVE MOBILE BANNER (Visible on Screens <= 1024px) -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="mobile-realmont-banner" id="mobileRealmontBanner">
+      <div class="mrb-header">
+        <div class="mrb-badge">
+          <span>⚡</span>
+          <span id="lbl-mb-duel-title">Duels Mont-Royal™</span>
+          <span class="mrb-live-tag">LIVE MTL</span>
+        </div>
+        <div class="mrb-quick-links">
+          <button class="mrb-radar-btn" onclick="openRadarModal()" id="btnMbNavRadar" title="Live Montreal Map">
+            <span>🗺️ MONT-RADAR™</span>
+          </button>
+          <button class="mrb-all-duels-btn" onclick="openDuelsModal()" id="btnMbAllDuels" title="All Montreal Duels">
+            <span>⚡ All Duels ↗</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Quick Duel Arena in Mobile Feed -->
+      <div class="mrb-duel-card" onclick="openDuelsModal()">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+          <div class="mrb-duel-title" id="mbDuelTitleText">St-Viateur Bagel 🥯 vs Fairmount Bagel 🥖</div>
+          <span style="font-size:0.68rem;color:#fbbf24;font-weight:700;">+15 🪙</span>
+        </div>
+        <div class="duel-energy-bar-track" style="height:16px;margin-bottom:8px;">
+          <div class="duel-energy-fill-a" id="mbDuelEnergyFillA" style="width: 54%;font-size:0.65rem;">54%</div>
+          <div class="duel-energy-fill-b" id="mbDuelEnergyFillB" style="width: 46%;font-size:0.65rem;">46%</div>
+        </div>
+        <div style="display:flex;gap:8px;" onclick="event.stopPropagation()">
+          <button class="btn-duel-vote vote-a" id="mbBtnDuelVoteA" onclick="voteDuel('A', event)" style="padding:6px 10px;font-size:0.75rem;">
+            <span class="vote-team-name" id="mbDuelTeamAName">St-Viateur 🥯</span>
+          </button>
+          <button class="btn-duel-vote vote-b" id="mbBtnDuelVoteB" onclick="voteDuel('B', event)" style="padding:6px 10px;font-size:0.75rem;">
+            <span class="vote-team-name" id="mbDuelTeamBName">Fairmount 🥖</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- 📸 STORIES BAR (24h — disappear)  -->
     <!-- ═══════════════════════════════════ -->
     <div id="storiesBar" style="display:none; margin-bottom:12px;">
@@ -5125,8 +5277,17 @@
         <button class="radar-cat-pill" onclick="filterRadarCategory('drop', this)" id="pillCatDrop">💎 Secret Drops</button>
       </div>
 
-      <!-- Real Montreal Leaflet Map Container -->
-      <div id="realMontrealMap"></div>
+      <!-- Real Montreal Leaflet Map Container with Free Layer Switcher -->
+      <div style="position:relative;width:100%;margin-bottom:12px;">
+        <div id="realMontrealMap" class="dark-leaflet-tiles" style="width:100% !important;height:400px !important;min-height:360px !important;border-radius:14px;overflow:hidden;position:relative;background:#090d16;border:1px solid rgba(6,182,212,0.4);z-index:1;display:block;"></div>
+        
+        <!-- 100% FREE NO-API-KEY Tile Layer Switcher Control -->
+        <div class="map-layer-selector-bar" style="position:absolute;top:10px;right:10px;z-index:999;display:flex;gap:4px;background:rgba(9,13,22,0.88);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.18);padding:4px;border-radius:20px;box-shadow:0 6px 18px rgba(0,0,0,0.7);">
+          <button class="map-layer-btn active" id="btnLayerDark" onclick="switchMapLayer('dark', this)" style="background:linear-gradient(135deg,#06b6d4,#3b82f6);border:none;color:#fff;font-size:0.72rem;font-weight:700;padding:4px 10px;border-radius:16px;cursor:pointer;">🌙 Dark</button>
+          <button class="map-layer-btn" id="btnLayerStreets" onclick="switchMapLayer('streets', this)" style="background:transparent;border:none;color:#94a3b8;font-size:0.72rem;font-weight:700;padding:4px 10px;border-radius:16px;cursor:pointer;">🗺️ Streets</button>
+          <button class="map-layer-btn" id="btnLayerSatellite" onclick="switchMapLayer('satellite', this)" style="background:transparent;border:none;color:#94a3b8;font-size:0.72rem;font-weight:700;padding:4px 10px;border-radius:16px;cursor:pointer;">🛰️ Satellite</button>
+        </div>
+      </div>
 
       <!-- Add Montreal Event Drawer -->
       <div class="radar-add-event-drawer" id="radarAddEventDrawer">
@@ -5216,7 +5377,7 @@
 <div class="overlay" id="duelsModalOverlay" onclick="closeDuelsModal(event)">
   <div class="modal duels-modal-card" onclick="event.stopPropagation()">
     <!-- Header -->
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,0.35);">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,0.35);flex-wrap:wrap;gap:10px;">
       <div style="display:flex;align-items:center;gap:10px;">
         <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#f43f5e,#ec4899);display:flex;align-items:center;justify-content:center;font-size:1.25rem;box-shadow:0 0 16px rgba(244,63,94,0.45);">⚡</div>
         <div>
@@ -5227,21 +5388,91 @@
           <p id="lbl-duels-modal-sub" style="color:var(--muted);font-size:0.8rem;margin:2px 0 0;">Vote for your Montreal favorites & earn +15 🪙 GENIUS IA coins!</p>
         </div>
       </div>
-      <button class="mc" onclick="closeDuelsModal()">✕</button>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="btn-filter-spot" style="padding:6px 12px;font-size:0.75rem;background:linear-gradient(135deg,#f43f5e,#ec4899);" onclick="toggleAdminDuelCreatorDrawer()" id="btnToggleAdminDuelDrawer">
+          <span>➕ Create Duel (Admin)</span>
+        </button>
+        <button class="mc" onclick="closeDuelsModal()">✕</button>
+      </div>
     </div>
 
     <div class="mb" style="padding:16px 20px;">
-      <!-- Active Duel Switcher Tabs -->
-      <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;scrollbar-width:thin;">
-        <button class="duel-modal-tab-pill active" onclick="switchModalDuel(0, this)" id="tabDuel0">🥯 Bagels: St-Viateur vs Fairmount</button>
-        <button class="duel-modal-tab-pill" onclick="switchModalDuel(1, this)" id="tabDuel1">🚴 Cycling vs 🏎️ F1</button>
-        <button class="duel-modal-tab-pill" onclick="switchModalDuel(2, this)" id="tabDuel2">🍟 Banquise vs Claudette</button>
-        <button class="duel-modal-tab-pill" onclick="switchModalDuel(3, this)" id="tabDuel3">☕ Olimpico vs Tommy</button>
+      <!-- ADMIN CUSTOM DUEL CREATOR DRAWER -->
+      <div id="adminDuelCreatorDrawer" style="display:none;background:rgba(11,17,32,0.98);border:1px solid rgba(244,63,94,0.45);border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 10px 25px rgba(0,0,0,0.6);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:1.15rem;">⚡</span>
+            <h4 style="margin:0;font-size:0.95rem;font-weight:800;color:#fff;" id="lbl-admin-duel-drawer-title">Create Montreal Duel (Admin)</h4>
+            <span style="font-size:0.65rem;background:rgba(244,63,94,0.2);border:1px solid #f43f5e;color:#f43f5e;padding:2px 7px;border-radius:10px;font-weight:800;">ADMIN CREATOR</span>
+          </div>
+          <button style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1rem;" onclick="toggleAdminDuelCreatorDrawer(false)">✕</button>
+        </div>
+        
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:10px;">
+          <div style="grid-column:1 / -1;">
+            <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lbl-newduel-title">Duel Topic / Matchup Title</label>
+            <input type="text" id="newDuelTitle" placeholder="e.g. Couche-Tard 🏪 vs Circle K, or IGA 🛒 vs Metro Plus" class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;">
+          </div>
+          <div>
+            <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lbl-newduel-category">Category</label>
+            <select id="newDuelCategory" class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;background:#0f172a;color:#fff;">
+              <option value="COMMERCE & RETAIL">🛒 Commerce & Boutiques</option>
+              <option value="GASTRONOMIE MTL">🥯 Gastronomie & Restaurants</option>
+              <option value="EVENTS & FESTIVALS">🎪 Événements & Festivals</option>
+              <option value="TECH & GAMING">🎮 Tech, Studios & Gaming</option>
+              <option value="NIGHTLIFE & BARS">🍸 Bars & Vie Nocturne</option>
+              <option value="MONTREAL ICONS">⚜️ Icônes Montréalaises</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lbl-newduel-reward">Voter Reward Coins</label>
+            <input type="number" id="newDuelReward" class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;" value="15">
+          </div>
+        </div>
+
+        <!-- Team A and Team B inputs -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:10px;">
+          <!-- Side A -->
+          <div style="background:rgba(244,63,94,0.08);border:1px solid rgba(244,63,94,0.3);border-radius:12px;padding:10px;">
+            <div style="font-size:0.75rem;font-weight:800;color:#f43f5e;margin-bottom:6px;">SIDE A (Équipe A)</div>
+            <input type="text" id="newDuelNameA" placeholder="Company / Brand: e.g. Couche-Tard" class="adm-input" style="width:100%;margin-bottom:6px;padding:7px 9px;font-size:0.8rem;">
+            <div style="display:flex;gap:6px;">
+              <input type="text" id="newDuelEmojiA" placeholder="Emoji: 🏪" class="adm-input" style="width:70px;margin-bottom:0;padding:7px 9px;font-size:0.8rem;text-align:center;" value="🏪">
+              <input type="number" id="newDuelVotesA" placeholder="Initial votes" class="adm-input" style="flex:1;margin-bottom:0;padding:7px 9px;font-size:0.8rem;" value="120">
+            </div>
+          </div>
+          <!-- Side B -->
+          <div style="background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.3);border-radius:12px;padding:10px;">
+            <div style="font-size:0.75rem;font-weight:800;color:#06b6d4;margin-bottom:6px;">SIDE B (Équipe B)</div>
+            <input type="text" id="newDuelNameB" placeholder="Company / Brand: e.g. Circle K" class="adm-input" style="width:100%;margin-bottom:6px;padding:7px 9px;font-size:0.8rem;">
+            <div style="display:flex;gap:6px;">
+              <input type="text" id="newDuelEmojiB" placeholder="Emoji: 🏬" class="adm-input" style="width:70px;margin-bottom:0;padding:7px 9px;font-size:0.8rem;text-align:center;" value="🏬">
+              <input type="number" id="newDuelVotesB" placeholder="Initial votes" class="adm-input" style="flex:1;margin-bottom:0;padding:7px 9px;font-size:0.8rem;" value="115">
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:12px;">
+          <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lbl-newduel-desc">Description / Battle Question</label>
+          <input type="text" id="newDuelDesc" placeholder="e.g. Which Montreal store has the best local products and convenience?" class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;">
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:8px;">
+          <button class="shop-btn" style="padding:6px 14px;background:var(--bg3);border:1px solid var(--border2);color:#94a3b8;font-size:0.8rem;" onclick="toggleAdminDuelCreatorDrawer(false)" id="btnCancelNewDuel">Cancel</button>
+          <button class="btn-filter-spot" style="padding:8px 18px;font-size:0.82rem;background:linear-gradient(135deg,#f43f5e,#ec4899);" onclick="submitAdminNewDuel()" id="btnSubmitNewDuel">
+            <span>🚀 Launch Duel</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Active Duel Switcher Tabs (Populated Dynamically) -->
+      <div id="duelsModalTabsContainer" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;scrollbar-width:thin;">
+        <!-- Populated via renderDuelTabsUI() -->
       </div>
 
       <!-- Duel Arena Stage -->
       <div class="duel-modal-box">
-        <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;">
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
           <span style="background:rgba(244,63,94,0.2);border:1px solid #f43f5e;color:#f43f5e;font-size:0.7rem;font-weight:900;padding:2px 8px;border-radius:10px;" id="modalDuelCategory">MONTREAL BATTLE</span>
           <span style="font-size:0.75rem;color:#fbbf24;font-weight:700;" id="lblModalDuelRewardHint">🎁 +15 🪙 Reward per vote</span>
         </div>
@@ -5280,6 +5511,36 @@
 
         <div id="modalDuelVoteFeedback" style="display:none;margin-top:14px;padding:8px 14px;background:rgba(16,185,129,0.15);border:1px solid #10b981;border-radius:10px;color:#34d399;font-size:0.82rem;font-weight:700;">
           🎉 Vote recorded! You earned +15 🪙 GENIUS IA coins!
+        </div>
+
+        <!-- Live Crowd Hype Reactions -->
+        <div style="margin-top:16px;background:rgba(0,0,0,0.35);border-radius:12px;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+          <span style="font-size:0.72rem;color:var(--muted);font-weight:700;">🔥 Live Crowd Hype:</span>
+          <div style="display:flex;gap:6px;">
+            <button onclick="sendDuelCrowdHype('A')" style="background:rgba(244,63,94,0.15);border:1px solid rgba(244,63,94,0.4);color:#f43f5e;padding:3px 9px;border-radius:12px;font-size:0.72rem;cursor:pointer;font-weight:700;" id="btnHypeTeamA">🔥 Side A</button>
+            <button onclick="sendDuelCrowdHype('B')" style="background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.4);color:#06b6d4;padding:3px 9px;border-radius:12px;font-size:0.72rem;cursor:pointer;font-weight:700;" id="btnHypeTeamB">⚡ Side B</button>
+            <button onclick="sendDuelCrowdHype('MTL')" style="background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.4);color:#fcd34d;padding:3px 9px;border-radius:12px;font-size:0.72rem;cursor:pointer;font-weight:700;">⚜️ MTL Power</button>
+          </div>
+        </div>
+
+        <!-- Duel Actions: Share & Admin controls -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.08);flex-wrap:wrap;gap:8px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <button class="cat-btn" style="padding:5px 12px;font-size:0.75rem;" onclick="shareActiveDuel()">
+              <span>📢 Share Duel</span>
+            </button>
+            <button class="cat-btn" style="padding:5px 12px;font-size:0.75rem;" onclick="openSuggestDuelPrompt()">
+              <span>💡 Suggest Topic</span>
+            </button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;" id="activeDuelAdminControls">
+            <button class="cat-btn" style="padding:5px 12px;font-size:0.75rem;border-color:rgba(251,191,36,0.5);color:#fcd34d;" onclick="setDuelAsFeatured()">
+              <span>⭐ Pin to Sidebar</span>
+            </button>
+            <button class="cat-btn" id="btnDeleteCustomDuel" style="padding:5px 10px;font-size:0.75rem;border-color:rgba(239,68,68,0.5);color:#f87171;display:none;" onclick="deleteActiveCustomDuel()">
+              <span>🗑️ Delete</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -7518,10 +7779,22 @@ function applyCommunityLanguage(lang) {
   const duelsModalTitle = document.getElementById('lbl-duels-modal-title'); if (duelsModalTitle) duelsModalTitle.textContent = 'Duels Mont-Royal™';
   const duelsModalSub = document.getElementById('lbl-duels-modal-sub'); if (duelsModalSub) duelsModalSub.textContent = lang === 'fr' ? 'Votez pour vos favoris montréalais et gagnez +15 🪙 GENIUS IA !' : 'Vote for your Montreal favorites & earn +15 🪙 GENIUS IA coins!';
   const modalRewardHint = document.getElementById('lblModalDuelRewardHint'); if (modalRewardHint) modalRewardHint.textContent = lang === 'fr' ? '🎁 +15 🪙 Récompense par vote' : '🎁 +15 🪙 Reward per vote';
-  const tab0 = document.getElementById('tabDuel0'); if (tab0) tab0.textContent = lang === 'fr' ? '🥯 Bagels: St-Viateur vs Fairmount' : '🥯 Bagels: St-Viateur vs Fairmount';
-  const tab1 = document.getElementById('tabDuel1'); if (tab1) tab1.textContent = lang === 'fr' ? '🚴 Cyclisme vs 🏎️ F1' : '🚴 Cycling vs 🏎️ F1';
-  const tab2 = document.getElementById('tabDuel2'); if (tab2) tab2.textContent = lang === 'fr' ? '🍟 Banquise vs Claudette' : '🍟 Banquise vs Claudette';
-  const tab3 = document.getElementById('tabDuel3'); if (tab3) tab3.textContent = lang === 'fr' ? '☕ Olimpico vs Tommy' : '☕ Olimpico vs Tommy';
+  const btnAdminDuel = document.getElementById('btnToggleAdminDuelDrawer'); if (btnAdminDuel) btnAdminDuel.innerHTML = `<span>${lang === 'fr' ? '➕ Créer Duel (Admin)' : '➕ Create Duel (Admin)'}</span>`;
+  const adminDuelT = document.getElementById('lbl-admin-duel-drawer-title'); if (adminDuelT) adminDuelT.textContent = lang === 'fr' ? 'Créer un Duel Montréalais (Admin)' : 'Create Montreal Duel (Admin)';
+  const newDuelTLbl = document.getElementById('lbl-newduel-title'); if (newDuelTLbl) newDuelTLbl.textContent = lang === 'fr' ? 'Sujet du Duel / Titre du Match' : 'Duel Topic / Matchup Title';
+  const newDuelCatLbl = document.getElementById('lbl-newduel-category'); if (newDuelCatLbl) newDuelCatLbl.textContent = lang === 'fr' ? 'Catégorie' : 'Category';
+  const newDuelRewLbl = document.getElementById('lbl-newduel-reward'); if (newDuelRewLbl) newDuelRewLbl.textContent = lang === 'fr' ? 'Pièces de Récompense par Vote' : 'Voter Reward Coins';
+  const newDuelDescLbl = document.getElementById('lbl-newduel-desc'); if (newDuelDescLbl) newDuelDescLbl.textContent = lang === 'fr' ? 'Description / Question du Défi' : 'Description / Battle Question';
+  const btnCancelDuel = document.getElementById('btnCancelNewDuel'); if (btnCancelDuel) btnCancelDuel.textContent = lang === 'fr' ? 'Annuler' : 'Cancel';
+  const btnSubmitDuel = document.getElementById('btnSubmitNewDuel'); if (btnSubmitDuel) btnSubmitDuel.innerHTML = `<span>${lang === 'fr' ? '🚀 Lancer le Duel' : '🚀 Launch Duel'}</span>`;
+  const btnDark = document.getElementById('btnLayerDark'); if (btnDark) btnDark.textContent = lang === 'fr' ? '🌙 Sombre' : '🌙 Dark';
+  const btnStreets = document.getElementById('btnLayerStreets'); if (btnStreets) btnStreets.textContent = lang === 'fr' ? '🗺️ Rues' : '🗺️ Streets';
+  const btnSat = document.getElementById('btnLayerSatellite'); if (btnSat) btnSat.textContent = lang === 'fr' ? '🛰️ Satellite' : '🛰️ Satellite';
+  const mbDuelT = document.getElementById('lbl-mb-duel-title'); if (mbDuelT) mbDuelT.textContent = 'Duels Mont-Royal™';
+  const mbNavRadar = document.getElementById('btnMbNavRadar'); if (mbNavRadar) mbNavRadar.innerHTML = `<span>${lang === 'fr' ? '🗺️ MONT-RADAR™' : '🗺️ MONT-RADAR™'}</span>`;
+  const mbAllDuels = document.getElementById('btnMbAllDuels'); if (mbAllDuels) mbAllDuels.innerHTML = `<span>${lang === 'fr' ? '⚡ Tous les Duels ↗' : '⚡ All Duels ↗'}</span>`;
+  if (typeof renderDuelTabsUI === 'function') renderDuelTabsUI();
+  if (typeof updateDuelMeterUI === 'function') updateDuelMeterUI();
 
   // Founder Pass VIP #0001
   const founderStatus = document.getElementById('lbl-founder-status'); if (founderStatus) founderStatus.textContent = lang === 'fr' ? 'Fondateur Officiel #0001 • Montréal & CA' : 'Official Founder #0001 • Montreal & CA';
@@ -12057,8 +12330,8 @@ function playSoundFx(type) {
   }
 }
 
-// 2. DUELS MONT-ROYAL™ MULTI-DUEL VIRAL ENGINE
-const REALMONT_DUELS = [
+// 2. DUELS MONT-ROYAL™ MULTI-DUEL & ADMIN CREATOR SYSTEM
+const DEFAULT_REALMONT_DUELS = [
   {
     id: 'bagels',
     cat: 'GASTRONOMIE MONTRÉALAISE',
@@ -12067,7 +12340,8 @@ const REALMONT_DUELS = [
     descEn: 'The century-old Montreal wood-fired bagel duel. Pick your camp!',
     descFr: 'Le duel centenaire des bagels au feu de bois à Montréal. Choisissez votre camp !',
     teamA: { name: 'St-Viateur', emoji: '🥯', votes: 1248 },
-    teamB: { name: 'Fairmount', emoji: '🥖', votes: 1072 }
+    teamB: { name: 'Fairmount', emoji: '🥖', votes: 1072 },
+    reward: 15
   },
   {
     id: 'cycling_f1',
@@ -12077,7 +12351,8 @@ const REALMONT_DUELS = [
     descEn: 'World Tour mountain battle on Mont-Royal vs 350 km/h Formula 1 thrills on Île Notre-Dame!',
     descFr: 'Bataille de montagne WorldTour sur le Mont-Royal vs frissons Formule 1 à 350 km/h sur l\'Île Notre-Dame !',
     teamA: { name: 'Cycliste MTL', emoji: '🚴', votes: 1420 },
-    teamB: { name: 'F1 Canada', emoji: '🏎️', votes: 1530 }
+    teamB: { name: 'F1 Canada', emoji: '🏎️', votes: 1530 },
+    reward: 15
   },
   {
     id: 'poutine',
@@ -12087,7 +12362,8 @@ const REALMONT_DUELS = [
     descEn: '24/7 legendary Plateau poutine vs authentic Laurier squeaky-cheese classic!',
     descFr: 'Légende 24h/24 du Plateau vs classique authentique au fromage squouik-squouik de Laurier !',
     teamA: { name: 'La Banquise', emoji: '🍟', votes: 1680 },
-    teamB: { name: 'Chez Claudette', emoji: '🧀', votes: 1390 }
+    teamB: { name: 'Chez Claudette', emoji: '🧀', votes: 1390 },
+    reward: 15
   },
   {
     id: 'coffee',
@@ -12097,45 +12373,120 @@ const REALMONT_DUELS = [
     descEn: 'Mile End Italian espresso institution vs Vieux-Montréal neoclassical chic!',
     descFr: 'Institution italienne du Mile End vs chic néoclassique du Vieux-Montréal !',
     teamA: { name: 'Olimpico', emoji: '☕', votes: 940 },
-    teamB: { name: 'Tommy Café', emoji: '🍵', votes: 890 }
+    teamB: { name: 'Tommy Café', emoji: '🍵', votes: 890 },
+    reward: 15
   }
 ];
 
 let activeModalDuelIndex = 0;
 
-function getDuelData(index) {
-  const d = REALMONT_DUELS[index];
+function getAllDuels() {
+  let custom = [];
+  try {
+    custom = JSON.parse(localStorage.getItem('realmont_custom_duels') || '[]');
+  } catch (e) {
+    custom = [];
+  }
+  return [...DEFAULT_REALMONT_DUELS, ...custom];
+}
+
+function getFeaturedDuelId() {
+  return localStorage.getItem('realmont_featured_duel_id') || 'bagels';
+}
+
+function getDuelData(indexOrId) {
+  const all = getAllDuels();
+  let d = null;
+  if (typeof indexOrId === 'number') {
+    d = all[indexOrId] || all[0];
+  } else if (typeof indexOrId === 'string') {
+    d = all.find(item => item.id === indexOrId) || all[0];
+  }
   if (!d) return null;
-  const votesA = parseInt(localStorage.getItem(`duel_${d.id}_votes_a`) || d.teamA.votes, 10);
-  const votesB = parseInt(localStorage.getItem(`duel_${d.id}_votes_b`) || d.teamB.votes, 10);
+
+  const votesA = parseInt(localStorage.getItem(`duel_${d.id}_votes_a`) || (d.teamA ? d.teamA.votes : 100), 10);
+  const votesB = parseInt(localStorage.getItem(`duel_${d.id}_votes_b`) || (d.teamB ? d.teamB.votes : 100), 10);
   const userVoted = localStorage.getItem(`duel_${d.id}_user_voted`) || null;
+
   return { ...d, currentVotesA: votesA, currentVotesB: votesB, userVoted };
 }
 
+function renderDuelTabsUI() {
+  const container = document.getElementById('duelsModalTabsContainer');
+  if (!container) return;
+  const duels = getAllDuels();
+  const lang = getCommunityLang();
+
+  container.innerHTML = duels.map((d, idx) => {
+    const isActive = idx === activeModalDuelIndex;
+    const title = lang === 'fr' ? (d.titleFr || d.titleEn) : d.titleEn;
+    const isCustomBadge = d.isCustom ? ' <span style="font-size:0.6rem;background:rgba(244,63,94,0.3);color:#fb7185;padding:1px 5px;border-radius:6px;margin-left:4px;">ADMIN</span>' : '';
+    return `<button class="duel-modal-tab-pill ${isActive ? 'active' : ''}" onclick="switchModalDuel(${idx})" style="white-space:nowrap;cursor:pointer;">
+      ${d.teamA.emoji || '⚡'} ${title}${isCustomBadge}
+    </button>`;
+  }).join('');
+}
+
 function updateDuelMeterUI() {
-  const d = getDuelData(0);
+  const featuredId = getFeaturedDuelId();
+  const d = getDuelData(featuredId);
   if (!d) return;
-  const total = d.currentVotesA + d.currentVotesB;
+
+  const total = Math.max(1, d.currentVotesA + d.currentVotesB);
   const pctA = Math.round((d.currentVotesA / total) * 100);
   const pctB = 100 - pctA;
+
+  const titleEl = document.getElementById('duelTitleText');
+  const subEl = document.getElementById('duelSubtitleText');
   const fillA = document.getElementById('duelEnergyFillA');
   const fillB = document.getElementById('duelEnergyFillB');
+  const nameA = document.getElementById('duelTeamAName');
+  const nameB = document.getElementById('duelTeamBName');
   const countA = document.getElementById('duelTeamACount');
   const countB = document.getElementById('duelTeamBCount');
   const btnA = document.getElementById('btnDuelVoteA');
   const btnB = document.getElementById('btnDuelVoteB');
+  const hintEl = document.getElementById('lblDuelRewardHint');
+
+  const lang = getCommunityLang();
+  if (titleEl) titleEl.textContent = lang === 'fr' ? (d.titleFr || d.titleEn) : d.titleEn;
+  if (subEl) subEl.textContent = lang === 'fr' ? (d.descFr || d.descEn) : d.descEn;
+  if (nameA) nameA.textContent = `${d.teamA.name} ${d.teamA.emoji || ''}`.trim();
+  if (nameB) nameB.textContent = `${d.teamB.name} ${d.teamB.emoji || ''}`.trim();
   if (fillA) { fillA.style.width = pctA + '%'; fillA.textContent = pctA + '%'; }
   if (fillB) { fillB.style.width = pctB + '%'; fillB.textContent = pctB + '%'; }
   if (countA) countA.textContent = d.currentVotesA.toLocaleString() + ' votes';
   if (countB) countB.textContent = d.currentVotesB.toLocaleString() + ' votes';
   if (btnA) btnA.classList.toggle('voted', d.userVoted === 'A');
   if (btnB) btnB.classList.toggle('voted', d.userVoted === 'B');
+  if (hintEl) {
+    hintEl.textContent = lang === 'fr' 
+      ? `🎁 +${d.reward || 15} 🪙 Récompense par vote • Cliquez pour tous les duels`
+      : `🎁 +${d.reward || 15} 🪙 Reward per vote • Click for All Duels`;
+  }
+
+  // Mobile Realmont Banner update
+  const mbTitle = document.getElementById('mbDuelTitleText');
+  const mbFillA = document.getElementById('mbDuelEnergyFillA');
+  const mbFillB = document.getElementById('mbDuelEnergyFillB');
+  const mbBtnA = document.getElementById('mbBtnDuelVoteA');
+  const mbBtnB = document.getElementById('mbBtnDuelVoteB');
+  const mbNameA = document.getElementById('mbDuelTeamAName');
+  const mbNameB = document.getElementById('mbDuelTeamBName');
+  if (mbTitle) mbTitle.textContent = lang === 'fr' ? (d.titleFr || d.titleEn) : d.titleEn;
+  if (mbFillA) { mbFillA.style.width = pctA + '%'; mbFillA.textContent = pctA + '%'; }
+  if (mbFillB) { mbFillB.style.width = pctB + '%'; mbFillB.textContent = pctB + '%'; }
+  if (mbBtnA) mbBtnA.classList.toggle('voted', d.userVoted === 'A');
+  if (mbBtnB) mbBtnB.classList.toggle('voted', d.userVoted === 'B');
+  if (mbNameA) mbNameA.textContent = `${d.teamA.name} ${d.teamA.emoji || ''}`.trim();
+  if (mbNameB) mbNameB.textContent = `${d.teamB.name} ${d.teamB.emoji || ''}`.trim();
 }
 
 function openDuelsModal(index = 0) {
   const m = document.getElementById('duelsModalOverlay');
   if (m) {
     m.classList.add('open');
+    renderDuelTabsUI();
     switchModalDuel(index);
   }
 }
@@ -12146,19 +12497,20 @@ function closeDuelsModal(e) {
   if (m) m.classList.remove('open');
 }
 
-function switchModalDuel(index, tabEl) {
+function switchModalDuel(index) {
+  const all = getAllDuels();
+  if (index < 0 || index >= all.length) index = 0;
   activeModalDuelIndex = index;
   const d = getDuelData(index);
   if (!d) return;
   const lang = getCommunityLang();
 
-  document.querySelectorAll('.duel-modal-tab-pill').forEach((btn, idx) => {
-    btn.classList.toggle('active', idx === index);
-  });
+  renderDuelTabsUI();
 
   const catEl = document.getElementById('modalDuelCategory');
   const titleEl = document.getElementById('modalDuelTitle');
   const descEl = document.getElementById('modalDuelDesc');
+  const rewardHintEl = document.getElementById('lblModalDuelRewardHint');
   const fillA = document.getElementById('modalDuelFillA');
   const fillB = document.getElementById('modalDuelFillB');
   const countA = document.getElementById('modalDuelVotesCountA');
@@ -12172,16 +12524,26 @@ function switchModalDuel(index, tabEl) {
   const pctAEl = document.getElementById('modalDuelPctA');
   const pctBEl = document.getElementById('modalDuelPctB');
   const feedback = document.getElementById('modalDuelVoteFeedback');
+  const btnDelete = document.getElementById('btnDeleteCustomDuel');
+  const btnHypeA = document.getElementById('btnHypeTeamA');
+  const btnHypeB = document.getElementById('btnHypeTeamB');
 
-  if (catEl) catEl.textContent = d.cat;
-  if (titleEl) titleEl.textContent = lang === 'fr' ? d.titleFr : d.titleEn;
-  if (descEl) descEl.textContent = lang === 'fr' ? d.descFr : d.descEn;
-  if (emojiA) emojiA.textContent = d.teamA.emoji;
-  if (emojiB) emojiB.textContent = d.teamB.emoji;
+  if (catEl) catEl.textContent = d.cat || 'MONTREAL BATTLE';
+  if (titleEl) titleEl.textContent = lang === 'fr' ? (d.titleFr || d.titleEn) : d.titleEn;
+  if (descEl) descEl.textContent = lang === 'fr' ? (d.descFr || d.descEn) : d.descEn;
+  if (rewardHintEl) {
+    rewardHintEl.textContent = lang === 'fr' 
+      ? `🎁 +${d.reward || 15} 🪙 Récompense par vote` 
+      : `🎁 +${d.reward || 15} 🪙 Reward per vote`;
+  }
+  if (emojiA) emojiA.textContent = d.teamA.emoji || '⚡';
+  if (emojiB) emojiB.textContent = d.teamB.emoji || '🔥';
   if (nameA) nameA.textContent = d.teamA.name;
   if (nameB) nameB.textContent = d.teamB.name;
+  if (btnHypeA) btnHypeA.textContent = `${d.teamA.emoji || '🔥'} ${d.teamA.name}`;
+  if (btnHypeB) btnHypeB.textContent = `${d.teamB.emoji || '⚡'} ${d.teamB.name}`;
 
-  const total = d.currentVotesA + d.currentVotesB;
+  const total = Math.max(1, d.currentVotesA + d.currentVotesB);
   const pctA = Math.round((d.currentVotesA / total) * 100);
   const pctB = 100 - pctA;
 
@@ -12198,10 +12560,15 @@ function switchModalDuel(index, tabEl) {
   if (feedback) {
     if (d.userVoted) {
       feedback.style.display = 'block';
-      feedback.textContent = lang === 'fr' ? `✓ Vous avez voté pour ${d.userVoted === 'A' ? d.teamA.name : d.teamB.name}!` : `✓ You voted for ${d.userVoted === 'A' ? d.teamA.name : d.teamB.name}!`;
+      const votedName = d.userVoted === 'A' ? d.teamA.name : d.teamB.name;
+      feedback.textContent = lang === 'fr' ? `✓ Vous avez voté pour ${votedName}!` : `✓ You voted for ${votedName}!`;
     } else {
       feedback.style.display = 'none';
     }
+  }
+
+  if (btnDelete) {
+    btnDelete.style.display = d.isCustom ? 'inline-flex' : 'none';
   }
 }
 
@@ -12225,27 +12592,22 @@ function voteModalDuel(team, event) {
   localStorage.setItem(`duel_${d.id}_votes_b`, newVotesB);
   localStorage.setItem(`duel_${d.id}_user_voted`, team);
 
-  if (activeModalDuelIndex === 0) {
-    localStorage.setItem('duel_votes_a', newVotesA);
-    localStorage.setItem('duel_votes_b', newVotesB);
-    localStorage.setItem('duel_user_voted', team);
-    updateDuelMeterUI();
-  }
-
+  const rewardCoins = d.reward || 15;
   if (typeof addCoinsLocally === 'function') {
-    addCoinsLocally(15, `Duel: ${d.titleEn}`);
+    addCoinsLocally(rewardCoins, `Duel: ${d.titleEn}`);
   } else if (typeof giveUserCoins === 'function') {
-    giveUserCoins(15, `Duel: ${d.titleEn}`);
+    giveUserCoins(rewardCoins, `Duel: ${d.titleEn}`);
   } else {
     const cur = parseInt(localStorage.getItem('genius_user_coins') || '0', 10);
-    localStorage.setItem('genius_user_coins', cur + 15);
+    localStorage.setItem('genius_user_coins', cur + rewardCoins);
     const bEl = document.getElementById('hdrCoinBalance');
-    if (bEl) bEl.textContent = cur + 15;
+    if (bEl) bEl.textContent = cur + rewardCoins;
   }
   playSoundFx('coin');
 
+  updateDuelMeterUI();
   switchModalDuel(activeModalDuelIndex);
-  toast(lang === 'fr' ? '🎉 Vote enregistré ! +15 🪙 GENIUS IA' : '🎉 Vote recorded! +15 🪙 GENIUS IA', 'success');
+  toast(lang === 'fr' ? `🎉 Vote enregistré ! +${rewardCoins} 🪙 GENIUS IA` : `🎉 Vote recorded! +${rewardCoins} 🪙 GENIUS IA`, 'success');
 }
 
 function voteDuel(team, event) {
@@ -12253,7 +12615,8 @@ function voteDuel(team, event) {
     event.preventDefault();
     event.stopPropagation();
   }
-  const d = getDuelData(0);
+  const featuredId = getFeaturedDuelId();
+  const d = getDuelData(featuredId);
   if (!d) return;
   const lang = getCommunityLang();
   if (d.userVoted) {
@@ -12263,27 +12626,176 @@ function voteDuel(team, event) {
   playSoundFx('duel');
   const newVotesA = team === 'A' ? d.currentVotesA + 1 : d.currentVotesA;
   const newVotesB = team === 'B' ? d.currentVotesB + 1 : d.currentVotesB;
-  localStorage.setItem('duel_bagels_votes_a', newVotesA);
-  localStorage.setItem('duel_bagels_votes_b', newVotesB);
-  localStorage.setItem('duel_bagels_user_voted', team);
-  localStorage.setItem('duel_votes_a', newVotesA);
-  localStorage.setItem('duel_votes_b', newVotesB);
-  localStorage.setItem('duel_user_voted', team);
+  localStorage.setItem(`duel_${d.id}_votes_a`, newVotesA);
+  localStorage.setItem(`duel_${d.id}_votes_b`, newVotesB);
+  localStorage.setItem(`duel_${d.id}_user_voted`, team);
 
   updateDuelMeterUI();
 
+  const rewardCoins = d.reward || 15;
   if (typeof addCoinsLocally === 'function') {
-    addCoinsLocally(15, 'Duels Mont-Royal Vote');
+    addCoinsLocally(rewardCoins, `Duel: ${d.titleEn}`);
   } else if (typeof giveUserCoins === 'function') {
-    giveUserCoins(15, 'Duels Mont-Royal Vote');
+    giveUserCoins(rewardCoins, `Duel: ${d.titleEn}`);
   } else {
     const cur = parseInt(localStorage.getItem('genius_user_coins') || '0', 10);
-    localStorage.setItem('genius_user_coins', cur + 15);
+    localStorage.setItem('genius_user_coins', cur + rewardCoins);
     const bEl = document.getElementById('hdrCoinBalance');
-    if (bEl) bEl.textContent = cur + 15;
+    if (bEl) bEl.textContent = cur + rewardCoins;
   }
   playSoundFx('coin');
-  toast(lang === 'fr' ? '🎉 Vote enregistré ! +15 🪙 GENIUS IA' : '🎉 Vote recorded! +15 🪙 GENIUS IA', 'success');
+  toast(lang === 'fr' ? `🎉 Vote enregistré ! +${rewardCoins} 🪙 GENIUS IA` : `🎉 Vote recorded! +${rewardCoins} 🪙 GENIUS IA`, 'success');
+}
+
+function toggleAdminDuelCreatorDrawer(forceState) {
+  const drawer = document.getElementById('adminDuelCreatorDrawer');
+  if (!drawer) return;
+  const isShown = forceState !== undefined ? forceState : drawer.style.display === 'block';
+  drawer.style.display = isShown ? 'none' : 'block';
+  if (!isShown) {
+    drawer.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+function submitAdminNewDuel() {
+  const titleInp = document.getElementById('newDuelTitle');
+  const catInp = document.getElementById('newDuelCategory');
+  const rewardInp = document.getElementById('newDuelReward');
+  const nameAInp = document.getElementById('newDuelNameA');
+  const emojiAInp = document.getElementById('newDuelEmojiA');
+  const votesAInp = document.getElementById('newDuelVotesA');
+  const nameBInp = document.getElementById('newDuelNameB');
+  const emojiBInp = document.getElementById('newDuelEmojiB');
+  const votesBInp = document.getElementById('newDuelVotesB');
+  const descInp = document.getElementById('newDuelDesc');
+
+  const title = (titleInp && titleInp.value.trim()) || '';
+  const nameA = (nameAInp && nameAInp.value.trim()) || '';
+  const nameB = (nameBInp && nameBInp.value.trim()) || '';
+  const lang = getCommunityLang();
+
+  if (!title || !nameA || !nameB) {
+    toast(lang === 'fr' ? 'Veuillez remplir le titre et les deux équipes !' : 'Please fill the title and both sides!', 'warning');
+    return;
+  }
+
+  const category = (catInp && catInp.value) || 'MONTREAL BATTLE';
+  const reward = parseInt((rewardInp && rewardInp.value) || '15', 10);
+  const emojiA = (emojiAInp && emojiAInp.value.trim()) || '⚡';
+  const emojiB = (emojiBInp && emojiBInp.value.trim()) || '🔥';
+  const votesA = parseInt((votesAInp && votesAInp.value) || '120', 10);
+  const votesB = parseInt((votesBInp && votesBInp.value) || '115', 10);
+  const desc = (descInp && descInp.value.trim()) || `${nameA} vs ${nameB} - Vote for Montreal!`;
+
+  const newDuelId = 'duel_custom_' + Date.now();
+  const newDuel = {
+    id: newDuelId,
+    cat: category,
+    titleEn: title,
+    titleFr: title,
+    descEn: desc,
+    descFr: desc,
+    teamA: { name: nameA, emoji: emojiA, votes: votesA },
+    teamB: { name: nameB, emoji: emojiB, votes: votesB },
+    reward: reward,
+    isCustom: true
+  };
+
+  let customDuels = [];
+  try {
+    customDuels = JSON.parse(localStorage.getItem('realmont_custom_duels') || '[]');
+  } catch (e) {
+    customDuels = [];
+  }
+  customDuels.unshift(newDuel);
+  localStorage.setItem('realmont_custom_duels', JSON.stringify(customDuels));
+
+  // Initialize initial votes
+  localStorage.setItem(`duel_${newDuelId}_votes_a`, votesA);
+  localStorage.setItem(`duel_${newDuelId}_votes_b`, votesB);
+
+  // Set as featured
+  localStorage.setItem('realmont_featured_duel_id', newDuelId);
+
+  // Clear inputs
+  if (titleInp) titleInp.value = '';
+  if (nameAInp) nameAInp.value = '';
+  if (nameBInp) nameBInp.value = '';
+  if (descInp) descInp.value = '';
+
+  toggleAdminDuelCreatorDrawer(false);
+  renderDuelTabsUI();
+  const all = getAllDuels();
+  const newIdx = all.findIndex(d => d.id === newDuelId);
+  switchModalDuel(newIdx >= 0 ? newIdx : 0);
+  updateDuelMeterUI();
+
+  playSoundFx('coin');
+  toast(lang === 'fr' ? '🚀 Nouveau duel créé et épinglé avec succès !' : '🚀 New duel launched and pinned successfully!', 'success');
+}
+
+function setDuelAsFeatured() {
+  const all = getAllDuels();
+  const d = all[activeModalDuelIndex];
+  if (!d) return;
+  localStorage.setItem('realmont_featured_duel_id', d.id);
+  updateDuelMeterUI();
+  const lang = getCommunityLang();
+  playSoundFx('coin');
+  toast(lang === 'fr' ? '⭐ Duel épinglé dans la barre latérale de Montréal !' : '⭐ Duel pinned to Montreal sidebar widget!', 'success');
+}
+
+function deleteActiveCustomDuel() {
+  const all = getAllDuels();
+  const d = all[activeModalDuelIndex];
+  if (!d || !d.isCustom) return;
+  const lang = getCommunityLang();
+
+  const confirmed = confirm(lang === 'fr' ? 'Voulez-vous vraiment supprimer ce duel ?' : 'Do you really want to delete this duel?');
+  if (!confirmed) return;
+
+  let customDuels = [];
+  try {
+    customDuels = JSON.parse(localStorage.getItem('realmont_custom_duels') || '[]');
+  } catch (e) {
+    customDuels = [];
+  }
+
+  customDuels = customDuels.filter(item => item.id !== d.id);
+  localStorage.setItem('realmont_custom_duels', JSON.stringify(customDuels));
+
+  if (getFeaturedDuelId() === d.id) {
+    localStorage.setItem('realmont_featured_duel_id', 'bagels');
+  }
+
+  updateDuelMeterUI();
+  renderDuelTabsUI();
+  switchModalDuel(0);
+  toast(lang === 'fr' ? '🗑️ Duel supprimé !' : '🗑️ Duel deleted!', 'info');
+}
+
+function shareActiveDuel() {
+  const all = getAllDuels();
+  const d = all[activeModalDuelIndex];
+  if (!d) return;
+  const url = window.location.origin + window.location.pathname + '?duel=' + d.id;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => {
+      toast(getCommunityLang() === 'fr' ? 'Lien du duel copié dans le presse-papier ! 📢' : 'Duel link copied to clipboard! 📢', 'success');
+    });
+  } else {
+    toast(url, 'info');
+  }
+}
+
+function sendDuelCrowdHype(team) {
+  const lang = getCommunityLang();
+  playSoundFx('duel');
+  toast(lang === 'fr' ? '🔥 Clameur de la foule enregistrée ! ⚜️' : '🔥 Live crowd cheer recorded! ⚜️', 'success');
+}
+
+function openSuggestDuelPrompt() {
+  toggleAdminDuelCreatorDrawer(true);
 }
 
 function scrollToDuelsWidget() {
@@ -12301,8 +12813,10 @@ function scrollToDuelsWidget() {
   }
 }
 
-// 3. MONT-RADAR™ REAL LEAFLET MAP ENGINE & COMMUNITY EVENTS
+// 3. MONT-RADAR™ 100% FREE LEAFLET MAP ENGINE & COMMUNITY EVENTS
 let realMontrealLeafletMap = null;
+let currentMapTileLayer = null;
+let activeTileLayerType = 'dark';
 let radarLeafletMarkers = [];
 let activeRadarFilter = 'all';
 let selectedRadarEvent = null;
@@ -12412,17 +12926,83 @@ const DEFAULT_REALMONT_EVENTS = [
 ];
 
 function getAllMontrealEvents() {
-  const localSaved = JSON.parse(localStorage.getItem('realmont_custom_radar_events') || '[]');
-  return [...DEFAULT_REALMONT_EVENTS, ...localSaved];
+  try {
+    const localSaved = JSON.parse(localStorage.getItem('realmont_custom_radar_events') || '[]');
+    return [...DEFAULT_REALMONT_EVENTS, ...localSaved];
+  } catch (e) {
+    return DEFAULT_REALMONT_EVENTS;
+  }
+}
+
+function createMapTileLayer(type) {
+  const mapContainer = document.getElementById('realMontrealMap');
+  if (type === 'satellite') {
+    if (mapContainer) mapContainer.classList.remove('dark-leaflet-tiles');
+    return L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: '&copy; Esri, Maxar, Earthstar Geographics',
+      maxZoom: 19
+    });
+  } else if (type === 'streets') {
+    if (mapContainer) mapContainer.classList.remove('dark-leaflet-tiles');
+    return L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19
+    });
+  } else {
+    // dark mode (100% free OSM with CSS filter)
+    if (mapContainer) mapContainer.classList.add('dark-leaflet-tiles');
+    return L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19
+    });
+  }
+}
+
+function switchMapLayer(layerName, btnEl) {
+  activeTileLayerType = layerName;
+  document.querySelectorAll('.map-layer-btn').forEach(b => {
+    b.classList.remove('active');
+    b.style.background = 'transparent';
+    b.style.color = '#94a3b8';
+  });
+  if (btnEl) {
+    btnEl.classList.add('active');
+    btnEl.style.background = 'linear-gradient(135deg,#06b6d4,#3b82f6)';
+    btnEl.style.color = '#fff';
+  }
+
+  if (realMontrealLeafletMap) {
+    if (currentMapTileLayer) {
+      realMontrealLeafletMap.removeLayer(currentMapTileLayer);
+    }
+    currentMapTileLayer = createMapTileLayer(layerName);
+    currentMapTileLayer.addTo(realMontrealLeafletMap);
+  }
+
+  const lang = getCommunityLang();
+  const labelMap = {
+    dark: lang === 'fr' ? 'Sombre' : 'Dark',
+    streets: lang === 'fr' ? 'Rues' : 'Streets',
+    satellite: lang === 'fr' ? 'Satellite' : 'Satellite'
+  };
+  toast((lang === 'fr' ? 'Harta: ' : 'Map: ') + labelMap[layerName], 'info');
 }
 
 function initMontrealRealMap() {
   const mapContainer = document.getElementById('realMontrealMap');
   if (!mapContainer) return;
   if (typeof L === 'undefined') {
-    console.warn('Leaflet.js not loaded yet');
+    console.warn('Leaflet.js not loaded yet, will retry...');
+    setTimeout(initMontrealRealMap, 200);
     return;
   }
+
+  // Ensure dimensions are explicit
+  mapContainer.style.display = 'block';
+  if (!mapContainer.style.height || mapContainer.style.height === '0px') {
+    mapContainer.style.height = window.innerWidth <= 768 ? '320px' : '400px';
+  }
+
   if (!realMontrealLeafletMap) {
     realMontrealLeafletMap = L.map('realMontrealMap', {
       center: [45.5125, -73.5750],
@@ -12430,11 +13010,8 @@ function initMontrealRealMap() {
       zoomControl: true
     });
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      subdomains: 'abcd',
-      maxZoom: 19
-    }).addTo(realMontrealLeafletMap);
+    currentMapTileLayer = createMapTileLayer(activeTileLayerType);
+    currentMapTileLayer.addTo(realMontrealLeafletMap);
 
     realMontrealLeafletMap.on('click', (e) => {
       const lat = e.latlng.lat.toFixed(5);
@@ -12459,12 +13036,24 @@ function initMontrealRealMap() {
       if (locSelect) locSelect.value = 'custom';
       toast(getCommunityLang() === 'fr' ? `Coordonnées sélectionnées: ${lat}, ${lng}` : `Coords selected: ${lat}, ${lng}`, 'info');
     });
+
+    window.addEventListener('resize', () => {
+      if (realMontrealLeafletMap) realMontrealLeafletMap.invalidateSize();
+    });
   }
 
   renderRadarMarkers();
+
+  // Invalidate size multiple times to ensure rendering on PCs and mobile phones
   setTimeout(() => {
     if (realMontrealLeafletMap) realMontrealLeafletMap.invalidateSize();
-  }, 150);
+  }, 100);
+  setTimeout(() => {
+    if (realMontrealLeafletMap) realMontrealLeafletMap.invalidateSize();
+  }, 300);
+  setTimeout(() => {
+    if (realMontrealLeafletMap) realMontrealLeafletMap.invalidateSize();
+  }, 600);
 }
 
 function renderRadarMarkers() {
@@ -12486,7 +13075,7 @@ function renderRadarMarkers() {
   filtered.forEach(ev => {
     const pinColor = ev.color || '#06b6d4';
     const pinIconHtml = `
-      <div class="radar-leaflet-pin" style="background:${pinColor};border-color:#fff;" title="${lang === 'fr' ? ev.titleFr : ev.titleEn}">
+      <div class="radar-leaflet-pin" style="background:${pinColor};border-color:#fff;" title="${lang === 'fr' ? (ev.titleFr || ev.titleEn) : ev.titleEn}">
         <span class="pin-pulse" style="background:${pinColor}88;"></span>
         <span style="font-size:1.1rem;">${ev.icon || '📍'}</span>
       </div>
@@ -12660,7 +13249,12 @@ function submitRadarCustomEvent() {
     isCustom: true
   };
 
-  const localSaved = JSON.parse(localStorage.getItem('realmont_custom_radar_events') || '[]');
+  let localSaved = [];
+  try {
+    localSaved = JSON.parse(localStorage.getItem('realmont_custom_radar_events') || '[]');
+  } catch (e) {
+    localSaved = [];
+  }
   localSaved.push(newEvent);
   localStorage.setItem('realmont_custom_radar_events', JSON.stringify(localSaved));
 
