@@ -2478,9 +2478,9 @@
 
       /* Vertical Scroll Snap Feed Element (Direct parent of .post-card) */
       #feedEl {
-        height: 100% !important;
         width: 100% !important;
-        flex: 1 1 100% !important;
+        flex: 1 1 0% !important;
+        min-height: 0 !important;
         overflow-y: scroll !important;
         scroll-snap-type: y mandatory !important;
         -webkit-overflow-scrolling: touch !important;
@@ -2501,10 +2501,9 @@
       /* 🎯 EXACTLY 1 POST FILLS 100% OF THE SCREEN (TIKTOK VERTICAL SNAP) */
       .feed:not(.mode-classic) .post-card,
       .feed:not(.mode-classic) .tiktok-card {
-        height: calc(100dvh - 104px) !important;
-        height: calc(100vh - 104px) !important;
-        min-height: calc(100dvh - 104px) !important;
-        max-height: calc(100dvh - 104px) !important;
+        height: 100% !important;
+        min-height: 100% !important;
+        max-height: 100% !important;
         width: 100% !important;
         scroll-snap-align: start !important;
         scroll-snap-stop: always !important;
@@ -2951,6 +2950,7 @@
         color: #fff !important;
         border-color: var(--accent) !important;
       }
+    }
     /* ══════════════════════════════════════════════
        ⚜️ REAL MONT VIRAL FEATURES (MONTREAL & CANADA)
        ══════════════════════════════════════════════ */
@@ -2981,14 +2981,143 @@
 
     /* 📸 MONTREAL DAILY PULSE™ BANNER */
     .daily-pulse-card {
+      flex-shrink: 0 !important;
       background: linear-gradient(135deg, rgba(251,191,36,0.12), rgba(244,63,94,0.08), rgba(6,182,212,0.06), var(--bg2));
       border: 1px solid rgba(251,191,36,0.38);
       border-radius: 16px;
       padding: 14px 16px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       position: relative;
       overflow: hidden;
       box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+      transition: all 0.25s ease-out;
+    }
+    .daily-pulse-card.dpc-collapsed {
+      padding: 8px 12px !important;
+      margin-bottom: 8px !important;
+    }
+    .daily-pulse-card.dpc-collapsed .dpc-body,
+    .daily-pulse-card.dpc-collapsed .dpc-streak-hint {
+      display: none !important;
+    }
+    .daily-pulse-card.dpc-collapsed .dpc-header {
+      margin-bottom: 0 !important;
+    }
+    .daily-pulse-card.dpc-collapsed .dpc-countdown {
+      display: none !important;
+    }
+    .dpc-toggle-btn {
+      background: rgba(255, 255, 255, 0.08) !important;
+      border: 1px solid rgba(255, 255, 255, 0.16) !important;
+      color: #cbd5e1 !important;
+      width: 26px !important;
+      height: 26px !important;
+      border-radius: 8px !important;
+      cursor: pointer !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 0.8rem !important;
+      line-height: 1 !important;
+      transition: all 0.18s !important;
+    }
+    .dpc-toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.18) !important;
+      color: #fff !important;
+    }
+    .dpc-btn-browse {
+      background: rgba(255, 255, 255, 0.07) !important;
+      border: 1px solid rgba(255, 255, 255, 0.18) !important;
+      color: #e2e8f0 !important;
+      padding: 7px 12px !important;
+      border-radius: 10px !important;
+      font-size: 0.78rem !important;
+      font-weight: 700 !important;
+      cursor: pointer !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 5px !important;
+      transition: all 0.2s !important;
+      flex-shrink: 0 !important;
+    }
+    .dpc-btn-browse:hover {
+      background: rgba(255, 255, 255, 0.16) !important;
+      color: #fff !important;
+    }
+    @media (max-width: 768px) {
+      .daily-pulse-card {
+        padding: 10px 12px !important;
+        margin-bottom: 8px !important;
+        border-radius: 14px !important;
+      }
+      .dpc-header {
+        margin-bottom: 6px !important;
+        gap: 6px !important;
+      }
+      .dpc-badge-icon {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 1rem !important;
+        border-radius: 8px !important;
+      }
+      .dpc-title {
+        font-size: 0.85rem !important;
+      }
+      .dpc-countdown {
+        font-size: 0.65rem !important;
+      }
+      .dpc-reward-pill {
+        font-size: 0.7rem !important;
+        padding: 2px 7px !important;
+      }
+      .dpc-body {
+        padding: 6px 10px !important;
+        margin-bottom: 6px !important;
+        gap: 8px !important;
+        border-radius: 10px !important;
+      }
+      .dpc-theme-icon {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 1.25rem !important;
+      }
+      .dpc-theme-title {
+        font-size: 0.82rem !important;
+      }
+      .dpc-theme-desc {
+        font-size: 0.72rem !important;
+        line-height: 1.25 !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+      }
+      .dpc-actions {
+        gap: 6px !important;
+        margin-top: 4px !important;
+        padding-bottom: 2px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        flex-wrap: nowrap !important;
+      }
+      .dpc-btn-join {
+        padding: 6px 11px !important;
+        font-size: 0.75rem !important;
+        min-height: 34px !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+      }
+      .dpc-btn-browse {
+        padding: 6px 9px !important;
+        font-size: 0.74rem !important;
+        min-height: 34px !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+      }
+      .dpc-streak-hint {
+        display: none !important;
+      }
     }
     .daily-pulse-card::before {
       content: '';
@@ -3297,15 +3426,17 @@
     }
 
     .mobile-realmont-banner {
-      display: none;
+      display: none !important;
+      flex-shrink: 0 !important;
       background: linear-gradient(145deg, rgba(244, 63, 94, 0.09), rgba(6, 182, 212, 0.06), var(--bg2));
       border: 1px solid rgba(244, 63, 94, 0.32);
       border-radius: 14px;
-      padding: 12px 14px;
-      margin-bottom: 12px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
       position: relative;
       overflow: hidden;
       box-shadow: 0 4px 18px rgba(0,0,0,0.35);
+      transition: all 0.25s ease-out;
     }
     .mobile-realmont-banner::before {
       content: '';
@@ -3317,6 +3448,35 @@
     @media (max-width: 1024px) {
       .mobile-realmont-banner {
         display: block !important;
+      }
+    }
+    .mobile-realmont-banner.mrb-collapsed {
+      padding: 6px 12px !important;
+      margin-bottom: 6px !important;
+    }
+    .mobile-realmont-banner.mrb-collapsed .mrb-duel-card {
+      display: none !important;
+    }
+    .mobile-realmont-banner.mrb-collapsed .mrb-header {
+      margin-bottom: 0 !important;
+    }
+    @media (max-width: 768px) {
+      .mobile-realmont-banner {
+        padding: 8px 10px !important;
+        margin-bottom: 6px !important;
+      }
+      .mrb-header {
+        margin-bottom: 6px !important;
+      }
+      .mrb-badge {
+        font-size: 0.8rem !important;
+      }
+      .mrb-duel-card {
+        padding: 8px 10px !important;
+      }
+      .mrb-duel-title {
+        font-size: 0.78rem !important;
+        margin-bottom: 4px !important;
       }
     }
     .mrb-header {
@@ -4420,6 +4580,9 @@
           <button class="mrb-all-duels-btn" onclick="openDuelsModal()" id="btnMbAllDuels" title="All Montreal Duels">
             <span>⚡ All Duels ↗</span>
           </button>
+          <button class="dpc-toggle-btn" id="btnToggleMbDuelBanner" onclick="toggleMobileDuelBanner()" title="Minimize / Expand" aria-label="Toggle Duel Banner">
+            <span id="mrbToggleIcon">▾</span>
+          </button>
         </div>
       </div>
       
@@ -4460,14 +4623,19 @@
             <div class="dpc-countdown" id="lblDailyPulseCountdown">⏱️ Resets at midnight</div>
           </div>
         </div>
-        <div class="dpc-reward-pill">
-          <span>🎁 +25 🪙 Reward</span>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="dpc-reward-pill">
+            <span>🎁 +25 🪙 Reward</span>
+          </div>
+          <button class="dpc-toggle-btn" id="btnTogglePulseCard" onclick="toggleDailyPulseCard()" title="Minimize / Expand" aria-label="Toggle Daily Pulse">
+            <span id="dpcToggleIcon">▾</span>
+          </button>
         </div>
       </div>
       
-      <div class="dpc-body">
+      <div class="dpc-body" id="dpcBody">
         <div class="dpc-theme-icon" id="dpcThemeIcon">☕</div>
-        <div style="flex:1;">
+        <div style="flex:1;min-width:0;">
           <div class="dpc-theme-title" id="dpcThemeTitle">Mile End Espresso & Morning Vibes</div>
           <div class="dpc-theme-desc" id="dpcThemeDesc">Share your morning Montreal spot, bagel break, or creative workspace! Capture and earn +25 🪙 instantly.</div>
         </div>
@@ -4476,6 +4644,9 @@
       <div class="dpc-actions">
         <button class="dpc-btn-join" id="btnJoinDailyPulse" onclick="participateInDailyPulse()">
           <span>📸 Share Daily Pulse (+25 🪙)</span>
+        </button>
+        <button class="dpc-btn-browse" id="btnBrowseDailyPulse" onclick="toggleFilterPulsePosts()" title="See Montreal entries">
+          <span id="lblBrowsePulseText">👀 Submissions</span>
         </button>
         <span class="dpc-streak-hint" id="dpcStreakHint">🔥 Daily Community Streak Active</span>
       </div>
@@ -6336,6 +6507,11 @@ function loadFeed() {
         if (!myFollowing || !myFollowing.has(authorId)) return;
       }
 
+      // Filter for Montreal Daily Pulse challenge (#MontrealPulse)
+      if (window.isPulseFilterActive) {
+        if (!p.content || !p.content.includes('#MontrealPulse')) return;
+      }
+
       posts.push(p);
       
       if (p.compressedCode && !p.code) {
@@ -6352,6 +6528,12 @@ function loadFeed() {
 
     if (curCat === 'following' && posts.length === 0) {
       el.innerHTML = '<div class="empty"><div class="empty-icon">❤️</div><div class="empty-title">No posts from following</div><div class="empty-text">Click the "+ Follow" button on any creator\'s post to see their creations here!</div></div>';
+      return;
+    }
+
+    if (window.isPulseFilterActive && posts.length === 0) {
+      const curL = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+      el.innerHTML = `<div class="empty"><div class="empty-icon">☕</div><div class="empty-title">${curL === 'fr' ? 'Aucune publication #MontrealPulse pour le moment' : 'No #MontrealPulse posts yet today'}</div><div class="empty-text">${curL === 'fr' ? 'Soyez le premier à partager votre moment montréalais et gagnez +25 🪙 !' : 'Be the first to share your Montreal moment and earn +25 🪙!'}</div><button class="dpc-btn-join" onclick="participateInDailyPulse()" style="margin-top:14px;padding:8px 18px;display:inline-flex;"><span>📸 ${curL === 'fr' ? 'Publier le 1er Pulse (+25 🪙)' : 'Share First Pulse (+25 🪙)'}</span></button></div>`;
       return;
     }
 
@@ -12988,10 +13170,78 @@ const DAILY_PULSE_THEMES = [
   { day: 6, icon: '🚴', titleEn: 'F1 Track, Cycling Sprint & Weekend Freedom', titleFr: 'Circuit F1, Sprint Vélo & Liberté du Week-end', descEn: 'Riding Circuit Gilles-Villeneuve, cycling Voie Camillien-Houde or festivals! Earn +25 🪙', descFr: 'Balade Circuit Gilles-Villeneuve, montée Camillien-Houde ou festivals ! Gagnez +25 🪙', tag: '#MontrealPulse' }
 ];
 
+let isPulseFilterActive = false;
+window.isPulseFilterActive = false;
+
+function toggleDailyPulseCard() {
+  const card = document.getElementById('montrealDailyPulseCard');
+  const icon = document.getElementById('dpcToggleIcon');
+  if (!card) return;
+  const isCollapsed = card.classList.toggle('dpc-collapsed');
+  if (icon) icon.textContent = isCollapsed ? '▸' : '▾';
+  try {
+    localStorage.setItem('dpc_card_collapsed', isCollapsed ? '1' : '0');
+  } catch (e) {}
+}
+
+function toggleMobileDuelBanner() {
+  const banner = document.getElementById('mobileRealmontBanner');
+  const icon = document.getElementById('mrbToggleIcon');
+  if (!banner) return;
+  const isCollapsed = banner.classList.toggle('mrb-collapsed');
+  if (icon) icon.textContent = isCollapsed ? '▸' : '▾';
+  try {
+    localStorage.setItem('mrb_banner_collapsed', isCollapsed ? '1' : '0');
+  } catch (e) {}
+}
+
+function toggleFilterPulsePosts() {
+  window.isPulseFilterActive = !window.isPulseFilterActive;
+  isPulseFilterActive = window.isPulseFilterActive;
+  const btn = document.getElementById('btnBrowseDailyPulse');
+  const lbl = document.getElementById('lblBrowsePulseText');
+  const lang = getCommunityLang();
+
+  if (window.isPulseFilterActive) {
+    if (btn) {
+      btn.style.background = 'linear-gradient(135deg, #06b6d4, #3b82f6)';
+      btn.style.borderColor = '#06b6d4';
+      btn.style.color = '#fff';
+    }
+    if (lbl) lbl.textContent = lang === 'fr' ? '✕ Tous les posts' : '✕ All Posts';
+    toast(lang === 'fr' ? 'Filtre actif : Défi #MontrealPulse' : 'Active filter: #MontrealPulse Submissions', 'info');
+  } else {
+    if (btn) {
+      btn.style.background = '';
+      btn.style.borderColor = '';
+      btn.style.color = '';
+    }
+    if (lbl) lbl.textContent = lang === 'fr' ? '👀 Publications' : '👀 Submissions';
+    toast(lang === 'fr' ? 'Affichage de tous les posts' : 'Showing all community posts', 'info');
+  }
+  loadFeed();
+}
+
 function initDailyPulseUI() {
   const today = new Date().getDay();
   const theme = DAILY_PULSE_THEMES.find(t => t.day === today) || DAILY_PULSE_THEMES[1];
   const lang = getCommunityLang();
+
+  // Restore collapse state
+  try {
+    if (localStorage.getItem('dpc_card_collapsed') === '1') {
+      const card = document.getElementById('montrealDailyPulseCard');
+      const icon = document.getElementById('dpcToggleIcon');
+      if (card) card.classList.add('dpc-collapsed');
+      if (icon) icon.textContent = '▸';
+    }
+    if (localStorage.getItem('mrb_banner_collapsed') === '1') {
+      const banner = document.getElementById('mobileRealmontBanner');
+      const icon = document.getElementById('mrbToggleIcon');
+      if (banner) banner.classList.add('mrb-collapsed');
+      if (icon) icon.textContent = '▸';
+    }
+  } catch (e) {}
 
   const iconEl = document.getElementById('dpcThemeIcon');
   const titleEl = document.getElementById('dpcThemeTitle');
