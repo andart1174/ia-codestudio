@@ -77,6 +77,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- LEAFLET.JS REAL INTERACTIVE MAP ENGINE -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -3108,78 +3113,126 @@
       margin-top: 6px;
     }
 
-    /* 🗺️ MONT-RADAR™ INTERACTIVE HEATMAP */
+    /* 🗺️ MONT-RADAR™ REAL INTERACTIVE MAP (MONTREAL & CA) */
     .mont-radar-modal-card {
       background: #090d16 !important;
-      border: 1px solid rgba(6, 182, 212, 0.35) !important;
+      border: 1px solid rgba(6, 182, 212, 0.45) !important;
       border-radius: 20px;
-      width: 100%;
-      max-width: 780px;
+      width: 95%;
+      max-width: 860px;
       max-height: 92vh;
-      overflow: hidden;
+      overflow-y: auto;
       display: flex;
       flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.85), 0 0 30px rgba(6,182,212,0.2) !important;
     }
-    .interactive-map-canvas-wrap {
-      position: relative;
+    #realMontrealMap {
       width: 100%;
-      height: 380px;
-      background: radial-gradient(circle at center, #0f172a 0%, #030712 100%);
+      height: 400px;
+      border-radius: 14px;
       overflow: hidden;
-      border-radius: 12px;
+      background: #060b14;
+      border: 1px solid rgba(6, 182, 212, 0.35);
+      position: relative;
+      z-index: 1;
+      box-shadow: inset 0 0 35px rgba(0,0,0,0.85);
     }
-    .montreal-map-svg {
-      width: 100%;
-      height: 100%;
-      display: block;
+    @media (max-width: 640px) {
+      #realMontrealMap { height: 310px; }
+      .mont-radar-modal-card { max-height: 95vh; padding: 0 !important; }
     }
-    .map-hotspot-pin {
-      position: absolute;
-      transform: translate(-50%, -50%);
-      cursor: pointer;
-      z-index: 10;
-      transition: transform 0.2s;
-    }
-    .map-hotspot-pin:hover {
-      transform: translate(-50%, -50%) scale(1.1);
-      z-index: 20;
-    }
-    .hotspot-pulse {
-      position: absolute;
-      inset: -8px;
-      border-radius: 50%;
-      background: rgba(244, 63, 94, 0.35);
-      animation: pinPulse 2s infinite ease-out;
-      pointer-events: none;
-    }
-    .hotspot-pulse.pulse-cyan { background: rgba(6, 182, 212, 0.35); }
-    .hotspot-pulse.pulse-gold { background: rgba(245, 158, 11, 0.35); }
-    .hotspot-pulse.pulse-green { background: rgba(16, 185, 129, 0.35); }
-    @keyframes pinPulse {
-      0% { transform: scale(0.5); opacity: 1; }
-      100% { transform: scale(2.2); opacity: 0; }
-    }
-    .hotspot-badge {
+    .radar-cat-pills-bar {
       display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      margin-bottom: 12px;
+      scrollbar-width: thin;
+    }
+    .radar-cat-pill {
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      color: #94a3b8;
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+      display: inline-flex;
       align-items: center;
       gap: 5px;
-      background: rgba(15, 23, 42, 0.92);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 999px;
-      padding: 4px 10px;
-      white-space: nowrap;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.6);
     }
-    .hb-icon { font-size: 0.9rem; }
-    .hb-name { font-size: 0.75rem; font-weight: 700; color: #fff; }
-    .hb-count { font-size: 0.7rem; font-weight: 800; color: #34d399; }
-    .badge-secret-drop {
-      border-color: rgba(245, 158, 11, 0.6) !important;
-      background: rgba(30, 20, 5, 0.95) !important;
+    .radar-cat-pill:hover, .radar-cat-pill.active {
+      background: rgba(6, 182, 212, 0.2);
+      border-color: #06b6d4;
+      color: #38bdf8;
+      box-shadow: 0 0 10px rgba(6,182,212,0.3);
     }
-    .badge-secret-drop .hb-status {
-      font-size: 0.7rem; font-weight: 900; color: #fbbf24;
+    .radar-leaflet-pin {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.7);
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .radar-leaflet-pin:hover {
+      transform: scale(1.22);
+      z-index: 9999 !important;
+    }
+    .radar-leaflet-pin .pin-pulse {
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      animation: radarPinPulse 2.2s infinite ease-out;
+      pointer-events: none;
+    }
+    @keyframes radarPinPulse {
+      0% { transform: scale(0.6); opacity: 0.9; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+    .radar-add-event-drawer {
+      background: rgba(11, 17, 32, 0.98);
+      border: 1px solid rgba(6, 182, 212, 0.4);
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 12px;
+      display: none;
+      animation: slideDownFade 0.25s ease-out;
+    }
+    @keyframes slideDownFade {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Leaflet Dark Theme Overrides */
+    .leaflet-container {
+      background-color: #090d16 !important;
+      font-family: 'Inter', sans-serif !important;
+    }
+    .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+      background: #0f172a !important;
+      color: #f1f5f9 !important;
+      border: 1px solid rgba(6, 182, 212, 0.45) !important;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.8), 0 0 15px rgba(6,182,212,0.3) !important;
+      border-radius: 12px !important;
+    }
+    .leaflet-popup-content {
+      margin: 10px 12px !important;
+      line-height: 1.4 !important;
+    }
+    .leaflet-container a.leaflet-popup-close-button {
+      color: #94a3b8 !important;
+      padding: 6px 8px 0 0 !important;
+    }
+    .leaflet-container a.leaflet-popup-close-button:hover {
+      color: #f43f5e !important;
     }
     .map-active-spot-card {
       display: flex;
@@ -3211,6 +3264,74 @@
     .btn-filter-spot:hover {
       transform: translateY(-1px);
       box-shadow: 0 4px 14px rgba(6, 182, 212, 0.5);
+    }
+
+    /* ⚡ DUELS MONT-ROYAL™ MODAL */
+    .duels-modal-card {
+      background: #090d16 !important;
+      border: 1px solid rgba(244, 63, 94, 0.4) !important;
+      border-radius: 20px;
+      width: 95%;
+      max-width: 620px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.85), 0 0 30px rgba(244,63,94,0.25) !important;
+    }
+    .duel-modal-tab-pill {
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      color: #cbd5e1;
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .duel-modal-tab-pill.active {
+      background: rgba(244, 63, 94, 0.2);
+      border-color: #f43f5e;
+      color: #f43f5e;
+      box-shadow: 0 0 10px rgba(244,63,94,0.3);
+    }
+    .duel-modal-box {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-modal-duel-vote {
+      flex: 1;
+      background: var(--bg3);
+      border: 2px solid var(--border2);
+      border-radius: 14px;
+      padding: 14px 10px;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      font-family: inherit;
+    }
+    .btn-modal-duel-vote:hover {
+      transform: translateY(-3px) scale(1.02);
+    }
+    .btn-modal-duel-vote.vote-a:hover, .btn-modal-duel-vote.vote-a.voted {
+      background: rgba(244, 63, 94, 0.22);
+      border-color: #f43f5e;
+      box-shadow: 0 0 20px rgba(244,63,94,0.4);
+    }
+    .btn-modal-duel-vote.vote-b:hover, .btn-modal-duel-vote.vote-b.voted {
+      background: rgba(6, 182, 212, 0.22);
+      border-color: #06b6d4;
+      box-shadow: 0 0 20px rgba(6,182,212,0.4);
     }
 
     /* 🎙️ SPARK VOICE™ RECORDER & SOUNDWAVE PLAYER */
@@ -3424,7 +3545,7 @@
       letter-spacing: 0.1em;
     }
 
-    /* ⚜️ PASSEPORT FONDATEUR VIP #0084 (HOLOGRAPHIC 3D TILT) */
+    /* ⚜️ PASSEPORT FONDATEUR VIP #0001 (HOLOGRAPHIC 3D TILT) */
     .holographic-founder-card {
       position: relative;
       width: 100%;
@@ -3698,8 +3819,8 @@
   </button>
 
   <!-- VIP FOUNDER PASS BUTTON -->
-  <button class="hdr-vip-pill" id="hdrVipPill" onclick="openFounderPassModal()" title="Founder VIP Pass #0084" style="display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,rgba(255,215,0,0.15),rgba(244,63,94,0.15));border:1px solid rgba(255,215,0,0.4);border-radius:20px;padding:4px 10px;color:#ffd700;font-size:0.75rem;font-weight:800;cursor:pointer;white-space:nowrap;">
-    <span>⚜️ VIP #0084</span>
+  <button class="hdr-vip-pill" id="hdrVipPill" onclick="openFounderPassModal()" title="Founder VIP Pass #0001" style="display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,rgba(255,215,0,0.15),rgba(244,63,94,0.15));border:1px solid rgba(255,215,0,0.4);border-radius:20px;padding:4px 10px;color:#ffd700;font-size:0.75rem;font-weight:800;cursor:pointer;white-space:nowrap;">
+    <span>⚜️ VIP #0001</span>
   </button>
 
   <!-- GENIUS IA COIN WIDGET -->
@@ -3766,17 +3887,14 @@
         <button class="cat-btn" style="display:flex;align-items:center;gap:8px;font-size:0.8rem;justify-content:flex-start;padding:8px 12px;" onclick="openRadarModal()" id="btnNavRadar">
           <span style="font-size:1.05rem;">🗺️</span> <span id="lblNavRadar">MONT-RADAR™ Live</span>
         </button>
-        <button class="cat-btn" style="display:flex;align-items:center;gap:8px;font-size:0.8rem;justify-content:flex-start;padding:8px 12px;" onclick="scrollToDuelsWidget()" id="btnNavDuels">
+        <button class="cat-btn" style="display:flex;align-items:center;gap:8px;font-size:0.8rem;justify-content:flex-start;padding:8px 12px;" onclick="openDuelsModal()" id="btnNavDuels">
           <span style="font-size:1.05rem;">⚡</span> <span id="lblNavDuels">Duels Mont-Royal™</span>
         </button>
         <button class="cat-btn" style="display:flex;align-items:center;gap:8px;font-size:0.8rem;justify-content:flex-start;padding:8px 12px;" onclick="openVoiceStudioModal()" id="btnNavVoice">
           <span style="font-size:1.05rem;">🎙️</span> <span id="lblNavVoice">Spark Voice™ 30s</span>
         </button>
-        <button class="cat-btn" style="display:flex;align-items:center;gap:8px;font-size:0.8rem;justify-content:flex-start;padding:8px 12px;" onclick="openRewardsKioskModal()" id="btnNavRewards">
-          <span style="font-size:1.05rem;">🎟️</span> <span id="lblNavRewards">Rewards Kiosk MTL</span>
-        </button>
         <button class="cat-btn" style="display:flex;align-items:center;gap:8px;font-size:0.8rem;justify-content:flex-start;padding:8px 12px;" onclick="openFounderPassModal()" id="btnNavFounder">
-          <span style="font-size:1.05rem;">⚜️</span> <span id="lblNavFounder">VIP Pass #0084</span>
+          <span style="font-size:1.05rem;">⚜️</span> <span id="lblNavFounder">VIP Pass #0001</span>
         </button>
         <button class="cat-btn" style="display:flex;align-items:center;gap:8px;font-size:0.8rem;justify-content:flex-start;padding:8px 12px;" onclick="openChatRoomsModal()" id="btnNavChat">
           <span style="font-size:1.05rem;">💬</span> <span id="lblNavChat">Montreal Chat Rooms</span>
@@ -4168,11 +4286,14 @@
     </div>
     <!-- ⚡ DUELS MONT-ROYAL™ CARD -->
     <div class="duel-widget-card" id="duelsMontRoyalWidget">
-      <div class="duel-card-header">
+      <div class="duel-card-header" style="cursor:pointer;" onclick="openDuelsModal()">
         <span class="duel-badge"><span>⚡</span> <span id="lbl-duel-badge">Duels Mont-Royal™</span></span>
-        <span class="duel-live-pill" id="lbl-duel-live">LIVE MTL</span>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span class="duel-live-pill" id="lbl-duel-live">LIVE MTL</span>
+          <span style="font-size:0.7rem;color:#f43f5e;font-weight:800;border:1px solid rgba(244,63,94,0.4);border-radius:10px;padding:1px 6px;">All Duels ↗</span>
+        </div>
       </div>
-      <h4 class="duel-title-text" id="duelTitleText">St-Viateur Bagel 🥯 vs Fairmount Bagel 🥖</h4>
+      <h4 class="duel-title-text" id="duelTitleText" style="cursor:pointer;" onclick="openDuelsModal()">St-Viateur Bagel 🥯 vs Fairmount Bagel 🥖</h4>
       <p class="duel-subtitle" id="duelSubtitleText">Vote for your Montreal favorite! Earn +15 🪙 GENIUS IA coins instantly.</p>
       
       <div class="duel-energy-container">
@@ -4181,18 +4302,18 @@
           <div class="duel-energy-fill-b" id="duelEnergyFillB" style="width: 46%;">46%</div>
         </div>
         <div class="duel-vote-buttons-row">
-          <button class="btn-duel-vote vote-a" id="btnDuelVoteA" onclick="voteDuel('A')">
+          <button class="btn-duel-vote vote-a" id="btnDuelVoteA" onclick="voteDuel('A', event)">
             <span class="vote-team-name" id="duelTeamAName">St-Viateur 🥯</span>
             <span class="vote-num" id="duelTeamACount">1,248 votes</span>
           </button>
           <div class="duel-vs-circle">VS</div>
-          <button class="btn-duel-vote vote-b" id="btnDuelVoteB" onclick="voteDuel('B')">
+          <button class="btn-duel-vote vote-b" id="btnDuelVoteB" onclick="voteDuel('B', event)">
             <span class="vote-team-name" id="duelTeamBName">Fairmount 🥖</span>
             <span class="vote-num" id="duelTeamBCount">1,072 votes</span>
           </button>
         </div>
       </div>
-      <div class="duel-coin-reward-hint" id="lblDuelRewardHint">🎁 +15 🪙 Reward per vote</div>
+      <div class="duel-coin-reward-hint" id="lblDuelRewardHint" style="cursor:pointer;" onclick="openDuelsModal()">🎁 +15 🪙 Reward per vote • Click for All Duels</div>
     </div>
 
     <!-- Tools — visible to everyone -->
@@ -4968,123 +5089,115 @@
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════ -->
-<!-- 🗺️ MONT-RADAR™ INTERACTIVE HEATMAP MODAL (MONTREAL & CA)   -->
+<!-- 🗺️ MONT-RADAR™ REAL INTERACTIVE MAP (MONTREAL & CA)        -->
 <!-- ═══════════════════════════════════════════════════════════ -->
 <div class="overlay" id="radarMapModal" onclick="closeRadarModal(event)">
   <div class="modal mont-radar-modal-card" onclick="event.stopPropagation()">
     <!-- Header -->
-    <div class="radar-modal-header" style="padding:16px 20px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,0.25);">
+    <div class="radar-modal-header" style="padding:16px 20px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,0.35);">
       <div style="display:flex;align-items:center;gap:10px;">
-        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#06b6d4,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:1.2rem;box-shadow:0 0 14px rgba(6,182,212,0.4);">🗺️</div>
+        <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#06b6d4,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:1.25rem;box-shadow:0 0 16px rgba(6,182,212,0.45);">🗺️</div>
         <div>
           <h3 style="font-family:'Outfit',sans-serif;font-size:1.15rem;font-weight:800;color:#fff;margin:0;display:flex;align-items:center;gap:8px;">
-            <span id="lbl-radar-modal-title">MONT-RADAR™ Live Heatmap</span>
-            <span style="font-size:0.68rem;background:linear-gradient(135deg,#f43f5e,#06b6d4);color:#fff;padding:2px 8px;border-radius:12px;font-weight:900;">MTL LIVE</span>
+            <span id="lbl-radar-modal-title">MONT-RADAR™ Real Live Map</span>
+            <span style="font-size:0.68rem;background:linear-gradient(135deg,#f43f5e,#06b6d4);color:#fff;padding:2px 8px;border-radius:12px;font-weight:900;">MONTREAL LIVE</span>
           </h3>
-          <p id="lbl-radar-modal-sub" style="color:var(--muted);font-size:0.8rem;margin:2px 0 0;">Explore live hot spots and secret geocache drops in Montreal</p>
+          <p id="lbl-radar-modal-sub" style="color:var(--muted);font-size:0.8rem;margin:2px 0 0;">Real-time interactive Montreal events, hot spots & secret geocaches</p>
         </div>
       </div>
-      <button class="mc" onclick="closeRadarModal()">✕</button>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="btn-filter-spot" style="padding:6px 14px;font-size:0.78rem;background:linear-gradient(135deg,#10b981,#06b6d4);" onclick="toggleRadarAddEventDrawer()" id="btnToggleAddEventDrawer">
+          <span>➕ Add Event</span>
+        </button>
+        <button class="mc" onclick="closeRadarModal()">✕</button>
+      </div>
     </div>
 
     <!-- Map Stage Container -->
     <div class="mb" style="padding:16px 20px;">
-      <div class="interactive-map-canvas-wrap" id="radarMapWrap">
-        <!-- Montreal Stylized Vector SVG Map -->
-        <svg class="montreal-map-svg" viewBox="0 0 800 400" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="riverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#0284c7" stop-opacity="0.35"/>
-              <stop offset="100%" stop-color="#0369a1" stop-opacity="0.2"/>
-            </linearGradient>
-            <linearGradient id="islandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#0f172a"/>
-              <stop offset="100%" stop-color="#1e293b"/>
-            </linearGradient>
-          </defs>
-          <!-- Grid lines -->
-          <pattern id="radarGrid" width="40" height="40" patternUnits="userSpaceOnUse">
-            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-          </pattern>
-          <rect width="100%" height="100%" fill="url(#radarGrid)" />
+      <!-- Category Filter Pills -->
+      <div class="radar-cat-pills-bar">
+        <button class="radar-cat-pill active" onclick="filterRadarCategory('all', this)" id="pillCatAll">🌐 All Events (<span id="countAllPins">7</span>)</button>
+        <button class="radar-cat-pill" onclick="filterRadarCategory('sports', this)" id="pillCatSports">🚴 Sports & Cycling</button>
+        <button class="radar-cat-pill" onclick="filterRadarCategory('music', this)" id="pillCatMusic">🎵 Music & Festivals</button>
+        <button class="radar-cat-pill" onclick="filterRadarCategory('food', this)" id="pillCatFood">🥯 Food & Gourmet</button>
+        <button class="radar-cat-pill" onclick="filterRadarCategory('art', this)" id="pillCatArt">🎨 Art & Culture</button>
+        <button class="radar-cat-pill" onclick="filterRadarCategory('drop', this)" id="pillCatDrop">💎 Secret Drops</button>
+      </div>
 
-          <!-- St. Lawrence River Shape -->
-          <path d="M 0,280 C 180,260 320,320 500,280 C 650,250 720,290 800,270 L 800,400 L 0,400 Z" fill="url(#riverGrad)" />
+      <!-- Real Montreal Leaflet Map Container -->
+      <div id="realMontrealMap"></div>
 
-          <!-- Montreal Island Outline -->
-          <path d="M 40,240 C 100,160 220,110 380,120 C 520,130 640,160 740,210 C 680,270 540,260 420,270 C 260,280 140,290 40,240 Z" fill="url(#islandGrad)" stroke="rgba(6,182,212,0.3)" stroke-width="2"/>
-
-          <!-- Mont-Royal Mountain Relief Contour -->
-          <ellipse cx="380" cy="180" rx="90" ry="45" fill="rgba(16,185,129,0.12)" stroke="rgba(16,185,129,0.35)" stroke-dasharray="4,4"/>
-          <ellipse cx="380" cy="180" rx="55" ry="26" fill="rgba(16,185,129,0.2)" stroke="rgba(16,185,129,0.6)"/>
-          <text x="350" y="184" fill="#34d399" font-size="11" font-weight="bold" font-family="'Outfit', sans-serif">MONT-ROYAL ⛰️</text>
-
-          <!-- Metro Line Visual Trails -->
-          <path d="M 180,230 Q 380,190 620,180" fill="none" stroke="rgba(244,63,94,0.4)" stroke-width="2" stroke-dasharray="6,4"/>
-          <path d="M 280,260 Q 400,220 540,150" fill="none" stroke="rgba(245,158,11,0.4)" stroke-width="2" stroke-dasharray="6,4"/>
-        </svg>
-
-        <!-- Hotspot Pin 1: Mont-Royal Tam-Tams -->
-        <div class="map-hotspot-pin" style="left:48%;top:45%;" onclick="selectRadarSpot('tam-tams')">
-          <div class="hotspot-pulse"></div>
-          <div class="hotspot-badge">
-            <span class="hb-icon">🥁</span>
-            <span class="hb-name">Tam-Tams</span>
-            <span class="hb-count">1.4k</span>
+      <!-- Add Montreal Event Drawer -->
+      <div class="radar-add-event-drawer" id="radarAddEventDrawer">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:1.1rem;">📍</span>
+            <h4 style="margin:0;font-size:0.95rem;font-weight:800;color:#fff;" id="lbl-add-event-drawer-title">Add Montreal Live Event</h4>
+            <span style="font-size:0.68rem;background:rgba(16,185,129,0.2);border:1px solid #10b981;color:#34d399;padding:2px 8px;border-radius:10px;font-weight:800;">+20 🪙 Reward</span>
+          </div>
+          <button style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1rem;" onclick="toggleRadarAddEventDrawer(false)">✕</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:10px;">
+          <div>
+            <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lbl-add-event-name">Event Title / Name</label>
+            <input type="text" id="newEventTitle" placeholder="e.g. Grand Prix Cycliste Watch Party" class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;">
+          </div>
+          <div>
+            <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lbl-add-event-category">Category</label>
+            <select id="newEventCategory" class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;background:#0f172a;color:#fff;">
+              <option value="sports">🚴 Sports & Grand Prix</option>
+              <option value="music">🎵 Music & Concert</option>
+              <option value="food">🥯 Food & Poutine/Bagel</option>
+              <option value="art">🎨 Art & Culture</option>
+              <option value="community">💡 Community Meetup</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lbl-add-event-location">Montreal Location</label>
+            <select id="newEventLocationPreset" onchange="onRadarLocationPresetChange(this.value)" class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;background:#0f172a;color:#fff;">
+              <option value="jeanne-mance">Parc Jeanne-Mance / Mont-Royal (Cycling Finish)</option>
+              <option value="tam-tams">Monument Cartier (Tam-Tams)</option>
+              <option value="vieux-port">Vieux-Port & Quai de l'Horloge</option>
+              <option value="jean-drapeau">Parc Jean-Drapeau / Île Sainte-Hélène</option>
+              <option value="mile-end">Mile End (St-Viateur / Fairmount)</option>
+              <option value="spectacles">Quartier des Spectacles / Place des Arts</option>
+              <option value="notre-dame">Circuit Gilles-Villeneuve (F1 Track)</option>
+              <option value="custom">📍 Click anywhere on map</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lbl-add-event-time">Time / Schedule</label>
+            <input type="text" id="newEventTime" placeholder="e.g. Today 14:00 - 18:00" class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;" value="Today / Aujourd'hui">
           </div>
         </div>
-
-        <!-- Hotspot Pin 2: Crescent Downtown -->
-        <div class="map-hotspot-pin" style="left:38%;top:58%;" onclick="selectRadarSpot('crescent')">
-          <div class="hotspot-pulse pulse-cyan"></div>
-          <div class="hotspot-badge">
-            <span class="hb-icon">🍸</span>
-            <span class="hb-name">Crescent & Centre-Ville</span>
-            <span class="hb-count">2.8k</span>
-          </div>
+        <div style="margin-bottom:12px;">
+          <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lbl-add-event-desc">Description & Highlights</label>
+          <input type="text" id="newEventDesc" placeholder="e.g. Cheering zone at the final climb, live big screens & free stickers!" class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;">
         </div>
-
-        <!-- Hotspot Pin 3: Old Port Montreal -->
-        <div class="map-hotspot-pin" style="left:56%;top:64%;" onclick="selectRadarSpot('old-port')">
-          <div class="hotspot-pulse pulse-gold"></div>
-          <div class="hotspot-badge">
-            <span class="hb-icon">⛵</span>
-            <span class="hb-name">Vieux-Port MTL</span>
-            <span class="hb-count">1.9k</span>
-          </div>
-        </div>
-
-        <!-- Hotspot Pin 4: Mile End -->
-        <div class="map-hotspot-pin" style="left:54%;top:32%;" onclick="selectRadarSpot('mile-end')">
-          <div class="hotspot-pulse pulse-green"></div>
-          <div class="hotspot-badge">
-            <span class="hb-icon">🥯</span>
-            <span class="hb-name">Mile End & Plateau</span>
-            <span class="hb-count">870</span>
-          </div>
-        </div>
-
-        <!-- Hotspot Pin 5: Secret Geocache Drop (100 coins) -->
-        <div class="map-hotspot-pin" style="left:68%;top:52%;" onclick="selectRadarSpot('geocache-drop')">
-          <div class="hotspot-pulse pulse-gold" style="animation-duration:1.2s;"></div>
-          <div class="hotspot-badge badge-secret-drop">
-            <span class="hb-icon">💎</span>
-            <span class="hb-name">Secret Drop</span>
-            <span class="hb-status">+100 🪙</span>
-          </div>
+        <div style="display:flex;justify-content:flex-end;gap:8px;">
+          <button class="shop-btn" style="padding:6px 14px;background:var(--bg3);border:1px solid var(--border2);color:#94a3b8;font-size:0.8rem;" onclick="toggleRadarAddEventDrawer(false)" id="btnCancelAddEvent">Cancel</button>
+          <button class="btn-filter-spot" style="padding:8px 18px;font-size:0.82rem;background:linear-gradient(135deg,#06b6d4,#3b82f6);" onclick="submitRadarCustomEvent()" id="btnSubmitAddEvent">
+            <span>🚀 Publish to Radar (+20 🪙)</span>
+          </button>
         </div>
       </div>
 
       <!-- Active Selected Hotspot Detail Card -->
       <div class="map-active-spot-card" id="radarSpotDetailsCard">
-        <div>
-          <div style="display:flex;align-items:center;gap:6px;">
-            <span style="font-size:1.1rem;" id="activeSpotIcon">🥁</span>
-            <h4 style="margin:0;font-size:0.95rem;font-weight:800;color:#fff;" id="activeSpotTitle">Mont-Royal Tam-Tams</h4>
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <span style="font-size:1.2rem;" id="activeSpotIcon">🚴</span>
+            <h4 style="margin:0;font-size:0.95rem;font-weight:800;color:#fff;" id="activeSpotTitle">Grand Prix Cycliste de Montréal</h4>
+            <span id="activeSpotBadge" style="font-size:0.65rem;background:rgba(244,63,94,0.2);border:1px solid #f43f5e;color:#f43f5e;padding:2px 8px;border-radius:10px;font-weight:800;">WORLD TOUR LIVE</span>
           </div>
-          <p style="margin:3px 0 0;font-size:0.78rem;color:var(--muted);" id="activeSpotDesc">Sunday drum circles, sun vibes, and creative Montreal gatherings.</p>
+          <p style="margin:4px 0 0;font-size:0.78rem;color:var(--muted);" id="activeSpotDesc">Final decisive stage! World champions battle on Mont-Royal & Camillien-Houde climbs.</p>
+          <div style="margin-top:4px;font-size:0.72rem;color:#38bdf8;display:flex;align-items:center;gap:12px;" id="activeSpotMeta">
+            <span>📍 Parc Jeanne-Mance / Mont-Royal</span>
+            <span>⏱️ Today 10:00 - 16:30</span>
+          </div>
         </div>
-        <div style="display:flex;gap:8px;align-items:center;">
+        <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
           <button class="btn-filter-spot" id="btnFilterByRadarSpot" onclick="filterFeedByRadarSpot()">
             <span>🎯 Filter Feed</span>
           </button>
@@ -5098,113 +5211,83 @@
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════ -->
-<!-- 🎟️ KIOSQUE DE RÉCOMPENSES MONTRÉAL (LOCAL VOUCHERS & PASSES)-->
+<!-- ⚡ DUELS MONT-ROYAL™ MODAL (VIRAL MONTREAL FACE-OFFS)       -->
 <!-- ═══════════════════════════════════════════════════════════ -->
-<div class="overlay" id="rewardsModalOverlay" onclick="closeRewardsKioskModal(event)">
-  <div class="modal rewards-modal-card" onclick="event.stopPropagation()" style="max-width:680px;">
+<div class="overlay" id="duelsModalOverlay" onclick="closeDuelsModal(event)">
+  <div class="modal duels-modal-card" onclick="event.stopPropagation()">
     <!-- Header -->
-    <div class="rewards-modal-header" style="padding:16px 20px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,0.35);">
       <div style="display:flex;align-items:center;gap:10px;">
-        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#f59e0b,#ef4444);display:flex;align-items:center;justify-content:center;font-size:1.2rem;box-shadow:0 0 14px rgba(245,158,11,0.4);">🎟️</div>
+        <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#f43f5e,#ec4899);display:flex;align-items:center;justify-content:center;font-size:1.25rem;box-shadow:0 0 16px rgba(244,63,94,0.45);">⚡</div>
         <div>
           <h3 style="font-family:'Outfit',sans-serif;font-size:1.15rem;font-weight:800;color:#fff;margin:0;display:flex;align-items:center;gap:8px;">
-            <span id="lbl-rewards-modal-title">Montreal Rewards Kiosk</span>
-            <span style="font-size:0.68rem;background:linear-gradient(135deg,#10b981,#06b6d4);color:#000;padding:2px 8px;border-radius:12px;font-weight:900;">REAL MONT</span>
+            <span id="lbl-duels-modal-title">Duels Mont-Royal™</span>
+            <span style="font-size:0.68rem;background:linear-gradient(135deg,#f43f5e,#fbbf24);color:#000;padding:2px 8px;border-radius:12px;font-weight:900;">VIRAL MTL</span>
           </h3>
-          <p id="lbl-rewards-modal-sub" style="color:var(--muted);font-size:0.8rem;margin:2px 0 0;">Redeem your GENIUS IA coins for real Montreal perks & digital vouchers</p>
+          <p id="lbl-duels-modal-sub" style="color:var(--muted);font-size:0.8rem;margin:2px 0 0;">Vote for your Montreal favorites & earn +15 🪙 GENIUS IA coins!</p>
         </div>
       </div>
-      <button class="mc" onclick="closeRewardsKioskModal()">✕</button>
+      <button class="mc" onclick="closeDuelsModal()">✕</button>
     </div>
 
     <div class="mb" style="padding:16px 20px;">
-      <!-- Coin Balance Bar -->
-      <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border2);border-radius:12px;padding:10px 16px;margin-bottom:16px;">
-        <div style="font-size:0.82rem;color:#94a3b8;" id="lbl-kiosk-balance-txt">Your current coin balance:</div>
-        <div style="display:flex;align-items:center;gap:6px;">
-          <img src="../genius-ia-coin.png" style="width:20px;height:20px;" alt="">
-          <span style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.05rem;color:#fcd34d;" id="kioskCoinBalance">0</span>
-          <span style="font-size:0.75rem;color:#fbbf24;font-weight:700;">🪙</span>
-        </div>
+      <!-- Active Duel Switcher Tabs -->
+      <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;scrollbar-width:thin;">
+        <button class="duel-modal-tab-pill active" onclick="switchModalDuel(0, this)" id="tabDuel0">🥯 Bagels: St-Viateur vs Fairmount</button>
+        <button class="duel-modal-tab-pill" onclick="switchModalDuel(1, this)" id="tabDuel1">🚴 Cycling vs 🏎️ F1</button>
+        <button class="duel-modal-tab-pill" onclick="switchModalDuel(2, this)" id="tabDuel2">🍟 Banquise vs Claudette</button>
+        <button class="duel-modal-tab-pill" onclick="switchModalDuel(3, this)" id="tabDuel3">☕ Olimpico vs Tommy</button>
       </div>
 
-      <!-- Vouchers Grid -->
-      <div class="rewards-vouchers-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;">
-        <!-- Perk 1: Poutine La Banquise -->
-        <div class="voucher-card" style="background:var(--bg3);border:1px solid var(--border2);border-radius:14px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;">
-          <div>
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-              <span style="font-size:1.5rem;">🍟</span>
-              <span style="font-weight:800;color:#fbbf24;font-size:0.95rem;">120 🪙</span>
-            </div>
-            <h4 style="margin:0 0 4px;font-size:0.95rem;color:#fff;" id="lbl-perk-poutine-title">Poutine Classique La Banquise</h4>
-            <p style="margin:0 0 12px;font-size:0.76rem;color:var(--muted);" id="lbl-perk-poutine-desc">Digital coupon valid for 1 free Montreal classic poutine upgrade.</p>
+      <!-- Duel Arena Stage -->
+      <div class="duel-modal-box">
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;">
+          <span style="background:rgba(244,63,94,0.2);border:1px solid #f43f5e;color:#f43f5e;font-size:0.7rem;font-weight:900;padding:2px 8px;border-radius:10px;" id="modalDuelCategory">MONTREAL BATTLE</span>
+          <span style="font-size:0.75rem;color:#fbbf24;font-weight:700;" id="lblModalDuelRewardHint">🎁 +15 🪙 Reward per vote</span>
+        </div>
+
+        <h3 style="font-family:'Outfit',sans-serif;font-size:1.25rem;font-weight:900;color:#fff;margin:0 0 4px;" id="modalDuelTitle">St-Viateur Bagel 🥯 vs Fairmount Bagel 🥖</h3>
+        <p style="color:var(--muted);font-size:0.82rem;margin:0 0 16px;" id="modalDuelDesc">The century-old Montreal wood-fired bagel duel. Pick your camp!</p>
+
+        <!-- Energy Meter Bar -->
+        <div style="margin-bottom:18px;">
+          <div class="duel-energy-bar-track" style="height:22px;">
+            <div class="duel-energy-fill-a" id="modalDuelFillA" style="width: 54%;font-size:0.75rem;">54%</div>
+            <div class="duel-energy-fill-b" id="modalDuelFillB" style="width: 46%;font-size:0.75rem;">46%</div>
           </div>
-          <button class="shop-btn buy" style="width:100%;padding:8px;" onclick="claimMontrealPerk('poutine', 120, 'Poutine Classique La Banquise')">
-            <span id="btn-claim-poutine">Claim Coupon (120 🪙)</span>
+          <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--muted);margin-top:4px;">
+            <span id="modalDuelVotesCountA" style="color:#f43f5e;font-weight:700;">1,248 votes</span>
+            <span id="modalDuelVotesCountB" style="color:#06b6d4;font-weight:700;">1,072 votes</span>
+          </div>
+        </div>
+
+        <!-- Big Voting Buttons Row -->
+        <div style="display:flex;align-items:center;gap:12px;">
+          <button class="btn-modal-duel-vote vote-a" id="btnModalVoteA" onclick="voteModalDuel('A', event)">
+            <span style="font-size:1.8rem;" id="modalDuelEmojiA">🥯</span>
+            <span style="font-size:0.95rem;font-weight:800;" id="modalDuelNameA">St-Viateur</span>
+            <span style="font-size:0.75rem;color:#f43f5e;font-weight:700;" id="modalDuelPctA">54%</span>
+          </button>
+          
+          <div class="duel-vs-circle" style="width:36px;height:36px;font-size:0.8rem;">VS</div>
+
+          <button class="btn-modal-duel-vote vote-b" id="btnModalVoteB" onclick="voteModalDuel('B', event)">
+            <span style="font-size:1.8rem;" id="modalDuelEmojiB">🥖</span>
+            <span style="font-size:0.95rem;font-weight:800;" id="modalDuelNameB">Fairmount</span>
+            <span style="font-size:0.75rem;color:#06b6d4;font-weight:700;" id="modalDuelPctB">46%</span>
           </button>
         </div>
 
-        <!-- Perk 2: Café & Bagel Chaud St-Viateur -->
-        <div class="voucher-card" style="background:var(--bg3);border:1px solid var(--border2);border-radius:14px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;">
-          <div>
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-              <span style="font-size:1.5rem;">🥯</span>
-              <span style="font-weight:800;color:#fbbf24;font-size:0.95rem;">60 🪙</span>
-            </div>
-            <h4 style="margin:0 0 4px;font-size:0.95rem;color:#fff;" id="lbl-perk-bagel-title">St-Viateur Bagel & Espresso</h4>
-            <p style="margin:0 0 12px;font-size:0.76rem;color:var(--muted);" id="lbl-perk-bagel-desc">Hot sesame bagel with cream cheese & double espresso coupon.</p>
-          </div>
-          <button class="shop-btn buy" style="width:100%;padding:8px;" onclick="claimMontrealPerk('bagel', 60, 'St-Viateur Bagel & Espresso')">
-            <span id="btn-claim-bagel">Claim Coupon (60 🪙)</span>
-          </button>
+        <div id="modalDuelVoteFeedback" style="display:none;margin-top:14px;padding:8px 14px;background:rgba(16,185,129,0.15);border:1px solid #10b981;border-radius:10px;color:#34d399;font-size:0.82rem;font-weight:700;">
+          🎉 Vote recorded! You earned +15 🪙 GENIUS IA coins!
         </div>
-
-        <!-- Perk 3: 24h Super-Boost Feed -->
-        <div class="voucher-card" style="background:var(--bg3);border:1px solid var(--border2);border-radius:14px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;">
-          <div>
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-              <span style="font-size:1.5rem;">🚀</span>
-              <span style="font-weight:800;color:#fbbf24;font-size:0.95rem;">80 🪙</span>
-            </div>
-            <h4 style="margin:0 0 4px;font-size:0.95rem;color:#fff;" id="lbl-perk-boost-title">24h Super-Boost Feed</h4>
-            <p style="margin:0 0 12px;font-size:0.76rem;color:var(--muted);" id="lbl-perk-boost-desc">Highlight your next post with glowing neon frame and top visibility.</p>
-          </div>
-          <button class="shop-btn buy" style="width:100%;padding:8px;" onclick="claimMontrealPerk('boost', 80, '24h Super-Boost Feed')">
-            <span id="btn-claim-boost">Claim Boost (80 🪙)</span>
-          </button>
-        </div>
-
-        <!-- Perk 4: VIP Pass Festival -->
-        <div class="voucher-card" style="background:var(--bg3);border:1px solid var(--border2);border-radius:14px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;">
-          <div>
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-              <span style="font-size:1.5rem;">🎟️</span>
-              <span style="font-weight:800;color:#fbbf24;font-size:0.95rem;">250 🪙</span>
-            </div>
-            <h4 style="margin:0 0 4px;font-size:0.95rem;color:#fff;" id="lbl-perk-festival-title">Pass VIP Montreal Festival</h4>
-            <p style="margin:0 0 12px;font-size:0.76rem;color:var(--muted);" id="lbl-perk-festival-desc">Exclusive entry access to partner cultural & electronic events.</p>
-          </div>
-          <button class="shop-btn buy" style="width:100%;padding:8px;" onclick="claimMontrealPerk('festival', 250, 'Pass VIP Montreal Festival')">
-            <span id="btn-claim-festival">Claim Pass (250 🪙)</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Generated Coupon Reveal Box -->
-      <div id="rewardCouponCardReveal" style="display:none;margin-top:16px;background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(6,182,212,0.15));border:1px solid rgba(16,185,129,0.4);border-radius:16px;padding:16px;text-align:center;">
-        <div style="font-size:1.8rem;margin-bottom:4px;">🎉</div>
-        <h4 style="color:#34d399;margin:0 0 4px;font-size:1.05rem;" id="couponClaimedTitle">Voucher Claimed!</h4>
-        <p style="color:#cbd5e1;font-size:0.8rem;margin:0 0 12px;" id="lbl-coupon-inst">Present this digital voucher or code to claim your reward:</p>
-        <div style="display:inline-block;padding:8px 18px;background:#000;border:2px dashed #34d399;border-radius:10px;font-family:monospace;font-size:1.25rem;font-weight:900;color:#fcd34d;letter-spacing:0.12em;margin-bottom:12px;" id="generatedCouponCode">MTL-REAL-8492</div>
-        <div id="kioskQrCodeContainer" style="display:flex;justify-content:center;margin-bottom:8px;"></div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════ -->
-<!-- ⚜️ PASSEPORT FONDATEUR VIP #0084 (HOLOGRAPHIC 3D PASS)      -->
+<!-- ⚜️ PASSEPORT FONDATEUR VIP #0001 (HOLOGRAPHIC 3D PASS)      -->
 <!-- ═══════════════════════════════════════════════════════════ -->
 <div class="overlay" id="founderPassModalOverlay" onclick="closeFounderPassModal(event)">
   <div class="modal founder-pass-modal-card" onclick="event.stopPropagation()" style="max-width:480px;text-align:center;">
@@ -5224,14 +5307,14 @@
               <span style="font-size:1.4rem;">⚜️</span>
               <span style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1rem;color:#ffd700;letter-spacing:0.06em;">REAL MONT VIP</span>
             </div>
-            <span style="background:rgba(255,215,0,0.2);border:1px solid #ffd700;color:#ffd700;font-size:0.7rem;font-weight:900;padding:2px 8px;border-radius:12px;">#0084 / 10,000</span>
+            <span style="background:rgba(255,215,0,0.2);border:1px solid #ffd700;color:#ffd700;font-size:0.7rem;font-weight:900;padding:2px 8px;border-radius:12px;">#0001 / 10,000</span>
           </div>
 
           <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
             <img src="../genius-ia-coin.png" id="founderPassAvatar" style="width:54px;height:54px;border-radius:50%;border:2px solid #ffd700;" alt="VIP">
             <div>
               <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.1rem;color:#fff;" id="founderPassOwnerName">Founding Creator</div>
-              <div style="font-size:0.75rem;color:#94a3b8;" id="lbl-founder-status">Official Founding Member • Montreal & CA</div>
+              <div style="font-size:0.75rem;color:#94a3b8;" id="lbl-founder-status">Official Founder #0001 • Montreal & CA</div>
             </div>
           </div>
 
@@ -5242,7 +5325,7 @@
             </div>
             <div style="text-align:right;">
               <div style="color:var(--muted);font-size:0.68rem;" id="lbl-founder-edition">GENESIS EDITION</div>
-              <div style="font-weight:800;color:#38bdf8;">VERIFIED BADGE 💎</div>
+              <div style="font-weight:800;color:#38bdf8;">FOUNDER BADGE 💎</div>
             </div>
           </div>
         </div>
@@ -7401,18 +7484,49 @@ function applyCommunityLanguage(lang) {
   // REAL MONT Montréal Hub & Duels
   const rmHubTitle = document.getElementById('lbl-realmont-hub-title');
   if (rmHubTitle) rmHubTitle.innerHTML = `<span>${lang === 'fr' ? '⚜️ Hub REAL MONT' : '⚜️ REAL MONT Hub'}</span><span style="font-size:0.65rem;background:linear-gradient(135deg,#f43f5e,#06b6d4);color:#fff;padding:2px 7px;border-radius:12px;font-weight:800;">MTL LIVE</span>`;
-  const navRadar = document.getElementById('lblNavRadar'); if (navRadar) navRadar.textContent = lang === 'fr' ? 'MONT-RADAR™ En Direct' : 'MONT-RADAR™ Live';
+  const navRadar = document.getElementById('lblNavRadar'); if (navRadar) navRadar.textContent = lang === 'fr' ? 'MONT-RADAR™ En Direct' : 'MONT-RADAR™ Live Map';
   const navDuels = document.getElementById('lblNavDuels'); if (navDuels) navDuels.textContent = 'Duels Mont-Royal™';
   const navVoice = document.getElementById('lblNavVoice'); if (navVoice) navVoice.textContent = 'Spark Voice™ 30s';
-  const navRewards = document.getElementById('lblNavRewards'); if (navRewards) navRewards.textContent = lang === 'fr' ? 'Kiosque Récompenses MTL' : 'Rewards Kiosk MTL';
-  const navFounder = document.getElementById('lblNavFounder'); if (navFounder) navFounder.textContent = lang === 'fr' ? 'Pass VIP #0084' : 'VIP Pass #0084';
+  const navFounder = document.getElementById('lblNavFounder'); if (navFounder) navFounder.textContent = lang === 'fr' ? 'Pass VIP #0001' : 'VIP Pass #0001';
   const navChat = document.getElementById('lblNavChat'); if (navChat) navChat.textContent = lang === 'fr' ? 'Salons Discussion MTL' : 'Montreal Chat Rooms';
+  const hdrVipPill = document.getElementById('hdrVipPill'); if (hdrVipPill) hdrVipPill.innerHTML = '<span>⚜️ VIP #0001</span>';
 
-  // Duels Mont-Royal Widget
+  // MONT-RADAR™ Real Live Map Modal
+  const radarTitle = document.getElementById('lbl-radar-modal-title'); if (radarTitle) radarTitle.textContent = lang === 'fr' ? 'MONT-RADAR™ Carte Réelle' : 'MONT-RADAR™ Real Live Map';
+  const radarSub = document.getElementById('lbl-radar-modal-sub'); if (radarSub) radarSub.textContent = lang === 'fr' ? 'Événements réels en direct, points d\'intérêt et géocaches à Montréal' : 'Real-time interactive Montreal events, hot spots & secret geocaches';
+  const btnAddEv = document.getElementById('btnToggleAddEventDrawer'); if (btnAddEv) btnAddEv.innerHTML = `<span>${lang === 'fr' ? '➕ Ajouter un Événement' : '➕ Add Event'}</span>`;
+  const pillAll = document.getElementById('pillCatAll'); if (pillAll) pillAll.innerHTML = `🌐 ${lang === 'fr' ? 'Tous les Événements' : 'All Events'} (<span id="countAllPins">${typeof getAllMontrealEvents === 'function' ? getAllMontrealEvents().length : 7}</span>)`;
+  const pillSports = document.getElementById('pillCatSports'); if (pillSports) pillSports.textContent = lang === 'fr' ? '🚴 Sports & Cyclisme' : '🚴 Sports & Cycling';
+  const pillMusic = document.getElementById('pillCatMusic'); if (pillMusic) pillMusic.textContent = lang === 'fr' ? '🎵 Musique & Festivals' : '🎵 Music & Festivals';
+  const pillFood = document.getElementById('pillCatFood'); if (pillFood) pillFood.textContent = lang === 'fr' ? '🥯 Gastronomie & MTL' : '🥯 Food & Gourmet';
+  const pillArt = document.getElementById('pillCatArt'); if (pillArt) pillArt.textContent = lang === 'fr' ? '🎨 Art & Culture' : '🎨 Art & Culture';
+  const pillDrop = document.getElementById('pillCatDrop'); if (pillDrop) pillDrop.textContent = lang === 'fr' ? '💎 Drops Secrets' : '💎 Secret Drops';
+  const addEvTitle = document.getElementById('lbl-add-event-drawer-title'); if (addEvTitle) addEvTitle.textContent = lang === 'fr' ? 'Ajouter un Événement Réel à Montréal' : 'Add Montreal Live Event';
+  const addEvName = document.getElementById('lbl-add-event-name'); if (addEvName) addEvName.textContent = lang === 'fr' ? 'Titre de l\'Événement' : 'Event Title / Name';
+  const addEvCat = document.getElementById('lbl-add-event-category'); if (addEvCat) addEvCat.textContent = lang === 'fr' ? 'Catégorie' : 'Category';
+  const addEvLoc = document.getElementById('lbl-add-event-location'); if (addEvLoc) addEvLoc.textContent = lang === 'fr' ? 'Emplacement à Montréal' : 'Montreal Location';
+  const addEvTime = document.getElementById('lbl-add-event-time'); if (addEvTime) addEvTime.textContent = lang === 'fr' ? 'Horaire / Heure' : 'Time / Schedule';
+  const addEvDesc = document.getElementById('lbl-add-event-desc'); if (addEvDesc) addEvDesc.textContent = lang === 'fr' ? 'Description & Points Forts' : 'Description & Highlights';
+  const btnCancelEv = document.getElementById('btnCancelAddEvent'); if (btnCancelEv) btnCancelEv.textContent = lang === 'fr' ? 'Annuler' : 'Cancel';
+  const btnSubmitEv = document.getElementById('btnSubmitAddEvent'); if (btnSubmitEv) btnSubmitEv.innerHTML = `<span>${lang === 'fr' ? '🚀 Publier sur le Radar (+20 🪙)' : '🚀 Publish to Radar (+20 🪙)'}</span>`;
+
+  // Duels Mont-Royal™ Modal & Widget
   const duelBadge = document.getElementById('lbl-duel-badge'); if (duelBadge) duelBadge.textContent = 'Duels Mont-Royal™';
   const duelLive = document.getElementById('lbl-duel-live'); if (duelLive) duelLive.textContent = lang === 'fr' ? 'EN DIRECT MTL' : 'LIVE MTL';
   const duelSub = document.getElementById('duelSubtitleText'); if (duelSub) duelSub.textContent = lang === 'fr' ? 'Votez pour votre favori montréalais! Gagnez +15 🪙 GENIUS IA immédiatement.' : 'Vote for your Montreal favorite! Earn +15 🪙 GENIUS IA coins instantly.';
-  const duelHint = document.getElementById('lblDuelRewardHint'); if (duelHint) duelHint.textContent = lang === 'fr' ? '🎁 +15 🪙 Récompense par vote' : '🎁 +15 🪙 Reward per vote';
+  const duelHint = document.getElementById('lblDuelRewardHint'); if (duelHint) duelHint.textContent = lang === 'fr' ? '🎁 +15 🪙 Récompense par vote • Cliquez pour tous les duels' : '🎁 +15 🪙 Reward per vote • Click for All Duels';
+  const duelsModalTitle = document.getElementById('lbl-duels-modal-title'); if (duelsModalTitle) duelsModalTitle.textContent = 'Duels Mont-Royal™';
+  const duelsModalSub = document.getElementById('lbl-duels-modal-sub'); if (duelsModalSub) duelsModalSub.textContent = lang === 'fr' ? 'Votez pour vos favoris montréalais et gagnez +15 🪙 GENIUS IA !' : 'Vote for your Montreal favorites & earn +15 🪙 GENIUS IA coins!';
+  const modalRewardHint = document.getElementById('lblModalDuelRewardHint'); if (modalRewardHint) modalRewardHint.textContent = lang === 'fr' ? '🎁 +15 🪙 Récompense par vote' : '🎁 +15 🪙 Reward per vote';
+  const tab0 = document.getElementById('tabDuel0'); if (tab0) tab0.textContent = lang === 'fr' ? '🥯 Bagels: St-Viateur vs Fairmount' : '🥯 Bagels: St-Viateur vs Fairmount';
+  const tab1 = document.getElementById('tabDuel1'); if (tab1) tab1.textContent = lang === 'fr' ? '🚴 Cyclisme vs 🏎️ F1' : '🚴 Cycling vs 🏎️ F1';
+  const tab2 = document.getElementById('tabDuel2'); if (tab2) tab2.textContent = lang === 'fr' ? '🍟 Banquise vs Claudette' : '🍟 Banquise vs Claudette';
+  const tab3 = document.getElementById('tabDuel3'); if (tab3) tab3.textContent = lang === 'fr' ? '☕ Olimpico vs Tommy' : '☕ Olimpico vs Tommy';
+
+  // Founder Pass VIP #0001
+  const founderStatus = document.getElementById('lbl-founder-status'); if (founderStatus) founderStatus.textContent = lang === 'fr' ? 'Fondateur Officiel #0001 • Montréal & CA' : 'Official Founder #0001 • Montreal & CA';
+  const founderPerks = document.getElementById('lbl-founder-perks'); if (founderPerks) founderPerks.textContent = lang === 'fr' ? 'STATUT À VIE' : 'LIFETIME STATUS';
+  const founderEdition = document.getElementById('lbl-founder-edition'); if (founderEdition) founderEdition.textContent = lang === 'fr' ? 'ÉDITION GENESIS' : 'GENESIS EDITION';
 
   // AI Hook & Spark Voice in Create Modal
   const aiHookLbl = document.getElementById('lblAiHook'); if (aiHookLbl) aiHookLbl.textContent = lang === 'fr' ? 'Générer Accroche IA' : 'Generate AI Hook';
@@ -11943,16 +12057,66 @@ function playSoundFx(type) {
   }
 }
 
-// 2. DUELS MONT-ROYAL™ ENGINE
-let duelVotes = {
-  A: parseInt(localStorage.getItem('duel_votes_a') || '1248', 10),
-  B: parseInt(localStorage.getItem('duel_votes_b') || '1072', 10),
-  userVoted: localStorage.getItem('duel_user_voted') || null
-};
+// 2. DUELS MONT-ROYAL™ MULTI-DUEL VIRAL ENGINE
+const REALMONT_DUELS = [
+  {
+    id: 'bagels',
+    cat: 'GASTRONOMIE MONTRÉALAISE',
+    titleEn: 'St-Viateur Bagel 🥯 vs Fairmount Bagel 🥖',
+    titleFr: 'Bagel St-Viateur 🥯 vs Bagel Fairmount 🥖',
+    descEn: 'The century-old Montreal wood-fired bagel duel. Pick your camp!',
+    descFr: 'Le duel centenaire des bagels au feu de bois à Montréal. Choisissez votre camp !',
+    teamA: { name: 'St-Viateur', emoji: '🥯', votes: 1248 },
+    teamB: { name: 'Fairmount', emoji: '🥖', votes: 1072 }
+  },
+  {
+    id: 'cycling_f1',
+    cat: 'WORLD TOUR & ADRENALINE',
+    titleEn: 'Grand Prix Cycliste 🚴 vs F1 Grand Prix Canada 🏎️',
+    titleFr: 'Grand Prix Cycliste 🚴 vs Grand Prix F1 Canada 🏎️',
+    descEn: 'World Tour mountain battle on Mont-Royal vs 350 km/h Formula 1 thrills on Île Notre-Dame!',
+    descFr: 'Bataille de montagne WorldTour sur le Mont-Royal vs frissons Formule 1 à 350 km/h sur l\'Île Notre-Dame !',
+    teamA: { name: 'Cycliste MTL', emoji: '🚴', votes: 1420 },
+    teamB: { name: 'F1 Canada', emoji: '🏎️', votes: 1530 }
+  },
+  {
+    id: 'poutine',
+    cat: 'COMFORT FOOD MTL',
+    titleEn: 'La Banquise 🍟 vs Chez Claudette 🧀',
+    titleFr: 'La Banquise 🍟 vs Chez Claudette 🧀',
+    descEn: '24/7 legendary Plateau poutine vs authentic Laurier squeaky-cheese classic!',
+    descFr: 'Légende 24h/24 du Plateau vs classique authentique au fromage squouik-squouik de Laurier !',
+    teamA: { name: 'La Banquise', emoji: '🍟', votes: 1680 },
+    teamB: { name: 'Chez Claudette', emoji: '🧀', votes: 1390 }
+  },
+  {
+    id: 'coffee',
+    cat: 'CAFÉS & CREATIVITY',
+    titleEn: 'Café Olimpico ☕ vs Tommy Café 🍵',
+    titleFr: 'Café Olimpico ☕ vs Tommy Café 🍵',
+    descEn: 'Mile End Italian espresso institution vs Vieux-Montréal neoclassical chic!',
+    descFr: 'Institution italienne du Mile End vs chic néoclassique du Vieux-Montréal !',
+    teamA: { name: 'Olimpico', emoji: '☕', votes: 940 },
+    teamB: { name: 'Tommy Café', emoji: '🍵', votes: 890 }
+  }
+];
+
+let activeModalDuelIndex = 0;
+
+function getDuelData(index) {
+  const d = REALMONT_DUELS[index];
+  if (!d) return null;
+  const votesA = parseInt(localStorage.getItem(`duel_${d.id}_votes_a`) || d.teamA.votes, 10);
+  const votesB = parseInt(localStorage.getItem(`duel_${d.id}_votes_b`) || d.teamB.votes, 10);
+  const userVoted = localStorage.getItem(`duel_${d.id}_user_voted`) || null;
+  return { ...d, currentVotesA: votesA, currentVotesB: votesB, userVoted };
+}
 
 function updateDuelMeterUI() {
-  const total = duelVotes.A + duelVotes.B;
-  const pctA = Math.round((duelVotes.A / total) * 100);
+  const d = getDuelData(0);
+  if (!d) return;
+  const total = d.currentVotesA + d.currentVotesB;
+  const pctA = Math.round((d.currentVotesA / total) * 100);
   const pctB = 100 - pctA;
   const fillA = document.getElementById('duelEnergyFillA');
   const fillB = document.getElementById('duelEnergyFillB');
@@ -11962,25 +12126,152 @@ function updateDuelMeterUI() {
   const btnB = document.getElementById('btnDuelVoteB');
   if (fillA) { fillA.style.width = pctA + '%'; fillA.textContent = pctA + '%'; }
   if (fillB) { fillB.style.width = pctB + '%'; fillB.textContent = pctB + '%'; }
-  if (countA) countA.textContent = duelVotes.A.toLocaleString() + ' votes';
-  if (countB) countB.textContent = duelVotes.B.toLocaleString() + ' votes';
-  if (btnA) btnA.classList.toggle('voted', duelVotes.userVoted === 'A');
-  if (btnB) btnB.classList.toggle('voted', duelVotes.userVoted === 'B');
+  if (countA) countA.textContent = d.currentVotesA.toLocaleString() + ' votes';
+  if (countB) countB.textContent = d.currentVotesB.toLocaleString() + ' votes';
+  if (btnA) btnA.classList.toggle('voted', d.userVoted === 'A');
+  if (btnB) btnB.classList.toggle('voted', d.userVoted === 'B');
 }
 
-function voteDuel(team) {
-  if (duelVotes.userVoted) {
-    toast(getCommunityLang() === 'fr' ? 'Vous avez déjà voté pour ce duel!' : 'You already voted on this duel!', 'info');
+function openDuelsModal(index = 0) {
+  const m = document.getElementById('duelsModalOverlay');
+  if (m) {
+    m.classList.add('open');
+    switchModalDuel(index);
+  }
+}
+
+function closeDuelsModal(e) {
+  if (e && e.target !== document.getElementById('duelsModalOverlay') && !e.target.classList.contains('mc')) return;
+  const m = document.getElementById('duelsModalOverlay');
+  if (m) m.classList.remove('open');
+}
+
+function switchModalDuel(index, tabEl) {
+  activeModalDuelIndex = index;
+  const d = getDuelData(index);
+  if (!d) return;
+  const lang = getCommunityLang();
+
+  document.querySelectorAll('.duel-modal-tab-pill').forEach((btn, idx) => {
+    btn.classList.toggle('active', idx === index);
+  });
+
+  const catEl = document.getElementById('modalDuelCategory');
+  const titleEl = document.getElementById('modalDuelTitle');
+  const descEl = document.getElementById('modalDuelDesc');
+  const fillA = document.getElementById('modalDuelFillA');
+  const fillB = document.getElementById('modalDuelFillB');
+  const countA = document.getElementById('modalDuelVotesCountA');
+  const countB = document.getElementById('modalDuelVotesCountB');
+  const btnA = document.getElementById('btnModalVoteA');
+  const btnB = document.getElementById('btnModalVoteB');
+  const emojiA = document.getElementById('modalDuelEmojiA');
+  const emojiB = document.getElementById('modalDuelEmojiB');
+  const nameA = document.getElementById('modalDuelNameA');
+  const nameB = document.getElementById('modalDuelNameB');
+  const pctAEl = document.getElementById('modalDuelPctA');
+  const pctBEl = document.getElementById('modalDuelPctB');
+  const feedback = document.getElementById('modalDuelVoteFeedback');
+
+  if (catEl) catEl.textContent = d.cat;
+  if (titleEl) titleEl.textContent = lang === 'fr' ? d.titleFr : d.titleEn;
+  if (descEl) descEl.textContent = lang === 'fr' ? d.descFr : d.descEn;
+  if (emojiA) emojiA.textContent = d.teamA.emoji;
+  if (emojiB) emojiB.textContent = d.teamB.emoji;
+  if (nameA) nameA.textContent = d.teamA.name;
+  if (nameB) nameB.textContent = d.teamB.name;
+
+  const total = d.currentVotesA + d.currentVotesB;
+  const pctA = Math.round((d.currentVotesA / total) * 100);
+  const pctB = 100 - pctA;
+
+  if (fillA) { fillA.style.width = pctA + '%'; fillA.textContent = pctA + '%'; }
+  if (fillB) { fillB.style.width = pctB + '%'; fillB.textContent = pctB + '%'; }
+  if (countA) countA.textContent = d.currentVotesA.toLocaleString() + ' votes';
+  if (countB) countB.textContent = d.currentVotesB.toLocaleString() + ' votes';
+  if (pctAEl) pctAEl.textContent = pctA + '%';
+  if (pctBEl) pctBEl.textContent = pctB + '%';
+
+  if (btnA) btnA.classList.toggle('voted', d.userVoted === 'A');
+  if (btnB) btnB.classList.toggle('voted', d.userVoted === 'B');
+
+  if (feedback) {
+    if (d.userVoted) {
+      feedback.style.display = 'block';
+      feedback.textContent = lang === 'fr' ? `✓ Vous avez voté pour ${d.userVoted === 'A' ? d.teamA.name : d.teamB.name}!` : `✓ You voted for ${d.userVoted === 'A' ? d.teamA.name : d.teamB.name}!`;
+    } else {
+      feedback.style.display = 'none';
+    }
+  }
+}
+
+function voteModalDuel(team, event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  const d = getDuelData(activeModalDuelIndex);
+  if (!d) return;
+  const lang = getCommunityLang();
+  if (d.userVoted) {
+    toast(lang === 'fr' ? 'Vous avez déjà voté pour ce duel !' : 'You already voted on this duel!', 'info');
+    return;
+  }
+
+  playSoundFx('duel');
+  const newVotesA = team === 'A' ? d.currentVotesA + 1 : d.currentVotesA;
+  const newVotesB = team === 'B' ? d.currentVotesB + 1 : d.currentVotesB;
+  localStorage.setItem(`duel_${d.id}_votes_a`, newVotesA);
+  localStorage.setItem(`duel_${d.id}_votes_b`, newVotesB);
+  localStorage.setItem(`duel_${d.id}_user_voted`, team);
+
+  if (activeModalDuelIndex === 0) {
+    localStorage.setItem('duel_votes_a', newVotesA);
+    localStorage.setItem('duel_votes_b', newVotesB);
+    localStorage.setItem('duel_user_voted', team);
+    updateDuelMeterUI();
+  }
+
+  if (typeof addCoinsLocally === 'function') {
+    addCoinsLocally(15, `Duel: ${d.titleEn}`);
+  } else if (typeof giveUserCoins === 'function') {
+    giveUserCoins(15, `Duel: ${d.titleEn}`);
+  } else {
+    const cur = parseInt(localStorage.getItem('genius_user_coins') || '0', 10);
+    localStorage.setItem('genius_user_coins', cur + 15);
+    const bEl = document.getElementById('hdrCoinBalance');
+    if (bEl) bEl.textContent = cur + 15;
+  }
+  playSoundFx('coin');
+
+  switchModalDuel(activeModalDuelIndex);
+  toast(lang === 'fr' ? '🎉 Vote enregistré ! +15 🪙 GENIUS IA' : '🎉 Vote recorded! +15 🪙 GENIUS IA', 'success');
+}
+
+function voteDuel(team, event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  const d = getDuelData(0);
+  if (!d) return;
+  const lang = getCommunityLang();
+  if (d.userVoted) {
+    toast(lang === 'fr' ? 'Vous avez déjà voté pour ce duel !' : 'You already voted on this duel!', 'info');
     return;
   }
   playSoundFx('duel');
-  duelVotes[team]++;
-  duelVotes.userVoted = team;
-  localStorage.setItem('duel_votes_' + team.toLowerCase(), duelVotes[team]);
+  const newVotesA = team === 'A' ? d.currentVotesA + 1 : d.currentVotesA;
+  const newVotesB = team === 'B' ? d.currentVotesB + 1 : d.currentVotesB;
+  localStorage.setItem('duel_bagels_votes_a', newVotesA);
+  localStorage.setItem('duel_bagels_votes_b', newVotesB);
+  localStorage.setItem('duel_bagels_user_voted', team);
+  localStorage.setItem('duel_votes_a', newVotesA);
+  localStorage.setItem('duel_votes_b', newVotesB);
   localStorage.setItem('duel_user_voted', team);
+
   updateDuelMeterUI();
 
-  // Award +15 coins
   if (typeof addCoinsLocally === 'function') {
     addCoinsLocally(15, 'Duels Mont-Royal Vote');
   } else if (typeof giveUserCoins === 'function') {
@@ -11992,97 +12283,287 @@ function voteDuel(team) {
     if (bEl) bEl.textContent = cur + 15;
   }
   playSoundFx('coin');
-  toast(getCommunityLang() === 'fr' ? 'Vote enregistré! +15 🪙 GENIUS IA' : 'Vote recorded! +15 🪙 GENIUS IA', 'success');
+  toast(lang === 'fr' ? '🎉 Vote enregistré ! +15 🪙 GENIUS IA' : '🎉 Vote recorded! +15 🪙 GENIUS IA', 'success');
 }
 
 function scrollToDuelsWidget() {
-  const w = document.getElementById('duelsMontRoyalWidget');
-  if (w) {
-    w.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    w.style.boxShadow = '0 0 25px rgba(244,63,94,0.6)';
-    setTimeout(() => { w.style.boxShadow = ''; }, 1800);
+  if (window.innerWidth <= 860) {
+    openDuelsModal(0);
+  } else {
+    const w = document.getElementById('duelsMontRoyalWidget');
+    if (w) {
+      w.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      w.style.boxShadow = '0 0 25px rgba(244,63,94,0.6)';
+      setTimeout(() => { w.style.boxShadow = ''; }, 1800);
+    } else {
+      openDuelsModal(0);
+    }
   }
 }
 
-// 3. MONT-RADAR™ INTERACTIVE HEATMAP & GEOCACHES
-const radarSpotsData = {
-  'tam-tams': {
-    nameEn: 'Mont-Royal Tam-Tams',
-    nameFr: 'Tam-Tams du Mont-Royal',
-    descEn: 'Sunday drum circles, sun vibes, and creative Montreal gatherings.',
-    descFr: 'Cercles de tam-tams du dimanche, ambiance estivale et rencontres créatives.',
+// 3. MONT-RADAR™ REAL LEAFLET MAP ENGINE & COMMUNITY EVENTS
+let realMontrealLeafletMap = null;
+let radarLeafletMarkers = [];
+let activeRadarFilter = 'all';
+let selectedRadarEvent = null;
+let mapUserPlacementCoords = null;
+let mapPlacementTempMarker = null;
+
+const DEFAULT_REALMONT_EVENTS = [
+  {
+    id: 'grand-prix-cycliste',
+    titleEn: 'Grand Prix Cycliste de Montréal (UCI WorldTour) - Grand Final!',
+    titleFr: 'Grand Prix Cycliste de Montréal (UCI WorldTour) - Grande Finale !',
+    cat: 'sports',
+    icon: '🚴',
+    badge: 'WORLD TOUR LIVE 🚴',
+    coords: [45.5175, -73.5855],
+    locationName: 'Parc Jeanne-Mance / Avenue du Parc',
+    descEn: 'Today is the decisive stage! 18 laps of the Mont-Royal circuit, Camillien-Houde wall and Côte de la Polytechnique. Watch the world\'s elite climbers battle live!',
+    descFr: 'Aujourd\'hui c\'est l\'étape décisive ! 18 tours du circuit Mont-Royal, montée Camillien-Houde et Côte de la Polytechnique. Venez encourager l\'élite mondiale !',
+    time: 'Today / Aujourd\'hui • 10:00 - 16:45',
+    color: '#f43f5e'
+  },
+  {
+    id: 'tam-tams',
+    titleEn: 'Mont-Royal Tam-Tams Drum Circle',
+    titleFr: 'Tam-Tams du Mont-Royal',
+    cat: 'music',
     icon: '🥁',
-    tag: 'Mont-Royal'
+    badge: 'ICONIC MTL 🥁',
+    coords: [45.5134, -73.5873],
+    locationName: 'Monument George-Étienne Cartier',
+    descEn: 'Legendary Sunday drum circles, sun vibes, dance circles & creative gatherings on the mountain lawn.',
+    descFr: 'Cercles de tam-tams légendaires du dimanche, soleil, danse et rassemblement créatif sur la pelouse du mont.',
+    time: 'Sunday • 12:00 - 19:00',
+    color: '#06b6d4'
   },
-  'crescent': {
-    nameEn: 'Crescent Street & Downtown',
-    nameFr: 'Rue Crescent & Centre-Ville',
-    descEn: 'Nightlife hub, bustling cyber cafes and digital creative lounges.',
-    descFr: 'Cœur de la vie nocturne, cyber-cafés branchés et salons créatifs.',
-    icon: '🍸',
-    tag: 'Downtown'
+  {
+    id: 'piknic-electronik',
+    titleEn: 'Piknic Électronik Montréal',
+    titleFr: 'Piknic Électronik Montréal',
+    cat: 'music',
+    icon: '🎧',
+    badge: 'DANCE & SUN 🎧',
+    coords: [45.5108, -73.5332],
+    locationName: 'Parc Jean-Drapeau, Plaine des Jeux',
+    descEn: 'Open-air electronic music dance festival under the iconic Calder sculpture with views of the Montreal skyline.',
+    descFr: 'Festival de musique électronique en plein air sous la sculpture de Calder avec vue imprenable sur Montréal.',
+    time: 'Weekend • 14:00 - 22:00',
+    color: '#a855f7'
   },
-  'old-port': {
-    nameEn: 'Old Port of Montreal',
-    nameFr: 'Vieux-Port de Montréal',
-    descEn: 'Historic cobblestone streets, Ferris wheel 3D views and riverside art.',
-    descFr: 'Rues pavées historiques, grande roue 3D et art au bord du fleuve.',
+  {
+    id: 'vieux-port',
+    titleEn: 'Vieux-Port Sunset & Street Food Quai',
+    titleFr: 'Vieux-Port Coucher de Soleil & Street Food',
+    cat: 'food',
     icon: '⛵',
-    tag: 'Vieux-Port'
+    badge: 'RIVERSIDE VIBES ⛵',
+    coords: [45.5074, -73.5518],
+    locationName: 'Quai de l\'Horloge & Jacques-Cartier',
+    descEn: 'Historic cobblestones, Ferris wheel panoramic view, street performers & St. Lawrence riverside sunset.',
+    descFr: 'Rues pavées historiques, grande roue panoramique, artistes de rue et coucher de soleil sur le fleuve Saint-Laurent.',
+    time: 'Daily • 12:00 - 23:00',
+    color: '#f59e0b'
   },
-  'mile-end': {
-    nameEn: 'Mile End & Plateau',
-    nameFr: 'Mile End & Plateau-Mont-Royal',
-    descEn: 'Artistic studios, bagel bakeries, indie game studios & WebGL devs.',
-    descFr: 'Ateliers artistiques, boulangeries de bagels, studios de jeux et dévs WebGL.',
+  {
+    id: 'mile-end-bagels',
+    titleEn: 'Mile End Artisan Bagels & AI Lounges',
+    titleFr: 'Mile End Bagels & Salons Créatifs',
+    cat: 'food',
     icon: '🥯',
-    tag: 'Mile End'
+    badge: 'GOURMET MTL 🥯',
+    coords: [45.5226, -73.5982],
+    locationName: 'Rue St-Viateur & Fairmount',
+    descEn: 'Fresh wood-fired bagels 24/7, third-wave espresso cafes, indie game studios and WebGL developers.',
+    descFr: 'Bagels chauds au four à bois 24h/24, cafés troisième vague, studios de jeux vidéo et développeurs WebGL.',
+    time: '24/7 Open',
+    color: '#10b981'
   },
-  'geocache-drop': {
-    nameEn: 'Secret Geocache Drop 💎',
-    nameFr: 'Drop Géocache Secrète 💎',
-    descEn: 'Exclusive digital cache located in Parc Jean-Drapeau! Claim +100 🪙',
-    descFr: 'Cache numérique exclusive située au Parc Jean-Drapeau! Réclamez +100 🪙',
+  {
+    id: 'circuit-f1',
+    titleEn: 'Circuit Gilles-Villeneuve Open Cycling & Sprint',
+    titleFr: 'Circuit Gilles-Villeneuve Vélo & Sprint',
+    cat: 'sports',
+    icon: '🏎️',
+    badge: 'F1 CIRCUIT 🏎️',
+    coords: [45.5005, -73.5262],
+    locationName: 'Île Notre-Dame, Circuit Gilles-Villeneuve',
+    descEn: 'Ride or run on the asphalt of the Formula 1 Canadian Grand Prix track with scenic river views.',
+    descFr: 'Roulez ou courez sur l\'asphalte officiel du Grand Prix du Canada de Formule 1 avec vue panoramique.',
+    time: 'Daily • 06:00 - 21:00',
+    color: '#ef4444'
+  },
+  {
+    id: 'secret-drop-1',
+    titleEn: 'Secret Geocache Drop #1 💎',
+    titleFr: 'Drop Géocache Secrète #1 💎',
+    cat: 'drop',
     icon: '💎',
-    tag: 'Secret Drop',
+    badge: 'SECRET DROP +100 🪙',
+    coords: [45.5048, -73.5876],
+    locationName: 'Belvédère Kondiaronk (Mont-Royal Lookout)',
+    descEn: 'Exclusive digital cache at the Montreal panoramic summit! Claim +100 🪙 GENIUS IA coins!',
+    descFr: 'Cache numérique exclusive au sommet panoramique de Montréal ! Réclamez +100 🪙 GENIUS IA !',
+    time: 'Active Now',
+    color: '#ffd700',
     isDrop: true
   }
-};
-let activeRadarSpotKey = 'tam-tams';
+];
 
-function openRadarModal() {
-  const m = document.getElementById('radarMapModal');
-  if (m) {
-    m.classList.add('open');
-    selectRadarSpot('tam-tams');
+function getAllMontrealEvents() {
+  const localSaved = JSON.parse(localStorage.getItem('realmont_custom_radar_events') || '[]');
+  return [...DEFAULT_REALMONT_EVENTS, ...localSaved];
+}
+
+function initMontrealRealMap() {
+  const mapContainer = document.getElementById('realMontrealMap');
+  if (!mapContainer) return;
+  if (typeof L === 'undefined') {
+    console.warn('Leaflet.js not loaded yet');
+    return;
+  }
+  if (!realMontrealLeafletMap) {
+    realMontrealLeafletMap = L.map('realMontrealMap', {
+      center: [45.5125, -73.5750],
+      zoom: 12.5,
+      zoomControl: true
+    });
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 19
+    }).addTo(realMontrealLeafletMap);
+
+    realMontrealLeafletMap.on('click', (e) => {
+      const lat = e.latlng.lat.toFixed(5);
+      const lng = e.latlng.lng.toFixed(5);
+      mapUserPlacementCoords = [parseFloat(lat), parseFloat(lng)];
+
+      if (mapPlacementTempMarker) {
+        realMontrealLeafletMap.removeLayer(mapPlacementTempMarker);
+      }
+
+      const tempIcon = L.divIcon({
+        className: 'custom-leaflet-divicon',
+        html: `<div class="radar-leaflet-pin" style="background:#10b981;border-color:#34d399;"><span class="pin-pulse" style="background:rgba(16,185,129,0.5);"></span><span style="font-size:1.1rem;">📍</span></div>`,
+        iconSize: [36, 36],
+        iconAnchor: [18, 18]
+      });
+
+      mapPlacementTempMarker = L.marker([lat, lng], { icon: tempIcon }).addTo(realMontrealLeafletMap);
+      
+      toggleRadarAddEventDrawer(true);
+      const locSelect = document.getElementById('newEventLocationPreset');
+      if (locSelect) locSelect.value = 'custom';
+      toast(getCommunityLang() === 'fr' ? `Coordonnées sélectionnées: ${lat}, ${lng}` : `Coords selected: ${lat}, ${lng}`, 'info');
+    });
+  }
+
+  renderRadarMarkers();
+  setTimeout(() => {
+    if (realMontrealLeafletMap) realMontrealLeafletMap.invalidateSize();
+  }, 150);
+}
+
+function renderRadarMarkers() {
+  if (!realMontrealLeafletMap) return;
+
+  radarLeafletMarkers.forEach(m => realMontrealLeafletMap.removeLayer(m));
+  radarLeafletMarkers = [];
+
+  const allEvents = getAllMontrealEvents();
+  const filtered = activeRadarFilter === 'all'
+    ? allEvents
+    : allEvents.filter(ev => ev.cat === activeRadarFilter);
+
+  const countEl = document.getElementById('countAllPins');
+  if (countEl) countEl.textContent = allEvents.length;
+
+  const lang = getCommunityLang();
+
+  filtered.forEach(ev => {
+    const pinColor = ev.color || '#06b6d4';
+    const pinIconHtml = `
+      <div class="radar-leaflet-pin" style="background:${pinColor};border-color:#fff;" title="${lang === 'fr' ? ev.titleFr : ev.titleEn}">
+        <span class="pin-pulse" style="background:${pinColor}88;"></span>
+        <span style="font-size:1.1rem;">${ev.icon || '📍'}</span>
+      </div>
+    `;
+
+    const customDivIcon = L.divIcon({
+      className: 'custom-leaflet-divicon',
+      html: pinIconHtml,
+      iconSize: [36, 36],
+      iconAnchor: [18, 18],
+      popupAnchor: [0, -18]
+    });
+
+    const marker = L.marker(ev.coords, { icon: customDivIcon }).addTo(realMontrealLeafletMap);
+
+    const popupHtml = `
+      <div style="font-family:'Inter',sans-serif;min-width:200px;">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+          <span style="font-size:1.2rem;">${ev.icon}</span>
+          <strong style="color:#fff;font-size:0.9rem;">${lang === 'fr' ? (ev.titleFr || ev.titleEn) : ev.titleEn}</strong>
+        </div>
+        <div style="font-size:0.7rem;color:#38bdf8;margin-bottom:6px;font-weight:700;">${ev.locationName || 'Montréal'} • ${ev.time || 'Live'}</div>
+        <p style="font-size:0.75rem;color:#cbd5e1;margin:0 0 8px;line-height:1.35;">${lang === 'fr' ? (ev.descFr || ev.descEn) : ev.descEn}</p>
+        <button onclick="selectRadarSpot('${ev.id}')" style="width:100%;padding:5px 8px;background:linear-gradient(135deg,#06b6d4,#3b82f6);border:none;border-radius:6px;color:#fff;font-size:0.75rem;font-weight:700;cursor:pointer;">
+          ${lang === 'fr' ? 'Voir Détails 🔍' : 'View Details 🔍'}
+        </button>
+      </div>
+    `;
+
+    marker.bindPopup(popupHtml);
+    marker.on('click', () => {
+      selectRadarSpot(ev.id);
+    });
+
+    radarLeafletMarkers.push(marker);
+  });
+
+  if (!selectedRadarEvent) {
+    selectRadarSpot('grand-prix-cycliste');
   }
 }
-function closeRadarModal(e) {
-  if (e && e.target !== document.getElementById('radarMapModal') && !e.target.classList.contains('mc')) return;
-  const m = document.getElementById('radarMapModal');
-  if (m) m.classList.remove('open');
+
+function filterRadarCategory(cat, pillBtn) {
+  activeRadarFilter = cat;
+  document.querySelectorAll('.radar-cat-pill').forEach(btn => btn.classList.remove('active'));
+  if (pillBtn) pillBtn.classList.add('active');
+  renderRadarMarkers();
 }
 
-function selectRadarSpot(key) {
-  activeRadarSpotKey = key;
-  const spot = radarSpotsData[key];
-  if (!spot) return;
+function selectRadarSpot(eventId) {
+  const allEvents = getAllMontrealEvents();
+  const ev = allEvents.find(e => e.id === eventId);
+  if (!ev) return;
+  selectedRadarEvent = ev;
+
   const lang = getCommunityLang();
   const title = document.getElementById('activeSpotTitle');
   const desc = document.getElementById('activeSpotDesc');
   const icon = document.getElementById('activeSpotIcon');
+  const badge = document.getElementById('activeSpotBadge');
+  const meta = document.getElementById('activeSpotMeta');
   const btnFilter = document.getElementById('btnFilterByRadarSpot');
   const btnDrop = document.getElementById('btnUnlockDropSpot');
 
-  if (title) title.textContent = lang === 'fr' ? spot.nameFr : spot.nameEn;
-  if (desc) desc.textContent = lang === 'fr' ? spot.descFr : spot.descEn;
-  if (icon) icon.textContent = spot.icon;
+  if (title) title.textContent = lang === 'fr' ? (ev.titleFr || ev.titleEn) : ev.titleEn;
+  if (desc) desc.textContent = lang === 'fr' ? (ev.descFr || ev.descEn) : ev.descEn;
+  if (icon) icon.textContent = ev.icon || '📍';
+  if (badge) badge.textContent = ev.badge || (ev.cat ? ev.cat.toUpperCase() : 'MTL LIVE');
+  if (meta) {
+    meta.innerHTML = `<span>📍 ${ev.locationName || 'Montréal'}</span><span>⏱️ ${ev.time || 'Live'}</span>`;
+  }
 
-  if (spot.isDrop) {
+  if (ev.isDrop) {
     if (btnFilter) btnFilter.style.display = 'none';
     if (btnDrop) {
       btnDrop.style.display = 'inline-flex';
-      const claimed = localStorage.getItem('radar_secret_drop_claimed');
+      const claimed = localStorage.getItem(`radar_drop_${ev.id}_claimed`);
       btnDrop.disabled = !!claimed;
       btnDrop.textContent = claimed ? (lang === 'fr' ? '✓ Déjà Réclamé' : '✓ Already Claimed') : (lang === 'fr' ? '💎 Réclamer le Drop' : '💎 Claim Drop');
     }
@@ -12090,22 +12571,157 @@ function selectRadarSpot(key) {
     if (btnFilter) btnFilter.style.display = 'inline-flex';
     if (btnDrop) btnDrop.style.display = 'none';
   }
+
+  if (realMontrealLeafletMap && ev.coords) {
+    realMontrealLeafletMap.panTo(ev.coords, { animate: true, duration: 0.8 });
+  }
+}
+
+function toggleRadarAddEventDrawer(forceState) {
+  const drawer = document.getElementById('radarAddEventDrawer');
+  if (!drawer) return;
+  const isShown = forceState !== undefined ? forceState : drawer.style.display === 'block';
+  drawer.style.display = isShown ? 'none' : 'block';
+  if (!isShown) {
+    drawer.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+function onRadarLocationPresetChange(val) {
+  const presets = {
+    'jeanne-mance': [45.5175, -73.5855],
+    'tam-tams': [45.5134, -73.5873],
+    'vieux-port': [45.5074, -73.5518],
+    'jean-drapeau': [45.5108, -73.5332],
+    'mile-end': [45.5226, -73.5982],
+    'spectacles': [45.5078, -73.5678],
+    'notre-dame': [45.5005, -73.5262]
+  };
+  if (presets[val]) {
+    mapUserPlacementCoords = presets[val];
+    if (realMontrealLeafletMap) {
+      realMontrealLeafletMap.panTo(mapUserPlacementCoords, { animate: true });
+    }
+  }
+}
+
+function submitRadarCustomEvent() {
+  const titleInp = document.getElementById('newEventTitle');
+  const catInp = document.getElementById('newEventCategory');
+  const presetInp = document.getElementById('newEventLocationPreset');
+  const timeInp = document.getElementById('newEventTime');
+  const descInp = document.getElementById('newEventDesc');
+
+  const title = (titleInp && titleInp.value.trim()) || '';
+  if (!title) {
+    toast(getCommunityLang() === 'fr' ? 'Veuillez saisir le titre de l\'événement !' : 'Please enter the event title!', 'warning');
+    return;
+  }
+
+  const category = (catInp && catInp.value) || 'community';
+  const time = (timeInp && timeInp.value.trim()) || 'Today';
+  const desc = (descInp && descInp.value.trim()) || 'Montreal community event';
+
+  let coords = mapUserPlacementCoords;
+  if (!coords) {
+    const presets = {
+      'jeanne-mance': [45.5175, -73.5855],
+      'tam-tams': [45.5134, -73.5873],
+      'vieux-port': [45.5074, -73.5518],
+      'jean-drapeau': [45.5108, -73.5332],
+      'mile-end': [45.5226, -73.5982],
+      'spectacles': [45.5078, -73.5678],
+      'notre-dame': [45.5005, -73.5262]
+    };
+    coords = presets[presetInp ? presetInp.value : 'jeanne-mance'] || [45.5125, -73.5750];
+  }
+
+  const categoryEmojis = {
+    sports: '🚴',
+    music: '🎵',
+    food: '🥯',
+    art: '🎨',
+    community: '💡'
+  };
+
+  const newEvent = {
+    id: 'user-ev-' + Date.now(),
+    titleEn: title,
+    titleFr: title,
+    cat: category,
+    icon: categoryEmojis[category] || '📍',
+    badge: `${category.toUpperCase()} MTL 🌟`,
+    coords: coords,
+    locationName: presetInp ? presetInp.options[presetInp.selectedIndex].text : 'Montréal',
+    descEn: desc,
+    descFr: desc,
+    time: time,
+    color: '#06b6d4',
+    isCustom: true
+  };
+
+  const localSaved = JSON.parse(localStorage.getItem('realmont_custom_radar_events') || '[]');
+  localSaved.push(newEvent);
+  localStorage.setItem('realmont_custom_radar_events', JSON.stringify(localSaved));
+
+  if (mapPlacementTempMarker && realMontrealLeafletMap) {
+    realMontrealLeafletMap.removeLayer(mapPlacementTempMarker);
+    mapPlacementTempMarker = null;
+  }
+
+  if (titleInp) titleInp.value = '';
+  if (descInp) descInp.value = '';
+  toggleRadarAddEventDrawer(false);
+
+  renderRadarMarkers();
+  selectRadarSpot(newEvent.id);
+
+  if (typeof addCoinsLocally === 'function') {
+    addCoinsLocally(20, 'Event Added to MONT-RADAR');
+  } else if (typeof giveUserCoins === 'function') {
+    giveUserCoins(20, 'Event Added to MONT-RADAR');
+  } else {
+    const cur = parseInt(localStorage.getItem('genius_user_coins') || '0', 10);
+    localStorage.setItem('genius_user_coins', cur + 20);
+    const bEl = document.getElementById('hdrCoinBalance');
+    if (bEl) bEl.textContent = cur + 20;
+  }
+  playSoundFx('coin');
+
+  toast(getCommunityLang() === 'fr' ? '🎉 Événement ajouté sur MONT-RADAR ! +20 🪙 GENIUS IA' : '🎉 Event added to MONT-RADAR! +20 🪙 GENIUS IA', 'success');
+}
+
+function openRadarModal() {
+  const m = document.getElementById('radarMapModal');
+  if (m) {
+    m.classList.add('open');
+    initMontrealRealMap();
+  }
+}
+
+function closeRadarModal(e) {
+  if (e && e.target !== document.getElementById('radarMapModal') && !e.target.classList.contains('mc')) return;
+  const m = document.getElementById('radarMapModal');
+  if (m) m.classList.remove('open');
 }
 
 function filterFeedByRadarSpot() {
-  const spot = radarSpotsData[activeRadarSpotKey];
-  if (!spot) return;
+  if (!selectedRadarEvent) return;
   closeRadarModal();
-  toast((getCommunityLang() === 'fr' ? 'Lieu sélectionné: ' : 'Selected location: ') + (getCommunityLang() === 'fr' ? spot.nameFr : spot.nameEn), 'info');
+  const lang = getCommunityLang();
+  toast((lang === 'fr' ? 'Lieu sélectionné: ' : 'Selected location: ') + (lang === 'fr' ? (selectedRadarEvent.titleFr || selectedRadarEvent.titleEn) : selectedRadarEvent.titleEn), 'info');
 }
 
 function claimRadarSecretDrop() {
-  const claimed = localStorage.getItem('radar_secret_drop_claimed');
+  if (!selectedRadarEvent || !selectedRadarEvent.isDrop) return;
+  const dropKey = `radar_drop_${selectedRadarEvent.id}_claimed`;
+  const claimed = localStorage.getItem(dropKey);
+  const lang = getCommunityLang();
   if (claimed) {
-    toast(getCommunityLang() === 'fr' ? 'Drop déjà réclamé pour aujourd\'hui!' : 'Drop already claimed for today!', 'info');
+    toast(lang === 'fr' ? 'Drop déjà réclamé pour aujourd\'hui !' : 'Drop already claimed for today!', 'info');
     return;
   }
-  localStorage.setItem('radar_secret_drop_claimed', 'true');
+  localStorage.setItem(dropKey, 'true');
   if (typeof addCoinsLocally === 'function') {
     addCoinsLocally(100, 'MONT-RADAR Secret Drop');
   } else if (typeof giveUserCoins === 'function') {
@@ -12117,81 +12733,15 @@ function claimRadarSecretDrop() {
     if (bEl) bEl.textContent = cur + 100;
   }
   playSoundFx('coin');
-  toast(getCommunityLang() === 'fr' ? '🎉 Drop Secret débloqué! +100 🪙 GENIUS IA' : '🎉 Secret Drop Unlocked! +100 🪙 GENIUS IA', 'success');
+  toast(lang === 'fr' ? '🎉 Drop Secret débloqué ! +100 🪙 GENIUS IA' : '🎉 Secret Drop Unlocked! +100 🪙 GENIUS IA', 'success');
   const btnDrop = document.getElementById('btnUnlockDropSpot');
   if (btnDrop) {
     btnDrop.disabled = true;
-    btnDrop.textContent = getCommunityLang() === 'fr' ? '✓ Réclamé' : '✓ Claimed';
+    btnDrop.textContent = lang === 'fr' ? '✓ Réclamé' : '✓ Claimed';
   }
 }
 
-// 4. KIOSQUE DE RÉCOMPENSES MONTRÉAL
-function openRewardsKioskModal() {
-  const m = document.getElementById('rewardsModalOverlay');
-  if (m) {
-    m.classList.add('open');
-    const bal = document.getElementById('kioskCoinBalance');
-    const curBal = typeof getUserCoinBalance === 'function' ? getUserCoinBalance() : (parseInt(localStorage.getItem('genius_user_coins') || '0', 10));
-    if (bal) bal.textContent = curBal;
-  }
-}
-function closeRewardsKioskModal(e) {
-  if (e && e.target !== document.getElementById('rewardsModalOverlay') && !e.target.classList.contains('mc')) return;
-  const m = document.getElementById('rewardsModalOverlay');
-  if (m) m.classList.remove('open');
-}
-
-function claimMontrealPerk(perkKey, cost, perkName) {
-  const curBal = typeof getUserCoinBalance === 'function' ? getUserCoinBalance() : (parseInt(localStorage.getItem('genius_user_coins') || '0', 10));
-  const lang = getCommunityLang();
-  if (curBal < cost) {
-    toast(lang === 'fr' ? `Solde insuffisant (${curBal}/${cost} 🪙). Gagnez plus de coins!` : `Insufficient coins (${curBal}/${cost} 🪙). Earn more coins!`, 'error');
-    return;
-  }
-  // Deduct coins
-  if (typeof deductCoinsLocally === 'function') {
-    deductCoinsLocally(cost, perkName);
-  } else if (typeof spendUserCoins === 'function') {
-    spendUserCoins(cost, perkName);
-  } else {
-    const newBal = Math.max(0, curBal - cost);
-    localStorage.setItem('genius_user_coins', newBal);
-    const bEl = document.getElementById('hdrCoinBalance');
-    if (bEl) bEl.textContent = newBal;
-  }
-  const bal = document.getElementById('kioskCoinBalance');
-  if (bal) bal.textContent = Math.max(0, curBal - cost);
-
-  playSoundFx('coin');
-  const couponCode = 'MTL-REAL-' + Math.floor(1000 + Math.random() * 9000);
-  const revealBox = document.getElementById('rewardCouponCardReveal');
-  const titleEl = document.getElementById('couponClaimedTitle');
-  const codeEl = document.getElementById('generatedCouponCode');
-  const qrContainer = document.getElementById('kioskQrCodeContainer');
-
-  if (titleEl) titleEl.textContent = perkName;
-  if (codeEl) codeEl.textContent = couponCode;
-  if (qrContainer) {
-    qrContainer.innerHTML = '';
-    if (typeof QRCode !== 'undefined') {
-      new QRCode(qrContainer, {
-        text: `https://ia-codestudio.com/community/?coupon=${couponCode}&perk=${encodeURIComponent(perkKey)}`,
-        width: 120,
-        height: 120,
-        colorDark: '#000000',
-        colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.M
-      });
-    }
-  }
-  if (revealBox) {
-    revealBox.style.display = 'block';
-    revealBox.scrollIntoView({ behavior: 'smooth' });
-  }
-  toast(lang === 'fr' ? `Coupon généré: ${couponCode}! 🎟️` : `Coupon generated: ${couponCode}! 🎟️`, 'success');
-}
-
-// 5. PASSEPORT FONDATEUR VIP #0084
+// 5. PASSEPORT FONDATEUR VIP #0001
 function openFounderPassModal() {
   const m = document.getElementById('founderPassModalOverlay');
   if (m) {
@@ -12212,16 +12762,16 @@ function closeFounderPassModal(e) {
 function shareFounderPassWhatsapp() {
   const lang = getCommunityLang();
   const text = lang === 'fr'
-    ? `Rejoins-moi sur REAL MONT ⚜️ Le nouveau réseau social 3D & créatif à Montréal et au Canada! Utilise mon pass VIP #0084 pour débloquer +50 🪙 instantanément: https://ia-codestudio.com/community/?ref=VIP0084`
-    : `Join me on REAL MONT ⚜️ The new 3D & creative social network in Montreal and Canada! Use my VIP pass #0084 to unlock +50 🪙 instantly: https://ia-codestudio.com/community/?ref=VIP0084`;
+    ? `Rejoins-moi sur REAL MONT ⚜️ Le nouveau réseau social 3D & créatif à Montréal et au Canada! Utilise mon pass VIP #0001 pour débloquer +50 🪙 instantanément: https://ia-codestudio.com/community/?ref=VIP0001`
+    : `Join me on REAL MONT ⚜️ The new 3D & creative social network in Montreal and Canada! Use my VIP pass #0001 to unlock +50 🪙 instantly: https://ia-codestudio.com/community/?ref=VIP0001`;
   window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
 }
 
 function copyFounderPassLink() {
-  const url = 'https://ia-codestudio.com/community/?ref=VIP0084';
+  const url = 'https://ia-codestudio.com/community/?ref=VIP0001';
   if (navigator.clipboard) {
     navigator.clipboard.writeText(url).then(() => {
-      toast(getCommunityLang() === 'fr' ? 'Lien VIP copié!' : 'VIP Invite link copied!', 'success');
+      toast(getCommunityLang() === 'fr' ? 'Lien VIP copié !' : 'VIP Invite link copied!', 'success');
     });
   }
 }
@@ -12516,11 +13066,11 @@ function sendRoomMessage() {
           <button class="cat-sheet-btn" onclick="closeCategoriesSheet();openRadarModal();" style="display:flex;align-items:center;gap:6px;font-size:0.8rem;">
             <span>🗺️</span> <span>MONT-RADAR™</span>
           </button>
-          <button class="cat-sheet-btn" onclick="closeCategoriesSheet();openRewardsKioskModal();" style="display:flex;align-items:center;gap:6px;font-size:0.8rem;">
-            <span>🎟️</span> <span>Rewards Kiosk</span>
+          <button class="cat-sheet-btn" onclick="closeCategoriesSheet();openDuelsModal();" style="display:flex;align-items:center;gap:6px;font-size:0.8rem;">
+            <span>⚡</span> <span>Duels Mont-Royal</span>
           </button>
           <button class="cat-sheet-btn" onclick="closeCategoriesSheet();openFounderPassModal();" style="display:flex;align-items:center;gap:6px;font-size:0.8rem;">
-            <span>⚜️</span> <span>VIP #0084</span>
+            <span>⚜️</span> <span>VIP #0001</span>
           </button>
           <button class="cat-sheet-btn" onclick="closeCategoriesSheet();openChatRoomsModal();" style="display:flex;align-items:center;gap:6px;font-size:0.8rem;">
             <span>💬</span> <span>Montreal Chat</span>
