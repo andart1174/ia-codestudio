@@ -20,7 +20,7 @@
                 // Admin bypass (matching premium-lock.js)
                 if (email === 'andart1174@gmail.com') {
                     btn.classList.add('active-sub');
-                    btn.innerText = currentLang === 'fr' ? '✅ Premium ACTIV (Admin)' : '✅ Premium ACTIVE (Admin)';
+                    btn.innerText = currentLang === 'fr' ? '✅ Premium ACTIF (Admin)' : '✅ Premium ACTIVE (Admin)';
                     return;
                 }
                 
@@ -36,7 +36,9 @@
                     
                     if (isUnlimited || daysLeft > 0) {
                         btn.classList.add('active-sub');
-                        btn.innerText = '✅ Premium ACTIV (' + (isUnlimited ? 'Illimité' : daysLeft + ' jours restants') + ')';
+                        btn.innerText = currentLang === 'fr' 
+                            ? '✅ Premium ACTIF (' + (isUnlimited ? 'Illimité' : daysLeft + ' jours restants') + ')'
+                            : '✅ Premium ACTIVE (' + (isUnlimited ? 'Unlimited' : daysLeft + ' days left') + ')';
                         return;
                     }
                 }

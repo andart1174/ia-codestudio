@@ -4719,15 +4719,21 @@
 
 <!-- HEADER -->
 <header class="header">
-  <a href="https://ia-codestudio.com" class="header-logo">
-    <img src="../logo-ia-codestudio.webp" alt="IA Code Studio">
-    <span class="lt">IA Code Studio</span>
+  <a href="./" class="header-logo" style="text-decoration:none;display:flex;align-items:center;gap:10px;">
+    <span style="font-size:1.6rem;filter:drop-shadow(0 0 10px rgba(124,58,237,0.7));">⚜️</span>
+    <div style="display:flex;flex-direction:column;line-height:1.15;">
+      <span style="font-family:'Outfit',sans-serif;font-size:1.3rem;font-weight:900;letter-spacing:0.04em;background:linear-gradient(135deg,#ffffff,#c084fc,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">REALMONT</span>
+      <span style="font-size:0.58rem;color:var(--muted);letter-spacing:0.09em;font-weight:700;">MONTREAL CYBER SOCIAL</span>
+    </div>
   </a>
   <div class="header-sep"></div>
-  <span class="header-brand" id="lbl-header-brand" style="display:inline-flex;align-items:center;gap:6px;">
-    <span>⚜️ REAL MONT</span>
-    <span style="font-size:0.65rem;background:linear-gradient(135deg,#ff3366,#ff6b35);color:#fff;padding:2px 7px;border-radius:12px;font-weight:900;letter-spacing:0.04em;">MTL ⚡ CA</span>
+  <span class="header-brand" id="lbl-header-brand" style="display:inline-flex;align-items:center;gap:6px;font-size:0.75rem;background:rgba(124,58,237,0.18);border:1px solid rgba(124,58,237,0.35);padding:3px 10px;border-radius:14px;color:#c084fc;font-weight:800;">
+    <span>⚜️ REALMONT</span>
+    <span style="font-size:0.6rem;background:linear-gradient(135deg,#f43f5e,#7c3aed);color:#fff;padding:1px 6px;border-radius:8px;font-weight:900;">LIVE</span>
   </span>
+  <a href="../" class="hdr-studio-badge" title="IA Code Studio 3D Engine" style="font-size:0.68rem;color:#94a3b8;border:1px solid var(--border2);border-radius:12px;padding:3px 8px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:all 0.2s;">
+    <span style="color:#06b6d4;">⚡</span> <span>3D Engine</span>
+  </a>
 
   <!-- LANGUAGE TOGGLE -->
   <button class="btn-lang-toggle" id="btnLangToggle" onclick="toggleCommunityLanguage()" title="Switch Language (EN / FR)">
@@ -4797,10 +4803,10 @@
       </div>
     </div>
     
-    <!-- ⚜️ REAL MONT MONTREAL HUB -->
+    <!-- ⚜️ REALMONT MONTREAL HUB -->
     <div class="scard" id="realmontHubCard" style="border-color: rgba(244, 63, 94, 0.3); background: linear-gradient(145deg, rgba(244,63,94,0.06), rgba(6,182,212,0.04), var(--bg2));">
       <div class="stitle" id="lbl-realmont-hub-title" style="display:flex;align-items:center;justify-content:space-between;">
-        <span>⚜️ REAL MONT Hub</span>
+        <span>⚜️ REALMONT Hub</span>
         <span style="font-size:0.65rem;background:linear-gradient(135deg,#f43f5e,#06b6d4);color:#fff;padding:2px 7px;border-radius:12px;font-weight:800;">MTL LIVE</span>
       </div>
       <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
@@ -4818,6 +4824,28 @@
         </button>
         <button class="cat-btn" style="display:flex;align-items:center;gap:8px;font-size:0.8rem;justify-content:flex-start;padding:8px 12px;" onclick="openChatRoomsModal()" id="btnNavChat">
           <span style="font-size:1.05rem;">💬</span> <span id="lblNavChat">Montreal Chat Rooms</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 🏙️ MONTREAL NEIGHBORHOOD CHANNELS -->
+    <div class="scard" id="montrealNeighborhoodsCard" style="border-color: rgba(124, 58, 237, 0.35); background: linear-gradient(145deg, rgba(124,58,237,0.08), rgba(6,182,212,0.05), var(--bg2));">
+      <div class="stitle" id="lbl-neighborhoods-title" style="display:flex;align-items:center;justify-content:space-between;">
+        <span>🏙️ Montreal Channels</span>
+        <span style="font-size:0.62rem;background:rgba(124,58,237,0.25);border:1px solid rgba(124,58,237,0.4);color:#c084fc;padding:2px 6px;border-radius:10px;font-weight:800;">QUARTIERS</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px;margin-top:8px;">
+        <button class="cat-btn" data-cat="plateau" onclick="filterCat('plateau',this)" id="catbtn-plateau" style="font-size:0.78rem;">
+          <span>☕</span> <span>Le Plateau & Mile End</span>
+        </button>
+        <button class="cat-btn" data-cat="downtown" onclick="filterCat('downtown',this)" id="catbtn-downtown" style="font-size:0.78rem;">
+          <span>🎓</span> <span>Downtown & Concordia</span>
+        </button>
+        <button class="cat-btn" data-cat="oldport" onclick="filterCat('oldport',this)" id="catbtn-oldport" style="font-size:0.78rem;">
+          <span>⛵</span> <span>Vieux-Port & Waterfront</span>
+        </button>
+        <button class="cat-btn" data-cat="montroyal" onclick="filterCat('montroyal',this)" id="catbtn-montroyal" style="font-size:0.78rem;">
+          <span>🌳</span> <span>Mont-Royal & Parks</span>
         </button>
       </div>
     </div>
@@ -4841,9 +4869,9 @@
 
     <!-- Login Prompt -->
     <div class="login-prompt" id="loginPrompt" style="display:none">
-      <div class="lp-icon">🌟</div>
-      <h3>Join the IA Studio Community</h3>
-      <p>Sign in to share your AI creations, get inspired and connect with creators worldwide.</p>
+      <div class="lp-icon">⚜️</div>
+      <h3 id="lbl-login-prompt-title">Join REALMONT Montreal Cyber Social</h3>
+      <p id="lbl-login-prompt-sub">Sign in with Google to share Montreal vibes, vote in duels, explore MONT-RADAR and connect with local creators.</p>
       <button class="btn-google" onclick="signInGoogle()" style="margin:0 auto">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
         Sign in with Google
@@ -5350,7 +5378,7 @@
         <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
           <div>
             <div class="comp-name" id="compName"></div>
-            <div class="comp-sub" id="lbl-comp-sub">Posting to REAL MONT</div>
+            <div class="comp-sub" id="lbl-comp-sub">Posting to REALMONT</div>
           </div>
           <button type="button" class="btn-ai-hook-gen" onclick="generateViralHook()" id="btnAiHookGen" style="background:rgba(244,63,94,0.15);border:1px solid rgba(244,63,94,0.4);color:#f43f5e;font-size:0.75rem;font-weight:700;padding:5px 10px;border-radius:14px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all 0.2s;">
             <span>✨</span> <span id="lblAiHook">Generate AI Hook</span>
@@ -5440,9 +5468,13 @@
       </div>
 
       <div class="opt-section">
-        <label class="opt-lbl">Category</label>
+        <label class="opt-lbl">Category / Neighborhood</label>
         <select class="sel" id="postCat">
           <option value="general">💬 General</option>
+          <option value="plateau">☕ Le Plateau & Mile End</option>
+          <option value="downtown">🎓 Downtown & Concordia</option>
+          <option value="oldport">⛵ Vieux-Port & Waterfront</option>
+          <option value="montroyal">🌳 Mont-Royal & Parks</option>
           <option value="showcase">🏆 Showcase — Share your creation</option>
           <option value="aiapp">🤖 AI App — Built with IA Architecte</option>
           <option value="3ddesign">🎨 3D Design — Showroom / mockup</option>
@@ -6244,7 +6276,7 @@
         <button class="btn-filter-spot" style="padding:6px 14px;font-size:0.78rem;background:linear-gradient(135deg,#10b981,#06b6d4);" onclick="toggleRadarAddEventDrawer()" id="btnToggleAddEventDrawer">
           <span>➕ Add Event</span>
         </button>
-        <button class="btn-filter-spot" id="btnRadarAdminManage" style="padding:6px 12px;font-size:0.78rem;background:rgba(239,68,68,0.2);border:1px solid #ef4444;color:#fca5a5;" onclick="toggleRadarAdminEventsDrawer()">
+        <button class="btn-filter-spot" id="btnRadarAdminManage" style="display:none !important;padding:6px 12px;font-size:0.78rem;background:rgba(239,68,68,0.2);border:1px solid #ef4444;color:#fca5a5;" onclick="toggleRadarAdminEventsDrawer()">
           <span>🛡️ Admin</span>
         </button>
         <button class="mc" onclick="closeRadarModal()">✕</button>
@@ -6373,7 +6405,7 @@
           <button class="btn-filter-spot" id="btnUnlockDropSpot" onclick="claimRadarSecretDrop()" style="display:none;background:linear-gradient(135deg,#f59e0b,#ec4899);">
             <span>💎 Claim Drop</span>
           </button>
-          <button class="btn-filter-spot" id="btnAdminDeleteRadarSpot" onclick="promptDeleteCurrentRadarEvent()" style="background:linear-gradient(135deg,#ef4444,#dc2626);border:1px solid #f87171;color:#fff;display:none;padding:6px 12px;font-size:0.78rem;">
+          <button class="btn-filter-spot" id="btnAdminDeleteRadarSpot" onclick="promptDeleteCurrentRadarEvent()" style="display:none !important;background:linear-gradient(135deg,#ef4444,#dc2626);border:1px solid #f87171;color:#fff;padding:6px 12px;font-size:0.78rem;">
             <span>🗑️ Delete Event</span>
           </button>
         </div>
@@ -6400,7 +6432,7 @@
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
-        <button class="btn-filter-spot" style="padding:6px 12px;font-size:0.75rem;background:linear-gradient(135deg,#f43f5e,#ec4899);" onclick="toggleAdminDuelCreatorDrawer()" id="btnToggleAdminDuelDrawer">
+        <button class="btn-filter-spot" style="display:none !important;padding:6px 12px;font-size:0.75rem;background:linear-gradient(135deg,#f43f5e,#ec4899);" onclick="toggleAdminDuelCreatorDrawer()" id="btnToggleAdminDuelDrawer">
           <span>➕ Create Duel (Admin)</span>
         </button>
         <button class="mc" onclick="closeDuelsModal()">✕</button>
@@ -6701,6 +6733,11 @@ const ADMIN_EMAILS = [
   'andart1174@gmail.com'
 ];
 
+// Purge any legacy passcode admin overrides immediately
+try {
+  localStorage.removeItem('realmont_admin_override');
+} catch (e) {}
+
 let user = null, isAdmin = false, curCat = 'all', curPostId = null;
 let uploadedUrls = [], unsub = null, unsubCmt = null;
 
@@ -6710,7 +6747,7 @@ let uploadedUrls = [], unsub = null, unsubCmt = null;
 auth.onAuthStateChanged(async u => {
   if (u) {
     user = u;
-    isAdmin = ADMIN_EMAILS.includes(u.email);
+    isAdmin = Boolean(u && u.email && ADMIN_EMAILS.map(e => e.toLowerCase().trim()).includes(u.email.toLowerCase().trim()));
 
     // Retrieve saved custom display name if set previously
     let customName = localStorage.getItem('custom_display_name_' + u.uid) || 
@@ -6778,7 +6815,7 @@ auth.onAuthStateChanged(async u => {
             photoURL: sessionUser.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(customName || 'User')}`,
             isCustomSession: true
           };
-          isAdmin = ADMIN_EMAILS.includes(sessionUser.email);
+          isAdmin = Boolean(sessionUser.email && ADMIN_EMAILS.map(e => e.toLowerCase().trim()).includes(sessionUser.email.toLowerCase().trim()));
           renderLoggedIn(user);
           db.collection('users').doc(user.uid).set({ displayName:user.displayName, photoURL:user.photoURL, email:user.email, lastSeen:firebase.firestore.FieldValue.serverTimestamp() }, { merge:true });
           loadUserStats(user.uid);
@@ -6793,6 +6830,8 @@ auth.onAuthStateChanged(async u => {
       }
     } catch (e) { console.error("Genius session auth parsing error:", e); }
 
+    user = null;
+    isAdmin = false;
     renderLoggedOut();
   }
   loadFeed();
@@ -6806,6 +6845,7 @@ function signInGoogle() {
 }
 function signOut() { 
   localStorage.removeItem('genius_session');
+  try { localStorage.removeItem('realmont_admin_override'); } catch(e){}
   auth.signOut().then(() => {
     toast('Signed out', 'info');
     setTimeout(() => window.location.reload(), 500);
@@ -6836,15 +6876,18 @@ function renderLoggedIn(u) {
   const ap = document.getElementById('adminPanel');
   if (ap) ap.style.display = isAdmin ? 'block' : 'none';
   if (isAdmin) loadStats();
+  if (typeof updateRadarAdminUI === 'function') updateRadarAdminUI();
   loadUserCoins(u.uid, u.email);
 }
 function renderLoggedOut() {
+  isAdmin = false;
   document.getElementById('hdrActions').innerHTML = `<button class="btn-google" onclick="signInGoogle()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">Sign in with Google</button>`;
   document.getElementById('loginPrompt').style.display = 'block';
   document.getElementById('createBar').style.display = 'none';
   document.getElementById('userCard').style.display = 'none';
   const ap = document.getElementById('adminPanel');
   if (ap) ap.style.display = 'none';
+  if (typeof updateRadarAdminUI === 'function') updateRadarAdminUI();
   loadUserCoins(null, null);
 }
 
@@ -8644,7 +8687,7 @@ function copyQrModalLink() {
 // 1. Translation System (EN / FR Only)
 const I18N = {
   en: {
-    communityBrand: '✦ Community',
+    communityBrand: '⚜️ REALMONT',
     allPosts: '🌐 All Posts',
     catFollowing: '❤️ Following',
     catGeneral: '💬 General',
@@ -8859,7 +8902,7 @@ const I18N = {
     codeSentToast: '💻 Code snippet sent!'
   },
   fr: {
-    communityBrand: '✦ Communauté',
+    communityBrand: '⚜️ REALMONT',
     allPosts: '🌐 Tous les Posts',
     catFollowing: '❤️ Abonnements',
     catGeneral: '💬 Général',
@@ -9102,7 +9145,7 @@ function applyCommunityLanguage(lang) {
   const installAppLbl = document.getElementById('lbl-install-app');
   if (flagEl) flagEl.textContent = lang === 'fr' ? '🇫🇷' : '🇬🇧';
   if (textEl) textEl.textContent = lang === 'fr' ? 'FR' : 'EN';
-  if (brandEl) brandEl.textContent = t.communityBrand;
+  if (brandEl) brandEl.innerHTML = `<span>⚜️ REALMONT</span><span style="font-size:0.6rem;background:linear-gradient(135deg,#f43f5e,#7c3aed);color:#fff;padding:1px 6px;border-radius:8px;font-weight:900;">LIVE</span>`;
   if (installAppLbl) installAppLbl.textContent = lang === 'fr' ? "Installer l'App" : "Install App";
 
   // Categories
@@ -9119,9 +9162,15 @@ function applyCommunityLanguage(lang) {
   const cTip = document.getElementById('catbtn-tips'); if (cTip) cTip.textContent = t.catTips;
   const cGen = document.getElementById('catbtn-general'); if (cGen) cGen.textContent = t.catGeneral;
 
-  // REAL MONT Montréal Hub & Duels
+  // REALMONT Montréal Hub & Duels
   const rmHubTitle = document.getElementById('lbl-realmont-hub-title');
-  if (rmHubTitle) rmHubTitle.innerHTML = `<span>${lang === 'fr' ? '⚜️ Hub REAL MONT' : '⚜️ REAL MONT Hub'}</span><span style="font-size:0.65rem;background:linear-gradient(135deg,#f43f5e,#06b6d4);color:#fff;padding:2px 7px;border-radius:12px;font-weight:800;">MTL LIVE</span>`;
+  if (rmHubTitle) rmHubTitle.innerHTML = `<span>${lang === 'fr' ? '⚜️ Hub REALMONT' : '⚜️ REALMONT Hub'}</span><span style="font-size:0.65rem;background:linear-gradient(135deg,#f43f5e,#06b6d4);color:#fff;padding:2px 7px;border-radius:12px;font-weight:800;">MTL LIVE</span>`;
+  const neighTitle = document.getElementById('lbl-neighborhoods-title');
+  if (neighTitle) neighTitle.innerHTML = `<span>${lang === 'fr' ? '🏙️ Canaux Montréal' : '🏙️ Montreal Channels'}</span><span style="font-size:0.62rem;background:rgba(124,58,237,0.25);border:1px solid rgba(124,58,237,0.4);color:#c084fc;padding:2px 6px;border-radius:10px;font-weight:800;">QUARTIERS</span>`;
+  const lpTitle = document.getElementById('lbl-login-prompt-title');
+  if (lpTitle) lpTitle.textContent = lang === 'fr' ? 'Rejoignez REALMONT • Réseau Social Cyber Montréal' : 'Join REALMONT Montreal Cyber Social';
+  const lpSub = document.getElementById('lbl-login-prompt-sub');
+  if (lpSub) lpSub.textContent = lang === 'fr' ? 'Connectez-vous avec Google pour partager vos créations, voter aux duels, explorer MONT-RADAR et échanger avec la communauté locale.' : 'Sign in with Google to share Montreal vibes, vote in duels, explore MONT-RADAR and connect with local creators.';
   const navRadar = document.getElementById('lblNavRadar'); if (navRadar) navRadar.textContent = lang === 'fr' ? 'MONT-RADAR™ En Direct' : 'MONT-RADAR™ Live Map';
   const navDuels = document.getElementById('lblNavDuels'); if (navDuels) navDuels.textContent = 'Duels Mont-Royal™';
   const navVoice = document.getElementById('lblNavVoice'); if (navVoice) navVoice.textContent = 'Spark Voice™ 30s';
@@ -9201,7 +9250,7 @@ function applyCommunityLanguage(lang) {
 
   // AI Hook & Spark Voice in Create Modal
   const aiHookLbl = document.getElementById('lblAiHook'); if (aiHookLbl) aiHookLbl.textContent = lang === 'fr' ? 'Générer Accroche IA' : 'Generate AI Hook';
-  const compSubLbl = document.getElementById('lbl-comp-sub'); if (compSubLbl) compSubLbl.textContent = lang === 'fr' ? 'Publication sur REAL MONT' : 'Posting to REAL MONT';
+  const compSubLbl = document.getElementById('lbl-comp-sub'); if (compSubLbl) compSubLbl.textContent = lang === 'fr' ? 'Publication sur REALMONT' : 'Posting to REALMONT';
   const spkVoiceLbl = document.getElementById('lbl-spark-voice-title'); if (spkVoiceLbl) spkVoiceLbl.textContent = lang === 'fr' ? '🎙️ Spark Voice™ (Note Vocale 30s)' : '🎙️ Spark Voice™ (30s Audio Note)';
 
   // Mobile Feed Mode Toggle
@@ -15117,6 +15166,7 @@ function openDuelsModal(index = 0) {
     m.classList.add('open');
     renderDuelTabsUI();
     switchModalDuel(index);
+    if (typeof updateRadarAdminUI === 'function') updateRadarAdminUI();
   }
 }
 
@@ -15277,6 +15327,7 @@ function voteDuel(team, event) {
 }
 
 function toggleAdminDuelCreatorDrawer(forceState) {
+  if (!isRadarAdmin()) return;
   const drawer = document.getElementById('adminDuelCreatorDrawer');
   if (!drawer) return;
   const isShown = forceState !== undefined ? forceState : drawer.style.display === 'block';
@@ -15287,6 +15338,7 @@ function toggleAdminDuelCreatorDrawer(forceState) {
 }
 
 function submitAdminNewDuel() {
+  if (!isRadarAdmin()) return;
   const titleInp = document.getElementById('newDuelTitle');
   const catInp = document.getElementById('newDuelCategory');
   const rewardInp = document.getElementById('newDuelReward');
@@ -15555,10 +15607,14 @@ const DEFAULT_REALMONT_EVENTS = [
 ];
 
 function isRadarAdmin() {
-  if (typeof isAdmin !== 'undefined' && isAdmin) return true;
-  if (typeof user !== 'undefined' && user && user.email && typeof ADMIN_EMAILS !== 'undefined' && ADMIN_EMAILS.includes(user.email)) return true;
-  if (localStorage.getItem('realmont_admin_override') === 'true') return true;
-  return false;
+  return Boolean(
+    typeof user !== 'undefined' &&
+    user &&
+    user.email &&
+    typeof ADMIN_EMAILS !== 'undefined' &&
+    Array.isArray(ADMIN_EMAILS) &&
+    ADMIN_EMAILS.map(e => String(e).toLowerCase().trim()).includes(String(user.email).toLowerCase().trim())
+  );
 }
 
 function getAllMontrealEvents() {
@@ -15631,7 +15687,7 @@ function switchMapLayer(layerName, btnEl) {
     streets: lang === 'fr' ? 'Rues' : 'Streets',
     satellite: lang === 'fr' ? 'Satellite' : 'Satellite'
   };
-  toast((lang === 'fr' ? 'Harta: ' : 'Map: ') + labelMap[layerName], 'info');
+  toast((lang === 'fr' ? 'Carte : ' : 'Map: ') + labelMap[layerName], 'info');
 }
 
 function initMontrealRealMap() {
@@ -15950,39 +16006,11 @@ function submitRadarCustomEvent() {
 // ─────────────────────────────────────────────────────────────
 // MONT-RADAR™ ADMIN CONTROLS (DELETE, SYNC & MANAGE EVENTS)
 // ─────────────────────────────────────────────────────────────
-function promptRadarAdminLogin() {
-  const lang = getCommunityLang();
-  const pass = prompt(lang === 'fr'
-    ? '🔐 Accès Administrateur MONT-RADAR :\nVeuillez saisir le code d\'accès administrateur ou connectez-vous avec votre compte Google :'
-    : '🔐 MONT-RADAR Admin Access:\nPlease enter the admin passcode or sign in with your admin Google account:');
-
-  if (!pass) return;
-
-  const trimmed = pass.trim();
-  if (trimmed === '1174' || trimmed === 'admin1174' || trimmed === 'realmont2026' || trimmed === 'realmont') {
-    localStorage.setItem('realmont_admin_override', 'true');
-    if (typeof isAdmin !== 'undefined') isAdmin = true;
-    toast(lang === 'fr' ? '✅ Mode Administrateur activé avec succès !' : '✅ Admin Mode activated successfully!', 'success');
-    updateRadarAdminUI();
-    const drawer = document.getElementById('radarAdminEventsDrawer');
-    if (drawer) {
-      drawer.style.display = 'block';
-      renderAdminEventsList();
-    }
-  } else {
-    toast(lang === 'fr' ? '❌ Code administrateur incorrect' : '❌ Incorrect admin passcode', 'error');
-  }
-}
-
 function toggleRadarAdminEventsDrawer(forceState) {
+  if (!isRadarAdmin()) return;
   const drawer = document.getElementById('radarAdminEventsDrawer');
   if (!drawer) return;
   const isShown = forceState !== undefined ? forceState : drawer.style.display === 'block';
-
-  if (!isShown && !isRadarAdmin()) {
-    promptRadarAdminLogin();
-    return;
-  }
 
   drawer.style.display = isShown ? 'none' : 'block';
   if (!isShown) {
@@ -15995,19 +16023,32 @@ function updateRadarAdminUI() {
   const adminActive = isRadarAdmin();
   const btnDelete = document.getElementById('btnAdminDeleteRadarSpot');
   if (btnDelete) {
-    btnDelete.style.display = adminActive ? 'inline-flex' : 'none';
+    if (adminActive) {
+      btnDelete.style.setProperty('display', 'inline-flex', 'important');
+    } else {
+      btnDelete.style.setProperty('display', 'none', 'important');
+    }
   }
   const btnAdminManage = document.getElementById('btnRadarAdminManage');
   if (btnAdminManage) {
-    const lang = getCommunityLang();
-    btnAdminManage.innerHTML = adminActive
-      ? `<span>🛡️ ${lang === 'fr' ? 'Gérer (Admin)' : 'Manage (Admin)'}</span>`
-      : `<span>🛡️ ${lang === 'fr' ? 'Admin' : 'Admin'}</span>`;
-    btnAdminManage.style.background = adminActive
-      ? 'linear-gradient(135deg,#ef4444,#dc2626)'
-      : 'rgba(239,68,68,0.2)';
-    btnAdminManage.style.borderColor = adminActive ? '#f87171' : '#ef4444';
-    btnAdminManage.style.color = '#fff';
+    if (adminActive) {
+      btnAdminManage.style.setProperty('display', 'inline-flex', 'important');
+      const lang = getCommunityLang();
+      btnAdminManage.innerHTML = `<span>🛡️ ${lang === 'fr' ? 'Gérer (Admin)' : 'Manage (Admin)'}</span>`;
+      btnAdminManage.style.background = 'linear-gradient(135deg,#ef4444,#dc2626)';
+      btnAdminManage.style.borderColor = '#f87171';
+      btnAdminManage.style.color = '#fff';
+    } else {
+      btnAdminManage.style.setProperty('display', 'none', 'important');
+    }
+  }
+  const btnToggleAdminDuel = document.getElementById('btnToggleAdminDuelDrawer');
+  if (btnToggleAdminDuel) {
+    if (adminActive) {
+      btnToggleAdminDuel.style.setProperty('display', 'inline-flex', 'important');
+    } else {
+      btnToggleAdminDuel.style.setProperty('display', 'none', 'important');
+    }
   }
 }
 
@@ -16053,10 +16094,7 @@ function renderAdminEventsList() {
 }
 
 async function deleteRadarEvent(eventId) {
-  if (!isRadarAdmin()) {
-    promptRadarAdminLogin();
-    return;
-  }
+  if (!isRadarAdmin()) return;
 
   const lang = getCommunityLang();
   const allEvents = getAllMontrealEvents();
@@ -16130,10 +16168,7 @@ function promptDeleteCurrentRadarEvent() {
 }
 
 async function resetRadarEventsToDefault() {
-  if (!isRadarAdmin()) {
-    promptRadarAdminLogin();
-    return;
-  }
+  if (!isRadarAdmin()) return;
   const lang = getCommunityLang();
   const confirmMsg = lang === 'fr'
     ? 'Voulez-vous réinitialiser tous les événements par défaut de MONT-RADAR ?'
@@ -16566,10 +16601,10 @@ function sendRoomMessage() {
       <button class="mc" onclick="closeCategoriesSheet()">✕</button>
     </div>
     <div class="mb" style="padding: 16px;">
-      <!-- ⚜️ REAL MONT Montreal Shortcuts for Mobile -->
+      <!-- ⚜️ REALMONT Montreal Shortcuts for Mobile -->
       <div style="margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border2);">
         <div style="font-size:0.75rem;font-weight:800;color:#f43f5e;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
-          <span>⚜️ REAL MONT Hub</span>
+          <span>⚜️ REALMONT Hub</span>
           <span style="font-size:0.65rem;background:#f43f5e;color:#fff;padding:2px 6px;border-radius:10px;">MTL LIVE</span>
         </div>
         <div style="display:grid;grid-template-columns:repeat(2, 1fr);gap:8px;">
@@ -16585,6 +16620,19 @@ function sendRoomMessage() {
           <button class="cat-sheet-btn" onclick="closeCategoriesSheet();openChatRoomsModal();" style="display:flex;align-items:center;gap:6px;font-size:0.8rem;">
             <span>💬</span> <span>Montreal Chat</span>
           </button>
+        </div>
+      </div>
+
+      <!-- 🏙️ Montreal Neighborhood Channels -->
+      <div style="margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border2);">
+        <div style="font-size:0.72rem;font-weight:800;color:#c084fc;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">
+          🏙️ Montreal Quartiers
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(2, 1fr);gap:8px;">
+          <button class="cat-sheet-btn" data-cat="plateau" onclick="selectCategoryFromSheet('plateau')">☕ Plateau & Mile End</button>
+          <button class="cat-sheet-btn" data-cat="downtown" onclick="selectCategoryFromSheet('downtown')">🎓 Downtown & McGill</button>
+          <button class="cat-sheet-btn" data-cat="oldport" onclick="selectCategoryFromSheet('oldport')">⛵ Vieux-Port</button>
+          <button class="cat-sheet-btn" data-cat="montroyal" onclick="selectCategoryFromSheet('montroyal')">🌳 Mont-Royal</button>
         </div>
       </div>
 
