@@ -1,7 +1,7 @@
 {
-  "name": "IA Code Studio - 3D AI WebGL Community",
-  "short_name": "IA Studio",
-  "description": "Explore, remix, and share 3D WebGL creations, Three.js scenes, and AI code. Earn GENIUS IA coins and connect with creators worldwide.",
+  "name": "REALMONT • Montreal Cyber Social",
+  "short_name": "REALMONT",
+  "description": "The Montreal cyber social network. Vertical video feeds, MONT-RADAR™ live map, Duels & Polls, and local creator rewards.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -28,17 +28,17 @@
       "purpose": "any"
     }
   ],
-  "categories": ["developer", "productivity", "graphics", "social"],
+  "categories": ["social", "entertainment", "graphics", "developer"],
   "shortcuts": [
     {
-      "name": "Community Feed",
+      "name": "REALMONT Feed",
       "url": "./",
-      "description": "Browse 3D WebGL creations and AI apps"
+      "description": "Real moments, video stories & duels"
     },
     {
-      "name": "IA Architecte Studio",
-      "url": "../ia-architecte-app/",
-      "description": "Create and edit interactive 3D WebGL apps"
+      "name": "MONT-RADAR™",
+      "url": "./#radar",
+      "description": "Live Montreal cyber radar map"
     }
   ]
 }

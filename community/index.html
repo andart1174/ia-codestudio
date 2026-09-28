@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>REAL MONT • Real Moments, 3D Vibes (Montreal & Canada)</title>
-  <meta name="description" content="REAL MONT — The next-gen social experience in Montreal & Canada. Share real moments, live 3D WebGL scenes, 30s Spark Voice, Duels Mont-Royal, and explore MONT-RADAR.">
-  <meta name="keywords" content="REAL MONT, Montreal social network, reseau social montreal, duels mont-royal, mont-radar, three.js 3d webgl, spark voice, genius ia coin, canada creators">
+  <title>REALMONT ⚜️ Real Moments • Montreal Cyber Social</title>
+  <meta name="description" content="REALMONT — The next-gen Montreal cyber social platform. Real moments, vertical video stories, MONT-RADAR™ live map, Duels & Polls, and Genius Coins 🪙 rewards.">
+  <meta name="keywords" content="REALMONT, Montreal social network, reseau social montreal, duels mont-royal, mont-radar, daily pulse montreal, three.js 3d webgl, spark voice, genius ia coin, canada creators">
   <link rel="canonical" href="https://ia-codestudio.com/community/">
   
   <!-- PWA & Mobile App Installation Support -->
@@ -13,40 +13,47 @@
   <meta name="theme-color" content="#7c3aed">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="REAL MONT">
+  <meta name="apple-mobile-web-app-title" content="REALMONT">
   <link rel="apple-touch-icon" href="../logo-ia-codestudio.png">
   <link rel="icon" type="image/png" href="../genius-ia-coin.png">
 
-  <!-- OpenGraph / Facebook / LinkedIn / WhatsApp -->
+  <!-- OpenGraph / Facebook / LinkedIn / WhatsApp / iMessage / Discord -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ia-codestudio.com/community/">
-  <meta property="og:title" content="REAL MONT • Real Moments, 3D Vibes (Montreal & Canada)">
-  <meta property="og:description" content="The next-gen Montreal social network. 3D WebGL scenes, Spark Voice, Duels Mont-Royal, MONT-RADAR live map, and local rewards.">
-  <meta property="og:image" content="https://ia-codestudio.com/og-social-banner.png">
+  <meta property="og:site_name" content="REALMONT">
+  <meta property="og:title" content="REALMONT ⚜️ Moments Réels • Montreal Cyber Social">
+  <meta property="og:description" content="Le réseau social de Montréal en direct • Real moments, vertical video stories, MONT-RADAR™ live map, Duels & Polls, and Genius Coins 🪙 rewards!">
+  <meta property="og:image" content="https://ia-codestudio.com/community/og-realmont.jpg">
+  <meta property="og:image:secure_url" content="https://ia-codestudio.com/community/og-realmont.jpg">
+  <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="REAL MONT — Montreal & Canada Social Hub">
-  <meta property="og:site_name" content="REAL MONT">
+  <meta property="og:image:alt" content="REALMONT — Montreal Cyber Social Platform">
+  <meta property="og:locale" content="fr_CA">
+  <meta property="og:locale:alternate" content="en_CA">
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://ia-codestudio.com/community/">
-  <meta name="twitter:title" content="REAL MONT • Real Moments, 3D Vibes (Montreal & Canada)">
-  <meta name="twitter:description" content="Explore real moments, live 3D WebGL scenes, Spark Voice, Duels Mont-Royal, and MONT-RADAR in Montreal!">
-  <meta name="twitter:image" content="https://ia-codestudio.com/og-social-banner.png">
-  <meta name="twitter:image:alt" content="REAL MONT">
+  <meta name="twitter:title" content="REALMONT ⚜️ Moments Réels • Montreal Cyber Social">
+  <meta name="twitter:description" content="Le réseau social de Montréal en direct • Real moments, vertical video stories, MONT-RADAR™ live map, Duels & Polls, and Genius Coins 🪙 rewards!">
+  <meta name="twitter:image" content="https://ia-codestudio.com/community/og-realmont.jpg">
+  <meta name="twitter:image:alt" content="REALMONT — Montreal Cyber Social Platform">
 
-  <!-- Schema.org JSON-LD for Community -->
+  <!-- Schema.org JSON-LD for REALMONT -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "WebPage",
-        "@id": "https://ia-codestudio.com/community/#webpage",
+        "@type": "SocialMediaPosting",
+        "@id": "https://ia-codestudio.com/community/#app",
         "url": "https://ia-codestudio.com/community/",
-        "name": "IA Code Studio Community — Share & Copy Three.js WebGL & AI Code",
-        "description": "Explore live previews of 3D WebGL scenes, animations, and AI-generated code shared by creators worldwide.",
+        "name": "REALMONT — Montreal Cyber Social Platform",
+        "headline": "REALMONT • Real Moments & Cyber Vibes in Montreal",
+        "description": "The next-gen Montreal social network. Video stories, live MONT-RADAR™ map, Duels & Polls, Montreal Daily Pulse, and Genius Coins 🪙 rewards.",
+        "image": "https://ia-codestudio.com/community/og-realmont.jpg",
+        "inLanguage": ["en", "fr"],
         "isPartOf": {
           "@type": "WebSite",
           "name": "IA Code Studio",
@@ -65,7 +72,7 @@
           {
             "@type": "ListItem",
             "position": 2,
-            "name": "Community Hub",
+            "name": "REALMONT Montreal",
             "item": "https://ia-codestudio.com/community/"
           }
         ]
@@ -8214,8 +8221,12 @@ function sharePost(id) {
   const linkInput = document.getElementById('shareDirectLinkInput');
   if (linkInput) linkInput.value = directUrl;
 
-  // Prepare post text/title for networks
-  const title = encodeURIComponent('Check out this amazing 3D WebGL creation on IA Code Studio! 🚀✨');
+  // Prepare post text/title for networks (Bilingual REALMONT)
+  const curLang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+  const shareTitleText = curLang === 'fr'
+    ? 'Regarde ce moment sur REALMONT Montréal ⚜️✨'
+    : 'Check out this moment on REALMONT Montreal ⚜️✨';
+  const title = encodeURIComponent(shareTitleText);
   const encodedUrl = encodeURIComponent(directUrl);
 
   // Set 1-click network URLs
@@ -8229,7 +8240,7 @@ function sharePost(id) {
   if (pinBtn) pinBtn.href = `https://pinterest.com/pin/create/button/?url=${encodedUrl}&description=${title}`;
 
   const twBtn = document.getElementById('shareBtnTwitter');
-  if (twBtn) twBtn.href = `https://twitter.com/intent/tweet?text=${title}&url=${encodedUrl}&hashtags=ThreeJS,WebGL,AICodeStudio,JavaScript`;
+  if (twBtn) twBtn.href = `https://twitter.com/intent/tweet?text=${title}&url=${encodedUrl}&hashtags=REALMONT,Montreal,MTL,Quebec,CyberSocial`;
 
   const tgBtn = document.getElementById('shareBtnTelegram');
   if (tgBtn) tgBtn.href = `https://t.me/share/url?url=${encodedUrl}&text=${title}`;
@@ -8246,14 +8257,15 @@ function sharePost(id) {
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
   } else {
-    navigator.clipboard.writeText(directUrl).then(() => toast('Project link copied! 🔗', 'success'));
+    navigator.clipboard.writeText(directUrl).then(() => toast(curLang === 'fr' ? 'Lien copié ! 🔗' : 'Link copied! 🔗', 'success'));
   }
 }
 
 function shareToInstagram() {
   const directUrl = `${window.location.origin}${window.location.pathname}?post=${currentSharePostId || ''}`;
+  const curLang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
   navigator.clipboard.writeText(directUrl).then(() => {
-    toast('📸 Link copied! Opening Instagram so you can paste it in your Story / Bio ✨', 'success');
+    toast(curLang === 'fr' ? '📸 Lien copié ! Ouverture d\'Instagram...' : '📸 Link copied! Opening Instagram so you can paste it in your Story / Bio ✨', 'success');
     setTimeout(() => {
       window.open('https://www.instagram.com/', '_blank');
     }, 800);
@@ -8262,8 +8274,12 @@ function shareToInstagram() {
 
 function shareToTiktok() {
   const directUrl = `${window.location.origin}${window.location.pathname}?post=${currentSharePostId || ''}`;
-  navigator.clipboard.writeText(`Check out my 3D creation on IA Code Studio! 👉 ${directUrl} #threejs #webgl #coding #iacodestudio`).then(() => {
-    toast('🎵 Link & hashtags copied for TikTok! Opening TikTok 🚀', 'success');
+  const curLang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+  const tiktokMsg = curLang === 'fr'
+    ? `Découvre ce moment sur REALMONT Montréal ! ⚜️ 👉 ${directUrl} #realmont #montreal #mtl #quebec`
+    : `Check out this moment on REALMONT Montreal! ⚜️ 👉 ${directUrl} #realmont #montreal #mtl #quebec`;
+  navigator.clipboard.writeText(tiktokMsg).then(() => {
+    toast(curLang === 'fr' ? '🎵 Lien et hashtags copiés pour TikTok ! Ouverture...' : '🎵 Link & hashtags copied for TikTok! Opening TikTok 🚀', 'success');
     setTimeout(() => {
       window.open('https://www.tiktok.com/', '_blank');
     }, 800);
@@ -8272,10 +8288,14 @@ function shareToTiktok() {
 
 function shareToYoutube() {
   const directUrl = `${window.location.origin}${window.location.pathname}?post=${currentSharePostId || ''}`;
-  navigator.clipboard.writeText(`Interactive 3D WebGL Demo: ${directUrl} (Made with IA Code Studio)`).then(() => {
-    toast('🔴 Link copied for YouTube video / Shorts description! Opening YouTube 🎥', 'success');
+  const curLang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+  navigator.clipboard.writeText(`REALMONT Montreal ⚜️: ${directUrl}`).then(() => {
+    toast(curLang === 'fr' ? '🔴 Lien copié pour YouTube ! Ouverture...' : '🔴 Link copied for YouTube! Opening YouTube 🎥', 'success');
     setTimeout(() => {
       window.open('https://studio.youtube.com/', '_blank');
+    }, 800);
+  });
+}
     }, 800);
   });
 }
@@ -13359,12 +13379,12 @@ async function shareSocialCardNative() {
   const curLang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
   canvas.toBlob(async (blob) => {
     if (!blob) { downloadSocialCard(); return; }
-    const file = new File([blob], 'montreal-story-iacodestudio.png', { type: 'image/png' });
+    const file = new File([blob], 'realmont-montreal-story.png', { type: 'image/png' });
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
       try {
         await navigator.share({
-          title: 'IA Code Studio Montreal ⚜️',
-          text: (curLang === 'fr' ? 'Explorez Montréal sur IA Code Studio ! Rejoignez-nous et recevez +100 🪙 en cadeau de bienvenue !' : 'Explore Montreal on IA Code Studio! Join now and claim your +100 🪙 welcome bonus!'),
+          title: 'REALMONT Montreal ⚜️',
+          text: (curLang === 'fr' ? 'Explorez Montréal sur REALMONT ! Rejoignez-nous et recevez +100 🪙 en cadeau de bienvenue !' : 'Explore Montreal on REALMONT! Join now and claim your +100 🪙 welcome bonus!'),
           files: [file]
         });
       } catch (err) {
