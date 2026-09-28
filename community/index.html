@@ -2513,7 +2513,7 @@
         margin: 0 !important;
         border-radius: 0 !important;
         border: none !important;
-        background: #020617 !important;
+        background: radial-gradient(circle at 50% 35%, #1e1b4b 0%, #0b0f19 60%, #020617 100%) !important;
         box-shadow: none !important;
         display: flex !important;
         flex-direction: column !important;
@@ -5093,7 +5093,7 @@
         <div class="up-area">
           <input type="file" id="imgInput" accept="image/*" multiple onchange="onImgSelect(event)">
           <div class="up-icon">🖼️</div>
-          <div class="up-text"><strong>Click to upload</strong> or drag & drop<br>JPG, PNG, GIF · Max 5MB each</div>
+          <div class="up-text"><strong>Click to upload</strong> or drag & drop<br>JPG, PNG, HEIC, WEBP · Auto HD Compression</div>
         </div>
         <div class="up-prog" id="upProg"><div class="up-prog-bar" id="upBar" style="width:0%"></div></div>
         <div class="img-previews" id="imgPreviews"></div>
@@ -6237,6 +6237,8 @@
 
 <!-- QR CODE GENERATOR LIB -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<!-- HEIC/HEIF Image Converter for iPhone & Mobile Camera Uploads -->
+<script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
 
 <!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -6629,10 +6631,10 @@ function renderPost(p) {
   let imgs = '';
   if (p.images && p.images.length) {
     const ii = p.images;
-    if (ii.length === 1) imgs = `<div class="p-images ig-1"><img src="${ii[0]}" onclick="openLb('${ii[0]}')" loading="lazy"></div>`;
-    else if (ii.length === 2) imgs = `<div class="p-images ig-2">${ii.map(u=>`<img src="${u}" onclick="openLb('${u}')" loading="lazy">`).join('')}</div>`;
-    else if (ii.length === 3) imgs = `<div class="p-images ig-3"><div class="img-main"><img src="${ii[0]}" onclick="openLb('${ii[0]}')" loading="lazy" style="height:100%"></div><img src="${ii[1]}" onclick="openLb('${ii[1]}')" loading="lazy"><img src="${ii[2]}" onclick="openLb('${ii[2]}')" loading="lazy"></div>`;
-    else imgs = `<div class="p-images ig-4">${ii.slice(0,4).map(u=>`<img src="${u}" onclick="openLb('${u}')" loading="lazy">`).join('')}</div>`;
+    if (ii.length === 1) imgs = `<div class="p-images ig-1"><img src="${ii[0]}" onclick="openLb('${ii[0]}')" onerror="this.onerror=null; this.src='../logo-ia-codestudio.webp';" alt="Post Photo"></div>`;
+    else if (ii.length === 2) imgs = `<div class="p-images ig-2">${ii.map(u=>`<img src="${u}" onclick="openLb('${u}')" onerror="this.onerror=null; this.src='../logo-ia-codestudio.webp';" alt="Post Photo">`).join('')}</div>`;
+    else if (ii.length === 3) imgs = `<div class="p-images ig-3"><div class="img-main"><img src="${ii[0]}" onclick="openLb('${ii[0]}')" onerror="this.onerror=null; this.src='../logo-ia-codestudio.webp';" alt="Post Photo" style="height:100%"></div><img src="${ii[1]}" onclick="openLb('${ii[1]}')" onerror="this.onerror=null; this.src='../logo-ia-codestudio.webp';" alt="Post Photo"><img src="${ii[2]}" onclick="openLb('${ii[2]}')" onerror="this.onerror=null; this.src='../logo-ia-codestudio.webp';" alt="Post Photo"></div>`;
+    else imgs = `<div class="p-images ig-4">${ii.slice(0,4).map(u=>`<img src="${u}" onclick="openLb('${u}')" onerror="this.onerror=null; this.src='../logo-ia-codestudio.webp';" alt="Post Photo">`).join('')}</div>`;
   }
 
   // Video HTML
@@ -6673,7 +6675,7 @@ function renderPost(p) {
     const labelFull = currentLang === 'fr' ? '📄 Code Complet' : '📄 Full Code';
     const labelCopy = currentLang === 'fr' ? 'Copier' : 'Copy';
 
-    const safeTitle = (p.title || p.caption || p.content || 'IA Project').replace(/[\r\n\t]+/g, ' ').replace(/'/g, "\\'");
+    const safeTitle = (p.title || p.caption || p.content || 'IA Project').replace(/[\r\r\n\t]+/g, ' ').replace(/'/g, "\\'");
 
     codeHtml = `
       <div class="p-code-tab-container" id="cv-container-${p.id}">
@@ -6858,7 +6860,7 @@ function extractCodeParts(html) {
   const scriptRegex = /<script[^>]*>([\s\S]*?)<\/script>/gi;
   let match;
   while ((match = scriptRegex.exec(html)) !== null) {
-    js += match[1].trim() + '\n\n';
+    js += match[1].trim() + '\r\n\r\n';
   }
   js = js.trim();
 
@@ -7129,53 +7131,213 @@ function openCreate() { if (!user) { signInGoogle(); return; } document.getEleme
 function closeCreate(e) { if (e && e.target !== document.getElementById('createOverlay')) return; document.getElementById('createOverlay').classList.remove('open'); }
 function updChar() { document.getElementById('charCnt').textContent = document.getElementById('postContent').value.length + ' / 2000'; }
 
+// ══════════════════════════════════════════
+// ADVANCED IMAGE PROCESSOR (HEIC -> JPEG + AUTO RESIZE & EXIF ROTATION)
+// ══════════════════════════════════════════
+let isUploadingImages = false;
+
+async function processAndCompressImage(file, maxDimension = 1920, quality = 0.85) {
+  let blobToProcess = file;
+
+  // 1. Detect and convert iPhone HEIC/HEIF to JPEG
+  const fileName = (file.name || '').toLowerCase();
+  const isHeic = fileName.endsWith('.heic') || fileName.endsWith('.heif') || file.type === 'image/heic' || file.type === 'image/heif';
+  
+  if (isHeic && typeof heic2any === 'function') {
+    try {
+      const converted = await heic2any({
+        blob: file,
+        toType: 'image/jpeg',
+        quality: 0.9
+      });
+      blobToProcess = Array.isArray(converted) ? converted[0] : converted;
+    } catch (err) {
+      console.warn('HEIC converter notice, falling back to direct pipeline:', err);
+    }
+  }
+
+  // 2. Scale & compress to crisp HD JPEG (max 1920px)
+  return new Promise((resolve) => {
+    const doCanvasResize = (imgSource, srcWidth, srcHeight) => {
+      try {
+        let w = srcWidth || 1920;
+        let h = srcHeight || 1080;
+        if (w > maxDimension || h > maxDimension) {
+          if (w > h) {
+            h = Math.round((h * maxDimension) / w);
+            w = maxDimension;
+          } else {
+            w = Math.round((w * maxDimension) / h);
+            h = maxDimension;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(imgSource, 0, 0, w, h);
+
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            const cleanName = (file.name || 'photo.jpg').replace(/\.[^/.]+$/, '') + '.jpg';
+            resolve({ file: new File([blobToProcess], cleanName, { type: 'image/jpeg' }), dataUrl: '' });
+            return;
+          }
+          const cleanName = (file.name || 'photo.jpg').replace(/\.[^/.]+$/, '') + '.jpg';
+          const finalFile = new File([blob], cleanName, { type: 'image/jpeg' });
+          const dataUrl = canvas.toDataURL('image/jpeg', quality);
+          resolve({ file: finalFile, dataUrl });
+        }, 'image/jpeg', quality);
+      } catch (e) {
+        console.error('Canvas resize error:', e);
+        resolve({ file: blobToProcess, dataUrl: '' });
+      }
+    };
+
+    // Use createImageBitmap when available for EXIF auto-rotation and high performance
+    if (typeof createImageBitmap === 'function') {
+      createImageBitmap(blobToProcess, { imageOrientation: 'from-image' })
+        .then((bitmap) => {
+          doCanvasResize(bitmap, bitmap.width, bitmap.height);
+        })
+        .catch(() => {
+          fallbackWithImgTag(blobToProcess, doCanvasResize, resolve);
+        });
+    } else {
+      fallbackWithImgTag(blobToProcess, doCanvasResize, resolve);
+    }
+  });
+}
+
+function fallbackWithImgTag(blob, doCanvasResize, resolve) {
+  try {
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      doCanvasResize(img, img.naturalWidth || img.width, img.naturalHeight || img.height);
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve({ file: blob, dataUrl: '' });
+    };
+    img.src = url;
+  } catch (e) {
+    resolve({ file: blob, dataUrl: '' });
+  }
+}
+
 async function onImgSelect(ev) {
   const files = Array.from(ev.target.files).slice(0, 4 - uploadedUrls.length);
   ev.target.value = '';
-  const startIdx = uploadedUrls.length;
-  for (let i = 0; i < files.length; i++) {
-    const f = files[i];
-    if (f.size > 5*1024*1024) { toast('Image too large (max 5MB)', 'error'); continue; }
-    const idx = startIdx + i;
-    const reader = new FileReader();
-    reader.onload = e2 => {
-      const prv = document.createElement('div');
-      prv.className = 'ip-item';
-      prv.id = 'prv-' + idx;
-      prv.innerHTML = `<img src="${e2.target.result}"><button class="ip-rm" onclick="rmPrv(${idx})">✕</button>`;
-      document.getElementById('imgPreviews').appendChild(prv);
-    };
-    reader.readAsDataURL(f);
-    document.getElementById('upProg').style.display = 'block';
-    try {
-      const url = await upFirebaseStorage(f, p => { document.getElementById('upBar').style.width = p + '%'; });
-      uploadedUrls[idx] = url;
-      toast('Image uploaded ✓', 'success');
-    } catch(e) { toast('Upload failed: ' + e.message, 'error'); }
+  if (!files.length) return;
+
+  const btnPub = document.getElementById('btnPub');
+  const upProg = document.getElementById('upProg');
+  const upBar = document.getElementById('upBar');
+  const curLang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+
+  isUploadingImages = true;
+  if (btnPub) {
+    btnPub.disabled = true;
+    btnPub.innerHTML = `<span>⏳ ${curLang === 'fr' ? 'Optimisation de la photo...' : 'Optimizing photo...'}</span>`;
   }
-  document.getElementById('upProg').style.display = 'none';
-  document.getElementById('upBar').style.width = '0%';
+  if (upProg) upProg.style.display = 'block';
+
+  for (let i = 0; i < files.length; i++) {
+    const originalFile = files[i];
+    const idx = uploadedUrls.length;
+
+    // Show thumbnail preview with loading spinner immediately
+    const prv = document.createElement('div');
+    prv.className = 'ip-item';
+    prv.id = 'prv-' + idx;
+    prv.style.position = 'relative';
+    prv.innerHTML = `
+      <div id="ip-spin-${idx}" style="position:absolute;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:3;border-radius:10px;">
+        <div class="spinner" style="width:20px;height:20px;border-width:2px;"></div>
+      </div>
+      <img src="" id="ip-img-${idx}" alt="Uploading..." style="filter:blur(1px);transition:filter 0.3s;width:100%;height:100%;object-fit:cover;">
+      <button class="ip-rm" onclick="rmPrv(${idx})" title="Remove" style="z-index:4;">✕</button>
+    `;
+    document.getElementById('imgPreviews').appendChild(prv);
+
+    try {
+      // 1. Convert HEIC if needed, scale down huge phone camera files, and compress to crisp HD JPEG
+      const { file: processedFile, dataUrl } = await processAndCompressImage(originalFile, 1920, 0.85);
+
+      const previewImg = document.getElementById(`ip-img-${idx}`);
+      if (previewImg && dataUrl) {
+        previewImg.src = dataUrl;
+        previewImg.style.filter = 'none';
+      }
+
+      if (btnPub) {
+        btnPub.innerHTML = `<span>⏳ ${curLang === 'fr' ? 'Envoi sur le cloud...' : 'Uploading to cloud...'}</span>`;
+      }
+
+      // 2. Upload lightweight optimized JPEG to Firebase Storage
+      let finalUrl = null;
+      try {
+        finalUrl = await upFirebaseStorage(processedFile, (pct) => {
+          if (upBar) upBar.style.width = pct + '%';
+        });
+      } catch (storageErr) {
+        console.warn('Firebase Storage upload warning, using local fallback if available:', storageErr);
+        // Fallback: If Storage has a glitch, use the small compressed dataUrl so the post isn't ruined
+        if (dataUrl && dataUrl.length < 800000) {
+          finalUrl = dataUrl;
+        } else {
+          throw storageErr;
+        }
+      }
+
+      uploadedUrls[idx] = finalUrl;
+
+      // Remove spinner
+      const spin = document.getElementById(`ip-spin-${idx}`);
+      if (spin) spin.remove();
+
+      toast(curLang === 'fr' ? 'Photo prête ✓' : 'Photo ready ✓', 'success');
+    } catch (err) {
+      console.error('Image upload failed:', err);
+      toast((curLang === 'fr' ? 'Échec photo: ' : 'Photo failed: ') + (err.message || 'Error'), 'error');
+      prv.remove();
+    }
+  }
+
+  isUploadingImages = false;
+  if (upProg) upProg.style.display = 'none';
+  if (upBar) upBar.style.width = '0%';
+  if (btnPub) {
+    btnPub.disabled = false;
+    btnPub.textContent = '✦ Publish Post';
+  }
 }
 
 function upFirebaseStorage(file, onProg) {
   return new Promise((res, rej) => {
-    const filename = 'community/' + Date.now() + '_' + Math.random().toString(36).substring(2, 9) + '_' + file.name;
+    const cleanFileName = (file.name || 'image.jpg').replace(/[^a-zA-Z0-9._-]/g, '_');
+    const filename = 'community/' + Date.now() + '_' + Math.random().toString(36).substring(2, 9) + '_' + cleanFileName;
     const storageRef = storage.ref(filename);
-    const uploadTask = storageRef.put(file);
+    const metadata = { contentType: file.type || 'image/jpeg' };
+    const uploadTask = storageRef.put(file, metadata);
     
     uploadTask.on('state_changed', 
       (snapshot) => {
         const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 90);
-        onProg(progress);
+        if (typeof onProg === 'function') onProg(progress);
       }, 
       (error) => {
         rej(error);
       }, 
       () => {
         uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-          onProg(100);
+          if (typeof onProg === 'function') onProg(100);
           res(downloadURL);
-        });
+        }).catch(rej);
       }
     );
   });
@@ -7188,15 +7350,38 @@ function rmPrv(idx) {
 
 async function publish() {
   if (!user) return;
+  const curLang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+
+  if (isUploadingImages) {
+    toast(curLang === 'fr' ? '⏳ Vos photos sont en cours d\'envoi, veuillez patienter un instant...' : '⏳ Your photos are still uploading, please wait a moment...', 'info');
+    return;
+  }
+
   const content = document.getElementById('postContent').value.trim();
   const category = document.getElementById('postCat').value;
   const videoUrl = document.getElementById('vidUrl').value.trim();
   const imgs = uploadedUrls.filter(Boolean);
   const hasVoice = (typeof sparkVoiceBlob !== 'undefined' && sparkVoiceBlob);
-  if (!content && !imgs.length && !videoUrl && !hasVoice) { toast('Add some content or voice note first', 'error'); return; }
-  if (content.length > 2000) { toast('Content too long (max 2000)', 'error'); return; }
+
+  const previewCount = document.querySelectorAll('#imgPreviews .ip-item').length;
+  if (previewCount > 0 && imgs.length === 0) {
+    toast(curLang === 'fr' ? 'L\'envoi de la photo a échoué. Veuillez sélectionner à nouveau la photo.' : 'Photo upload failed. Please try selecting the photo again.', 'error');
+    return;
+  }
+
+  if (!content && !imgs.length && !videoUrl && !hasVoice) {
+    toast(curLang === 'fr' ? 'Ajoutez du texte ou une photo d\'abord' : 'Add some content or a photo first', 'error');
+    return;
+  }
+  if (content.length > 2000) {
+    toast('Content too long (max 2000)', 'error');
+    return;
+  }
+
   const btn = document.getElementById('btnPub');
-  btn.disabled = true; btn.textContent = 'Publishing...';
+  btn.disabled = true;
+  btn.textContent = curLang === 'fr' ? 'Publication en cours...' : 'Publishing...';
+
   try {
     let voiceDataUrl = null;
     if (hasVoice) {
@@ -7228,7 +7413,8 @@ async function publish() {
       commentsCount: 0,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
-    toast('Post published! ✨', 'success');
+
+    toast(curLang === 'fr' ? 'Publication réussie ! ✨' : 'Post published! ✨', 'success');
     if (typeof checkAndAwardDailyPulseReward === 'function') checkAndAwardDailyPulseReward(content);
     if (typeof playSoundFx === 'function') playSoundFx('publish');
     if (typeof clearSparkVoice === 'function') clearSparkVoice();
@@ -7240,12 +7426,16 @@ async function publish() {
     document.getElementById('imgPreviews').innerHTML = '';
     document.getElementById('charCnt').textContent = '0 / 2000';
     uploadedUrls = [];
+    isUploadingImages = false;
     loadStats();
     recordQuestProgress('publish', 1);
-  } catch(e) { toast('Error: ' + e.message, 'error'); }
-  finally { btn.disabled = false; btn.textContent = '✦ Publish Post'; }
+  } catch(e) {
+    toast('Error: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '✦ Publish Post';
+  }
 }
-
 // ══════════════════════════════════════════
 // LIKES
 // ══════════════════════════════════════════
@@ -11686,7 +11876,7 @@ function renderDmBubbleHtml(m, isOutgoing, msgId) {
             <button class="dm-code-btn run" onclick="openCodeRunnerModal('${esc(m.code).replace(/'/g, "\\'")}', '${safeTitle}')">▶️ Run 3D</button>
           </div>
         </div>
-        <pre class="dm-code-pre"><code>${esc(m.code.slice(0, 300))}${m.code.length > 300 ? '\n... (Click Run 3D to see full)' : ''}</code></pre>
+        <pre class="dm-code-pre"><code>${esc(m.code.slice(0, 300))}${m.code.length > 300 ? '\r\n... (Click Run 3D to see full)' : ''}</code></pre>
         <div id="ai-exp-${msgId}" style="display:none;padding:8px 12px;background:rgba(124,58,237,0.1);font-size:0.75rem;color:#e9d5ff;border-top:1px solid rgba(124,58,237,0.2);"></div>
       </div>
     `;
@@ -11862,64 +12052,42 @@ function triggerDmPhotoUpload() {
   if (fileInput) fileInput.click();
 }
 
-function handleDmPhotoSelect(e) {
+async function handleDmPhotoSelect(e) {
   const file = e.target.files[0];
   if (!file) return;
 
-  const reader = new FileReader();
-  reader.onload = function(evt) {
-    const img = new Image();
-    img.onload = async function() {
-      // Compress to max 800px width/height and 75% quality
-      const maxDim = 800;
-      let w = img.width;
-      let h = img.height;
-      if (w > maxDim || h > maxDim) {
-        if (w > h) { h = (h / w) * maxDim; w = maxDim; }
-        else { w = (w / h) * maxDim; h = maxDim; }
-      }
+  try {
+    const { dataUrl: compressedDataUrl } = await processAndCompressImage(file, 800, 0.75);
 
-      const canvas = document.createElement('canvas');
-      canvas.width = w;
-      canvas.height = h;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, w, h);
+    if (activeDmTargetUid === 'GENIUS_AI_BOT') {
+      localAiMessages.push({ isAi: false, image: compressedDataUrl, text: "Shared photo" });
+      renderAiConversation();
+      return;
+    }
 
-      const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.75);
+    const myUid = user.uid || user.email || '';
+    const myName = user.displayName || user.email?.split('@')[0] || 'User';
+    const convoId = getDmConvoId(user, activeDmTargetUid);
 
-      if (activeDmTargetUid === 'GENIUS_AI_BOT') {
-        localAiMessages.push({ isAi: false, image: compressedDataUrl, text: "Shared photo" });
-        renderAiConversation();
-        return;
-      }
-
-      const myUid = user.uid || user.email || '';
-      const myName = user.displayName || user.email?.split('@')[0] || 'User';
-      const convoId = getDmConvoId(user, activeDmTargetUid);
-
-      try {
-        await db.collection('devsocial_posts').add({
-          type: 'dm_msg',
-          convoId: convoId,
-          senderUid: myUid,
-          senderEmail: user.email || '',
-          senderName: myName,
-          senderPhoto: user.photoURL || '',
-          receiverUid: activeDmTargetUid,
-          receiverName: activeDmTargetName,
-          image: compressedDataUrl,
-          createdAt: Date.now()
-        });
-        const lang = getCommunityLang();
-        const t = I18N[lang] || I18N.en;
-        toast(t.photoSentToast, 'success');
-      } catch(err) {
-        console.error("Send photo error:", err);
-      }
-    };
-    img.src = evt.target.result;
-  };
-  reader.readAsDataURL(file);
+    await db.collection('devsocial_posts').add({
+      type: 'dm_msg',
+      convoId: convoId,
+      senderUid: myUid,
+      senderEmail: user.email || '',
+      senderName: myName,
+      senderPhoto: user.photoURL || '',
+      receiverUid: activeDmTargetUid,
+      receiverName: activeDmTargetName,
+      image: compressedDataUrl,
+      createdAt: Date.now()
+    });
+    const lang = getCommunityLang();
+    const t = I18N[lang] || I18N.en;
+    toast(t.photoSentToast || 'Photo sent ✓', 'success');
+  } catch(err) {
+    console.error("Send photo error:", err);
+    toast('Error sending photo', 'error');
+  }
 }
 
 // Code Snippet Modals
@@ -12112,29 +12280,23 @@ function closeAddStoryModal() {
   document.getElementById('addStoryModal').style.display = 'none';
 }
 
-function handleStoryPhotoSelect(e) {
+async function handleStoryPhotoSelect(e) {
   const file = e.target.files[0];
   if (!file) return;
-  const reader = new FileReader();
-  reader.onload = evt => {
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      const maxW = 1080; const maxH = 1920;
-      let w = img.width, h = img.height;
-      if (w > maxW) { h = h * maxW / w; w = maxW; }
-      if (h > maxH) { w = w * maxH / h; h = maxH; }
-      canvas.width = w; canvas.height = h;
-      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-      storyPhotoDataUrl = canvas.toDataURL('image/jpeg', 0.82);
-      const preview = document.getElementById('storyPreviewImg');
+  try {
+    const { dataUrl } = await processAndCompressImage(file, 1080, 0.82);
+    storyPhotoDataUrl = dataUrl;
+    const preview = document.getElementById('storyPreviewImg');
+    if (preview) {
       preview.src = storyPhotoDataUrl;
       preview.style.display = 'block';
-      document.getElementById('storyPreviewPlaceholder').style.display = 'none';
-    };
-    img.src = evt.target.result;
-  };
-  reader.readAsDataURL(file);
+    }
+    const ph = document.getElementById('storyPreviewPlaceholder');
+    if (ph) ph.style.display = 'none';
+  } catch (err) {
+    console.error('Story photo processing error:', err);
+    toast('Error processing photo', 'error');
+  }
 }
 
 async function publishStory() {
@@ -12652,79 +12814,79 @@ function mutateCodeWithAi(srcCode, preset, customPrompt) {
     canvasFilter = 'filter: grayscale(100%) sepia(100%) hue-rotate(85deg) saturate(800%) contrast(190%) brightness(0.95) !important;';
   }
 
-  const styleTag = '<style>\n' +
-    'html, body { margin:0; padding:0; overflow:hidden; width:100%; height:100%; background:#000 !important; }\n' +
-    'canvas:not(#geniusAiOverlayCanvas) { ' + canvasFilter + ' }\n' +
-    '#geniusAiOverlayCanvas { position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:9999; }\n' +
+  const styleTag = '<style>\r\n' +
+    'html, body { margin:0; padding:0; overflow:hidden; width:100%; height:100%; background:#000 !important; }\r\n' +
+    'canvas:not(#geniusAiOverlayCanvas) { ' + canvasFilter + ' }\r\n' +
+    '#geniusAiOverlayCanvas { position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:9999; }\r\n' +
     '</style>';
 
   // 3. Live Atmospheric Particles & Shaders Hook
-  const overlayScript = '<' + 'script>\n' +
-    '(function() {\n' +
-    '  window.addEventListener("DOMContentLoaded", function() {\n' +
-    '    var cvs = document.createElement("canvas");\n' +
-    '    cvs.id = "geniusAiOverlayCanvas";\n' +
-    '    document.body.appendChild(cvs);\n' +
-    '    var ctx = cvs.getContext("2d");\n' +
-    '    function resize() { cvs.width = window.innerWidth; cvs.height = window.innerHeight; }\n' +
-    '    resize();\n' +
-    '    window.addEventListener("resize", resize);\n' +
-    '    var preset = "' + preset + '";\n' +
-    '    var pts = [];\n' +
-    '    var count = preset === "matrix" ? 60 : 70;\n' +
-    '    for (var i = 0; i < count; i++) {\n' +
-    '      pts.push({\n' +
-    '        x: Math.random() * cvs.width,\n' +
-    '        y: Math.random() * cvs.height,\n' +
-    '        vx: (Math.random() - 0.5) * (preset === "lava" ? 1.5 : 2),\n' +
-    '        vy: preset === "lava" ? -(Math.random() * 3 + 1) : (preset === "matrix" ? (Math.random() * 5 + 2) : (Math.random() - 0.5) * 2),\n' +
-    '        sz: Math.random() * (preset === "gold" ? 4 : 3) + 1,\n' +
-    '        alpha: Math.random() * 0.8 + 0.2,\n' +
-    '        char: String.fromCharCode(0x30A0 + Math.floor(Math.random() * 96))\n' +
-    '      });\n' +
-    '    }\n' +
-    '    function anim() {\n' +
-    '      ctx.clearRect(0, 0, cvs.width, cvs.height);\n' +
-    '      for (var i = 0; i < pts.length; i++) {\n' +
-    '        var p = pts[i];\n' +
-    '        p.x += p.vx; p.y += p.vy;\n' +
-    '        if (p.y < 0) p.y = cvs.height;\n' +
-    '        if (p.y > cvs.height) p.y = 0;\n' +
-    '        if (p.x < 0) p.x = cvs.width;\n' +
-    '        if (p.x > cvs.width) p.x = 0;\n' +
-    '        ctx.save();\n' +
-    '        if (preset === "matrix") {\n' +
-    '          ctx.fillStyle = "rgba(0, 255, 65, " + p.alpha + ")";\n' +
-    '          ctx.font = (p.sz * 4 + 8) + "px monospace";\n' +
-    '          ctx.fillText(p.char, p.x, p.y);\n' +
-    '        } else if (preset === "lava") {\n' +
-    '          ctx.fillStyle = "rgba(255, " + Math.floor(Math.random()*120+60) + ", 0, " + p.alpha + ")";\n' +
-    '          ctx.shadowColor = "#ff3700"; ctx.shadowBlur = 12;\n' +
-    '          ctx.beginPath(); ctx.arc(p.x, p.y, p.sz, 0, Math.PI * 2); ctx.fill();\n' +
-    '        } else if (preset === "ice") {\n' +
-    '          ctx.fillStyle = "rgba(180, 240, 255, " + p.alpha + ")";\n' +
-    '          ctx.shadowColor = "#00f0ff"; ctx.shadowBlur = 15;\n' +
-    '          ctx.beginPath(); ctx.arc(p.x, p.y, p.sz, 0, Math.PI * 2); ctx.fill();\n' +
-    '        } else if (preset === "gold") {\n' +
-    '          ctx.fillStyle = "rgba(255, 215, 0, " + p.alpha + ")";\n' +
-    '          ctx.shadowColor = "#ffd700"; ctx.shadowBlur = 15;\n' +
-    '          ctx.fillRect(p.x, p.y, p.sz * 1.5, p.sz * 1.5);\n' +
-    '        } else if (preset === "galaxy") {\n' +
-    '          ctx.fillStyle = (i % 2 === 0) ? "rgba(184, 0, 255, " + p.alpha + ")" : "rgba(0, 229, 255, " + p.alpha + ")";\n' +
-    '          ctx.shadowColor = "#b800ff"; ctx.shadowBlur = 15;\n' +
-    '          ctx.beginPath(); ctx.arc(p.x, p.y, p.sz, 0, Math.PI * 2); ctx.fill();\n' +
-    '        } else {\n' +
-    '          ctx.fillStyle = (i % 2 === 0) ? "rgba(0, 240, 255, " + p.alpha + ")" : "rgba(255, 0, 128, " + p.alpha + ")";\n' +
-    '          ctx.shadowColor = "#00f0ff"; ctx.shadowBlur = 15;\n' +
-    '          ctx.beginPath(); ctx.arc(p.x, p.y, p.sz, 0, Math.PI * 2); ctx.fill();\n' +
-    '        }\n' +
-    '        ctx.restore();\n' +
-    '      }\n' +
-    '      requestAnimationFrame(anim);\n' +
-    '    }\n' +
-    '    anim();\n' +
-    '  });\n' +
-    '})();\n' +
+  const overlayScript = '<' + 'script>\r\n' +
+    '(function() {\r\n' +
+    '  window.addEventListener("DOMContentLoaded", function() {\r\n' +
+    '    var cvs = document.createElement("canvas");\r\n' +
+    '    cvs.id = "geniusAiOverlayCanvas";\r\n' +
+    '    document.body.appendChild(cvs);\r\n' +
+    '    var ctx = cvs.getContext("2d");\r\n' +
+    '    function resize() { cvs.width = window.innerWidth; cvs.height = window.innerHeight; }\r\n' +
+    '    resize();\r\n' +
+    '    window.addEventListener("resize", resize);\r\n' +
+    '    var preset = "' + preset + '";\r\n' +
+    '    var pts = [];\r\n' +
+    '    var count = preset === "matrix" ? 60 : 70;\r\n' +
+    '    for (var i = 0; i < count; i++) {\r\n' +
+    '      pts.push({\r\n' +
+    '        x: Math.random() * cvs.width,\r\n' +
+    '        y: Math.random() * cvs.height,\r\n' +
+    '        vx: (Math.random() - 0.5) * (preset === "lava" ? 1.5 : 2),\r\n' +
+    '        vy: preset === "lava" ? -(Math.random() * 3 + 1) : (preset === "matrix" ? (Math.random() * 5 + 2) : (Math.random() - 0.5) * 2),\r\n' +
+    '        sz: Math.random() * (preset === "gold" ? 4 : 3) + 1,\r\n' +
+    '        alpha: Math.random() * 0.8 + 0.2,\r\n' +
+    '        char: String.fromCharCode(0x30A0 + Math.floor(Math.random() * 96))\r\n' +
+    '      });\r\n' +
+    '    }\r\n' +
+    '    function anim() {\r\n' +
+    '      ctx.clearRect(0, 0, cvs.width, cvs.height);\r\n' +
+    '      for (var i = 0; i < pts.length; i++) {\r\n' +
+    '        var p = pts[i];\r\n' +
+    '        p.x += p.vx; p.y += p.vy;\r\n' +
+    '        if (p.y < 0) p.y = cvs.height;\r\n' +
+    '        if (p.y > cvs.height) p.y = 0;\r\n' +
+    '        if (p.x < 0) p.x = cvs.width;\r\n' +
+    '        if (p.x > cvs.width) p.x = 0;\r\n' +
+    '        ctx.save();\r\n' +
+    '        if (preset === "matrix") {\r\n' +
+    '          ctx.fillStyle = "rgba(0, 255, 65, " + p.alpha + ")";\r\n' +
+    '          ctx.font = (p.sz * 4 + 8) + "px monospace";\r\n' +
+    '          ctx.fillText(p.char, p.x, p.y);\r\n' +
+    '        } else if (preset === "lava") {\r\n' +
+    '          ctx.fillStyle = "rgba(255, " + Math.floor(Math.random()*120+60) + ", 0, " + p.alpha + ")";\r\n' +
+    '          ctx.shadowColor = "#ff3700"; ctx.shadowBlur = 12;\r\n' +
+    '          ctx.beginPath(); ctx.arc(p.x, p.y, p.sz, 0, Math.PI * 2); ctx.fill();\r\n' +
+    '        } else if (preset === "ice") {\r\n' +
+    '          ctx.fillStyle = "rgba(180, 240, 255, " + p.alpha + ")";\r\n' +
+    '          ctx.shadowColor = "#00f0ff"; ctx.shadowBlur = 15;\r\n' +
+    '          ctx.beginPath(); ctx.arc(p.x, p.y, p.sz, 0, Math.PI * 2); ctx.fill();\r\n' +
+    '        } else if (preset === "gold") {\r\n' +
+    '          ctx.fillStyle = "rgba(255, 215, 0, " + p.alpha + ")";\r\n' +
+    '          ctx.shadowColor = "#ffd700"; ctx.shadowBlur = 15;\r\n' +
+    '          ctx.fillRect(p.x, p.y, p.sz * 1.5, p.sz * 1.5);\r\n' +
+    '        } else if (preset === "galaxy") {\r\n' +
+    '          ctx.fillStyle = (i % 2 === 0) ? "rgba(184, 0, 255, " + p.alpha + ")" : "rgba(0, 229, 255, " + p.alpha + ")";\r\n' +
+    '          ctx.shadowColor = "#b800ff"; ctx.shadowBlur = 15;\r\n' +
+    '          ctx.beginPath(); ctx.arc(p.x, p.y, p.sz, 0, Math.PI * 2); ctx.fill();\r\n' +
+    '        } else {\r\n' +
+    '          ctx.fillStyle = (i % 2 === 0) ? "rgba(0, 240, 255, " + p.alpha + ")" : "rgba(255, 0, 128, " + p.alpha + ")";\r\n' +
+    '          ctx.shadowColor = "#00f0ff"; ctx.shadowBlur = 15;\r\n' +
+    '          ctx.beginPath(); ctx.arc(p.x, p.y, p.sz, 0, Math.PI * 2); ctx.fill();\r\n' +
+    '        }\r\n' +
+    '        ctx.restore();\r\n' +
+    '      }\r\n' +
+    '      requestAnimationFrame(anim);\r\n' +
+    '    }\r\n' +
+    '    anim();\r\n' +
+    '  });\r\n' +
+    '})();\r\n' +
     '<' + '/script>';
 
   // Inject into Head & Body
@@ -14619,7 +14781,7 @@ function generateViralHook() {
   const randomHook = hooks[Math.floor(Math.random() * hooks.length)];
   const txt = document.getElementById('postContent');
   if (txt) {
-    txt.value = (txt.value ? txt.value + "\n\n" : "") + randomHook;
+    txt.value = (txt.value ? txt.value + "\r\n\r\n" : "") + randomHook;
     if (typeof updChar === 'function') updChar();
     playSoundFx('like');
     toast(lang === 'fr' ? 'Accroche virale insérée!' : 'Viral AI hook inserted!', 'success');
