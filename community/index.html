@@ -1735,17 +1735,251 @@
     }
     .ref-social-btn:hover { background: var(--border); transform: translateY(-1px); }
 
-    /* 📸 3. SOCIAL SHARE CARD MODAL */
+    /* 📸 3. SOCIAL SHARE CARD MODAL & 9:16 STORY FORMAT */
     .social-card-stage {
       background: #020617;
-      border-radius: 12px;
+      border-radius: 16px;
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
       margin-bottom: 14px;
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      box-shadow: 0 10px 35px rgba(0,0,0,0.7), 0 0 25px rgba(168, 85, 247, 0.15);
+      max-height: 520px;
+    }
+    #socialCardCanvas {
+      max-width: 100%;
+      max-height: 480px;
+      width: auto;
+      height: auto;
+      display: block;
+      border-radius: 10px;
+      object-fit: contain;
+    }
+    .social-card-format-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .format-tab-btn {
+      flex: 1;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      color: #94a3b8;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .format-tab-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .format-tab-btn.active {
+      background: linear-gradient(135deg, #a855f7, #ec4899);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+    }
+
+    /* 📊 CREATE FORMAT TOOLBAR */
+    .create-format-toolbar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 4px 2px 10px;
+      scrollbar-width: none;
+    }
+    .create-format-toolbar::-webkit-scrollbar { display: none; }
+    .fmt-tool-btn {
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      color: #cbd5e1;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .fmt-tool-btn:hover, .fmt-tool-btn.active {
+      background: rgba(244, 63, 94, 0.15);
+      border-color: #f43f5e;
+      color: #fff;
+      transform: translateY(-1px);
+    }
+    .fmt-tool-btn.active-blue {
+      background: rgba(6, 182, 212, 0.15);
+      border-color: #06b6d4;
+      color: #38bdf8;
+    }
+    .fmt-tool-btn.active-emerald {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: #10b981;
+      color: #34d399;
+    }
+
+    /* 📊 INTERACTIVE POST POLL CARD */
+    .post-poll-card {
+      background: rgba(11, 17, 32, 0.88);
+      border: 1px solid rgba(244, 63, 94, 0.35);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin: 10px 0;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      z-index: 2;
+    }
+    .poll-question-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .poll-badge {
+      font-size: 0.7rem;
+      font-weight: 900;
+      color: #f43f5e;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .poll-total-votes {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      font-weight: 700;
+    }
+    .poll-options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .poll-opt-btn {
+      position: relative;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      overflow: hidden;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 700;
+      transition: all 0.2s;
+      text-align: left;
+    }
+    .poll-opt-btn:hover {
+      border-color: rgba(244, 63, 94, 0.5);
+      background: rgba(255, 255, 255, 0.09);
+      transform: translateY(-1px);
+    }
+    .poll-opt-btn.voted {
+      border-color: #f43f5e;
+      box-shadow: 0 0 14px rgba(244, 63, 94, 0.25);
+    }
+    .poll-opt-fill {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      background: linear-gradient(90deg, rgba(244, 63, 94, 0.35), rgba(251, 191, 36, 0.25));
+      z-index: 1;
+      transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 9px;
+      pointer-events: none;
+    }
+    .poll-opt-btn:nth-child(2) .poll-opt-fill {
+      background: linear-gradient(90deg, rgba(6, 182, 212, 0.35), rgba(59, 130, 246, 0.25));
+    }
+    .poll-opt-btn:nth-child(3) .poll-opt-fill {
+      background: linear-gradient(90deg, rgba(16, 185, 129, 0.35), rgba(6, 182, 212, 0.25));
+    }
+    .poll-opt-btn:nth-child(4) .poll-opt-fill {
+      background: linear-gradient(90deg, rgba(168, 85, 247, 0.35), rgba(236, 72, 153, 0.25));
+    }
+    .poll-opt-text {
+      position: relative;
+      z-index: 2;
+      font-weight: 700;
+    }
+    .poll-opt-pct {
+      position: relative;
+      z-index: 2;
+      font-family: 'Outfit', monospace;
+      font-size: 0.82rem;
+      font-weight: 900;
+      color: #fbbf24;
+    }
+
+    /* 📍 USER LOCATION TAG */
+    .user-location-tag {
+      font-size: 0.68rem;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #34d399;
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .user-location-tag:hover {
+      background: rgba(16, 185, 129, 0.22);
+      transform: translateY(-1px);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+    }
+
+    /* 📹 DIRECT VIDEO FEED PLAYER */
+    .p-direct-video {
+      position: relative;
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000;
+      margin: 8px 0;
+    }
+    .p-direct-video video {
+      width: 100%;
+      max-height: 480px;
+      display: block;
+      object-fit: cover;
+    }
+    .feed:not(.mode-classic) .tiktok-card .p-direct-video {
+      position: absolute !important;
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      z-index: 1 !important;
+      margin: 0 !important;
+      border-radius: 0 !important;
+    }
+    .feed:not(.mode-classic) .tiktok-card .p-direct-video video {
+      width: 100% !important;
+      height: 100% !important;
+      max-height: none !important;
+      object-fit: cover !important;
     }
     #socialCardCanvas {
       max-width: 100%;
@@ -5053,6 +5287,63 @@
       <textarea class="p-textarea" id="postContent" placeholder="Share your creation, idea or tip with the community... ✨" oninput="updChar()"></textarea>
       <div class="char-count" id="charCnt">0 / 2000</div>
 
+      <!-- VIRAL CREATOR TOOLS BAR -->
+      <div class="create-format-toolbar">
+        <button type="button" class="fmt-tool-btn" id="btnToolPoll" onclick="togglePollCreator()">
+          <span>📊</span> <span>Sondaj / Duel</span>
+        </button>
+        <button type="button" class="fmt-tool-btn" id="btnToolVideo" onclick="toggleVideoSection()">
+          <span>📹</span> <span>Video Clip</span>
+        </button>
+        <button type="button" class="fmt-tool-btn" id="btnToolLocation" onclick="toggleLocationPicker()">
+          <span>📍</span> <span>Locație Montreal</span>
+        </button>
+      </div>
+
+      <!-- 📊 POLL / DUEL CREATOR SECTION -->
+      <div id="pollCreatorSection" style="display:none;background:rgba(244,63,94,0.06);border:1px solid rgba(244,63,94,0.3);border-radius:12px;padding:12px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div style="font-size:0.82rem;font-weight:800;color:#f43f5e;display:flex;align-items:center;gap:6px;">
+            <span>📊</span> <span>SONDAJ / DUEL COMUNITAR (+5 🪙 per vot)</span>
+          </div>
+          <button type="button" onclick="togglePollCreator(false)" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;font-weight:700;">✕ Anulează</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <input type="text" class="in" id="pollOpt1" placeholder="Opțiunea 1 (ex: St-Viateur Bagels 🥯)" style="font-size:0.82rem;padding:8px 12px;">
+          <input type="text" class="in" id="pollOpt2" placeholder="Opțiunea 2 (ex: Fairmount Bagels 🥖)" style="font-size:0.82rem;padding:8px 12px;">
+          <div id="extraPollOptions" style="display:flex;flex-direction:column;gap:8px;"></div>
+          <button type="button" id="btnAddPollOpt" onclick="addPollOptionField()" style="background:rgba(255,255,255,0.06);border:1px dashed var(--border2);color:#cbd5e1;padding:6px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-weight:700;">
+            + Adaugă altă opțiune (max 4)
+          </button>
+        </div>
+      </div>
+
+      <!-- 📍 MONTREAL LOCATION PICKER SECTION -->
+      <div id="locationPickerSection" style="display:none;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.3);border-radius:12px;padding:12px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div style="font-size:0.82rem;font-weight:800;color:#10b981;display:flex;align-items:center;gap:6px;">
+            <span>📍</span> <span>PIN MONTREAL PE MONT-RADAR™</span>
+          </div>
+          <button type="button" onclick="toggleLocationPicker(false)" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;font-weight:700;">✕ Închide</button>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <select class="sel" id="postLocationSelect" onchange="onLocationSelectChange(this)" style="flex:1;">
+            <option value="">Alege un loc emblematic din Montreal...</option>
+            <option value="Mont-Royal (Belvédère)|45.5048|-73.5872|🏔️">🏔️ Mont-Royal (Belvédère Kondiaronk)</option>
+            <option value="Mile End (Bagels & Vibes)|45.5225|-73.5958|🥯">🥯 Mile End (St-Viateur / Fairmount)</option>
+            <option value="Vieux-Port & Fleuve St-Laurent|45.5075|-73.5539|⛵">⛵ Vieux-Port & Vieux-Montréal</option>
+            <option value="Quartier des Spectacles|45.5088|-73.5682|🎭">🎭 Quartier des Spectacles / Place des Arts</option>
+            <option value="Parc La Fontaine|45.5262|-73.5689|🌳">🌳 Parc La Fontaine / Plateau</option>
+            <option value="Downtown Sainte-Catherine|45.5017|-73.5673|🛍️">🛍️ Downtown / Rue Sainte-Catherine</option>
+            <option value="Saint-Henri & Marché Atwater|45.4795|-73.5847|🥪">🥪 Saint-Henri & Marché Atwater</option>
+            <option value="Circuit Gilles-Villeneuve (F1)|45.5034|-73.5273|🚴">🚴 Circuit Gilles-Villeneuve / F1</option>
+            <option value="Griffintown & Canal Lachine|45.4925|-73.5601|🏙️">🏙️ Griffintown & Canal Lachine</option>
+            <option value="custom">📍 Locație Personalizată...</option>
+          </select>
+          <input type="text" class="in" id="customLocationInput" placeholder="Numele locului / străzii..." style="display:none;flex:1;font-size:0.82rem;">
+        </div>
+      </div>
+
       <!-- 🎙️ SPARK VOICE™ (30s Audio Note) -->
       <div class="opt-section" id="sparkVoiceSection">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
@@ -5099,9 +5390,33 @@
         <div class="img-previews" id="imgPreviews"></div>
       </div>
 
-      <div class="opt-section">
-        <label class="opt-lbl">YouTube Video (paste link, max 1 min)</label>
-        <input type="url" class="vid-input" id="vidUrl" placeholder="https://youtube.com/watch?v=... or https://youtu.be/...">
+      <div class="opt-section" id="videoSectionBox">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <label class="opt-lbl" style="margin:0;">Video (Telefon / Fișier sau YouTube)</label>
+          <div style="display:flex;gap:4px;">
+            <button type="button" class="fmt-tool-btn active-blue" id="btnVidTabFile" onclick="switchVideoTab('file')" style="font-size:0.72rem;padding:3px 9px;">📹 Fișier Video</button>
+            <button type="button" class="fmt-tool-btn" id="btnVidTabYt" onclick="switchVideoTab('yt')" style="font-size:0.72rem;padding:3px 9px;">🔗 YouTube</button>
+          </div>
+        </div>
+        
+        <!-- Direct Video Upload Drop / Picker -->
+        <div id="videoUploadBox" style="display:block;">
+          <input type="file" id="videoFileInput" accept="video/mp4,video/webm,video/quicktime,video/mov" style="display:none;" onchange="onVideoSelect(event)">
+          <div class="up-area" style="padding:14px;cursor:pointer;" onclick="document.getElementById('videoFileInput').click()">
+            <div class="up-icon" style="font-size:1.8rem;">📹</div>
+            <div class="up-text"><strong>Apasă pentru video din telefon / PC</strong><br>MP4, WebM, MOV · Max 60 secunde</div>
+          </div>
+          <div class="up-prog" id="upVidProg" style="display:none;"><div class="up-prog-bar" id="upVidBar" style="width:0%"></div></div>
+          <div id="videoPreviewWrap" style="display:none;margin-top:8px;position:relative;border-radius:10px;overflow:hidden;background:#000;">
+            <video id="videoPreviewEl" playsinline controls style="width:100%;max-height:220px;display:block;border-radius:10px;"></video>
+            <button type="button" onclick="removeSelectedVideo()" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.75);color:#fff;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-weight:900;" title="Șterge video">✕</button>
+          </div>
+        </div>
+
+        <!-- YouTube Link Box -->
+        <div id="videoYtBox" style="display:none;">
+          <input type="url" class="vid-input" id="vidUrl" placeholder="https://youtube.com/watch?v=... or https://youtu.be/...">
+        </div>
       </div>
     </div>
     <div class="mf">
@@ -5519,19 +5834,36 @@
       <button class="mc" onclick="closeSocialCardModal()">✕</button>
     </div>
     <div class="mb">
-      <div style="font-size:0.84rem;color:#94a3b8;margin-bottom:12px;" id="lbl-social-card-sub">
-        Download or copy your branded 3D project showcase card with live QR Code to share on social media.
+      <!-- Format Switcher: 9:16 Story vs 1200x630 Banner -->
+      <div class="social-card-format-tabs">
+        <button type="button" class="format-tab-btn active" id="btnFmtStory916" onclick="switchSocialCardFormat('story916')">
+          <span>📱</span> <span>Story Instagram / TikTok (9:16)</span>
+        </button>
+        <button type="button" class="format-tab-btn" id="btnFmtLandscape" onclick="switchSocialCardFormat('landscape')">
+          <span>🖥️</span> <span>Banner Feed / Twitter (1200x630)</span>
+        </button>
       </div>
+
+      <div style="font-size:0.82rem;color:#94a3b8;margin-bottom:10px;" id="lbl-social-card-sub">
+        Distribuie instantaneu pe Instagram Stories, TikTok sau WhatsApp cu cod QR live și bonus de bun venit!
+      </div>
+
       <div class="social-card-stage">
-        <canvas id="socialCardCanvas" width="1200" height="630"></canvas>
+        <canvas id="socialCardCanvas" width="1080" height="1920"></canvas>
       </div>
-      <div style="display:flex;gap:10px;justify-content:flex-end;">
-        <button class="shop-btn" style="width:auto;padding:8px 16px;background:var(--bg3);border:1px solid var(--border2);color:#fff;" onclick="copySocialCardToClipboard()" id="btn-copy-social-card">
-          📋 Copy Image
+
+      <div style="display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap;align-items:center;">
+        <button class="shop-btn" style="width:auto;padding:8px 14px;background:linear-gradient(135deg,#ec4899,#a855f7);border:none;color:#fff;font-weight:800;" onclick="shareSocialCardNative()" id="btn-share-social-card">
+          <span>📲 Partajează pe Instagram / TikTok</span>
         </button>
-        <button class="shop-btn buy" style="width:auto;padding:8px 18px;" onclick="downloadSocialCard()" id="btn-download-social-card">
-          📥 Download PNG
-        </button>
+        <div style="display:flex;gap:8px;">
+          <button class="shop-btn" style="width:auto;padding:8px 14px;background:var(--bg3);border:1px solid var(--border2);color:#fff;" onclick="copySocialCardToClipboard()" id="btn-copy-social-card">
+            📋 Copiază
+          </button>
+          <button class="shop-btn buy" style="width:auto;padding:8px 16px;" onclick="downloadSocialCard()" id="btn-download-social-card">
+            📥 Descarcă PNG
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -6627,6 +6959,45 @@ function renderPost(p) {
   const authorBadge = p.equippedBadge ? `<span class="badge-pill">${esc(p.equippedBadge)}</span>` : '';
   const authorGlow = p.equippedGlow === 'prism' ? 'user-glow-prism' : '';
 
+  // Direct Video Upload HTML
+  let directVidHtml = '';
+  if (p.videoFileUrl) {
+    directVidHtml = `
+      <div class="p-video p-direct-video">
+        <video src="${p.videoFileUrl}" playsinline loop controls muted preload="metadata" onclick="this.paused ? this.play() : this.pause()"></video>
+      </div>
+    `;
+  }
+
+  // Interactive Poll HTML
+  let pollHtml = '';
+  if (p.poll && p.poll.options && p.poll.options.length) {
+    const totalVotes = p.poll.totalVotes || 0;
+    const userVotedAny = user && p.poll.options.some(o => o.voters && o.voters.includes(user.uid));
+    pollHtml = `
+      <div class="post-poll-card" id="poll-${p.id}">
+        <div class="poll-question-header">
+          <span class="poll-badge">📊 SONDAJ COMUNITAR MTL</span>
+          <span class="poll-total-votes" id="poll-total-${p.id}">${totalVotes} vot${totalVotes === 1 ? '' : 'uri'}</span>
+        </div>
+        <div class="poll-options-list">
+          ${p.poll.options.map(opt => {
+            const votes = opt.votes || 0;
+            const pct = totalVotes > 0 ? Math.round((votes / totalVotes) * 100) : 0;
+            const isVotedByMe = user && opt.voters && opt.voters.includes(user.uid);
+            return `
+              <button class="poll-opt-btn ${isVotedByMe ? 'voted' : ''}" onclick="votePostPoll('${p.id}', '${opt.id}', event)">
+                <div class="poll-opt-fill" style="width: ${userVotedAny ? pct : 0}%;"></div>
+                <span class="poll-opt-text">${esc(opt.text)} ${isVotedByMe ? '✓' : ''}</span>
+                ${userVotedAny ? `<span class="poll-opt-pct">${pct}% (${votes})</span>` : ''}
+              </button>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }
+
   // Images HTML
   let imgs = '';
   if (p.images && p.images.length) {
@@ -6768,7 +7139,7 @@ function renderPost(p) {
       <img src="${a}" class="p-avatar ${authorFrame}">
       <div class="pm">
         <div class="p-author ${authorGlow}" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-          <span style="cursor:pointer;" onclick="openAuthorProfileModal('${esc(authorUid)}', '${esc(displayName).replace(/'/g, "\\'")}', '${esc(a)}')">${esc(displayName)}</span> ${p.neighborhood ? `<span class="user-neighborhood-tag" onclick="event.stopPropagation(); openAuthorProfileModal('${esc(authorUid)}', '${esc(displayName).replace(/'/g, "\\'")}', '${esc(a)}')">⚜️ ${esc(p.neighborhood).replace('⚜️','').trim()}</span>` : ''} ${authorBadge} ${userTag ? `<span class="user-tag" style="background: rgba(124, 58, 237, 0.15); color: #c084fc; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: normal; display: inline-block;">${esc(userTag)}</span>` : ''}
+          <span style="cursor:pointer;" onclick="openAuthorProfileModal('${esc(authorUid)}', '${esc(displayName).replace(/'/g, "\\'")}', '${esc(a)}')">${esc(displayName)}</span> ${p.neighborhood ? `<span class="user-neighborhood-tag" onclick="event.stopPropagation(); openAuthorProfileModal('${esc(authorUid)}', '${esc(displayName).replace(/'/g, "\\'")}', '${esc(a)}')">⚜️ ${esc(p.neighborhood).replace('⚜️','').trim()}</span>` : ''} ${p.location && p.location.name ? `<span class="user-location-tag" onclick="event.stopPropagation(); flyToRadarLocation('${esc(p.location.name)}', ${p.location.lat || 45.5017}, ${p.location.lng || -73.5673})">📍 ${esc(p.location.name)} ↗</span>` : ''} ${authorBadge} ${userTag ? `<span class="user-tag" style="background: rgba(124, 58, 237, 0.15); color: #c084fc; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: normal; display: inline-block;">${esc(userTag)}</span>` : ''}
           ${followBtnHtml}
         </div>
         <div class="p-time">
@@ -6783,7 +7154,7 @@ function renderPost(p) {
       </div>
     </div>
     ${postCaption ? `<div class="p-content" onclick="this.classList.toggle('expanded')">${esc(postCaption)}</div>` : ''}
-    ${imgs}${vid}${voiceHtml}${codeHtml}
+    ${directVidHtml}${imgs}${vid}${pollHtml}${voiceHtml}${codeHtml}
     <div class="pf">
       <div class="tiktok-side-avatar-box" onclick="openAuthorProfileModal('${esc(authorUid)}', '${esc(displayName).replace(/'/g, "\\'")}', '${esc(a)}')">
         <img src="${a}" class="tiktok-side-avatar ${authorFrame}" alt="${esc(displayName)}">
@@ -7393,6 +7764,36 @@ async function publish() {
       });
     }
 
+    // 1. Construct Poll Data if active
+    let pollData = null;
+    if (isPollActive) {
+      const o1 = (document.getElementById('pollOpt1')?.value || '').trim();
+      const o2 = (document.getElementById('pollOpt2')?.value || '').trim();
+      const o3 = (document.getElementById('pollOpt3')?.value || '').trim();
+      const o4 = (document.getElementById('pollOpt4')?.value || '').trim();
+      const rawOpts = [o1, o2, o3, o4].filter(Boolean);
+      if (rawOpts.length >= 2) {
+        pollData = {
+          id: 'poll_' + Date.now(),
+          question: content || 'Sondaj Comunitar Montreal',
+          options: rawOpts.map((txt, idx) => ({
+            id: 'opt_' + idx,
+            text: txt,
+            votes: 0,
+            voters: []
+          })),
+          totalVotes: 0,
+          createdAt: Date.now()
+        };
+      }
+    }
+
+    // 2. Custom Location input check
+    if (selectedLocationData && document.getElementById('customLocationInput')) {
+      const custVal = document.getElementById('customLocationInput').value.trim();
+      if (custVal) selectedLocationData.name = custVal;
+    }
+
     const postRef = db.collection('devsocial_posts').doc();
     const postId = postRef.id;
     await postRef.set({
@@ -7405,7 +7806,10 @@ async function publish() {
       content,
       images: imgs,
       videoUrl: videoUrl || null,
+      videoFileUrl: uploadedVideoUrl || null,
       voiceUrl: voiceDataUrl || null,
+      poll: pollData,
+      location: selectedLocationData || null,
       category,
       likedBy: [],
       likesCount: 0,
@@ -7427,6 +7831,9 @@ async function publish() {
     document.getElementById('charCnt').textContent = '0 / 2000';
     uploadedUrls = [];
     isUploadingImages = false;
+    togglePollCreator(false);
+    toggleLocationPicker(false);
+    removeSelectedVideo();
     loadStats();
     recordQuestProgress('publish', 1);
   } catch(e) {
@@ -10583,13 +10990,240 @@ function closeSocialCardModal(e) {
   activeSocialCardPost = null;
 }
 
-function renderSocialCardCanvas(post) {
+function renderSocialCardCanvas(post, formatOverride) {
   activeSocialCardPost = post;
+  const format = formatOverride || currentSocialCardFormat || 'story916';
   const canvas = document.getElementById('socialCardCanvas');
   if (!canvas) return;
+
+  if (format === 'story916') {
+    canvas.width = 1080;
+    canvas.height = 1920;
+  } else {
+    canvas.width = 1200;
+    canvas.height = 630;
+  }
+
   const ctx = canvas.getContext('2d');
-  const w = canvas.width;  // 1200
-  const h = canvas.height; // 630
+  const w = canvas.width;
+  const h = canvas.height;
+
+  // ════════════════════════════════════════
+  // 📱 RENDER 9:16 INSTAGRAM / TIKTOK STORY
+  // ════════════════════════════════════════
+  if (format === 'story916') {
+    // 1. Deep Cyberpunk Gradient
+    const bgGrad = ctx.createLinearGradient(0, 0, w, h);
+    bgGrad.addColorStop(0, '#030712');
+    bgGrad.addColorStop(0.3, '#0f172a');
+    bgGrad.addColorStop(0.7, '#1e1b4b');
+    bgGrad.addColorStop(1, '#020617');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    // 2. Cyber Grid & Glowing Ambient Lights
+    ctx.strokeStyle = 'rgba(168, 85, 247, 0.08)';
+    ctx.lineWidth = 1;
+    for (let x = 0; x < w; x += 60) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+    }
+    for (let y = 0; y < h; y += 60) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+    }
+
+    const orb1 = ctx.createRadialGradient(w / 2, 300, 20, w / 2, 300, 500);
+    orb1.addColorStop(0, 'rgba(244, 63, 94, 0.35)');
+    orb1.addColorStop(1, 'rgba(244, 63, 94, 0)');
+    ctx.fillStyle = orb1; ctx.fillRect(0, 0, w, h);
+
+    const orb2 = ctx.createRadialGradient(w / 2, 1400, 20, w / 2, 1400, 600);
+    orb2.addColorStop(0, 'rgba(6, 182, 212, 0.25)');
+    orb2.addColorStop(1, 'rgba(6, 182, 212, 0)');
+    ctx.fillStyle = orb2; ctx.fillRect(0, 0, w, h);
+
+    // Outer Neon Border
+    ctx.strokeStyle = 'rgba(244, 63, 94, 0.7)';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(36, 36, w - 72, h - 72);
+
+    // 3. Top Header: Branding
+    ctx.fillStyle = '#fbbf24';
+    ctx.font = '900 38px Outfit, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('⚜️ REAL MONT · IA CODE STUDIO ⚜️', w / 2, 120);
+
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '600 24px Outfit, sans-serif';
+    ctx.fillText('MONTREAL VIRAL SOCIAL NETWORK', w / 2, 165);
+
+    // 4. Author Header Card
+    const authorName = post.displayName || post.user || 'Creator';
+    const authorNeigh = post.neighborhood ? post.neighborhood.replace('⚜️', '').trim() : 'Montréal';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(80, 210, w - 160, 110, [20]);
+    ctx.fill(); ctx.stroke();
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '800 36px Outfit, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(authorName, 120, 265);
+
+    ctx.fillStyle = '#38bdf8';
+    ctx.font = '700 24px Outfit, sans-serif';
+    ctx.fillText(`⚜️ ${authorNeigh} · Montrealer`, 120, 300);
+
+    // 5. Post Caption / Quote
+    const caption = (post.caption || post.content || 'Interactive Montreal Creation ⚜️').slice(0, 140);
+    ctx.fillStyle = '#f8fafc';
+    ctx.font = '800 42px Outfit, sans-serif';
+    ctx.textAlign = 'center';
+    
+    // Multi-line caption wrapping
+    const words = caption.split(' ');
+    let line = '';
+    let curY = 380;
+    for (let n = 0; n < words.length; n++) {
+      const testLine = line + words[n] + ' ';
+      const metrics = ctx.measureText(testLine);
+      if (metrics.width > (w - 180) && n > 0) {
+        ctx.fillText(line, w / 2, curY);
+        line = words[n] + ' ';
+        curY += 54;
+      } else {
+        line = testLine;
+      }
+    }
+    ctx.fillText(line, w / 2, curY);
+
+    // 6. Visual Media Box (Middle)
+    const mediaBoxY = Math.max(curY + 40, 520);
+    const mediaBoxH = 680;
+    ctx.fillStyle = '#000000';
+    ctx.strokeStyle = 'rgba(244, 63, 94, 0.4)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.roundRect(80, mediaBoxY, w - 160, mediaBoxH, [24]);
+    ctx.fill(); ctx.stroke();
+
+    const drawQrAndFooter = () => {
+      // 7. Viral Invitation & QR Code Section
+      const qrBoxY = mediaBoxY + mediaBoxH + 40;
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+      ctx.strokeStyle = 'rgba(251, 191, 36, 0.4)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(80, qrBoxY, w - 160, 260, [20]);
+      ctx.fill(); ctx.stroke();
+
+      // QR Code Box
+      const qrSize = 190;
+      const qrX = 120;
+      const qrY = qrBoxY + 35;
+      
+      const qrEl = document.createElement('div');
+      const postUrl = `https://ia-codestudio.com/community/#post-${post.id}`;
+      new QRCode(qrEl, { text: postUrl, width: qrSize, height: qrSize, correctLevel: QRCode.CorrectLevel.M });
+
+      setTimeout(() => {
+        const qrCanvas = qrEl.querySelector('canvas') || qrEl.querySelector('img');
+        if (qrCanvas) {
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.roundRect(qrX - 8, qrY - 8, qrSize + 16, qrSize + 16, [12]);
+          ctx.fill();
+          ctx.drawImage(qrCanvas, qrX, qrY, qrSize, qrSize);
+        }
+
+        // Call to action text next to QR
+        ctx.fillStyle = '#fbbf24';
+        ctx.font = '900 32px Outfit, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText('🎁 SCAN TO VIEW & CLAIM', 350, qrBoxY + 80);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '800 40px Outfit, sans-serif';
+        ctx.fillText('+100 🪙 WELCOME BONUS', 350, qrBoxY + 130);
+
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '600 22px Outfit, sans-serif';
+        ctx.fillText('Open camera on phone & scan code', 350, qrBoxY + 175);
+
+        ctx.fillStyle = '#38bdf8';
+        ctx.font = '700 24px Outfit, sans-serif';
+        ctx.fillText('ia-codestudio.com/community', 350, qrBoxY + 215);
+
+        // Watermark Footer
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.font = '700 20px Outfit, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Montreal\'s Free WebGL & Cyber Social Platform ⚜️', w / 2, h - 60);
+      }, 80);
+    };
+
+    // If post has image: draw image in the media box
+    if (post.images && post.images.length) {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(80, mediaBoxY, w - 160, mediaBoxH, [24]);
+        ctx.clip();
+        ctx.drawImage(img, 80, mediaBoxY, w - 160, mediaBoxH);
+        ctx.restore();
+        drawQrAndFooter();
+      };
+      img.onerror = () => {
+        ctx.fillStyle = '#06b6d4';
+        ctx.font = '900 80px Outfit, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('⚜️ MONTREAL', w / 2, mediaBoxY + 340);
+        drawQrAndFooter();
+      };
+      img.src = post.images[0];
+    } else if (post.poll && post.poll.options) {
+      // Draw Poll Graphic in Story
+      ctx.fillStyle = '#f43f5e';
+      ctx.font = '900 36px Outfit, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('📊 VOTEAZĂ ÎN SONDAJUL ZILEI', w / 2, mediaBoxY + 100);
+
+      post.poll.options.slice(0, 3).forEach((opt, idx) => {
+        const optY = mediaBoxY + 180 + (idx * 140);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+        ctx.strokeStyle = idx === 0 ? '#f43f5e' : '#06b6d4';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.roundRect(120, optY, w - 240, 95, [18]);
+        ctx.fill(); ctx.stroke();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '800 34px Outfit, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText(opt.text, 160, optY + 60);
+      });
+      drawQrAndFooter();
+    } else {
+      // 3D/AI/Code Text Showcase
+      ctx.fillStyle = '#a855f7';
+      ctx.font = '900 80px Outfit, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('🚀 IA CODE STUDIO', w / 2, mediaBoxY + 300);
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.font = '800 42px Outfit, sans-serif';
+      ctx.fillText('⚡ 3D WebGL & AI Innovation', w / 2, mediaBoxY + 380);
+      drawQrAndFooter();
+    }
+    return;
+  }
+
+  // ════════════════════════════════════════
+  // 🖥️ RENDER 1200x630 LANDSCAPE BANNER
+  // ════════════════════════════════════════
 
   function drawBase() {
     // 1. Dark Futuristic Cyber Gradient Background
@@ -12047,6 +12681,350 @@ async function sendDmText() {
 }
 
 // Photo Upload Compression (Client-side HTML5 Canvas)
+// ══════════════════════════════════════════
+// VIRAL CREATOR TOOLS: POLLS, VIDEO UPLOAD, LOCATION PIN & 9:16 STORIES
+// ══════════════════════════════════════════
+let isPollActive = false;
+let pollOptionsCount = 2;
+let uploadedVideoUrl = null;
+let isUploadingVideo = false;
+let selectedLocationData = null;
+let currentSocialCardFormat = 'story916';
+
+function togglePollCreator(forceState) {
+  isPollActive = (typeof forceState === 'boolean') ? forceState : !isPollActive;
+  const box = document.getElementById('pollCreatorSection');
+  const btn = document.getElementById('btnToolPoll');
+  if (box) box.style.display = isPollActive ? 'block' : 'none';
+  if (btn) btn.classList.toggle('active', isPollActive);
+  if (!isPollActive) {
+    const o1 = document.getElementById('pollOpt1');
+    const o2 = document.getElementById('pollOpt2');
+    const extra = document.getElementById('extraPollOptions');
+    if (o1) o1.value = '';
+    if (o2) o2.value = '';
+    if (extra) extra.innerHTML = '';
+    pollOptionsCount = 2;
+  }
+}
+
+function addPollOptionField() {
+  if (pollOptionsCount >= 4) {
+    toast('Maxim 4 opțiuni permise', 'info');
+    return;
+  }
+  pollOptionsCount++;
+  const extra = document.getElementById('extraPollOptions');
+  if (!extra) return;
+  const optIdx = pollOptionsCount;
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'in';
+  input.id = 'pollOpt' + optIdx;
+  input.placeholder = `Opțiunea ${optIdx} (opțional)`;
+  input.style.fontSize = '0.82rem';
+  input.style.padding = '8px 12px';
+  extra.appendChild(input);
+  if (pollOptionsCount >= 4) {
+    const btn = document.getElementById('btnAddPollOpt');
+    if (btn) btn.style.display = 'none';
+  }
+}
+
+function toggleLocationPicker(forceState) {
+  const box = document.getElementById('locationPickerSection');
+  const btn = document.getElementById('btnToolLocation');
+  const isOpen = (typeof forceState === 'boolean') ? forceState : (box && box.style.display === 'none');
+  if (box) box.style.display = isOpen ? 'block' : 'none';
+  if (btn) btn.classList.toggle('active-emerald', isOpen);
+  if (!isOpen) {
+    selectedLocationData = null;
+    const sel = document.getElementById('postLocationSelect');
+    if (sel) sel.value = '';
+    const cust = document.getElementById('customLocationInput');
+    if (cust) { cust.value = ''; cust.style.display = 'none'; }
+  }
+}
+
+function onLocationSelectChange(sel) {
+  const customInp = document.getElementById('customLocationInput');
+  if (!sel || !sel.value) {
+    selectedLocationData = null;
+    if (customInp) customInp.style.display = 'none';
+    return;
+  }
+  if (sel.value === 'custom') {
+    selectedLocationData = { name: 'Montréal', lat: 45.5017, lng: -73.5673, icon: '📍' };
+    if (customInp) {
+      customInp.style.display = 'block';
+      customInp.focus();
+    }
+  } else {
+    if (customInp) customInp.style.display = 'none';
+    const parts = sel.value.split('|');
+    selectedLocationData = {
+      name: parts[0] || 'Montréal',
+      lat: parseFloat(parts[1]) || 45.5017,
+      lng: parseFloat(parts[2]) || -73.5673,
+      icon: parts[3] || '📍'
+    };
+  }
+}
+
+function toggleVideoSection() {
+  const box = document.getElementById('videoSectionBox');
+  const btn = document.getElementById('btnToolVideo');
+  if (box) {
+    const isVis = box.style.display !== 'none';
+    box.style.display = isVis ? 'none' : 'block';
+    if (btn) btn.classList.toggle('active-blue', !isVis);
+  }
+}
+
+function switchVideoTab(tab) {
+  const fileBox = document.getElementById('videoUploadBox');
+  const ytBox = document.getElementById('videoYtBox');
+  const btnFile = document.getElementById('btnVidTabFile');
+  const btnYt = document.getElementById('btnVidTabYt');
+  if (tab === 'file') {
+    if (fileBox) fileBox.style.display = 'block';
+    if (ytBox) ytBox.style.display = 'none';
+    if (btnFile) { btnFile.classList.add('active-blue'); }
+    if (btnYt) { btnYt.classList.remove('active-blue'); }
+  } else {
+    if (fileBox) fileBox.style.display = 'none';
+    if (ytBox) ytBox.style.display = 'block';
+    if (btnYt) { btnYt.classList.add('active-blue'); }
+    if (btnFile) { btnFile.classList.remove('active-blue'); }
+  }
+}
+
+async function onVideoSelect(ev) {
+  const file = ev.target.files && ev.target.files[0];
+  ev.target.value = '';
+  if (!file) return;
+
+  if (file.size > 50 * 1024 * 1024) {
+    toast('Fișierul depășește 50MB. Vă rugăm alegeți un clip de max 60s.', 'error');
+    return;
+  }
+
+  const previewWrap = document.getElementById('videoPreviewWrap');
+  const videoEl = document.getElementById('videoPreviewEl');
+  const upProg = document.getElementById('upVidProg');
+  const upBar = document.getElementById('upVidBar');
+  const btnPub = document.getElementById('btnPub');
+  const curLang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+
+  if (videoEl) {
+    videoEl.src = URL.createObjectURL(file);
+    if (previewWrap) previewWrap.style.display = 'block';
+  }
+
+  isUploadingVideo = true;
+  if (btnPub) {
+    btnPub.disabled = true;
+    btnPub.innerHTML = `<span>⏳ ${curLang === 'fr' ? 'Envoi de la vidéo...' : 'Uploading video...'}</span>`;
+  }
+  if (upProg) upProg.style.display = 'block';
+
+  try {
+    const cleanFileName = (file.name || 'video.mp4').replace(/[^a-zA-Z0-9._-]/g, '_');
+    const filename = 'community/videos/' + Date.now() + '_' + Math.random().toString(36).substring(2, 9) + '_' + cleanFileName;
+    const storageRef = storage.ref(filename);
+    const metadata = { contentType: file.type || 'video/mp4' };
+    const uploadTask = storageRef.put(file, metadata);
+
+    uploadTask.on('state_changed',
+      (snapshot) => {
+        const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 90);
+        if (upBar) upBar.style.width = progress + '%';
+      },
+      (err) => {
+        console.error('Video upload error:', err);
+        toast('Upload video failed: ' + err.message, 'error');
+        removeSelectedVideo();
+      },
+      async () => {
+        const downloadUrl = await uploadTask.snapshot.ref.getDownloadURL();
+        uploadedVideoUrl = downloadUrl;
+        if (upBar) upBar.style.width = '100%';
+        toast(curLang === 'fr' ? 'Vidéo prête ✓' : 'Video ready ✓', 'success');
+        isUploadingVideo = false;
+        if (upProg) upProg.style.display = 'none';
+        if (upBar) upBar.style.width = '0%';
+        if (btnPub) { btnPub.disabled = false; btnPub.textContent = '✦ Publish Post'; }
+      }
+    );
+  } catch (e) {
+    console.error('Video error:', e);
+    toast('Error: ' + e.message, 'error');
+    removeSelectedVideo();
+  }
+}
+
+function removeSelectedVideo() {
+  uploadedVideoUrl = null;
+  isUploadingVideo = false;
+  const previewWrap = document.getElementById('videoPreviewWrap');
+  const videoEl = document.getElementById('videoPreviewEl');
+  const upProg = document.getElementById('upVidProg');
+  const upBar = document.getElementById('upVidBar');
+  const btnPub = document.getElementById('btnPub');
+  if (videoEl) { videoEl.pause(); videoEl.src = ''; }
+  if (previewWrap) previewWrap.style.display = 'none';
+  if (upProg) upProg.style.display = 'none';
+  if (upBar) upBar.style.width = '0%';
+  if (btnPub) { btnPub.disabled = false; btnPub.textContent = '✦ Publish Post'; }
+}
+
+async function votePostPoll(postId, optionId, ev) {
+  if (ev) ev.stopPropagation();
+  if (!user) {
+    signInGoogle();
+    return;
+  }
+
+  const pollCard = document.getElementById('poll-' + postId);
+  if (!pollCard) return;
+
+  try {
+    const postRef = db.collection('devsocial_posts').doc(postId);
+    const doc = await postRef.get();
+    if (!doc.exists) return;
+
+    const data = doc.data();
+    const poll = data.poll;
+    if (!poll || !poll.options) return;
+
+    // Check if user already voted
+    const alreadyVoted = poll.options.some(o => o.voters && o.voters.includes(user.uid));
+    if (alreadyVoted) {
+      toast(getCommunityLang() === 'fr' ? 'Vous avez déjà voté dans ce sondaj !' : 'You have already voted in this poll!', 'info');
+      return;
+    }
+
+    // Update poll
+    poll.totalVotes = (poll.totalVotes || 0) + 1;
+    poll.options.forEach(opt => {
+      if (opt.id === optionId) {
+        opt.votes = (opt.votes || 0) + 1;
+        opt.voters = opt.voters || [];
+        opt.voters.push(user.uid);
+      }
+    });
+
+    await postRef.update({ poll: poll });
+
+    // Reward +5 coins
+    if (typeof addCoinsLocally === 'function') {
+      addCoinsLocally(5, 'Poll Vote');
+    } else if (typeof giveUserCoins === 'function') {
+      giveUserCoins(5, 'Poll Vote');
+    } else {
+      const cur = parseInt(localStorage.getItem('genius_user_coins') || '0', 10);
+      localStorage.setItem('genius_user_coins', cur + 5);
+      const bEl = document.getElementById('hdrCoinBalance');
+      if (bEl) bEl.textContent = cur + 5;
+    }
+
+    playSoundFx('coin');
+    const lang = getCommunityLang();
+    toast(lang === 'fr' ? '🎉 +5 🪙 pour votre vote dans le sondaj !' : '🎉 +5 🪙 earned for your vote!', 'success');
+
+    // Live update UI locally
+    const totalVotes = poll.totalVotes;
+    const totalEl = document.getElementById('poll-total-' + postId);
+    if (totalEl) totalEl.textContent = totalVotes + (lang === 'fr' ? ' votes' : ' votes');
+
+    const optButtons = pollCard.querySelectorAll('.poll-opt-btn');
+    poll.options.forEach((opt, idx) => {
+      const btn = optButtons[idx];
+      if (btn) {
+        const pct = Math.round((opt.votes / totalVotes) * 100);
+        const fill = btn.querySelector('.poll-opt-fill');
+        if (fill) fill.style.width = pct + '%';
+        if (opt.id === optionId) btn.classList.add('voted');
+        let pctEl = btn.querySelector('.poll-opt-pct');
+        if (!pctEl) {
+          pctEl = document.createElement('span');
+          pctEl.className = 'poll-opt-pct';
+          btn.appendChild(pctEl);
+        }
+        pctEl.textContent = `${pct}% (${opt.votes})`;
+      }
+    });
+  } catch (err) {
+    console.error('Vote error:', err);
+    toast('Error: ' + err.message, 'error');
+  }
+}
+
+function flyToRadarLocation(name, lat, lng) {
+  openRadarModal();
+  setTimeout(() => {
+    if (typeof realMontrealMapInstance !== 'undefined' && realMontrealMapInstance) {
+      realMontrealMapInstance.flyTo([lat, lng], 15, { animate: true, duration: 1.2 });
+      if (typeof L !== 'undefined') {
+        L.popup({ offset: [0, -10] })
+          .setLatLng([lat, lng])
+          .setContent(`<div style="padding:6px;text-align:center;font-family:'Outfit',sans-serif;"><b>📍 ${name}</b><div style="font-size:11px;color:#94a3b8;margin-top:2px;">Postare din comunitatea Montreal ⚜️</div></div>`)
+          .openOn(realMontrealMapInstance);
+      }
+    }
+  }, 450);
+}
+
+// ══════════════════════════════════════════
+// 📱 9:16 INSTAGRAM / TIKTOK STORY EXPORTER
+// ══════════════════════════════════════════
+function switchSocialCardFormat(fmt) {
+  currentSocialCardFormat = fmt;
+  const btnStory = document.getElementById('btnFmtStory916');
+  const btnLand = document.getElementById('btnFmtLandscape');
+  const canvas = document.getElementById('socialCardCanvas');
+  if (btnStory) btnStory.classList.toggle('active', fmt === 'story916');
+  if (btnLand) btnLand.classList.toggle('active', fmt === 'landscape');
+
+  if (canvas) {
+    if (fmt === 'story916') {
+      canvas.width = 1080;
+      canvas.height = 1920;
+    } else {
+      canvas.width = 1200;
+      canvas.height = 630;
+    }
+  }
+  if (activeSocialCardPost) {
+    renderSocialCardCanvas(activeSocialCardPost, fmt);
+  }
+}
+
+async function shareSocialCardNative() {
+  const canvas = document.getElementById('socialCardCanvas');
+  if (!canvas) return;
+
+  const curLang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+  canvas.toBlob(async (blob) => {
+    if (!blob) { downloadSocialCard(); return; }
+    const file = new File([blob], 'montreal-story-iacodestudio.png', { type: 'image/png' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          title: 'IA Code Studio Montreal ⚜️',
+          text: 'Explorează Montrealul pe IA Code Studio! Alătură-te și primești +100 🪙 cadou de bun venit!',
+          files: [file]
+        });
+      } catch (err) {
+        if (err.name !== 'AbortError') downloadSocialCard();
+      }
+    } else {
+      downloadSocialCard();
+      toast(curLang === 'fr' ? 'Image téléchargée ! Partagez-la sur vos Stories Instagram ou TikTok.' : 'Image downloaded! Share it on your Instagram or TikTok Stories.', 'success');
+    }
+  }, 'image/png');
+}
+
 function triggerDmPhotoUpload() {
   const fileInput = document.getElementById('dmPhotoFileInput');
   if (fileInput) fileInput.click();
