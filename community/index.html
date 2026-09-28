@@ -6244,6 +6244,9 @@
         <button class="btn-filter-spot" style="padding:6px 14px;font-size:0.78rem;background:linear-gradient(135deg,#10b981,#06b6d4);" onclick="toggleRadarAddEventDrawer()" id="btnToggleAddEventDrawer">
           <span>➕ Add Event</span>
         </button>
+        <button class="btn-filter-spot" id="btnRadarAdminManage" style="padding:6px 12px;font-size:0.78rem;background:rgba(239,68,68,0.2);border:1px solid #ef4444;color:#fca5a5;" onclick="toggleRadarAdminEventsDrawer()">
+          <span>🛡️ Admin</span>
+        </button>
         <button class="mc" onclick="closeRadarModal()">✕</button>
       </div>
     </div>
@@ -6327,6 +6330,28 @@
         </div>
       </div>
 
+      <!-- Admin Event Manager Drawer (Delete / Manage Events) -->
+      <div class="radar-admin-events-drawer" id="radarAdminEventsDrawer" style="display:none;background:rgba(15,23,42,0.96);border:1px solid rgba(239,68,68,0.45);border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:0 10px 30px rgba(0,0,0,0.6);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:1.3rem;">🛡️</span>
+            <div>
+              <h4 style="margin:0;font-size:0.95rem;font-weight:800;color:#fff;" id="lblAdminDrawerTitle">MONT-RADAR Event Manager (Admin)</h4>
+              <p style="margin:2px 0 0;font-size:0.72rem;color:var(--muted);" id="lblAdminDrawerSubtitle">Delete expired events, manage Montreal happenings, or reset</p>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button onclick="resetRadarEventsToDefault()" class="shop-btn" style="padding:4px 10px;font-size:0.72rem;background:rgba(255,255,255,0.08);color:#94a3b8;border:1px solid var(--border2);" id="btnResetEvents">
+              🔄 Reset Defaults
+            </button>
+            <button style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.1rem;" onclick="toggleRadarAdminEventsDrawer(false)">✕</button>
+          </div>
+        </div>
+        <div id="adminEventsListContainer" style="max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-right:4px;">
+          <!-- Populated dynamically by renderAdminEventsList() -->
+        </div>
+      </div>
+
       <!-- Active Selected Hotspot Detail Card -->
       <div class="map-active-spot-card" id="radarSpotDetailsCard">
         <div style="flex:1;">
@@ -6341,12 +6366,15 @@
             <span>⏱️ Today 10:00 - 16:30</span>
           </div>
         </div>
-        <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+        <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;flex-wrap:wrap;">
           <button class="btn-filter-spot" id="btnFilterByRadarSpot" onclick="filterFeedByRadarSpot()">
             <span>🎯 Filter Feed</span>
           </button>
           <button class="btn-filter-spot" id="btnUnlockDropSpot" onclick="claimRadarSecretDrop()" style="display:none;background:linear-gradient(135deg,#f59e0b,#ec4899);">
             <span>💎 Claim Drop</span>
+          </button>
+          <button class="btn-filter-spot" id="btnAdminDeleteRadarSpot" onclick="promptDeleteCurrentRadarEvent()" style="background:linear-gradient(135deg,#ef4444,#dc2626);border:1px solid #f87171;color:#fff;display:none;padding:6px 12px;font-size:0.78rem;">
+            <span>🗑️ Delete Event</span>
           </button>
         </div>
       </div>
@@ -9119,6 +9147,11 @@ function applyCommunityLanguage(lang) {
   const addEvDesc = document.getElementById('lbl-add-event-desc'); if (addEvDesc) addEvDesc.textContent = lang === 'fr' ? 'Description & Points Forts' : 'Description & Highlights';
   const btnCancelEv = document.getElementById('btnCancelAddEvent'); if (btnCancelEv) btnCancelEv.textContent = lang === 'fr' ? 'Annuler' : 'Cancel';
   const btnSubmitEv = document.getElementById('btnSubmitAddEvent'); if (btnSubmitEv) btnSubmitEv.innerHTML = `<span>${lang === 'fr' ? '🚀 Publier sur le Radar (+20 🪙)' : '🚀 Publish to Radar (+20 🪙)'}</span>`;
+  const btnAdminDel = document.getElementById('btnAdminDeleteRadarSpot'); if (btnAdminDel) btnAdminDel.innerHTML = `<span>🗑️ ${lang === 'fr' ? 'Supprimer' : 'Delete Event'}</span>`;
+  const adminDrwT = document.getElementById('lblAdminDrawerTitle'); if (adminDrwT) adminDrwT.textContent = lang === 'fr' ? 'Gestion des Événements MONT-RADAR (Admin)' : 'MONT-RADAR Event Manager (Admin)';
+  const adminDrwS = document.getElementById('lblAdminDrawerSubtitle'); if (adminDrwS) adminDrwS.textContent = lang === 'fr' ? 'Supprimez les événements expirés, gérez les événements ou réinitialisez' : 'Delete expired events, manage Montreal happenings, or reset';
+  const btnRst = document.getElementById('btnResetEvents'); if (btnRst) btnRst.textContent = lang === 'fr' ? '🔄 Réinitialiser' : '🔄 Reset Defaults';
+  if (typeof updateRadarAdminUI === 'function') updateRadarAdminUI();
 
   // Duels Mont-Royal™ Modal & Widget
   const duelBadge = document.getElementById('lbl-duel-badge'); if (duelBadge) duelBadge.textContent = 'Duels Mont-Royal™';
@@ -15521,13 +15554,30 @@ const DEFAULT_REALMONT_EVENTS = [
   }
 ];
 
+function isRadarAdmin() {
+  if (typeof isAdmin !== 'undefined' && isAdmin) return true;
+  if (typeof user !== 'undefined' && user && user.email && typeof ADMIN_EMAILS !== 'undefined' && ADMIN_EMAILS.includes(user.email)) return true;
+  if (localStorage.getItem('realmont_admin_override') === 'true') return true;
+  return false;
+}
+
 function getAllMontrealEvents() {
+  let deletedIds = [];
   try {
-    const localSaved = JSON.parse(localStorage.getItem('realmont_custom_radar_events') || '[]');
-    return [...DEFAULT_REALMONT_EVENTS, ...localSaved];
+    deletedIds = JSON.parse(localStorage.getItem('realmont_deleted_radar_events') || '[]');
   } catch (e) {
-    return DEFAULT_REALMONT_EVENTS;
+    deletedIds = [];
   }
+
+  let localSaved = [];
+  try {
+    localSaved = JSON.parse(localStorage.getItem('realmont_custom_radar_events') || '[]');
+  } catch (e) {
+    localSaved = [];
+  }
+
+  const all = [...DEFAULT_REALMONT_EVENTS, ...localSaved];
+  return all.filter(ev => !deletedIds.includes(ev.id));
 }
 
 function createMapTileLayer(type) {
@@ -15757,6 +15807,8 @@ function selectRadarSpot(eventId) {
     if (btnDrop) btnDrop.style.display = 'none';
   }
 
+  updateRadarAdminUI();
+
   if (realMontrealLeafletMap && ev.coords) {
     realMontrealLeafletMap.panTo(ev.coords, { animate: true, duration: 0.8 });
   }
@@ -15854,6 +15906,17 @@ function submitRadarCustomEvent() {
   localSaved.push(newEvent);
   localStorage.setItem('realmont_custom_radar_events', JSON.stringify(localSaved));
 
+  // Sync custom event to Firestore cloud
+  try {
+    if (typeof db !== 'undefined') {
+      db.collection('devsocial_posts').doc(newEvent.id).set({
+        ...newEvent,
+        type: 'radar_event',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      }).catch(e => console.warn('Radar event cloud save error:', e));
+    }
+  } catch (e) {}
+
   if (mapPlacementTempMarker && realMontrealLeafletMap) {
     realMontrealLeafletMap.removeLayer(mapPlacementTempMarker);
     mapPlacementTempMarker = null;
@@ -15865,6 +15928,9 @@ function submitRadarCustomEvent() {
 
   renderRadarMarkers();
   selectRadarSpot(newEvent.id);
+  if (document.getElementById('radarAdminEventsDrawer')?.style.display === 'block') {
+    renderAdminEventsList();
+  }
 
   if (typeof addCoinsLocally === 'function') {
     addCoinsLocally(20, 'Event Added to MONT-RADAR');
@@ -15881,11 +15947,265 @@ function submitRadarCustomEvent() {
   toast(getCommunityLang() === 'fr' ? '🎉 Événement ajouté sur MONT-RADAR ! +20 🪙 GENIUS IA' : '🎉 Event added to MONT-RADAR! +20 🪙 GENIUS IA', 'success');
 }
 
+// ─────────────────────────────────────────────────────────────
+// MONT-RADAR™ ADMIN CONTROLS (DELETE, SYNC & MANAGE EVENTS)
+// ─────────────────────────────────────────────────────────────
+function promptRadarAdminLogin() {
+  const lang = getCommunityLang();
+  const pass = prompt(lang === 'fr'
+    ? '🔐 Accès Administrateur MONT-RADAR :\nVeuillez saisir le code d\'accès administrateur ou connectez-vous avec votre compte Google :'
+    : '🔐 MONT-RADAR Admin Access:\nPlease enter the admin passcode or sign in with your admin Google account:');
+
+  if (!pass) return;
+
+  const trimmed = pass.trim();
+  if (trimmed === '1174' || trimmed === 'admin1174' || trimmed === 'realmont2026' || trimmed === 'realmont') {
+    localStorage.setItem('realmont_admin_override', 'true');
+    if (typeof isAdmin !== 'undefined') isAdmin = true;
+    toast(lang === 'fr' ? '✅ Mode Administrateur activé avec succès !' : '✅ Admin Mode activated successfully!', 'success');
+    updateRadarAdminUI();
+    const drawer = document.getElementById('radarAdminEventsDrawer');
+    if (drawer) {
+      drawer.style.display = 'block';
+      renderAdminEventsList();
+    }
+  } else {
+    toast(lang === 'fr' ? '❌ Code administrateur incorrect' : '❌ Incorrect admin passcode', 'error');
+  }
+}
+
+function toggleRadarAdminEventsDrawer(forceState) {
+  const drawer = document.getElementById('radarAdminEventsDrawer');
+  if (!drawer) return;
+  const isShown = forceState !== undefined ? forceState : drawer.style.display === 'block';
+
+  if (!isShown && !isRadarAdmin()) {
+    promptRadarAdminLogin();
+    return;
+  }
+
+  drawer.style.display = isShown ? 'none' : 'block';
+  if (!isShown) {
+    renderAdminEventsList();
+    drawer.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+function updateRadarAdminUI() {
+  const adminActive = isRadarAdmin();
+  const btnDelete = document.getElementById('btnAdminDeleteRadarSpot');
+  if (btnDelete) {
+    btnDelete.style.display = adminActive ? 'inline-flex' : 'none';
+  }
+  const btnAdminManage = document.getElementById('btnRadarAdminManage');
+  if (btnAdminManage) {
+    const lang = getCommunityLang();
+    btnAdminManage.innerHTML = adminActive
+      ? `<span>🛡️ ${lang === 'fr' ? 'Gérer (Admin)' : 'Manage (Admin)'}</span>`
+      : `<span>🛡️ ${lang === 'fr' ? 'Admin' : 'Admin'}</span>`;
+    btnAdminManage.style.background = adminActive
+      ? 'linear-gradient(135deg,#ef4444,#dc2626)'
+      : 'rgba(239,68,68,0.2)';
+    btnAdminManage.style.borderColor = adminActive ? '#f87171' : '#ef4444';
+    btnAdminManage.style.color = '#fff';
+  }
+}
+
+function renderAdminEventsList() {
+  const container = document.getElementById('adminEventsListContainer');
+  if (!container) return;
+
+  const allEvents = getAllMontrealEvents();
+  const lang = getCommunityLang();
+
+  if (allEvents.length === 0) {
+    container.innerHTML = `<div style="text-align:center;padding:16px;color:var(--muted);font-size:0.8rem;">${lang === 'fr' ? 'Aucun événement actif. Cliquez sur "Ajouter un Événement" ou réinitialisez.' : 'No active events. Click "Add Event" or reset to defaults.'}</div>`;
+    return;
+  }
+
+  container.innerHTML = allEvents.map(ev => {
+    const title = lang === 'fr' ? (ev.titleFr || ev.titleEn) : ev.titleEn;
+    const catBadge = ev.badge || (ev.cat ? ev.cat.toUpperCase() : 'MTL');
+    return `
+      <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:8px 12px;gap:8px;">
+        <div style="display:flex;align-items:center;gap:10px;min-width:0;flex:1;">
+          <span style="font-size:1.3rem;">${ev.icon || '📍'}</span>
+          <div style="min-width:0;flex:1;">
+            <div style="font-weight:700;font-size:0.85rem;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${title}">
+              ${title}
+            </div>
+            <div style="font-size:0.7rem;color:#38bdf8;">
+              📍 ${ev.locationName || 'Montréal'} • ⏱️ ${ev.time || 'Live'} • <span style="color:#fb7185;">${catBadge}</span>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0;">
+          <button onclick="selectRadarSpot('${ev.id}')" style="background:rgba(6,182,212,0.2);border:1px solid #06b6d4;color:#67e8f9;border-radius:8px;padding:5px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;">
+            🔍 ${lang === 'fr' ? 'Voir' : 'View'}
+          </button>
+          <button onclick="deleteRadarEvent('${ev.id}')" style="background:#ef4444;border:none;color:#fff;border-radius:8px;padding:5px 10px;font-size:0.72rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;">
+            🗑️ ${lang === 'fr' ? 'Supprimer' : 'Delete'}
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function deleteRadarEvent(eventId) {
+  if (!isRadarAdmin()) {
+    promptRadarAdminLogin();
+    return;
+  }
+
+  const lang = getCommunityLang();
+  const allEvents = getAllMontrealEvents();
+  const ev = allEvents.find(e => e.id === eventId);
+  const evTitle = ev ? (lang === 'fr' ? (ev.titleFr || ev.titleEn) : ev.titleEn) : eventId;
+
+  const confirmMsg = lang === 'fr'
+    ? `Êtes-vous sûr de vouloir supprimer l'événement "${evTitle}" de MONT-RADAR ?`
+    : `Are you sure you want to delete event "${evTitle}" from MONT-RADAR?`;
+
+  if (!confirm(confirmMsg)) return;
+
+  // 1. Add to deleted IDs in localStorage
+  let deletedIds = [];
+  try {
+    deletedIds = JSON.parse(localStorage.getItem('realmont_deleted_radar_events') || '[]');
+  } catch (e) {
+    deletedIds = [];
+  }
+  if (!deletedIds.includes(eventId)) {
+    deletedIds.push(eventId);
+    localStorage.setItem('realmont_deleted_radar_events', JSON.stringify(deletedIds));
+  }
+
+  // 2. Also remove from custom events if it was custom
+  try {
+    let customEvents = JSON.parse(localStorage.getItem('realmont_custom_radar_events') || '[]');
+    customEvents = customEvents.filter(e => e.id !== eventId);
+    localStorage.setItem('realmont_custom_radar_events', JSON.stringify(customEvents));
+  } catch (e) {}
+
+  // 3. Sync deletion to Firestore
+  try {
+    if (typeof db !== 'undefined') {
+      await db.collection('devsocial_posts').doc('config_radar_deleted_events').set({
+        deletedIds: firebase.firestore.FieldValue.arrayUnion(eventId),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+
+      if (eventId.startsWith('user-ev-') || eventId.startsWith('ev-')) {
+        await db.collection('devsocial_posts').doc(eventId).delete().catch(() => {});
+      }
+    }
+  } catch (e) {
+    console.warn('Firestore delete sync error:', e);
+  }
+
+  // 4. Update UI
+  if (selectedRadarEvent && selectedRadarEvent.id === eventId) {
+    selectedRadarEvent = null;
+  }
+  renderRadarMarkers();
+  renderAdminEventsList();
+
+  const remaining = getAllMontrealEvents();
+  if (remaining.length > 0) {
+    selectRadarSpot(remaining[0].id);
+  } else {
+    const titleEl = document.getElementById('activeSpotTitle');
+    if (titleEl) titleEl.textContent = lang === 'fr' ? 'Aucun événement actif' : 'No active events';
+    const descEl = document.getElementById('activeSpotDesc');
+    if (descEl) descEl.textContent = lang === 'fr' ? 'Ajoutez de nouveaux événements réels via le bouton "+ Ajouter un événement".' : 'Add new real Montreal events via the "+ Add Event" button.';
+  }
+
+  toast(lang === 'fr' ? '🗑️ Événement supprimé de MONT-RADAR !' : '🗑️ Event deleted from MONT-RADAR!', 'success');
+}
+
+function promptDeleteCurrentRadarEvent() {
+  if (!selectedRadarEvent) return;
+  deleteRadarEvent(selectedRadarEvent.id);
+}
+
+async function resetRadarEventsToDefault() {
+  if (!isRadarAdmin()) {
+    promptRadarAdminLogin();
+    return;
+  }
+  const lang = getCommunityLang();
+  const confirmMsg = lang === 'fr'
+    ? 'Voulez-vous réinitialiser tous les événements par défaut de MONT-RADAR ?'
+    : 'Do you want to reset all MONT-RADAR default events?';
+  if (!confirm(confirmMsg)) return;
+
+  localStorage.removeItem('realmont_deleted_radar_events');
+  try {
+    if (typeof db !== 'undefined') {
+      await db.collection('devsocial_posts').doc('config_radar_deleted_events').set({
+        deletedIds: [],
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+  } catch (e) {}
+
+  renderRadarMarkers();
+  renderAdminEventsList();
+  if (DEFAULT_REALMONT_EVENTS.length > 0) {
+    selectRadarSpot(DEFAULT_REALMONT_EVENTS[0].id);
+  }
+  toast(lang === 'fr' ? '🔄 Événements réinitialisés avec succès !' : '🔄 Events reset to defaults successfully!', 'success');
+}
+
+async function syncRadarEventsWithFirestore() {
+  try {
+    if (typeof db === 'undefined') return;
+
+    // 1. Sync deleted events from Firestore
+    const delDoc = await db.collection('devsocial_posts').doc('config_radar_deleted_events').get();
+    if (delDoc.exists && delDoc.data() && Array.isArray(delDoc.data().deletedIds)) {
+      let localDeleted = [];
+      try {
+        localDeleted = JSON.parse(localStorage.getItem('realmont_deleted_radar_events') || '[]');
+      } catch (e) { localDeleted = []; }
+      const merged = Array.from(new Set([...localDeleted, ...delDoc.data().deletedIds]));
+      localStorage.setItem('realmont_deleted_radar_events', JSON.stringify(merged));
+    }
+
+    // 2. Sync custom events from Firestore
+    const snap = await db.collection('devsocial_posts').where('type', '==', 'radar_event').limit(50).get();
+    if (!snap.empty) {
+      let localCustom = [];
+      try {
+        localCustom = JSON.parse(localStorage.getItem('realmont_custom_radar_events') || '[]');
+      } catch (e) { localCustom = []; }
+
+      snap.forEach(doc => {
+        const data = doc.data();
+        if (data && data.id && !localCustom.some(e => e.id === data.id)) {
+          localCustom.push(data);
+        }
+      });
+      localStorage.setItem('realmont_custom_radar_events', JSON.stringify(localCustom));
+    }
+
+    renderRadarMarkers();
+    if (document.getElementById('radarAdminEventsDrawer')?.style.display === 'block') {
+      renderAdminEventsList();
+    }
+  } catch (err) {
+    console.warn('Firestore radar sync catch:', err);
+  }
+}
+
 function openRadarModal() {
   const m = document.getElementById('radarMapModal');
   if (m) {
     m.classList.add('open');
     initMontrealRealMap();
+    updateRadarAdminUI();
+    syncRadarEventsWithFirestore();
   }
 }
 
