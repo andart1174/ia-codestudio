@@ -1951,13 +1951,13 @@
       box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
     }
 
-    /* 📹 DIRECT VIDEO FEED PLAYER */
+    /* 📹 DIRECT VIDEO FEED PLAYER & UNMUTE BUTTON */
     .p-direct-video {
       position: relative;
       width: 100%;
       border-radius: 12px;
       overflow: hidden;
-      background: #000;
+      background: #020617;
       margin: 8px 0;
     }
     .p-direct-video video {
@@ -1965,6 +1965,7 @@
       max-height: 480px;
       display: block;
       object-fit: cover;
+      background: #000;
     }
     .feed:not(.mode-classic) .tiktok-card .p-direct-video {
       position: absolute !important;
@@ -1974,12 +1975,49 @@
       z-index: 1 !important;
       margin: 0 !important;
       border-radius: 0 !important;
+      background: #000 !important;
     }
     .feed:not(.mode-classic) .tiktok-card .p-direct-video video {
       width: 100% !important;
       height: 100% !important;
       max-height: none !important;
       object-fit: cover !important;
+    }
+    .btn-video-unmute {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 25;
+      background: rgba(0, 0, 0, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      backdrop-filter: blur(8px);
+      transition: all 0.2s;
+    }
+    .btn-video-unmute:hover {
+      background: rgba(0, 0, 0, 0.85);
+      transform: scale(1.08);
+    }
+    .video-fallback-box {
+      width: 100%;
+      min-height: 240px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 40%, #1e1b4b 0%, #030712 100%);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      border: 1px solid rgba(168, 85, 247, 0.2);
     }
     #socialCardCanvas {
       max-width: 100%;
@@ -5290,13 +5328,13 @@
       <!-- VIRAL CREATOR TOOLS BAR -->
       <div class="create-format-toolbar">
         <button type="button" class="fmt-tool-btn" id="btnToolPoll" onclick="togglePollCreator()">
-          <span>📊</span> <span>Sondaj / Duel</span>
+          <span>📊</span> <span id="lblToolPoll">Poll / Duel</span>
         </button>
         <button type="button" class="fmt-tool-btn" id="btnToolVideo" onclick="toggleVideoSection()">
-          <span>📹</span> <span>Video Clip</span>
+          <span>📹</span> <span id="lblToolVideo">Video Clip</span>
         </button>
         <button type="button" class="fmt-tool-btn" id="btnToolLocation" onclick="toggleLocationPicker()">
-          <span>📍</span> <span>Locație Montreal</span>
+          <span>📍</span> <span id="lblToolLocation">Montreal Location</span>
         </button>
       </div>
 
@@ -5304,16 +5342,16 @@
       <div id="pollCreatorSection" style="display:none;background:rgba(244,63,94,0.06);border:1px solid rgba(244,63,94,0.3);border-radius:12px;padding:12px;margin-bottom:12px;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
           <div style="font-size:0.82rem;font-weight:800;color:#f43f5e;display:flex;align-items:center;gap:6px;">
-            <span>📊</span> <span>SONDAJ / DUEL COMUNITAR (+5 🪙 per vot)</span>
+            <span>📊</span> <span id="lblPollCreatorHeader">COMMUNITY POLL / DUEL (+5 🪙 per vote)</span>
           </div>
-          <button type="button" onclick="togglePollCreator(false)" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;font-weight:700;">✕ Anulează</button>
+          <button type="button" onclick="togglePollCreator(false)" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;font-weight:700;" id="lblPollCancel">✕ Cancel</button>
         </div>
         <div style="display:flex;flex-direction:column;gap:8px;">
-          <input type="text" class="in" id="pollOpt1" placeholder="Opțiunea 1 (ex: St-Viateur Bagels 🥯)" style="font-size:0.82rem;padding:8px 12px;">
-          <input type="text" class="in" id="pollOpt2" placeholder="Opțiunea 2 (ex: Fairmount Bagels 🥖)" style="font-size:0.82rem;padding:8px 12px;">
+          <input type="text" class="in" id="pollOpt1" placeholder="Option 1 (e.g. St-Viateur Bagels 🥯)" style="font-size:0.82rem;padding:8px 12px;">
+          <input type="text" class="in" id="pollOpt2" placeholder="Option 2 (e.g. Fairmount Bagels 🥖)" style="font-size:0.82rem;padding:8px 12px;">
           <div id="extraPollOptions" style="display:flex;flex-direction:column;gap:8px;"></div>
           <button type="button" id="btnAddPollOpt" onclick="addPollOptionField()" style="background:rgba(255,255,255,0.06);border:1px dashed var(--border2);color:#cbd5e1;padding:6px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-weight:700;">
-            + Adaugă altă opțiune (max 4)
+            + Add another option (max 4)
           </button>
         </div>
       </div>
@@ -5322,25 +5360,25 @@
       <div id="locationPickerSection" style="display:none;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.3);border-radius:12px;padding:12px;margin-bottom:12px;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
           <div style="font-size:0.82rem;font-weight:800;color:#10b981;display:flex;align-items:center;gap:6px;">
-            <span>📍</span> <span>PIN MONTREAL PE MONT-RADAR™</span>
+            <span>📍</span> <span id="lblLocationPickerHeader">PIN MONTREAL ON MONT-RADAR™</span>
           </div>
-          <button type="button" onclick="toggleLocationPicker(false)" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;font-weight:700;">✕ Închide</button>
+          <button type="button" onclick="toggleLocationPicker(false)" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;font-weight:700;" id="lblLocationClose">✕ Close</button>
         </div>
         <div style="display:flex;gap:8px;align-items:center;">
           <select class="sel" id="postLocationSelect" onchange="onLocationSelectChange(this)" style="flex:1;">
-            <option value="">Alege un loc emblematic din Montreal...</option>
+            <option value="" id="optLocDefault">Choose an iconic Montreal spot...</option>
             <option value="Mont-Royal (Belvédère)|45.5048|-73.5872|🏔️">🏔️ Mont-Royal (Belvédère Kondiaronk)</option>
             <option value="Mile End (Bagels & Vibes)|45.5225|-73.5958|🥯">🥯 Mile End (St-Viateur / Fairmount)</option>
-            <option value="Vieux-Port & Fleuve St-Laurent|45.5075|-73.5539|⛵">⛵ Vieux-Port & Vieux-Montréal</option>
+            <option value="Vieux-Port & Fleuve St-Laurent|45.5075|-73.5539|⛵">⛵ Vieux-Port & Fleuve St-Laurent</option>
             <option value="Quartier des Spectacles|45.5088|-73.5682|🎭">🎭 Quartier des Spectacles / Place des Arts</option>
             <option value="Parc La Fontaine|45.5262|-73.5689|🌳">🌳 Parc La Fontaine / Plateau</option>
             <option value="Downtown Sainte-Catherine|45.5017|-73.5673|🛍️">🛍️ Downtown / Rue Sainte-Catherine</option>
             <option value="Saint-Henri & Marché Atwater|45.4795|-73.5847|🥪">🥪 Saint-Henri & Marché Atwater</option>
             <option value="Circuit Gilles-Villeneuve (F1)|45.5034|-73.5273|🚴">🚴 Circuit Gilles-Villeneuve / F1</option>
             <option value="Griffintown & Canal Lachine|45.4925|-73.5601|🏙️">🏙️ Griffintown & Canal Lachine</option>
-            <option value="custom">📍 Locație Personalizată...</option>
+            <option value="custom" id="optLocCustom">📍 Custom Location...</option>
           </select>
-          <input type="text" class="in" id="customLocationInput" placeholder="Numele locului / străzii..." style="display:none;flex:1;font-size:0.82rem;">
+          <input type="text" class="in" id="customLocationInput" placeholder="Spot or street name..." style="display:none;flex:1;font-size:0.82rem;">
         </div>
       </div>
 
@@ -5392,24 +5430,24 @@
 
       <div class="opt-section" id="videoSectionBox">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-          <label class="opt-lbl" style="margin:0;">Video (Telefon / Fișier sau YouTube)</label>
+          <label class="opt-lbl" style="margin:0;" id="lblVideoBoxHeader">Video (Phone File or YouTube)</label>
           <div style="display:flex;gap:4px;">
-            <button type="button" class="fmt-tool-btn active-blue" id="btnVidTabFile" onclick="switchVideoTab('file')" style="font-size:0.72rem;padding:3px 9px;">📹 Fișier Video</button>
+            <button type="button" class="fmt-tool-btn active-blue" id="btnVidTabFile" onclick="switchVideoTab('file')" style="font-size:0.72rem;padding:3px 9px;">📹 Video File</button>
             <button type="button" class="fmt-tool-btn" id="btnVidTabYt" onclick="switchVideoTab('yt')" style="font-size:0.72rem;padding:3px 9px;">🔗 YouTube</button>
           </div>
         </div>
         
         <!-- Direct Video Upload Drop / Picker -->
         <div id="videoUploadBox" style="display:block;">
-          <input type="file" id="videoFileInput" accept="video/mp4,video/webm,video/quicktime,video/mov" style="display:none;" onchange="onVideoSelect(event)">
+          <input type="file" id="videoFileInput" accept="video/mp4,video/webm,video/quicktime,video/mov,video/*" style="display:none;" onchange="onVideoSelect(event)">
           <div class="up-area" style="padding:14px;cursor:pointer;" onclick="document.getElementById('videoFileInput').click()">
             <div class="up-icon" style="font-size:1.8rem;">📹</div>
-            <div class="up-text"><strong>Apasă pentru video din telefon / PC</strong><br>MP4, WebM, MOV · Max 60 secunde</div>
+            <div class="up-text" id="lblVideoUploadPrompt"><strong>Click to choose video from phone / PC</strong><br>MP4, WebM, MOV · Max 60 seconds</div>
           </div>
           <div class="up-prog" id="upVidProg" style="display:none;"><div class="up-prog-bar" id="upVidBar" style="width:0%"></div></div>
           <div id="videoPreviewWrap" style="display:none;margin-top:8px;position:relative;border-radius:10px;overflow:hidden;background:#000;">
-            <video id="videoPreviewEl" playsinline controls style="width:100%;max-height:220px;display:block;border-radius:10px;"></video>
-            <button type="button" onclick="removeSelectedVideo()" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.75);color:#fff;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-weight:900;" title="Șterge video">✕</button>
+            <video id="videoPreviewEl" playsinline controls muted style="width:100%;max-height:220px;display:block;border-radius:10px;"></video>
+            <button type="button" onclick="removeSelectedVideo()" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.75);color:#fff;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-weight:900;" title="Delete video" id="btnRemoveVideo">✕</button>
           </div>
         </div>
 
@@ -5845,7 +5883,7 @@
       </div>
 
       <div style="font-size:0.82rem;color:#94a3b8;margin-bottom:10px;" id="lbl-social-card-sub">
-        Distribuie instantaneu pe Instagram Stories, TikTok sau WhatsApp cu cod QR live și bonus de bun venit!
+        Share instantly to Instagram Stories, TikTok, or WhatsApp with live QR code and welcome bonus!
       </div>
 
       <div class="social-card-stage">
@@ -5854,14 +5892,14 @@
 
       <div style="display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap;align-items:center;">
         <button class="shop-btn" style="width:auto;padding:8px 14px;background:linear-gradient(135deg,#ec4899,#a855f7);border:none;color:#fff;font-weight:800;" onclick="shareSocialCardNative()" id="btn-share-social-card">
-          <span>📲 Partajează pe Instagram / TikTok</span>
+          <span>📲 Share to Instagram / TikTok</span>
         </button>
         <div style="display:flex;gap:8px;">
           <button class="shop-btn" style="width:auto;padding:8px 14px;background:var(--bg3);border:1px solid var(--border2);color:#fff;" onclick="copySocialCardToClipboard()" id="btn-copy-social-card">
-            📋 Copiază
+            📋 Copy
           </button>
           <button class="shop-btn buy" style="width:auto;padding:8px 16px;" onclick="downloadSocialCard()" id="btn-download-social-card">
-            📥 Descarcă PNG
+            📥 Download PNG
           </button>
         </div>
       </div>
@@ -6959,12 +6997,26 @@ function renderPost(p) {
   const authorBadge = p.equippedBadge ? `<span class="badge-pill">${esc(p.equippedBadge)}</span>` : '';
   const authorGlow = p.equippedGlow === 'prism' ? 'user-glow-prism' : '';
 
-  // Direct Video Upload HTML
+  // Direct Video Upload HTML (with FastStart, Poster Frame, Error Fallback & Mute Toggle)
   let directVidHtml = '';
   if (p.videoFileUrl) {
     directVidHtml = `
-      <div class="p-video p-direct-video">
-        <video src="${p.videoFileUrl}" playsinline loop controls muted preload="metadata" onclick="this.paused ? this.play() : this.pause()"></video>
+      <div class="p-video p-direct-video" id="vbox-${p.id}">
+        <video class="community-direct-video"
+               id="vid-el-${p.id}"
+               src="${p.videoFileUrl}"
+               ${p.videoPoster ? `poster="${p.videoPoster}"` : ''}
+               playsinline webkit-playsinline
+               loop
+               controls
+               muted
+               preload="auto"
+               onerror="handleVideoPlayError(this, '${esc(p.videoFileUrl)}')"
+               onclick="toggleDirectVideoPlay(this, event)">
+        </video>
+        <button type="button" class="btn-video-unmute" onclick="toggleVideoMute('${p.id}', event)" title="Toggle Sound">
+          <span id="vmute-${p.id}">🔇</span>
+        </button>
       </div>
     `;
   }
@@ -6977,8 +7029,8 @@ function renderPost(p) {
     pollHtml = `
       <div class="post-poll-card" id="poll-${p.id}">
         <div class="poll-question-header">
-          <span class="poll-badge">📊 SONDAJ COMUNITAR MTL</span>
-          <span class="poll-total-votes" id="poll-total-${p.id}">${totalVotes} vot${totalVotes === 1 ? '' : 'uri'}</span>
+          <span class="poll-badge">${currentLang === 'fr' ? '📊 SONDAGE COMMUNAUTAIRE MTL' : '📊 MTL COMMUNITY POLL'}</span>
+          <span class="poll-total-votes" id="poll-total-${p.id}">${totalVotes} ${totalVotes === 1 ? (currentLang === 'fr' ? 'vote' : 'vote') : (currentLang === 'fr' ? 'votes' : 'votes')}</span>
         </div>
         <div class="poll-options-list">
           ${p.poll.options.map(opt => {
@@ -7130,6 +7182,15 @@ function renderPost(p) {
         }
       }
     }, 40);
+
+  if (p.videoFileUrl) {
+    setTimeout(() => {
+      const cardEl = document.getElementById('post-' + p.id);
+      if (cardEl && postViewportObserver) {
+        postViewportObserver.observe(cardEl);
+      }
+    }, 50);
+  }
   }
 
   const postCaption = p.content || p.caption || (currentLang === 'fr' ? (p.caption_fr || p.caption_en) : (p.caption_en || p.caption_fr)) || '';
@@ -7727,6 +7788,10 @@ async function publish() {
     toast(curLang === 'fr' ? '⏳ Vos photos sont en cours d\'envoi, veuillez patienter un instant...' : '⏳ Your photos are still uploading, please wait a moment...', 'info');
     return;
   }
+  if (isUploadingVideo) {
+    toast(curLang === 'fr' ? '⏳ Votre vidéo est en cours d\'envoi, veuillez patienter un instant...' : '⏳ Your video is still uploading, please wait a moment...', 'info');
+    return;
+  }
 
   const content = document.getElementById('postContent').value.trim();
   const category = document.getElementById('postCat').value;
@@ -7740,8 +7805,8 @@ async function publish() {
     return;
   }
 
-  if (!content && !imgs.length && !videoUrl && !hasVoice) {
-    toast(curLang === 'fr' ? 'Ajoutez du texte ou une photo d\'abord' : 'Add some content or a photo first', 'error');
+  if (!content && !imgs.length && !videoUrl && !uploadedVideoUrl && !hasVoice && !isPollActive) {
+    toast(curLang === 'fr' ? 'Ajoutez du texte, une photo ou une vidéo d\'abord' : 'Add some content, a photo, or a video first', 'error');
     return;
   }
   if (content.length > 2000) {
@@ -7775,7 +7840,7 @@ async function publish() {
       if (rawOpts.length >= 2) {
         pollData = {
           id: 'poll_' + Date.now(),
-          question: content || 'Sondaj Comunitar Montreal',
+          question: content || (curLang === 'fr' ? 'Sondage Communautaire Montréal' : 'Montreal Community Poll'),
           options: rawOpts.map((txt, idx) => ({
             id: 'opt_' + idx,
             text: txt,
@@ -7807,6 +7872,7 @@ async function publish() {
       images: imgs,
       videoUrl: videoUrl || null,
       videoFileUrl: uploadedVideoUrl || null,
+      videoPoster: uploadedVideoPoster || null,
       voiceUrl: voiceDataUrl || null,
       poll: pollData,
       location: selectedLocationData || null,
@@ -8575,6 +8641,30 @@ const I18N = {
     btnEquipped: '✓ Equipped',
     itemPurchasedToast: '🛍️ Unlocked {name}! Applied to your profile.',
     // Quests
+    // Viral Creator Tools & Modals
+    toolPoll: 'Poll / Duel',
+    toolVideo: 'Video Clip',
+    toolLocation: 'Montreal Location',
+    pollHeader: 'COMMUNITY POLL / DUEL (+5 🪙 per vote)',
+    pollCancel: '✕ Cancel',
+    pollOpt1Ph: 'Option 1 (e.g. St-Viateur Bagels 🥯)',
+    pollOpt2Ph: 'Option 2 (e.g. Fairmount Bagels 🥖)',
+    pollAddOpt: '+ Add another option (max 4)',
+    locHeader: 'PIN MONTREAL ON MONT-RADAR™',
+    locClose: '✕ Close',
+    locDefault: 'Choose an iconic Montreal spot...',
+    locCustom: '📍 Custom Location...',
+    locCustomPh: 'Spot or street name...',
+    vidBoxHeader: 'Video (Phone File or YouTube)',
+    vidTabFile: '📹 Video File',
+    vidTabYt: '🔗 YouTube',
+    vidUploadPrompt: '<strong>Click to choose video from phone / PC</strong><br>MP4, WebM, MOV · Max 60 seconds',
+    socialCardSub: 'Share instantly to Instagram Stories, TikTok, or WhatsApp with live QR code and welcome bonus!',
+    shareSocialBtn: '📲 Share to Instagram / TikTok',
+    copyCardBtn: '📋 Copy',
+    downloadCardBtn: '📥 Download PNG',
+    pollBadge: '📊 MTL COMMUNITY POLL',
+    storyPollHeader: '📊 VOTE IN TODAY\'S POLL',
     questsTitle: '🎯 Daily Quests (Resets every 24h)',
     questsSub: 'Complete quests below to earn free GENIUS IA coins!',
     qPublishTitle: 'Daily Creator',
@@ -8766,6 +8856,30 @@ const I18N = {
     btnEquipped: '✓ Équipé',
     itemPurchasedToast: '🛍️ {name} débloqué ! Appliqué à votre profil.',
     // Quests
+    // Outils de Création Viraux & Modales
+    toolPoll: 'Sondage / Duel',
+    toolVideo: 'Clip Vidéo',
+    toolLocation: 'Lieu à Montréal',
+    pollHeader: 'SONDAGE / DUEL COMMUNAUTAIRE (+5 🪙 par vote)',
+    pollCancel: '✕ Annuler',
+    pollOpt1Ph: 'Option 1 (ex. Bagels St-Viateur 🥯)',
+    pollOpt2Ph: 'Option 2 (ex. Bagels Fairmount 🥖)',
+    pollAddOpt: '+ Ajouter une option (max 4)',
+    locHeader: 'ÉPINGLER MONTRÉAL SUR MONT-RADAR™',
+    locClose: '✕ Fermer',
+    locDefault: 'Choisir un lieu emblématique de Montréal...',
+    locCustom: '📍 Lieu personnalisé...',
+    locCustomPh: 'Nom du lieu ou de la rue...',
+    vidBoxHeader: 'Vidéo (Fichier téléphone ou YouTube)',
+    vidTabFile: '📹 Fichier Vidéo',
+    vidTabYt: '🔗 YouTube',
+    vidUploadPrompt: '<strong>Appuyez pour choisir une vidéo depuis votre téléphone / PC</strong><br>MP4, WebM, MOV · Max 60 secondes',
+    socialCardSub: 'Partagez instantanément sur Instagram Stories, TikTok ou WhatsApp avec code QR en direct et bonus de bienvenue !',
+    shareSocialBtn: '📲 Partager sur Instagram / TikTok',
+    copyCardBtn: '📋 Copier',
+    downloadCardBtn: '📥 Télécharger PNG',
+    pollBadge: '📊 SONDAGE COMMUNAUTAIRE MTL',
+    storyPollHeader: '📊 VOTEZ AU SONDAGE DU JOUR',
     questsTitle: '🎯 Quêtes du Jour (Réinitialisation 24h)',
     questsSub: 'Complétez les quêtes ci-dessous pour gagner des pièces GENIUS IA gratuites !',
     qPublishTitle: 'Créateur du Jour',
@@ -9043,9 +9157,31 @@ function applyCommunityLanguage(lang) {
   const editProfLbl = document.getElementById('lbl-edit-profile-input'); if (editProfLbl) editProfLbl.textContent = t.editProfileInputLbl;
   const editProfSave = document.getElementById('btn-save-profile-name'); if (editProfSave) editProfSave.textContent = t.btnSaveProfileName;
 
-  // Post composer placeholder
+  // Post composer placeholder & Viral Tools
   const postInp = document.getElementById('postContent');
   if (postInp) postInp.placeholder = t.sharePrompt;
+
+  const lblToolPoll = document.getElementById('lblToolPoll'); if (lblToolPoll) lblToolPoll.textContent = t.toolPoll;
+  const lblToolVideo = document.getElementById('lblToolVideo'); if (lblToolVideo) lblToolVideo.textContent = t.toolVideo;
+  const lblToolLocation = document.getElementById('lblToolLocation'); if (lblToolLocation) lblToolLocation.textContent = t.toolLocation;
+  const lblPollCreatorHeader = document.getElementById('lblPollCreatorHeader'); if (lblPollCreatorHeader) lblPollCreatorHeader.textContent = t.pollHeader;
+  const lblPollCancel = document.getElementById('lblPollCancel'); if (lblPollCancel) lblPollCancel.textContent = t.pollCancel;
+  const pollOpt1 = document.getElementById('pollOpt1'); if (pollOpt1) pollOpt1.placeholder = t.pollOpt1Ph;
+  const pollOpt2 = document.getElementById('pollOpt2'); if (pollOpt2) pollOpt2.placeholder = t.pollOpt2Ph;
+  const btnAddPollOpt = document.getElementById('btnAddPollOpt'); if (btnAddPollOpt) btnAddPollOpt.textContent = t.pollAddOpt;
+  const lblLocationPickerHeader = document.getElementById('lblLocationPickerHeader'); if (lblLocationPickerHeader) lblLocationPickerHeader.textContent = t.locHeader;
+  const lblLocationClose = document.getElementById('lblLocationClose'); if (lblLocationClose) lblLocationClose.textContent = t.locClose;
+  const optLocDefault = document.getElementById('optLocDefault'); if (optLocDefault) optLocDefault.textContent = t.locDefault;
+  const optLocCustom = document.getElementById('optLocCustom'); if (optLocCustom) optLocCustom.textContent = t.locCustom;
+  const customLocationInput = document.getElementById('customLocationInput'); if (customLocationInput) customLocationInput.placeholder = t.locCustomPh;
+  const lblVideoBoxHeader = document.getElementById('lblVideoBoxHeader'); if (lblVideoBoxHeader) lblVideoBoxHeader.textContent = t.vidBoxHeader;
+  const btnVidTabFile = document.getElementById('btnVidTabFile'); if (btnVidTabFile) btnVidTabFile.textContent = t.vidTabFile;
+  const btnVidTabYt = document.getElementById('btnVidTabYt'); if (btnVidTabYt) btnVidTabYt.textContent = t.vidTabYt;
+  const lblVideoUploadPrompt = document.getElementById('lblVideoUploadPrompt'); if (lblVideoUploadPrompt) lblVideoUploadPrompt.innerHTML = t.vidUploadPrompt;
+  const lblSocialCardSub = document.getElementById('lbl-social-card-sub'); if (lblSocialCardSub) lblSocialCardSub.textContent = t.socialCardSub;
+  const btnShareSocialCard = document.getElementById('btn-share-social-card'); if (btnShareSocialCard) btnShareSocialCard.innerHTML = '<span>' + t.shareSocialBtn + '</span>';
+  const btnCopySocialCard = document.getElementById('btn-copy-social-card'); if (btnCopySocialCard) btnCopySocialCard.textContent = t.copyCardBtn;
+  const btnDownloadSocialCard = document.getElementById('btn-download-social-card'); if (btnDownloadSocialCard) btnDownloadSocialCard.textContent = t.downloadCardBtn;
   const pubBtn = document.getElementById('btnPub');
   if (pubBtn && !pubBtn.disabled) pubBtn.textContent = t.btnPublish;
 
@@ -11159,7 +11295,8 @@ function renderSocialCardCanvas(post, formatOverride) {
         ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
         ctx.font = '700 20px Outfit, sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText('Montreal\'s Free WebGL & Cyber Social Platform ⚜️', w / 2, h - 60);
+        const curWatermarkLang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+        ctx.fillText(curWatermarkLang === 'fr' ? 'Réseau Social Cyber & WebGL Gratuit de Montréal ⚜️' : 'Montreal\'s Free WebGL & Cyber Social Platform ⚜️', w / 2, h - 60);
       }, 80);
     };
 
@@ -11189,7 +11326,8 @@ function renderSocialCardCanvas(post, formatOverride) {
       ctx.fillStyle = '#f43f5e';
       ctx.font = '900 36px Outfit, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('📊 VOTEAZĂ ÎN SONDAJUL ZILEI', w / 2, mediaBoxY + 100);
+      const curL = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+      ctx.fillText(curL === 'fr' ? '📊 VOTEZ AU SONDAGE DU JOUR' : '📊 VOTE IN TODAY\'S POLL', w / 2, mediaBoxY + 100);
 
       post.poll.options.slice(0, 3).forEach((opt, idx) => {
         const optY = mediaBoxY + 180 + (idx * 140);
@@ -12687,9 +12825,173 @@ async function sendDmText() {
 let isPollActive = false;
 let pollOptionsCount = 2;
 let uploadedVideoUrl = null;
+let uploadedVideoPoster = null;
 let isUploadingVideo = false;
 let selectedLocationData = null;
 let currentSocialCardFormat = 'story916';
+
+// ── Pure JS MP4 FastStart (moves moov atom before mdat so video streams instantly on mobile) ──
+function enableMp4FastStart(arrayBuffer) {
+  try {
+    const view = new DataView(arrayBuffer);
+    const len = arrayBuffer.byteLength;
+    let offset = 0;
+    let ftypOffset = -1, ftypSize = 0;
+    let mdatOffset = -1, mdatSize = 0;
+    let moovOffset = -1, moovSize = 0;
+
+    while (offset < len - 8) {
+      const size = view.getUint32(offset);
+      if (size < 8) break;
+      const type = String.fromCharCode(
+        view.getUint8(offset + 4), view.getUint8(offset + 5),
+        view.getUint8(offset + 6), view.getUint8(offset + 7)
+      );
+      if (type === 'ftyp') { ftypOffset = offset; ftypSize = size; }
+      else if (type === 'mdat') { mdatOffset = offset; mdatSize = size; }
+      else if (type === 'moov') { moovOffset = offset; moovSize = size; }
+      offset += size;
+    }
+
+    if (moovOffset < mdatOffset || moovOffset === -1 || mdatOffset === -1) {
+      return arrayBuffer; // Already faststart or unsupported
+    }
+
+    const shift = moovSize;
+    const moovBytes = new Uint8Array(arrayBuffer.slice(moovOffset, moovOffset + moovSize));
+    const moovView = new DataView(moovBytes.buffer);
+
+    let pos = 0;
+    while (pos < moovBytes.length - 8) {
+      const bType = String.fromCharCode(
+        moovView.getUint8(pos + 4), moovView.getUint8(pos + 5),
+        moovView.getUint8(pos + 6), moovView.getUint8(pos + 7)
+      );
+      if (bType === 'stco') {
+        const bSize = moovView.getUint32(pos);
+        const count = moovView.getUint32(pos + 12);
+        let ePos = pos + 16;
+        for (let i = 0; i < count; i++) {
+          const cur = moovView.getUint32(ePos);
+          moovView.setUint32(ePos, cur + shift);
+          ePos += 4;
+        }
+        pos += bSize;
+      } else if (bType === 'co64') {
+        const bSize = moovView.getUint32(pos);
+        const count = moovView.getUint32(pos + 12);
+        let ePos = pos + 16;
+        for (let i = 0; i < count; i++) {
+          const high = moovView.getUint32(ePos);
+          const low = moovView.getUint32(ePos + 4);
+          let val = BigInt(high) * 0x100000000n + BigInt(low) + BigInt(shift);
+          moovView.setUint32(ePos, Number(val / 0x100000000n));
+          moovView.setUint32(ePos + 4, Number(val % 0x100000000n));
+          ePos += 8;
+        }
+        pos += bSize;
+      } else {
+        pos++;
+      }
+    }
+
+    const beforeMdat = new Uint8Array(arrayBuffer.slice(0, mdatOffset));
+    const mdatData = new Uint8Array(arrayBuffer.slice(mdatOffset, moovOffset));
+    const afterMoov = new Uint8Array(arrayBuffer.slice(moovOffset + moovSize));
+
+    const totalLen = beforeMdat.length + moovBytes.length + mdatData.length + afterMoov.length;
+    const result = new Uint8Array(totalLen);
+    let curIdx = 0;
+    result.set(beforeMdat, curIdx); curIdx += beforeMdat.length;
+    result.set(moovBytes, curIdx); curIdx += moovBytes.length;
+    result.set(mdatData, curIdx); curIdx += mdatData.length;
+    result.set(afterMoov, curIdx);
+
+    return result.buffer;
+  } catch (err) {
+    console.warn('FastStart processing fallback:', err);
+    return arrayBuffer;
+  }
+}
+
+// ── Extract first video frame for instant crisp mobile poster thumbnail ──
+function extractVideoPosterThumbnail(file) {
+  return new Promise((resolve) => {
+    const video = document.createElement('video');
+    video.preload = 'metadata';
+    video.muted = true;
+    video.playsInline = true;
+    const url = URL.createObjectURL(file);
+    video.src = url;
+    let resolved = false;
+
+    const cleanup = (val) => {
+      if (resolved) return;
+      resolved = true;
+      try { URL.revokeObjectURL(url); } catch(e){}
+      resolve(val);
+    };
+
+    video.onloadeddata = () => {
+      video.currentTime = 0.1;
+    };
+    video.onseeked = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.min(video.videoWidth || 640, 720);
+        canvas.height = Math.round(canvas.width * ((video.videoHeight || 360) / (video.videoWidth || 640)));
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        cleanup(dataUrl);
+      } catch (e) {
+        cleanup(null);
+      }
+    };
+    video.onerror = () => cleanup(null);
+    setTimeout(() => cleanup(null), 3000);
+  });
+}
+
+function handleVideoPlayError(videoEl, url) {
+  console.warn('Video failed to decode natively:', url);
+  const parent = videoEl.parentElement;
+  if (!parent) return;
+  const lang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+  const openLbl = lang === 'fr' ? 'Ouvrir la Vidéo HD' : 'Open HD Video';
+  const msg = lang === 'fr' ? 'Clip Vidéo Haute Qualité' : 'High Quality Video Clip';
+  parent.innerHTML = `
+    <div class="video-fallback-box">
+      <span style="font-size:2.2rem;margin-bottom:8px;">📹</span>
+      <div style="font-weight:800;font-size:0.92rem;color:#fff;margin-bottom:4px;">${msg}</div>
+      <a href="${url}" target="_blank" rel="noopener" class="shop-btn" style="width:auto;padding:8px 16px;background:linear-gradient(135deg,#06b6d4,#3b82f6);color:#fff;text-decoration:none;font-weight:700;margin-top:8px;display:inline-flex;align-items:center;gap:6px;">
+        ▶ ${openLbl}
+      </a>
+    </div>
+  `;
+}
+
+function toggleDirectVideoPlay(videoEl, ev) {
+  if (ev) ev.stopPropagation();
+  if (!videoEl) return;
+  if (videoEl.paused) {
+    videoEl.play().catch(e => {
+      videoEl.muted = true;
+      videoEl.play().catch(() => {});
+    });
+  } else {
+    videoEl.pause();
+  }
+}
+
+function toggleVideoMute(postId, ev) {
+  if (ev) ev.stopPropagation();
+  const v = document.getElementById('vid-el-' + postId);
+  const icon = document.getElementById('vmute-' + postId);
+  if (!v) return;
+  v.muted = !v.muted;
+  if (icon) icon.textContent = v.muted ? '🔇' : '🔊';
+}
 
 function togglePollCreator(forceState) {
   isPollActive = (typeof forceState === 'boolean') ? forceState : !isPollActive;
@@ -12709,8 +13011,9 @@ function togglePollCreator(forceState) {
 }
 
 function addPollOptionField() {
+  const lang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
   if (pollOptionsCount >= 4) {
-    toast('Maxim 4 opțiuni permise', 'info');
+    toast(lang === 'fr' ? 'Maximum 4 options autorisées' : 'Maximum 4 options allowed', 'info');
     return;
   }
   pollOptionsCount++;
@@ -12721,7 +13024,7 @@ function addPollOptionField() {
   input.type = 'text';
   input.className = 'in';
   input.id = 'pollOpt' + optIdx;
-  input.placeholder = `Opțiunea ${optIdx} (opțional)`;
+  input.placeholder = lang === 'fr' ? `Option ${optIdx} (optionnelle)` : `Option ${optIdx} (optional)`;
   input.style.fontSize = '0.82rem';
   input.style.padding = '8px 12px';
   extra.appendChild(input);
@@ -12804,8 +13107,10 @@ async function onVideoSelect(ev) {
   ev.target.value = '';
   if (!file) return;
 
+  const curLang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+
   if (file.size > 50 * 1024 * 1024) {
-    toast('Fișierul depășește 50MB. Vă rugăm alegeți un clip de max 60s.', 'error');
+    toast(curLang === 'fr' ? 'Le fichier dépasse 50 Mo. Veuillez choisir un clip de 60s max.' : 'File exceeds 50MB. Please choose a clip of max 60s.', 'error');
     return;
   }
 
@@ -12814,7 +13119,6 @@ async function onVideoSelect(ev) {
   const upProg = document.getElementById('upVidProg');
   const upBar = document.getElementById('upVidBar');
   const btnPub = document.getElementById('btnPub');
-  const curLang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
 
   if (videoEl) {
     videoEl.src = URL.createObjectURL(file);
@@ -12824,25 +13128,37 @@ async function onVideoSelect(ev) {
   isUploadingVideo = true;
   if (btnPub) {
     btnPub.disabled = true;
-    btnPub.innerHTML = `<span>⏳ ${curLang === 'fr' ? 'Envoi de la vidéo...' : 'Uploading video...'}</span>`;
+    btnPub.innerHTML = `<span>⏳ ${curLang === 'fr' ? 'Optimisation et envoi de la vidéo...' : 'Optimizing and uploading video...'}</span>`;
   }
   if (upProg) upProg.style.display = 'block';
+  if (upBar) upBar.style.width = '10%';
 
   try {
+    // 1. Extract crisp first-frame thumbnail for instant mobile preview
+    uploadedVideoPoster = await extractVideoPosterThumbnail(file);
+
+    // 2. Read ArrayBuffer & apply Pure JS FastStart (moves moov to front)
+    const arrayBuf = await file.arrayBuffer();
+    const fastBuffer = enableMp4FastStart(arrayBuf);
+    const uploadBlob = new Blob([fastBuffer], { type: file.type || 'video/mp4' });
+
+    if (upBar) upBar.style.width = '25%';
+
+    // 3. Upload to Firebase Storage in community/ (matching existing rules)
     const cleanFileName = (file.name || 'video.mp4').replace(/[^a-zA-Z0-9._-]/g, '_');
-    const filename = 'community/videos/' + Date.now() + '_' + Math.random().toString(36).substring(2, 9) + '_' + cleanFileName;
+    const filename = 'community/' + Date.now() + '_' + Math.random().toString(36).substring(2, 9) + '_' + cleanFileName;
     const storageRef = storage.ref(filename);
     const metadata = { contentType: file.type || 'video/mp4' };
-    const uploadTask = storageRef.put(file, metadata);
+    const uploadTask = storageRef.put(uploadBlob, metadata);
 
     uploadTask.on('state_changed',
       (snapshot) => {
-        const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 90);
+        const progress = 25 + Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 70);
         if (upBar) upBar.style.width = progress + '%';
       },
       (err) => {
         console.error('Video upload error:', err);
-        toast('Upload video failed: ' + err.message, 'error');
+        toast((curLang === 'fr' ? 'Échec de l\'envoi vidéo : ' : 'Video upload failed: ') + err.message, 'error');
         removeSelectedVideo();
       },
       async () => {
@@ -12853,29 +13169,37 @@ async function onVideoSelect(ev) {
         isUploadingVideo = false;
         if (upProg) upProg.style.display = 'none';
         if (upBar) upBar.style.width = '0%';
-        if (btnPub) { btnPub.disabled = false; btnPub.textContent = '✦ Publish Post'; }
+        if (btnPub) {
+          btnPub.disabled = false;
+          btnPub.textContent = curLang === 'fr' ? '✦ Publier' : '✦ Publish Post';
+        }
       }
     );
   } catch (e) {
     console.error('Video error:', e);
-    toast('Error: ' + e.message, 'error');
+    toast((curLang === 'fr' ? 'Erreur : ' : 'Error: ') + e.message, 'error');
     removeSelectedVideo();
   }
 }
 
 function removeSelectedVideo() {
   uploadedVideoUrl = null;
+  uploadedVideoPoster = null;
   isUploadingVideo = false;
   const previewWrap = document.getElementById('videoPreviewWrap');
   const videoEl = document.getElementById('videoPreviewEl');
   const upProg = document.getElementById('upVidProg');
   const upBar = document.getElementById('upVidBar');
   const btnPub = document.getElementById('btnPub');
+  const curLang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
   if (videoEl) { videoEl.pause(); videoEl.src = ''; }
   if (previewWrap) previewWrap.style.display = 'none';
   if (upProg) upProg.style.display = 'none';
   if (upBar) upBar.style.width = '0%';
-  if (btnPub) { btnPub.disabled = false; btnPub.textContent = '✦ Publish Post'; }
+  if (btnPub) {
+    btnPub.disabled = false;
+    btnPub.textContent = curLang === 'fr' ? '✦ Publier' : '✦ Publish Post';
+  }
 }
 
 async function votePostPoll(postId, optionId, ev) {
@@ -12900,7 +13224,7 @@ async function votePostPoll(postId, optionId, ev) {
     // Check if user already voted
     const alreadyVoted = poll.options.some(o => o.voters && o.voters.includes(user.uid));
     if (alreadyVoted) {
-      toast(getCommunityLang() === 'fr' ? 'Vous avez déjà voté dans ce sondaj !' : 'You have already voted in this poll!', 'info');
+      toast(getCommunityLang() === 'fr' ? 'Vous avez déjà voté dans ce sondage !' : 'You have already voted in this poll!', 'info');
       return;
     }
 
@@ -12930,7 +13254,7 @@ async function votePostPoll(postId, optionId, ev) {
 
     playSoundFx('coin');
     const lang = getCommunityLang();
-    toast(lang === 'fr' ? '🎉 +5 🪙 pour votre vote dans le sondaj !' : '🎉 +5 🪙 earned for your vote!', 'success');
+    toast(lang === 'fr' ? '🎉 +5 🪙 pour votre vote au sondage !' : '🎉 +5 🪙 earned for your poll vote!', 'success');
 
     // Live update UI locally
     const totalVotes = poll.totalVotes;
@@ -12968,7 +13292,7 @@ function flyToRadarLocation(name, lat, lng) {
       if (typeof L !== 'undefined') {
         L.popup({ offset: [0, -10] })
           .setLatLng([lat, lng])
-          .setContent(`<div style="padding:6px;text-align:center;font-family:'Outfit',sans-serif;"><b>📍 ${name}</b><div style="font-size:11px;color:#94a3b8;margin-top:2px;">Postare din comunitatea Montreal ⚜️</div></div>`)
+          .setContent(`<div style="padding:6px;text-align:center;font-family:'Outfit',sans-serif;"><b>📍 ${name}</b><div style="font-size:11px;color:#94a3b8;margin-top:2px;">${(typeof getCommunityLang === 'function' && getCommunityLang() === 'fr') ? 'Publication de la communauté montréalaise ⚜️' : 'Montreal Community Post ⚜️'}</div></div>`)
           .openOn(realMontrealMapInstance);
       }
     }
@@ -13012,7 +13336,7 @@ async function shareSocialCardNative() {
       try {
         await navigator.share({
           title: 'IA Code Studio Montreal ⚜️',
-          text: 'Explorează Montrealul pe IA Code Studio! Alătură-te și primești +100 🪙 cadou de bun venit!',
+          text: (curLang === 'fr' ? 'Explorez Montréal sur IA Code Studio ! Rejoignez-nous et recevez +100 🪙 en cadeau de bienvenue !' : 'Explore Montreal on IA Code Studio! Join now and claim your +100 🪙 welcome bonus!'),
           files: [file]
         });
       } catch (err) {
