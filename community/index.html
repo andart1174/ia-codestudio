@@ -2686,6 +2686,66 @@
     }
 
     /* ══════════════════════════════════════════════
+       🌐 IN-APP BROWSER (FACEBOOK/INSTAGRAM/TIKTOK) FLOATING HELPER BAR
+       ══════════════════════════════════════════════ */
+    .iab-notice-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 42px;
+      background: linear-gradient(90deg, #1e1b4b, #312e81);
+      border-bottom: 1px solid rgba(124, 58, 237, 0.45);
+      z-index: 10001;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      font-family: 'Outfit', sans-serif;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    }
+    .iab-notice-content {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 0.78rem;
+      color: #e0e7ff;
+    }
+    .iab-btn {
+      background: linear-gradient(135deg, #06b6d4, #3b82f6);
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.72rem;
+      padding: 5px 10px;
+      cursor: pointer;
+      white-space: nowrap;
+      font-family: inherit;
+      box-shadow: 0 2px 8px rgba(6, 182, 212, 0.4);
+    }
+    .iab-close {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 0.9rem;
+      cursor: pointer;
+      padding: 4px 6px;
+      line-height: 1;
+    }
+    body.has-iab-bar .header {
+      top: 42px !important;
+    }
+    body.has-iab-bar .wrap {
+      top: 90px !important;
+      height: calc(100dvh - 146px) !important;
+      height: calc(100vh - 146px) !important;
+    }
+
+    /* ══════════════════════════════════════════════
        📱 MOBILE FULLSCREEN TIKTOK SNAP FEED (MAX-WIDTH: 768PX)
        ══════════════════════════════════════════════ */
     .mobile-bottom-nav { display: none; }
@@ -2768,6 +2828,95 @@
         scrollbar-width: none !important;
       }
       #feedEl::-webkit-scrollbar { display: none !important; }
+
+      /* 📱 FLUID CLASSIC SOCIAL FEED ON MOBILE */
+      .feed.mode-classic #feedEl {
+        scroll-snap-type: none !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding: 8px 10px 80px 10px !important;
+      }
+      .feed.mode-classic .post-card {
+        height: auto !important;
+        min-height: initial !important;
+        max-height: none !important;
+        margin-bottom: 16px !important;
+        border-radius: 16px !important;
+        background: var(--bg2) !important;
+        border: 1px solid var(--border2) !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
+        padding: 16px !important;
+        scroll-snap-align: none !important;
+        display: block !important;
+        position: relative !important;
+        overflow: visible !important;
+      }
+      .feed.mode-classic .tiktok-side-avatar-box,
+      .feed.mode-classic .btn-mobile-touch-toggle,
+      .feed.mode-classic .btn-mobile-code-toggle {
+        display: none !important;
+      }
+      .feed.mode-classic .p-code-tab-container,
+      .feed.mode-classic .p-images,
+      .feed.mode-classic .p-video,
+      .feed.mode-classic .p-direct-video {
+        position: static !important;
+        width: 100% !important;
+        height: auto !important;
+        border-radius: 12px !important;
+        margin-bottom: 12px !important;
+      }
+      .feed.mode-classic .p-code-preview,
+      .feed.mode-classic .preview-iframe-post {
+        position: relative !important;
+        width: 100% !important;
+        height: 320px !important;
+        min-height: 280px !important;
+        border-radius: 12px !important;
+      }
+      .feed.mode-classic .cv-tabs {
+        display: flex !important;
+      }
+      .feed.mode-classic .p-content {
+        position: static !important;
+        color: #cbd5e1 !important;
+        font-size: 0.92rem !important;
+        line-height: 1.65 !important;
+        margin-bottom: 12px !important;
+        max-height: none !important;
+        -webkit-line-clamp: unset !important;
+        background: transparent !important;
+        padding: 0 !important;
+        cursor: default !important;
+      }
+      .feed.mode-classic .reactions-bar {
+        position: static !important;
+        margin-top: 10px !important;
+        margin-bottom: 4px !important;
+        padding: 0 !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+      }
+      .feed.mode-classic .ph {
+        position: static !important;
+        background: transparent !important;
+        padding: 0 !important;
+        margin-bottom: 12px !important;
+        display: flex !important;
+      }
+      .feed.mode-classic .pf {
+        position: static !important;
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+        padding-top: 12px !important;
+        border-top: 1px solid var(--border2) !important;
+      }
+      .feed.mode-classic .tiktok-card::after {
+        display: none !important;
+      }
 
       /* Hide redundant top clutter on mobile */
       .create-bar { display: none !important; }
@@ -4773,7 +4922,7 @@
   </button>
 
   <div class="header-actions" id="hdrActions">
-    <button class="btn-google" onclick="signInGoogle()">
+    <button class="btn-google" onclick="promptGuestLogin('generic')">
       <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
       Sign in with Google
     </button>
@@ -4872,7 +5021,7 @@
       <div class="lp-icon">⚜️</div>
       <h3 id="lbl-login-prompt-title">Join REALMONT Montreal Cyber Social</h3>
       <p id="lbl-login-prompt-sub">Sign in with Google to share Montreal vibes, vote in duels, explore MONT-RADAR and connect with local creators.</p>
-      <button class="btn-google" onclick="signInGoogle()" style="margin:0 auto">
+      <button class="btn-google" onclick="promptGuestLogin('generic')" style="margin:0 auto">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
         Sign in with Google
       </button>
@@ -5551,7 +5700,9 @@
         <button class="c-send" onclick="sendCmt()">➤</button>
       </div>
       <div id="cmtLoginMsg" style="display:none;text-align:center;padding:14px;color:var(--muted);font-size:.83rem">
-        Sign in to leave a comment
+        <button type="button" class="btn-guest-cmt" onclick="promptGuestLogin('comment')" style="background:linear-gradient(135deg,rgba(124,58,237,0.25),rgba(6,182,212,0.2));border:1px solid rgba(124,58,237,0.45);color:#fff;padding:8px 18px;border-radius:10px;font-size:0.83rem;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;transition:all 0.2s;">
+          <span>💬</span> <span id="lblCmtGuestPrompt">Sign in with Google to comment</span>
+        </button>
       </div>
     </div>
   </div>
@@ -6838,10 +6989,252 @@ auth.onAuthStateChanged(async u => {
   if (u && ADMIN_EMAILS.includes(u.email)) loadStats();
 });
 
+// ══════════════════════════════════════════
+// 🌐 IN-APP BROWSER (FACEBOOK/INSTA) & GUEST SYSTEM
+// ══════════════════════════════════════════
+const GUEST_MODAL_I18N = {
+  en: {
+    like: {
+      title: "Support Montreal Creators",
+      sub: "Sign in with Google to like posts, save favorites, and encourage local Montreal creators."
+    },
+    post: {
+      title: "Share Your Montreal Story",
+      sub: "Sign in with Google to share photos, videos, 3D WebGL designs, and local vibes on REALMONT."
+    },
+    comment: {
+      title: "Join the Conversation",
+      sub: "Sign in with Google to comment on creations and connect with the Montreal community."
+    },
+    tip: {
+      title: "Tip with REALMONT Coins",
+      sub: "Sign in with Google to tip creators and reward your favorite Montreal moments."
+    },
+    profile: {
+      title: "Your REALMONT Profile",
+      sub: "Sign in with Google to manage your profile, streaks, and REALMONT coins."
+    },
+    messages: {
+      title: "Direct Messages & Calls",
+      sub: "Sign in with Google to send private messages and start peer-to-peer cyber calls."
+    },
+    follow: {
+      title: "Follow Local Creators",
+      sub: "Sign in with Google to follow your favorite creators and customize your personal feed."
+    },
+    remix: {
+      title: "AI 3D Remix & Mutation",
+      sub: "Sign in with Google to remix WebGL shaders, create 3D variants, and earn creator rewards."
+    },
+    boost: {
+      title: "Boost Your Post",
+      sub: "Sign in with Google to promote your post to the top of the Montreal feed."
+    },
+    generic: {
+      title: "Join REALMONT Montreal",
+      sub: "Sign in with Google to unlock duels, MONT-RADAR™, daily challenges, and community rewards."
+    },
+    perk1: "Explore MONT-RADAR™ with live interactive local spots",
+    perk2: "Vote in Duels Mont-Royal & earn daily REALMONT coins",
+    perk3: "Publish Montreal photos, videos, and 3D WebGL scenes",
+    iabTitle: "Social Browser Detected:",
+    iabDesc: " Facebook/Instagram blocks Google sign-in popups. Tap below to open in your default browser for 1-tap sign-in:",
+    iabBtn: "Open in Chrome / Safari ↗",
+    googleBtn: "Continue with Google",
+    browseBtn: "Continue browsing as guest →",
+    iabTopBar: "For best 60FPS speed & 1-tap sign-in: Open in Chrome / Safari ↗"
+  },
+  fr: {
+    like: {
+      title: "Soutenez les créateurs de Montréal",
+      sub: "Connectez-vous avec Google pour aimer les publications, sauvegarder vos favoris et encourager les créateurs."
+    },
+    post: {
+      title: "Partagez votre histoire montréalaise",
+      sub: "Connectez-vous avec Google pour publier des photos, vidéos, scènes 3D et moments forts sur REALMONT."
+    },
+    comment: {
+      title: "Rejoignez la discussion",
+      sub: "Connectez-vous avec Google pour commenter les publications et échanger avec la communauté de Montréal."
+    },
+    tip: {
+      title: "Envoyez un pourboire",
+      sub: "Connectez-vous avec Google pour récompenser vos créateurs montréalais préférés en pièces REALMONT."
+    },
+    profile: {
+      title: "Votre profil REALMONT",
+      sub: "Connectez-vous avec Google pour accéder à votre profil, vos pièces REALMONT et vos séries quotidiennes."
+    },
+    messages: {
+      title: "Messagerie & Appels",
+      sub: "Connectez-vous avec Google pour envoyer des messages privés et démarrer des appels avec les créateurs."
+    },
+    follow: {
+      title: "Suivre des créateurs",
+      sub: "Connectez-vous avec Google pour suivre vos créateurs préférés et personnaliser votre fil d'actualité."
+    },
+    remix: {
+      title: "Remix 3D & Mutation IA",
+      sub: "Connectez-vous avec Google pour muter les shaders 3D et gagner des récompenses créateurs."
+    },
+    boost: {
+      title: "Booster votre publication",
+      sub: "Connectez-vous avec Google pour propulser votre publication au sommet du fil de Montréal."
+    },
+    generic: {
+      title: "Rejoignez REALMONT Montréal",
+      sub: "Connectez-vous avec Google pour débloquer tous les duels, MONT-RADAR™, défis du jour et récompenses."
+    },
+    perk1: "Explorez MONT-RADAR™ avec les lieux locaux interactifs",
+    perk2: "Votez aux Duels Mont-Royal & gagnez des pièces quotidiennes",
+    perk3: "Publiez des photos, vidéos et scènes WebGL 3D de Montréal",
+    iabTitle: "Navigateur social détecté :",
+    iabDesc: " Facebook/Instagram bloque les fenêtres de connexion Google. Cliquez ci-dessous pour ouvrir dans votre navigateur habituel :",
+    iabBtn: "Ouvrir dans Chrome / Safari ↗",
+    googleBtn: "Continuer avec Google",
+    browseBtn: "Continuer en invité →",
+    iabTopBar: "Pour la meilleure vitesse 60FPS & connexion 1-clic : Ouvrir dans Chrome / Safari ↗"
+  }
+};
+
+let currentGuestContext = 'generic';
+
+function isInAppBrowser() {
+  const ua = (navigator.userAgent || navigator.vendor || window.opera || '').toLowerCase();
+  return /fban|fbav|fb_iab|instagram|tiktok|musical_ly|bytedance|snapchat|linkedinapp|twitter|line\//i.test(ua);
+}
+
+function isAndroidDevice() {
+  return /android/i.test(navigator.userAgent || '');
+}
+
+function openInNativeBrowser() {
+  const currentUrl = window.location.href;
+  if (isAndroidDevice()) {
+    const noScheme = currentUrl.replace(/^https?:\/\//i, '');
+    window.location.href = `intent://${noScheme}#Intent;scheme=https;package=com.android.chrome;end`;
+  } else {
+    navigator.clipboard.writeText(currentUrl).then(() => {
+      const lang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+      toast(lang === 'fr' ? '✓ Lien copié ! Ouvrez Safari pour vous connecter en 1 clic.' : '✓ Link copied! Open Safari for 1-tap sign-in.', 'success');
+    }).catch(() => {
+      const lang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+      toast(lang === 'fr' ? 'Appuyez sur "..." en haut à droite et choisissez "Ouvrir dans Safari"' : 'Tap "..." at top right and choose "Open in Safari"', 'info');
+    });
+  }
+}
+
+function initInAppBrowserNotice() {
+  if (!isInAppBrowser()) return;
+  try {
+    if (sessionStorage.getItem('realmont_iab_dismissed') === '1') return;
+  } catch(e) {}
+
+  if (document.getElementById('iabNoticeBar')) return;
+
+  const lang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+  const dict = GUEST_MODAL_I18N[lang] || GUEST_MODAL_I18N.en;
+
+  const bar = document.createElement('div');
+  bar.id = 'iabNoticeBar';
+  bar.className = 'iab-notice-bar';
+  bar.innerHTML = `
+    <div class="iab-notice-content">
+      <span style="font-size:1.05rem;">🌐</span>
+      <span id="iabNoticeText">${dict.iabTopBar}</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <button type="button" class="iab-btn" onclick="openInNativeBrowser()">
+        ${dict.iabBtn}
+      </button>
+      <button type="button" class="iab-close" onclick="dismissIabNotice()" title="Close">✕</button>
+    </div>
+  `;
+  document.body.prepend(bar);
+  document.body.classList.add('has-iab-bar');
+}
+
+function dismissIabNotice() {
+  const bar = document.getElementById('iabNoticeBar');
+  if (bar) bar.remove();
+  document.body.classList.remove('has-iab-bar');
+  try {
+    sessionStorage.setItem('realmont_iab_dismissed', '1');
+  } catch(e) {}
+}
+
+function promptGuestLogin(context = 'generic') {
+  if (user) return;
+  currentGuestContext = context;
+  const modal = document.getElementById('guestLoginModal');
+  if (!modal) {
+    signInGoogle();
+    return;
+  }
+  const lang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+  const dict = GUEST_MODAL_I18N[lang] || GUEST_MODAL_I18N.en;
+  const ctxData = dict[context] || dict.generic;
+
+  const titleEl = document.getElementById('guestModalTitle');
+  const subEl = document.getElementById('guestModalSubtitle');
+  const perk1 = document.getElementById('guestPerk1');
+  const perk2 = document.getElementById('guestPerk2');
+  const perk3 = document.getElementById('guestPerk3');
+  const iabBox = document.getElementById('guestIabHelperBox');
+  const iabTitle = document.getElementById('guestIabTitle');
+  const iabDesc = document.getElementById('guestIabDesc');
+  const iabBtn = document.getElementById('guestIabBtn');
+  const googleBtn = document.getElementById('lblGuestGoogleBtn');
+  const browseBtn = document.getElementById('lblGuestBrowseBtn');
+
+  if (titleEl) titleEl.textContent = ctxData.title;
+  if (subEl) subEl.textContent = ctxData.sub;
+  if (perk1) perk1.textContent = dict.perk1;
+  if (perk2) perk2.textContent = dict.perk2;
+  if (perk3) perk3.textContent = dict.perk3;
+  if (googleBtn) googleBtn.textContent = dict.googleBtn;
+  if (browseBtn) browseBtn.textContent = dict.browseBtn;
+
+  if (isInAppBrowser() && iabBox) {
+    iabBox.style.display = 'block';
+    if (iabTitle) iabTitle.textContent = dict.iabTitle;
+    if (iabDesc) iabDesc.textContent = dict.iabDesc;
+    if (iabBtn) iabBtn.textContent = dict.iabBtn;
+  } else if (iabBox) {
+    iabBox.style.display = 'none';
+  }
+
+  modal.style.display = 'flex';
+}
+
+function closeGuestLoginModal() {
+  const modal = document.getElementById('guestLoginModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function handleGuestGoogleClick() {
+  if (isInAppBrowser()) {
+    openInNativeBrowser();
+  } else {
+    closeGuestLoginModal();
+    signInGoogle();
+  }
+}
+
 function signInGoogle() {
+  if (isInAppBrowser()) {
+    promptGuestLogin('generic');
+    return;
+  }
   const provider = new firebase.auth.GoogleAuthProvider();
   provider.setCustomParameters({ prompt: 'select_account' });
-  auth.signInWithPopup(provider).catch(e => toast(e.message, 'error'));
+  auth.signInWithPopup(provider).catch(e => {
+    if (e.code === 'auth/popup-blocked') {
+      promptGuestLogin('generic');
+    } else {
+      toast(e.message, 'error');
+    }
+  });
 }
 function signOut() { 
   localStorage.removeItem('genius_session');
@@ -6881,7 +7274,9 @@ function renderLoggedIn(u) {
 }
 function renderLoggedOut() {
   isAdmin = false;
-  document.getElementById('hdrActions').innerHTML = `<button class="btn-google" onclick="signInGoogle()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">Sign in with Google</button>`;
+  const lang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+  const btnText = lang === 'fr' ? 'Connexion Google' : 'Sign in with Google';
+  document.getElementById('hdrActions').innerHTML = `<button class="btn-google" onclick="promptGuestLogin('generic')"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">${btnText}</button>`;
   document.getElementById('loginPrompt').style.display = 'block';
   document.getElementById('createBar').style.display = 'none';
   document.getElementById('userCard').style.display = 'none';
@@ -7619,29 +8014,43 @@ function setMobileFeedMode(mode) {
   const feed = document.querySelector('.feed');
   const btnTiktok = document.getElementById('btnModeTiktok');
   const btnClassic = document.getElementById('btnModeClassic');
+  const sheetTiktok = document.getElementById('btnSheetModeTiktok');
+  const sheetClassic = document.getElementById('btnSheetModeClassic');
+  const sheetModeLbl = document.getElementById('lblSheetCurrentMode');
   if (!feed) return;
   
+  const lang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+
   if (mode === 'classic') {
     feed.classList.add('mode-classic');
     if (btnClassic) btnClassic.classList.add('active');
     if (btnTiktok) btnTiktok.classList.remove('active');
+    if (sheetClassic) sheetClassic.classList.add('active');
+    if (sheetTiktok) sheetTiktok.classList.remove('active');
+    if (sheetModeLbl) sheetModeLbl.textContent = lang === 'fr' ? 'Cartes' : 'Classic Cards';
     localStorage.setItem('community_feed_mode', 'classic');
   } else {
     feed.classList.remove('mode-classic');
     if (btnTiktok) btnTiktok.classList.add('active');
     if (btnClassic) btnClassic.classList.remove('active');
+    if (sheetTiktok) sheetTiktok.classList.add('active');
+    if (sheetClassic) sheetClassic.classList.remove('active');
+    if (sheetModeLbl) sheetModeLbl.textContent = lang === 'fr' ? 'Reels' : 'TikTok Reels';
     localStorage.setItem('community_feed_mode', 'tiktok');
   }
 }
 
-// Restore saved mobile feed mode
+// Restore or initialize mobile feed mode
 (function() {
   const savedMode = localStorage.getItem('community_feed_mode');
-  if (savedMode === 'classic') {
-    window.addEventListener('DOMContentLoaded', () => {
-      setMobileFeedMode('classic');
-    });
-  }
+  // Default to classic mode on mobile so posts are never squished and immediately visible
+  const targetMode = savedMode === 'tiktok' ? 'tiktok' : 'classic';
+  window.addEventListener('DOMContentLoaded', () => {
+    setMobileFeedMode(targetMode);
+    if (typeof initInAppBrowserNotice === 'function') {
+      initInAppBrowserNotice();
+    }
+  });
 })();
 
 // ══════════════════════════════════════════
@@ -7665,7 +8074,7 @@ function filterTab(cat, btn) {
 // ══════════════════════════════════════════
 // CREATE POST
 // ══════════════════════════════════════════
-function openCreate() { if (!user) { signInGoogle(); return; } document.getElementById('createOverlay').classList.add('open'); document.getElementById('postContent').focus(); }
+function openCreate() { if (!user) { promptGuestLogin('post'); return; } document.getElementById('createOverlay').classList.add('open'); document.getElementById('postContent').focus(); }
 function closeCreate(e) { if (e && e.target !== document.getElementById('createOverlay')) return; document.getElementById('createOverlay').classList.remove('open'); }
 function updChar() { document.getElementById('charCnt').textContent = document.getElementById('postContent').value.length + ' / 2000'; }
 
@@ -8019,7 +8428,7 @@ async function publish() {
 // LIKES
 // ══════════════════════════════════════════
 async function toggleLike(postId, liked) {
-  if (!user) { toast('Sign in to like posts', 'info'); return; }
+  if (!user) { promptGuestLogin('like'); return; }
   const btn = document.getElementById('lb-' + postId);
   const cnt = document.getElementById('lc-' + postId);
   btn.disabled = true;
@@ -8159,7 +8568,8 @@ function closeCmts(e) {
 }
 
 async function sendCmt() {
-  if (!user || !curPostId) return;
+  if (!user) { promptGuestLogin('comment'); return; }
+  if (!curPostId) return;
   const inp = document.getElementById('cmtInput');
   const content = inp.value.trim();
   if (!content) return;
@@ -9270,6 +9680,29 @@ function applyCommunityLanguage(lang) {
   if (mbMessages) mbMessages.textContent = 'Messages';
   if (mbProfile) mbProfile.textContent = lang === 'fr' ? 'Profil' : 'Profile';
   if (sheetTitle) sheetTitle.textContent = lang === 'fr' ? '🏆 Explorer les Sujets' : '🏆 Explore Topics';
+
+  // Mobile Topics Sheet Feed Mode Switcher
+  const sheetModeTitle = document.getElementById('lblSheetFeedModeTitle');
+  const btnSheetClassic = document.getElementById('btnSheetModeClassic');
+  const btnSheetTiktok = document.getElementById('btnSheetModeTiktok');
+  const sheetCurMode = document.getElementById('lblSheetCurrentMode');
+  const isClassicActive = document.querySelector('.feed')?.classList.contains('mode-classic');
+
+  if (sheetModeTitle) sheetModeTitle.textContent = lang === 'fr' ? "Mode d'affichage du fil" : "Feed View Mode";
+  if (btnSheetClassic) btnSheetClassic.innerHTML = `<span>📱</span> <span>${lang === 'fr' ? 'Cartes Classiques' : 'Classic Cards'}</span>`;
+  if (btnSheetTiktok) btnSheetTiktok.innerHTML = `<span>🎬</span> <span>${lang === 'fr' ? 'TikTok Reels' : 'TikTok Reels'}</span>`;
+  if (sheetCurMode) sheetCurMode.textContent = isClassicActive ? (lang === 'fr' ? 'Cartes' : 'Classic Cards') : (lang === 'fr' ? 'Reels' : 'TikTok Reels');
+
+  // Comment Guest Button
+  const cmtGuestLbl = document.getElementById('lblCmtGuestPrompt');
+  if (cmtGuestLbl) cmtGuestLbl.textContent = lang === 'fr' ? 'Connectez-vous avec Google pour commenter' : 'Sign in with Google to comment';
+
+  // In-App Browser Floating Notice (if visible)
+  const iabNoticeText = document.getElementById('iabNoticeText');
+  const dict = (typeof GUEST_MODAL_I18N !== 'undefined') ? (GUEST_MODAL_I18N[lang] || GUEST_MODAL_I18N.en) : null;
+  if (iabNoticeText && dict) iabNoticeText.textContent = dict.iabTopBar;
+  const iabBtnEl = document.querySelector('.iab-btn');
+  if (iabBtnEl && dict) iabBtnEl.textContent = dict.iabBtn;
 
   // Stories
   const myStoryLbl = document.getElementById('lbl-my-story'); if (myStoryLbl) myStoryLbl.textContent = t.myStory;
@@ -10414,7 +10847,7 @@ function renderShop() {
 }
 
 async function buyShopItem(category, itemId, cost, itemName) {
-  if (!user) { signInGoogle(); return; }
+  if (!user) { promptGuestLogin('generic'); return; }
   const lang = getCommunityLang();
   const t = I18N[lang] || I18N.en;
 
@@ -10453,7 +10886,7 @@ async function toggleEquipCosmetic(category, itemId) {
 // 🚀 8. POST BOOST & PROMOTION ENGINE
 // ══════════════════════════════════════════
 async function openBoostModal(postId) {
-  if (!user) { signInGoogle(); return; }
+  if (!user) { promptGuestLogin('boost'); return; }
   activeBoostPostId = postId;
   const overlay = document.getElementById('boostOverlay');
   if (overlay) overlay.classList.add('open');
@@ -10637,7 +11070,7 @@ async function initNewScratchCard() {
 
 // Mystery Chests
 async function openMysteryChest(tier) {
-  if (!user) { signInGoogle(); return; }
+  if (!user) { promptGuestLogin('generic'); return; }
   const isSuperAdmin = user && user.email && ADMIN_EMAILS.includes(user.email);
   const lang = getCommunityLang();
   const t = I18N[lang] || I18N.en;
@@ -10800,7 +11233,7 @@ let activeTipAuthorEmail = null;
 let activeTipAmount = 20;
 
 function openTipModal(postId, authorUid, authorEmail, authorName) {
-  if (!user) { signInGoogle(); return; }
+  if (!user) { promptGuestLogin('tip'); return; }
   activeTipPostId = postId;
   activeTipAuthorUid = authorUid;
   activeTipAuthorEmail = authorEmail;
@@ -11114,7 +11547,7 @@ function renderStreakUI() {
 }
 
 async function claimDailyStreak() {
-  if (!user) { signInGoogle(); return; }
+  if (!user) { promptGuestLogin('generic'); return; }
   const today = getTodayDateString();
   if (userStreak.lastClaimDate === today) return;
 
@@ -12187,7 +12620,7 @@ function attachStreamToMediaElements(stream, isVideo) {
 }
 
 async function initiateCyberCall(receiverUid, receiverName, receiverPhoto, callType = 'audio') {
-  if (!user) { signInGoogle(); return; }
+  if (!user) { promptGuestLogin('messages'); return; }
   if (activeCallId) return;
 
   const myUid = user.uid || user.email || '';
@@ -12550,7 +12983,7 @@ let dmConvoListenerUnsub = null;
 let currentRunningCodeSnippet = '';
 
 function openDmModal(targetUid, targetName, targetPhoto) {
-  if (!user) { signInGoogle(); return; }
+  if (!user) { promptGuestLogin('messages'); return; }
   document.getElementById('dmModalOverlay').classList.add('open');
   loadDmConversations();
 
@@ -12825,7 +13258,7 @@ function renderAiConversation() {
 }
 
 async function sendDmText() {
-  if (!user) { signInGoogle(); return; }
+  if (!user) { promptGuestLogin('messages'); return; }
   const input = document.getElementById('dmTextInput');
   if (!input) return;
   const text = input.value.trim();
@@ -13332,7 +13765,7 @@ function removeSelectedVideo() {
 async function votePostPoll(postId, optionId, ev) {
   if (ev) ev.stopPropagation();
   if (!user) {
-    signInGoogle();
+    promptGuestLogin('generic');
     return;
   }
 
@@ -13697,7 +14130,7 @@ function renderStoriesBar() {
 }
 
 function openAddStoryModal() {
-  if (!user) { signInGoogle(); return; }
+  if (!user) { promptGuestLogin('post'); return; }
   storyPhotoDataUrl = null;
   document.getElementById('storyPreviewImg').style.display = 'none';
   document.getElementById('storyPreviewPlaceholder').style.display = 'block';
@@ -13876,7 +14309,7 @@ async function loadMyFollowing() {
 }
 
 async function toggleFollow(targetUid, targetName, btnEl) {
-  if (!user) { signInGoogle(); return; }
+  if (!user) { promptGuestLogin('follow'); return; }
   const myUid = user.uid || user.email || '';
   if (!targetUid || targetUid === myUid) return;
 
@@ -14079,7 +14512,7 @@ let selectedRemixPreset = 'cyberpunk';
 let currentRemixedGeneratedCode = '';
 
 async function openAiRemixModal(postId) {
-  if (!user) { signInGoogle(); return; }
+  if (!user) { promptGuestLogin('remix'); return; }
 
   let post = null;
   if (window.communityPosts && window.communityPosts[postId]) {
@@ -14335,7 +14768,7 @@ function mutateCodeWithAi(srcCode, preset, customPrompt) {
 }
 
 async function publishAiRemix() {
-  if (!user) { signInGoogle(); return; }
+  if (!user) { promptGuestLogin('post'); return; }
   if (!currentRemixedGeneratedCode || !currentRemixOriginalPost) {
     toast('No remix code generated to publish', 'warning'); return;
   }
@@ -14478,7 +14911,7 @@ function scrollToTopFeed() {
 }
 
 function openProfileOrVault() {
-  if (!user) { signInGoogle(); return; }
+  if (!user) { promptGuestLogin('profile'); return; }
   openEditProfileModal();
 }
 
@@ -14713,7 +15146,7 @@ async function sendQuickTip(postId, authorUid, authorEmail, authorName, amount =
     event.stopPropagation();
   }
   if (!user) {
-    signInGoogle();
+    promptGuestLogin('tip');
     return;
   }
   const myUid = user.uid || user.email;
@@ -14818,15 +15251,20 @@ function initDailyPulseUI() {
   const theme = DAILY_PULSE_THEMES.find(t => t.day === today) || DAILY_PULSE_THEMES[1];
   const lang = getCommunityLang();
 
-  // Restore collapse state
+  // Restore collapse state (defaults to collapsed on mobile <= 768px for immediate post visibility)
   try {
-    if (localStorage.getItem('dpc_card_collapsed') === '1') {
+    const isMobile = window.innerWidth <= 768;
+    const dpcPref = localStorage.getItem('dpc_card_collapsed');
+    const shouldCollapseDpc = dpcPref === '1' || (dpcPref === null && isMobile);
+    if (shouldCollapseDpc) {
       const card = document.getElementById('montrealDailyPulseCard');
       const icon = document.getElementById('dpcToggleIcon');
       if (card) card.classList.add('dpc-collapsed');
       if (icon) icon.textContent = '▸';
     }
-    if (localStorage.getItem('mrb_banner_collapsed') === '1') {
+    const mrbPref = localStorage.getItem('mrb_banner_collapsed');
+    const shouldCollapseMrb = mrbPref === '1' || (mrbPref === null && isMobile);
+    if (shouldCollapseMrb) {
       const banner = document.getElementById('mobileRealmontBanner');
       const icon = document.getElementById('mrbToggleIcon');
       if (banner) banner.classList.add('mrb-collapsed');
@@ -14860,7 +15298,7 @@ function initDailyPulseUI() {
 
 function participateInDailyPulse() {
   if (!user) {
-    signInGoogle();
+    promptGuestLogin('post');
     return;
   }
   const today = new Date().getDay();
@@ -16623,6 +17061,22 @@ function sendRoomMessage() {
         </div>
       </div>
 
+      <!-- 🎬 Feed Display Mode Switcher -->
+      <div style="margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border2);">
+        <div style="font-size:0.72rem;font-weight:800;color:#38bdf8;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+          <span id="lblSheetFeedModeTitle">Feed View Mode</span>
+          <span style="font-size:0.65rem;color:var(--muted);" id="lblSheetCurrentMode">Classic Cards</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <button class="cat-sheet-btn active" id="btnSheetModeClassic" onclick="setMobileFeedMode('classic');closeCategoriesSheet();" style="display:flex;align-items:center;justify-content:center;gap:6px;font-size:0.8rem;padding:9px;">
+            <span>📱</span> <span>Classic Cards</span>
+          </button>
+          <button class="cat-sheet-btn" id="btnSheetModeTiktok" onclick="setMobileFeedMode('tiktok');closeCategoriesSheet();" style="display:flex;align-items:center;justify-content:center;gap:6px;font-size:0.8rem;padding:9px;">
+            <span>🎬</span> <span>TikTok Reels</span>
+          </button>
+        </div>
+      </div>
+
       <!-- 🏙️ Montreal Neighborhood Channels -->
       <div style="margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border2);">
         <div style="font-size:0.72rem;font-weight:800;color:#c084fc;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">
@@ -16648,6 +17102,68 @@ function sendRoomMessage() {
         <button class="cat-sheet-btn" data-cat="general" onclick="selectCategoryFromSheet('general')">💬 General</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ⚜️ REALMONT GUEST WELCOME & LOGIN MODAL -->
+<div class="overlay" id="guestLoginModal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(3,7,18,0.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);align-items:center;justify-content:center;padding:16px;">
+  <div style="background:var(--bg2);border:1px solid rgba(124,58,237,0.45);box-shadow:0 10px 40px rgba(0,0,0,0.7), 0 0 35px rgba(124,58,237,0.25);border-radius:24px;padding:26px 22px;width:100%;max-width:440px;position:relative;text-align:center;box-sizing:border-box;">
+    
+    <!-- Close button -->
+    <button onclick="closeGuestLoginModal()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.06);border:1px solid var(--border2);color:#94a3b8;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:0.95rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">✕</button>
+
+    <!-- Header badge -->
+    <div style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(6,182,212,0.15));border:1px solid rgba(124,58,237,0.4);padding:6px 14px;border-radius:20px;margin-bottom:14px;">
+      <span style="font-size:1.2rem;">⚜️</span>
+      <span style="font-family:'Outfit',sans-serif;font-weight:900;font-size:0.88rem;letter-spacing:0.04em;background:linear-gradient(135deg,#fff,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">REALMONT</span>
+      <span style="font-size:0.6rem;background:#f43f5e;color:#fff;padding:2px 6px;border-radius:8px;font-weight:800;">MTL</span>
+    </div>
+
+    <!-- Title and dynamic context prompt -->
+    <h3 id="guestModalTitle" style="font-family:'Outfit',sans-serif;font-size:1.3rem;font-weight:800;color:#fff;margin:0 0 6px 0;">Join the Montreal Cyber Social</h3>
+    <p id="guestModalSubtitle" style="color:#94a3b8;font-size:0.85rem;line-height:1.5;margin:0 0 16px 0;">Sign in with Google to post photos, like creations, vote in duels, and connect with Montreal creators.</p>
+
+    <!-- Perks / Feature Highlights -->
+    <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border2);border-radius:14px;padding:12px;margin-bottom:18px;text-align:left;display:flex;flex-direction:column;gap:8px;font-size:0.8rem;color:#cbd5e1;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:1.1rem;flex-shrink:0;">🗺️</span>
+        <span id="guestPerk1">Explore MONT-RADAR™ with live interactive local spots</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:1.1rem;flex-shrink:0;">⚡</span>
+        <span id="guestPerk2">Vote in Duels Mont-Royal & earn daily REALMONT coins</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:1.1rem;flex-shrink:0;">🎨</span>
+        <span id="guestPerk3">Publish Montreal photos, videos, and 3D WebGL scenes</span>
+      </div>
+    </div>
+
+    <!-- In-App Browser Helper Box (Conditional) -->
+    <div id="guestIabHelperBox" style="display:none;background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);border-radius:14px;padding:12px;margin-bottom:14px;text-align:left;">
+      <div style="display:flex;align-items:flex-start;gap:8px;">
+        <span style="font-size:1.2rem;">🌐</span>
+        <div style="font-size:0.78rem;line-height:1.45;color:#fecdd3;">
+          <strong id="guestIabTitle">Social Browser Detected:</strong>
+          <span id="guestIabDesc"> Facebook/Instagram blocks Google sign-in popups. Tap below to open in your default browser for 1-tap sign-in:</span>
+        </div>
+      </div>
+      <button onclick="openInNativeBrowser()" style="width:100%;margin-top:10px;padding:9px;border-radius:10px;background:linear-gradient(135deg,#06b6d4,#3b82f6);border:none;color:#fff;font-weight:800;font-size:0.82rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+        <span>🌐</span> <span id="guestIabBtn">Open in Chrome / Safari ↗</span>
+      </button>
+    </div>
+
+    <!-- Google Sign-In Button -->
+    <button onclick="handleGuestGoogleClick()" id="btnGuestGoogleAuth" style="width:100%;padding:13px 18px;border-radius:14px;background:#ffffff;border:none;color:#1e293b;font-weight:700;font-size:0.92rem;font-family:'Outfit',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 18px rgba(0,0,0,0.35);transition:transform 0.15s, box-shadow 0.15s;margin-bottom:10px;">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width:20px;height:20px;" alt="Google">
+      <span id="lblGuestGoogleBtn">Continue with Google</span>
+    </button>
+
+    <!-- Continue Browsing as Guest -->
+    <button onclick="closeGuestLoginModal()" style="width:100%;padding:9px;border-radius:10px;background:transparent;border:1px solid transparent;color:var(--muted);font-weight:600;font-size:0.82rem;cursor:pointer;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--muted)'">
+      <span id="lblGuestBrowseBtn">Continue browsing as guest →</span>
+    </button>
+
   </div>
 </div>
 </body>
