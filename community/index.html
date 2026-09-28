@@ -2939,6 +2939,331 @@
     }
 
     /* ══════════════════════════════════════════════
+       📻 RADIO MONT-ROYAL 24/7 & CYBER DROPS STYLES
+       ══════════════════════════════════════════════ */
+    .btn-hdr-radio {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 13px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(244, 63, 94, 0.15), rgba(6, 182, 212, 0.15));
+      border: 1px solid rgba(6, 182, 212, 0.4);
+      color: #67e8f9;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 2px 10px rgba(6, 182, 212, 0.15);
+      position: relative;
+    }
+    .btn-hdr-radio:hover {
+      background: linear-gradient(135deg, rgba(244, 63, 94, 0.25), rgba(6, 182, 212, 0.25));
+      border-color: #38bdf8;
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(6, 182, 212, 0.35);
+    }
+    .btn-hdr-radio.is-playing {
+      border-color: #f43f5e;
+      background: linear-gradient(135deg, rgba(244, 63, 94, 0.28), rgba(168, 85, 247, 0.28));
+      color: #fca5a5;
+      box-shadow: 0 0 15px rgba(244, 63, 94, 0.4);
+    }
+    .radio-live-indicator {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+      display: inline-block;
+      animation: radioPulseDot 1.8s infinite;
+    }
+    .btn-hdr-radio.is-playing .radio-live-indicator {
+      background: #f43f5e;
+      box-shadow: 0 0 8px #f43f5e;
+    }
+    @keyframes radioPulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+    .radio-equalizer-bars {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 12px;
+    }
+    .radio-equalizer-bars span {
+      width: 2.5px;
+      background: #67e8f9;
+      border-radius: 1px;
+      animation: eqBounce 1s infinite ease-in-out;
+    }
+    .btn-hdr-radio.is-playing .radio-equalizer-bars span {
+      background: #f43f5e;
+    }
+    .radio-equalizer-bars span:nth-child(1) { height: 4px; animation-delay: 0.1s; }
+    .radio-equalizer-bars span:nth-child(2) { height: 10px; animation-delay: 0.3s; }
+    .radio-equalizer-bars span:nth-child(3) { height: 7px; animation-delay: 0.2s; }
+    .radio-equalizer-bars span:nth-child(4) { height: 11px; animation-delay: 0.4s; }
+    @keyframes eqBounce {
+      0%, 100% { height: 3px; }
+      50% { height: 12px; }
+    }
+
+    /* Floating Radio Deck Widget */
+    .realmont-radio-deck {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 360px;
+      max-width: calc(100vw - 32px);
+      background: rgba(13, 17, 28, 0.94);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 18px;
+      box-shadow: 0 16px 45px rgba(0, 0, 0, 0.75), 0 0 25px rgba(6, 182, 212, 0.2);
+      z-index: 99990;
+      overflow: hidden;
+      font-family: inherit;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      display: none;
+    }
+    .realmont-radio-deck.open {
+      display: block;
+      animation: radioDeckSlideUp 0.35s ease-out;
+    }
+    @keyframes radioDeckSlideUp {
+      from { opacity: 0; transform: translateY(20px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .realmont-radio-deck.mini {
+      width: 290px;
+    }
+    .realmont-radio-deck.mini .radio-deck-body {
+      display: none;
+    }
+    .radio-deck-header {
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.25);
+    }
+    .radio-deck-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .radio-deck-live-badge {
+      font-size: 0.62rem;
+      background: linear-gradient(135deg, #f43f5e, #e11d48);
+      color: #fff;
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      box-shadow: 0 0 10px rgba(244, 63, 94, 0.4);
+    }
+    .radio-deck-now-playing {
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(6, 182, 212, 0.08) 0%, transparent 100%);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .radio-deck-artwork {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #1e1b4b, #0f172a);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      flex-shrink: 0;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+    .radio-deck-artwork.spin {
+      animation: vinylSpin 6s linear infinite;
+    }
+    @keyframes vinylSpin {
+      100% { transform: rotate(360deg); }
+    }
+    .radio-station-list {
+      padding: 10px 14px;
+      max-height: 190px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .radio-station-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .radio-station-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+    .radio-station-item.active {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.18), rgba(124, 58, 237, 0.18));
+      border-color: #38bdf8;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+    }
+    .radio-deck-controls {
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: rgba(0, 0, 0, 0.35);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .radio-btn-play-big {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #06b6d4, #3b82f6);
+      border: none;
+      color: #fff;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s;
+      box-shadow: 0 4px 18px rgba(6, 182, 212, 0.45);
+      flex-shrink: 0;
+    }
+    .radio-btn-play-big:hover {
+      transform: scale(1.08);
+      box-shadow: 0 6px 22px rgba(6, 182, 212, 0.65);
+    }
+    .radio-btn-play-big.playing {
+      background: linear-gradient(135deg, #f43f5e, #ec4899);
+      box-shadow: 0 4px 18px rgba(244, 63, 94, 0.5);
+    }
+    .radio-vol-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 80px;
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.2);
+      outline: none;
+      cursor: pointer;
+    }
+    .radio-vol-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #38bdf8;
+      cursor: pointer;
+      box-shadow: 0 0 6px #38bdf8;
+    }
+
+    /* MONT-RADAR Cyber Drop Pin & Drawer Styles */
+    .radar-drop-pin {
+      position: relative;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle, #fde047 20%, #eab308 60%, #b45309 100%);
+      border: 2px solid #fff;
+      box-shadow: 0 0 20px #eab308, 0 4px 12px rgba(0,0,0,0.6);
+      cursor: pointer;
+      animation: dropFloat 2.5s ease-in-out infinite;
+    }
+    @keyframes dropFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+    .radar-drop-pulse {
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 2px solid #fbbf24;
+      animation: dropRingPulse 1.8s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+      pointer-events: none;
+    }
+    @keyframes dropRingPulse {
+      0% { transform: scale(0.9); opacity: 1; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+    .radar-admin-drop-drawer {
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(245, 158, 11, 0.5);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(245, 158, 11, 0.2);
+      display: none;
+    }
+    .drop-coin-chip {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: #fde047;
+      padding: 5px 10px;
+      border-radius: 14px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .drop-coin-chip:hover, .drop-coin-chip.active {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #000;
+      border-color: #fbbf24;
+      transform: translateY(-1px);
+    }
+    .drop-icon-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 1.1rem;
+      padding: 4px 8px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .drop-icon-chip.active {
+      border-color: #38bdf8;
+      background: rgba(56, 189, 248, 0.2);
+      transform: scale(1.1);
+    }
+
+    @media (max-width: 768px) {
+      .btn-hdr-radio .radio-btn-label {
+        display: none;
+      }
+      .realmont-radio-deck {
+        bottom: 74px;
+        right: 10px;
+        left: 10px;
+        width: auto;
+        max-width: calc(100vw - 20px);
+      }
+    }
+
+    /* ══════════════════════════════════════════════
        📱 MOBILE FULLSCREEN TIKTOK SNAP FEED (MAX-WIDTH: 768PX)
        ══════════════════════════════════════════════ */
     .mobile-bottom-nav { display: none; }
@@ -5121,6 +5446,16 @@
     <span class="pwa-text" id="lbl-install-app">Install App</span>
   </button>
 
+  <!-- 📻 RADIO MONT-ROYAL 24/7 BUTTON -->
+  <button class="btn-hdr-radio" id="btnHdrRadio" onclick="toggleRealmontRadioDeck()" title="Radio Mont-Royal 24/7 Live Music">
+    <span class="radio-live-indicator"></span>
+    <span style="font-size:1.05rem;">📻</span>
+    <span class="radio-btn-label" id="lblHdrRadio">Radio 24/7</span>
+    <div class="radio-equalizer-bars" id="hdrRadioEq" style="display:none;">
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </button>
+
   <div class="header-actions" id="hdrActions">
     <button class="btn-google" onclick="promptGuestLogin('generic')">
       <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
@@ -6627,6 +6962,9 @@
         <button class="btn-filter-spot" style="padding:6px 14px;font-size:0.78rem;background:linear-gradient(135deg,#10b981,#06b6d4);" onclick="toggleRadarAddEventDrawer()" id="btnToggleAddEventDrawer">
           <span>➕ Add Event</span>
         </button>
+        <button class="btn-filter-spot" id="btnRadarAdminDropSpawn" style="display:none !important;padding:6px 12px;font-size:0.78rem;background:linear-gradient(135deg,rgba(245,158,11,0.25),rgba(236,72,153,0.25));border:1px solid #f59e0b;color:#fde047;font-weight:800;" onclick="toggleRadarAdminDropDrawer()">
+          <span>💎 Spawn Cyber Drop</span>
+        </button>
         <button class="btn-filter-spot" id="btnRadarAdminManage" style="display:none !important;padding:6px 12px;font-size:0.78rem;background:rgba(239,68,68,0.2);border:1px solid #ef4444;color:#fca5a5;" onclick="toggleRadarAdminEventsDrawer()">
           <span>🛡️ Admin</span>
         </button>
@@ -6732,6 +7070,83 @@
         </div>
         <div id="adminEventsListContainer" style="max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-right:4px;">
           <!-- Populated dynamically by renderAdminEventsList() -->
+        </div>
+      </div>
+
+      <!-- Admin Cyber Drop Spawner Drawer (Admin Geocaching & Custom Coins) -->
+      <div class="radar-admin-drop-drawer" id="radarAdminDropDrawer">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:1.3rem;">💎</span>
+            <div>
+              <h4 style="margin:0;font-size:0.95rem;font-weight:800;color:#fff;" id="lblAdminDropTitle">MONT-RADAR™ Cyber Drop Spawner (Admin)</h4>
+              <p style="margin:2px 0 0;font-size:0.72rem;color:var(--muted);" id="lblAdminDropSubtitle">Deploy secret digital treasures & customize GENIUS IA coin rewards on the map</p>
+            </div>
+          </div>
+          <button style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.1rem;" onclick="toggleRadarAdminDropDrawer(false)">✕</button>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:10px;">
+          <div>
+            <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lblAdminDropName">Treasure Name / Title</label>
+            <input type="text" id="newDropTitle" placeholder="e.g. Mont-Royal Golden Beacon" class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;" value="Secret Mont-Royal Cyber Drop 💎">
+          </div>
+          <div>
+            <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lblAdminDropCoins">Coin Reward (GENIUS IA 🪙)</label>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <input type="number" id="newDropCoins" placeholder="100" class="adm-input" style="width:90px;margin-bottom:0;padding:8px 10px;font-size:0.82rem;color:#fde047;font-weight:800;" value="100" min="10" max="10000">
+              <div style="display:flex;gap:4px;flex-wrap:wrap;">
+                <button type="button" class="drop-coin-chip" onclick="setDropCoinValue(50, this)">50</button>
+                <button type="button" class="drop-coin-chip active" onclick="setDropCoinValue(100, this)">100</button>
+                <button type="button" class="drop-coin-chip" onclick="setDropCoinValue(250, this)">250</button>
+                <button type="button" class="drop-coin-chip" onclick="setDropCoinValue(500, this)">500</button>
+                <button type="button" class="drop-coin-chip" onclick="setDropCoinValue(1000, this)">1K</button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lblAdminDropIcon">Treasure Icon</label>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;" id="dropIconSelector">
+              <button type="button" class="drop-icon-chip active" onclick="setDropIcon('💎', this)">💎</button>
+              <button type="button" class="drop-icon-chip" onclick="setDropIcon('🎁', this)">🎁</button>
+              <button type="button" class="drop-icon-chip" onclick="setDropIcon('⚡', this)">⚡</button>
+              <button type="button" class="drop-icon-chip" onclick="setDropIcon('🏆', this)">🏆</button>
+              <button type="button" class="drop-icon-chip" onclick="setDropIcon('🔑', this)">🔑</button>
+              <button type="button" class="drop-icon-chip" onclick="setDropIcon('🪙', this)">🪙</button>
+              <button type="button" class="drop-icon-chip" onclick="setDropIcon('👑', this)">👑</button>
+            </div>
+          </div>
+          <div>
+            <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lblAdminDropLoc">Montreal Location</label>
+            <select id="newDropLocationPreset" onchange="onRadarDropLocationPresetChange(this.value)" class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;background:#0f172a;color:#fff;">
+              <option value="kondiaronk">Belvédère Kondiaronk (Mont-Royal Lookout)</option>
+              <option value="tam-tams">Monument Cartier (Tam-Tams Mont-Royal)</option>
+              <option value="vieux-port">Vieux-Port & Quai de l'Horloge</option>
+              <option value="mile-end">Mile End (St-Viateur / Fairmount)</option>
+              <option value="spectacles">Quartier des Spectacles / Place des Arts</option>
+              <option value="lafontaine">Parc La Fontaine (Lagoon & Ice)</option>
+              <option value="jean-drapeau">Parc Jean-Drapeau (Calder Sculpture)</option>
+              <option value="notre-dame">Circuit Gilles-Villeneuve F1 Track</option>
+              <option value="custom">📍 Click anywhere on map</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-bottom:12px;">
+          <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lblAdminDropClue">Secret Geocaching Clue / Mystery Hint</label>
+          <input type="text" id="newDropClue" placeholder="e.g. Look near the grand stone staircase facing the Montreal downtown skyline..." class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;" value="Secret digital cache hidden at this iconic Montreal spot! Claim your coins!">
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+          <div style="font-size:0.72rem;color:#fde047;">
+            ⚡ <span id="lblAdminDropTip">Drop is published in real-time to all users on MONT-RADAR!</span>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="shop-btn" style="padding:6px 14px;background:var(--bg3);border:1px solid var(--border2);color:#94a3b8;font-size:0.8rem;" onclick="toggleRadarAdminDropDrawer(false)" id="btnCancelAdminDrop">Cancel</button>
+            <button class="btn-filter-spot" style="padding:8px 18px;font-size:0.82rem;background:linear-gradient(135deg,#f59e0b,#ec4899);color:#fff;font-weight:800;" onclick="submitRadarAdminCyberDrop()" id="btnSubmitAdminDrop">
+              <span>🚀 Deploy Cyber Drop</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -10229,6 +10644,28 @@ function applyCommunityLanguage(lang) {
   const adminDrwT = document.getElementById('lblAdminDrawerTitle'); if (adminDrwT) adminDrwT.textContent = lang === 'fr' ? 'Gestion des Événements MONT-RADAR (Admin)' : 'MONT-RADAR Event Manager (Admin)';
   const adminDrwS = document.getElementById('lblAdminDrawerSubtitle'); if (adminDrwS) adminDrwS.textContent = lang === 'fr' ? 'Supprimez les événements expirés, gérez les événements ou réinitialisez' : 'Delete expired events, manage Montreal happenings, or reset';
   const btnRst = document.getElementById('btnResetEvents'); if (btnRst) btnRst.textContent = lang === 'fr' ? '🔄 Réinitialiser' : '🔄 Reset Defaults';
+
+  // Radio Mont-Royal 24/7 & Cyber Drops Spawner Translations
+  const lblHdrRadio = document.getElementById('lblHdrRadio'); if (lblHdrRadio) lblHdrRadio.textContent = 'Radio 24/7';
+  const lblRadioDeckTitle = document.getElementById('lblRadioDeckTitle'); if (lblRadioDeckTitle) lblRadioDeckTitle.textContent = 'Radio Mont-Royal 24/7';
+  const lblRadioDeckSub = document.getElementById('lblRadioDeckSub'); if (lblRadioDeckSub) lblRadioDeckSub.textContent = lang === 'fr' ? 'Flux réels en direct • Montréal & Cyberpunk' : 'Real live streams • Montreal & Cyberpunk';
+  const lblRadioLiveBadge = document.getElementById('lblRadioLiveBadge'); if (lblRadioLiveBadge) lblRadioLiveBadge.textContent = lang === 'fr' ? 'EN DIRECT 🔴' : 'LIVE 🔴';
+  const lblSheetRadioTitle = document.getElementById('lblSheetRadioTitle'); if (lblSheetRadioTitle) lblSheetRadioTitle.textContent = 'Radio Mont-Royal 24/7';
+
+  // Admin Cyber Drop Spawner Drawer
+  const adminDropT = document.getElementById('lblAdminDropTitle'); if (adminDropT) adminDropT.textContent = lang === 'fr' ? 'Créateur de Drops Cyber MONT-RADAR™ (Admin)' : 'MONT-RADAR™ Cyber Drop Spawner (Admin)';
+  const adminDropS = document.getElementById('lblAdminDropSubtitle'); if (adminDropS) adminDropS.textContent = lang === 'fr' ? 'Déployez des trésors numériques et personnalisez les récompenses en pièces GENIUS IA sur la carte' : 'Deploy secret digital treasures & customize GENIUS IA coin rewards on the map';
+  const adminDropN = document.getElementById('lblAdminDropName'); if (adminDropN) adminDropN.textContent = lang === 'fr' ? 'Nom du Trésor / Titre' : 'Treasure Name / Title';
+  const adminDropC = document.getElementById('lblAdminDropCoins'); if (adminDropC) adminDropC.textContent = lang === 'fr' ? 'Récompense en Pièces (GENIUS IA 🪙)' : 'Coin Reward (GENIUS IA 🪙)';
+  const adminDropI = document.getElementById('lblAdminDropIcon'); if (adminDropI) adminDropI.textContent = lang === 'fr' ? 'Icône du Trésor' : 'Treasure Icon';
+  const adminDropL = document.getElementById('lblAdminDropLoc'); if (adminDropL) adminDropL.textContent = lang === 'fr' ? 'Emplacement à Montréal' : 'Montreal Location';
+  const adminDropClue = document.getElementById('lblAdminDropClue'); if (adminDropClue) adminDropClue.textContent = lang === 'fr' ? 'Indice Géocaching Secret / Indication Mystère' : 'Secret Geocaching Clue / Mystery Hint';
+  const adminDropTip = document.getElementById('lblAdminDropTip'); if (adminDropTip) adminDropTip.textContent = lang === 'fr' ? 'Le Drop est publié en direct pour tous les utilisateurs sur MONT-RADAR !' : 'Drop is published in real-time to all users on MONT-RADAR!';
+  const btnCancelDrop = document.getElementById('btnCancelAdminDrop'); if (btnCancelDrop) btnCancelDrop.textContent = lang === 'fr' ? 'Annuler' : 'Cancel';
+  const btnSubmitDrop = document.getElementById('btnSubmitAdminDrop'); if (btnSubmitDrop) btnSubmitDrop.innerHTML = `<span>${lang === 'fr' ? '🚀 Déployer le Drop Cyber' : '🚀 Deploy Cyber Drop'}</span>`;
+  if (typeof updateRadioNowPlayingDisplay === 'function') updateRadioNowPlayingDisplay();
+  if (typeof renderRadioStations === 'function') renderRadioStations();
+
   if (typeof updateRadarAdminUI === 'function') updateRadarAdminUI();
 
   // Duels Mont-Royal™ Modal & Widget
@@ -16659,7 +17096,8 @@ const DEFAULT_REALMONT_EVENTS = [
     descFr: 'Cache numérique exclusive au sommet panoramique de Montréal ! Réclamez +100 🪙 GENIUS IA !',
     time: 'Active Now',
     color: '#ffd700',
-    isDrop: true
+    isDrop: true,
+    coins: 100
   }
 ];
 
@@ -16833,7 +17271,12 @@ function renderRadarMarkers() {
 
   filtered.forEach(ev => {
     const pinColor = ev.color || '#06b6d4';
-    const pinIconHtml = `
+    const pinIconHtml = ev.isDrop ? `
+      <div class="radar-drop-pin" title="${lang === 'fr' ? (ev.titleFr || ev.titleEn) : ev.titleEn}">
+        <span class="radar-drop-pulse"></span>
+        <span style="font-size:1.25rem;">${ev.icon || '💎'}</span>
+      </div>
+    ` : `
       <div class="radar-leaflet-pin" style="background:${pinColor};border-color:#fff;" title="${lang === 'fr' ? (ev.titleFr || ev.titleEn) : ev.titleEn}">
         <span class="pin-pulse" style="background:${pinColor}88;"></span>
         <span style="font-size:1.1rem;">${ev.icon || '📍'}</span>
@@ -16843,9 +17286,9 @@ function renderRadarMarkers() {
     const customDivIcon = L.divIcon({
       className: 'custom-leaflet-divicon',
       html: pinIconHtml,
-      iconSize: [36, 36],
-      iconAnchor: [18, 18],
-      popupAnchor: [0, -18]
+      iconSize: [38, 38],
+      iconAnchor: [19, 19],
+      popupAnchor: [0, -19]
     });
 
     const marker = L.marker(ev.coords, { icon: customDivIcon }).addTo(realMontrealLeafletMap);
@@ -16913,7 +17356,10 @@ function selectRadarSpot(eventId) {
       btnDrop.style.display = 'inline-flex';
       const claimed = localStorage.getItem(`radar_drop_${ev.id}_claimed`);
       btnDrop.disabled = !!claimed;
-      btnDrop.textContent = claimed ? (lang === 'fr' ? '✓ Déjà Réclamé' : '✓ Already Claimed') : (lang === 'fr' ? '💎 Réclamer le Drop' : '💎 Claim Drop');
+      const coinReward = Number(ev.coins) || 100;
+      btnDrop.textContent = claimed
+        ? (lang === 'fr' ? '✓ Déjà Réclamé' : '✓ Already Claimed')
+        : (lang === 'fr' ? `💎 Réclamer le Drop (+${coinReward} 🪙)` : `💎 Claim Drop (+${coinReward} 🪙)`);
     }
   } else {
     if (btnFilter) btnFilter.style.display = 'inline-flex';
@@ -17099,6 +17545,16 @@ function updateRadarAdminUI() {
       btnAdminManage.style.setProperty('display', 'none', 'important');
     }
   }
+  const btnAdminDropSpawn = document.getElementById('btnRadarAdminDropSpawn');
+  if (btnAdminDropSpawn) {
+    if (adminActive) {
+      btnAdminDropSpawn.style.setProperty('display', 'inline-flex', 'important');
+      const lang = getCommunityLang();
+      btnAdminDropSpawn.innerHTML = `<span>💎 ${lang === 'fr' ? 'Créer Drop (Admin)' : 'Spawn Drop (Admin)'}</span>`;
+    } else {
+      btnAdminDropSpawn.style.setProperty('display', 'none', 'important');
+    }
+  }
   const btnToggleAdminDuel = document.getElementById('btnToggleAdminDuelDrawer');
   if (btnToggleAdminDuel) {
     if (adminActive) {
@@ -17265,8 +17721,8 @@ async function syncRadarEventsWithFirestore() {
       localStorage.setItem('realmont_deleted_radar_events', JSON.stringify(merged));
     }
 
-    // 2. Sync custom events from Firestore
-    const snap = await db.collection('devsocial_posts').where('type', '==', 'radar_event').limit(50).get();
+    // 2. Sync custom events & secret drops from Firestore
+    const snap = await db.collection('devsocial_posts').where('type', 'in', ['radar_event', 'radar_drop']).limit(60).get();
     if (!snap.empty) {
       let localCustom = [];
       try {
@@ -17323,19 +17779,23 @@ function claimRadarSecretDrop() {
     toast(lang === 'fr' ? 'Drop déjà réclamé pour aujourd\'hui !' : 'Drop already claimed for today!', 'info');
     return;
   }
+  const coinsReward = Number(selectedRadarEvent.coins) || 100;
   localStorage.setItem(dropKey, 'true');
   if (typeof addCoinsLocally === 'function') {
-    addCoinsLocally(100, 'MONT-RADAR Secret Drop');
+    addCoinsLocally(coinsReward, 'MONT-RADAR Secret Drop');
   } else if (typeof giveUserCoins === 'function') {
-    giveUserCoins(100, 'MONT-RADAR Secret Drop');
+    giveUserCoins(coinsReward, 'MONT-RADAR Secret Drop');
   } else {
     const cur = parseInt(localStorage.getItem('genius_user_coins') || '0', 10);
-    localStorage.setItem('genius_user_coins', cur + 100);
+    localStorage.setItem('genius_user_coins', cur + coinsReward);
     const bEl = document.getElementById('hdrCoinBalance');
-    if (bEl) bEl.textContent = cur + 100;
+    if (bEl) bEl.textContent = cur + coinsReward;
   }
   playSoundFx('coin');
-  toast(lang === 'fr' ? '🎉 Drop Secret débloqué ! +100 🪙 GENIUS IA' : '🎉 Secret Drop Unlocked! +100 🪙 GENIUS IA', 'success');
+  if (typeof triggerFlyingCoins === 'function') {
+    triggerFlyingCoins();
+  }
+  toast(lang === 'fr' ? `🎉 Drop Secret débloqué ! +${coinsReward} 🪙 GENIUS IA` : `🎉 Secret Drop Unlocked! +${coinsReward} 🪙 GENIUS IA`, 'success');
   const btnDrop = document.getElementById('btnUnlockDropSpot');
   if (btnDrop) {
     btnDrop.disabled = true;
@@ -17624,6 +18084,469 @@ function sendRoomMessage() {
   playSoundFx('message');
   renderChatChannelMessages();
 }
+
+// ═════════════════════════════════════════════════════════════
+// 📻 RADIO MONT-ROYAL 24/7 (REAL LIVE STREAMS & AUDIO PLAYER)
+// ═════════════════════════════════════════════════════════════
+const REALMONT_RADIO_STATIONS = [
+  {
+    id: 'cism',
+    name: 'CISM 89.3 FM Montréal',
+    genre: 'Montréal Indie & Culture ⚜️',
+    genreFr: 'Indie & Culture Montréalaise ⚜️',
+    icon: '⚜️',
+    url: 'https://stream.cism893.ca/cism-128.mp3',
+    desc: 'Live broadcast from Université de Montréal & Mont-Royal',
+    descFr: 'En direct de l\'Université de Montréal et du Mont-Royal'
+  },
+  {
+    id: 'nightride',
+    name: 'Nightride FM Retrowave',
+    genre: 'Cyberpunk & Synthwave 🌌',
+    genreFr: 'Cyberpunk & Synthwave 🌌',
+    icon: '🌌',
+    url: 'https://stream.nightride.fm/nightride.mp3',
+    desc: '24/7 synthwave, darksynth & cyberpunk electronic beats',
+    descFr: '24/7 pur synthwave, darksynth et rythmes cyber'
+  },
+  {
+    id: 'somagroove',
+    name: 'SomaFM Groove Salad',
+    genre: 'Downtempo Lo-Fi & Chill 🍃',
+    genreFr: 'Downtempo Lo-Fi & Chillout 🍃',
+    icon: '🍃',
+    url: 'https://ice1.somafm.com/groovesalad-128-mp3',
+    desc: 'A nicely chilled plate of ambient & downtempo grooves',
+    descFr: 'Ambiance downtempo et rythmes Lo-Fi apaisants'
+  },
+  {
+    id: 'somadefcon',
+    name: 'SomaFM DEF CON Radio',
+    genre: 'Cyber Hackers & Beats ⚡',
+    genreFr: 'Rythmes Cyber & Hackers ⚡',
+    icon: '⚡',
+    url: 'https://ice1.somafm.com/defcon-128-mp3',
+    desc: 'Music for hackers and electronic music explorers',
+    descFr: 'Musique électronique et cyberpunk pour hackers'
+  },
+  {
+    id: 'somaspace',
+    name: 'SomaFM Space Station',
+    genre: 'Deep Space Cyber Ambient 🚀',
+    genreFr: 'Ambiance Spatiale & Voyage 🚀',
+    icon: '🚀',
+    url: 'https://ice1.somafm.com/spacestation-128-mp3',
+    desc: 'Spaced-out ambient and mid-tempo electronic travel',
+    descFr: 'Voyage spatial électronique et ambient planant'
+  }
+];
+
+let currentRadioStationIndex = 0;
+let isRadioPlaying = false;
+let radioVolume = 0.8;
+let isRadioMuted = false;
+let realmontRadioPlayer = null;
+
+function initRealmontRadio() {
+  realmontRadioPlayer = document.getElementById('realmontRadioPlayer');
+  if (!realmontRadioPlayer) return;
+
+  const savedIdx = parseInt(localStorage.getItem('realmont_radio_station_index') || '0', 10);
+  if (!isNaN(savedIdx) && savedIdx >= 0 && savedIdx < REALMONT_RADIO_STATIONS.length) {
+    currentRadioStationIndex = savedIdx;
+  }
+  const savedVol = parseFloat(localStorage.getItem('realmont_radio_volume') || '0.8');
+  if (!isNaN(savedVol)) {
+    radioVolume = Math.max(0, Math.min(1, savedVol));
+    realmontRadioPlayer.volume = radioVolume;
+    const vSlider = document.getElementById('radioVolumeSlider');
+    if (vSlider) vSlider.value = radioVolume;
+  }
+
+  realmontRadioPlayer.addEventListener('play', () => {
+    isRadioPlaying = true;
+    updateRadioUIPlayingState(true);
+  });
+
+  realmontRadioPlayer.addEventListener('pause', () => {
+    isRadioPlaying = false;
+    updateRadioUIPlayingState(false);
+  });
+
+  realmontRadioPlayer.addEventListener('waiting', () => {
+    const statusEl = document.getElementById('radioCurrentStatus');
+    if (statusEl) {
+      statusEl.textContent = getCommunityLang() === 'fr' ? 'Connexion au flux en direct...' : 'Connecting to live stream...';
+    }
+  });
+
+  realmontRadioPlayer.addEventListener('playing', () => {
+    const statusEl = document.getElementById('radioCurrentStatus');
+    if (statusEl) {
+      statusEl.textContent = getCommunityLang() === 'fr' ? 'En direct • 128 kbps Stéréo' : 'Live Broadcast • 128 kbps Stereo';
+    }
+  });
+
+  realmontRadioPlayer.addEventListener('error', (e) => {
+    console.warn('Realmont Radio stream notice:', e);
+    const statusEl = document.getElementById('radioCurrentStatus');
+    if (statusEl) {
+      statusEl.textContent = getCommunityLang() === 'fr' ? 'Reconnexion au flux...' : 'Reconnecting to stream...';
+    }
+    if (isRadioPlaying) {
+      setTimeout(() => {
+        if (isRadioPlaying && realmontRadioPlayer) {
+          const st = REALMONT_RADIO_STATIONS[currentRadioStationIndex];
+          realmontRadioPlayer.src = st.url + '?t=' + Date.now();
+          realmontRadioPlayer.play().catch(() => {});
+        }
+      }, 2000);
+    }
+  });
+
+  renderRadioStations();
+  updateRadioNowPlayingDisplay();
+}
+
+function renderRadioStations() {
+  const container = document.getElementById('radioStationList');
+  if (!container) return;
+  const lang = getCommunityLang();
+
+  container.innerHTML = REALMONT_RADIO_STATIONS.map((st, idx) => {
+    const isActive = idx === currentRadioStationIndex;
+    const genre = lang === 'fr' ? (st.genreFr || st.genre) : st.genre;
+    const desc = lang === 'fr' ? (st.descFr || st.desc) : st.desc;
+    return `
+      <div class="radio-station-item ${isActive ? 'active' : ''}" onclick="selectRadioStation(${idx})" title="${desc}">
+        <div style="display:flex;align-items:center;gap:10px;min-width:0;flex:1;">
+          <span style="font-size:1.25rem;">${st.icon}</span>
+          <div style="min-width:0;flex:1;">
+            <div style="font-weight:700;font-size:0.8rem;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+              ${st.name}
+            </div>
+            <div style="font-size:0.68rem;color:#38bdf8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+              ${genre}
+            </div>
+          </div>
+        </div>
+        <div style="flex-shrink:0;margin-left:8px;">
+          ${isActive && isRadioPlaying ? '<span style="color:#f43f5e;font-size:0.75rem;font-weight:800;">LIVE 🔊</span>' : '<span style="color:#94a3b8;font-size:0.75rem;">▶</span>'}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function updateRadioNowPlayingDisplay() {
+  const st = REALMONT_RADIO_STATIONS[currentRadioStationIndex];
+  if (!st) return;
+  const lang = getCommunityLang();
+
+  const titleEl = document.getElementById('radioCurrentTitle');
+  const genreEl = document.getElementById('radioCurrentGenre');
+  const iconEl = document.getElementById('radioCurrentIcon');
+  if (titleEl) titleEl.textContent = st.name;
+  if (genreEl) genreEl.textContent = lang === 'fr' ? (st.genreFr || st.genre) : st.genre;
+  if (iconEl) iconEl.textContent = st.icon;
+}
+
+function selectRadioStation(index, shouldPlay = true) {
+  if (index < 0 || index >= REALMONT_RADIO_STATIONS.length) return;
+  currentRadioStationIndex = index;
+  localStorage.setItem('realmont_radio_station_index', String(index));
+
+  const st = REALMONT_RADIO_STATIONS[index];
+  if (!realmontRadioPlayer) {
+    realmontRadioPlayer = document.getElementById('realmontRadioPlayer');
+  }
+  if (realmontRadioPlayer) {
+    realmontRadioPlayer.src = st.url;
+    realmontRadioPlayer.load();
+    if (shouldPlay) {
+      realmontRadioPlayer.play().then(() => {
+        isRadioPlaying = true;
+        updateRadioUIPlayingState(true);
+      }).catch(err => {
+        console.warn('Radio stream play blocked or postponed:', err);
+      });
+    }
+  }
+
+  updateRadioNowPlayingDisplay();
+  renderRadioStations();
+
+  const lang = getCommunityLang();
+  toast((lang === 'fr' ? '📻 Station branchée : ' : '📻 Station tuned: ') + st.name, 'info');
+}
+
+function toggleRadioPlayPause() {
+  if (!realmontRadioPlayer) {
+    realmontRadioPlayer = document.getElementById('realmontRadioPlayer');
+  }
+  if (!realmontRadioPlayer) return;
+
+  if (isRadioPlaying) {
+    realmontRadioPlayer.pause();
+    isRadioPlaying = false;
+    updateRadioUIPlayingState(false);
+  } else {
+    const st = REALMONT_RADIO_STATIONS[currentRadioStationIndex];
+    if (!realmontRadioPlayer.src || realmontRadioPlayer.src === '' || realmontRadioPlayer.src === window.location.href) {
+      realmontRadioPlayer.src = st.url;
+    }
+    realmontRadioPlayer.play().then(() => {
+      isRadioPlaying = true;
+      updateRadioUIPlayingState(true);
+    }).catch(err => {
+      console.warn('Radio play blocked:', err);
+      toast(getCommunityLang() === 'fr' ? 'Cliquez pour autoriser l\'audio' : 'Click to enable audio streaming', 'info');
+    });
+  }
+}
+
+function updateRadioUIPlayingState(playing) {
+  const btnPlay = document.getElementById('btnRadioPlayPause');
+  const playIcon = document.getElementById('radioPlayIcon');
+  const hdrBtn = document.getElementById('btnHdrRadio');
+  const hdrEq = document.getElementById('hdrRadioEq');
+  const deckEq = document.getElementById('radioDeckEq');
+  const artwork = document.getElementById('radioDeckArtwork');
+
+  if (playing) {
+    if (btnPlay) { btnPlay.classList.add('playing'); btnPlay.title = 'Pause'; }
+    if (playIcon) playIcon.textContent = '⏸';
+    if (hdrBtn) hdrBtn.classList.add('is-playing');
+    if (hdrEq) hdrEq.style.display = 'inline-flex';
+    if (deckEq) deckEq.style.opacity = '1';
+    if (artwork) artwork.classList.add('spin');
+  } else {
+    if (btnPlay) { btnPlay.classList.remove('playing'); btnPlay.title = 'Play'; }
+    if (playIcon) playIcon.textContent = '▶';
+    if (hdrBtn) hdrBtn.classList.remove('is-playing');
+    if (hdrEq) hdrEq.style.display = 'none';
+    if (deckEq) deckEq.style.opacity = '0.3';
+    if (artwork) artwork.classList.remove('spin');
+  }
+
+  renderRadioStations();
+}
+
+function playNextRadioStation() {
+  const nextIdx = (currentRadioStationIndex + 1) % REALMONT_RADIO_STATIONS.length;
+  selectRadioStation(nextIdx, true);
+}
+
+function setRadioVolume(val) {
+  radioVolume = parseFloat(val);
+  localStorage.setItem('realmont_radio_volume', String(radioVolume));
+  if (realmontRadioPlayer) {
+    realmontRadioPlayer.volume = radioVolume;
+    if (radioVolume > 0 && isRadioMuted) {
+      isRadioMuted = false;
+      realmontRadioPlayer.muted = false;
+      const btnMute = document.getElementById('btnRadioMute');
+      if (btnMute) btnMute.textContent = '🔊';
+    }
+  }
+}
+
+function toggleRadioMute() {
+  if (!realmontRadioPlayer) return;
+  isRadioMuted = !isRadioMuted;
+  realmontRadioPlayer.muted = isRadioMuted;
+  const btnMute = document.getElementById('btnRadioMute');
+  if (btnMute) {
+    btnMute.textContent = isRadioMuted ? '🔇' : '🔊';
+  }
+}
+
+function toggleRealmontRadioDeck(forceState) {
+  const deck = document.getElementById('realmontRadioDeck');
+  if (!deck) return;
+  const isShown = forceState !== undefined ? forceState : deck.classList.contains('open');
+
+  if (isShown) {
+    deck.classList.remove('open');
+  } else {
+    deck.classList.add('open');
+    renderRadioStations();
+    updateRadioNowPlayingDisplay();
+  }
+}
+
+function toggleRadioMiniMode() {
+  const deck = document.getElementById('realmontRadioDeck');
+  if (!deck) return;
+  deck.classList.toggle('mini');
+}
+
+// ═════════════════════════════════════════════════════════════
+// 💎 MONT-RADAR™ ADMIN CYBER DROPS (SPAWNER & CUSTOM COINS)
+// ═════════════════════════════════════════════════════════════
+let dropSelectedCoinAmount = 100;
+let dropSelectedIcon = '💎';
+let dropTempMapCoords = null;
+
+function toggleRadarAdminDropDrawer(forceState) {
+  if (!isRadarAdmin()) return;
+  const drawer = document.getElementById('radarAdminDropDrawer');
+  if (!drawer) return;
+  const isShown = forceState !== undefined ? forceState : drawer.style.display === 'block';
+
+  drawer.style.display = isShown ? 'none' : 'block';
+  if (!isShown) {
+    drawer.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+function setDropCoinValue(val, btnEl) {
+  dropSelectedCoinAmount = parseInt(val, 10) || 100;
+  const inp = document.getElementById('newDropCoins');
+  if (inp) inp.value = dropSelectedCoinAmount;
+  document.querySelectorAll('.drop-coin-chip').forEach(b => b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+}
+
+function setDropIcon(icon, btnEl) {
+  dropSelectedIcon = icon;
+  document.querySelectorAll('.drop-icon-chip').forEach(b => b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+}
+
+function onRadarDropLocationPresetChange(val) {
+  const presets = {
+    'kondiaronk': [45.5048, -73.5876],
+    'tam-tams': [45.5134, -73.5873],
+    'vieux-port': [45.5074, -73.5518],
+    'mile-end': [45.5226, -73.5982],
+    'spectacles': [45.5078, -73.5678],
+    'lafontaine': [45.5270, -73.5700],
+    'jean-drapeau': [45.5108, -73.5332],
+    'notre-dame': [45.5005, -73.5262]
+  };
+
+  if (presets[val]) {
+    dropTempMapCoords = presets[val];
+    if (realMontrealLeafletMap) {
+      realMontrealLeafletMap.panTo(presets[val], { animate: true, duration: 0.6 });
+      if (mapPlacementTempMarker) realMontrealLeafletMap.removeLayer(mapPlacementTempMarker);
+      const tempIcon = L.divIcon({
+        className: 'custom-leaflet-divicon',
+        html: `<div class="radar-drop-pin"><span class="radar-drop-pulse"></span><span style="font-size:1.25rem;">${dropSelectedIcon}</span></div>`,
+        iconSize: [38, 38],
+        iconAnchor: [19, 19]
+      });
+      mapPlacementTempMarker = L.marker(presets[val], { icon: tempIcon }).addTo(realMontrealLeafletMap);
+    }
+  } else if (val === 'custom') {
+    toast(getCommunityLang() === 'fr' ? 'Cliquez n\'importe où sur la carte pour placer le trésor !' : 'Click anywhere on map to drop treasure!', 'info');
+  }
+}
+
+async function submitRadarAdminCyberDrop() {
+  if (!isRadarAdmin()) return;
+  const lang = getCommunityLang();
+
+  const titleInp = document.getElementById('newDropTitle');
+  const coinsInp = document.getElementById('newDropCoins');
+  const clueInp = document.getElementById('newDropClue');
+  const presetInp = document.getElementById('newDropLocationPreset');
+
+  const title = (titleInp && titleInp.value.trim()) ? titleInp.value.trim() : 'Secret Mont-Royal Cyber Drop 💎';
+  const coins = (coinsInp && parseInt(coinsInp.value, 10)) ? parseInt(coinsInp.value, 10) : dropSelectedCoinAmount;
+  const clue = (clueInp && clueInp.value.trim()) ? clueInp.value.trim() : 'Secret digital treasure on Montreal map!';
+
+  let coords = [45.5048, -73.5876];
+  let locName = 'Belvédère Kondiaronk (Mont-Royal)';
+
+  if (presetInp && presetInp.value === 'custom' && mapUserPlacementCoords) {
+    coords = mapUserPlacementCoords;
+    locName = `Custom Coordinates [${coords[0]}, ${coords[1]}]`;
+  } else if (presetInp && presetInp.value !== 'custom') {
+    const presets = {
+      'kondiaronk': [45.5048, -73.5876],
+      'tam-tams': [45.5134, -73.5873],
+      'vieux-port': [45.5074, -73.5518],
+      'mile-end': [45.5226, -73.5982],
+      'spectacles': [45.5078, -73.5678],
+      'lafontaine': [45.5270, -73.5700],
+      'jean-drapeau': [45.5108, -73.5332],
+      'notre-dame': [45.5005, -73.5262]
+    };
+    if (presets[presetInp.value]) {
+      coords = presets[presetInp.value];
+      locName = presetInp.options[presetInp.selectedIndex].text;
+    }
+  }
+
+  const dropId = 'drop-' + Date.now();
+  const newDrop = {
+    id: dropId,
+    titleEn: title,
+    titleFr: title,
+    cat: 'drop',
+    icon: dropSelectedIcon || '💎',
+    badge: `SECRET DROP +${coins} 🪙`,
+    coords: coords,
+    locationName: locName,
+    descEn: `${clue} (Secret Cache: Claim +${coins} 🪙 GENIUS IA coins!)`,
+    descFr: `${clue} (Cache Secrète : Réclamez +${coins} 🪙 GENIUS IA !)`,
+    time: 'Active Now',
+    color: '#ffd700',
+    isDrop: true,
+    isCustom: true,
+    coins: coins,
+    createdBy: user ? user.email : 'admin'
+  };
+
+  // 1. Save locally in custom events list
+  let localSaved = [];
+  try {
+    localSaved = JSON.parse(localStorage.getItem('realmont_custom_radar_events') || '[]');
+  } catch (e) {
+    localSaved = [];
+  }
+  localSaved.push(newDrop);
+  localStorage.setItem('realmont_custom_radar_events', JSON.stringify(localSaved));
+
+  // 2. Persist to Firestore collection devsocial_posts as 'radar_drop'
+  try {
+    if (typeof db !== 'undefined') {
+      await db.collection('devsocial_posts').doc(dropId).set({
+        ...newDrop,
+        type: 'radar_drop',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+  } catch (e) {
+    console.warn('Radar drop cloud save warning:', e);
+  }
+
+  if (mapPlacementTempMarker && realMontrealLeafletMap) {
+    realMontrealLeafletMap.removeLayer(mapPlacementTempMarker);
+    mapPlacementTempMarker = null;
+  }
+
+  toggleRadarAdminDropDrawer(false);
+  activeRadarFilter = 'drop';
+  document.querySelectorAll('.radar-cat-pill').forEach(btn => btn.classList.remove('active'));
+  const pillDrop = document.getElementById('pillCatDrop');
+  if (pillDrop) pillDrop.classList.add('active');
+
+  renderRadarMarkers();
+  selectRadarSpot(newDrop.id);
+
+  playSoundFx('coin');
+  toast(lang === 'fr' ? `💎 Trésor Cyber déployé avec succès ! (+${coins} 🪙)` : `💎 Cyber Drop deployed successfully! (+${coins} 🪙)`, 'success');
+}
+
+// Auto-initialize radio on load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initRealmontRadio);
+} else {
+  initRealmontRadio();
+}
 </script>
 
 <!-- 📱 TIKTOK MOBILE BOTTOM NAVIGATION (PHOTO 2 STYLE) -->
@@ -17676,6 +18599,9 @@ function sendRoomMessage() {
           </button>
           <button class="cat-sheet-btn" onclick="closeCategoriesSheet();openChatRoomsModal();" style="display:flex;align-items:center;gap:6px;font-size:0.8rem;">
             <span>💬</span> <span>Montreal Chat</span>
+          </button>
+          <button class="cat-sheet-btn" onclick="closeCategoriesSheet();toggleRealmontRadioDeck(true);" style="grid-column:1 / -1;display:flex;align-items:center;justify-content:center;gap:6px;font-size:0.82rem;background:linear-gradient(135deg,rgba(244,63,94,0.18),rgba(6,182,212,0.18));border:1px solid rgba(6,182,212,0.4);color:#67e8f9;font-weight:700;">
+            <span>📻</span> <span id="lblSheetRadioTitle">Radio Mont-Royal 24/7</span>
           </button>
         </div>
       </div>
@@ -17809,6 +18735,73 @@ function sendRoomMessage() {
       <button type="button" onclick="closeAuthModal()" style="background:none; border:none; color:#64748b; font-size:12px; cursor:pointer; padding:6px 12px; transition:color 0.2s;" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#64748b'">
         <span id="auth-browse-guest-text">Continuer en tant qu'invité →</span>
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 📻 REALMONT RADIO 24/7 (REAL LIVE MONTREAL & CYBER STREAMS) -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<audio id="realmontRadioPlayer" preload="none"></audio>
+
+<div class="realmont-radio-deck" id="realmontRadioDeck">
+  <!-- Header -->
+  <div class="radio-deck-header">
+    <div class="radio-deck-title-wrap">
+      <span style="font-size:1.15rem;">📻</span>
+      <div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-weight:800;font-size:0.85rem;color:#fff;" id="lblRadioDeckTitle">Radio Mont-Royal 24/7</span>
+          <span class="radio-deck-live-badge" id="lblRadioLiveBadge">LIVE 🔴</span>
+        </div>
+        <div style="font-size:0.68rem;color:var(--muted);" id="lblRadioDeckSub">Real live streams • Montreal & Cyberpunk</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <button onclick="toggleRadioMiniMode()" title="Toggle Compact Mode" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:0.95rem;padding:2px 4px;">🎛️</button>
+      <button onclick="toggleRealmontRadioDeck(false)" title="Close Radio Deck" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.1rem;padding:2px 4px;">✕</button>
+    </div>
+  </div>
+
+  <div class="radio-deck-body">
+    <!-- Now Playing Card -->
+    <div class="radio-deck-now-playing">
+      <div class="radio-deck-artwork" id="radioDeckArtwork">
+        <span id="radioCurrentIcon">⚜️</span>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+          <div style="font-weight:800;font-size:0.88rem;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="radioCurrentTitle">CISM 89.3 FM Montréal</div>
+          <div class="radio-equalizer-bars" id="radioDeckEq">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+        <div style="font-size:0.72rem;color:#38bdf8;margin:2px 0;" id="radioCurrentGenre">Indie & Montréal Culture</div>
+        <div style="font-size:0.68rem;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="radioCurrentStatus">Ready to Stream • 128 kbps</div>
+      </div>
+    </div>
+
+    <!-- Station Selection List -->
+    <div class="radio-station-list" id="radioStationList">
+      <!-- Populated dynamically by renderRadioStations() -->
+    </div>
+
+    <!-- Controls Bar -->
+    <div class="radio-deck-controls">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="radio-btn-play-big" id="btnRadioPlayPause" onclick="toggleRadioPlayPause()" title="Play / Pause">
+          <span id="radioPlayIcon">▶</span>
+        </button>
+        <button onclick="playNextRadioStation()" title="Next Station" style="background:rgba(255,255,255,0.08);border:1px solid var(--border2);color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.8rem;">
+          ⏭️
+        </button>
+      </div>
+
+      <!-- Volume Controls -->
+      <div style="display:flex;align-items:center;gap:6px;">
+        <button onclick="toggleRadioMute()" id="btnRadioMute" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:0.95rem;">🔊</button>
+        <input type="range" min="0" max="1" step="0.05" value="0.8" class="radio-vol-slider" id="radioVolumeSlider" oninput="setRadioVolume(this.value)">
+      </div>
     </div>
   </div>
 </div>
