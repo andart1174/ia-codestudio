@@ -423,6 +423,199 @@
     .mc:hover { background:rgba(255,255,255,.05); color:#fff; }
     .mb { padding:22px; }
 
+    /* ===== UNIVERSAL AUTH MODAL (PHOTO 2 DESIGN) ===== */
+    .auth-modal-overlay {
+      position: fixed !important;
+      inset: 0 !important;
+      background: rgba(3, 7, 18, 0.88) !important;
+      backdrop-filter: blur(14px) !important;
+      -webkit-backdrop-filter: blur(14px) !important;
+      z-index: 100000 !important;
+      display: none !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 16px !important;
+    }
+    .auth-modal-overlay.active {
+      display: flex !important;
+    }
+    .auth-modal-content {
+      background: #0d1527 !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      border-radius: 26px !important;
+      width: 100% !important;
+      max-width: 420px !important;
+      padding: 36px 28px 30px !important;
+      box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.8), 0 0 35px rgba(124, 58, 237, 0.25) !important;
+      position: relative !important;
+      box-sizing: border-box !important;
+      animation: authModalIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes authModalIn {
+      from { opacity: 0; transform: scale(0.95) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .auth-modal-close-btn {
+      position: absolute !important;
+      top: 18px !important;
+      right: 18px !important;
+      background: rgba(255, 255, 255, 0.06) !important;
+      border: 1px solid var(--border2) !important;
+      color: #94a3b8 !important;
+      width: 32px !important;
+      height: 32px !important;
+      border-radius: 50% !important;
+      font-size: 1.1rem !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      line-height: 1 !important;
+      transition: all 0.2s !important;
+    }
+    .auth-modal-close-btn:hover {
+      background: rgba(255, 255, 255, 0.15) !important;
+      color: #fff !important;
+    }
+    .auth-modal-title {
+      color: #ffffff !important;
+      font-size: 24px !important;
+      font-weight: 800 !important;
+      text-align: center !important;
+      margin: 0 0 20px 0 !important;
+      letter-spacing: -0.5px !important;
+      font-family: 'Outfit', sans-serif !important;
+      background: none !important;
+      -webkit-text-fill-color: initial !important;
+    }
+    .btn-google-auth {
+      width: 100% !important;
+      background: #ffffff !important;
+      color: #111827 !important;
+      border: none !important;
+      border-radius: 50px !important;
+      padding: 12px 20px !important;
+      font-size: 15px !important;
+      font-weight: 700 !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 12px !important;
+      transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
+      font-family: 'Inter', -apple-system, sans-serif !important;
+      box-sizing: border-box !important;
+    }
+    .btn-google-auth:hover {
+      background: #f8fafc !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.3) !important;
+    }
+    .btn-google-auth:active {
+      transform: scale(0.99) !important;
+    }
+    .auth-divider {
+      display: flex !important;
+      align-items: center !important;
+      text-align: center !important;
+      margin: 20px 0 18px 0 !important;
+    }
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '' !important;
+      flex: 1 !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+    }
+    .auth-divider span {
+      padding: 0 14px !important;
+      color: #64748b !important;
+      font-size: 11px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.8px !important;
+      text-transform: uppercase !important;
+      font-family: 'Outfit', sans-serif !important;
+    }
+    .auth-input-wrap {
+      position: relative !important;
+      margin-bottom: 14px !important;
+    }
+    .auth-input-wrap .auth-icon {
+      position: absolute !important;
+      left: 14px !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      color: #64748b !important;
+      pointer-events: none !important;
+    }
+    .auth-input-wrap input {
+      width: 100% !important;
+      background: rgba(255, 255, 255, 0.04) !important;
+      border: 1px solid rgba(255, 255, 255, 0.12) !important;
+      border-radius: 12px !important;
+      color: #ffffff !important;
+      padding: 12px 14px 12px 44px !important;
+      font-size: 14px !important;
+      font-family: 'Inter', -apple-system, sans-serif !important;
+      outline: none !important;
+      transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s !important;
+      box-sizing: border-box !important;
+    }
+    .auth-input-wrap input::placeholder {
+      color: #64748b !important;
+    }
+    .auth-input-wrap input:focus {
+      border-color: #3b82f6 !important;
+      background: rgba(59, 130, 246, 0.06) !important;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+    }
+    .btn-auth-submit {
+      width: 100% !important;
+      background: #2563eb !important;
+      color: #ffffff !important;
+      border: none !important;
+      padding: 13px 20px !important;
+      border-radius: 12px !important;
+      font-size: 15px !important;
+      font-weight: 700 !important;
+      cursor: pointer !important;
+      transition: background-color 0.2s, transform 0.2s !important;
+      font-family: 'Outfit', sans-serif !important;
+      letter-spacing: 0.2px !important;
+      margin-top: 4px !important;
+      box-sizing: border-box !important;
+    }
+    .btn-auth-submit:hover {
+      background: #1d4ed8 !important;
+      transform: translateY(-1px) !important;
+    }
+    .btn-auth-submit:active {
+      transform: scale(0.99) !important;
+    }
+    .btn-auth-submit:disabled {
+      opacity: 0.6 !important;
+      cursor: not-allowed !important;
+      transform: none !important;
+    }
+    .auth-bottom-switch {
+      text-align: center !important;
+      margin-top: 20px !important;
+    }
+    .auth-bottom-switch a {
+      color: #94a3b8 !important;
+      font-size: 13px !important;
+      text-decoration: none !important;
+      transition: color 0.2s !important;
+      font-family: 'Inter', -apple-system, sans-serif !important;
+    }
+    .auth-bottom-switch a:hover {
+      color: #ffffff !important;
+      text-decoration: underline !important;
+    }
+
     /* CREATE POST */
     .comp-hdr { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
     .comp-avatar { width:40px; height:40px; border-radius:50%; border:2px solid var(--accent); object-fit:cover; }
@@ -2830,11 +3023,18 @@
       #feedEl::-webkit-scrollbar { display: none !important; }
 
       /* 📱 FLUID CLASSIC SOCIAL FEED ON MOBILE */
-      .feed.mode-classic #feedEl {
-        scroll-snap-type: none !important;
+      .feed.mode-classic {
         overflow-y: auto !important;
         -webkit-overflow-scrolling: touch !important;
-        padding: 8px 10px 80px 10px !important;
+        display: block !important;
+        height: 100% !important;
+      }
+      .feed.mode-classic #feedEl {
+        scroll-snap-type: none !important;
+        overflow: visible !important;
+        height: auto !important;
+        flex: none !important;
+        padding: 8px 10px 90px 10px !important;
       }
       .feed.mode-classic .post-card {
         height: auto !important;
@@ -4924,7 +5124,7 @@
   <div class="header-actions" id="hdrActions">
     <button class="btn-google" onclick="promptGuestLogin('generic')">
       <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
-      Sign in with Google
+      <span id="lblHdrSignIn">Sign in with Google</span>
     </button>
   </div>
 </header>
@@ -5020,10 +5220,10 @@
     <div class="login-prompt" id="loginPrompt" style="display:none">
       <div class="lp-icon">⚜️</div>
       <h3 id="lbl-login-prompt-title">Join REALMONT Montreal Cyber Social</h3>
-      <p id="lbl-login-prompt-sub">Sign in with Google to share Montreal vibes, vote in duels, explore MONT-RADAR and connect with local creators.</p>
+      <p id="lbl-login-prompt-sub">Sign in to share Montreal vibes, vote in duels, explore MONT-RADAR and connect with local creators.</p>
       <button class="btn-google" onclick="promptGuestLogin('generic')" style="margin:0 auto">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
-        Sign in with Google
+        <span id="lblLoginPromptBtn">Sign In / Join</span>
       </button>
     </div>
 
@@ -6945,37 +7145,13 @@ auth.onAuthStateChanged(async u => {
     checkAndApplyReferralBonus();
     initCallListener(u);
   } else {
-    // Check if user is logged in via Premium Session on the main site
+    // Check if user is logged in via session
     try {
       const session = localStorage.getItem('genius_session');
       if (session) {
         const sessionUser = JSON.parse(session);
         if (sessionUser && sessionUser.email) {
-          if (!window._signingAnon) {
-            window._signingAnon = true;
-            auth.signInAnonymously().catch(e => console.error("Anon auth failed:", e));
-          }
-          let customName = localStorage.getItem('custom_display_name_' + sessionUser.email) ||
-                           localStorage.getItem('hub_custom_name') ||
-                           sessionUser.name ||
-                           sessionUser.email.split('@')[0];
-          user = {
-            uid: sessionUser.uid || sessionUser.email,
-            displayName: customName,
-            email: sessionUser.email,
-            photoURL: sessionUser.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(customName || 'User')}`,
-            isCustomSession: true
-          };
-          isAdmin = Boolean(sessionUser.email && ADMIN_EMAILS.map(e => e.toLowerCase().trim()).includes(sessionUser.email.toLowerCase().trim()));
-          renderLoggedIn(user);
-          db.collection('users').doc(user.uid).set({ displayName:user.displayName, photoURL:user.photoURL, email:user.email, lastSeen:firebase.firestore.FieldValue.serverTimestamp() }, { merge:true });
-          loadUserStats(user.uid);
-          initReferralSystem();
-          loadStreakState();
-          checkAndApplyReferralBonus();
-          initCallListener(user);
-          loadFeed();
-          if (isAdmin) loadStats();
+          loginUserFromSession(sessionUser);
           return;
         }
       }
@@ -6989,6 +7165,52 @@ auth.onAuthStateChanged(async u => {
   if (u && ADMIN_EMAILS.includes(u.email)) loadStats();
 });
 
+function loginUserFromSession(sessionUser) {
+  if (!sessionUser || !sessionUser.email) return;
+  const email = sessionUser.email.toLowerCase().trim();
+  const isAdminUser = Boolean(ADMIN_EMAILS.map(e => e.toLowerCase().trim()).includes(email) || sessionUser.role === 'Admin');
+  isAdmin = isAdminUser;
+
+  if (!window._signingAnon && (!auth.currentUser || auth.currentUser.isAnonymous)) {
+    window._signingAnon = true;
+    auth.signInAnonymously().catch(e => console.error("Anon auth failed:", e));
+  }
+
+  let customName = localStorage.getItem('custom_display_name_' + email) ||
+                   localStorage.getItem('custom_display_name_' + (sessionUser.uid || email)) ||
+                   localStorage.getItem('hub_custom_name') ||
+                   sessionUser.name ||
+                   sessionUser.displayName ||
+                   email.split('@')[0];
+
+  user = {
+    uid: sessionUser.uid || email,
+    displayName: customName,
+    email: email,
+    photoURL: sessionUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(customName || 'User')}&background=7c3aed&color=fff&bold=true`,
+    isCustomSession: true
+  };
+
+  renderLoggedIn(user);
+
+  if (db) {
+    db.collection('users').doc(user.uid).set({
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+      email: user.email,
+      lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true }).catch(e => console.warn("Doc set warning:", e));
+  }
+
+  loadUserStats(user.uid);
+  initReferralSystem();
+  loadStreakState();
+  checkAndApplyReferralBonus();
+  initCallListener(user);
+  loadFeed();
+  if (isAdmin) loadStats();
+}
+
 // ══════════════════════════════════════════
 // 🌐 IN-APP BROWSER (FACEBOOK/INSTA) & GUEST SYSTEM
 // ══════════════════════════════════════════
@@ -6996,49 +7218,49 @@ const GUEST_MODAL_I18N = {
   en: {
     like: {
       title: "Support Montreal Creators",
-      sub: "Sign in with Google to like posts, save favorites, and encourage local Montreal creators."
+      sub: "Sign in or create an account to like posts, save favorites, and encourage local Montreal creators."
     },
     post: {
       title: "Share Your Montreal Story",
-      sub: "Sign in with Google to share photos, videos, 3D WebGL designs, and local vibes on REALMONT."
+      sub: "Sign in or create an account to share photos, videos, 3D WebGL designs, and local vibes on REALMONT."
     },
     comment: {
       title: "Join the Conversation",
-      sub: "Sign in with Google to comment on creations and connect with the Montreal community."
+      sub: "Sign in or create an account to comment on creations and connect with the Montreal community."
     },
     tip: {
       title: "Tip with REALMONT Coins",
-      sub: "Sign in with Google to tip creators and reward your favorite Montreal moments."
+      sub: "Sign in or create an account to tip creators and reward your favorite Montreal moments."
     },
     profile: {
       title: "Your REALMONT Profile",
-      sub: "Sign in with Google to manage your profile, streaks, and REALMONT coins."
+      sub: "Sign in or create an account to manage your profile, streaks, and REALMONT coins."
     },
     messages: {
       title: "Direct Messages & Calls",
-      sub: "Sign in with Google to send private messages and start peer-to-peer cyber calls."
+      sub: "Sign in or create an account to send private messages and start peer-to-peer cyber calls."
     },
     follow: {
       title: "Follow Local Creators",
-      sub: "Sign in with Google to follow your favorite creators and customize your personal feed."
+      sub: "Sign in or create an account to follow your favorite creators and customize your personal feed."
     },
     remix: {
       title: "AI 3D Remix & Mutation",
-      sub: "Sign in with Google to remix WebGL shaders, create 3D variants, and earn creator rewards."
+      sub: "Sign in or create an account to remix WebGL shaders, create 3D variants, and earn creator rewards."
     },
     boost: {
       title: "Boost Your Post",
-      sub: "Sign in with Google to promote your post to the top of the Montreal feed."
+      sub: "Sign in or create an account to promote your post to the top of the Montreal feed."
     },
     generic: {
       title: "Join REALMONT Montreal",
-      sub: "Sign in with Google to unlock duels, MONT-RADAR™, daily challenges, and community rewards."
+      sub: "Sign in or create an account to unlock duels, MONT-RADAR™, daily challenges, and community rewards."
     },
     perk1: "Explore MONT-RADAR™ with live interactive local spots",
     perk2: "Vote in Duels Mont-Royal & earn daily REALMONT coins",
     perk3: "Publish Montreal photos, videos, and 3D WebGL scenes",
     iabTitle: "Social Browser Detected:",
-    iabDesc: " Facebook/Instagram blocks Google sign-in popups. Tap below to open in your default browser for 1-tap sign-in:",
+    iabDesc: " Facebook/Instagram blocks Google sign-in popups. Sign in with Email & Password below, or open in Chrome/Safari for Google 1-click:",
     iabBtn: "Open in Chrome / Safari ↗",
     googleBtn: "Continue with Google",
     browseBtn: "Continue browsing as guest →",
@@ -7047,49 +7269,49 @@ const GUEST_MODAL_I18N = {
   fr: {
     like: {
       title: "Soutenez les créateurs de Montréal",
-      sub: "Connectez-vous avec Google pour aimer les publications, sauvegarder vos favoris et encourager les créateurs."
+      sub: "Connectez-vous ou créez un compte pour aimer les publications, sauvegarder vos favoris et encourager les créateurs."
     },
     post: {
       title: "Partagez votre histoire montréalaise",
-      sub: "Connectez-vous avec Google pour publier des photos, vidéos, scènes 3D et moments forts sur REALMONT."
+      sub: "Connectez-vous ou créez un compte pour publier des photos, vidéos, scènes 3D et moments forts sur REALMONT."
     },
     comment: {
       title: "Rejoignez la discussion",
-      sub: "Connectez-vous avec Google pour commenter les publications et échanger avec la communauté de Montréal."
+      sub: "Connectez-vous ou créez un compte pour commenter les publications et échanger avec la communauté de Montréal."
     },
     tip: {
       title: "Envoyez un pourboire",
-      sub: "Connectez-vous avec Google pour récompenser vos créateurs montréalais préférés en pièces REALMONT."
+      sub: "Connectez-vous ou créez un compte pour récompenser vos créateurs montréalais préférés en pièces REALMONT."
     },
     profile: {
       title: "Votre profil REALMONT",
-      sub: "Connectez-vous avec Google pour accéder à votre profil, vos pièces REALMONT et vos séries quotidiennes."
+      sub: "Connectez-vous ou créez un compte pour accéder à votre profil, vos pièces REALMONT et vos séries quotidiennes."
     },
     messages: {
       title: "Messagerie & Appels",
-      sub: "Connectez-vous avec Google pour envoyer des messages privés et démarrer des appels avec les créateurs."
+      sub: "Connectez-vous ou créez un compte pour envoyer des messages privés et démarrer des appels avec les créateurs."
     },
     follow: {
       title: "Suivre des créateurs",
-      sub: "Connectez-vous avec Google pour suivre vos créateurs préférés et personnaliser votre fil d'actualité."
+      sub: "Connectez-vous ou créez un compte pour suivre vos créateurs préférés et personnaliser votre fil d'actualité."
     },
     remix: {
       title: "Remix 3D & Mutation IA",
-      sub: "Connectez-vous avec Google pour muter les shaders 3D et gagner des récompenses créateurs."
+      sub: "Connectez-vous ou créez un compte pour muter les shaders 3D et gagner des récompenses créateurs."
     },
     boost: {
       title: "Booster votre publication",
-      sub: "Connectez-vous avec Google pour propulser votre publication au sommet du fil de Montréal."
+      sub: "Connectez-vous ou créez un compte pour propulser votre publication au sommet du fil de Montréal."
     },
     generic: {
       title: "Rejoignez REALMONT Montréal",
-      sub: "Connectez-vous avec Google pour débloquer tous les duels, MONT-RADAR™, défis du jour et récompenses."
+      sub: "Connectez-vous ou créez un compte pour débloquer tous les duels, MONT-RADAR™, défis du jour et récompenses."
     },
     perk1: "Explorez MONT-RADAR™ avec les lieux locaux interactifs",
     perk2: "Votez aux Duels Mont-Royal & gagnez des pièces quotidiennes",
     perk3: "Publiez des photos, vidéos et scènes WebGL 3D de Montréal",
     iabTitle: "Navigateur social détecté :",
-    iabDesc: " Facebook/Instagram bloque les fenêtres de connexion Google. Cliquez ci-dessous pour ouvrir dans votre navigateur habituel :",
+    iabDesc: " Facebook/Instagram bloque les popups Google. Connectez-vous avec Email & Mot de passe ci-dessous, ou ouvrez dans Safari/Chrome :",
     iabBtn: "Ouvrir dans Chrome / Safari ↗",
     googleBtn: "Continuer avec Google",
     browseBtn: "Continuer en invité →",
@@ -7163,108 +7385,499 @@ function dismissIabNotice() {
   } catch(e) {}
 }
 
-function promptGuestLogin(context = 'generic') {
-  if (user) return;
-  currentGuestContext = context;
-  const modal = document.getElementById('guestLoginModal');
-  if (!modal) {
-    signInGoogle();
-    return;
+// ══════════════════════════════════════════
+// 🔑 PHOTO 2 UNIVERSAL AUTH SYSTEM
+// ══════════════════════════════════════════
+let isSignUpMode = false;
+let isRecoveryMode = false;
+
+function toggleAuthMode(e) {
+  if (e) e.preventDefault();
+  isSignUpMode = !isSignUpMode;
+  isRecoveryMode = false;
+  updateAuthUI();
+}
+
+function toggleRecoveryMode(e) {
+  if (e) e.preventDefault();
+  isRecoveryMode = !isRecoveryMode;
+  isSignUpMode = false;
+  updateAuthUI();
+}
+
+function updateAuthUI() {
+  const nameGroup = document.getElementById('auth-name-group');
+  const title = document.getElementById('auth-title');
+  const btn = document.getElementById('auth-submit-btn');
+  const toggleLink = document.getElementById('auth-toggle-link');
+  const forgotLink = document.getElementById('auth-forgot-link');
+  const recoveryHint = document.getElementById('recovery-hint');
+  const nameInput = document.getElementById('auth-name');
+  const errBox = document.getElementById('auth-error');
+  const googleBtn = document.getElementById('btn-google-auth');
+  const divider = document.getElementById('auth-divider');
+  const googleText = document.getElementById('auth-google-text');
+  const dividerText = document.getElementById('auth-divider-text');
+  const emailInput = document.getElementById('auth-email');
+  const passInput = document.getElementById('auth-password');
+
+  if (errBox) errBox.style.display = 'none';
+
+  const lang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+
+  if (googleText) googleText.textContent = lang === 'fr' ? 'Continuer avec Google' : 'Continue with Google';
+  if (dividerText) dividerText.textContent = lang === 'fr' ? 'OU AVEC EMAIL' : 'OR WITH EMAIL';
+  if (emailInput) emailInput.placeholder = 'Email';
+  if (passInput) passInput.placeholder = lang === 'fr' ? 'Mot de passe' : 'Password';
+  if (nameInput) nameInput.placeholder = lang === 'fr' ? 'Votre nom' : 'Your name';
+
+  if (isRecoveryMode) {
+    if (nameGroup) { nameGroup.style.display = 'none'; if (nameInput) nameInput.required = false; }
+    if (forgotLink) forgotLink.style.display = 'none';
+    if (recoveryHint) {
+      recoveryHint.textContent = lang === 'fr' ? "Entrez votre email et votre nouveau mot de passe." : "Enter your email and your new password.";
+      recoveryHint.style.display = 'block';
+    }
+    if (googleBtn) googleBtn.style.display = 'none';
+    if (divider) divider.style.display = 'none';
+    if (title) title.textContent = lang === 'fr' ? "Récupération" : "Account Recovery";
+    if (btn) btn.textContent = lang === 'fr' ? "Sauvegarder et Connecter" : "Save & Sign In";
+    if (toggleLink) {
+      toggleLink.textContent = lang === 'fr' ? "Déjà un compte ? Connectez-vous" : "Already have an account? Sign In";
+      toggleLink.onclick = (e) => { e.preventDefault(); isRecoveryMode = false; isSignUpMode = false; updateAuthUI(); };
+    }
+  } else if (isSignUpMode) {
+    if (nameGroup) { nameGroup.style.display = 'block'; if (nameInput) nameInput.required = true; }
+    if (forgotLink) forgotLink.style.display = 'none';
+    if (recoveryHint) recoveryHint.style.display = 'none';
+    if (googleBtn) googleBtn.style.display = 'flex';
+    if (divider) divider.style.display = 'flex';
+    if (title) title.textContent = lang === 'fr' ? "Créer un compte" : "Create Account";
+    if (btn) btn.textContent = lang === 'fr' ? "S'inscrire" : "Sign Up";
+    if (toggleLink) {
+      toggleLink.textContent = lang === 'fr' ? "Déjà un compte ? Connectez-vous" : "Already have an account? Sign In";
+      toggleLink.onclick = toggleAuthMode;
+    }
+  } else {
+    if (nameGroup) { nameGroup.style.display = 'none'; if (nameInput) nameInput.required = false; }
+    if (forgotLink) {
+      forgotLink.style.display = 'inline-block';
+      forgotLink.textContent = lang === 'fr' ? "Mot de passe oublié ?" : "Forgot password?";
+    }
+    if (recoveryHint) recoveryHint.style.display = 'none';
+    if (googleBtn) googleBtn.style.display = 'flex';
+    if (divider) divider.style.display = 'flex';
+    if (title) title.textContent = lang === 'fr' ? "Se connecter" : "Sign In";
+    if (btn) btn.textContent = lang === 'fr' ? "Connexion" : "Sign In";
+    if (toggleLink) {
+      toggleLink.textContent = lang === 'fr' ? "Pas de compte ? Inscrivez-vous" : "Don't have an account? Sign up";
+      toggleLink.onclick = toggleAuthMode;
+    }
   }
+
+  const browseGuestText = document.getElementById('auth-browse-guest-text');
+  if (browseGuestText) browseGuestText.textContent = lang === 'fr' ? "Continuer en tant qu'invité →" : "Continue browsing as guest →";
+}
+
+function openAuthModal(mode = 'login', context = 'generic') {
+  if (user) return;
+  const modal = document.getElementById('modal-login');
+  if (!modal) return;
+  isRecoveryMode = (mode === 'recovery');
+  isSignUpMode = (mode === 'signup');
+  updateAuthUI();
+
   const lang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
   const dict = GUEST_MODAL_I18N[lang] || GUEST_MODAL_I18N.en;
   const ctxData = dict[context] || dict.generic;
-
-  const titleEl = document.getElementById('guestModalTitle');
-  const subEl = document.getElementById('guestModalSubtitle');
-  const perk1 = document.getElementById('guestPerk1');
-  const perk2 = document.getElementById('guestPerk2');
-  const perk3 = document.getElementById('guestPerk3');
-  const iabBox = document.getElementById('guestIabHelperBox');
-  const iabTitle = document.getElementById('guestIabTitle');
-  const iabDesc = document.getElementById('guestIabDesc');
-  const iabBtn = document.getElementById('guestIabBtn');
-  const googleBtn = document.getElementById('lblGuestGoogleBtn');
-  const browseBtn = document.getElementById('lblGuestBrowseBtn');
-
-  if (titleEl) titleEl.textContent = ctxData.title;
-  if (subEl) subEl.textContent = ctxData.sub;
-  if (perk1) perk1.textContent = dict.perk1;
-  if (perk2) perk2.textContent = dict.perk2;
-  if (perk3) perk3.textContent = dict.perk3;
-  if (googleBtn) googleBtn.textContent = dict.googleBtn;
-  if (browseBtn) browseBtn.textContent = dict.browseBtn;
-
-  if (isInAppBrowser() && iabBox) {
-    iabBox.style.display = 'block';
-    if (iabTitle) iabTitle.textContent = dict.iabTitle;
-    if (iabDesc) iabDesc.textContent = dict.iabDesc;
-    if (iabBtn) iabBtn.textContent = dict.iabBtn;
-  } else if (iabBox) {
-    iabBox.style.display = 'none';
+  const subEl = document.getElementById('auth-context-subtitle');
+  if (subEl) {
+    if (context && context !== 'generic' && ctxData && ctxData.sub) {
+      subEl.textContent = ctxData.sub;
+      subEl.style.display = 'block';
+    } else {
+      subEl.style.display = 'none';
+    }
   }
 
+  const iabTip = document.getElementById('auth-iab-tip');
+  if (iabTip) {
+    if (isInAppBrowser()) {
+      iabTip.style.display = 'block';
+      const tipText = document.getElementById('auth-iab-tip-text');
+      if (tipText) {
+        tipText.textContent = lang === 'fr'
+          ? "Navigateur social détecté : connectez-vous par email/mot de passe ci-dessous, ou ouvrez dans Safari/Chrome pour Google."
+          : "Social browser detected: sign in with email/password below, or open in Safari/Chrome for Google.";
+      }
+    } else {
+      iabTip.style.display = 'none';
+    }
+  }
+
+  modal.classList.add('active');
   modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
 }
 
-function closeGuestLoginModal() {
-  const modal = document.getElementById('guestLoginModal');
-  if (modal) modal.style.display = 'none';
-}
-
-function handleGuestGoogleClick() {
-  if (isInAppBrowser()) {
-    openInNativeBrowser();
-  } else {
-    closeGuestLoginModal();
-    signInGoogle();
+function closeAuthModal() {
+  const modal = document.getElementById('modal-login');
+  if (modal) {
+    modal.classList.remove('active');
+    modal.style.display = 'none';
   }
+  document.body.style.overflow = '';
 }
 
-function signInGoogle() {
+function promptGuestLogin(context = 'generic') {
+  if (user) return;
+  currentGuestContext = context;
+  openAuthModal(context === 'signup' ? 'signup' : 'login', context);
+}
+
+async function handleGoogleSignIn() {
+  const errBox = document.getElementById('auth-error');
+  if (errBox) errBox.style.display = 'none';
+
   if (isInAppBrowser()) {
-    promptGuestLogin('generic');
+    const tip = document.getElementById('auth-iab-tip');
+    if (tip) tip.style.display = 'block';
+    openInNativeBrowser();
     return;
   }
-  const provider = new firebase.auth.GoogleAuthProvider();
-  provider.setCustomParameters({ prompt: 'select_account' });
-  auth.signInWithPopup(provider).catch(e => {
-    if (e.code === 'auth/popup-blocked') {
-      promptGuestLogin('generic');
-    } else {
-      toast(e.message, 'error');
+
+  try {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    const result = await auth.signInWithPopup(provider);
+    const googleUser = result.user;
+    if (!googleUser || !googleUser.email) throw new Error("No user email returned");
+
+    const email = googleUser.email.toLowerCase().trim();
+    const isAdminUser = Boolean(ADMIN_EMAILS.map(e => e.toLowerCase().trim()).includes(email));
+    const displayName = googleUser.displayName || email.split('@')[0];
+    const photoURL = googleUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=7c3aed&color=fff&bold=true`;
+
+    if (db) {
+      try {
+        const userDoc = await db.collection('users').doc(email).get();
+        if (userDoc.exists && userDoc.data().banned === true) {
+          await auth.signOut();
+          const lang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+          if (errBox) {
+            errBox.textContent = lang === 'fr' ? "Votre compte a été banni." : "Your account has been banned.";
+            errBox.style.display = 'block';
+          }
+          return;
+        }
+      } catch(e) { console.warn("Ban check warning:", e); }
     }
-  });
+
+    const sessionUser = {
+      email: email,
+      name: displayName,
+      role: isAdminUser ? 'Admin' : 'User',
+      photoURL: photoURL,
+      uid: googleUser.uid,
+      loginAt: Date.now()
+    };
+    localStorage.setItem('genius_session', JSON.stringify(sessionUser));
+    localStorage.setItem('custom_display_name_' + email, displayName);
+
+    let users = JSON.parse(localStorage.getItem('ia_users') || '[]');
+    users = users.filter(u => u.email !== email);
+    users.push(sessionUser);
+    localStorage.setItem('ia_users', JSON.stringify(users));
+
+    closeAuthModal();
+    loginUserFromSession(sessionUser);
+    const lang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+    toast(lang === 'fr' ? `Bienvenue, ${displayName} !` : `Welcome, ${displayName}!`, 'success');
+  } catch (err) {
+    console.error("Google Auth Error:", err);
+    if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') return;
+    if (err.code === 'auth/popup-blocked') {
+      if (isInAppBrowser()) {
+        const tip = document.getElementById('auth-iab-tip');
+        if (tip) tip.style.display = 'block';
+      } else {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithRedirect(provider).catch(e => console.error(e));
+      }
+      return;
+    }
+    if (errBox) {
+      const lang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+      let msg = err.message || (lang === 'fr' ? "Échec de la connexion avec Google." : "Google sign in failed.");
+      if (err.code === 'auth/unauthorized-domain') {
+        msg = lang === 'fr' ? "Domaine non autorisé dans Firebase Console." : "Unauthorized domain in Firebase Console.";
+      }
+      errBox.textContent = msg;
+      errBox.style.display = 'block';
+    }
+  }
 }
+
+async function handleAuthSubmit(e) {
+  if (e) e.preventDefault();
+  const emailInput = document.getElementById('auth-email');
+  const passwordInput = document.getElementById('auth-password');
+  const nameInput = document.getElementById('auth-name');
+  const errBox = document.getElementById('auth-error');
+  const btn = document.getElementById('auth-submit-btn');
+
+  if (!emailInput || !passwordInput) return;
+  const email = emailInput.value.trim().toLowerCase();
+  const password = passwordInput.value;
+  const name = nameInput ? nameInput.value.trim() : '';
+
+  if (errBox) errBox.style.display = 'none';
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = '⏳...';
+  }
+
+  const lang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+
+  try {
+    let users = JSON.parse(localStorage.getItem('ia_users') || '[]');
+    const isAdminUser = Boolean(email === 'andart1174@gmail.com' || ADMIN_EMAILS.map(x => x.toLowerCase().trim()).includes(email));
+
+    if (db) {
+      try {
+        const fbUserDoc = await db.collection('users').doc(email).get();
+        if (fbUserDoc.exists && fbUserDoc.data().banned === true) {
+          if (errBox) {
+            errBox.textContent = lang === 'fr' ? "Votre compte a été banni." : "Your account has been banned.";
+            errBox.style.display = 'block';
+          }
+          if (btn) { btn.disabled = false; updateAuthUI(); }
+          return;
+        }
+      } catch(err) { console.warn(err); }
+    }
+
+    if (isRecoveryMode) {
+      let userToReset = users.find(u => u.email === email);
+      if (!userToReset && db) {
+        try {
+          const doc = await db.collection('users').doc(email).get();
+          if (doc.exists) userToReset = doc.data();
+        } catch(e) { console.warn(e); }
+      }
+      if (!userToReset && isAdminUser) {
+        userToReset = { email: email, password: password, name: 'Admin', role: 'Admin', createdAt: Date.now() };
+        users.push(userToReset);
+      }
+
+      if (userToReset) {
+        userToReset.password = password;
+        if (isAdminUser && userToReset.role !== 'Admin') userToReset.role = 'Admin';
+
+        if (db) {
+          try {
+            await db.collection('users').doc(userToReset.email).set(userToReset, { merge: true });
+          } catch(e) { console.warn(e); }
+        }
+
+        users = users.filter(u => u.email !== userToReset.email);
+        users.push(userToReset);
+        localStorage.setItem('ia_users', JSON.stringify(users));
+
+        const displayName = userToReset.name || email.split('@')[0];
+        const sessionUser = {
+          email: userToReset.email,
+          name: displayName,
+          role: userToReset.role || (isAdminUser ? 'Admin' : 'User'),
+          photoURL: userToReset.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=7c3aed&color=fff&bold=true`,
+          uid: userToReset.uid || email,
+          loginAt: Date.now()
+        };
+        localStorage.setItem('genius_session', JSON.stringify(sessionUser));
+        localStorage.setItem('custom_display_name_' + email, displayName);
+
+        closeAuthModal();
+        loginUserFromSession(sessionUser);
+        toast(lang === 'fr' ? 'Mot de passe mis à jour !' : 'Password updated!', 'success');
+      } else {
+        if (errBox) {
+          errBox.textContent = lang === 'fr' ? "Compte introuvable." : "Account not found.";
+          errBox.style.display = 'block';
+        }
+      }
+    } else if (isSignUpMode) {
+      let existingUser = users.find(u => u.email === email);
+      if (!existingUser && db) {
+        try {
+          const doc = await db.collection('users').doc(email).get();
+          if (doc.exists) existingUser = doc.data();
+        } catch(e) { console.warn(e); }
+      }
+
+      if (existingUser) {
+        if (errBox) {
+          errBox.textContent = lang === 'fr' ? "Email déjà utilisé." : "Email already registered.";
+          errBox.style.display = 'block';
+        }
+      } else {
+        const finalName = name || email.split('@')[0];
+        const photoURL = `https://ui-avatars.com/api/?name=${encodeURIComponent(finalName)}&background=7c3aed&color=fff&bold=true`;
+        const newUser = {
+          email,
+          password,
+          name: finalName,
+          displayName: finalName,
+          photoURL,
+          role: isAdminUser ? 'Admin' : 'User',
+          createdAt: Date.now()
+        };
+
+        if (db) {
+          try {
+            await db.collection('users').doc(newUser.email).set(newUser, { merge: true });
+          } catch(e) { console.warn(e); }
+        }
+
+        users.push(newUser);
+        localStorage.setItem('ia_users', JSON.stringify(users));
+
+        const sessionUser = {
+          email: newUser.email,
+          name: newUser.name,
+          role: newUser.role,
+          photoURL: photoURL,
+          uid: email,
+          loginAt: Date.now()
+        };
+        localStorage.setItem('genius_session', JSON.stringify(sessionUser));
+        localStorage.setItem('custom_display_name_' + email, finalName);
+
+        closeAuthModal();
+        loginUserFromSession(sessionUser);
+        toast(lang === 'fr' ? `Bienvenue sur REALMONT, ${finalName} !` : `Welcome to REALMONT, ${finalName}!`, 'success');
+      }
+    } else {
+      let match = users.find(u => u.email === email && u.password === password);
+      if (!match) {
+        const LEGACY_ADMINS = [
+          { email: 'admin@ia-codestudio.com', password: 'admin2026', name: 'André Admin', role: 'Admin' },
+          { email: 'admin@aistudio.com', password: 'aistudio2026', name: 'Super Admin', role: 'Admin' }
+        ];
+        match = LEGACY_ADMINS.find(u => u.email === email && u.password === password);
+      }
+      if (!match && db) {
+        try {
+          const doc = await db.collection('users').doc(email).get();
+          if (doc.exists) {
+            const fbUser = doc.data();
+            if (fbUser.password === password) {
+              match = fbUser;
+              users.push(fbUser);
+              localStorage.setItem('ia_users', JSON.stringify(users));
+            }
+          }
+        } catch(e) { console.warn(e); }
+      }
+
+      if (match) {
+        const finalName = match.name || match.displayName || email.split('@')[0];
+        const photoURL = match.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(finalName)}&background=7c3aed&color=fff&bold=true`;
+        const sessionUser = {
+          email: match.email,
+          name: finalName,
+          role: match.role || (isAdminUser ? 'Admin' : 'User'),
+          photoURL: photoURL,
+          uid: match.uid || email,
+          loginAt: Date.now()
+        };
+        localStorage.setItem('genius_session', JSON.stringify(sessionUser));
+        localStorage.setItem('custom_display_name_' + email, finalName);
+
+        closeAuthModal();
+        loginUserFromSession(sessionUser);
+        toast(lang === 'fr' ? `Rebonjour, ${finalName} !` : `Welcome back, ${finalName}!`, 'success');
+      } else {
+        if (errBox) {
+          errBox.textContent = lang === 'fr' ? "Email ou mot de passe incorrect." : "Invalid email or password.";
+          errBox.style.display = 'block';
+        }
+      }
+    }
+  } catch (err) {
+    console.error("Auth submit error:", err);
+    if (errBox) {
+      errBox.textContent = err.message || (lang === 'fr' ? "Une erreur est survenue." : "An error occurred.");
+      errBox.style.display = 'block';
+    }
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      updateAuthUI();
+    }
+  }
+}
+
 function signOut() { 
   localStorage.removeItem('genius_session');
   try { localStorage.removeItem('realmont_admin_override'); } catch(e){}
   auth.signOut().then(() => {
-    toast('Signed out', 'info');
-    setTimeout(() => window.location.reload(), 500);
+    const lang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+    toast(lang === 'fr' ? 'Déconnecté' : 'Signed out', 'info');
+    setTimeout(() => window.location.reload(), 400);
+  }).catch(() => {
+    window.location.reload();
   });
 }
+
+// Modal helper aliases
+window.openModal = function(id) {
+  if (id === 'login') {
+    openAuthModal('login');
+    return;
+  }
+  const m = document.getElementById('modal-' + id);
+  if (m) {
+    m.classList.add('active');
+    m.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+};
+window.closeModal = function(id) {
+  if (id === 'login') {
+    closeAuthModal();
+    return;
+  }
+  const m = document.getElementById('modal-' + id);
+  if (m) {
+    m.classList.remove('active');
+    m.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+};
+window.closeGuestLoginModal = closeAuthModal;
 
 function av(u) { return u.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.displayName||'User')}&background=7c3aed&color=fff&bold=true`; }
 
 function renderLoggedIn(u) {
   const a = av(u);
+  const lang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+  const logoutText = lang === 'fr' ? 'Déconnexion' : 'Sign Out';
   document.getElementById('hdrActions').innerHTML = `
-    <img src="${a}" class="hdr-avatar">
-    <span class="hdr-name">${u.displayName}</span>
+    <img src="${a}" class="hdr-avatar" alt="${u.displayName || 'Avatar'}">
+    <span class="hdr-name">${u.displayName || 'User'}</span>
     ${isAdmin?'<span class="admin-badge">ADMIN</span>':''}
-    <button class="btn-logout" onclick="signOut()">Sign Out</button>`;
+    <button class="btn-logout" onclick="signOut()">${logoutText}</button>`;
   document.getElementById('loginPrompt').style.display = 'none';
   document.getElementById('createBar').style.display = 'flex';
   document.getElementById('cbAvatar').src = a;
   document.getElementById('compAvatar').src = a;
-  document.getElementById('compName').textContent = u.displayName;
+  document.getElementById('compName').textContent = u.displayName || 'User';
   document.getElementById('cmtAvatar').src = a;
   const uc = document.getElementById('userCard');
-  uc.style.display = 'block';
+  if (uc) uc.style.display = 'block';
   document.getElementById('slAvatar').src = a;
-  document.getElementById('slName').textContent = u.displayName;
-  document.getElementById('slEmail').textContent = u.email;
+  document.getElementById('slName').textContent = u.displayName || 'User';
+  document.getElementById('slEmail').textContent = u.email || '';
   // Show Admin Panel only for admins
   const ap = document.getElementById('adminPanel');
   if (ap) ap.style.display = isAdmin ? 'block' : 'none';
@@ -7272,11 +7885,12 @@ function renderLoggedIn(u) {
   if (typeof updateRadarAdminUI === 'function') updateRadarAdminUI();
   loadUserCoins(u.uid, u.email);
 }
+
 function renderLoggedOut() {
   isAdmin = false;
   const lang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
-  const btnText = lang === 'fr' ? 'Connexion Google' : 'Sign in with Google';
-  document.getElementById('hdrActions').innerHTML = `<button class="btn-google" onclick="promptGuestLogin('generic')"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">${btnText}</button>`;
+  const btnText = lang === 'fr' ? 'Se connecter' : 'Sign in';
+  document.getElementById('hdrActions').innerHTML = `<button class="btn-google" onclick="promptGuestLogin('generic')"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt=""><span id="lblHdrSignIn">${btnText}</span></button>`;
   document.getElementById('loginPrompt').style.display = 'block';
   document.getElementById('createBar').style.display = 'none';
   document.getElementById('userCard').style.display = 'none';
@@ -9580,7 +10194,12 @@ function applyCommunityLanguage(lang) {
   const lpTitle = document.getElementById('lbl-login-prompt-title');
   if (lpTitle) lpTitle.textContent = lang === 'fr' ? 'Rejoignez REALMONT • Réseau Social Cyber Montréal' : 'Join REALMONT Montreal Cyber Social';
   const lpSub = document.getElementById('lbl-login-prompt-sub');
-  if (lpSub) lpSub.textContent = lang === 'fr' ? 'Connectez-vous avec Google pour partager vos créations, voter aux duels, explorer MONT-RADAR et échanger avec la communauté locale.' : 'Sign in with Google to share Montreal vibes, vote in duels, explore MONT-RADAR and connect with local creators.';
+  if (lpSub) lpSub.textContent = lang === 'fr' ? 'Connectez-vous pour partager vos créations, voter aux duels, explorer MONT-RADAR et échanger avec la communauté locale.' : 'Sign in to share Montreal vibes, vote in duels, explore MONT-RADAR and connect with local creators.';
+  const lpBtn = document.getElementById('lblLoginPromptBtn');
+  if (lpBtn) lpBtn.textContent = lang === 'fr' ? 'Se connecter / Rejoindre' : 'Sign In / Join';
+  const hdrSignIn = document.getElementById('lblHdrSignIn');
+  if (hdrSignIn) hdrSignIn.textContent = lang === 'fr' ? 'Se connecter' : 'Sign in';
+  if (typeof updateAuthUI === 'function') updateAuthUI();
   const navRadar = document.getElementById('lblNavRadar'); if (navRadar) navRadar.textContent = lang === 'fr' ? 'MONT-RADAR™ En Direct' : 'MONT-RADAR™ Live Map';
   const navDuels = document.getElementById('lblNavDuels'); if (navDuels) navDuels.textContent = 'Duels Mont-Royal™';
   const navVoice = document.getElementById('lblNavVoice'); if (navVoice) navVoice.textContent = 'Spark Voice™ 30s';
@@ -17105,65 +17724,92 @@ function sendRoomMessage() {
   </div>
 </div>
 
-<!-- ⚜️ REALMONT GUEST WELCOME & LOGIN MODAL -->
-<div class="overlay" id="guestLoginModal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(3,7,18,0.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);align-items:center;justify-content:center;padding:16px;">
-  <div style="background:var(--bg2);border:1px solid rgba(124,58,237,0.45);box-shadow:0 10px 40px rgba(0,0,0,0.7), 0 0 35px rgba(124,58,237,0.25);border-radius:24px;padding:26px 22px;width:100%;max-width:440px;position:relative;text-align:center;box-sizing:border-box;">
+<!-- ===== UNIVERSAL AUTH MODAL (PHOTO 2 DESIGN) ===== -->
+<div id="modal-login" class="auth-modal-overlay" onclick="if(event.target===this)closeAuthModal()">
+  <div class="auth-modal-content">
+    <button type="button" class="auth-modal-close-btn" onclick="closeAuthModal()" title="Close">✕</button>
     
-    <!-- Close button -->
-    <button onclick="closeGuestLoginModal()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.06);border:1px solid var(--border2);color:#94a3b8;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:0.95rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">✕</button>
+    <h2 class="auth-modal-title" id="auth-title">Se connecter</h2>
 
-    <!-- Header badge -->
-    <div style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(6,182,212,0.15));border:1px solid rgba(124,58,237,0.4);padding:6px 14px;border-radius:20px;margin-bottom:14px;">
-      <span style="font-size:1.2rem;">⚜️</span>
-      <span style="font-family:'Outfit',sans-serif;font-weight:900;font-size:0.88rem;letter-spacing:0.04em;background:linear-gradient(135deg,#fff,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">REALMONT</span>
-      <span style="font-size:0.6rem;background:#f43f5e;color:#fff;padding:2px 6px;border-radius:8px;font-weight:800;">MTL</span>
-    </div>
+    <p id="auth-context-subtitle" style="display:none; color:#94a3b8; font-size:12.5px; line-height:1.45; text-align:center; margin:-12px 0 16px 0;"></p>
 
-    <!-- Title and dynamic context prompt -->
-    <h3 id="guestModalTitle" style="font-family:'Outfit',sans-serif;font-size:1.3rem;font-weight:800;color:#fff;margin:0 0 6px 0;">Join the Montreal Cyber Social</h3>
-    <p id="guestModalSubtitle" style="color:#94a3b8;font-size:0.85rem;line-height:1.5;margin:0 0 16px 0;">Sign in with Google to post photos, like creations, vote in duels, and connect with Montreal creators.</p>
-
-    <!-- Perks / Feature Highlights -->
-    <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border2);border-radius:14px;padding:12px;margin-bottom:18px;text-align:left;display:flex;flex-direction:column;gap:8px;font-size:0.8rem;color:#cbd5e1;">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <span style="font-size:1.1rem;flex-shrink:0;">🗺️</span>
-        <span id="guestPerk1">Explore MONT-RADAR™ with live interactive local spots</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;">
-        <span style="font-size:1.1rem;flex-shrink:0;">⚡</span>
-        <span id="guestPerk2">Vote in Duels Mont-Royal & earn daily REALMONT coins</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;">
-        <span style="font-size:1.1rem;flex-shrink:0;">🎨</span>
-        <span id="guestPerk3">Publish Montreal photos, videos, and 3D WebGL scenes</span>
-      </div>
-    </div>
-
-    <!-- In-App Browser Helper Box (Conditional) -->
-    <div id="guestIabHelperBox" style="display:none;background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);border-radius:14px;padding:12px;margin-bottom:14px;text-align:left;">
-      <div style="display:flex;align-items:flex-start;gap:8px;">
-        <span style="font-size:1.2rem;">🌐</span>
-        <div style="font-size:0.78rem;line-height:1.45;color:#fecdd3;">
-          <strong id="guestIabTitle">Social Browser Detected:</strong>
-          <span id="guestIabDesc"> Facebook/Instagram blocks Google sign-in popups. Tap below to open in your default browser for 1-tap sign-in:</span>
-        </div>
-      </div>
-      <button onclick="openInNativeBrowser()" style="width:100%;margin-top:10px;padding:9px;border-radius:10px;background:linear-gradient(135deg,#06b6d4,#3b82f6);border:none;color:#fff;font-weight:800;font-size:0.82rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
-        <span>🌐</span> <span id="guestIabBtn">Open in Chrome / Safari ↗</span>
-      </button>
-    </div>
-
-    <!-- Google Sign-In Button -->
-    <button onclick="handleGuestGoogleClick()" id="btnGuestGoogleAuth" style="width:100%;padding:13px 18px;border-radius:14px;background:#ffffff;border:none;color:#1e293b;font-weight:700;font-size:0.92rem;font-family:'Outfit',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 18px rgba(0,0,0,0.35);transition:transform 0.15s, box-shadow 0.15s;margin-bottom:10px;">
-      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width:20px;height:20px;" alt="Google">
-      <span id="lblGuestGoogleBtn">Continue with Google</span>
+    <!-- 1-Click Google Sign-In (Photo 2) -->
+    <button type="button" class="btn-google-auth" id="btn-google-auth" onclick="handleGoogleSignIn()">
+      <svg width="20" height="20" viewBox="0 0 24 24" style="flex-shrink:0;">
+        <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+        <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+        <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+        <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+      </svg>
+      <span id="auth-google-text">Continuer avec Google</span>
     </button>
+
+    <!-- Social Browser In-App Tip (FB/IG/TikTok) -->
+    <div id="auth-iab-tip" style="display:none; margin-top:12px; background:rgba(251,191,36,0.1); border:1px solid rgba(251,191,36,0.3); border-radius:12px; padding:10px 14px; font-size:12px; color:#fde047; text-align:center;">
+      <span id="auth-iab-tip-text">Navigateur social détecté : connectez-vous par email/mot de passe ci-dessous, ou ouvrez dans Safari/Chrome pour Google.</span>
+      <button type="button" onclick="openInNativeBrowser()" style="display:block; width:100%; margin-top:8px; background:linear-gradient(135deg,#06b6d4,#3b82f6); color:#fff; border:none; border-radius:8px; font-weight:700; font-size:11px; padding:6px 10px; cursor:pointer;">Ouvrir dans Chrome / Safari ↗</button>
+    </div>
+
+    <!-- Divider Line (Photo 2) -->
+    <div class="auth-divider" id="auth-divider">
+      <span id="auth-divider-text">OU AVEC EMAIL</span>
+    </div>
+
+    <!-- Email & Password Form -->
+    <form id="login-form" onsubmit="handleAuthSubmit(event)">
+      <div class="auth-input-wrap" id="auth-name-group" style="display:none;">
+        <span class="auth-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </span>
+        <input type="text" id="auth-name" placeholder="Votre nom">
+      </div>
+      
+      <div class="auth-input-wrap">
+        <span class="auth-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+          </svg>
+        </span>
+        <input type="email" id="auth-email" placeholder="Email" required autocomplete="email">
+      </div>
+      
+      <div class="auth-input-wrap">
+        <span class="auth-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </span>
+        <input type="password" id="auth-password" placeholder="Mot de passe" required autocomplete="current-password">
+      </div>
+
+      <div style="text-align: right; margin-bottom: 14px; margin-top: -4px;">
+        <a href="#" id="auth-forgot-link" onclick="toggleRecoveryMode(event)" style="color:#64748b; font-size:12px; text-decoration:none; transition: color 0.2s;" onmouseover="this.style.color='#3b82f6'" onmouseout="this.style.color='#64748b'">Mot de passe oublié ?</a>
+      </div>
+
+      <p id="recovery-hint" style="display:none; color:#10b981; font-size:13px; margin-bottom:14px; text-align:center;">
+        Entrez votre email et votre nouveau mot de passe.
+      </p>
+
+      <div id="auth-error" style="display:none; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.35); color: #f87171; padding: 10px 14px; border-radius: 10px; font-size: 13px; margin-bottom: 14px; text-align: center;">Erreur.</div>
+
+      <button type="submit" class="btn-auth-submit" id="auth-submit-btn">Connexion</button>
+    </form>
+
+    <div class="auth-bottom-switch">
+      <a href="#" id="auth-toggle-link" onclick="toggleAuthMode(event)">Pas de compte ? Inscrivez-vous</a>
+    </div>
 
     <!-- Continue Browsing as Guest -->
-    <button onclick="closeGuestLoginModal()" style="width:100%;padding:9px;border-radius:10px;background:transparent;border:1px solid transparent;color:var(--muted);font-weight:600;font-size:0.82rem;cursor:pointer;transition:color 0.18s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--muted)'">
-      <span id="lblGuestBrowseBtn">Continue browsing as guest →</span>
-    </button>
-
+    <div style="text-align: center; margin-top: 14px;">
+      <button type="button" onclick="closeAuthModal()" style="background:none; border:none; color:#64748b; font-size:12px; cursor:pointer; padding:6px 12px; transition:color 0.2s;" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#64748b'">
+        <span id="auth-browse-guest-text">Continuer en tant qu'invité →</span>
+      </button>
+    </div>
   </div>
 </div>
 </body>
