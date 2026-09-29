@@ -5452,7 +5452,7 @@
   </button>
 
   <!-- 📻 RADIO MONT-ROYAL 24/7 BUTTON -->
-  <button class="btn-hdr-radio" id="btnHdrRadio" onclick="toggleRealmontRadioDeck()" title="Radio Mont-Royal 24/7 Live Music">
+  <button class="btn-hdr-radio" id="btnHdrRadio" onclick="toggleRealmontRadioDeck();if(!isRadioPlaying)toggleRadioPlayPause();" title="Radio Mont-Royal 24/7 Live Music">
     <span class="radio-live-indicator"></span>
     <span style="font-size:1.05rem;">📻</span>
     <span class="radio-btn-label" id="lblHdrRadio">Radio 24/7</span>
@@ -18374,16 +18374,6 @@ function sendRoomMessage() {
 // ═════════════════════════════════════════════════════════════
 const REALMONT_RADIO_STATIONS = [
   {
-    id: 'chillsynth',
-    name: 'Chillsynth FM Montreal',
-    genre: 'Downtempo Lo-Fi & Chill 🍃',
-    genreFr: 'Downtempo Lo-Fi & Chillout 🍃',
-    icon: '🍃',
-    url: 'https://stream.nightride.fm/chillsynth.mp3',
-    desc: 'Downtempo synth, chill beats and relaxing vibes',
-    descFr: 'Synthwave relaxante, rythmes Lo-Fi et détente'
-  },
-  {
     id: 'cism',
     name: 'CISM 89.3 FM Montréal',
     genre: 'Montréal Indie & Culture ⚜️',
@@ -18394,44 +18384,14 @@ const REALMONT_RADIO_STATIONS = [
     descFr: 'En direct de l\'Université de Montréal et du Mont-Royal'
   },
   {
-    id: 'nightride',
-    name: 'Nightride FM Retrowave',
-    genre: 'Cyberpunk & Synthwave 🌌',
-    genreFr: 'Cyberpunk & Synthwave 🌌',
-    icon: '🌌',
-    url: 'https://stream.nightride.fm/nightride.mp3',
-    desc: '24/7 synthwave, darksynth & cyberpunk electronic beats',
-    descFr: '24/7 pur synthwave, darksynth et rythmes cyber'
-  },
-  {
-    id: 'darksynth',
-    name: 'Darksynth Cyber Beats',
-    genre: 'Cyber Hackers & Beats ⚡',
-    genreFr: 'Rythmes Cyber & Hackers ⚡',
-    icon: '⚡',
-    url: 'https://stream.nightride.fm/darksynth.mp3',
-    desc: 'Music for hackers and electronic music explorers',
-    descFr: 'Musique électronique et cyberpunk pour hackers'
-  },
-  {
-    id: 'spacesynth',
-    name: 'Spacesynth Cosmic FM',
-    genre: 'Deep Space Cyber Ambient 🚀',
-    genreFr: 'Ambiance Spatiale & Voyage 🚀',
-    icon: '🚀',
-    url: 'https://stream.nightride.fm/spacesynth.mp3',
-    desc: 'Spaced-out ambient and mid-tempo electronic travel',
-    descFr: 'Voyage spatial électronique et ambient planant'
-  },
-  {
-    id: 'lofi',
-    name: 'Chillhop Lo-Fi Montreal',
-    genre: '24/7 Lo-Fi Chillhop Beats ☕',
-    genreFr: 'Beats Lo-Fi Détente 24/7 ☕',
-    icon: '☕',
-    url: 'https://streams.ilovemusic.de/iloveradio17.mp3',
-    desc: 'Mellow chillhop study and relax beats around the clock',
-    descFr: 'Rythmes Lo-Fi chillhop relaxants 24h sur 24'
+    id: 'chillsynth',
+    name: 'Chillsynth Lo-Fi FM',
+    genre: 'Downtempo Lo-Fi & Chill 🍃',
+    genreFr: 'Downtempo Lo-Fi & Chillout 🍃',
+    icon: '🍃',
+    url: 'https://stream.nightride.fm/chillsynth.mp3',
+    desc: '24/7 relaxing lo-fi synth & chill beats',
+    descFr: 'Rythmes Lo-Fi chill et détente 24/7'
   }
 ];
 
@@ -18445,12 +18405,18 @@ function initRealmontRadio() {
   realmontRadioPlayer = document.getElementById('realmontRadioPlayer');
   if (!realmontRadioPlayer) return;
 
-  const savedIdx = parseInt(localStorage.getItem('realmont_radio_station_index') || '0', 10);
-  if (!isNaN(savedIdx) && savedIdx >= 0 && savedIdx < REALMONT_RADIO_STATIONS.length) {
-    currentRadioStationIndex = savedIdx;
-  } else {
-    currentRadioStationIndex = 0;
+  let savedIdx = parseInt(localStorage.getItem('realmont_radio_station_index') || '0', 10);
+  if (isNaN(savedIdx) || savedIdx < 0 || savedIdx >= REALMONT_RADIO_STATIONS.length) {
+    savedIdx = 0;
+    try { localStorage.setItem('realmont_radio_station_index', '0'); } catch(e){}
   }
+  currentRadioStationIndex = savedIdx;
+
+  const st = REALMONT_RADIO_STATIONS[currentRadioStationIndex];
+  if (!realmontRadioPlayer.src || !realmontRadioPlayer.src.includes(st.url.replace(/^https?:\/\//, ''))) {
+    realmontRadioPlayer.src = st.url;
+  }
+
   const savedVol = parseFloat(localStorage.getItem('realmont_radio_volume') || '0.8');
   if (!isNaN(savedVol)) {
     radioVolume = Math.max(0, Math.min(1, savedVol));
@@ -18459,52 +18425,51 @@ function initRealmontRadio() {
     if (vSlider) vSlider.value = radioVolume;
   }
 
-  realmontRadioPlayer.addEventListener('play', () => {
+  realmontRadioPlayer.onplay = () => {
     isRadioPlaying = true;
     updateRadioUIPlayingState(true);
-  });
+  };
 
-  realmontRadioPlayer.addEventListener('pause', () => {
+  realmontRadioPlayer.onpause = () => {
     isRadioPlaying = false;
     updateRadioUIPlayingState(false);
-  });
+  };
 
-  realmontRadioPlayer.addEventListener('waiting', () => {
+  realmontRadioPlayer.onwaiting = () => {
     const statusEl = document.getElementById('radioCurrentStatus');
     if (statusEl && isRadioPlaying) {
-      statusEl.textContent = getCommunityLang() === 'fr' ? 'Connexion au flux en direct...' : 'Connecting to live stream...';
+      statusEl.textContent = getCommunityLang() === 'fr' ? 'Connexion au flux en direct...' : 'Connecting live...';
     }
-  });
+  };
 
-  realmontRadioPlayer.addEventListener('playing', () => {
+  realmontRadioPlayer.onplaying = () => {
     isRadioPlaying = true;
     updateRadioUIPlayingState(true);
     const statusEl = document.getElementById('radioCurrentStatus');
     if (statusEl) {
       statusEl.textContent = getCommunityLang() === 'fr' ? 'En direct • 128 kbps Stéréo 🔴' : 'Live Broadcast • 128 kbps Stereo 🔴';
     }
-  });
+  };
 
-  realmontRadioPlayer.addEventListener('error', (e) => {
+  realmontRadioPlayer.onerror = (e) => {
     if (!realmontRadioPlayer.src || realmontRadioPlayer.src === '' || realmontRadioPlayer.src === window.location.href) {
       return;
     }
     console.warn('Realmont Radio stream notice:', e);
     const statusEl = document.getElementById('radioCurrentStatus');
     if (statusEl && isRadioPlaying) {
-      statusEl.textContent = getCommunityLang() === 'fr' ? 'Reconnexion au flux...' : 'Reconnecting to stream...';
+      statusEl.textContent = getCommunityLang() === 'fr' ? 'Reconnexion...' : 'Reconnecting...';
     }
     if (isRadioPlaying) {
       setTimeout(() => {
         if (isRadioPlaying && realmontRadioPlayer) {
-          const st = REALMONT_RADIO_STATIONS[currentRadioStationIndex] || REALMONT_RADIO_STATIONS[0];
-          realmontRadioPlayer.src = st.url;
-          realmontRadioPlayer.load();
+          const s = REALMONT_RADIO_STATIONS[currentRadioStationIndex] || REALMONT_RADIO_STATIONS[0];
+          realmontRadioPlayer.src = s.url;
           realmontRadioPlayer.play().catch(() => {});
         }
-      }, 2500);
+      }, 2000);
     }
-  });
+  };
 
   renderRadioStations();
   updateRadioNowPlayingDisplay();
@@ -18541,7 +18506,7 @@ function renderRadioStations() {
 }
 
 function updateRadioNowPlayingDisplay() {
-  const st = REALMONT_RADIO_STATIONS[currentRadioStationIndex];
+  const st = REALMONT_RADIO_STATIONS[currentRadioStationIndex] || REALMONT_RADIO_STATIONS[0];
   if (!st) return;
   const lang = getCommunityLang();
 
@@ -18554,21 +18519,21 @@ function updateRadioNowPlayingDisplay() {
 }
 
 function selectRadioStation(index, shouldPlay = true) {
-  if (index < 0 || index >= REALMONT_RADIO_STATIONS.length) return;
+  if (index < 0 || index >= REALMONT_RADIO_STATIONS.length) index = 0;
   currentRadioStationIndex = index;
-  localStorage.setItem('realmont_radio_station_index', String(index));
+  try { localStorage.setItem('realmont_radio_station_index', String(index)); } catch(e){}
 
   const st = REALMONT_RADIO_STATIONS[index];
   if (!realmontRadioPlayer) {
     realmontRadioPlayer = document.getElementById('realmontRadioPlayer');
   }
   if (realmontRadioPlayer) {
+    const statusEl = document.getElementById('radioCurrentStatus');
+    if (statusEl) {
+      statusEl.textContent = getCommunityLang() === 'fr' ? 'Connexion en direct...' : 'Connecting live...';
+    }
     realmontRadioPlayer.src = st.url;
     if (shouldPlay) {
-      const statusEl = document.getElementById('radioCurrentStatus');
-      if (statusEl) {
-        statusEl.textContent = getCommunityLang() === 'fr' ? 'Connexion en direct...' : 'Connecting live...';
-      }
       realmontRadioPlayer.play().then(() => {
         isRadioPlaying = true;
         updateRadioUIPlayingState(true);
@@ -18576,7 +18541,7 @@ function selectRadioStation(index, shouldPlay = true) {
           statusEl.textContent = getCommunityLang() === 'fr' ? 'En direct • 128 kbps Stéréo 🔴' : 'Live Broadcast • 128 kbps Stereo 🔴';
         }
       }).catch(err => {
-        console.warn('Radio stream play postponed:', err);
+        console.warn('Radio select play deferred:', err);
       });
     }
   }
@@ -18585,7 +18550,7 @@ function selectRadioStation(index, shouldPlay = true) {
   renderRadioStations();
 
   const lang = getCommunityLang();
-  toast((lang === 'fr' ? '📻 Station branchée : ' : '📻 Station tuned: ') + st.name, 'info');
+  toast((lang === 'fr' ? '📻 Station : ' : '📻 Station: ') + st.name, 'info');
 }
 
 function toggleRadioPlayPause() {
@@ -18594,19 +18559,22 @@ function toggleRadioPlayPause() {
   }
   if (!realmontRadioPlayer) return;
 
+  const statusEl = document.getElementById('radioCurrentStatus');
+  const st = REALMONT_RADIO_STATIONS[currentRadioStationIndex] || REALMONT_RADIO_STATIONS[0];
+
   if (isRadioPlaying && !realmontRadioPlayer.paused) {
     realmontRadioPlayer.pause();
     isRadioPlaying = false;
     updateRadioUIPlayingState(false);
-  } else {
-    const st = REALMONT_RADIO_STATIONS[currentRadioStationIndex] || REALMONT_RADIO_STATIONS[0];
-    const statusEl = document.getElementById('radioCurrentStatus');
     if (statusEl) {
-      statusEl.textContent = getCommunityLang() === 'fr' ? 'Connexion en direct...' : 'Connecting live...';
+      statusEl.textContent = getCommunityLang() === 'fr' ? 'En pause • Cliquez pour reprendre' : 'Paused • Click to play';
     }
-
+  } else {
     if (!realmontRadioPlayer.src || !realmontRadioPlayer.src.includes(st.url.replace(/^https?:\/\//, ''))) {
       realmontRadioPlayer.src = st.url;
+    }
+    if (statusEl) {
+      statusEl.textContent = getCommunityLang() === 'fr' ? 'Connexion en direct...' : 'Connecting live...';
     }
     const playPromise = realmontRadioPlayer.play();
     if (playPromise !== undefined) {
@@ -18617,7 +18585,7 @@ function toggleRadioPlayPause() {
           statusEl.textContent = getCommunityLang() === 'fr' ? 'En direct • 128 kbps Stéréo 🔴' : 'Live Broadcast • 128 kbps Stereo 🔴';
         }
       }).catch(err => {
-        console.warn('Radio play direct attempt notice:', err);
+        console.warn('Direct play error, retrying:', err);
         realmontRadioPlayer.src = st.url;
         realmontRadioPlayer.load();
         realmontRadioPlayer.play().then(() => {
@@ -18627,13 +18595,12 @@ function toggleRadioPlayPause() {
             statusEl.textContent = getCommunityLang() === 'fr' ? 'En direct • 128 kbps Stéréo 🔴' : 'Live Broadcast • 128 kbps Stereo 🔴';
           }
         }).catch(err2 => {
-          console.warn('Radio play error:', err2);
+          console.warn('Play error:', err2);
           isRadioPlaying = false;
           updateRadioUIPlayingState(false);
           if (statusEl) {
-            statusEl.textContent = getCommunityLang() === 'fr' ? 'Échec de lecture du flux' : 'Failed to stream audio';
+            statusEl.textContent = getCommunityLang() === 'fr' ? 'Cliquez pour écouter' : 'Click Play to listen';
           }
-          toast(getCommunityLang() === 'fr' ? 'Impossible de lancer ce flux audio' : 'Unable to play this stream', 'error');
         });
       });
     }
@@ -18953,7 +18920,7 @@ if (document.readyState === 'loading') {
           <button class="cat-sheet-btn" onclick="closeCategoriesSheet();openChatRoomsModal();" style="display:flex;align-items:center;gap:6px;font-size:0.8rem;">
             <span>💬</span> <span>Montreal Chat</span>
           </button>
-          <button class="cat-sheet-btn" onclick="closeCategoriesSheet();setTimeout(() => toggleRealmontRadioDeck(true), 120);" style="grid-column:1 / -1;display:flex;align-items:center;justify-content:center;gap:6px;font-size:0.82rem;background:linear-gradient(135deg,rgba(244,63,94,0.18),rgba(6,182,212,0.18));border:1px solid rgba(6,182,212,0.4);color:#67e8f9;font-weight:700;">
+          <button class="cat-sheet-btn" onclick="closeCategoriesSheet();toggleRealmontRadioDeck(true);if(!isRadioPlaying)toggleRadioPlayPause();" style="grid-column:1 / -1;display:flex;align-items:center;justify-content:center;gap:6px;font-size:0.82rem;background:linear-gradient(135deg,rgba(244,63,94,0.18),rgba(6,182,212,0.18));border:1px solid rgba(6,182,212,0.4);color:#67e8f9;font-weight:700;">
             <span>📻</span> <span id="lblSheetRadioTitle">Radio Mont-Royal 24/7</span>
           </button>
         </div>
@@ -19095,7 +19062,7 @@ if (document.readyState === 'loading') {
 <!-- ═══════════════════════════════════════════════════════════ -->
 <!-- 📻 REALMONT RADIO 24/7 (REAL LIVE MONTREAL & CYBER STREAMS) -->
 <!-- ═══════════════════════════════════════════════════════════ -->
-<audio id="realmontRadioPlayer" preload="none" playsinline></audio>
+<audio id="realmontRadioPlayer" preload="none" playsinline src="https://stream.cism893.ca/cism-128.mp3"></audio>
 
 <div class="realmont-radio-deck" id="realmontRadioDeck">
   <!-- Header -->

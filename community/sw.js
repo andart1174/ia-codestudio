@@ -1,14 +1,18 @@
 // IA Code Studio — Service Worker v1.0
 // Handles Web Push Notifications so users are alerted even when the site is closed
 
-const CACHE_NAME = 'ia-studio-v1';
+const CACHE_NAME = 'ia-studio-v2';
 
 self.addEventListener('install', e => {
   self.skipWaiting();
 });
 
 self.addEventListener('activate', e => {
-  e.waitUntil(clients.claim());
+  e.waitUntil(
+    caches.keys().then(keys => Promise.all(
+      keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
+    )).then(() => clients.claim())
+  );
 });
 
 // Handle push notifications from server (or Firestore Cloud Functions)
