@@ -3255,11 +3255,16 @@
         display: none;
       }
       .realmont-radio-deck {
-        bottom: 74px;
-        right: 10px;
-        left: 10px;
-        width: auto;
-        max-width: calc(100vw - 20px);
+        position: fixed !important;
+        bottom: 68px !important;
+        right: 12px !important;
+        left: 12px !important;
+        width: auto !important;
+        max-width: calc(100vw - 24px) !important;
+        z-index: 999999 !important;
+      }
+      .realmont-radio-deck.open {
+        display: block !important;
       }
     }
 
@@ -17327,6 +17332,62 @@ function filterRadarCategory(cat, pillBtn) {
   renderRadarMarkers();
 }
 
+// ═════════════════════════════════════════════════════════════
+// 🧭 GEOCACHING PROXIMITY & HAVERSINE DISTANCE VERIFICATION
+// ═════════════════════════════════════════════════════════════
+let currentCachedUserCoords = null;
+
+function calculateGeoDistanceMeters(lat1, lon1, lat2, lon2) {
+  const R = 6371e3; // Earth radius in meters
+  const phi1 = (lat1 * Math.PI) / 180;
+  const phi2 = (lat2 * Math.PI) / 180;
+  const deltaPhi = ((lat2 - lat1) * Math.PI) / 180;
+  const deltaLambda = ((lon2 - lon1) * Math.PI) / 180;
+
+  const a = Math.sin(deltaPhi / 2) * Math.sin(deltaPhi / 2) +
+            Math.cos(phi1) * Math.cos(phi2) *
+            Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+function checkRadarDropDistanceLive(dropLat, dropLng) {
+  const badge = document.getElementById('activeSpotDistanceBadge');
+  const lang = getCommunityLang();
+  if (!navigator.geolocation) {
+    if (badge) badge.innerHTML = `<span style="color:#f59e0b;">⚠️ ${lang === 'fr' ? 'GPS non disponible' : 'GPS unavailable'}</span>`;
+    return;
+  }
+
+  const updateBadge = (uLat, uLng) => {
+    currentCachedUserCoords = [uLat, uLng];
+    const dist = calculateGeoDistanceMeters(uLat, uLng, dropLat, dropLng);
+    const dBadge = document.getElementById('activeSpotDistanceBadge');
+    if (!dBadge) return;
+    if (dist <= 250) {
+      dBadge.innerHTML = `<span style="color:#10b981;font-weight:700;">🟢 ${lang === 'fr' ? 'À portée (' + Math.round(dist) + 'm)' : 'In Range (' + Math.round(dist) + 'm)'}</span>`;
+    } else {
+      const dStr = dist >= 1000 ? (dist / 1000).toFixed(1) + ' km' : Math.round(dist) + 'm';
+      dBadge.innerHTML = `<span style="color:#f43f5e;font-weight:700;" title="${lang === 'fr' ? 'Doit être à moins de 250m' : 'Must be within 250m'}">🧭 ${lang === 'fr' ? 'Distance: ' + dStr + ' (Trop loin)' : 'Distance: ' + dStr + ' (Too far)'}</span>`;
+    }
+  };
+
+  if (currentCachedUserCoords) {
+    updateBadge(currentCachedUserCoords[0], currentCachedUserCoords[1]);
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => updateBadge(pos.coords.latitude, pos.coords.longitude),
+    (err) => {
+      const dBadge = document.getElementById('activeSpotDistanceBadge');
+      if (dBadge && !currentCachedUserCoords) {
+        dBadge.innerHTML = `<span style="color:#94a3b8;" title="${err.message}">📍 ${lang === 'fr' ? 'Activez GPS pour voir la distance' : 'Enable GPS to view distance'}</span>`;
+      }
+    },
+    { enableHighAccuracy: true, timeout: 8000, maximumAge: 30000 }
+  );
+}
+
 function selectRadarSpot(eventId) {
   const allEvents = getAllMontrealEvents();
   const ev = allEvents.find(e => e.id === eventId);
@@ -17360,6 +17421,13 @@ function selectRadarSpot(eventId) {
       btnDrop.textContent = claimed
         ? (lang === 'fr' ? '✓ Déjà Réclamé' : '✓ Already Claimed')
         : (lang === 'fr' ? `💎 Réclamer le Drop (+${coinReward} 🪙)` : `💎 Claim Drop (+${coinReward} 🪙)`);
+    }
+
+    if (ev.coords && Array.isArray(ev.coords) && ev.coords.length >= 2) {
+      if (meta) {
+        meta.innerHTML = `<span>📍 ${ev.locationName || 'Montréal'}</span><span>💎 ${ev.coins || 100} Coins</span><span id="activeSpotDistanceBadge" style="color:#38bdf8;">🧭 ${lang === 'fr' ? 'Calcul distance GPS...' : 'Calculating distance...'}</span>`;
+      }
+      checkRadarDropDistanceLive(ev.coords[0], ev.coords[1]);
     }
   } else {
     if (btnFilter) btnFilter.style.display = 'inline-flex';
@@ -17401,7 +17469,7 @@ function onRadarLocationPresetChange(val) {
   }
 }
 
-function submitRadarCustomEvent() {
+async function submitRadarCustomEvent() {
   const titleInp = document.getElementById('newEventTitle');
   const catInp = document.getElementById('newEventCategory');
   const presetInp = document.getElementById('newEventLocationPreset');
@@ -17468,9 +17536,27 @@ function submitRadarCustomEvent() {
   // Sync custom event to Firestore cloud
   try {
     if (typeof db !== 'undefined') {
-      db.collection('devsocial_posts').doc(newEvent.id).set({
+      const currentUid = (typeof user !== 'undefined' && user && user.uid) ? user.uid : (firebase.auth().currentUser ? firebase.auth().currentUser.uid : 'admin_event');
+      const authorName = (typeof user !== 'undefined' && user && user.displayName) ? user.displayName : 'Admin';
+      const authorEmail = (typeof user !== 'undefined' && user && user.email) ? user.email : 'andart1174@gmail.com';
+
+      // Master config document for instant multi-device sync
+      await db.collection('devsocial_posts').doc('config_radar_events').set({
+        events: firebase.firestore.FieldValue.arrayUnion(newEvent),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true }).catch(() => {});
+
+      // Individual event doc with auth fields
+      await db.collection('devsocial_posts').doc(newEvent.id).set({
         ...newEvent,
+        uid: currentUid,
+        user: authorName,
+        displayName: authorName,
+        userEmail: authorEmail,
         type: 'radar_event',
+        category: 'radar_event',
+        content: newEvent.titleEn,
+        caption: newEvent.titleEn,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       }).catch(e => console.warn('Radar event cloud save error:', e));
     }
@@ -17647,7 +17733,21 @@ async function deleteRadarEvent(eventId) {
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       }, { merge: true });
 
-      if (eventId.startsWith('user-ev-') || eventId.startsWith('ev-')) {
+      // Clean from master config doc
+      const cfgRef = db.collection('devsocial_posts').doc('config_radar_events');
+      const cfgDoc = await cfgRef.get().catch(() => null);
+      if (cfgDoc && cfgDoc.exists && cfgDoc.data()) {
+        const cData = cfgDoc.data();
+        const updatedDrops = (cData.drops || []).filter(d => d.id !== eventId);
+        const updatedEvents = (cData.events || []).filter(e => e.id !== eventId);
+        await cfgRef.set({
+          drops: updatedDrops,
+          events: updatedEvents,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true }).catch(() => {});
+      }
+
+      if (eventId.startsWith('user-ev-') || eventId.startsWith('ev-') || eventId.startsWith('drop-')) {
         await db.collection('devsocial_posts').doc(eventId).delete().catch(() => {});
       }
     }
@@ -17706,13 +17806,45 @@ async function resetRadarEventsToDefault() {
   toast(lang === 'fr' ? '🔄 Événements réinitialisés avec succès !' : '🔄 Events reset to defaults successfully!', 'success');
 }
 
+let radarFirestoreListenerUnsub = null;
+function initRadarCloudListener() {
+  if (radarFirestoreListenerUnsub || typeof db === 'undefined') return;
+  try {
+    radarFirestoreListenerUnsub = db.collection('devsocial_posts').doc('config_radar_events').onSnapshot(doc => {
+      if (doc && doc.exists && doc.data()) {
+        const cData = doc.data();
+        let localCustom = [];
+        try {
+          localCustom = JSON.parse(localStorage.getItem('realmont_custom_radar_events') || '[]');
+        } catch (e) { localCustom = []; }
+
+        const cloudItems = [...(Array.isArray(cData.drops) ? cData.drops : []), ...(Array.isArray(cData.events) ? cData.events : [])];
+        let hasNew = false;
+        cloudItems.forEach(item => {
+          if (item && item.id && !localCustom.some(e => e.id === item.id)) {
+            localCustom.push(item);
+            hasNew = true;
+          }
+        });
+        if (hasNew) {
+          localStorage.setItem('realmont_custom_radar_events', JSON.stringify(localCustom));
+          renderRadarMarkers();
+          if (document.getElementById('radarAdminEventsDrawer')?.style.display === 'block') {
+            renderAdminEventsList();
+          }
+        }
+      }
+    }, err => console.warn('Radar cloud listener notice:', err));
+  } catch (e) {}
+}
+
 async function syncRadarEventsWithFirestore() {
   try {
     if (typeof db === 'undefined') return;
 
     // 1. Sync deleted events from Firestore
-    const delDoc = await db.collection('devsocial_posts').doc('config_radar_deleted_events').get();
-    if (delDoc.exists && delDoc.data() && Array.isArray(delDoc.data().deletedIds)) {
+    const delDoc = await db.collection('devsocial_posts').doc('config_radar_deleted_events').get().catch(() => null);
+    if (delDoc && delDoc.exists && delDoc.data() && Array.isArray(delDoc.data().deletedIds)) {
       let localDeleted = [];
       try {
         localDeleted = JSON.parse(localStorage.getItem('realmont_deleted_radar_events') || '[]');
@@ -17721,22 +17853,54 @@ async function syncRadarEventsWithFirestore() {
       localStorage.setItem('realmont_deleted_radar_events', JSON.stringify(merged));
     }
 
-    // 2. Sync custom events & secret drops from Firestore
-    const snap = await db.collection('devsocial_posts').where('type', 'in', ['radar_event', 'radar_drop']).limit(60).get();
-    if (!snap.empty) {
+    // 2. Sync from master config_radar_events doc (guaranteed multi-device sync)
+    const cfgDoc = await db.collection('devsocial_posts').doc('config_radar_events').get().catch(() => null);
+    if (cfgDoc && cfgDoc.exists && cfgDoc.data()) {
+      const cData = cfgDoc.data();
       let localCustom = [];
       try {
         localCustom = JSON.parse(localStorage.getItem('realmont_custom_radar_events') || '[]');
       } catch (e) { localCustom = []; }
 
-      snap.forEach(doc => {
-        const data = doc.data();
-        if (data && data.id && !localCustom.some(e => e.id === data.id)) {
-          localCustom.push(data);
+      const cloudItems = [...(Array.isArray(cData.drops) ? cData.drops : []), ...(Array.isArray(cData.events) ? cData.events : [])];
+      let didAdd = false;
+      cloudItems.forEach(item => {
+        if (item && item.id && !localCustom.some(e => e.id === item.id)) {
+          localCustom.push(item);
+          didAdd = true;
         }
       });
-      localStorage.setItem('realmont_custom_radar_events', JSON.stringify(localCustom));
+      if (didAdd) {
+        localStorage.setItem('realmont_custom_radar_events', JSON.stringify(localCustom));
+      }
     }
+
+    // 3. Fallback: also sync custom events & secret drops from devsocial_posts collection query
+    try {
+      const snap = await db.collection('devsocial_posts').where('type', 'in', ['radar_event', 'radar_drop']).limit(60).get();
+      if (!snap.empty) {
+        let localCustom = [];
+        try {
+          localCustom = JSON.parse(localStorage.getItem('realmont_custom_radar_events') || '[]');
+        } catch (e) { localCustom = []; }
+
+        let didAdd = false;
+        snap.forEach(doc => {
+          const data = doc.data();
+          if (data && data.id && !localCustom.some(e => e.id === data.id)) {
+            localCustom.push(data);
+            didAdd = true;
+          }
+        });
+        if (didAdd) {
+          localStorage.setItem('realmont_custom_radar_events', JSON.stringify(localCustom));
+        }
+      }
+    } catch (qErr) {
+      console.warn('Radar posts query notice:', qErr);
+    }
+
+    initRadarCloudListener();
 
     renderRadarMarkers();
     if (document.getElementById('radarAdminEventsDrawer')?.style.display === 'block') {
@@ -17770,7 +17934,7 @@ function filterFeedByRadarSpot() {
   toast((lang === 'fr' ? 'Lieu sélectionné: ' : 'Selected location: ') + (lang === 'fr' ? (selectedRadarEvent.titleFr || selectedRadarEvent.titleEn) : selectedRadarEvent.titleEn), 'info');
 }
 
-function claimRadarSecretDrop() {
+async function claimRadarSecretDrop() {
   if (!selectedRadarEvent || !selectedRadarEvent.isDrop) return;
   const dropKey = `radar_drop_${selectedRadarEvent.id}_claimed`;
   const claimed = localStorage.getItem(dropKey);
@@ -17779,28 +17943,117 @@ function claimRadarSecretDrop() {
     toast(lang === 'fr' ? 'Drop déjà réclamé pour aujourd\'hui !' : 'Drop already claimed for today!', 'info');
     return;
   }
-  const coinsReward = Number(selectedRadarEvent.coins) || 100;
-  localStorage.setItem(dropKey, 'true');
-  if (typeof addCoinsLocally === 'function') {
-    addCoinsLocally(coinsReward, 'MONT-RADAR Secret Drop');
-  } else if (typeof giveUserCoins === 'function') {
-    giveUserCoins(coinsReward, 'MONT-RADAR Secret Drop');
-  } else {
-    const cur = parseInt(localStorage.getItem('genius_user_coins') || '0', 10);
-    localStorage.setItem('genius_user_coins', cur + coinsReward);
-    const bEl = document.getElementById('hdrCoinBalance');
-    if (bEl) bEl.textContent = cur + coinsReward;
+
+  const dropCoords = selectedRadarEvent.coords;
+  const isAdmin = isRadarAdmin();
+
+  const awardDropCoins = () => {
+    const coinsReward = Number(selectedRadarEvent.coins) || 100;
+    localStorage.setItem(dropKey, 'true');
+    if (typeof addCoinsLocally === 'function') {
+      addCoinsLocally(coinsReward, 'MONT-RADAR Secret Drop');
+    } else if (typeof giveUserCoins === 'function') {
+      giveUserCoins(coinsReward, 'MONT-RADAR Secret Drop');
+    } else {
+      const cur = parseInt(localStorage.getItem('genius_user_coins') || '0', 10);
+      localStorage.setItem('genius_user_coins', cur + coinsReward);
+      const bEl = document.getElementById('hdrCoinBalance');
+      if (bEl) bEl.textContent = cur + coinsReward;
+    }
+    playSoundFx('coin');
+    if (typeof triggerFlyingCoins === 'function') {
+      triggerFlyingCoins();
+    }
+    toast(lang === 'fr' ? `🎉 Drop Secret débloqué ! +${coinsReward} 🪙 GENIUS IA` : `🎉 Secret Drop Unlocked! +${coinsReward} 🪙 GENIUS IA`, 'success');
+    const btnDrop = document.getElementById('btnUnlockDropSpot');
+    if (btnDrop) {
+      btnDrop.disabled = true;
+      btnDrop.textContent = lang === 'fr' ? '✓ Réclamé' : '✓ Claimed';
+    }
+  };
+
+  if (!dropCoords || !Array.isArray(dropCoords) || dropCoords.length < 2) {
+    awardDropCoins();
+    return;
   }
-  playSoundFx('coin');
-  if (typeof triggerFlyingCoins === 'function') {
-    triggerFlyingCoins();
-  }
-  toast(lang === 'fr' ? `🎉 Drop Secret débloqué ! +${coinsReward} 🪙 GENIUS IA` : `🎉 Secret Drop Unlocked! +${coinsReward} 🪙 GENIUS IA`, 'success');
+
   const btnDrop = document.getElementById('btnUnlockDropSpot');
   if (btnDrop) {
     btnDrop.disabled = true;
-    btnDrop.textContent = lang === 'fr' ? '✓ Réclamé' : '✓ Claimed';
+    btnDrop.textContent = lang === 'fr' ? '📡 Vérification GPS...' : '📡 Verifying GPS...';
   }
+
+  const getGpsDist = () => {
+    return new Promise((resolve) => {
+      if (!navigator.geolocation) {
+        resolve({ ok: false, reason: 'no_geolocation' });
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const uLat = pos.coords.latitude;
+          const uLng = pos.coords.longitude;
+          currentCachedUserCoords = [uLat, uLng];
+          const dist = calculateGeoDistanceMeters(uLat, uLng, dropCoords[0], dropCoords[1]);
+          resolve({ ok: true, dist, uLat, uLng });
+        },
+        (err) => {
+          resolve({ ok: false, reason: err.message || 'permission_denied' });
+        },
+        { enableHighAccuracy: true, timeout: 9000, maximumAge: 10000 }
+      );
+    });
+  };
+
+  const gpsResult = await getGpsDist();
+
+  if (!gpsResult.ok) {
+    if (btnDrop) {
+      btnDrop.disabled = false;
+      const coinReward = Number(selectedRadarEvent.coins) || 100;
+      btnDrop.textContent = lang === 'fr' ? `💎 Réclamer le Drop (+${coinReward} 🪙)` : `💎 Claim Drop (+${coinReward} 🪙)`;
+    }
+    if (isAdmin) {
+      const adminConfirm = confirm(lang === 'fr'
+        ? "⚠️ Signal GPS introuvable sur cet appareil.\n\nEn tant qu'administrateur, voulez-vous débloquer ce drop en mode test ?"
+        : "⚠️ GPS signal unavailable on this device.\n\nAs admin, do you want to unlock this drop in test mode?");
+      if (adminConfirm) {
+        awardDropCoins();
+      }
+      return;
+    }
+    toast(lang === 'fr'
+      ? '📍 Impossible d\'obtenir votre position GPS. Veuillez autoriser la localisation pour réclamer ce trésor !'
+      : '📍 Unable to get your GPS location. Please allow location access to claim this treasure!', 'error');
+    return;
+  }
+
+  const MAX_RADIUS_METERS = 250;
+  if (gpsResult.dist > MAX_RADIUS_METERS) {
+    if (btnDrop) {
+      btnDrop.disabled = false;
+      const coinReward = Number(selectedRadarEvent.coins) || 100;
+      btnDrop.textContent = lang === 'fr' ? `💎 Réclamer le Drop (+${coinReward} 🪙)` : `💎 Claim Drop (+${coinReward} 🪙)`;
+    }
+    const distKm = (gpsResult.dist / 1000).toFixed(2);
+    if (isAdmin) {
+      const adminConfirm = confirm(lang === 'fr'
+        ? `🛡️ CONTRÔLE ADMIN : Vous êtes à ${distKm} km du drop (> 250m).\n\nVoulez-vous forcer la réclamation en mode test administrateur ?`
+        : `🛡️ ADMIN CONTROL: You are ${distKm} km away (> 250m).\n\nDo you want to force-claim this drop in admin test mode?`);
+      if (adminConfirm) {
+        awardDropCoins();
+        return;
+      }
+    }
+
+    toast(lang === 'fr'
+      ? `❌ Trop loin ! Vous êtes à ${distKm} km. Vous devez vous déplacer physiquement à moins de 250 m du trésor pour le réclamer !`
+      : `❌ Out of range! You are ${distKm} km away. You must physically be within 250m of the treasure to claim it!`, 'error');
+    return;
+  }
+
+  // Physical proximity verified (<= 250m)
+  awardDropCoins();
 }
 
 // 5. PASSEPORT FONDATEUR VIP #0001
@@ -18115,7 +18368,7 @@ const REALMONT_RADIO_STATIONS = [
     genre: 'Downtempo Lo-Fi & Chill 🍃',
     genreFr: 'Downtempo Lo-Fi & Chillout 🍃',
     icon: '🍃',
-    url: 'https://ice1.somafm.com/groovesalad-128-mp3',
+    url: 'https://ice2.somafm.com/groovesalad-128-mp3',
     desc: 'A nicely chilled plate of ambient & downtempo grooves',
     descFr: 'Ambiance downtempo et rythmes Lo-Fi apaisants'
   },
@@ -18125,7 +18378,7 @@ const REALMONT_RADIO_STATIONS = [
     genre: 'Cyber Hackers & Beats ⚡',
     genreFr: 'Rythmes Cyber & Hackers ⚡',
     icon: '⚡',
-    url: 'https://ice1.somafm.com/defcon-128-mp3',
+    url: 'https://ice2.somafm.com/defcon-128-mp3',
     desc: 'Music for hackers and electronic music explorers',
     descFr: 'Musique électronique et cyberpunk pour hackers'
   },
@@ -18135,7 +18388,7 @@ const REALMONT_RADIO_STATIONS = [
     genre: 'Deep Space Cyber Ambient 🚀',
     genreFr: 'Ambiance Spatiale & Voyage 🚀',
     icon: '🚀',
-    url: 'https://ice1.somafm.com/spacestation-128-mp3',
+    url: 'https://ice2.somafm.com/spacestation-128-mp3',
     desc: 'Spaced-out ambient and mid-tempo electronic travel',
     descFr: 'Voyage spatial électronique et ambient planant'
   }
@@ -18175,32 +18428,37 @@ function initRealmontRadio() {
 
   realmontRadioPlayer.addEventListener('waiting', () => {
     const statusEl = document.getElementById('radioCurrentStatus');
-    if (statusEl) {
+    if (statusEl && isRadioPlaying) {
       statusEl.textContent = getCommunityLang() === 'fr' ? 'Connexion au flux en direct...' : 'Connecting to live stream...';
     }
   });
 
   realmontRadioPlayer.addEventListener('playing', () => {
+    isRadioPlaying = true;
+    updateRadioUIPlayingState(true);
     const statusEl = document.getElementById('radioCurrentStatus');
     if (statusEl) {
-      statusEl.textContent = getCommunityLang() === 'fr' ? 'En direct • 128 kbps Stéréo' : 'Live Broadcast • 128 kbps Stereo';
+      statusEl.textContent = getCommunityLang() === 'fr' ? 'En direct • 128 kbps Stéréo 🔴' : 'Live Broadcast • 128 kbps Stereo 🔴';
     }
   });
 
   realmontRadioPlayer.addEventListener('error', (e) => {
+    if (!realmontRadioPlayer.src || realmontRadioPlayer.src === '' || realmontRadioPlayer.src === window.location.href) {
+      return;
+    }
     console.warn('Realmont Radio stream notice:', e);
     const statusEl = document.getElementById('radioCurrentStatus');
-    if (statusEl) {
+    if (statusEl && isRadioPlaying) {
       statusEl.textContent = getCommunityLang() === 'fr' ? 'Reconnexion au flux...' : 'Reconnecting to stream...';
     }
     if (isRadioPlaying) {
       setTimeout(() => {
         if (isRadioPlaying && realmontRadioPlayer) {
           const st = REALMONT_RADIO_STATIONS[currentRadioStationIndex];
-          realmontRadioPlayer.src = st.url + '?t=' + Date.now();
+          realmontRadioPlayer.src = st.url + (st.url.includes('?') ? '&' : '?') + 't=' + Date.now();
           realmontRadioPlayer.play().catch(() => {});
         }
-      }, 2000);
+      }, 2500);
     }
   });
 
@@ -18262,13 +18520,19 @@ function selectRadioStation(index, shouldPlay = true) {
   }
   if (realmontRadioPlayer) {
     realmontRadioPlayer.src = st.url;
-    realmontRadioPlayer.load();
     if (shouldPlay) {
+      const statusEl = document.getElementById('radioCurrentStatus');
+      if (statusEl) {
+        statusEl.textContent = getCommunityLang() === 'fr' ? 'Connexion en direct...' : 'Connecting live...';
+      }
       realmontRadioPlayer.play().then(() => {
         isRadioPlaying = true;
         updateRadioUIPlayingState(true);
+        if (statusEl) {
+          statusEl.textContent = getCommunityLang() === 'fr' ? 'En direct • 128 kbps Stéréo 🔴' : 'Live Broadcast • 128 kbps Stereo 🔴';
+        }
       }).catch(err => {
-        console.warn('Radio stream play blocked or postponed:', err);
+        console.warn('Radio stream play postponed:', err);
       });
     }
   }
@@ -18286,21 +18550,42 @@ function toggleRadioPlayPause() {
   }
   if (!realmontRadioPlayer) return;
 
-  if (isRadioPlaying) {
+  if (isRadioPlaying && !realmontRadioPlayer.paused) {
     realmontRadioPlayer.pause();
     isRadioPlaying = false;
     updateRadioUIPlayingState(false);
   } else {
     const st = REALMONT_RADIO_STATIONS[currentRadioStationIndex];
-    if (!realmontRadioPlayer.src || realmontRadioPlayer.src === '' || realmontRadioPlayer.src === window.location.href) {
+    const statusEl = document.getElementById('radioCurrentStatus');
+    if (statusEl) {
+      statusEl.textContent = getCommunityLang() === 'fr' ? 'Connexion en direct...' : 'Connecting live...';
+    }
+
+    if (!realmontRadioPlayer.src || !realmontRadioPlayer.src.includes(st.url.replace(/^https?:\/\//, ''))) {
       realmontRadioPlayer.src = st.url;
     }
     realmontRadioPlayer.play().then(() => {
       isRadioPlaying = true;
       updateRadioUIPlayingState(true);
+      if (statusEl) {
+        statusEl.textContent = getCommunityLang() === 'fr' ? 'En direct • 128 kbps Stéréo 🔴' : 'Live Broadcast • 128 kbps Stereo 🔴';
+      }
     }).catch(err => {
-      console.warn('Radio play blocked:', err);
-      toast(getCommunityLang() === 'fr' ? 'Cliquez pour autoriser l\'audio' : 'Click to enable audio streaming', 'info');
+      console.warn('Radio play direct attempt notice:', err);
+      realmontRadioPlayer.src = st.url + (st.url.includes('?') ? '&' : '?') + 't=' + Date.now();
+      realmontRadioPlayer.play().then(() => {
+        isRadioPlaying = true;
+        updateRadioUIPlayingState(true);
+        if (statusEl) {
+          statusEl.textContent = getCommunityLang() === 'fr' ? 'En direct • 128 kbps Stéréo 🔴' : 'Live Broadcast • 128 kbps Stereo 🔴';
+        }
+      }).catch(err2 => {
+        console.warn('Radio play blocked or requires user click:', err2);
+        if (statusEl) {
+          statusEl.textContent = getCommunityLang() === 'fr' ? 'Cliquez sur Lecture pour écouter' : 'Click Play to listen';
+        }
+        toast(getCommunityLang() === 'fr' ? 'Cliquez sur ▶ pour lancer le flux' : 'Click ▶ to start streaming', 'info');
+      });
     });
   }
 }
@@ -18364,14 +18649,14 @@ function toggleRadioMute() {
 function toggleRealmontRadioDeck(forceState) {
   const deck = document.getElementById('realmontRadioDeck');
   if (!deck) return;
-  const isShown = forceState !== undefined ? forceState : deck.classList.contains('open');
+  const shouldOpen = (forceState !== undefined) ? Boolean(forceState) : !deck.classList.contains('open');
 
-  if (isShown) {
-    deck.classList.remove('open');
-  } else {
+  if (shouldOpen) {
     deck.classList.add('open');
     renderRadioStations();
     updateRadioNowPlayingDisplay();
+  } else {
+    deck.classList.remove('open');
   }
 }
 
@@ -18510,14 +18795,32 @@ async function submitRadarAdminCyberDrop() {
   localSaved.push(newDrop);
   localStorage.setItem('realmont_custom_radar_events', JSON.stringify(localSaved));
 
-  // 2. Persist to Firestore collection devsocial_posts as 'radar_drop'
+  // 2. Persist to Firestore: master config doc + individual doc with auth uid
   try {
     if (typeof db !== 'undefined') {
+      const currentUid = (typeof user !== 'undefined' && user && user.uid) ? user.uid : (firebase.auth().currentUser ? firebase.auth().currentUser.uid : 'admin_drop');
+      const authorName = (typeof user !== 'undefined' && user && user.displayName) ? user.displayName : 'Admin';
+      const authorEmail = (typeof user !== 'undefined' && user && user.email) ? user.email : 'andart1174@gmail.com';
+
+      // Master config document for instant cross-device realtime sync
+      await db.collection('devsocial_posts').doc('config_radar_events').set({
+        drops: firebase.firestore.FieldValue.arrayUnion(newDrop),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true }).catch(e => console.warn('Radar master config write notice:', e));
+
+      // Individual doc in devsocial_posts collection
       await db.collection('devsocial_posts').doc(dropId).set({
         ...newDrop,
+        uid: currentUid,
+        user: authorName,
+        displayName: authorName,
+        userEmail: authorEmail,
         type: 'radar_drop',
+        category: 'radar_drop',
+        content: title,
+        caption: title,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
+      }).catch(e => console.warn('Radar drop doc write notice:', e));
     }
   } catch (e) {
     console.warn('Radar drop cloud save warning:', e);
@@ -18600,7 +18903,7 @@ if (document.readyState === 'loading') {
           <button class="cat-sheet-btn" onclick="closeCategoriesSheet();openChatRoomsModal();" style="display:flex;align-items:center;gap:6px;font-size:0.8rem;">
             <span>💬</span> <span>Montreal Chat</span>
           </button>
-          <button class="cat-sheet-btn" onclick="closeCategoriesSheet();toggleRealmontRadioDeck(true);" style="grid-column:1 / -1;display:flex;align-items:center;justify-content:center;gap:6px;font-size:0.82rem;background:linear-gradient(135deg,rgba(244,63,94,0.18),rgba(6,182,212,0.18));border:1px solid rgba(6,182,212,0.4);color:#67e8f9;font-weight:700;">
+          <button class="cat-sheet-btn" onclick="closeCategoriesSheet();setTimeout(() => toggleRealmontRadioDeck(true), 120);" style="grid-column:1 / -1;display:flex;align-items:center;justify-content:center;gap:6px;font-size:0.82rem;background:linear-gradient(135deg,rgba(244,63,94,0.18),rgba(6,182,212,0.18));border:1px solid rgba(6,182,212,0.4);color:#67e8f9;font-weight:700;">
             <span>📻</span> <span id="lblSheetRadioTitle">Radio Mont-Royal 24/7</span>
           </button>
         </div>
