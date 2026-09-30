@@ -3030,35 +3030,163 @@
         overflow: hidden !important;
       }
 
-      /* Minimal fixed top header (48px) */
+      /* Horizontally scrollable & swipeable top header (smooth touch carousel) */
       .header {
         position: fixed !important;
         top: 0 !important;
         left: 0 !important;
         right: 0 !important;
-        height: 48px !important;
-        z-index: 100 !important;
-        background: rgba(3, 7, 18, 0.94) !important;
-        backdrop-filter: blur(14px) !important;
-        -webkit-backdrop-filter: blur(14px) !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-        padding: 0 12px !important;
+        height: 50px !important;
+        z-index: 1000 !important;
+        background: rgba(3, 7, 18, 0.96) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        padding: 0 10px !important;
         display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
         align-items: center !important;
-        justify-content: space-between !important;
+        justify-content: flex-start !important;
+        gap: 8px !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        white-space: nowrap !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+        overscroll-behavior-x: contain !important;
+        touch-action: pan-x !important;
+        user-select: none;
       }
-      .header-sep, .header-brand { display: none !important; }
-      .header-logo .lt { display: none !important; }
-      .btn-header-comms { display: none !important; }
-      .btn-install-pwa { display: none !important; }
-      .btn-notif-bell { display: none !important; }
-      .hdr-coin-pill { padding: 4px 8px !important; font-size: 0.75rem !important; margin-left: auto !important; margin-right: 6px !important; }
-      .btn-google { padding: 5px 12px !important; font-size: 0.78rem !important; }
+      .header::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+      }
+      .header > * {
+        flex-shrink: 0 !important;
+      }
+      .header-logo {
+        flex-shrink: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+      }
+      .header-sep {
+        width: 1px !important;
+        height: 18px !important;
+        background: var(--border2) !important;
+        flex-shrink: 0 !important;
+        display: inline-block !important;
+      }
+      .header-brand {
+        display: inline-flex !important;
+        flex-shrink: 0 !important;
+        padding: 3px 8px !important;
+        font-size: 0.72rem !important;
+      }
+      .hdr-studio-badge {
+        display: inline-flex !important;
+        flex-shrink: 0 !important;
+        padding: 4px 8px !important;
+        font-size: 0.7rem !important;
+        border-radius: 12px !important;
+      }
+      .btn-lang-toggle {
+        display: inline-flex !important;
+        flex-shrink: 0 !important;
+        padding: 5px 9px !important;
+        font-size: 0.76rem !important;
+        border-radius: 20px !important;
+      }
+      .hdr-vip-pill {
+        display: inline-flex !important;
+        flex-shrink: 0 !important;
+        margin: 0 !important;
+        padding: 5px 10px !important;
+        font-size: 0.74rem !important;
+        border-radius: 20px !important;
+      }
+      .hdr-coin-pill {
+        display: inline-flex !important;
+        flex-shrink: 0 !important;
+        margin: 0 !important;
+        padding: 4px 10px !important;
+        font-size: 0.74rem !important;
+        border-radius: 999px !important;
+      }
+      .btn-header-comms {
+        display: inline-flex !important;
+        flex-shrink: 0 !important;
+        margin: 0 !important;
+        padding: 5px 11px !important;
+        font-size: 0.75rem !important;
+        border-radius: 20px !important;
+      }
+      .btn-notif-bell {
+        display: inline-flex !important;
+        flex-shrink: 0 !important;
+        margin: 0 !important;
+        width: 34px !important;
+        height: 34px !important;
+        font-size: 0.92rem !important;
+      }
+      .btn-install-pwa {
+        display: inline-flex !important;
+        flex-shrink: 0 !important;
+        margin: 0 !important;
+        padding: 5px 11px !important;
+        font-size: 0.75rem !important;
+        border-radius: 20px !important;
+      }
+      .btn-install-pwa .pwa-text {
+        display: inline !important;
+      }
+      .header-actions {
+        display: inline-flex !important;
+        flex-shrink: 0 !important;
+        margin: 0 !important;
+        align-items: center !important;
+        gap: 6px !important;
+        padding-right: 14px !important;
+      }
+      .hdr-name {
+        display: inline-block !important;
+        font-size: 0.75rem !important;
+        max-width: 90px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+      }
+      .hdr-avatar {
+        width: 28px !important;
+        height: 28px !important;
+        border-radius: 50% !important;
+        flex-shrink: 0 !important;
+      }
+      .admin-badge {
+        padding: 2px 6px !important;
+        font-size: 0.65rem !important;
+        flex-shrink: 0 !important;
+      }
+      .btn-logout {
+        padding: 4px 9px !important;
+        font-size: 0.72rem !important;
+        flex-shrink: 0 !important;
+        border-radius: 14px !important;
+      }
+      .btn-google {
+        padding: 5px 12px !important;
+        font-size: 0.78rem !important;
+        flex-shrink: 0 !important;
+        border-radius: 20px !important;
+      }
 
       /* Fullscreen wrap container docked between top header & bottom nav */
       .wrap {
         position: fixed !important;
-        top: 48px !important;
+        top: 50px !important;
         left: 0 !important;
         right: 0 !important;
         bottom: 56px !important;
@@ -3068,8 +3196,8 @@
         display: block !important;
         grid-template-columns: 1fr !important;
         width: 100% !important;
-        height: calc(100dvh - 104px) !important;
-        height: calc(100vh - 104px) !important;
+        height: calc(100dvh - 106px) !important;
+        height: calc(100vh - 106px) !important;
       }
       .sl, .sr { display: none !important; }
 
@@ -5167,19 +5295,19 @@
   </button>
 
   <!-- VIP FOUNDER PASS BUTTON -->
-  <button class="hdr-vip-pill" id="hdrVipPill" onclick="openFounderPassModal()" title="Founder VIP Pass #0001" style="display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,rgba(255,215,0,0.15),rgba(244,63,94,0.15));border:1px solid rgba(255,215,0,0.4);border-radius:20px;padding:4px 10px;color:#ffd700;font-size:0.75rem;font-weight:800;cursor:pointer;white-space:nowrap;">
+  <button class="hdr-vip-pill" id="hdrVipPill" onclick="openFounderPassModal()" title="Founder VIP Pass #0001" style="display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,rgba(255,215,0,0.15),rgba(244,63,94,0.15));border:1px solid rgba(255,215,0,0.4);border-radius:20px;padding:4px 10px;color:#ffd700;font-size:0.75rem;font-weight:800;cursor:pointer;white-space:nowrap;margin-left:auto;">
     <span>⚜️ VIP #0001</span>
   </button>
 
   <!-- GENIUS IA COIN WIDGET -->
-  <div class="hdr-coin-pill" id="hdrCoinWidget" onclick="openVaultModal()" title="Genius Vault & Lucky Wheel" style="margin-left:auto;">
+  <div class="hdr-coin-pill" id="hdrCoinWidget" onclick="openVaultModal()" title="Genius Vault & Lucky Wheel">
     <img src="../genius-ia-coin.png" class="hdr-coin-icon" alt="GENIUS IA">
     <span class="hdr-coin-val" id="hdrCoinBalance">0</span>
     <span class="hdr-coin-tag">GENIUS IA</span>
   </div>
 
   <!-- DIRECT COMMS & CYBER CALLS BUTTON (PERMANENT IN NAVBAR) -->
-  <button class="btn-header-comms" id="btnOpenDms" onclick="openDmModal()" title="Direct Messages & Cyber Phone Calls" style="margin-left:8px;display:inline-flex;">
+  <button class="btn-header-comms" id="btnOpenDms" onclick="openDmModal()" title="Direct Messages & Cyber Phone Calls" style="display:inline-flex;">
     <span style="font-size:1.05rem;">💬</span>
     <span id="lbl-header-comms">Messages & 📞 Call</span>
     <span class="dm-badge-count" id="dmUnreadBadge" style="display:none;">0</span>
@@ -18281,6 +18409,51 @@ async function submitRadarAdminCyberDrop() {
   toast(lang === 'fr' ? `💎 Trésor Cyber déployé avec succès ! (+${coins} 🪙)` : `💎 Cyber Drop deployed successfully! (+${coins} 🪙)`, 'success');
 }
 
+// ⚜️ Smooth Horizontal Swipe & Mouse Drag for Top Navigation Bar
+(function initHeaderSwipe() {
+  function setup() {
+    const hdr = document.querySelector('.header');
+    if (!hdr || hdr._swipeInit) return;
+    hdr._swipeInit = true;
+
+    let isDown = false;
+    let startX = 0;
+    let scrollLeft = 0;
+
+    hdr.addEventListener('mousedown', (e) => {
+      if (e.button !== 0) return;
+      isDown = true;
+      startX = e.pageX - hdr.offsetLeft;
+      scrollLeft = hdr.scrollLeft;
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDown = false;
+    });
+
+    hdr.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      const x = e.pageX - hdr.offsetLeft;
+      const walk = x - startX;
+      if (Math.abs(walk) > 4) {
+        hdr.scrollLeft = scrollLeft - walk;
+      }
+    });
+
+    // Horizontal wheel scroll without needing shift key
+    hdr.addEventListener('wheel', (e) => {
+      if (e.deltaY !== 0 && hdr.scrollWidth > hdr.clientWidth) {
+        hdr.scrollLeft += e.deltaY;
+      }
+    }, { passive: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setup);
+  } else {
+    setup();
+  }
+})();
 
 </script>
 
