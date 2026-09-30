@@ -9844,15 +9844,22 @@ function handlePwaShortcutsAndBounty() {
     }
   }
 
-  // Handle Quick Action shortcuts from icon long-press (?action=xyz)
+  // Handle Quick Action shortcuts & Viral Duel Deep Links (?action=xyz / ?duel=xyz)
   const params = new URLSearchParams(window.location.search);
   const action = params.get('action');
+  const targetDuel = params.get('duel');
   if (action === 'radar') {
     setTimeout(() => { if (typeof openRadarModal === 'function') openRadarModal(); }, 600);
   } else if (action === 'create') {
     setTimeout(() => { if (typeof openCreate === 'function') openCreate(); }, 600);
-  } else if (action === 'duels') {
-    setTimeout(() => { if (typeof openDuelsModal === 'function') openDuelsModal(); }, 600);
+  } else if (action === 'duels' || targetDuel) {
+    setTimeout(() => {
+      if (typeof openDuelsModal === 'function') {
+        const all = typeof getAllDuels === 'function' ? getAllDuels() : [];
+        const foundIdx = targetDuel ? all.findIndex(d => d.id === targetDuel) : 0;
+        openDuelsModal(foundIdx >= 0 ? foundIdx : 0);
+      }
+    }, 600);
   } else if (action === 'feed') {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -12652,15 +12659,42 @@ function copyReferralLink() {
 }
 
 function shareReferral(platform) {
+  triggerHaptic('light');
   const link = getReferralLink();
-  const msg = encodeURIComponent(`🚀 Join me on IA Code Studio Community to explore, create, and share interactive 3D WebGL & AI code! Get 100 free coins on sign up: ${link}`);
+  const lang = getCommunityLang();
+  
+  const textEn = `⚜️ Join me on REALMONT — The Worldwide Cyber Social Network! Explore 3D Cyber Earth, video reels, world duels & get +100 🪙 GENIUS IA Coins free: ${link} #realmont #cybersocial #3dwebgl`;
+  const textFr = `⚜️ Rejoins-moi sur REALMONT — Le Réseau Social Cyber Mondial ! Explore la Terre 3D, les reels vidéo, les duels mondiaux & reçois +100 🪙 offerts : ${link} #realmont #cybersocial #3dwebgl`;
+  const plainText = lang === 'fr' ? textFr : textEn;
+  const encodedMsg = encodeURIComponent(plainText);
+  
+  if (platform === 'native' && navigator.share) {
+    navigator.share({
+      title: 'REALMONT ⚜️ Global Cyber Social',
+      text: plainText,
+      url: link
+    }).catch(() => {});
+    return;
+  }
   
   if (platform === 'whatsapp') {
-    window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
+    window.open(`https://api.whatsapp.com/send?text=${encodedMsg}`, '_blank');
   } else if (platform === 'telegram') {
-    window.open(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${msg}`, '_blank');
+    window.open(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodedMsg}`, '_blank');
   } else if (platform === 'twitter') {
-    window.open(`https://twitter.com/intent/tweet?text=${msg}`, '_blank');
+    window.open(`https://twitter.com/intent/tweet?text=${encodedMsg}`, '_blank');
+  } else if (platform === 'facebook') {
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`, '_blank');
+  } else if (platform === 'tiktok') {
+    navigator.clipboard.writeText(plainText).then(() => {
+      toast(lang === 'fr' ? '🎵 Texte & hashtags copiés pour TikTok ! Ouverture...' : '🎵 Caption & hashtags copied for TikTok! Opening TikTok 🚀', 'success');
+      setTimeout(() => { window.open('https://www.tiktok.com/', '_blank'); }, 800);
+    });
+  } else if (platform === 'instagram') {
+    navigator.clipboard.writeText(link).then(() => {
+      toast(lang === 'fr' ? '📸 Lien copié ! Ouverture d\'Instagram...' : '📸 Link copied! Opening Instagram...', 'success');
+      setTimeout(() => { window.open('https://www.instagram.com/', '_blank'); }, 800);
+    });
   }
 }
 
@@ -12772,11 +12806,11 @@ function renderSocialCardCanvas(post, formatOverride) {
     ctx.fillStyle = '#fbbf24';
     ctx.font = '900 38px Outfit, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('⚜️ REAL MONT · IA CODE STUDIO ⚜️', w / 2, 120);
+    ctx.fillText('⚜️ REALMONT · GLOBAL CYBER SOCIAL ⚜️', w / 2, 120);
 
     ctx.fillStyle = '#94a3b8';
     ctx.font = '600 24px Outfit, sans-serif';
-    ctx.fillText('MONTREAL VIRAL SOCIAL NETWORK', w / 2, 165);
+    ctx.fillText('WORLDWIDE 3D CYBER SOCIAL NETWORK · ia-codestudio.com', w / 2, 165);
 
     // 4. Author Header Card
     const authorName = post.displayName || post.user || 'Creator';
@@ -16972,13 +17006,28 @@ function deleteActiveCustomDuel() {
 }
 
 function shareActiveDuel() {
-  const all = getAllDuels();
+  triggerHaptic('light');
+  const all = typeof getAllDuels === 'function' ? getAllDuels() : [];
   const d = all[activeModalDuelIndex];
   if (!d) return;
-  const url = window.location.origin + window.location.pathname + '?duel=' + d.id;
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(url).then(() => {
-      toast(getCommunityLang() === 'fr' ? 'Lien du duel copié dans le presse-papier ! 📢' : 'Duel link copied to clipboard! 📢', 'success');
+  const lang = getCommunityLang();
+  const title = lang === 'fr' ? (d.titleFr || d.titleEn) : d.titleEn;
+  const host = window.location.origin + window.location.pathname;
+  const url = `${host}?action=duels&duel=${encodeURIComponent(d.id)}`;
+  
+  const textEn = `⚡ Who wins this cyber debate? "${title}" • Vote live on REALMONT & earn +15 🪙: ${url} #realmont #duels #vote`;
+  const textFr = `⚡ Qui va gagner ce duel ? « ${title} » • Vote en direct sur REALMONT & gagne +15 🪙 : ${url} #realmont #duels #vote`;
+  const plainText = lang === 'fr' ? textFr : textEn;
+  
+  if (navigator.share) {
+    navigator.share({
+      title: `⚡ REALMONT Duel: ${title}`,
+      text: plainText,
+      url: url
+    }).catch(() => {});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(plainText).then(() => {
+      toast(lang === 'fr' ? '⚡ Lien et texte du duel copiés ! Partagez sur TikTok / WhatsApp 📢' : '⚡ Duel text & link copied! Share to TikTok / WhatsApp 📢', 'success');
     });
   } else {
     toast(url, 'info');
