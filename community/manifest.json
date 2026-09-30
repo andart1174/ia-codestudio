@@ -4,27 +4,28 @@
   "description": "The Worldwide Cyber Social Network. Real moments, CYBER EARTH™ live radar, Duels Arena, and global creator rewards.",
   "start_url": "./",
   "scope": "./",
+  "id": "realmont-app",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#030712",
   "theme_color": "#7c3aed",
   "icons": [
     {
-      "src": "../logo-ia-codestudio.png",
+      "src": "./icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "../logo-ia-codestudio.png",
+      "src": "./icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "./genius-ia-coin.png",
-      "sizes": "192x192",
-      "type": "image/png",
+      "src": "./logo-ia-codestudio.png",
+      "sizes": "512x512",
+      "type": "image/jpeg",
       "purpose": "any"
     }
   ],

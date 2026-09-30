@@ -5591,7 +5591,7 @@
       <div style="background:var(--bg2);border:1px solid rgba(16,185,129,0.45);box-shadow:0 0 45px rgba(16,185,129,0.25);border-radius:22px;padding:26px;width:100%;max-width:460px;position:relative;text-align:center;">
         <button onclick="closePwaInstallModal()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.06);border:1px solid var(--border2);color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:0.95rem;display:flex;align-items:center;justify-content:center;">✕</button>
         
-        <img src="../logo-ia-codestudio.png" style="width:70px;height:70px;border-radius:18px;box-shadow:0 0 25px rgba(124,58,237,0.5);margin-bottom:12px;" alt="REALMONT">
+        <img src="./icon-192.png" style="width:70px;height:70px;border-radius:18px;box-shadow:0 0 25px rgba(124,58,237,0.5);margin-bottom:12px;" alt="REALMONT">
         <h3 id="pwaModalTitle" style="font-family:'Outfit',sans-serif;font-size:1.25rem;color:#fff;margin-bottom:4px;">Install REALMONT App</h3>
         <p id="pwaModalSubtitle" style="color:var(--muted);font-size:0.85rem;margin-bottom:14px;">Instant full-screen standalone app, 60FPS 3D WebGL, push notifications & offline speed!</p>
 
@@ -9674,8 +9674,7 @@ function dismissFloatingPwaPrompt() {
   }
 }
 
-function handlePwaInstallClick() {
-  triggerHaptic('light');
+function openPwaModalWithInstructions() {
   const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
   const isAndroid = /Android/.test(navigator.userAgent);
   const lang = getCommunityLang();
@@ -9692,10 +9691,10 @@ function handlePwaInstallClick() {
     if (modalTitle) modalTitle.textContent = "Installer l'Application REALMONT";
     if (modalSubtitle) modalSubtitle.textContent = "Application plein écran ultra-rapide, 3D WebGL 60FPS, notifications push et accès instantané !";
     if (bountyPill) bountyPill.innerHTML = "🎁 Cadeau : <strong>+100 Pièces GENIUS IA</strong> & Badge <strong>📱 App Pioneer</strong> offerts !";
-    if (btnTrigger) btnTrigger.textContent = "📲 Installer l'App Maintenant (+100 🪙)";
+    if (btnTrigger) btnTrigger.textContent = deferredPwaPrompt ? "📲 Installer en 1 Clic (+100 🪙)" : "📲 Installer l'App (+100 🪙)";
     
     if (isIos) {
-      if (instrTitle) instrTitle.textContent = "🍏 Installation sur iPhone & iPad :";
+      if (instrTitle) instrTitle.textContent = "🍏 Installation sur iPhone & iPad (Safari) :";
       if (instrBody) {
         instrBody.innerHTML = `
           <div style="margin-bottom:8px;">1. Touchez le bouton <strong>Partager [⎋]</strong> en bas de Safari.</div>
@@ -9707,19 +9706,24 @@ function handlePwaInstallClick() {
       if (instrTitle) instrTitle.textContent = "📱 Installation sur Android :";
       if (instrBody) {
         instrBody.innerHTML = `
-          <div style="margin-bottom:8px;">1. Cliquez sur le bouton vert <strong>« Installer l'App Maintenant »</strong> ci-dessus.</div>
+          <div style="margin-bottom:8px;">1. Cliquez sur le bouton vert <strong>« Installer »</strong> ci-dessus.</div>
           <div style="margin-bottom:8px;">2. Ou appuyez sur le menu du navigateur <strong>[⋮]</strong> en haut à droite.</div>
           <div style="margin-bottom:8px;">3. Touchez <strong>« Installer l'application »</strong> (ou <strong>« Ajouter à l'écran d'accueil »</strong>) 📲.</div>
           <div>4. Lancez REALMONT directement depuis votre écran d'accueil ! 🚀</div>
         `;
       }
     } else {
-      if (instrTitle) instrTitle.textContent = "💻 Installation sur PC / Mac :";
+      if (instrTitle) instrTitle.textContent = "💻 Installation sur PC / Mac (Chrome, Edge) :";
       if (instrBody) {
         instrBody.innerHTML = `
-          <div style="margin-bottom:8px;">1. Cliquez sur le bouton <strong>« Installer l'App Maintenant »</strong> ci-dessus.</div>
-          <div style="margin-bottom:8px;">2. Ou cliquez sur l'icône <strong>Installer (⊕)</strong> dans la barre d'adresse de votre navigateur.</div>
-          <div>3. Profitez de REALMONT en plein écran sans barre de navigation ! 🚀</div>
+          <div style="background:rgba(56,189,248,0.12);border:1px dashed #38bdf8;border-radius:10px;padding:8px 12px;margin-bottom:10px;font-size:0.8rem;color:#7dd3fc;display:flex;align-items:center;justify-content:space-between;">
+            <span>Barre d'adresse :</span>
+            <span style="font-family:monospace;background:rgba(0,0,0,0.5);padding:2px 8px;border-radius:6px;font-size:0.75rem;">ia-codestudio.com/community/</span>
+            <span style="background:#10b981;color:#fff;font-weight:900;padding:2px 7px;border-radius:6px;font-size:0.75rem;">⊕ Installer</span>
+          </div>
+          <div style="margin-bottom:8px;">1. Regardez dans la <strong>barre d'adresse en haut à droite</strong> de votre navigateur.</div>
+          <div style="margin-bottom:8px;">2. Cliquez sur l'icône <strong>Installer (⊕)</strong> ou sur le menu <strong>[⋮] → « Installer REALMONT... »</strong>.</div>
+          <div>3. Profitez de l'application en plein écran ultra-rapide ! 🚀</div>
         `;
       }
     }
@@ -9727,10 +9731,10 @@ function handlePwaInstallClick() {
     if (modalTitle) modalTitle.textContent = "Install REALMONT App";
     if (modalSubtitle) modalSubtitle.textContent = "Ultra-fast standalone app, 60FPS 3D WebGL, push notifications & instant launch!";
     if (bountyPill) bountyPill.innerHTML = "🎁 Free Gift: <strong>+100 GENIUS IA Coins</strong> & <strong>📱 App Pioneer</strong> badge upon install!";
-    if (btnTrigger) btnTrigger.textContent = "📲 Install App Now (+100 🪙)";
+    if (btnTrigger) btnTrigger.textContent = deferredPwaPrompt ? "📲 1-Click Install Now (+100 🪙)" : "📲 Install App (+100 🪙)";
 
     if (isIos) {
-      if (instrTitle) instrTitle.textContent = "🍏 How to install on iPhone & iPad:";
+      if (instrTitle) instrTitle.textContent = "🍏 How to install on iPhone & iPad (Safari):";
       if (instrBody) {
         instrBody.innerHTML = `
           <div style="margin-bottom:8px;">1. Tap the <strong>Share button [⎋]</strong> at the bottom of Safari.</div>
@@ -9742,18 +9746,23 @@ function handlePwaInstallClick() {
       if (instrTitle) instrTitle.textContent = "📱 How to install on Android:";
       if (instrBody) {
         instrBody.innerHTML = `
-          <div style="margin-bottom:8px;">1. Click the green <strong>"Install App Now"</strong> button above.</div>
+          <div style="margin-bottom:8px;">1. Click the green <strong>"Install"</strong> button above.</div>
           <div style="margin-bottom:8px;">2. Or tap the browser menu <strong>[⋮]</strong> in top right.</div>
           <div style="margin-bottom:8px;">3. Tap <strong>"Install app"</strong> (or <strong>"Add to Home screen"</strong>) 📲.</div>
           <div>4. Launch REALMONT directly from your home screen! 🚀</div>
         `;
       }
     } else {
-      if (instrTitle) instrTitle.textContent = "💻 How to install on PC / Mac:";
+      if (instrTitle) instrTitle.textContent = "💻 How to install on PC / Mac (Chrome, Edge):";
       if (instrBody) {
         instrBody.innerHTML = `
-          <div style="margin-bottom:8px;">1. Click the green <strong>"Install App Now"</strong> button above.</div>
-          <div style="margin-bottom:8px;">2. Or click the <strong>Install icon (⊕)</strong> in the top right of your browser's address bar.</div>
+          <div style="background:rgba(56,189,248,0.12);border:1px dashed #38bdf8;border-radius:10px;padding:8px 12px;margin-bottom:10px;font-size:0.8rem;color:#7dd3fc;display:flex;align-items:center;justify-content:space-between;">
+            <span>Address bar:</span>
+            <span style="font-family:monospace;background:rgba(0,0,0,0.5);padding:2px 8px;border-radius:6px;font-size:0.75rem;">ia-codestudio.com/community/</span>
+            <span style="background:#10b981;color:#fff;font-weight:900;padding:2px 7px;border-radius:6px;font-size:0.75rem;">⊕ Install</span>
+          </div>
+          <div style="margin-bottom:8px;">1. Look at the <strong>address bar (top right)</strong> of your browser.</div>
+          <div style="margin-bottom:8px;">2. Click the <strong>Install icon (⊕)</strong> or browser menu <strong>[⋮] → "Install REALMONT..."</strong>.</div>
           <div>3. Enjoy instant full-screen standalone experience! 🚀</div>
         `;
       }
@@ -9763,6 +9772,15 @@ function handlePwaInstallClick() {
   if (modal) {
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+  }
+}
+
+function handlePwaInstallClick() {
+  triggerHaptic('light');
+  if (deferredPwaPrompt) {
+    triggerPwaDirectPrompt();
+  } else {
+    openPwaModalWithInstructions();
   }
 }
 
@@ -9779,8 +9797,28 @@ function triggerPwaDirectPrompt() {
       deferredPwaPrompt = null;
     });
   } else {
+    openPwaModalWithInstructions();
+    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isAndroid = /Android/.test(navigator.userAgent);
     const lang = getCommunityLang();
-    toast(lang === 'fr' ? '👉 Suivez les étapes ci-dessous pour ajouter à votre écran d\'accueil !' : '👉 Follow the simple steps shown below to add to your Home Screen!', 'info');
+    
+    if (isIos) {
+      toast(lang === 'fr' ? '👉 Touchez Partager [⎋] puis « Sur l\'écran d\'accueil » ➕' : '👉 Tap Safari Share [⎋] then "Add to Home Screen" ➕', 'info');
+    } else if (isAndroid) {
+      toast(lang === 'fr' ? '👉 Touchez le menu [⋮] puis « Installer l\'application » 📲' : '👉 Tap menu [⋮] then "Install app" 📲', 'info');
+    } else {
+      toast(lang === 'fr' ? '👉 Cliquez sur l\'icône Installer (⊕) dans la barre d\'adresse en haut !' : '👉 Click the Install icon (⊕) in your browser address bar above!', 'info');
+    }
+    
+    const box = document.getElementById('pwaDeviceInstructions');
+    if (box) {
+      box.style.border = '2px solid #10b981';
+      box.style.boxShadow = '0 0 25px rgba(16,185,129,0.5)';
+      setTimeout(() => {
+        box.style.border = '1px solid var(--border2)';
+        box.style.boxShadow = 'none';
+      }, 1500);
+    }
   }
 }
 
@@ -18732,7 +18770,7 @@ async function submitRadarAdminCyberDrop() {
     </div>
   </div>
   <div class="pfp-actions">
-    <button class="pfp-btn" id="lblPfpBtn" onclick="event.stopPropagation(); triggerPwaDirectPrompt();">Install</button>
+    <button class="pfp-btn" id="lblPfpBtn" onclick="event.stopPropagation(); handlePwaInstallClick();">Install</button>
     <button class="pfp-close" onclick="event.stopPropagation(); dismissFloatingPwaPrompt();" title="Close">✕</button>
   </div>
 </div>

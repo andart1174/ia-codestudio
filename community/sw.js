@@ -1,12 +1,14 @@
-// REALMONT ⚜️ Global Cyber Social — Service Worker v2.1
+// REALMONT ⚜️ Global Cyber Social — Service Worker v2.2
 // Handles Web Push Notifications & Fast Standalone App Shell
 
-const CACHE_NAME = 'realmont-pwa-v2.1';
+const CACHE_NAME = 'realmont-pwa-v2.2';
 const PRECACHE_ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  '../logo-ia-codestudio.png',
+  './icon-192.png',
+  './icon-512.png',
+  './logo-ia-codestudio.png',
   './genius-ia-coin.png'
 ];
 
@@ -49,7 +51,7 @@ self.addEventListener('push', e => {
   let data = { 
     title: '⚜️ REALMONT', 
     body: 'New social activity in REALMONT!', 
-    icon: '../logo-ia-codestudio.png', 
+    icon: './icon-192.png', 
     badge: './genius-ia-coin.png' 
   };
   try {
@@ -59,7 +61,7 @@ self.addEventListener('push', e => {
   e.waitUntil(
     self.registration.showNotification(data.title, {
       body: data.body,
-      icon: data.icon || '../logo-ia-codestudio.png',
+      icon: data.icon || './icon-192.png',
       badge: data.badge || './genius-ia-coin.png',
       vibrate: [200, 100, 200],
       data: { url: data.url || './' },
