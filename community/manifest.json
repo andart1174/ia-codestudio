@@ -1,11 +1,11 @@
 {
-  "name": "REALMONT • Montreal Cyber Social",
+  "name": "REALMONT ⚜️ Global Cyber Social",
   "short_name": "REALMONT",
-  "description": "The Montreal cyber social network. Vertical video feeds, MONT-RADAR™ live map, Duels & Polls, and local creator rewards.",
+  "description": "The Worldwide Cyber Social Network. Real moments, CYBER EARTH™ live radar, Duels Arena, and global creator rewards.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "orientation": "any",
+  "orientation": "portrait-primary",
   "background_color": "#030712",
   "theme_color": "#7c3aed",
   "icons": [
@@ -31,14 +31,28 @@
   "categories": ["social", "entertainment", "graphics", "developer"],
   "shortcuts": [
     {
-      "name": "REALMONT Feed",
-      "url": "./",
-      "description": "Real moments, video stories & duels"
+      "name": "CYBER EARTH™ Radar",
+      "short_name": "Radar",
+      "url": "./?action=radar",
+      "description": "Worldwide live radar map"
     },
     {
-      "name": "MONT-RADAR™",
-      "url": "./#radar",
-      "description": "Live Montreal cyber radar map"
+      "name": "Create Post",
+      "short_name": "Create",
+      "url": "./?action=create",
+      "description": "Share a new cyber creation"
+    },
+    {
+      "name": "Duels Arena",
+      "short_name": "Duels",
+      "url": "./?action=duels",
+      "description": "Vote in world cyber debates"
+    },
+    {
+      "name": "Viral World Feed",
+      "short_name": "Feed",
+      "url": "./?action=feed",
+      "description": "Top viral world creations"
     }
   ]
 }

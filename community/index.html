@@ -2,15 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>REALMONT ⚜️ Real Moments • Montreal Cyber Social</title>
-  <meta name="description" content="REALMONT — The next-gen Montreal cyber social platform. Real moments, vertical video stories, MONT-RADAR™ live map, Duels & Polls, and Genius Coins 🪙 rewards.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>REALMONT ⚜️ Global Cyber Social • Real Moments</title>
+  <meta name="description" content="REALMONT — The Worldwide Cyber Social Network. Real moments, vertical video stories, CYBER EARTH™ live radar, Duels Arena, and Genius Coins 🪙 rewards.">
   <meta name="keywords" content="REALMONT, Montreal social network, reseau social montreal, duels mont-royal, mont-radar, daily pulse montreal, three.js 3d webgl, spark voice, genius ia coin, canada creators">
   <link rel="canonical" href="https://ia-codestudio.com/community/">
   
   <!-- PWA & Mobile App Installation Support -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#7c3aed">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="REALMONT">
@@ -238,6 +239,145 @@
     @media (max-width: 600px) {
       .btn-install-pwa .pwa-text { display: none; }
       .btn-install-pwa { padding: 6px 9px; }
+    }
+
+    /* 📲 REALMONT PWA FLOATING PROMPT & STANDALONE APPS */
+    .pwa-floating-prompt {
+      position: fixed;
+      bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+      left: 12px;
+      right: 12px;
+      max-width: 440px;
+      margin: 0 auto;
+      z-index: 9990;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 14px;
+      background: rgba(11, 15, 25, 0.96);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(16, 185, 129, 0.5);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.65), 0 0 25px rgba(16, 185, 129, 0.25);
+      border-radius: 18px;
+      cursor: pointer;
+      animation: slideUpFloatPrompt 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .pwa-floating-prompt:hover {
+      transform: translateY(-2px);
+      border-color: #10b981;
+    }
+    @keyframes slideUpFloatPrompt {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .pfp-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .pfp-icon {
+      font-size: 1.4rem;
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(16, 185, 129, 0.3));
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .pfp-text {
+      min-width: 0;
+    }
+    .pfp-title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .pfp-desc {
+      font-size: 0.72rem;
+      color: #34d399;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .pfp-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .pfp-btn {
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: none;
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.78rem;
+      padding: 7px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+      white-space: nowrap;
+      transition: transform 0.15s ease;
+    }
+    .pfp-btn:hover {
+      transform: scale(1.04);
+    }
+    .pfp-close {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--muted);
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .pfp-close:hover {
+      background: rgba(255, 255, 255, 0.18);
+      color: #fff;
+    }
+
+    /* Standalone App Full-Screen Optimization (Runs exact as native mobile app) */
+    @media all and (display-mode: standalone) {
+      body {
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+        overscroll-behavior-y: contain;
+      }
+      input, textarea, [contenteditable="true"] {
+        -webkit-user-select: text;
+        user-select: text;
+      }
+      .hdr {
+        padding-top: max(10px, env(safe-area-inset-top));
+      }
+      .mobile-bottom-nav {
+        padding-bottom: max(6px, env(safe-area-inset-bottom));
+      }
+      .btn-install-pwa, #pwaFloatingPrompt {
+        display: none !important;
+      }
+    }
+    body.is-standalone-app .btn-install-pwa,
+    body.is-standalone-app #pwaFloatingPrompt {
+      display: none !important;
     }
 
     .share-networks-grid {
@@ -5004,7 +5144,7 @@
   <!-- 📲 PWA INSTALL BUTTON -->
   <button class="btn-install-pwa" id="btnInstallPwa" onclick="handlePwaInstallClick()" title="Install App on Phone / Desktop">
     <span>📲</span>
-    <span class="pwa-text" id="lbl-install-app">Install App</span>
+    <span class="pwa-text" id="lbl-install-app">Install App (+100 🪙)</span>
   </button>
 
 
@@ -5451,17 +5591,17 @@
       <div style="background:var(--bg2);border:1px solid rgba(16,185,129,0.45);box-shadow:0 0 45px rgba(16,185,129,0.25);border-radius:22px;padding:26px;width:100%;max-width:460px;position:relative;text-align:center;">
         <button onclick="closePwaInstallModal()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.06);border:1px solid var(--border2);color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:0.95rem;display:flex;align-items:center;justify-content:center;">✕</button>
         
-        <img src="../logo-ia-codestudio.png" style="width:70px;height:70px;border-radius:18px;box-shadow:0 0 25px rgba(124,58,237,0.5);margin-bottom:12px;" alt="IA Code Studio">
-        <h3 style="font-family:'Outfit',sans-serif;font-size:1.25rem;color:#fff;margin-bottom:4px;">Install IA Code Studio</h3>
-        <p style="color:var(--muted);font-size:0.85rem;margin-bottom:14px;">Instant full-screen 60FPS 3D WebGL, faster load times & offline access!</p>
+        <img src="../logo-ia-codestudio.png" style="width:70px;height:70px;border-radius:18px;box-shadow:0 0 25px rgba(124,58,237,0.5);margin-bottom:12px;" alt="REALMONT">
+        <h3 id="pwaModalTitle" style="font-family:'Outfit',sans-serif;font-size:1.25rem;color:#fff;margin-bottom:4px;">Install REALMONT App</h3>
+        <p id="pwaModalSubtitle" style="color:var(--muted);font-size:0.85rem;margin-bottom:14px;">Instant full-screen standalone app, 60FPS 3D WebGL, push notifications & offline speed!</p>
 
-        <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.35);padding:5px 12px;border-radius:20px;color:#fcd34d;font-weight:700;font-size:0.82rem;margin-bottom:16px;">
-          🎁 Earn <strong>+20 GENIUS IA Coins</strong> upon install!
+        <div id="pwaBountyPill" style="display:inline-flex;align-items:center;gap:6px;background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.35);padding:6px 14px;border-radius:20px;color:#fcd34d;font-weight:700;font-size:0.85rem;margin-bottom:16px;">
+          🎁 Free Gift: <strong>+100 GENIUS IA Coins</strong> & <strong>📱 App Pioneer</strong> badge upon install!
         </div>
 
         <!-- 1-Click Native Trigger Button -->
-        <button id="btnPwaDirectInstallTrigger" onclick="triggerPwaDirectPrompt()" style="width:100%;padding:13px;border-radius:12px;background:linear-gradient(135deg,#10b981,#059669);border:none;color:#fff;font-weight:800;font-size:0.95rem;cursor:pointer;font-family:'Outfit',sans-serif;box-shadow:0 0 20px rgba(16,185,129,0.35);margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:8px;">
-          <span>📲</span> <span>Install App Now</span>
+        <button id="btnPwaDirectInstallTrigger" onclick="triggerPwaDirectPrompt()" style="width:100%;padding:13px;border-radius:12px;background:linear-gradient(135deg,#10b981,#059669);border:none;color:#fff;font-weight:800;font-size:0.98rem;cursor:pointer;font-family:'Outfit',sans-serif;box-shadow:0 0 20px rgba(16,185,129,0.35);margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:8px;">
+          <span style="font-size:1.1rem;">📲</span> <span id="lblBtnPwaInstallTrigger">Install App Now (+100 🪙)</span>
         </button>
 
         <!-- Device-specific step-by-step instructions -->
@@ -9010,10 +9150,12 @@ async function toggleLike(postId, liked) {
   try {
     const ref = db.collection('devsocial_posts').doc(postId);
     if (liked) {
+      triggerHaptic('light');
       await ref.update({ likedBy: firebase.firestore.FieldValue.arrayRemove(user.uid), likesCount: firebase.firestore.FieldValue.increment(-1) });
       btn.classList.remove('liked'); btn.querySelector('svg').setAttribute('fill','none');
       cnt.textContent = Math.max(0, parseInt(cnt.textContent) - 1);
     } else {
+      triggerHaptic('medium');
       await ref.update({ likedBy: firebase.firestore.FieldValue.arrayUnion(user.uid), likesCount: firebase.firestore.FieldValue.increment(1) });
       btn.classList.add('liked'); btn.querySelector('svg').setAttribute('fill','currentColor');
       cnt.textContent = parseInt(cnt.textContent) + 1;
@@ -9401,9 +9543,79 @@ function checkUrlPostHighlight() {
 }
 
 // ══════════════════════════════════════════
-// 📱 UNIVERSAL PWA APP INSTALLATION ENGINE
+// 📱 REALMONT UNIVERSAL PWA APP ENGINE & BOUNTY (+100 🪙)
 // ══════════════════════════════════════════
 let deferredPwaPrompt = null;
+let pwaPromptDismissed = false;
+
+// 📳 Haptic Feedback Utility (Tactile vibrations for native app touch feeling)
+function triggerHaptic(type = 'light') {
+  if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+    try {
+      switch (type) {
+        case 'light':
+          navigator.vibrate(12);
+          break;
+        case 'medium':
+          navigator.vibrate(25);
+          break;
+        case 'heavy':
+          navigator.vibrate(45);
+          break;
+        case 'success':
+          navigator.vibrate([20, 60, 30]);
+          break;
+        case 'error':
+          navigator.vibrate([40, 50, 40]);
+          break;
+        default:
+          navigator.vibrate(15);
+      }
+    } catch(e) {}
+  }
+}
+
+// 🎁 Claim Viral Install Bounty (+100 🪙 and 📱 App Pioneer badge)
+async function claimPwaInstallBounty() {
+  if (localStorage.getItem('realmont_pwa_bounty_claimed') === '1') return;
+  localStorage.setItem('realmont_pwa_bounty_claimed', '1');
+
+  // 1. Credit 100 Coins
+  if (typeof addCoins === 'function') {
+    await addCoins(100, '📱 App Pioneer Install Bonus (+100 🪙)', true);
+  } else if (typeof creditUserCoins === 'function') {
+    creditUserCoins(100, '📱 App Pioneer Install Bonus');
+  }
+
+  // 2. Grant and auto-equip App Pioneer Badge
+  if (!userInventory.badges) userInventory.badges = [];
+  if (!userInventory.badges.includes('📱 App Pioneer')) {
+    userInventory.badges.push('📱 App Pioneer');
+  }
+  if (!userEquipped.badge) {
+    userEquipped.badge = '📱 App Pioneer';
+  }
+  localStorage.setItem('genius_inventory', JSON.stringify(userInventory));
+  localStorage.setItem('genius_equipped', JSON.stringify(userEquipped));
+  if (typeof saveUserCoinState === 'function') saveUserCoinState();
+  if (typeof renderShop === 'function') renderShop();
+  if (typeof updateUserAvatarCosmetics === 'function') updateUserAvatarCosmetics();
+
+  // 3. Tactile vibration
+  triggerHaptic('success');
+
+  // 4. Celebration Toast
+  const lang = getCommunityLang();
+  const msg = lang === 'fr'
+    ? '🎉 Application REALMONT installée ! +100 🪙 & Badge 📱 App Pioneer débloqués !'
+    : '🎉 REALMONT App installed! +100 🪙 & 📱 App Pioneer badge unlocked!';
+  setTimeout(() => {
+    toast(msg, 'success');
+    if (typeof spawnFlyingCoins === 'function') {
+      spawnFlyingCoins(window.innerWidth / 2, window.innerHeight / 2, 12);
+    }
+  }, 800);
+}
 
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
@@ -9413,51 +9625,138 @@ window.addEventListener('beforeinstallprompt', (e) => {
     pwaBtn.style.display = 'inline-flex';
     pwaBtn.classList.add('pulse-glow');
   }
+  showFloatingPwaPrompt();
 });
 
 window.addEventListener('appinstalled', () => {
   deferredPwaPrompt = null;
   const pwaBtn = document.getElementById('btnInstallPwa');
   if (pwaBtn) pwaBtn.style.display = 'none';
-  toast('🎉 IA Code Studio App installed! +20 🪙 rewarded!', 'success');
-  if (typeof creditUserCoins === 'function') creditUserCoins(20, 'pwa_installed');
+  const floatPrompt = document.getElementById('pwaFloatingPrompt');
+  if (floatPrompt) floatPrompt.style.display = 'none';
+  claimPwaInstallBounty();
 });
 
+function showFloatingPwaPrompt() {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  if (isStandalone || pwaPromptDismissed || sessionStorage.getItem('realmont_pwa_dismissed') === '1') return;
+
+  const floatPrompt = document.getElementById('pwaFloatingPrompt');
+  if (!floatPrompt) return;
+
+  const lang = getCommunityLang();
+  const tTitle = document.getElementById('lblPfpTitle');
+  const tDesc = document.getElementById('lblPfpDesc');
+  const tBtn = document.getElementById('lblPfpBtn');
+
+  if (lang === 'fr') {
+    if (tTitle) tTitle.textContent = "Installer l'App REALMONT";
+    if (tDesc) tDesc.textContent = "+100 🪙 Cadeau & Badge 📱 App Pioneer";
+    if (tBtn) tBtn.textContent = "Installer";
+  } else {
+    if (tTitle) tTitle.textContent = "Install REALMONT App";
+    if (tDesc) tDesc.textContent = "+100 🪙 Free Gift & 📱 App Pioneer";
+    if (tBtn) tBtn.textContent = "Install";
+  }
+
+  floatPrompt.style.display = 'flex';
+}
+
+function dismissFloatingPwaPrompt() {
+  triggerHaptic('light');
+  pwaPromptDismissed = true;
+  sessionStorage.setItem('realmont_pwa_dismissed', '1');
+  const floatPrompt = document.getElementById('pwaFloatingPrompt');
+  if (floatPrompt) {
+    floatPrompt.style.opacity = '0';
+    floatPrompt.style.transform = 'translateY(50px)';
+    setTimeout(() => { floatPrompt.style.display = 'none'; }, 250);
+  }
+}
+
 function handlePwaInstallClick() {
+  triggerHaptic('light');
   const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
   const isAndroid = /Android/.test(navigator.userAgent);
+  const lang = getCommunityLang();
   
   const modal = document.getElementById('pwaInstallModal');
   const instrTitle = document.getElementById('pwaInstructionsTitle');
   const instrBody = document.getElementById('pwaInstructionsBody');
+  const modalTitle = document.getElementById('pwaModalTitle');
+  const modalSubtitle = document.getElementById('pwaModalSubtitle');
+  const bountyPill = document.getElementById('pwaBountyPill');
+  const btnTrigger = document.getElementById('lblBtnPwaInstallTrigger');
 
-  if (isIos) {
-    if (instrTitle) instrTitle.textContent = '🍏 How to install on iPhone & iPad:';
-    if (instrBody) {
-      instrBody.innerHTML = `
-        <div style="margin-bottom:8px;">1. Tap the <strong>Share button [⎋]</strong> at the bottom of Safari.</div>
-        <div style="margin-bottom:8px;">2. Scroll down and tap <strong>"Add to Home Screen" ➕</strong>.</div>
-        <div>3. Tap <strong>"Add"</strong> in top right. You're all set! 🚀</div>
-      `;
-    }
-  } else if (isAndroid) {
-    if (instrTitle) instrTitle.textContent = '📱 How to install on Android:';
-    if (instrBody) {
-      instrBody.innerHTML = `
-        <div style="margin-bottom:8px;">1. Click the green <strong>"Install App Now"</strong> button above.</div>
-        <div style="margin-bottom:8px;">2. Or tap the browser menu <strong>[⋮]</strong> in top right.</div>
-        <div style="margin-bottom:8px;">3. Tap <strong>"Install app"</strong> (or <strong>"Add to Home screen"</strong>) 📲.</div>
-        <div>4. Launch IA Code Studio directly from your home screen! 🚀</div>
-      `;
+  if (lang === 'fr') {
+    if (modalTitle) modalTitle.textContent = "Installer l'Application REALMONT";
+    if (modalSubtitle) modalSubtitle.textContent = "Application plein écran ultra-rapide, 3D WebGL 60FPS, notifications push et accès instantané !";
+    if (bountyPill) bountyPill.innerHTML = "🎁 Cadeau : <strong>+100 Pièces GENIUS IA</strong> & Badge <strong>📱 App Pioneer</strong> offerts !";
+    if (btnTrigger) btnTrigger.textContent = "📲 Installer l'App Maintenant (+100 🪙)";
+    
+    if (isIos) {
+      if (instrTitle) instrTitle.textContent = "🍏 Installation sur iPhone & iPad :";
+      if (instrBody) {
+        instrBody.innerHTML = `
+          <div style="margin-bottom:8px;">1. Touchez le bouton <strong>Partager [⎋]</strong> en bas de Safari.</div>
+          <div style="margin-bottom:8px;">2. Faites défiler et appuyez sur <strong>« Sur l'écran d'accueil » ➕</strong>.</div>
+          <div>3. Touchez <strong>« Ajouter »</strong> en haut à droite. C'est prêt ! 🚀</div>
+        `;
+      }
+    } else if (isAndroid) {
+      if (instrTitle) instrTitle.textContent = "📱 Installation sur Android :";
+      if (instrBody) {
+        instrBody.innerHTML = `
+          <div style="margin-bottom:8px;">1. Cliquez sur le bouton vert <strong>« Installer l'App Maintenant »</strong> ci-dessus.</div>
+          <div style="margin-bottom:8px;">2. Ou appuyez sur le menu du navigateur <strong>[⋮]</strong> en haut à droite.</div>
+          <div style="margin-bottom:8px;">3. Touchez <strong>« Installer l'application »</strong> (ou <strong>« Ajouter à l'écran d'accueil »</strong>) 📲.</div>
+          <div>4. Lancez REALMONT directement depuis votre écran d'accueil ! 🚀</div>
+        `;
+      }
+    } else {
+      if (instrTitle) instrTitle.textContent = "💻 Installation sur PC / Mac :";
+      if (instrBody) {
+        instrBody.innerHTML = `
+          <div style="margin-bottom:8px;">1. Cliquez sur le bouton <strong>« Installer l'App Maintenant »</strong> ci-dessus.</div>
+          <div style="margin-bottom:8px;">2. Ou cliquez sur l'icône <strong>Installer (⊕)</strong> dans la barre d'adresse de votre navigateur.</div>
+          <div>3. Profitez de REALMONT en plein écran sans barre de navigation ! 🚀</div>
+        `;
+      }
     }
   } else {
-    if (instrTitle) instrTitle.textContent = '💻 How to install on PC / Mac:';
-    if (instrBody) {
-      instrBody.innerHTML = `
-        <div style="margin-bottom:8px;">1. Click the green <strong>"Install App Now"</strong> button above.</div>
-        <div style="margin-bottom:8px;">2. Or click the <strong>Install icon (⊕)</strong> in the top right of your browser's address bar.</div>
-        <div>3. Enjoy instant full-screen 3D desktop studio! 🚀</div>
-      `;
+    if (modalTitle) modalTitle.textContent = "Install REALMONT App";
+    if (modalSubtitle) modalSubtitle.textContent = "Ultra-fast standalone app, 60FPS 3D WebGL, push notifications & instant launch!";
+    if (bountyPill) bountyPill.innerHTML = "🎁 Free Gift: <strong>+100 GENIUS IA Coins</strong> & <strong>📱 App Pioneer</strong> badge upon install!";
+    if (btnTrigger) btnTrigger.textContent = "📲 Install App Now (+100 🪙)";
+
+    if (isIos) {
+      if (instrTitle) instrTitle.textContent = "🍏 How to install on iPhone & iPad:";
+      if (instrBody) {
+        instrBody.innerHTML = `
+          <div style="margin-bottom:8px;">1. Tap the <strong>Share button [⎋]</strong> at the bottom of Safari.</div>
+          <div style="margin-bottom:8px;">2. Scroll down and tap <strong>"Add to Home Screen" ➕</strong>.</div>
+          <div>3. Tap <strong>"Add"</strong> in top right. You're all set! 🚀</div>
+        `;
+      }
+    } else if (isAndroid) {
+      if (instrTitle) instrTitle.textContent = "📱 How to install on Android:";
+      if (instrBody) {
+        instrBody.innerHTML = `
+          <div style="margin-bottom:8px;">1. Click the green <strong>"Install App Now"</strong> button above.</div>
+          <div style="margin-bottom:8px;">2. Or tap the browser menu <strong>[⋮]</strong> in top right.</div>
+          <div style="margin-bottom:8px;">3. Tap <strong>"Install app"</strong> (or <strong>"Add to Home screen"</strong>) 📲.</div>
+          <div>4. Launch REALMONT directly from your home screen! 🚀</div>
+        `;
+      }
+    } else {
+      if (instrTitle) instrTitle.textContent = "💻 How to install on PC / Mac:";
+      if (instrBody) {
+        instrBody.innerHTML = `
+          <div style="margin-bottom:8px;">1. Click the green <strong>"Install App Now"</strong> button above.</div>
+          <div style="margin-bottom:8px;">2. Or click the <strong>Install icon (⊕)</strong> in the top right of your browser's address bar.</div>
+          <div>3. Enjoy instant full-screen standalone experience! 🚀</div>
+        `;
+      }
     }
   }
 
@@ -9468,24 +9767,57 @@ function handlePwaInstallClick() {
 }
 
 function triggerPwaDirectPrompt() {
+  triggerHaptic('light');
   if (deferredPwaPrompt) {
     deferredPwaPrompt.prompt();
     deferredPwaPrompt.userChoice.then((choiceResult) => {
       if (choiceResult.outcome === 'accepted') {
-        toast('🎉 Installing IA Code Studio App...', 'success');
+        const lang = getCommunityLang();
+        toast(lang === 'fr' ? '🎉 Installation de REALMONT en cours...' : '🎉 Installing REALMONT App...', 'success');
         closePwaInstallModal();
       }
       deferredPwaPrompt = null;
     });
   } else {
-    toast('👉 Follow the simple steps shown below to add to your Home Screen!', 'info');
+    const lang = getCommunityLang();
+    toast(lang === 'fr' ? '👉 Suivez les étapes ci-dessous pour ajouter à votre écran d\'accueil !' : '👉 Follow the simple steps shown below to add to your Home Screen!', 'info');
   }
 }
 
 function closePwaInstallModal() {
+  triggerHaptic('light');
   const modal = document.getElementById('pwaInstallModal');
   if (modal) modal.style.display = 'none';
   document.body.style.overflow = '';
+}
+
+function handlePwaShortcutsAndBounty() {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  if (isStandalone) {
+    document.body.classList.add('is-standalone-app');
+    claimPwaInstallBounty();
+    const pwaBtn = document.getElementById('btnInstallPwa');
+    if (pwaBtn) pwaBtn.style.display = 'none';
+  } else {
+    if (!sessionStorage.getItem('realmont_pwa_dismissed')) {
+      setTimeout(() => {
+        showFloatingPwaPrompt();
+      }, 3500);
+    }
+  }
+
+  // Handle Quick Action shortcuts from icon long-press (?action=xyz)
+  const params = new URLSearchParams(window.location.search);
+  const action = params.get('action');
+  if (action === 'radar') {
+    setTimeout(() => { if (typeof openRadarModal === 'function') openRadarModal(); }, 600);
+  } else if (action === 'create') {
+    setTimeout(() => { if (typeof openCreate === 'function') openCreate(); }, 600);
+  } else if (action === 'duels') {
+    setTimeout(() => { if (typeof openDuelsModal === 'function') openDuelsModal(); }, 600);
+  } else if (action === 'feed') {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 }
 
 async function loadStats() {
@@ -10133,7 +10465,7 @@ function applyCommunityLanguage(lang) {
   if (textEl) textEl.textContent = lang === 'fr' ? 'FR' : 'EN';
   if (brandEl) brandEl.innerHTML = `<span>⚜️ REALMONT</span><span style="font-size:0.6rem;background:linear-gradient(135deg,#f43f5e,#7c3aed);color:#fff;padding:1px 6px;border-radius:8px;font-weight:900;">LIVE</span>`;
   if (subEl) subEl.textContent = 'GLOBAL CYBER SOCIAL';
-  if (installAppLbl) installAppLbl.textContent = lang === 'fr' ? "Installer l'App" : "Install App";
+  if (installAppLbl) installAppLbl.textContent = lang === 'fr' ? "Installer l'App (+100 🪙)" : "Install App (+100 🪙)";
 
   // Categories & Global Feed Tabs
   const catTitle = document.getElementById('lbl-categories-title');
@@ -11195,6 +11527,7 @@ async function spinLuckyWheel() {
     const currentSlice = Math.floor(normAngle / sliceAngle) % numSlices;
     if (currentSlice !== lastTickSlice) {
       playWheelTickSound();
+      triggerHaptic('light');
       lastTickSlice = currentSlice;
     }
 
@@ -11208,6 +11541,7 @@ async function spinLuckyWheel() {
       checkWheelStatus();
 
       const prize = WHEEL_SLICES[winIndex];
+      triggerHaptic(prize >= 100 ? 'success' : 'medium');
       if (prize >= 100) {
         playJackpotSound();
       } else {
@@ -11331,6 +11665,7 @@ const SHOP_ITEMS = {
     { id: 'hologram', name_en: 'Hologram Matrix', name_fr: 'Matrice Hologramme', desc_en: 'Dynamic rotating chromatic glitch aura', desc_fr: 'Aura chromatique rotative dynamique', cost: 500, icon: '🔮' }
   ],
   badges: [
+    { id: '📱 App Pioneer', name_en: 'App Pioneer', name_fr: 'Pionnier App', desc_en: 'Exclusive badge for installing the official REALMONT mobile app', desc_fr: 'Badge exclusif pour l\'installation de l\'application mobile REALMONT', cost: 0, icon: '📱' },
     { id: '🚀 Code Pioneer', name_en: 'Code Pioneer', name_fr: 'Pionnier du Code', desc_en: 'Displayed next to your name on all posts', desc_fr: 'Affiché à côté de votre nom sur vos posts', cost: 50, icon: '🚀' },
     { id: '⚡ AI Wizard', name_en: 'AI Wizard', name_fr: 'Sorcier de l\'IA', desc_en: 'Master of prompt engineering & AI tools', desc_fr: 'Maître des prompts et outils d\'IA', cost: 150, icon: '⚡' },
     { id: '💎 Diamond Creator', name_en: 'Diamond Creator', name_fr: 'Créateur Diamant', desc_en: 'Elite status in the IA Code Studio community', desc_fr: 'Statut d\'élite dans la communauté', cost: 300, icon: '💎' },
@@ -11657,6 +11992,7 @@ async function initNewScratchCard() {
 
 // Mystery Chests
 async function openMysteryChest(tier) {
+  triggerHaptic('medium');
   if (!user) { promptGuestLogin('generic'); return; }
   const isSuperAdmin = user && user.email && ADMIN_EMAILS.includes(user.email);
   const lang = getCommunityLang();
@@ -11696,6 +12032,7 @@ async function openMysteryChest(tier) {
     resTitle.textContent = `+${wonCoins} GENIUS IA!`;
     resDesc.textContent = t.chestWonCoins.replace('{n}', wonCoins);
 
+    triggerHaptic('success');
     playJackpotSound();
     spawnFlyingCoins(window.innerWidth / 2, window.innerHeight / 2, 8);
     await addCoins(wonCoins, `📦 ${chestName} Reward (+${wonCoins} 🪙)`);
@@ -15060,16 +15397,19 @@ let swRegistration = null;
 async function initPushNotifications() {
   if (!('serviceWorker' in navigator)) return;
   try {
-    swRegistration = await navigator.serviceWorker.register('/community/sw.js', { scope: '/community/' });
-    console.log('✅ Service Worker registered');
+    swRegistration = await navigator.serviceWorker.register('./sw.js', { scope: './' });
+    console.log('✅ REALMONT Service Worker registered');
 
     // Check permission
     if (Notification.permission === 'granted') {
-      document.getElementById('btnNotifBell').title = '🔔 Notifications ON';
-      document.getElementById('btnNotifBell').style.color = '#10b981';
+      const bell = document.getElementById('btnNotifBell');
+      if (bell) {
+        bell.title = '🔔 Notifications ON';
+        bell.style.color = '#10b981';
+      }
     }
   } catch(e) {
-    console.warn('Service Worker note:', e);
+    console.warn('REALMONT Service Worker note:', e);
   }
 }
 
@@ -15128,6 +15468,18 @@ function notifyNewLike(postTitle, likerName) {
 
 function notifyNewComment(commenterName) {
   showLocalNotification(`💬 ${commenterName} commented on your post!`, 'Check what they said!');
+  const dot = document.getElementById('notifDot');
+  if (dot) dot.classList.add('show');
+}
+
+function notifyDuelVote(duelTitle, teamName) {
+  showLocalNotification('⚡ REALMONT Duels Arena', `New vote for "${teamName}" in "${duelTitle}"!`);
+  const dot = document.getElementById('notifDot');
+  if (dot) dot.classList.add('show');
+}
+
+function notifyCyberDropNearby(cityName, reward) {
+  showLocalNotification('⚜️ REALMONT • Radar Alert', `📍 Cyber Drop detected in ${cityName}! Claim +${reward} 🪙 before it vanishes!`);
   const dot = document.getElementById('notifDot');
   if (dot) dot.classList.add('show');
 }
@@ -15495,6 +15847,7 @@ window.addEventListener('DOMContentLoaded', () => {
   initPushNotifications();
   checkUrlPostHighlight();
   if (typeof updateDuelMeterUI === 'function') updateDuelMeterUI();
+  handlePwaShortcutsAndBounty();
 });
 
 // Initialize after login
@@ -15993,6 +16346,7 @@ function checkAndAwardDailyPulseReward(content) {
 
 function handlePostDoubleTap(e, postId) {
   if (e && e.cancelable) e.preventDefault();
+  triggerHaptic('success');
   const likeBtn = document.getElementById(`lb-${postId}`);
   if (likeBtn && !likeBtn.classList.contains('liked')) {
     toggleLike(postId, false);
@@ -16374,6 +16728,7 @@ function switchModalDuel(index) {
 }
 
 function voteModalDuel(team, event) {
+  triggerHaptic('heavy');
   if (event) {
     event.preventDefault();
     event.stopPropagation();
@@ -16412,6 +16767,7 @@ function voteModalDuel(team, event) {
 }
 
 function voteDuel(team, event) {
+  triggerHaptic('heavy');
   if (event) {
     event.preventDefault();
     event.stopPropagation();
@@ -18365,6 +18721,21 @@ async function submitRadarAdminCyberDrop() {
 })();
 
 </script>
+
+<!-- 📲 REALMONT PWA FLOATING PROMPT (+100 🪙 BOUNTY) -->
+<div id="pwaFloatingPrompt" class="pwa-floating-prompt" style="display:none;" onclick="handlePwaInstallClick()">
+  <div class="pfp-left">
+    <div class="pfp-icon">⚜️</div>
+    <div class="pfp-text">
+      <div class="pfp-title" id="lblPfpTitle">Install REALMONT App</div>
+      <div class="pfp-desc" id="lblPfpDesc">+100 🪙 Free Gift & 📱 Pioneer Badge</div>
+    </div>
+  </div>
+  <div class="pfp-actions">
+    <button class="pfp-btn" id="lblPfpBtn" onclick="event.stopPropagation(); triggerPwaDirectPrompt();">Install</button>
+    <button class="pfp-close" onclick="event.stopPropagation(); dismissFloatingPwaPrompt();" title="Close">✕</button>
+  </div>
+</div>
 
 <!-- 📱 CYBER MOBILE BOTTOM NAVIGATION -->
 <nav class="mobile-bottom-nav" id="mobileBottomNav">
