@@ -284,6 +284,54 @@
     .share-net-btn.reddit:hover { background: #FF4500; border-color: #FF4500; color: #fff; }
     .share-net-btn.card:hover { background: linear-gradient(135deg,#a855f7,#ec4899); border-color: #ec4899; color: #fff; }
 
+    /* 🌍 CYBER EARTH TELEPORT BAR & CHIPS */
+    .radar-teleport-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 6px 2px 10px 2px;
+      margin-bottom: 6px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      white-space: nowrap;
+    }
+    .radar-teleport-bar::-webkit-scrollbar { display: none; }
+    .teleport-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #c084fc;
+      letter-spacing: 0.06em;
+      flex-shrink: 0;
+      margin-right: 4px;
+    }
+    .btn-teleport-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #94a3b8;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 16px;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .btn-teleport-chip:hover {
+      background: rgba(124, 58, 237, 0.25);
+      border-color: #a855f7;
+      color: #fff;
+      transform: translateY(-1px);
+    }
+    .btn-teleport-chip.active {
+      background: linear-gradient(135deg, #06b6d4, #7c3aed) !important;
+      border-color: #06b6d4 !important;
+      color: #fff !important;
+      box-shadow: 0 0 14px rgba(6, 182, 212, 0.5) !important;
+    }
+
     .post-highlight-pulse {
       animation: postHighlightGlow 3.5s ease-out forwards !important;
     }
@@ -5276,7 +5324,7 @@
     <span style="font-size:1.6rem;filter:drop-shadow(0 0 10px rgba(124,58,237,0.7));">⚜️</span>
     <div style="display:flex;flex-direction:column;line-height:1.15;">
       <span style="font-family:'Outfit',sans-serif;font-size:1.3rem;font-weight:900;letter-spacing:0.04em;background:linear-gradient(135deg,#ffffff,#c084fc,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">REALMONT</span>
-      <span style="font-size:0.58rem;color:var(--muted);letter-spacing:0.09em;font-weight:700;">MONTREAL CYBER SOCIAL</span>
+      <span style="font-size:0.58rem;color:var(--muted);letter-spacing:0.09em;font-weight:700;" id="lbl-header-subtitle">GLOBAL CYBER SOCIAL</span>
     </div>
   </a>
   <div class="header-sep"></div>
@@ -5406,15 +5454,14 @@
     </div>
 
     <div class="scard">
-      <div class="stitle" id="lbl-categories-title">Categories</div>
-      <button class="cat-btn active" data-cat="all" onclick="filterCat('all',this)" id="catbtn-all">🌐 All Posts</button>
+      <div class="stitle" id="lbl-categories-title">Feed Channels</div>
+      <button class="cat-btn active" data-cat="global" onclick="filterCat('global',this)" id="catbtn-global">🌍 Global Viral</button>
+      <button class="cat-btn" data-cat="nearme" onclick="filterCat('nearme',this)" id="catbtn-nearme">📍 Near Me</button>
+      <button class="cat-btn" data-cat="showcase" onclick="filterCat('showcase',this)" id="catbtn-showcase">🤖 AI & 3D Showcase</button>
       <button class="cat-btn" data-cat="following" onclick="filterCat('following',this)" id="catbtn-following">❤️ Following</button>
-      <button class="cat-btn" data-cat="showcase" onclick="filterCat('showcase',this)" id="catbtn-showcase">🏆 Showcase</button>
-      <button class="cat-btn" data-cat="aiapp" onclick="filterCat('aiapp',this)" id="catbtn-aiapp">🤖 AI Apps</button>
+      <button class="cat-btn" data-cat="all" onclick="filterCat('all',this)" id="catbtn-all">🌐 All Posts</button>
       <button class="cat-btn" data-cat="3ddesign" onclick="filterCat('3ddesign',this)" id="catbtn-3ddesign">🎨 3D Design</button>
-      <button class="cat-btn" data-cat="marketing" onclick="filterCat('marketing',this)" id="catbtn-marketing">📢 Marketing</button>
       <button class="cat-btn" data-cat="webdev" onclick="filterCat('webdev',this)" id="catbtn-webdev">💻 Web Dev</button>
-      <button class="cat-btn" data-cat="tips" onclick="filterCat('tips',this)" id="catbtn-tips">💡 Tips & Tricks</button>
       <button class="cat-btn" data-cat="general" onclick="filterCat('general',this)" id="catbtn-general">💬 General</button>
     </div>
   </aside>
@@ -5425,8 +5472,8 @@
     <!-- Login Prompt -->
     <div class="login-prompt" id="loginPrompt" style="display:none">
       <div class="lp-icon">⚜️</div>
-      <h3 id="lbl-login-prompt-title">Join REALMONT Montreal Cyber Social</h3>
-      <p id="lbl-login-prompt-sub">Sign in to share Montreal vibes, vote in duels, explore MONT-RADAR and connect with local creators.</p>
+      <h3 id="lbl-login-prompt-title">Join REALMONT • Global Cyber Social</h3>
+      <p id="lbl-login-prompt-sub">Sign in to share vibes, vote in world duels, explore CYBER EARTH and connect with creators worldwide.</p>
       <button class="btn-google" onclick="promptGuestLogin('generic')" style="margin:0 auto">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
         <span id="lblLoginPromptBtn">Sign In / Join</span>
@@ -5442,14 +5489,13 @@
 
     <!-- Filter tabs -->
     <div class="ftabs">
-      <button class="ftab active" data-cat="all" onclick="filterTab('all',this)">🌐 All</button>
+      <button class="ftab active" data-cat="global" onclick="filterTab('global',this)" id="tab-global">🌍 Global Viral</button>
+      <button class="ftab" data-cat="nearme" onclick="filterTab('nearme',this)" id="tab-nearme">📍 Near Me</button>
+      <button class="ftab" data-cat="showcase" onclick="filterTab('showcase',this)" id="tab-showcase">🤖 AI & 3D Showcase</button>
       <button class="ftab" data-cat="following" onclick="filterTab('following',this)" id="tab-following">❤️ Following</button>
-      <button class="ftab" data-cat="showcase" onclick="filterTab('showcase',this)">🏆 Showcase</button>
-      <button class="ftab" data-cat="aiapp" onclick="filterTab('aiapp',this)">🤖 AI Apps</button>
+      <button class="ftab" data-cat="all" onclick="filterTab('all',this)" id="tab-all">🌐 All</button>
       <button class="ftab" data-cat="3ddesign" onclick="filterTab('3ddesign',this)">🎨 3D Design</button>
-      <button class="ftab" data-cat="marketing" onclick="filterTab('marketing',this)">📢 Marketing</button>
       <button class="ftab" data-cat="webdev" onclick="filterTab('webdev',this)">💻 Web Dev</button>
-      <button class="ftab" data-cat="tips" onclick="filterTab('tips',this)">💡 Tips</button>
       <button class="ftab" data-cat="general" onclick="filterTab('general',this)">💬 General</button>
     </div>
     <!-- ═══════════════════════════════════ -->
@@ -6383,9 +6429,10 @@
             <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1.05rem;color:#fff;" id="lbl-lb-title">🏆 Community Leaderboard</div>
             <div style="font-size:0.78rem;color:#94a3b8;" id="lbl-lb-sub">Top ranked creators and coin holders</div>
           </div>
-          <div style="display:flex;gap:4px;">
-            <button class="v-tab active" id="btn-lb-holders" style="padding:4px 10px;font-size:0.75rem;" onclick="switchLbTab('holders')">👑 Top Holders</button>
+          <div style="display:flex;gap:4px;flex-wrap:wrap;">
+            <button class="v-tab active" id="btn-lb-holders" style="padding:4px 10px;font-size:0.75rem;" onclick="switchLbTab('holders')">👑 Top Creators</button>
             <button class="v-tab" id="btn-lb-tippers" style="padding:4px 10px;font-size:0.75rem;" onclick="switchLbTab('tippers')">💖 Top Tippers</button>
+            <button class="v-tab" id="btn-lb-countries" style="padding:4px 10px;font-size:0.75rem;" onclick="switchLbTab('countries')">🌍 Cyber Countries</button>
           </div>
         </div>
 
@@ -6823,10 +6870,10 @@
         <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#06b6d4,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:1.25rem;box-shadow:0 0 16px rgba(6,182,212,0.45);">🗺️</div>
         <div>
           <h3 style="font-family:'Outfit',sans-serif;font-size:1.15rem;font-weight:800;color:#fff;margin:0;display:flex;align-items:center;gap:8px;">
-            <span id="lbl-radar-modal-title">MONT-RADAR™ Real Live Map</span>
-            <span style="font-size:0.68rem;background:linear-gradient(135deg,#f43f5e,#06b6d4);color:#fff;padding:2px 8px;border-radius:12px;font-weight:900;">MONTREAL LIVE</span>
+            <span id="lbl-radar-modal-title">CYBER EARTH™ World Radar</span>
+            <span style="font-size:0.68rem;background:linear-gradient(135deg,#f43f5e,#06b6d4);color:#fff;padding:2px 8px;border-radius:12px;font-weight:900;" id="lbl-radar-live-badge">WORLDWIDE LIVE 🌍</span>
           </h3>
-          <p id="lbl-radar-modal-sub" style="color:var(--muted);font-size:0.8rem;margin:2px 0 0;">Real-time interactive Montreal events, hot spots & secret geocaches</p>
+          <p id="lbl-radar-modal-sub" style="color:var(--muted);font-size:0.8rem;margin:2px 0 0;">Real-time interactive global events, hot spots & secret cyber drops around the world</p>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
@@ -6853,6 +6900,19 @@
         <button class="radar-cat-pill" onclick="filterRadarCategory('food', this)" id="pillCatFood">🥯 Food & Gourmet</button>
         <button class="radar-cat-pill" onclick="filterRadarCategory('art', this)" id="pillCatArt">🎨 Art & Culture</button>
         <button class="radar-cat-pill" onclick="filterRadarCategory('drop', this)" id="pillCatDrop">💎 Secret Drops</button>
+      </div>
+
+      <!-- 🌍 CYBER EARTH TELEPORT BAR -->
+      <div class="radar-teleport-bar" id="radarTeleportBar">
+        <span class="teleport-label" id="lblTeleportPrefix">🌍 TELEPORT:</span>
+        <button type="button" class="btn-teleport-chip active" id="tp-world" onclick="teleportToCity('world', this)">🌍 All World</button>
+        <button type="button" class="btn-teleport-chip" id="tp-paris" onclick="teleportToCity('paris', this)">🗼 Paris</button>
+        <button type="button" class="btn-teleport-chip" id="tp-newyork" onclick="teleportToCity('newyork', this)">🗽 New York</button>
+        <button type="button" class="btn-teleport-chip" id="tp-tokyo" onclick="teleportToCity('tokyo', this)">🏯 Tokyo</button>
+        <button type="button" class="btn-teleport-chip" id="tp-london" onclick="teleportToCity('london', this)">🏰 London</button>
+        <button type="button" class="btn-teleport-chip" id="tp-dubai" onclick="teleportToCity('dubai', this)">🌆 Dubai</button>
+        <button type="button" class="btn-teleport-chip" id="tp-bucharest" onclick="teleportToCity('bucharest', this)">🇷🇴 Bucharest</button>
+        <button type="button" class="btn-teleport-chip" id="tp-montreal" onclick="teleportToCity('montreal', this)">⚜️ Montreal</button>
       </div>
 
       <!-- Real Montreal Leaflet Map Container with Free Layer Switcher -->
@@ -7375,7 +7435,7 @@ try {
   localStorage.removeItem('realmont_admin_override');
 } catch (e) {}
 
-let user = null, isAdmin = false, curCat = 'all', curPostId = null;
+let user = null, isAdmin = false, curCat = 'global', curPostId = null;
 let uploadedUrls = [], unsub = null, unsubCmt = null;
 
 // ══════════════════════════════════════════
@@ -8258,7 +8318,7 @@ function loadFeed() {
 
   if (unsub) unsub();
   let q = db.collection('devsocial_posts').limit(50);
-  if (curCat !== 'all' && curCat !== 'following') q = db.collection('devsocial_posts').where('category','==',curCat).limit(50);
+  if (curCat !== 'all' && curCat !== 'following' && curCat !== 'global' && curCat !== 'nearme') q = db.collection('devsocial_posts').where('category','==',curCat).limit(50);
   unsub = q.onSnapshot(async snap => {
     if (snap.empty) {
       el.innerHTML = '<div class="empty"><div class="empty-icon">✨</div><div class="empty-title">No posts yet</div><div class="empty-text">Be the first to share something amazing!</div></div>';
@@ -8318,7 +8378,7 @@ function loadFeed() {
       }
     }
     
-    // Sort with Boost prioritization
+    // Sort with Boost and Global Viral algorithm
     const now = Date.now();
     posts.sort((a, b) => {
       let scoreA = 0;
@@ -8343,6 +8403,13 @@ function loadFeed() {
         else if (typeof b.createdAt === 'number') tB = b.createdAt;
         else if (b.createdAt.seconds) tB = b.createdAt.seconds * 1000;
       }
+
+      if (curCat === 'global') {
+        const viralA = ((a.likesCount || 0) * 1) + ((a.commentsCount || 0) * 3) + ((a.remixCount || 0) * 5);
+        const viralB = ((b.likesCount || 0) * 1) + ((b.commentsCount || 0) * 3) + ((b.remixCount || 0) * 5);
+        return (scoreB + (viralB * 1000000000) + tB) - (scoreA + (viralA * 1000000000) + tA);
+      }
+
       return (scoreB + tB) - (scoreA + tA);
     });
     
@@ -10453,24 +10520,33 @@ function applyCommunityLanguage(lang) {
   const textEl = document.getElementById('langText');
   const brandEl = document.getElementById('lbl-header-brand');
   const installAppLbl = document.getElementById('lbl-install-app');
+  const subEl = document.getElementById('lbl-header-subtitle');
   if (flagEl) flagEl.textContent = lang === 'fr' ? '🇫🇷' : '🇬🇧';
   if (textEl) textEl.textContent = lang === 'fr' ? 'FR' : 'EN';
   if (brandEl) brandEl.innerHTML = `<span>⚜️ REALMONT</span><span style="font-size:0.6rem;background:linear-gradient(135deg,#f43f5e,#7c3aed);color:#fff;padding:1px 6px;border-radius:8px;font-weight:900;">LIVE</span>`;
+  if (subEl) subEl.textContent = 'GLOBAL CYBER SOCIAL';
   if (installAppLbl) installAppLbl.textContent = lang === 'fr' ? "Installer l'App" : "Install App";
 
-  // Categories
+  // Categories & Global Feed Tabs
   const catTitle = document.getElementById('lbl-categories-title');
   if (catTitle) catTitle.textContent = lang === 'fr' ? 'Catégories' : 'Categories';
+  const cGlobal = document.getElementById('catbtn-global'); if (cGlobal) cGlobal.textContent = lang === 'fr' ? '🌍 Viral Mondial' : '🌍 Global Viral';
+  const tGlobal = document.getElementById('tab-global'); if (tGlobal) tGlobal.textContent = lang === 'fr' ? '🌍 Viral Mondial' : '🌍 Global Viral';
+  const cNearMe = document.getElementById('catbtn-nearme'); if (cNearMe) cNearMe.textContent = lang === 'fr' ? '📍 Proche de Moi' : '📍 Near Me';
+  const tNearMe = document.getElementById('tab-nearme'); if (tNearMe) tNearMe.textContent = lang === 'fr' ? '📍 Proche de Moi' : '📍 Near Me';
+  const cSho = document.getElementById('catbtn-showcase'); if (cSho) cSho.textContent = lang === 'fr' ? '🤖 Vitrine IA & 3D' : '🤖 AI & 3D Showcase';
+  const tSho = document.getElementById('tab-showcase'); if (tSho) tSho.textContent = lang === 'fr' ? '🤖 Vitrine IA & 3D' : '🤖 AI & 3D Showcase';
   const cAll = document.getElementById('catbtn-all'); if (cAll) cAll.textContent = t.allPosts;
+  const tAll = document.getElementById('tab-all'); if (tAll) tAll.textContent = lang === 'fr' ? '🌐 Tous' : '🌐 All';
   const cFol = document.getElementById('catbtn-following'); if (cFol) cFol.textContent = t.catFollowing;
   const tFol = document.getElementById('tab-following'); if (tFol) tFol.textContent = t.catFollowing;
-  const cSho = document.getElementById('catbtn-showcase'); if (cSho) cSho.textContent = t.catShowcase;
   const cAi = document.getElementById('catbtn-aiapp'); if (cAi) cAi.textContent = t.catAiApp;
   const c3d = document.getElementById('catbtn-3ddesign'); if (c3d) c3d.textContent = t.cat3d;
   const cMkt = document.getElementById('catbtn-marketing'); if (cMkt) cMkt.textContent = t.catMarketing;
   const cDev = document.getElementById('catbtn-webdev'); if (cDev) cDev.textContent = t.catWebDev;
   const cTip = document.getElementById('catbtn-tips'); if (cTip) cTip.textContent = t.catTips;
   const cGen = document.getElementById('catbtn-general'); if (cGen) cGen.textContent = t.catGeneral;
+  const btnLbCountries = document.getElementById('btn-lb-countries'); if (btnLbCountries) btnLbCountries.textContent = lang === 'fr' ? '🌍 Pays Cyber' : '🌍 Cyber Countries';
 
   // REALMONT Montréal Hub & Duels
   const rmHubTitle = document.getElementById('lbl-realmont-hub-title');
@@ -10478,24 +10554,24 @@ function applyCommunityLanguage(lang) {
   const neighTitle = document.getElementById('lbl-neighborhoods-title');
   if (neighTitle) neighTitle.innerHTML = `<span>${lang === 'fr' ? '🏙️ Canaux Montréal' : '🏙️ Montreal Channels'}</span><span style="font-size:0.62rem;background:rgba(124,58,237,0.25);border:1px solid rgba(124,58,237,0.4);color:#c084fc;padding:2px 6px;border-radius:10px;font-weight:800;">QUARTIERS</span>`;
   const lpTitle = document.getElementById('lbl-login-prompt-title');
-  if (lpTitle) lpTitle.textContent = lang === 'fr' ? 'Rejoignez REALMONT • Réseau Social Cyber Montréal' : 'Join REALMONT Montreal Cyber Social';
+  if (lpTitle) lpTitle.textContent = lang === 'fr' ? 'Rejoignez REALMONT • Réseau Social Cyber Global' : 'Join REALMONT Global Cyber Social';
   const lpSub = document.getElementById('lbl-login-prompt-sub');
-  if (lpSub) lpSub.textContent = lang === 'fr' ? 'Connectez-vous pour partager vos créations, voter aux duels, explorer MONT-RADAR et échanger avec la communauté locale.' : 'Sign in to share Montreal vibes, vote in duels, explore MONT-RADAR and connect with local creators.';
+  if (lpSub) lpSub.textContent = lang === 'fr' ? 'Connectez-vous pour partager vos créations, voter aux duels mondiaux, explorer CYBER EARTH et échanger avec la communauté.' : 'Sign in to share vibes, vote in world duels, explore CYBER EARTH and connect with global creators.';
   const lpBtn = document.getElementById('lblLoginPromptBtn');
   if (lpBtn) lpBtn.textContent = lang === 'fr' ? 'Se connecter / Rejoindre' : 'Sign In / Join';
   const hdrSignIn = document.getElementById('lblHdrSignIn');
   if (hdrSignIn) hdrSignIn.textContent = lang === 'fr' ? 'Se connecter' : 'Sign in';
   if (typeof updateAuthUI === 'function') updateAuthUI();
-  const navRadar = document.getElementById('lblNavRadar'); if (navRadar) navRadar.textContent = lang === 'fr' ? 'MONT-RADAR™ En Direct' : 'MONT-RADAR™ Live Map';
+  const navRadar = document.getElementById('lblNavRadar'); if (navRadar) navRadar.textContent = lang === 'fr' ? 'CYBER EARTH™ Radar' : 'CYBER EARTH™ World Radar';
   const navDuels = document.getElementById('lblNavDuels'); if (navDuels) navDuels.textContent = 'Duels Mont-Royal™';
   const navVoice = document.getElementById('lblNavVoice'); if (navVoice) navVoice.textContent = 'Spark Voice™ 30s';
   const navFounder = document.getElementById('lblNavFounder'); if (navFounder) navFounder.textContent = lang === 'fr' ? 'Pass VIP #0001' : 'VIP Pass #0001';
   const navChat = document.getElementById('lblNavChat'); if (navChat) navChat.textContent = lang === 'fr' ? 'Salons Discussion MTL' : 'Montreal Chat Rooms';
   const hdrVipPill = document.getElementById('hdrVipPill'); if (hdrVipPill) hdrVipPill.innerHTML = '<span>⚜️ VIP #0001</span>';
 
-  // MONT-RADAR™ Real Live Map Modal
-  const radarTitle = document.getElementById('lbl-radar-modal-title'); if (radarTitle) radarTitle.textContent = lang === 'fr' ? 'MONT-RADAR™ Carte Réelle' : 'MONT-RADAR™ Real Live Map';
-  const radarSub = document.getElementById('lbl-radar-modal-sub'); if (radarSub) radarSub.textContent = lang === 'fr' ? 'Événements réels en direct, points d\'intérêt et géocaches à Montréal' : 'Real-time interactive Montreal events, hot spots & secret geocaches';
+  // CYBER EARTH™ Real Live Map Modal
+  const radarTitle = document.getElementById('lbl-radar-modal-title'); if (radarTitle) radarTitle.textContent = lang === 'fr' ? 'CYBER EARTH™ Radar Mondial' : 'CYBER EARTH™ World Radar';
+  const radarSub = document.getElementById('lbl-radar-modal-sub'); if (radarSub) radarSub.textContent = lang === 'fr' ? 'Événements réels en direct dans le monde entier, spots et cyber drops secrets' : 'Real-time interactive worldwide events, hot spots & secret geocaches';
   const btnAddEv = document.getElementById('btnToggleAddEventDrawer'); if (btnAddEv) btnAddEv.innerHTML = `<span>${lang === 'fr' ? '➕ Ajouter un Événement' : '➕ Add Event'}</span>`;
   const pillAll = document.getElementById('pillCatAll'); if (pillAll) pillAll.innerHTML = `🌐 ${lang === 'fr' ? 'Tous les Événements' : 'All Events'} (<span id="countAllPins">${typeof getAllMontrealEvents === 'function' ? getAllMontrealEvents().length : 7}</span>)`;
   const pillSports = document.getElementById('pillCatSports'); if (pillSports) pillSports.textContent = lang === 'fr' ? '🚴 Sports & Cyclisme' : '🚴 Sports & Cycling';
@@ -10553,7 +10629,7 @@ function applyCommunityLanguage(lang) {
   const btnStreets = document.getElementById('btnLayerStreets'); if (btnStreets) btnStreets.textContent = lang === 'fr' ? '🗺️ Rues' : '🗺️ Streets';
   const btnSat = document.getElementById('btnLayerSatellite'); if (btnSat) btnSat.textContent = lang === 'fr' ? '🛰️ Satellite' : '🛰️ Satellite';
   const mbDuelT = document.getElementById('lbl-mb-duel-title'); if (mbDuelT) mbDuelT.textContent = 'Duels Mont-Royal™';
-  const mbNavRadar = document.getElementById('btnMbNavRadar'); if (mbNavRadar) mbNavRadar.innerHTML = `<span>${lang === 'fr' ? '🗺️ MONT-RADAR™' : '🗺️ MONT-RADAR™'}</span>`;
+  const mbNavRadar = document.getElementById('btnMbNavRadar'); if (mbNavRadar) mbNavRadar.innerHTML = `<span>${lang === 'fr' ? '🌍 CYBER EARTH™' : '🌍 CYBER EARTH™'}</span>`;
   const mbAllDuels = document.getElementById('btnMbAllDuels'); if (mbAllDuels) mbAllDuels.innerHTML = `<span>${lang === 'fr' ? '⚡ Tous les Duels ↗' : '⚡ All Duels ↗'}</span>`;
   
   // Montreal Daily Pulse & User Profiles I18N
@@ -12054,6 +12130,69 @@ async function loadLeaderboard(type = 'holders') {
   podiumEl.innerHTML = '<div style="color:#94a3b8;font-size:0.8rem;">Loading rankings...</div>';
   listEl.innerHTML = '';
 
+  if (type === 'countries') {
+    const curLang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+    const countries = [
+      { name: curLang === 'fr' ? 'Canada (Hub Montréal)' : 'Canada (Montreal Hub)', flag: '🇨🇦', points: 142500, users: 1840 },
+      { name: curLang === 'fr' ? 'France (Hub Paris)' : 'France (Paris Hub)', flag: '🇫🇷', points: 118200, users: 1420 },
+      { name: curLang === 'fr' ? 'États-Unis (Hub New York)' : 'United States (NYC Hub)', flag: '🇺🇸', points: 105400, users: 1290 },
+      { name: curLang === 'fr' ? 'Roumanie (Hub Bucarest)' : 'Romania (Bucharest Hub)', flag: '🇷🇴', points: 94800, users: 980 },
+      { name: curLang === 'fr' ? 'Japon (Hub Tokyo)' : 'Japan (Tokyo Hub)', flag: '🇯🇵', points: 88300, users: 850 },
+      { name: curLang === 'fr' ? 'Royaume-Uni (Londres)' : 'United Kingdom (London)', flag: '🇬🇧', points: 76400, users: 710 },
+      { name: curLang === 'fr' ? 'Émirats Arabes (Dubaï)' : 'UAE (Dubai Tech)', flag: '🇦🇪', points: 72100, users: 640 },
+      { name: curLang === 'fr' ? 'Allemagne (Berlin Cyber)' : 'Germany (Berlin Cyber)', flag: '🇩🇪', points: 65900, users: 590 }
+    ];
+
+    const top3 = countries.slice(0, 3);
+    const others = countries.slice(3);
+
+    let podiumHtml = '';
+    if (top3[1]) {
+      podiumHtml += `
+        <div class="podium-card rank-2">
+          <div class="podium-medal">🥈</div>
+          <div style="font-size:2.4rem;line-height:1;margin:6px 0;">${top3[1].flag}</div>
+          <div class="podium-name">${esc(top3[1].name)}</div>
+          <div class="podium-coins">${top3[1].points.toLocaleString()} ⚡</div>
+        </div>
+      `;
+    }
+    if (top3[0]) {
+      podiumHtml += `
+        <div class="podium-card rank-1">
+          <div class="podium-medal">🥇</div>
+          <div style="font-size:2.8rem;line-height:1;margin:6px 0;">${top3[0].flag}</div>
+          <div class="podium-name">${esc(top3[0].name)}</div>
+          <div class="podium-coins">${top3[0].points.toLocaleString()} ⚡</div>
+        </div>
+      `;
+    }
+    if (top3[2]) {
+      podiumHtml += `
+        <div class="podium-card rank-3">
+          <div class="podium-medal">🥉</div>
+          <div style="font-size:2.4rem;line-height:1;margin:6px 0;">${top3[2].flag}</div>
+          <div class="podium-name">${esc(top3[2].name)}</div>
+          <div class="podium-coins">${top3[2].points.toLocaleString()} ⚡</div>
+        </div>
+      `;
+    }
+    podiumEl.innerHTML = podiumHtml;
+
+    listEl.innerHTML = others.map((c, idx) => `
+      <div class="lb-row">
+        <div class="lb-rank">#${idx + 4}</div>
+        <div style="font-size:1.4rem;margin-right:8px;">${c.flag}</div>
+        <div class="lb-name" style="flex:1;">
+          ${esc(c.name)}
+          <span class="badge-pill" style="margin-left:6px;font-size:0.7rem;background:rgba(59,130,246,0.15);color:#60a5fa;border:1px solid rgba(59,130,246,0.3);">${c.users} ${curLang === 'fr' ? 'créateurs' : 'creators'}</span>
+        </div>
+        <div class="lb-val">${c.points.toLocaleString()} ⚡</div>
+      </div>
+    `).join('');
+    return;
+  }
+
   try {
     const snap = await db.collection('users').get();
     const membersMap = new Map();
@@ -12130,8 +12269,9 @@ async function loadLeaderboard(type = 'holders') {
 }
 
 function switchLbTab(type) {
-  document.getElementById('btn-lb-holders').classList.toggle('active', type === 'holders');
-  document.getElementById('btn-lb-tippers').classList.toggle('active', type === 'tippers');
+  document.getElementById('btn-lb-holders')?.classList.toggle('active', type === 'holders');
+  document.getElementById('btn-lb-tippers')?.classList.toggle('active', type === 'tippers');
+  document.getElementById('btn-lb-countries')?.classList.toggle('active', type === 'countries');
   loadLeaderboard(type);
 }
 
@@ -16367,8 +16507,41 @@ function playSoundFx(type) {
   }
 }
 
-// 2. DUELS MONT-ROYAL™ MULTI-DUEL & ADMIN CREATOR SYSTEM
+// 2. DUELS MONT-ROYAL™ & WORLD CHAMPIONSHIP DUELS SYSTEM
 const DEFAULT_REALMONT_DUELS = [
+  {
+    id: 'tokyo_ny',
+    cat: 'GLOBAL CYBER METROPOLIS 🌍',
+    titleEn: 'Tokyo 🏯 vs New York 🗽 — Ultimate Cyber Metropolis',
+    titleFr: 'Tokyo 🏯 vs New York 🗽 — Métropole Cyber Ultime',
+    descEn: 'Neon Shibuya & Akihabara tech vs Manhattan skyline & Times Square cyber vibes! Pick your world capital.',
+    descFr: 'Néons de Shibuya & tech d\'Akihabara vs gratte-ciels de Manhattan & cyber vibes de Times Square !',
+    teamA: { name: 'Tokyo', emoji: '🏯', votes: 3420 },
+    teamB: { name: 'New York', emoji: '🗽', votes: 3180 },
+    reward: 20
+  },
+  {
+    id: 'ai_human',
+    cat: 'FUTURE CREATIVITY 🤖',
+    titleEn: 'AI Generative Art 🤖 vs Human Digital Art 🎨',
+    titleFr: 'Art Génératif IA 🤖 vs Art Numérique Humain 🎨',
+    descEn: 'Neural engine prompts & 3D synth vs manual stylus brushwork & pure human soul.',
+    descFr: 'Prompts neuronaux & synth 3D vs coups de pinceau au stylet & pure âme humaine.',
+    teamA: { name: 'AI Art', emoji: '🤖', votes: 2890 },
+    teamB: { name: 'Human Art', emoji: '🎨', votes: 3410 },
+    reward: 20
+  },
+  {
+    id: 'android_iphone',
+    cat: 'CYBER TECH BATTLE 📱',
+    titleEn: 'Android Open Cyber 🤖 vs iPhone Apple Eco 🍎',
+    titleFr: 'Android Cyber Ouvert 🤖 vs iPhone Écosystème Apple 🍎',
+    descEn: 'Root freedom, customization & WebGL performance vs sleek privacy & seamless ecosystem.',
+    descFr: 'Liberté de personnalisation & perf WebGL vs design épuré, vie privée & écosystème.',
+    teamA: { name: 'Android', emoji: '🤖', votes: 4120 },
+    teamB: { name: 'iPhone', emoji: '🍎', votes: 3980 },
+    reward: 20
+  },
   {
     id: 'bagels',
     cat: 'GASTRONOMIE MONTRÉALAISE',
@@ -16428,7 +16601,7 @@ function getAllDuels() {
 }
 
 function getFeaturedDuelId() {
-  return localStorage.getItem('realmont_featured_duel_id') || 'bagels';
+  return localStorage.getItem('realmont_featured_duel_id') || 'tokyo_ny';
 }
 
 function getDuelData(indexOrId) {
@@ -16963,6 +17136,102 @@ const DEFAULT_REALMONT_EVENTS = [
     color: '#ffd700',
     isDrop: true,
     coins: 100
+  },
+  {
+    id: 'secret-drop-nyc',
+    titleEn: 'Secret Cyber Drop #NYC 🗽 💎',
+    titleFr: 'Drop Cyber Secret #NYC 🗽 💎',
+    cat: 'drop',
+    icon: '💎',
+    badge: 'WORLD DROP +150 🪙',
+    coords: [40.7580, -73.9855],
+    locationName: 'Times Square, New York, USA',
+    descEn: 'High-tech neon Cyber Drop located in the heart of Times Square! Claim +150 🪙 GENIUS IA coins!',
+    descFr: 'Trésor Cyber haute technologie situé au cœur de Times Square ! Réclamez +150 🪙 GENIUS IA !',
+    time: 'Active Now',
+    color: '#06b6d4',
+    isDrop: true,
+    coins: 150
+  },
+  {
+    id: 'secret-drop-paris',
+    titleEn: 'Secret Cyber Drop #Paris 🗼 💎',
+    titleFr: 'Drop Cyber Secret #Paris 🗼 💎',
+    cat: 'drop',
+    icon: '💎',
+    badge: 'WORLD DROP +150 🪙',
+    coords: [48.8584, 2.2945],
+    locationName: 'Tour Eiffel / Champ de Mars, Paris, France',
+    descEn: 'Futuristic Paris Cyber Drop at the foot of the Eiffel Tower! Claim +150 🪙 GENIUS IA coins!',
+    descFr: 'Trésor Cyber futuriste au pied de la Tour Eiffel ! Réclamez +150 🪙 GENIUS IA !',
+    time: 'Active Now',
+    color: '#a855f7',
+    isDrop: true,
+    coins: 150
+  },
+  {
+    id: 'secret-drop-tokyo',
+    titleEn: 'Secret Cyber Drop #Tokyo 🏯 💎',
+    titleFr: 'Drop Cyber Secret #Tokyo 🏯 💎',
+    cat: 'drop',
+    icon: '💎',
+    badge: 'WORLD DROP +150 🪙',
+    coords: [35.6595, 139.7004],
+    locationName: 'Shibuya Crossing & Cyber District, Tokyo, Japan',
+    descEn: 'Cyberpunk world hub drop at Shibuya Crossing! Claim +150 🪙 GENIUS IA coins!',
+    descFr: 'Trésor Cyber au cœur battant de Shibuya ! Réclamez +150 🪙 GENIUS IA !',
+    time: 'Active Now',
+    color: '#f43f5e',
+    isDrop: true,
+    coins: 150
+  },
+  {
+    id: 'secret-drop-london',
+    titleEn: 'Secret Cyber Drop #London 🏰 💎',
+    titleFr: 'Drop Cyber Secret #London 🏰 💎',
+    cat: 'drop',
+    icon: '💎',
+    badge: 'WORLD DROP +150 🪙',
+    coords: [51.5007, -0.1246],
+    locationName: 'Big Ben & Westminster, London, UK',
+    descEn: 'Historic cyber beacon drop near Big Ben and the Thames! Claim +150 🪙 GENIUS IA coins!',
+    descFr: 'Trésor Cyber légendaire près de Big Ben et de la Tamise ! Réclamez +150 🪙 GENIUS IA !',
+    time: 'Active Now',
+    color: '#10b981',
+    isDrop: true,
+    coins: 150
+  },
+  {
+    id: 'secret-drop-dubai',
+    titleEn: 'Secret Cyber Drop #Dubai 🌆 💎',
+    titleFr: 'Drop Cyber Secret #Dubai 🌆 💎',
+    cat: 'drop',
+    icon: '💎',
+    badge: 'WORLD DROP +150 🪙',
+    coords: [25.1972, 55.2744],
+    locationName: 'Burj Khalifa & Downtown Dubai, UAE',
+    descEn: 'Sky-high futuristic Cyber Drop at the pinnacle of modern architecture! Claim +150 🪙 GENIUS IA coins!',
+    descFr: 'Trésor Cyber futuriste au pied du plus haut gratte-ciel du monde ! Réclamez +150 🪙 GENIUS IA !',
+    time: 'Active Now',
+    color: '#fbbf24',
+    isDrop: true,
+    coins: 150
+  },
+  {
+    id: 'secret-drop-bucharest',
+    titleEn: 'Secret Cyber Drop #Bucharest 🇷🇴 💎',
+    titleFr: 'Drop Cyber Secret #Bucarest 🇷🇴 💎',
+    cat: 'drop',
+    icon: '💎',
+    badge: 'WORLD DROP +150 🪙',
+    coords: [44.4355, 26.1025],
+    locationName: 'Piața Universității, Bucharest, Romania',
+    descEn: 'Eastern European Tech Valley Cyber Drop at University Square! Claim +150 🪙 GENIUS IA coins!',
+    descFr: 'Trésor Cyber de la Tech Valley à Piața Universității ! Réclamez +150 🪙 GENIUS IA !',
+    time: 'Active Now',
+    color: '#38bdf8',
+    isDrop: true,
+    coins: 150
   }
 ];
 
@@ -17050,6 +17319,27 @@ function switchMapLayer(layerName, btnEl) {
   toast((lang === 'fr' ? 'Carte : ' : 'Map: ') + labelMap[layerName], 'info');
 }
 
+const WORLD_CITY_HUBS = {
+  world: { nameEn: 'All World 🌍', nameFr: 'Monde Entier 🌍', coords: [25, 0], zoom: 2.2 },
+  paris: { nameEn: 'Paris 🗼', nameFr: 'Paris 🗼', coords: [48.8566, 2.3522], zoom: 13 },
+  newyork: { nameEn: 'New York 🗽', nameFr: 'New York 🗽', coords: [40.7128, -74.0060], zoom: 12.5 },
+  tokyo: { nameEn: 'Tokyo 🏯', nameFr: 'Tokyo 🏯', coords: [35.6762, 139.6503], zoom: 12.5 },
+  london: { nameEn: 'London 🏰', nameFr: 'Londres 🏰', coords: [51.5074, -0.1278], zoom: 13 },
+  dubai: { nameEn: 'Dubai 🌆', nameFr: 'Dubaï 🌆', coords: [25.2048, 55.2708], zoom: 12.5 },
+  bucharest: { nameEn: 'Bucharest 🇷🇴', nameFr: 'Bucarest 🇷🇴', coords: [44.4323, 26.1063], zoom: 13 },
+  montreal: { nameEn: 'Montreal ⚜️', nameFr: 'Montréal ⚜️', coords: [45.5125, -73.5750], zoom: 12.5 }
+};
+
+function teleportToCity(cityKey, btn) {
+  if (!realMontrealLeafletMap) return;
+  const hub = WORLD_CITY_HUBS[cityKey] || WORLD_CITY_HUBS.world;
+  document.querySelectorAll('.btn-teleport-chip').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  realMontrealLeafletMap.flyTo(hub.coords, hub.zoom, { duration: 1.8, easeLinearity: 0.25 });
+  const lang = typeof getCommunityLang === 'function' ? getCommunityLang() : 'en';
+  toast((lang === 'fr' ? '⚡ Téléporté à ' : '⚡ Teleported to ') + (lang === 'fr' ? hub.nameFr : hub.nameEn), 'info');
+}
+
 function initMontrealRealMap() {
   const mapContainer = document.getElementById('realMontrealMap');
   if (!mapContainer) return;
@@ -17066,11 +17356,40 @@ function initMontrealRealMap() {
   }
 
   if (!realMontrealLeafletMap) {
+    // 🌍 Worldwide Smart Location Detection (GPS or TimeZone)
+    let initialCenter = [45.5125, -73.5750];
+    let initialZoom = 12.5;
+    let initialCity = 'montreal';
+
+    const tz = (typeof Intl !== 'undefined' && Intl.DateTimeFormat) ? (Intl.DateTimeFormat().resolvedOptions().timeZone || '') : '';
+    if (tz.includes('Paris') || tz.includes('Europe/Paris')) {
+      initialCenter = [48.8566, 2.3522]; initialZoom = 13; initialCity = 'paris';
+    } else if (tz.includes('Bucharest') || tz.includes('Romania')) {
+      initialCenter = [44.4355, 26.1025]; initialZoom = 13; initialCity = 'bucharest';
+    } else if (tz.includes('New_York') || tz.includes('Chicago') || tz.includes('Los_Angeles') || tz.includes('America/Denver')) {
+      initialCenter = [40.7128, -74.0060]; initialZoom = 12.5; initialCity = 'newyork';
+    } else if (tz.includes('Tokyo') || tz.includes('Asia/Tokyo')) {
+      initialCenter = [35.6762, 139.6503]; initialZoom = 12.5; initialCity = 'tokyo';
+    } else if (tz.includes('London') || tz.includes('Europe/London')) {
+      initialCenter = [51.5074, -0.1278]; initialZoom = 13; initialCity = 'london';
+    } else if (tz.includes('Dubai') || tz.includes('Asia/Dubai')) {
+      initialCenter = [25.2048, 55.2708]; initialZoom = 12.5; initialCity = 'dubai';
+    } else if (tz.includes('Montreal') || tz.includes('Toronto')) {
+      initialCenter = [45.5125, -73.5750]; initialZoom = 12.5; initialCity = 'montreal';
+    }
+
     realMontrealLeafletMap = L.map('realMontrealMap', {
-      center: [45.5125, -73.5750],
-      zoom: 12.5,
-      zoomControl: true
+      center: initialCenter,
+      zoom: initialZoom,
+      zoomControl: true,
+      worldCopyJump: true
     });
+
+    const activeChip = document.getElementById('tp-' + initialCity);
+    if (activeChip) {
+      document.querySelectorAll('.btn-teleport-chip').forEach(b => b.classList.remove('active'));
+      activeChip.classList.add('active');
+    }
 
     currentMapTileLayer = createMapTileLayer(activeTileLayerType);
     currentMapTileLayer.addTo(realMontrealLeafletMap);
@@ -18542,14 +18861,13 @@ async function submitRadarAdminCyberDrop() {
       </div>
 
       <div class="categories-grid-sheet">
-        <button class="cat-sheet-btn active" data-cat="all" onclick="selectCategoryFromSheet('all')">🌐 All Posts</button>
+        <button class="cat-sheet-btn active" data-cat="global" onclick="selectCategoryFromSheet('global')">🌍 Global Viral</button>
+        <button class="cat-sheet-btn" data-cat="nearme" onclick="selectCategoryFromSheet('nearme')">📍 Near Me</button>
+        <button class="cat-sheet-btn" data-cat="showcase" onclick="selectCategoryFromSheet('showcase')">🤖 AI & 3D Showcase</button>
         <button class="cat-sheet-btn" data-cat="following" onclick="selectCategoryFromSheet('following')">❤️ Following</button>
-        <button class="cat-sheet-btn" data-cat="showcase" onclick="selectCategoryFromSheet('showcase')">🏆 Showcase</button>
-        <button class="cat-sheet-btn" data-cat="aiapp" onclick="selectCategoryFromSheet('aiapp')">🤖 AI Apps</button>
+        <button class="cat-sheet-btn" data-cat="all" onclick="selectCategoryFromSheet('all')">🌐 All Posts</button>
         <button class="cat-sheet-btn" data-cat="3ddesign" onclick="selectCategoryFromSheet('3ddesign')">🎨 3D Design</button>
-        <button class="cat-sheet-btn" data-cat="marketing" onclick="selectCategoryFromSheet('marketing')">📢 Marketing</button>
         <button class="cat-sheet-btn" data-cat="webdev" onclick="selectCategoryFromSheet('webdev')">💻 Web Dev</button>
-        <button class="cat-sheet-btn" data-cat="tips" onclick="selectCategoryFromSheet('tips')">💡 Tips & Tricks</button>
         <button class="cat-sheet-btn" data-cat="general" onclick="selectCategoryFromSheet('general')">💬 General</button>
       </div>
     </div>
