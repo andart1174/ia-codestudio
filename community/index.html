@@ -18631,62 +18631,109 @@ function executeRadarDropDetection(centerLat, centerLng, isVirtualScan = false) 
   currentCachedUserCoords = [centerLat, centerLng];
   virtualRadarScanActive = isVirtualScan;
 
-  let allEvents = (typeof RADAR_DEFAULT_EVENTS !== 'undefined') ? [...RADAR_DEFAULT_EVENTS] : [];
+  let allEvents = [];
   try {
-    const custom = JSON.parse(localStorage.getItem('realmont_custom_radar_events') || '[]');
-    if (Array.isArray(custom)) allEvents = [...allEvents, ...custom];
-  } catch (e) {}
+    if (typeof getAllMontrealEvents === 'function') {
+      allEvents = getAllMontrealEvents();
+    } else if (typeof DEFAULT_REALMONT_EVENTS !== 'undefined') {
+      allEvents = [...DEFAULT_REALMONT_EVENTS];
+    }
+  } catch (e) {
+    allEvents = (typeof DEFAULT_REALMONT_EVENTS !== 'undefined') ? [...DEFAULT_REALMONT_EVENTS] : [];
+  }
+
+  // Filter for valid drops with coordinates first
+  let candidates = allEvents.filter(ev => ev.isDrop && ev.coords && Array.isArray(ev.coords) && ev.coords.length >= 2);
+  if (candidates.length === 0) {
+    candidates = allEvents.filter(ev => ev.coords && Array.isArray(ev.coords) && ev.coords.length >= 2);
+  }
+
+  if (candidates.length === 0) {
+    toast(lang === 'fr' ? 'Aucun Cyber Drop trouvé.' : 'No Cyber Drop found.', 'info');
+    return;
+  }
 
   let closestPin = null;
   let minDistance = Infinity;
 
-  allEvents.forEach(ev => {
-    if (ev.coords && Array.isArray(ev.coords) && ev.coords.length >= 2) {
-      const dist = calculateGeoDistanceMeters(centerLat, centerLng, ev.coords[0], ev.coords[1]);
-      if (dist < minDistance) {
-        minDistance = dist;
-        closestPin = ev;
-      }
+  candidates.forEach(ev => {
+    const dist = calculateGeoDistanceMeters(centerLat, centerLng, ev.coords[0], ev.coords[1]);
+    if (dist < minDistance) {
+      minDistance = dist;
+      closestPin = ev;
     }
   });
 
   if (!closestPin) {
-    toast(lang === 'fr' ? 'Aucun drop trouvé dans ce secteur.' : 'No drops found in this area.', 'info');
+    toast(lang === 'fr' ? 'Aucun Cyber Drop trouvé dans ce secteur.' : 'No Cyber Drop found in this area.', 'info');
     return;
   }
 
-  // If virtual scan, within 300m, or admin: unlock and focus on the drop!
-  if (isVirtualScan || minDistance <= 300 || isRadarAdmin()) {
-    triggerHaptic('heavy');
-    playSoundFx('coin');
-    selectRadarHotspot(closestPin.id);
-    if (realMontrealLeafletMap) {
-      realMontrealLeafletMap.flyTo(closestPin.coords, 16, { duration: 1.5 });
+  // Haptic & Sound FX
+  if (typeof triggerHaptic === 'function') triggerHaptic('heavy');
+  if (typeof playSoundFx === 'function') playSoundFx('coin');
+
+  // Select the spot using selectRadarSpot (updates active card, title, icon, and claim button)
+  if (typeof selectRadarSpot === 'function') {
+    selectRadarSpot(closestPin.id);
+  }
+
+  // Smoothly fly map to drop coordinates
+  if (realMontrealLeafletMap && closestPin.coords) {
+    realMontrealLeafletMap.flyTo(closestPin.coords, 16, { duration: 1.5 });
+  }
+
+  // Open marker popup on map if available
+  if (Array.isArray(radarLeafletMarkers)) {
+    const targetMarker = radarLeafletMarkers.find(m => {
+      try {
+        const ll = m.getLatLng();
+        return Math.abs(ll.lat - closestPin.coords[0]) < 0.001 && Math.abs(ll.lng - closestPin.coords[1]) < 0.001;
+      } catch (e) {
+        return false;
+      }
+    });
+    if (targetMarker && typeof targetMarker.openPopup === 'function') {
+      setTimeout(() => {
+        try { targetMarker.openPopup(); } catch (e) {}
+      }, 1600);
     }
-    const pinTitle = lang === 'fr' ? (closestPin.titleFr || closestPin.titleEn) : closestPin.titleEn;
-    const coinsReward = Number(closestPin.coins) || 100;
+  }
+
+  // Scroll active spot details card into view smoothly
+  setTimeout(() => {
+    const detailsCard = document.getElementById('radarSpotDetailsCard');
+    if (detailsCard) {
+      detailsCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, 400);
+
+  const pinTitle = lang === 'fr' ? (closestPin.titleFr || closestPin.titleEn) : closestPin.titleEn;
+  const coinsReward = Number(closestPin.coins) || 100;
+
+  if (isVirtualScan || minDistance <= 500 || isRadarAdmin()) {
     toast(lang === 'fr'
       ? `💎 DROP DÉTECTÉ : "${pinTitle}" (+${coinsReward} 🪙) ! Réclamez vos pièces !`
       : `💎 DROP DETECTED: "${pinTitle}" (+${coinsReward} 🪙)! Claim your coins!`, 'success');
   } else {
-    triggerHaptic('light');
     const distKm = (minDistance / 1000).toFixed(1);
-    const pinTitle = lang === 'fr' ? (closestPin.titleFr || closestPin.titleEn) : closestPin.titleEn;
     toast(lang === 'fr'
-      ? `📡 Drop le plus proche : "${pinTitle}" à ${distKm} km. Rapprochez-vous ou téléportez-vous !`
-      : `📡 Closest drop: "${pinTitle}" is ${distKm} km away. Teleport or get closer!`, 'info');
+      ? `📡 Drop détecté : "${pinTitle}" à ${distKm} km ! Centrage sur le trésor...`
+      : `📡 Drop detected: "${pinTitle}" is ${distKm} km away! Centering on drop...`, 'success');
   }
 }
 
 function scanNearbyCyberDrops() {
-  triggerHaptic('medium');
+  if (typeof triggerHaptic === 'function') triggerHaptic('medium');
   const lang = getCommunityLang();
 
   const runVirtualFallbackScan = () => {
     let mapCenter = [45.5048, -73.5876];
     if (realMontrealLeafletMap) {
-      const c = realMontrealLeafletMap.getCenter();
-      if (c && typeof c.lat === 'number') mapCenter = [c.lat, c.lng];
+      try {
+        const c = realMontrealLeafletMap.getCenter();
+        if (c && typeof c.lat === 'number') mapCenter = [c.lat, c.lng];
+      } catch (e) {}
     }
     toast(lang === 'fr' ? '🧭 Scan Radar Virtuel activé sur la carte...' : '🧭 Virtual Radar Scan activated on map...', 'info');
     executeRadarDropDetection(mapCenter[0], mapCenter[1], true);
@@ -18699,17 +18746,30 @@ function scanNearbyCyberDrops() {
 
   toast(lang === 'fr' ? '📡 Scan Radar GPS en cours...' : '📡 Scanning GPS Radar nearby...', 'info');
 
+  let hasResponded = false;
+  const gpsTimeoutId = setTimeout(() => {
+    if (!hasResponded) {
+      hasResponded = true;
+      runVirtualFallbackScan();
+    }
+  }, 3500);
+
   navigator.geolocation.getCurrentPosition(
     (pos) => {
+      if (hasResponded) return;
+      hasResponded = true;
+      clearTimeout(gpsTimeoutId);
       const uLat = pos.coords.latitude;
       const uLng = pos.coords.longitude;
       executeRadarDropDetection(uLat, uLng, false);
     },
     (err) => {
-      // Automatic graceful fallback to virtual radar without blocking
+      if (hasResponded) return;
+      hasResponded = true;
+      clearTimeout(gpsTimeoutId);
       runVirtualFallbackScan();
     },
-    { enableHighAccuracy: true, timeout: 5000, maximumAge: 10000 }
+    { enableHighAccuracy: true, timeout: 3000, maximumAge: 10000 }
   );
 }
 
@@ -18829,6 +18889,14 @@ async function claimRadarSecretDrop() {
         awardDropCoins();
         return;
       }
+    }
+
+    const virtualClaimConfirm = confirm(lang === 'fr'
+      ? `📡 Vous êtes à ${distKm} km de ce Cyber Drop.\n\nVoulez-vous le débloquer en mode Explorateur Virtuel ?`
+      : `📡 You are ${distKm} km from this Cyber Drop.\n\nDo you want to unlock it in Virtual Explorer mode?`);
+    if (virtualClaimConfirm) {
+      awardDropCoins();
+      return;
     }
 
     toast(lang === 'fr'
