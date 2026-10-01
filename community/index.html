@@ -4621,6 +4621,13 @@
       min-height: 0 !important;
       padding: 16px 20px 48px 20px !important;
     }
+    @media (max-width: 1024px) {
+      /* Keep mobile feed super clean: move Daily Pulse & Duels banner to Topics */
+      #mobileRealmontBanner,
+      #montrealDailyPulseCard {
+        display: none !important;
+      }
+    }
     @media (max-width: 640px) {
       .duels-modal-card { max-height: 94vh !important; width: 98% !important; border-radius: 18px 18px 0 0 !important; }
       .duels-modal-card .mb { padding: 12px 10px 48px 10px !important; }
@@ -7083,10 +7090,6 @@
             <button type="button" class="drop-coin-chip" onclick="applyCityWarPreset('mtl_ny')">⚜️ Montreal vs 🗽 New York</button>
           </div>
         </div>
-            <span style="font-size:0.65rem;background:rgba(244,63,94,0.2);border:1px solid #f43f5e;color:#f43f5e;padding:2px 7px;border-radius:10px;font-weight:800;">ADMIN CREATOR</span>
-          </div>
-          <button style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1rem;" onclick="toggleAdminDuelCreatorDrawer(false)">✕</button>
-        </div>
         
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:10px;">
           <div style="grid-column:1 / -1;">
@@ -8693,10 +8696,11 @@ function renderPost(p) {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         <span id="cc-${p.id}">${p.commentsCount||0}</span>
       </button>
-      <button class="btn-action-pill btn-ai-remix" onclick="openAiRemixModal('${p.id}')" title="AI Studio Remix & Mutation" style="border-color:rgba(168,85,247,0.45);color:#d8b4fe;">
-        <span>✨</span>
+      ${p.code ? `
+      <button class="btn-action-pill btn-ai-remix" onclick="openAiRemixModal('${p.id}')" title="AI 3D Mutation & Remix" style="border-color:rgba(168,85,247,0.45);color:#d8b4fe;">
+        <span>🪄</span>
         <span>${currentLang === 'fr' ? 'IA Remix' : 'AI Remix'}</span>
-      </button>
+      </button>` : ''}
       ${!isPostAuthor ? `
       <button class="btn-quick-tip" onclick="sendQuickTip('${p.id}', '${esc(authorUid)}', '${esc(p.userEmail || p.email || '')}', '${esc(displayName).replace(/'/g, "\\'")}', 5, event)" title="Quick +5 🪙 Tip">
         <span>🪙 +5 Tip</span>
@@ -15858,9 +15862,10 @@ async function openAiRemixModal(postId) {
     }
   }
 
-  if (!post.code && !postImg) {
-    // Generate a visual cyber typography card for text posts
-    post.code = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{margin:0;display:flex;align-items:center;justify-content:center;height:100vh;background:#050814;color:#fff;font-family:sans-serif;text-align:center;padding:20px;box-sizing:border-box;}.box{border:2px solid #06b6d4;padding:30px;border-radius:20px;box-shadow:0 0 30px rgba(6,182,212,0.4);max-width:500px;}h2{color:#38bdf8;font-size:1.4rem;margin-bottom:12px;}p{color:#cbd5e1;font-size:1rem;line-height:1.5;}</style></head><body><div class="box"><h2>⚜️ REALMONT REMIX</h2><p>${post.content || post.title || 'Creative Cyber Vision'}</p></div></body></html>`;
+  if (!post.code) {
+    const lang = getCommunityLang();
+    toast(lang === 'fr' ? 'Le Remix IA est réservé aux créations en code HTML 3D.' : 'AI Remix is available for HTML 3D code creations.', 'info');
+    return;
   }
 
   const authorName = post.displayName || post.user || 'Creator';
@@ -16523,6 +16528,28 @@ const DAILY_PULSE_THEMES = [
 
 let isPulseFilterActive = false;
 window.isPulseFilterActive = false;
+
+function openDailyPulseModal() {
+  const card = document.getElementById('montrealDailyPulseCard');
+  if (card) {
+    if (window.innerWidth <= 1024) {
+      const lang = getCommunityLang();
+      const themeTitle = document.getElementById('dpcThemeTitle')?.textContent || 'Mile End Espresso & Morning Vibes';
+      const themeDesc = document.getElementById('dpcThemeDesc')?.textContent || 'Share your morning Montreal spot, bagel break, or creative workspace! Capture and earn +25 🪙 instantly.';
+      
+      const proceed = confirm(lang === 'fr'
+        ? `⚜️ MONTREAL DAILY PULSE™\n\nMission du jour : ${themeTitle}\n\n${themeDesc}\n\nAppuyez sur OK pour participer (+25 🪙) !`
+        : `⚜️ MONTREAL DAILY PULSE™\n\nToday's Mission: ${themeTitle}\n\n${themeDesc}\n\nTap OK to share your submission and earn +25 🪙!`);
+      
+      if (proceed && typeof shareDailyPulseSubmission === 'function') {
+        shareDailyPulseSubmission();
+      }
+    } else {
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      card.classList.remove('dpc-collapsed');
+    }
+  }
+}
 
 function toggleDailyPulseCard() {
   const card = document.getElementById('montrealDailyPulseCard');
@@ -19605,7 +19632,10 @@ async function submitRadarAdminCyberDrop() {
             <span>🗺️</span> <span>MONT-RADAR™</span>
           </button>
           <button class="cat-sheet-btn" onclick="closeCategoriesSheet();openDuelsModal();" style="display:flex;align-items:center;gap:6px;font-size:0.8rem;">
-            <span>⚡</span> <span>Duels Mont-Royal</span>
+            <span>⚡</span> <span>Duels & City Wars</span>
+          </button>
+          <button class="cat-sheet-btn" onclick="closeCategoriesSheet();openDailyPulseModal();" style="display:flex;align-items:center;gap:6px;font-size:0.8rem;background:linear-gradient(135deg,rgba(251,191,36,0.12),rgba(244,63,94,0.12));border-color:rgba(251,191,36,0.4);color:#fde047;">
+            <span>⚜️</span> <span>Montreal Daily Pulse™</span>
           </button>
           <button class="cat-sheet-btn" onclick="closeCategoriesSheet();openFounderPassModal();" style="display:flex;align-items:center;gap:6px;font-size:0.8rem;">
             <span>⚜️</span> <span>VIP #0001</span>
