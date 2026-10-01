@@ -6756,7 +6756,10 @@
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
-        <button class="btn-filter-spot" style="padding:6px 14px;font-size:0.78rem;background:linear-gradient(135deg,#10b981,#06b6d4);" onclick="toggleRadarAddEventDrawer()" id="btnToggleAddEventDrawer">
+        <button class="btn-filter-spot" style="padding:6px 12px;font-size:0.76rem;background:linear-gradient(135deg,#a855f7,#06b6d4);box-shadow:0 0 12px rgba(6,182,212,0.35);" onclick="scanNearbyCyberDrops()" id="btnScanNearbyDrops" title="Detect secret drops near your real GPS position">
+          <span>📡 Scan Radar</span>
+        </button>
+        <button class="btn-filter-spot" style="padding:6px 12px;font-size:0.76rem;background:linear-gradient(135deg,#10b981,#06b6d4);" onclick="toggleRadarAddEventDrawer()" id="btnToggleAddEventDrawer">
           <span>➕ Add Event</span>
         </button>
         <button class="btn-filter-spot" id="btnRadarAdminDropSpawn" style="display:none !important;padding:6px 12px;font-size:0.78rem;background:linear-gradient(135deg,rgba(245,158,11,0.25),rgba(236,72,153,0.25));border:1px solid #f59e0b;color:#fde047;font-weight:800;" onclick="toggleRadarAdminDropDrawer()">
@@ -6937,15 +6940,44 @@
           <div>
             <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lblAdminDropLoc">Montreal Location</label>
             <select id="newDropLocationPreset" onchange="onRadarDropLocationPresetChange(this.value)" class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;background:#0f172a;color:#fff;">
-              <option value="kondiaronk">Belvédère Kondiaronk (Mont-Royal Lookout)</option>
-              <option value="tam-tams">Monument Cartier (Tam-Tams Mont-Royal)</option>
-              <option value="vieux-port">Vieux-Port & Quai de l'Horloge</option>
-              <option value="mile-end">Mile End (St-Viateur / Fairmount)</option>
-              <option value="spectacles">Quartier des Spectacles / Place des Arts</option>
-              <option value="lafontaine">Parc La Fontaine (Lagoon & Ice)</option>
-              <option value="jean-drapeau">Parc Jean-Drapeau (Calder Sculpture)</option>
-              <option value="notre-dame">Circuit Gilles-Villeneuve F1 Track</option>
-              <option value="custom">📍 Click anywhere on map</option>
+              <optgroup label="⚜️ Montreal (MTL)">
+                <option value="kondiaronk">Belvédère Kondiaronk (Mont-Royal Lookout)</option>
+                <option value="tam-tams">Monument Cartier (Tam-Tams Mont-Royal)</option>
+                <option value="vieux-port">Vieux-Port & Quai de l'Horloge</option>
+                <option value="mile-end">Mile End (St-Viateur / Fairmount)</option>
+                <option value="spectacles">Quartier des Spectacles / Place des Arts</option>
+                <option value="lafontaine">Parc La Fontaine (Lagoon)</option>
+                <option value="jean-drapeau">Parc Jean-Drapeau (Calder Sculpture)</option>
+                <option value="notre-dame">Circuit Gilles-Villeneuve F1</option>
+              </optgroup>
+              <optgroup label="🗼 Paris (France)">
+                <option value="paris-eiffel">Tour Eiffel (Champ de Mars)</option>
+                <option value="paris-louvre">Musée du Louvre (Pyramide)</option>
+                <option value="paris-montmartre">Basilique du Sacré-Cœur (Montmartre)</option>
+              </optgroup>
+              <optgroup label="🗽 New York (USA)">
+                <option value="ny-timessquare">Times Square (42nd St)</option>
+                <option value="ny-centralpark">Central Park (Bow Bridge)</option>
+                <option value="ny-brooklynbridge">Brooklyn Bridge Promenade</option>
+              </optgroup>
+              <optgroup label="🏯 Tokyo (Japan)">
+                <option value="tokyo-shibuya">Shibuya Crossing (Hachiko)</option>
+                <option value="tokyo-sensoji">Senso-ji Temple (Asakusa)</option>
+              </optgroup>
+              <optgroup label="🏰 London (UK)">
+                <option value="london-bigben">Big Ben & Westminster</option>
+                <option value="london-towerbridge">Tower Bridge (Thames)</option>
+              </optgroup>
+              <optgroup label="🌆 Dubai (UAE)">
+                <option value="dubai-burj">Burj Khalifa & Dubai Fountain</option>
+              </optgroup>
+              <optgroup label="🇷🇴 Bucharest (Romania)">
+                <option value="bucharest-universitate">Piața Universității (Kilometrul 0)</option>
+                <option value="bucharest-arctriumf">Arcul de Triumf (Kiseleff)</option>
+              </optgroup>
+              <optgroup label="📍 Custom Coordinates">
+                <option value="custom">📍 Click anywhere on map</option>
+              </optgroup>
             </select>
           </div>
         </div>
@@ -7028,8 +7060,29 @@
       <div id="adminDuelCreatorDrawer" style="display:none;background:rgba(11,17,32,0.98);border:1px solid rgba(244,63,94,0.45);border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 10px 25px rgba(0,0,0,0.6);">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
           <div style="display:flex;align-items:center;gap:6px;">
-            <span style="font-size:1.15rem;">⚡</span>
-            <h4 style="margin:0;font-size:0.95rem;font-weight:800;color:#fff;" id="lbl-admin-duel-drawer-title">Create Montreal Duel (Admin)</h4>
+            <span style="font-size:1.15rem;">⚔️</span>
+            <h4 style="margin:0;font-size:0.95rem;font-weight:800;color:#fff;" id="lbl-admin-duel-drawer-title">Admin Duel & City War Creator</h4>
+          </div>
+          <button style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1rem;" onclick="toggleAdminDuelCreatorDrawer(false)">✕</button>
+        </div>
+
+        <!-- Mode Toggle: Standard Matchup vs Global City War -->
+        <div style="display:flex;gap:8px;margin-bottom:12px;background:rgba(0,0,0,0.4);padding:4px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);">
+          <button type="button" class="v-tab active" id="btnModeStandardDuel" onclick="setAdminDuelMode('standard', this)" style="flex:1;text-align:center;padding:6px 10px;font-size:0.75rem;">⚡ Montreal Local Battle</button>
+          <button type="button" class="v-tab" id="btnModeCityWar" onclick="setAdminDuelMode('citywar', this)" style="flex:1;text-align:center;padding:6px 10px;font-size:0.75rem;background:linear-gradient(135deg,rgba(244,63,94,0.2),rgba(6,182,212,0.2));border:1px solid #06b6d4;color:#38bdf8;">⚔️ Global City War Mode</button>
+        </div>
+
+        <!-- City War Quick Preset Selector (Visible in City War Mode) -->
+        <div id="adminCityWarPresetRow" style="display:none;margin-bottom:12px;background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.3);border-radius:12px;padding:10px;">
+          <label style="font-size:0.72rem;color:#38bdf8;font-weight:800;display:block;margin-bottom:6px;">🌍 QUICK CITY WAR PRESETS (Click to autofill):</label>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button type="button" class="drop-coin-chip" onclick="applyCityWarPreset('mtl_paris')">⚜️ Montreal vs 🗼 Paris</button>
+            <button type="button" class="drop-coin-chip" onclick="applyCityWarPreset('tokyo_ny')">🏯 Tokyo vs 🗽 New York</button>
+            <button type="button" class="drop-coin-chip" onclick="applyCityWarPreset('london_dubai')">🏰 London vs 🌆 Dubai</button>
+            <button type="button" class="drop-coin-chip" onclick="applyCityWarPreset('paris_bucharest')">🗼 Paris vs 🇷🇴 Bucharest</button>
+            <button type="button" class="drop-coin-chip" onclick="applyCityWarPreset('mtl_ny')">⚜️ Montreal vs 🗽 New York</button>
+          </div>
+        </div>
             <span style="font-size:0.65rem;background:rgba(244,63,94,0.2);border:1px solid #f43f5e;color:#f43f5e;padding:2px 7px;border-radius:10px;font-weight:800;">ADMIN CREATOR</span>
           </div>
           <button style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1rem;" onclick="toggleAdminDuelCreatorDrawer(false)">✕</button>
@@ -7054,6 +7107,10 @@
           <div>
             <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lbl-newduel-reward">Voter Reward Coins</label>
             <input type="number" id="newDuelReward" class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;" value="15">
+          </div>
+          <div>
+            <label style="font-size:0.72rem;color:#fcd34d;font-weight:800;display:block;margin-bottom:4px;" id="lbl-newduel-jackpot">🏆 Winner City Jackpot (Admin)</label>
+            <input type="number" id="newDuelJackpot" class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;color:#fbbf24;font-weight:800;" value="100" placeholder="e.g. 100">
           </div>
         </div>
 
@@ -7110,6 +7167,12 @@
 
         <h3 style="font-family:'Outfit',sans-serif;font-size:1.25rem;font-weight:900;color:#fff;margin:0 0 4px;" id="modalDuelTitle">St-Viateur Bagel 🥯 vs Fairmount Bagel 🥖</h3>
         <p style="color:var(--muted);font-size:0.82rem;margin:0 0 16px;" id="modalDuelDesc">The century-old Montreal wood-fired bagel duel. Pick your camp!</p>
+
+        <!-- Winner Jackpot Banner -->
+        <div id="modalDuelJackpotBanner" style="display:none;background:linear-gradient(135deg,rgba(251,191,36,0.15),rgba(244,63,94,0.15));border:1px solid rgba(251,191,36,0.4);border-radius:12px;padding:8px 12px;margin-bottom:14px;align-items:center;justify-content:center;gap:8px;">
+          <span style="font-size:1.15rem;">🏆</span>
+          <span style="font-size:0.76rem;color:#fde047;font-weight:800;" id="modalDuelJackpotText">WINNER CITY JACKPOT: +100 🪙 TO ALL CITIZENS OF WINNING SIDE!</span>
+        </div>
 
         <!-- Energy Meter Bar -->
         <div style="margin-bottom:18px;">
@@ -7182,33 +7245,79 @@
 <!-- ⚜️ PASSEPORT FONDATEUR VIP #0001 (HOLOGRAPHIC 3D PASS)      -->
 <!-- ═══════════════════════════════════════════════════════════ -->
 <div class="overlay" id="founderPassModalOverlay" onclick="closeFounderPassModal(event)">
-  <div class="modal founder-pass-modal-card" onclick="event.stopPropagation()" style="max-width:480px;text-align:center;">
-    <div class="mh" style="border:none;justify-content:flex-end;">
+  <div class="modal founder-pass-modal-card" onclick="event.stopPropagation()" style="max-width:500px;text-align:center;">
+    <div class="mh" style="border:none;justify-content:flex-end;padding:12px 16px 0;">
       <button class="mc" onclick="closeFounderPassModal()">✕</button>
     </div>
     
     <div class="mb" style="padding:0 20px 24px;">
-      <!-- 3D Holographic Card Stage -->
-      <div class="founder-hologram-stage" style="perspective:1000px;margin-bottom:16px;">
-        <div class="founder-hologram-card" id="founderCardElement" style="background:linear-gradient(135deg,#1e1b4b,#312e81,#4c1d95,#1e1b4b);border:2px solid rgba(255,215,0,0.6);border-radius:20px;padding:24px 20px;box-shadow:0 0 35px rgba(255,215,0,0.3);position:relative;overflow:hidden;text-align:left;">
-          <!-- Sheen overlay -->
-          <div style="position:absolute;inset:0;background:linear-gradient(105deg,transparent 20%,rgba(255,255,255,0.2) 40%,transparent 60%);pointer-events:none;"></div>
+      <!-- 3D Holographic Card Stage with Gyroscope/Tilt -->
+      <div class="founder-hologram-stage" style="perspective:1000px;margin-bottom:18px;">
+        <div class="founder-hologram-card" id="founderCardElement" style="background:linear-gradient(135deg,#0d111e 0%,#1e1b4b 40%,#312e81 70%,#090d16 100%);border:2px solid rgba(255,215,0,0.65);border-radius:22px;padding:24px 20px;box-shadow:0 0 40px rgba(255,215,0,0.3), inset 0 0 25px rgba(0,0,0,0.7);position:relative;overflow:hidden;text-align:left;transform-style:preserve-3d;transition:transform 0.15s ease-out;">
+          <!-- Sheen foil overlay -->
+          <div id="founderHoloSheen" style="position:absolute;inset:0;background:linear-gradient(105deg,transparent 20%,rgba(255,255,255,0.25) 45%,rgba(255,215,0,0.2) 50%,transparent 60%);pointer-events:none;mix-blend-mode:overlay;transition:opacity 0.2s;"></div>
           
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
             <div style="display:flex;align-items:center;gap:8px;">
-              <span style="font-size:1.4rem;">⚜️</span>
-              <span style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1rem;color:#ffd700;letter-spacing:0.06em;">REAL MONT VIP</span>
+              <span style="font-size:1.5rem;filter:drop-shadow(0 0 8px #ffd700);">⚜️</span>
+              <div>
+                <span style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1.05rem;color:#ffd700;letter-spacing:0.06em;display:block;line-height:1.1;">REAL MONT</span>
+                <span style="font-size:0.62rem;color:#94a3b8;letter-spacing:0.12em;font-weight:800;">GLOBAL 3D PASSPORT</span>
+              </div>
             </div>
-            <span style="background:rgba(255,215,0,0.2);border:1px solid #ffd700;color:#ffd700;font-size:0.7rem;font-weight:900;padding:2px 8px;border-radius:12px;">#0001 / 10,000</span>
+            <span id="founderPassVipNum" style="background:rgba(255,215,0,0.18);border:1px solid #ffd700;color:#ffd700;font-size:0.72rem;font-weight:900;padding:3px 10px;border-radius:14px;box-shadow:0 0 12px rgba(255,215,0,0.25);">#0001 / 10,000</span>
           </div>
 
-          <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
-            <img src="../genius-ia-coin.png" id="founderPassAvatar" style="width:54px;height:54px;border-radius:50%;border:2px solid #ffd700;" alt="VIP">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
+            <div style="position:relative;">
+              <img src="../genius-ia-coin.png" id="founderPassAvatar" style="width:60px;height:60px;border-radius:50%;border:2px solid #ffd700;object-fit:cover;box-shadow:0 0 20px rgba(255,215,0,0.4);" alt="VIP">
+              <span style="position:absolute;bottom:-2px;right:-2px;background:#ffd700;color:#000;font-size:0.65rem;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-weight:900;">★</span>
+            </div>
             <div>
-              <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.1rem;color:#fff;" id="founderPassOwnerName">Founding Creator</div>
-              <div style="font-size:0.75rem;color:#94a3b8;" id="lbl-founder-status">Official Founder #0001 • Montreal & CA</div>
+              <div style="font-family:'Outfit',sans-serif;font-weight:900;font-size:1.15rem;color:#fff;" id="founderPassOwnerName">Founding Creator</div>
+              <div style="font-size:0.76rem;color:#38bdf8;font-weight:700;" id="lbl-founder-status">👑 Grand Founder • Worldwide Access</div>
+              <div style="font-size:0.7rem;color:#fcd34d;margin-top:2px;" id="founderPassBalanceDisplay">🪙 Balance: 100 GENIUS IA</div>
             </div>
           </div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.15);padding-top:12px;font-size:0.75rem;color:#cbd5e1;">
+            <div>
+              <div style="color:var(--muted);font-size:0.65rem;text-transform:uppercase;letter-spacing:0.06em;" id="lbl-founder-perks">LIFETIME STATUS</div>
+              <div style="font-weight:900;color:#fcd34d;">2X COIN MULTIPLIER ⚡</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="color:var(--muted);font-size:0.65rem;text-transform:uppercase;letter-spacing:0.06em;" id="lbl-founder-edition">GENESIS EDITION</div>
+              <div style="font-weight:900;color:#38bdf8;">FOUNDER BADGE 💎</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="font-family:'Outfit',sans-serif;font-size:1.15rem;color:#fff;margin:0 0 4px;" id="lbl-invite-crew-title">Share Your 3D Holographic Passport</h3>
+      <p style="color:var(--muted);font-size:0.8rem;margin:0 0 16px;" id="lbl-invite-crew-sub">Flex on TikTok & Instagram Stories. Invite friends and earn +50 🪙 per new citizen!</p>
+
+      <!-- Viral Share Actions -->
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;gap:8px;">
+          <button class="shop-btn buy" style="flex:1;padding:10px 14px;background:linear-gradient(135deg,#ec4899,#f43f5e);border:none;font-weight:800;font-size:0.85rem;" onclick="sharePassportToStories()" id="btnFounderStories">
+            <span>📲 Share to Stories (TikTok / IG)</span>
+          </button>
+          <button class="shop-btn buy" style="padding:10px 14px;background:linear-gradient(135deg,#25D366,#128C7E);border:none;font-weight:800;font-size:0.85rem;" onclick="shareFounderPassWhatsapp()" id="btnFounderWhatsapp">
+            <span>💬 WhatsApp</span>
+          </button>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="shop-btn" style="flex:1;padding:9px 12px;background:var(--bg3);border:1px solid var(--border2);color:#fff;font-size:0.78rem;" onclick="copyFounderPassLink()" id="btnFounderCopyLink">
+            <span>📋 Copy Referral Link (+50 🪙)</span>
+          </button>
+          <button class="shop-btn" style="flex:1;padding:9px 12px;background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.4);color:#ffd700;font-size:0.78rem;font-weight:700;" onclick="downloadPassportCard()" id="btnFounderDownload">
+            <span>📥 Download 3D Pass Image</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
           <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.15);padding-top:12px;font-size:0.75rem;color:#cbd5e1;">
             <div>
@@ -8584,11 +8693,10 @@ function renderPost(p) {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         <span id="cc-${p.id}">${p.commentsCount||0}</span>
       </button>
-      ${p.code ? `
-      <button class="btn-action-pill btn-ai-remix" onclick="openAiRemixModal('${p.id}')" title="AI 3D Mutation & Remix">
-        <span>🪄</span>
+      <button class="btn-action-pill btn-ai-remix" onclick="openAiRemixModal('${p.id}')" title="AI Studio Remix & Mutation" style="border-color:rgba(168,85,247,0.45);color:#d8b4fe;">
+        <span>✨</span>
         <span>${currentLang === 'fr' ? 'IA Remix' : 'AI Remix'}</span>
-      </button>` : ''}
+      </button>
       ${!isPostAuthor ? `
       <button class="btn-quick-tip" onclick="sendQuickTip('${p.id}', '${esc(authorUid)}', '${esc(p.userEmail || p.email || '')}', '${esc(displayName).replace(/'/g, "\\'")}', 5, event)" title="Quick +5 🪙 Tip">
         <span>🪙 +5 Tip</span>
@@ -15738,9 +15846,21 @@ async function openAiRemixModal(postId) {
     post.code = window.communityPosts[postId];
   }
 
-  if (!post.code) {
-    toast('No code found to remix for this project.', 'warning');
-    return;
+  // Extract potential image from post or DOM
+  let postImg = post.imageUrl || post.image || post.photo || null;
+  if (!postImg) {
+    const cardEl = document.getElementById('post-' + postId);
+    if (cardEl) {
+      const imgTag = cardEl.querySelector('.post-img, .post-image img, img:not(.avatar):not(.badge-pill)');
+      if (imgTag && imgTag.src && !imgTag.src.includes('avatar') && !imgTag.src.includes('ui-avatars')) {
+        postImg = imgTag.src;
+      }
+    }
+  }
+
+  if (!post.code && !postImg) {
+    // Generate a visual cyber typography card for text posts
+    post.code = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{margin:0;display:flex;align-items:center;justify-content:center;height:100vh;background:#050814;color:#fff;font-family:sans-serif;text-align:center;padding:20px;box-sizing:border-box;}.box{border:2px solid #06b6d4;padding:30px;border-radius:20px;box-shadow:0 0 30px rgba(6,182,212,0.4);max-width:500px;}h2{color:#38bdf8;font-size:1.4rem;margin-bottom:12px;}p{color:#cbd5e1;font-size:1rem;line-height:1.5;}</style></head><body><div class="box"><h2>⚜️ REALMONT REMIX</h2><p>${post.content || post.title || 'Creative Cyber Vision'}</p></div></body></html>`;
   }
 
   const authorName = post.displayName || post.user || 'Creator';
@@ -15749,7 +15869,8 @@ async function openAiRemixModal(postId) {
     authorUid: post.uid || post.userEmail || post.email || '',
     authorName: authorName,
     authorPhoto: post.photoURL || post.userAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=7c3aed&color=fff&bold=true`,
-    code: post.code,
+    code: post.code || '',
+    imageUrl: postImg || post.imageUrl || post.image || '',
     category: post.category || 'showcase'
   };
 
@@ -15785,7 +15906,7 @@ function selectRemixPreset(presetName, btn) {
 }
 
 function triggerAiRemixGeneration() {
-  if (!currentRemixOriginalPost || !currentRemixOriginalPost.code) return;
+  if (!currentRemixOriginalPost) return;
 
   const overlay = document.getElementById('remixLoadingOverlay');
   if (overlay) overlay.style.display = 'flex';
@@ -15796,7 +15917,20 @@ function triggerAiRemixGeneration() {
 
   setTimeout(() => {
     try {
-      currentRemixedGeneratedCode = mutateCodeWithAi(currentRemixOriginalPost.code, selectedRemixPreset, customPrompt);
+      if (currentRemixOriginalPost.imageUrl) {
+        const filters = {
+          'cyberpunk': 'contrast(1.4) saturate(1.8) hue-rotate(180deg) drop-shadow(0 0 25px #06b6d4)',
+          'lava': 'contrast(1.45) saturate(2.3) sepia(0.6) hue-rotate(-30deg) drop-shadow(0 0 30px #f43f5e)',
+          'ice': 'contrast(1.25) brightness(1.2) saturate(1.4) hue-rotate(150deg) drop-shadow(0 0 30px #38bdf8)',
+          'galaxy': 'contrast(1.5) saturate(2.0) hue-rotate(240deg) drop-shadow(0 0 30px #a855f7)',
+          'gold': 'contrast(1.3) sepia(0.85) saturate(2.5) hue-rotate(15deg) drop-shadow(0 0 30px #fbbf24)',
+          'matrix': 'contrast(1.6) saturate(0) brightness(0.9) sepia(1) hue-rotate(90deg) drop-shadow(0 0 25px #10b981)'
+        };
+        const activeFilter = filters[selectedRemixPreset] || filters.cyberpunk;
+        currentRemixedGeneratedCode = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{margin:0;display:flex;align-items:center;justify-content:center;height:100vh;background:#050814;overflow:hidden;}img{max-width:90%;max-height:90vh;border-radius:18px;filter:${activeFilter};box-shadow:0 15px 40px rgba(0,0,0,0.8);}</style></head><body><img src="${currentRemixOriginalPost.imageUrl}" alt="Remix"></body></html>`;
+      } else {
+        currentRemixedGeneratedCode = mutateCodeWithAi(currentRemixOriginalPost.code, selectedRemixPreset, customPrompt);
+      }
       const iframe = document.getElementById('remixPreviewIframe');
       if (iframe) iframe.srcdoc = currentRemixedGeneratedCode;
 
@@ -16902,6 +17036,19 @@ function switchModalDuel(index) {
 
   renderDuelTabsUI();
 
+  const jackpotBanner = document.getElementById('modalDuelJackpotBanner');
+  const jackpotText = document.getElementById('modalDuelJackpotText');
+  if (jackpotBanner && jackpotText) {
+    if (d.winnerJackpot && d.winnerJackpot > 0) {
+      jackpotBanner.style.display = 'flex';
+      jackpotText.textContent = lang === 'fr'
+        ? `🏆 CAGNOTTE DE GUERRE: +${d.winnerJackpot} 🪙 AUX CITOYENS DU CAMP GAGNANT !`
+        : `🏆 CITY WAR JACKPOT: +${d.winnerJackpot} 🪙 TO ALL CITIZENS OF WINNING SIDE!`;
+    } else {
+      jackpotBanner.style.display = 'none';
+    }
+  }
+
   const catEl = document.getElementById('modalDuelCategory');
   const titleEl = document.getElementById('modalDuelTitle');
   const descEl = document.getElementById('modalDuelDesc');
@@ -17044,6 +17191,93 @@ function voteDuel(team, event) {
   toast(lang === 'fr' ? `🎉 Vote enregistré ! +${rewardCoins} 🪙 GENIUS IA` : `🎉 Vote recorded! +${rewardCoins} 🪙 GENIUS IA`, 'success');
 }
 
+let adminCurrentDuelMode = 'standard';
+
+function setAdminDuelMode(mode, btn) {
+  adminCurrentDuelMode = mode;
+  document.querySelectorAll('#btnModeStandardDuel, #btnModeCityWar').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const presetRow = document.getElementById('adminCityWarPresetRow');
+  const titleInp = document.getElementById('newDuelTitle');
+  const catInp = document.getElementById('newDuelCategory');
+  const rewardInp = document.getElementById('newDuelReward');
+  const jackpotInp = document.getElementById('newDuelJackpot');
+
+  if (mode === 'citywar') {
+    if (presetRow) presetRow.style.display = 'block';
+    if (catInp) catInp.value = '⚔️ GLOBAL CITY WAR';
+    if (rewardInp) rewardInp.value = '20';
+    if (jackpotInp) jackpotInp.value = '150';
+    applyCityWarPreset('mtl_paris');
+  } else {
+    if (presetRow) presetRow.style.display = 'none';
+    if (catInp) catInp.value = 'COMMERCE & RETAIL';
+    if (rewardInp) rewardInp.value = '15';
+    if (jackpotInp) jackpotInp.value = '0';
+  }
+}
+
+function applyCityWarPreset(presetKey) {
+  const titleInp = document.getElementById('newDuelTitle');
+  const descInp = document.getElementById('newDuelDesc');
+  const nameA = document.getElementById('newDuelNameA');
+  const emojiA = document.getElementById('newDuelEmojiA');
+  const nameB = document.getElementById('newDuelNameB');
+  const emojiB = document.getElementById('newDuelEmojiB');
+  const catInp = document.getElementById('newDuelCategory');
+  const jackpotInp = document.getElementById('newDuelJackpot');
+
+  const presets = {
+    'mtl_paris': {
+      title: '⚜️ Montreal vs 🗼 Paris: World Capital of Culture & Gastronomy',
+      desc: 'Battle of the giants! Which metropolis has the best lifestyle, culinary soul & creative scene?',
+      sideA: 'Montreal ⚜️', emojiA: '⚜️',
+      sideB: 'Paris 🗼', emojiB: '🗼',
+      jackpot: 150
+    },
+    'tokyo_ny': {
+      title: '🏯 Tokyo vs 🗽 New York: The Ultimate Cyber Megacity',
+      desc: 'The sleepless neon giants. Pick between Tokyo cyberpunk precision or New York relentless ambition!',
+      sideA: 'Tokyo 🏯', emojiA: '🏯',
+      sideB: 'New York 🗽', emojiB: '🗽',
+      jackpot: 200
+    },
+    'london_dubai': {
+      title: '🏰 London vs 🌆 Dubai: Royal Heritage vs Futuristic Skyscrapers',
+      desc: 'Century-old tradition vs ultra-modern high-tech oasis. Where would you build your future?',
+      sideA: 'London 🏰', emojiA: '🏰',
+      sideB: 'Dubai 🌆', emojiB: '🌆',
+      jackpot: 150
+    },
+    'paris_bucharest': {
+      title: '🗼 Paris vs 🇷🇴 Bucharest: The Little Paris vs The Grand Capital',
+      desc: 'Historic European charm, bohemian cafes and incredible tech talent. Vote for your pride!',
+      sideA: 'Paris 🗼', emojiA: '🗼',
+      sideB: 'Bucharest 🇷🇴', emojiB: '🇷🇴',
+      jackpot: 120
+    },
+    'mtl_ny': {
+      title: '⚜️ Montreal vs 🗽 New York: Creative Freedom vs Big Apple Skyline',
+      desc: 'North American powerhouse showdown: Mont-Royal & festivals vs Manhattan & Broadway!',
+      sideA: 'Montreal ⚜️', emojiA: '⚜️',
+      sideB: 'New York 🗽', emojiB: '🗽',
+      jackpot: 150
+    }
+  };
+
+  const p = presets[presetKey];
+  if (!p) return;
+  if (titleInp) titleInp.value = p.title;
+  if (descInp) descInp.value = p.desc;
+  if (nameA) nameA.value = p.sideA;
+  if (emojiA) emojiA.value = p.emojiA;
+  if (nameB) nameB.value = p.sideB;
+  if (emojiB) emojiB.value = p.emojiB;
+  if (catInp) catInp.value = '⚔️ GLOBAL CITY WAR';
+  if (jackpotInp) jackpotInp.value = p.jackpot;
+  toast(getCommunityLang() === 'fr' ? '⚔️ Modèle de City War appliqué !' : '⚔️ City War preset applied!', 'info');
+}
+
 function toggleAdminDuelCreatorDrawer(forceState) {
   if (!isRadarAdmin()) return;
   const drawer = document.getElementById('adminDuelCreatorDrawer');
@@ -17080,11 +17314,13 @@ function submitAdminNewDuel() {
 
   const category = (catInp && catInp.value) || 'MONTREAL BATTLE';
   const reward = parseInt((rewardInp && rewardInp.value) || '15', 10);
+  const jackpotInp = document.getElementById('newDuelJackpot');
+  const jackpot = parseInt((jackpotInp && jackpotInp.value) || '0', 10);
   const emojiA = (emojiAInp && emojiAInp.value.trim()) || '⚡';
-  const emojiB = (emojiBInp && emojiBInp.value.trim()) || '🔥';
+  const emojiB = (emojiBInp && emojiBInp.value.trim()) || '🏬';
   const votesA = parseInt((votesAInp && votesAInp.value) || '120', 10);
   const votesB = parseInt((votesBInp && votesBInp.value) || '115', 10);
-  const desc = (descInp && descInp.value.trim()) || `${nameA} vs ${nameB} - Vote for Montreal!`;
+  const desc = (descInp && descInp.value.trim()) || `${nameA} vs ${nameB} - Vote for your city!`;
 
   const newDuelId = 'duel_custom_' + Date.now();
   const newDuel = {
@@ -17097,6 +17333,7 @@ function submitAdminNewDuel() {
     teamA: { name: nameA, emoji: emojiA, votes: votesA },
     teamB: { name: nameB, emoji: emojiB, votes: votesB },
     reward: reward,
+    winnerJackpot: jackpot,
     isCustom: true
   };
 
@@ -18360,6 +18597,68 @@ function filterFeedByRadarSpot() {
   toast((lang === 'fr' ? 'Lieu sélectionné: ' : 'Selected location: ') + (lang === 'fr' ? (selectedRadarEvent.titleFr || selectedRadarEvent.titleEn) : selectedRadarEvent.titleEn), 'info');
 }
 
+function scanNearbyCyberDrops() {
+  triggerHaptic('medium');
+  const lang = getCommunityLang();
+
+  if (!navigator.geolocation) {
+    toast(lang === 'fr' ? 'GPS non disponible sur cet appareil' : 'GPS not available on this device', 'warning');
+    return;
+  }
+
+  toast(lang === 'fr' ? '📡 Scan Radar GPS en cours...' : '📡 Scanning GPS Radar nearby...', 'info');
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const uLat = pos.coords.latitude;
+      const uLng = pos.coords.longitude;
+      currentCachedUserCoords = [uLat, uLng];
+
+      const allEvents = (typeof RADAR_DEFAULT_EVENTS !== 'undefined') ? [...RADAR_DEFAULT_EVENTS] : [];
+      let closestPin = null;
+      let minDistance = Infinity;
+
+      allEvents.forEach(ev => {
+        if (ev.coords && Array.isArray(ev.coords) && ev.coords.length >= 2) {
+          const dist = calculateGeoDistanceMeters(uLat, uLng, ev.coords[0], ev.coords[1]);
+          if (dist < minDistance) {
+            minDistance = dist;
+            closestPin = ev;
+          }
+        }
+      });
+
+      if (!closestPin) {
+        toast(lang === 'fr' ? 'Aucun drop trouvé.' : 'No drops found.', 'info');
+        return;
+      }
+
+      if (minDistance <= 250 || isRadarAdmin()) {
+        triggerHaptic('heavy');
+        playSoundFx('coin');
+        selectRadarHotspot(closestPin.id);
+        if (realMontrealLeafletMap) {
+          realMontrealLeafletMap.flyTo(closestPin.coords, 16, { duration: 1.5 });
+        }
+        toast(lang === 'fr'
+          ? `🎉 DROP SECRET DÉTECTÉ à ${Math.round(minDistance)}m ! Réclamez vos pièces !`
+          : `🎉 SECRET DROP DETECTED at ${Math.round(minDistance)}m! Claim your coins!`, 'success');
+      } else {
+        triggerHaptic('light');
+        const distKm = (minDistance / 1000).toFixed(1);
+        const pinTitle = lang === 'fr' ? (closestPin.titleFr || closestPin.titleEn) : closestPin.titleEn;
+        toast(lang === 'fr'
+          ? `📡 Drop le plus proche: "${pinTitle}" à ${distKm} km. Téléportez-vous ou rapprochez-vous !`
+          : `📡 Closest drop: "${pinTitle}" is ${distKm} km away. Teleport or get closer!`, 'info');
+      }
+    },
+    (err) => {
+      toast(lang === 'fr' ? 'Autorisation GPS requise pour le scan' : 'GPS permission required for scan', 'warning');
+    },
+    { enableHighAccuracy: true, timeout: 8000 }
+  );
+}
+
 async function claimRadarSecretDrop() {
   if (!selectedRadarEvent || !selectedRadarEvent.isDrop) return;
   const dropKey = `radar_drop_${selectedRadarEvent.id}_claimed`;
@@ -18483,6 +18782,71 @@ async function claimRadarSecretDrop() {
 }
 
 // 5. PASSEPORT FONDATEUR VIP #0001
+let founderPassTiltInitialized = false;
+
+function initFounderPass3DTilt() {
+  const card = document.getElementById('founderCardElement');
+  const sheen = document.getElementById('founderHoloSheen');
+  if (!card || founderPassTiltInitialized) return;
+  founderPassTiltInitialized = true;
+
+  const handleMove = (x, y, rect) => {
+    const cardX = x - rect.left;
+    const cardY = y - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((centerY - cardY) / centerY) * 14;
+    const rotateY = ((cardX - centerX) / centerX) * 14;
+    card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`;
+    if (sheen) {
+      const angle = 105 + (rotateY * 3);
+      const pos = Math.max(10, Math.min(90, 50 + (rotateX * 2)));
+      sheen.style.background = `linear-gradient(${angle}deg, transparent 15%, rgba(255,255,255,0.3) ${pos}%, rgba(255,215,0,0.25) ${pos + 8}%, transparent ${pos + 18}%)`;
+    }
+  };
+
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    handleMove(e.clientX, e.clientY, rect);
+  });
+
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+    if (sheen) sheen.style.background = 'linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.2) 40%, transparent 60%)';
+  });
+
+  card.addEventListener('touchmove', (e) => {
+    if (e.touches && e.touches[0]) {
+      const rect = card.getBoundingClientRect();
+      handleMove(e.touches[0].clientX, e.touches[0].clientY, rect);
+    }
+  }, { passive: true });
+
+  card.addEventListener('touchend', () => {
+    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+  });
+}
+
+function getOrGenerateUserVipPassportNum() {
+  let vipNum = localStorage.getItem('realmont_user_vip_number');
+  if (vipNum) return vipNum;
+  if (isRadarAdmin() || (typeof user !== 'undefined' && user && user.email && user.email.toLowerCase().includes('andart'))) {
+    vipNum = '0001';
+  } else if (typeof user !== 'undefined' && user && user.uid) {
+    let hash = 0;
+    for (let i = 0; i < user.uid.length; i++) {
+      hash = ((hash << 5) - hash) + user.uid.charCodeAt(i);
+      hash |= 0;
+    }
+    const num = Math.abs(hash % 9000) + 42;
+    vipNum = String(num).padStart(4, '0');
+  } else {
+    vipNum = '0777';
+  }
+  localStorage.setItem('realmont_user_vip_number', vipNum);
+  return vipNum;
+}
+
 function openFounderPassModal() {
   const m = document.getElementById('founderPassModalOverlay');
   if (m) {
@@ -18490,31 +18854,196 @@ function openFounderPassModal() {
     const u = (typeof user !== 'undefined' && user) ? user : null;
     const nameEl = document.getElementById('founderPassOwnerName');
     const avEl = document.getElementById('founderPassAvatar');
-    if (u && u.displayName && nameEl) nameEl.textContent = u.displayName;
+    const vipNumEl = document.getElementById('founderPassVipNum');
+    const balEl = document.getElementById('founderPassBalanceDisplay');
+    const statusEl = document.getElementById('lbl-founder-status');
+
+    const vipNum = getOrGenerateUserVipPassportNum();
+    if (vipNumEl) vipNumEl.textContent = `#${vipNum} / 10,000`;
+
+    const name = (u && u.displayName) ? u.displayName : (localStorage.getItem('genius_user_name') || 'Founding Creator');
+    if (nameEl) nameEl.textContent = name;
     if (u && u.photoURL && avEl) avEl.src = u.photoURL;
+
+    const coins = parseInt(localStorage.getItem('genius_user_coins') || '100', 10);
+    if (balEl) balEl.textContent = `🪙 Balance: ${coins} GENIUS IA`;
+
+    const lang = getCommunityLang();
+    if (statusEl) {
+      if (vipNum === '0001') {
+        statusEl.textContent = lang === 'fr' ? '👑 Grand Fondateur • Accès Mondial' : '👑 Grand Founder • Worldwide Access';
+      } else {
+        statusEl.textContent = lang === 'fr' ? `💎 Citoyen VIP #${vipNum} • Rang Élite` : `💎 VIP Citizen #${vipNum} • Elite Tier`;
+      }
+    }
+
+    initFounderPass3DTilt();
+    triggerHaptic('medium');
   }
 }
+
 function closeFounderPassModal(e) {
   if (e && e.target !== document.getElementById('founderPassModalOverlay') && !e.target.classList.contains('mc')) return;
   const m = document.getElementById('founderPassModalOverlay');
   if (m) m.classList.remove('open');
 }
 
+async function sharePassportToStories() {
+  triggerHaptic('light');
+  const vipNum = getOrGenerateUserVipPassportNum();
+  const lang = getCommunityLang();
+  const url = `https://ia-codestudio.com/community/?ref=VIP${vipNum}`;
+  const shareData = {
+    title: '⚜️ REALMONT 3D VIP Passport',
+    text: lang === 'fr'
+      ? `Regardez mon Passeport 3D Officiel REALMONT #${vipNum} ! Rejoignez le nouveau réseau social créatif 3D :`
+      : `Check out my official REALMONT 3D VIP Passport #${vipNum}! Join the future of creative 3D social networking:`,
+    url: url
+  };
+
+  if (navigator.share) {
+    try {
+      await navigator.share(shareData);
+      toast(lang === 'fr' ? '🎉 Passeport partagé avec succès ! +25 🪙' : '🎉 Passport shared successfully! +25 🪙', 'success');
+      if (typeof addCoinsLocally === 'function') addCoinsLocally(25, 'Passport Share Bounty');
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        copyFounderPassLink();
+      }
+    }
+  } else {
+    copyFounderPassLink();
+  }
+}
+
 function shareFounderPassWhatsapp() {
+  const vipNum = getOrGenerateUserVipPassportNum();
   const lang = getCommunityLang();
   const text = lang === 'fr'
-    ? `Rejoins-moi sur REAL MONT ⚜️ Le nouveau réseau social 3D & créatif à Montréal et au Canada! Utilise mon pass VIP #0001 pour débloquer +50 🪙 instantanément: https://ia-codestudio.com/community/?ref=VIP0001`
-    : `Join me on REAL MONT ⚜️ The new 3D & creative social network in Montreal and Canada! Use my VIP pass #0001 to unlock +50 🪙 instantly: https://ia-codestudio.com/community/?ref=VIP0001`;
+    ? `Rejoins-moi sur REAL MONT ⚜️ Le nouveau réseau social 3D & créatif à Montréal et au monde entier ! Utilise mon pass VIP #${vipNum} pour débloquer +100 🪙 instantanément : https://ia-codestudio.com/community/?ref=VIP${vipNum}`
+    : `Join me on REAL MONT ⚜️ The new 3D & creative social network in Montreal and worldwide! Use my VIP pass #${vipNum} to unlock +100 🪙 instantly: https://ia-codestudio.com/community/?ref=VIP${vipNum}`;
   window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
 }
 
 function copyFounderPassLink() {
-  const url = 'https://ia-codestudio.com/community/?ref=VIP0001';
+  const vipNum = getOrGenerateUserVipPassportNum();
+  const url = `https://ia-codestudio.com/community/?ref=VIP${vipNum}`;
   if (navigator.clipboard) {
     navigator.clipboard.writeText(url).then(() => {
       toast(getCommunityLang() === 'fr' ? 'Lien VIP copié !' : 'VIP Invite link copied!', 'success');
     });
   }
+}
+
+function downloadPassportCard() {
+  triggerHaptic('light');
+  const lang = getCommunityLang();
+  const vipNum = getOrGenerateUserVipPassportNum();
+  const canvas = document.createElement('canvas');
+  canvas.width = 1080;
+  canvas.height = 1920;
+  const ctx = canvas.getContext('2d');
+
+  // Background Cyber Dark
+  const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1920);
+  bgGrad.addColorStop(0, '#060913');
+  bgGrad.addColorStop(0.35, '#1e1b4b');
+  bgGrad.addColorStop(0.7, '#0f172a');
+  bgGrad.addColorStop(1, '#020617');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, 1080, 1920);
+
+  // Holographic Cyber Grid Lines
+  ctx.strokeStyle = 'rgba(6, 182, 212, 0.15)';
+  ctx.lineWidth = 2;
+  for (let x = 0; x < 1080; x += 80) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 1920); ctx.stroke();
+  }
+  for (let y = 0; y < 1920; y += 80) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(1080, y); ctx.stroke();
+  }
+
+  // Glow Circle Behind Card
+  const glow = ctx.createRadialGradient(540, 960, 50, 540, 960, 500);
+  glow.addColorStop(0, 'rgba(251, 191, 36, 0.25)');
+  glow.addColorStop(0.6, 'rgba(244, 63, 94, 0.15)');
+  glow.addColorStop(1, 'transparent');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, 1080, 1920);
+
+  // VIP Passport Box in Center
+  const cardW = 900, cardH = 1100, cardX = 90, cardY = 410;
+  ctx.save();
+  ctx.shadowColor = 'rgba(251, 191, 36, 0.5)';
+  ctx.shadowBlur = 40;
+  ctx.strokeStyle = '#ffd700';
+  ctx.lineWidth = 6;
+  ctx.fillStyle = '#0b1120';
+  ctx.beginPath();
+  ctx.roundRect(cardX, cardY, cardW, cardH, 40);
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
+
+  // Top Title in Canvas
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '900 68px Outfit, sans-serif';
+  ctx.fillText('REAL MONT™', 540, 240);
+
+  ctx.fillStyle = '#38bdf8';
+  ctx.font = '800 32px Outfit, sans-serif';
+  ctx.fillText('GLOBAL 3D SOCIAL CITIZENSHIP', 540, 310);
+
+  // Card Content
+  ctx.fillStyle = '#ffd700';
+  ctx.font = '900 80px Outfit, sans-serif';
+  ctx.fillText('⚜️', 540, 540);
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '900 48px Outfit, sans-serif';
+  const name = (typeof user !== 'undefined' && user && user.displayName) ? user.displayName : (localStorage.getItem('genius_user_name') || 'Founding Creator');
+  ctx.fillText(name, 540, 640);
+
+  ctx.fillStyle = '#fbbf24';
+  ctx.font = '800 40px Outfit, sans-serif';
+  ctx.fillText(`PASSPORT #${vipNum} / 10,000`, 540, 720);
+
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '600 32px Outfit, sans-serif';
+  ctx.fillText('GENESIS EDITION • VERIFIED ON-CHAIN', 540, 780);
+
+  // Perks Box inside card
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+  ctx.beginPath();
+  ctx.roundRect(140, 840, 800, 400, 24);
+  ctx.fill();
+
+  ctx.fillStyle = '#fde047';
+  ctx.font = '800 36px Outfit, sans-serif';
+  ctx.fillText('⚡ 2X GENIUS IA COIN MULTIPLIER', 540, 930);
+  ctx.fillStyle = '#67e8f9';
+  ctx.fillText('🗺️ WORLD RADAR PROXIMITY ACCESS', 540, 1010);
+  ctx.fillStyle = '#f43f5e';
+  ctx.fillText('⚔️ GLOBAL DUELS CITIZEN VOTER', 540, 1090);
+  ctx.fillStyle = '#a855f7';
+  ctx.fillText('🪄 GENIUS AI REMIX STUDIO UNLOCKED', 540, 1170);
+
+  // Bottom Footer in Canvas
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '800 38px Outfit, sans-serif';
+  ctx.fillText('Join at: ia-codestudio.com/community', 540, 1650);
+
+  ctx.fillStyle = '#64748b';
+  ctx.font = '600 28px Outfit, sans-serif';
+  ctx.fillText(`VIP Referral Code: VIP${vipNum} (+100 🪙 Bonus)`, 540, 1720);
+
+  // Trigger download
+  const link = document.createElement('a');
+  link.download = `REALMONT_VIP_PASSPORT_${vipNum}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  toast(lang === 'fr' ? '📥 Image Passeport HD téléchargée ! Prête pour TikTok & Insta Stories !' : '📥 HD Passport Image downloaded! Ready for TikTok & Insta Stories!', 'success');
 }
 
 // 6. SPARK VOICE™ RECORDING STUDIO
@@ -18808,7 +19337,20 @@ function onRadarDropLocationPresetChange(val) {
     'spectacles': [45.5078, -73.5678],
     'lafontaine': [45.5270, -73.5700],
     'jean-drapeau': [45.5108, -73.5332],
-    'notre-dame': [45.5005, -73.5262]
+    'notre-dame': [45.5005, -73.5262],
+    'paris-eiffel': [48.8584, 2.2945],
+    'paris-louvre': [48.8606, 2.3376],
+    'paris-montmartre': [48.8867, 2.3431],
+    'ny-timessquare': [40.7580, -73.9855],
+    'ny-centralpark': [40.7750, -73.9712],
+    'ny-brooklynbridge': [40.7061, -73.9969],
+    'tokyo-shibuya': [35.6595, 139.7005],
+    'tokyo-sensoji': [35.7148, 139.7967],
+    'london-bigben': [51.5007, -0.1246],
+    'london-towerbridge': [51.5055, -0.0754],
+    'dubai-burj': [25.1972, 55.2744],
+    'bucharest-universitate': [44.4355, 26.1025],
+    'bucharest-arctriumf': [44.4671, 26.0781]
   };
 
   if (presets[val]) {
@@ -18857,7 +19399,20 @@ async function submitRadarAdminCyberDrop() {
       'spectacles': [45.5078, -73.5678],
       'lafontaine': [45.5270, -73.5700],
       'jean-drapeau': [45.5108, -73.5332],
-      'notre-dame': [45.5005, -73.5262]
+      'notre-dame': [45.5005, -73.5262],
+      'paris-eiffel': [48.8584, 2.2945],
+      'paris-louvre': [48.8606, 2.3376],
+      'paris-montmartre': [48.8867, 2.3431],
+      'ny-timessquare': [40.7580, -73.9855],
+      'ny-centralpark': [40.7750, -73.9712],
+      'ny-brooklynbridge': [40.7061, -73.9969],
+      'tokyo-shibuya': [35.6595, 139.7005],
+      'tokyo-sensoji': [35.7148, 139.7967],
+      'london-bigben': [51.5007, -0.1246],
+      'london-towerbridge': [51.5055, -0.0754],
+      'dubai-burj': [25.1972, 55.2744],
+      'bucharest-universitate': [44.4355, 26.1025],
+      'bucharest-arctriumf': [44.4671, 26.0781]
     };
     if (presets[presetInp.value]) {
       coords = presets[presetInp.value];
