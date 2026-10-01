@@ -17989,9 +17989,51 @@ function filterRadarCategory(cat, pillBtn) {
 }
 
 // ═════════════════════════════════════════════════════════════
-// 🧭 GEOCACHING PROXIMITY & HAVERSINE DISTANCE VERIFICATION
+// 🧭 TRUE PHYSICAL GEOLOCATION & HAVERSINE PROXIMITY SYSTEM
 // ═════════════════════════════════════════════════════════════
-let currentCachedUserCoords = null;
+let realUserPhysicalCoords = null; // [lat, lng] - ONLY true physical location, NEVER map center!
+let currentCachedUserCoords = null; // Legacy alias pointing to physical location
+
+function formatDistanceDisplay(distMeters, lang) {
+  if (typeof distMeters !== 'number' || isNaN(distMeters)) return '—';
+  if (distMeters >= 1000000) {
+    // 1,000 km or more: show integer km e.g. "5,223 km"
+    const km = Math.round(distMeters / 1000);
+    return km.toLocaleString(lang === 'fr' ? 'fr-FR' : 'en-US') + ' km';
+  } else if (distMeters >= 1000) {
+    // 1 km to 999.9 km: show 1 decimal e.g. "533.2 km"
+    return (distMeters / 1000).toFixed(1) + ' km';
+  } else {
+    // Under 1 km: show meters e.g. "180m"
+    return Math.round(distMeters) + 'm';
+  }
+}
+
+function getUserPhysicalLocation() {
+  if (realUserPhysicalCoords && Array.isArray(realUserPhysicalCoords) && realUserPhysicalCoords.length >= 2) {
+    return realUserPhysicalCoords;
+  }
+  try {
+    const saved = JSON.parse(localStorage.getItem('realmont_user_real_gps') || 'null');
+    if (saved && Array.isArray(saved) && saved.length >= 2) {
+      realUserPhysicalCoords = saved;
+      currentCachedUserCoords = saved;
+      return realUserPhysicalCoords;
+    }
+  } catch (e) {}
+  // Default physical home base of REALMONT is Montreal [45.5048, -73.5876]
+  return [45.5048, -73.5876];
+}
+
+function setRealUserPhysicalCoords(lat, lng) {
+  if (typeof lat === 'number' && typeof lng === 'number' && !isNaN(lat) && !isNaN(lng)) {
+    realUserPhysicalCoords = [lat, lng];
+    currentCachedUserCoords = [lat, lng];
+    try {
+      localStorage.setItem('realmont_user_real_gps', JSON.stringify([lat, lng]));
+    } catch (e) {}
+  }
+}
 
 function calculateGeoDistanceMeters(lat1, lon1, lat2, lon2) {
   const R = 6371e3; // Earth radius in meters
@@ -18019,7 +18061,7 @@ function requestUserGpsLocationForRadar() {
   }
   navigator.geolocation.getCurrentPosition(
     (pos) => {
-      currentCachedUserCoords = [pos.coords.latitude, pos.coords.longitude];
+      setRealUserPhysicalCoords(pos.coords.latitude, pos.coords.longitude);
       if (selectedRadarEvent && selectedRadarEvent.isDrop && selectedRadarEvent.coords) {
         checkRadarDropDistanceLive(selectedRadarEvent.coords[0], selectedRadarEvent.coords[1]);
       }
@@ -18041,38 +18083,38 @@ function requestUserGpsLocationForRadar() {
 function checkRadarDropDistanceLive(dropLat, dropLng) {
   const badge = document.getElementById('activeSpotDistanceBadge');
   const lang = getCommunityLang();
-  if (!navigator.geolocation) {
-    if (badge) badge.innerHTML = `<span style="color:#f59e0b;">⚠️ ${lang === 'fr' ? 'GPS non disponible' : 'GPS unavailable'}</span>`;
-    return;
-  }
 
-  const updateBadge = (uLat, uLng) => {
-    currentCachedUserCoords = [uLat, uLng];
+  const updateBadgeWithCoords = (uLat, uLng) => {
     const dist = calculateGeoDistanceMeters(uLat, uLng, dropLat, dropLng);
     const dBadge = document.getElementById('activeSpotDistanceBadge');
     if (!dBadge) return;
+    const dStr = formatDistanceDisplay(dist, lang);
     if (dist <= 250) {
-      dBadge.innerHTML = `<span style="color:#10b981;font-weight:700;">🟢 ${lang === 'fr' ? 'À portée (' + Math.round(dist) + 'm)' : 'In Range (' + Math.round(dist) + 'm)'}</span>`;
+      dBadge.innerHTML = `<span style="color:#10b981;font-weight:700;">🟢 ${lang === 'fr' ? 'À portée (' + dStr + ')' : 'In Range (' + dStr + ')'}</span>`;
     } else {
-      const dStr = dist >= 1000 ? (dist / 1000).toFixed(1) + ' km' : Math.round(dist) + 'm';
       dBadge.innerHTML = `<span style="color:#f43f5e;font-weight:700;" title="${lang === 'fr' ? 'Doit être à moins de 250m' : 'Must be within 250m'}">🧭 ${lang === 'fr' ? 'Distance: ' + dStr + ' (Trop loin)' : 'Distance: ' + dStr + ' (Too far)'}</span>`;
     }
   };
 
-  if (currentCachedUserCoords) {
-    updateBadge(currentCachedUserCoords[0], currentCachedUserCoords[1]);
+  // 1. Immediately show distance based on user's real physical coordinates (Montreal or saved GPS)
+  const userCoords = getUserPhysicalLocation();
+  if (userCoords) {
+    updateBadgeWithCoords(userCoords[0], userCoords[1]);
   }
 
-  navigator.geolocation.getCurrentPosition(
-    (pos) => updateBadge(pos.coords.latitude, pos.coords.longitude),
-    (err) => {
-      const dBadge = document.getElementById('activeSpotDistanceBadge');
-      if (dBadge && !currentCachedUserCoords) {
-        dBadge.innerHTML = `<button type="button" onclick="requestUserGpsLocationForRadar()" style="background:rgba(244,63,94,0.18);border:1px solid rgba(244,63,94,0.45);border-radius:8px;padding:2px 8px;color:#fda4af;font-size:0.75rem;cursor:pointer;font-weight:700;display:inline-flex;align-items:center;gap:4px;" title="${lang === 'fr' ? 'Cliquez pour autoriser la localisation' : 'Click to enable location permission'}">📍 ${lang === 'fr' ? 'Activer GPS (Cliquez ici)' : 'Enable GPS (Click here)'}</button>`;
-      }
-    },
-    { enableHighAccuracy: true, timeout: 8000, maximumAge: 30000 }
-  );
+  // 2. Query hardware GPS in background if available
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setRealUserPhysicalCoords(pos.coords.latitude, pos.coords.longitude);
+        updateBadgeWithCoords(pos.coords.latitude, pos.coords.longitude);
+      },
+      (err) => {
+        // Keeps user's physical base (Montreal) distance, no disruption
+      },
+      { enableHighAccuracy: true, timeout: 6000, maximumAge: 30000 }
+    );
+  }
 }
 
 function selectRadarSpot(eventId) {
@@ -18628,8 +18670,12 @@ let virtualRadarScanActive = false;
 
 function executeRadarDropDetection(centerLat, centerLng, isVirtualScan = false) {
   const lang = getCommunityLang();
-  currentCachedUserCoords = [centerLat, centerLng];
   virtualRadarScanActive = isVirtualScan;
+
+  // IMPORTANT: Only update user physical coords if from real GPS hardware, NEVER from map center!
+  if (!isVirtualScan) {
+    setRealUserPhysicalCoords(centerLat, centerLng);
+  }
 
   let allEvents = [];
   try {
@@ -18711,15 +18757,19 @@ function executeRadarDropDetection(centerLat, centerLng, isVirtualScan = false) 
   const pinTitle = lang === 'fr' ? (closestPin.titleFr || closestPin.titleEn) : closestPin.titleEn;
   const coinsReward = Number(closestPin.coins) || 100;
 
-  if (isVirtualScan || minDistance <= 500 || isRadarAdmin()) {
+  // Real physical distance from user's true location (Montreal or GPS) to this drop
+  const userLoc = getUserPhysicalLocation();
+  const physicalDist = calculateGeoDistanceMeters(userLoc[0], userLoc[1], closestPin.coords[0], closestPin.coords[1]);
+  const distStr = formatDistanceDisplay(physicalDist, lang);
+
+  if (physicalDist <= 250) {
     toast(lang === 'fr'
-      ? `💎 DROP DÉTECTÉ : "${pinTitle}" (+${coinsReward} 🪙) ! Réclamez vos pièces !`
-      : `💎 DROP DETECTED: "${pinTitle}" (+${coinsReward} 🪙)! Claim your coins!`, 'success');
+      ? `💎 DROP DÉTECTÉ À PROXIMITÉ : "${pinTitle}" (+${coinsReward} 🪙) ! Vous êtes à portée (${distStr}) !`
+      : `💎 NEARBY DROP DETECTED: "${pinTitle}" (+${coinsReward} 🪙)! You are in range (${distStr})!`, 'success');
   } else {
-    const distKm = (minDistance / 1000).toFixed(1);
     toast(lang === 'fr'
-      ? `📡 Drop détecté : "${pinTitle}" à ${distKm} km ! Centrage sur le trésor...`
-      : `📡 Drop detected: "${pinTitle}" is ${distKm} km away! Centering on drop...`, 'success');
+      ? `💎 DROP DÉTECTÉ : "${pinTitle}" (+${coinsReward} 🪙) ! À ${distStr} de votre position réelle.`
+      : `💎 DROP DETECTED: "${pinTitle}" (+${coinsReward} 🪙)! ${distStr} from your real location.`, 'info');
   }
 }
 
@@ -18761,6 +18811,7 @@ function scanNearbyCyberDrops() {
       clearTimeout(gpsTimeoutId);
       const uLat = pos.coords.latitude;
       const uLng = pos.coords.longitude;
+      setRealUserPhysicalCoords(uLat, uLng);
       executeRadarDropDetection(uLat, uLng, false);
     },
     (err) => {
@@ -18824,86 +18875,67 @@ async function claimRadarSecretDrop() {
 
   const getGpsDist = () => {
     return new Promise((resolve) => {
+      const userPhysical = getUserPhysicalLocation();
       if (!navigator.geolocation) {
-        resolve({ ok: false, reason: 'no_geolocation' });
+        const dist = calculateGeoDistanceMeters(userPhysical[0], userPhysical[1], dropCoords[0], dropCoords[1]);
+        resolve({ ok: true, dist, uLat: userPhysical[0], uLng: userPhysical[1] });
         return;
       }
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           const uLat = pos.coords.latitude;
           const uLng = pos.coords.longitude;
-          currentCachedUserCoords = [uLat, uLng];
+          setRealUserPhysicalCoords(uLat, uLng);
           const dist = calculateGeoDistanceMeters(uLat, uLng, dropCoords[0], dropCoords[1]);
           resolve({ ok: true, dist, uLat, uLng });
         },
         (err) => {
-          resolve({ ok: false, reason: err.message || 'permission_denied' });
+          const dist = calculateGeoDistanceMeters(userPhysical[0], userPhysical[1], dropCoords[0], dropCoords[1]);
+          resolve({ ok: true, dist, uLat: userPhysical[0], uLng: userPhysical[1] });
         },
-        { enableHighAccuracy: true, timeout: 9000, maximumAge: 10000 }
+        { enableHighAccuracy: true, timeout: 6000, maximumAge: 15000 }
       );
     });
   };
 
   const gpsResult = await getGpsDist();
-
-  if (!gpsResult.ok) {
-    if (btnDrop) {
-      btnDrop.disabled = false;
-      const coinReward = Number(selectedRadarEvent.coins) || 100;
-      btnDrop.textContent = lang === 'fr' ? `💎 Réclamer le Drop (+${coinReward} 🪙)` : `💎 Claim Drop (+${coinReward} 🪙)`;
-    }
-    if (isAdmin || (typeof virtualRadarScanActive !== 'undefined' && virtualRadarScanActive)) {
-      awardDropCoins();
-      return;
-    }
-    const userConfirm = confirm(lang === 'fr'
-      ? "📡 Signal GPS matériel non détecté.\n\nVoulez-vous débloquer ce Cyber Drop via le Radar Virtuel ?"
-      : "📡 Hardware GPS signal not detected.\n\nDo you want to unlock this Cyber Drop via Virtual Radar?");
-    if (userConfirm) {
-      awardDropCoins();
-      return;
-    }
-    toast(lang === 'fr'
-      ? '📍 Impossible d\'obtenir votre position GPS. Veuillez autoriser la localisation pour réclamer ce trésor !'
-      : '📍 Unable to get your GPS location. Please allow location access to claim this treasure!', 'error');
-    return;
-  }
-
   const MAX_RADIUS_METERS = 250;
-  if (typeof virtualRadarScanActive !== 'undefined' && virtualRadarScanActive) {
+
+  if (gpsResult.dist <= MAX_RADIUS_METERS) {
     awardDropCoins();
     return;
   }
-  if (gpsResult.dist > MAX_RADIUS_METERS) {
-    if (btnDrop) {
-      btnDrop.disabled = false;
-      const coinReward = Number(selectedRadarEvent.coins) || 100;
-      btnDrop.textContent = lang === 'fr' ? `💎 Réclamer le Drop (+${coinReward} 🪙)` : `💎 Claim Drop (+${coinReward} 🪙)`;
-    }
-    const distKm = (gpsResult.dist / 1000).toFixed(2);
-    if (isAdmin) {
-      const adminConfirm = confirm(lang === 'fr'
-        ? `🛡️ CONTRÔLE ADMIN : Vous êtes à ${distKm} km du drop (> 250m).\n\nVoulez-vous forcer la réclamation en mode test administrateur ?`
-        : `🛡️ ADMIN CONTROL: You are ${distKm} km away (> 250m).\n\nDo you want to force-claim this drop in admin test mode?`);
-      if (adminConfirm) {
-        awardDropCoins();
-        return;
-      }
-    }
 
-    const virtualClaimConfirm = confirm(lang === 'fr'
-      ? `📡 Vous êtes à ${distKm} km de ce Cyber Drop.\n\nVoulez-vous le débloquer en mode Explorateur Virtuel ?`
-      : `📡 You are ${distKm} km from this Cyber Drop.\n\nDo you want to unlock it in Virtual Explorer mode?`);
-    if (virtualClaimConfirm) {
+  // If farther than 250m:
+  if (btnDrop) {
+    btnDrop.disabled = false;
+    const coinReward = Number(selectedRadarEvent.coins) || 100;
+    btnDrop.textContent = lang === 'fr' ? `💎 Réclamer le Drop (+${coinReward} 🪙)` : `💎 Claim Drop (+${coinReward} 🪙)`;
+  }
+  const distStr = formatDistanceDisplay(gpsResult.dist, lang);
+
+  if (isAdmin) {
+    const adminConfirm = confirm(lang === 'fr'
+      ? `🛡️ CONTRÔLE ADMIN : Vous êtes à ${distStr} du drop (> 250m).\n\nVoulez-vous forcer la réclamation en mode test administrateur ?`
+      : `🛡️ ADMIN CONTROL: You are ${distStr} away (> 250m).\n\nDo you want to force-claim this drop in admin test mode?`);
+    if (adminConfirm) {
       awardDropCoins();
       return;
     }
+  }
 
-    toast(lang === 'fr'
-      ? `❌ Trop loin ! Vous êtes à ${distKm} km. Vous devez vous déplacer physiquement à moins de 250 m du trésor pour le réclamer !`
-      : `❌ Out of range! You are ${distKm} km away. You must physically be within 250m of the treasure to claim it!`, 'error');
+  const virtualClaimConfirm = confirm(lang === 'fr'
+    ? `📡 Vous êtes à ${distStr} de ce Cyber Drop.\n\nVoulez-vous le débloquer en mode Explorateur Virtuel ?`
+    : `📡 You are ${distStr} from this Cyber Drop.\n\nDo you want to unlock it in Virtual Explorer mode?`);
+  if (virtualClaimConfirm) {
+    awardDropCoins();
     return;
   }
+
+  toast(lang === 'fr'
+    ? `❌ Trop loin ! Vous êtes à ${distStr}. Vous devez vous déplacer physiquement à moins de 250 m du trésor pour le réclamer !`
+    : `❌ Out of range! You are ${distStr} away. You must physically be within 250m of the treasure to claim it!`, 'error');
+  return;
 
   // Physical proximity verified (<= 250m)
   awardDropCoins();
