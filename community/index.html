@@ -4410,17 +4410,39 @@
       padding: 16px 20px 48px 20px !important;
     }
     /* 🛡️ ULTRA-STABLE ZERO-GPU-CRASH MOBILE RADAR OVERLAY */
+    body.radar-modal-active {
+      overflow: hidden !important;
+      overscroll-behavior: none !important;
+    }
+    body.radar-modal-active #mobileBottomNav,
+    body.radar-modal-active .mobile-bottom-nav,
+    #radarMapModal.open ~ #mobileBottomNav,
+    #radarMapModal.open ~ .mobile-bottom-nav {
+      display: none !important;
+    }
     #radarMapModal {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100% !important;
+      height: 100dvh !important;
+      z-index: 100005 !important;
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
-      background: rgba(3, 7, 18, 0.94) !important;
+      background: #030712 !important; /* 100% SOLID OPAQUE - Prevents YouTube iframe / GPU video bleed-through */
       transition: opacity 0.15s ease-out !important;
+      overscroll-behavior: contain !important;
+      touch-action: none !important;
     }
     #radarMapModal .mont-radar-modal-card {
       transform: none !important;
       -webkit-transform: none !important;
       transition: none !important;
       animation: none !important;
+      background: #090d16 !important;
+      overscroll-behavior: contain !important;
+      position: relative !important;
+      z-index: 100006 !important;
     }
     #realMontrealMap {
       width: 100% !important;
@@ -4428,7 +4450,7 @@
       min-height: 220px !important;
       border-radius: 14px;
       overflow: hidden;
-      background: #060b14;
+      background: #090d16 !important;
       border: 1px solid rgba(6, 182, 212, 0.4);
       position: relative;
       z-index: 1;
@@ -4436,13 +4458,33 @@
       box-shadow: inset 0 0 35px rgba(0,0,0,0.85);
       transform: none !important;
       -webkit-transform: none !important;
-      touch-action: pan-x pan-y !important;
+      touch-action: none !important;
       overscroll-behavior: contain !important;
     }
     @media (max-width: 640px) {
-      #realMontrealMap { height: 240px !important; min-height: 200px !important; }
-      .mont-radar-modal-card { max-height: 94vh !important; width: 98% !important; border-radius: 18px 18px 0 0 !important; }
-      .mont-radar-modal-card .mb { padding: 12px 10px 48px 10px !important; }
+      #radarMapModal {
+        align-items: flex-end !important;
+        padding: 0 !important;
+        background: #030712 !important;
+      }
+      #radarMapModal .mont-radar-modal-card {
+        max-height: 94dvh !important;
+        height: 94dvh !important;
+        width: 100% !important;
+        border-radius: 20px 20px 0 0 !important;
+        margin: 0 !important;
+      }
+      #radarMapModal .mont-radar-modal-card .mb {
+        padding: 10px 10px 48px 10px !important;
+        touch-action: pan-y !important;
+        overscroll-behavior: contain !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+      #realMontrealMap {
+        height: 250px !important;
+        min-height: 220px !important;
+        touch-action: none !important;
+      }
       .radar-leaflet-pin .pin-pulse { display: none !important; }
       .radar-drop-pin .radar-drop-pulse { display: none !important; }
     }
@@ -18209,16 +18251,13 @@ function createMapTileLayer(type) {
       maxZoom: 19
     });
   } else {
-    // 🌙 Native Cyberpunk Dark Gray Canvas (100% Free, NO API KEY, NO WATERMARK, Silky Smooth on Mobile)
+    // 🌙 CartoDB Dark Matter (100% Free, NO API KEY, High Contrast, Razor-sharp roads & labels)
     if (mapContainer) mapContainer.classList.remove('dark-leaflet-tiles');
-    const darkBase = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-      attribution: '&copy; Esri, HERE, Garmin, &copy; OpenStreetMap contributors',
-      maxZoom: 19
+    return L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 20
     });
-    const darkLabels = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 19
-    });
-    return L.layerGroup([darkBase, darkLabels]);
   }
 }
 
@@ -19109,15 +19148,37 @@ async function syncRadarEventsWithFirestore() {
   }
 }
 
+let radarTouchListenerAttached = false;
 function openRadarModal() {
   const m = document.getElementById('radarMapModal');
   if (m) {
+    if (!radarTouchListenerAttached) {
+      radarTouchListenerAttached = true;
+      m.addEventListener('touchmove', function(e) {
+        if (!e.target.closest('.mb') && !e.target.closest('#realMontrealMap')) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+    }
+
+    document.body.classList.add('radar-modal-active');
     document.body.style.overflow = 'hidden';
+
+    // Completely hide mobile bottom navigation bar so it never bleeds or clashes
+    const bNav = document.getElementById('mobileBottomNav');
+    if (bNav) bNav.style.setProperty('display', 'none', 'important');
+
     m.classList.add('open');
+
     setTimeout(() => {
       initMontrealRealMap();
       if (realMontrealLeafletMap) realMontrealLeafletMap.invalidateSize({ pan: false });
-    }, 60);
+    }, 120);
+
+    setTimeout(() => {
+      if (realMontrealLeafletMap) realMontrealLeafletMap.invalidateSize({ pan: false });
+    }, 400);
+
     updateRadarAdminUI();
     syncRadarEventsWithFirestore();
   }
@@ -19128,7 +19189,14 @@ function closeRadarModal(e) {
   const m = document.getElementById('radarMapModal');
   if (m) {
     m.classList.remove('open');
+    document.body.classList.remove('radar-modal-active');
     document.body.style.overflow = '';
+
+    // Restore mobile bottom navigation bar on mobile
+    const bNav = document.getElementById('mobileBottomNav');
+    if (bNav && window.innerWidth <= 640) {
+      bNav.style.display = '';
+    }
   }
 }
 
