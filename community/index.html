@@ -4521,9 +4521,9 @@
       transform: scale(1.1);
       box-shadow: 0 0 12px rgba(6, 182, 212, 0.6);
     }
-    /* 100% Free Native Cyberpunk Dark Mode (Zero CSS Filter - 0 GPU crash on mobile) */
-    .dark-leaflet-tiles .leaflet-tile {
-      filter: none !important;
+    /* 100% Free Cyberpunk Dark Mode (Inverts OpenStreetMap tiles into high-contrast dark map - NO API KEY, NO WATERMARK) */
+    #realMontrealMap.dark-leaflet-tiles .leaflet-tile-pane {
+      filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%) !important;
     }
     .map-layer-btn {
       transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -7087,21 +7087,15 @@
         <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#06b6d4,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:1.25rem;box-shadow:0 0 16px rgba(6,182,212,0.45);">🗺️</div>
         <div>
           <h3 style="font-family:'Outfit',sans-serif;font-size:1.15rem;font-weight:800;color:#fff;margin:0;display:flex;align-items:center;gap:8px;">
-            <span id="lbl-radar-modal-title">CYBER EARTH™ World Radar</span>
-            <span style="font-size:0.68rem;background:linear-gradient(135deg,#f43f5e,#06b6d4);color:#fff;padding:2px 8px;border-radius:12px;font-weight:900;" id="lbl-radar-live-badge">WORLDWIDE LIVE 🌍</span>
+            <span id="lbl-radar-modal-title">REALMONT™ Events Radar</span>
+            <span style="font-size:0.68rem;background:linear-gradient(135deg,#10b981,#06b6d4);color:#fff;padding:2px 8px;border-radius:12px;font-weight:900;" id="lbl-radar-live-badge">WORLDWIDE LIVE 🌍</span>
           </h3>
-          <p id="lbl-radar-modal-sub" style="color:var(--muted);font-size:0.8rem;margin:2px 0 0;">Real-time interactive global events, hot spots & secret cyber drops around the world</p>
+          <p id="lbl-radar-modal-sub" style="color:var(--muted);font-size:0.8rem;margin:2px 0 0;">Interactive real-time map of community events, meetups & hot spots in your city and worldwide</p>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
-        <button class="btn-filter-spot" style="padding:6px 12px;font-size:0.76rem;background:linear-gradient(135deg,#a855f7,#06b6d4);box-shadow:0 0 12px rgba(6,182,212,0.35);" onclick="scanNearbyCyberDrops()" id="btnScanNearbyDrops" title="Detect secret drops near your real GPS position">
-          <span>📡 Scan Radar</span>
-        </button>
-        <button class="btn-filter-spot" style="padding:6px 12px;font-size:0.76rem;background:linear-gradient(135deg,#10b981,#06b6d4);" onclick="toggleRadarAddEventDrawer()" id="btnToggleAddEventDrawer">
+        <button class="btn-filter-spot" style="padding:8px 16px;font-size:0.82rem;background:linear-gradient(135deg,#10b981,#06b6d4);box-shadow:0 0 14px rgba(16,185,129,0.35);font-weight:800;" onclick="toggleRadarAddEventDrawer()" id="btnToggleAddEventDrawer">
           <span>➕ Add Event</span>
-        </button>
-        <button class="btn-filter-spot" id="btnRadarAdminDropSpawn" style="display:none !important;padding:6px 12px;font-size:0.78rem;background:linear-gradient(135deg,rgba(245,158,11,0.25),rgba(236,72,153,0.25));border:1px solid #f59e0b;color:#fde047;font-weight:800;" onclick="toggleRadarAdminDropDrawer()">
-          <span>💎 Spawn Cyber Drop</span>
         </button>
         <button class="btn-filter-spot" id="btnRadarAdminManage" style="display:none !important;padding:6px 12px;font-size:0.78rem;background:rgba(239,68,68,0.2);border:1px solid #ef4444;color:#fca5a5;" onclick="toggleRadarAdminEventsDrawer()">
           <span>🛡️ Admin</span>
@@ -7116,12 +7110,12 @@
       <div class="radar-scroll-nav-wrapper" style="margin-bottom:10px;">
         <button type="button" class="btn-radar-nav-arrow" onclick="scrollRadarBar('radarCatPillsBar', -1)" aria-label="Previous category" title="Previous">‹</button>
         <div class="radar-cat-pills-bar" id="radarCatPillsBar">
-          <button class="radar-cat-pill active" onclick="filterRadarCategory('all', this)" id="pillCatAll">🌐 All Events (<span id="countAllPins">7</span>)</button>
-          <button class="radar-cat-pill" onclick="filterRadarCategory('sports', this)" id="pillCatSports">🚴 Sports & Cycling</button>
+          <button class="radar-cat-pill active" onclick="filterRadarCategory('all', this)" id="pillCatAll">🌐 All Events (<span id="countAllPins">12</span>)</button>
+          <button class="radar-cat-pill" onclick="filterRadarCategory('sports', this)" id="pillCatSports">🚴 Sports & Fitness</button>
           <button class="radar-cat-pill" onclick="filterRadarCategory('music', this)" id="pillCatMusic">🎵 Music & Festivals</button>
           <button class="radar-cat-pill" onclick="filterRadarCategory('food', this)" id="pillCatFood">🥯 Food & Gourmet</button>
           <button class="radar-cat-pill" onclick="filterRadarCategory('art', this)" id="pillCatArt">🎨 Art & Culture</button>
-          <button class="radar-cat-pill" onclick="filterRadarCategory('drop', this)" id="pillCatDrop">💎 Secret Drops</button>
+          <button class="radar-cat-pill" onclick="filterRadarCategory('community', this)" id="pillCatCommunity">💡 Meetups & Social</button>
         </div>
         <button type="button" class="btn-radar-nav-arrow" onclick="scrollRadarBar('radarCatPillsBar', 1)" aria-label="Next category" title="Next">›</button>
       </div>
@@ -7143,38 +7137,24 @@
         <button type="button" class="btn-radar-nav-arrow" onclick="scrollRadarBar('radarTeleportBar', 1)" aria-label="Next city" title="Next">›</button>
       </div>
 
-      <!-- ⚡ 15-MIN FLASH SUPER DROP LIVE BANNER -->
-      <div class="radar-flash-drop-banner" id="radarFlashDropBanner" onclick="focusOnFlashSuperDrop()">
-        <div style="display:flex;align-items:center;gap:8px;">
-          <span style="font-size:1.4rem;">⚡</span>
-          <div>
-            <div style="font-weight:900;color:#fff;font-size:0.86rem;" id="lblFlashBannerTitle">SUPER DROP FLASH EVENT (+300 🪙)</div>
-            <div style="font-size:0.72rem;color:#fde047;" id="lblFlashBannerSub">Active for 15 minutes! Tap to fly to Golden Beacon</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <span style="font-family:'Outfit',sans-serif;font-weight:900;color:#fff;font-size:1rem;background:rgba(0,0,0,0.4);padding:4px 10px;border-radius:10px;border:1px solid #f59e0b;" id="flashTimerCountdown">14:59</span>
-        </div>
-      </div>
-
-      <!-- Real Montreal Leaflet Map Container with Free Layer Switcher -->
+      <!-- Real Leaflet Map Container with Free Layer Switcher -->
       <div style="position:relative;width:100%;margin-bottom:12px;">
-        <div id="realMontrealMap" class="dark-leaflet-tiles" style="width:100%;height:380px;min-height:220px;border-radius:14px;overflow:hidden;position:relative;background:#090d16;border:1px solid rgba(6,182,212,0.4);z-index:1;display:block;"></div>
+        <div id="realMontrealMap" style="width:100%;height:380px;min-height:220px;border-radius:14px;overflow:hidden;position:relative;background:#090d16;border:1px solid rgba(6,182,212,0.4);z-index:1;display:block;"></div>
         
         <!-- 100% FREE NO-API-KEY Tile Layer Switcher Control -->
         <div class="map-layer-selector-bar" style="position:absolute;top:10px;right:10px;z-index:999;display:flex;gap:4px;background:rgba(9,13,22,0.96);border:1px solid rgba(255,255,255,0.18);padding:4px;border-radius:20px;box-shadow:0 6px 18px rgba(0,0,0,0.7);">
-          <button class="map-layer-btn active" id="btnLayerDark" onclick="switchMapLayer('dark', this)" style="background:linear-gradient(135deg,#06b6d4,#3b82f6);border:none;color:#fff;font-size:0.72rem;font-weight:700;padding:4px 10px;border-radius:16px;cursor:pointer;">🌙 Dark</button>
-          <button class="map-layer-btn" id="btnLayerStreets" onclick="switchMapLayer('streets', this)" style="background:transparent;border:none;color:#94a3b8;font-size:0.72rem;font-weight:700;padding:4px 10px;border-radius:16px;cursor:pointer;">🗺️ Streets</button>
+          <button class="map-layer-btn active" id="btnLayerStreets" onclick="switchMapLayer('streets', this)" style="background:linear-gradient(135deg,#06b6d4,#3b82f6);border:none;color:#fff;font-size:0.72rem;font-weight:700;padding:4px 10px;border-radius:16px;cursor:pointer;">🗺️ Streets</button>
+          <button class="map-layer-btn" id="btnLayerDark" onclick="switchMapLayer('dark', this)" style="background:transparent;border:none;color:#94a3b8;font-size:0.72rem;font-weight:700;padding:4px 10px;border-radius:16px;cursor:pointer;">🌙 Dark</button>
           <button class="map-layer-btn" id="btnLayerSatellite" onclick="switchMapLayer('satellite', this)" style="background:transparent;border:none;color:#94a3b8;font-size:0.72rem;font-weight:700;padding:4px 10px;border-radius:16px;cursor:pointer;">🛰️ Satellite</button>
         </div>
       </div>
 
-      <!-- Add Montreal Event Drawer -->
+      <!-- Add Montreal & Global Event Drawer -->
       <div class="radar-add-event-drawer" id="radarAddEventDrawer">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
           <div style="display:flex;align-items:center;gap:6px;">
             <span style="font-size:1.1rem;">📍</span>
-            <h4 style="margin:0;font-size:0.95rem;font-weight:800;color:#fff;" id="lbl-add-event-drawer-title">Add Montreal Live Event</h4>
+            <h4 style="margin:0;font-size:0.95rem;font-weight:800;color:#fff;" id="lbl-add-event-drawer-title">Add Live Event (Montréal & Worldwide)</h4>
             <span style="font-size:0.68rem;background:rgba(16,185,129,0.2);border:1px solid #10b981;color:#34d399;padding:2px 8px;border-radius:10px;font-weight:800;">+20 🪙 Reward</span>
           </div>
           <button style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1rem;" onclick="toggleRadarAddEventDrawer(false)">✕</button>
@@ -7182,45 +7162,61 @@
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:10px;">
           <div>
             <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lbl-add-event-name">Event Title / Name</label>
-            <input type="text" id="newEventTitle" placeholder="e.g. Grand Prix Cycliste Watch Party" class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;">
+            <input type="text" id="newEventTitle" placeholder="e.g. Grand Prix Watch Party, Rooftop Party..." class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;">
           </div>
           <div>
             <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lbl-add-event-category">Category</label>
             <select id="newEventCategory" class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;background:#0f172a;color:#fff;">
-              <option value="sports">🚴 Sports & Grand Prix</option>
-              <option value="music">🎵 Music & Concert</option>
-              <option value="food">🥯 Food & Poutine/Bagel</option>
+              <option value="community">💡 Community Meetup & Social</option>
+              <option value="sports">🚴 Sports & Fitness</option>
+              <option value="music">🎵 Music & Concerts</option>
+              <option value="food">🥯 Food & Drinks</option>
               <option value="art">🎨 Art & Culture</option>
-              <option value="community">💡 Community Meetup</option>
             </select>
           </div>
           <div>
-            <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lbl-add-event-location">Montreal Location</label>
-            <select id="newEventLocationPreset" onchange="onRadarLocationPresetChange(this.value)" class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;background:#0f172a;color:#fff;">
-              <option value="jeanne-mance">Parc Jeanne-Mance / Mont-Royal (Cycling Finish)</option>
-              <option value="tam-tams">Monument Cartier (Tam-Tams)</option>
-              <option value="vieux-port">Vieux-Port & Quai de l'Horloge</option>
-              <option value="jean-drapeau">Parc Jean-Drapeau / Île Sainte-Hélène</option>
-              <option value="mile-end">Mile End (St-Viateur / Fairmount)</option>
-              <option value="spectacles">Quartier des Spectacles / Place des Arts</option>
-              <option value="notre-dame">Circuit Gilles-Villeneuve (F1 Track)</option>
-              <option value="custom">📍 Click anywhere on map</option>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+              <label style="font-size:0.72rem;color:var(--muted);margin-bottom:0;" id="lbl-add-event-location">City & Location</label>
+              <button type="button" onclick="useMyGpsForNewEvent()" style="background:none;border:none;color:#38bdf8;font-size:0.68rem;cursor:pointer;font-weight:700;padding:0;" title="Use current GPS">📡 Mon GPS</button>
+            </div>
+            <input type="text" id="newEventLocationName" placeholder="e.g. Montréal - Parc Jeanne-Mance / Paris / Bucharest" class="adm-input" style="width:100%;margin-bottom:4px;padding:8px 10px;font-size:0.82rem;">
+            <select id="newEventLocationPreset" onchange="onRadarLocationPresetChange(this.value)" class="adm-input" style="width:100%;margin-bottom:0;padding:6px 10px;font-size:0.75rem;background:#0f172a;color:#94a3b8;">
+              <option value="custom">📍 Toucher la carte pour placer le repère (ou GPS)</option>
+              <option value="jeanne-mance">⚜️ Montréal — Parc Jeanne-Mance / Mont-Royal</option>
+              <option value="tam-tams">⚜️ Montréal — Tam-Tams (Monument Cartier)</option>
+              <option value="vieux-port">⚜️ Montréal — Vieux-Port & Quai de l'Horloge</option>
+              <option value="spectacles">⚜️ Montréal — Quartier des Spectacles</option>
+              <option value="mile-end">⚜️ Montréal — Mile End (St-Viateur / Fairmount)</option>
+              <option value="jean-drapeau">⚜️ Montréal — Parc Jean-Drapeau</option>
+              <option value="notre-dame">⚜️ Montréal — Circuit F1 Gilles-Villeneuve</option>
+              <option value="paris-eiffel">🗼 Paris — Tour Eiffel & Champ de Mars</option>
+              <option value="paris-louvre">🗼 Paris — Musée du Louvre</option>
+              <option value="ny-centralpark">🗽 New York — Central Park</option>
+              <option value="ny-timessquare">🗽 New York — Times Square</option>
+              <option value="tokyo-shibuya">🏯 Tokyo — Shibuya Crossing</option>
+              <option value="london-bigben">🏰 London — Big Ben & Westminster</option>
+              <option value="bucharest-universitate">🇷🇴 Bucharest — Piața Universității</option>
             </select>
           </div>
           <div>
-            <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lbl-add-event-time">Time / Schedule</label>
-            <input type="text" id="newEventTime" placeholder="e.g. Today 14:00 - 18:00" class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;" value="Today / Aujourd'hui">
+            <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lbl-add-event-time">Time & Duration (Cât ține)</label>
+            <input type="text" id="newEventTime" placeholder="e.g. Today 18:00 - 22:00 (4h) / Ce soir 19h - 23h" class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;" value="Aujourd'hui / Today 18:00 - 22:00">
           </div>
         </div>
-        <div style="margin-bottom:12px;">
-          <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lbl-add-event-desc">Description & Highlights</label>
-          <input type="text" id="newEventDesc" placeholder="e.g. Cheering zone at the final climb, live big screens & free stickers!" class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;">
+        <div style="margin-bottom:10px;">
+          <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lbl-add-event-desc">Description & Event Details (Ce eveniment este)</label>
+          <input type="text" id="newEventDesc" placeholder="e.g. Rencontre conviviale, musique acoustique, ambiance chaleureuse pour tous !" class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;">
         </div>
-        <div style="display:flex;justify-content:flex-end;gap:8px;">
-          <button class="shop-btn" style="padding:6px 14px;background:var(--bg3);border:1px solid var(--border2);color:#94a3b8;font-size:0.8rem;" onclick="toggleRadarAddEventDrawer(false)" id="btnCancelAddEvent">Cancel</button>
-          <button class="btn-filter-spot" style="padding:8px 18px;font-size:0.82rem;background:linear-gradient(135deg,#06b6d4,#3b82f6);" onclick="submitRadarCustomEvent()" id="btnSubmitAddEvent">
-            <span>🚀 Publish to Radar (+20 🪙)</span>
-          </button>
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+          <div style="font-size:0.7rem;color:#38bdf8;">
+            💡 <span>Touchez la carte n'importe où pour y placer votre événement !</span>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="shop-btn" style="padding:6px 14px;background:var(--bg3);border:1px solid var(--border2);color:#94a3b8;font-size:0.8rem;" onclick="toggleRadarAddEventDrawer(false)" id="btnCancelAddEvent">Cancel</button>
+            <button class="btn-filter-spot" style="padding:8px 18px;font-size:0.82rem;background:linear-gradient(135deg,#06b6d4,#3b82f6);" onclick="submitRadarCustomEvent()" id="btnSubmitAddEvent">
+              <span>🚀 Publish to Radar (+20 🪙)</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -7246,113 +7242,6 @@
         </div>
       </div>
 
-      <!-- Admin Cyber Drop Spawner Drawer (Admin Geocaching & Custom Coins) -->
-      <div class="radar-admin-drop-drawer" id="radarAdminDropDrawer">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span style="font-size:1.3rem;">💎</span>
-            <div>
-              <h4 style="margin:0;font-size:0.95rem;font-weight:800;color:#fff;" id="lblAdminDropTitle">MONT-RADAR™ Cyber Drop Spawner (Admin)</h4>
-              <p style="margin:2px 0 0;font-size:0.72rem;color:var(--muted);" id="lblAdminDropSubtitle">Deploy secret digital treasures & customize GENIUS IA coin rewards on the map</p>
-            </div>
-          </div>
-          <button style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.1rem;" onclick="toggleRadarAdminDropDrawer(false)">✕</button>
-        </div>
-
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:10px;">
-          <div>
-            <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lblAdminDropName">Treasure Name / Title</label>
-            <input type="text" id="newDropTitle" placeholder="e.g. Mont-Royal Golden Beacon" class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;" value="Secret Mont-Royal Cyber Drop 💎">
-          </div>
-          <div>
-            <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lblAdminDropCoins">Coin Reward (GENIUS IA 🪙)</label>
-            <div style="display:flex;gap:6px;align-items:center;">
-              <input type="number" id="newDropCoins" placeholder="100" class="adm-input" style="width:90px;margin-bottom:0;padding:8px 10px;font-size:0.82rem;color:#fde047;font-weight:800;" value="100" min="10" max="10000">
-              <div style="display:flex;gap:4px;flex-wrap:wrap;">
-                <button type="button" class="drop-coin-chip" onclick="setDropCoinValue(50, this)">50</button>
-                <button type="button" class="drop-coin-chip active" onclick="setDropCoinValue(100, this)">100</button>
-                <button type="button" class="drop-coin-chip" onclick="setDropCoinValue(250, this)">250</button>
-                <button type="button" class="drop-coin-chip" onclick="setDropCoinValue(500, this)">500</button>
-                <button type="button" class="drop-coin-chip" onclick="setDropCoinValue(1000, this)">1K</button>
-              </div>
-            </div>
-          </div>
-          <div>
-            <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lblAdminDropIcon">Treasure Icon</label>
-            <div style="display:flex;gap:6px;flex-wrap:wrap;" id="dropIconSelector">
-              <button type="button" class="drop-icon-chip active" onclick="setDropIcon('💎', this)">💎</button>
-              <button type="button" class="drop-icon-chip" onclick="setDropIcon('🎁', this)">🎁</button>
-              <button type="button" class="drop-icon-chip" onclick="setDropIcon('⚡', this)">⚡</button>
-              <button type="button" class="drop-icon-chip" onclick="setDropIcon('🏆', this)">🏆</button>
-              <button type="button" class="drop-icon-chip" onclick="setDropIcon('🔑', this)">🔑</button>
-              <button type="button" class="drop-icon-chip" onclick="setDropIcon('🪙', this)">🪙</button>
-              <button type="button" class="drop-icon-chip" onclick="setDropIcon('👑', this)">👑</button>
-            </div>
-          </div>
-          <div>
-            <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lblAdminDropLoc">Montreal Location</label>
-            <select id="newDropLocationPreset" onchange="onRadarDropLocationPresetChange(this.value)" class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;background:#0f172a;color:#fff;">
-              <optgroup label="⚜️ Montreal (MTL)">
-                <option value="kondiaronk">Belvédère Kondiaronk (Mont-Royal Lookout)</option>
-                <option value="tam-tams">Monument Cartier (Tam-Tams Mont-Royal)</option>
-                <option value="vieux-port">Vieux-Port & Quai de l'Horloge</option>
-                <option value="mile-end">Mile End (St-Viateur / Fairmount)</option>
-                <option value="spectacles">Quartier des Spectacles / Place des Arts</option>
-                <option value="lafontaine">Parc La Fontaine (Lagoon)</option>
-                <option value="jean-drapeau">Parc Jean-Drapeau (Calder Sculpture)</option>
-                <option value="notre-dame">Circuit Gilles-Villeneuve F1</option>
-              </optgroup>
-              <optgroup label="🗼 Paris (France)">
-                <option value="paris-eiffel">Tour Eiffel (Champ de Mars)</option>
-                <option value="paris-louvre">Musée du Louvre (Pyramide)</option>
-                <option value="paris-montmartre">Basilique du Sacré-Cœur (Montmartre)</option>
-              </optgroup>
-              <optgroup label="🗽 New York (USA)">
-                <option value="ny-timessquare">Times Square (42nd St)</option>
-                <option value="ny-centralpark">Central Park (Bow Bridge)</option>
-                <option value="ny-brooklynbridge">Brooklyn Bridge Promenade</option>
-              </optgroup>
-              <optgroup label="🏯 Tokyo (Japan)">
-                <option value="tokyo-shibuya">Shibuya Crossing (Hachiko)</option>
-                <option value="tokyo-sensoji">Senso-ji Temple (Asakusa)</option>
-              </optgroup>
-              <optgroup label="🏰 London (UK)">
-                <option value="london-bigben">Big Ben & Westminster</option>
-                <option value="london-towerbridge">Tower Bridge (Thames)</option>
-              </optgroup>
-              <optgroup label="🌆 Dubai (UAE)">
-                <option value="dubai-burj">Burj Khalifa & Dubai Fountain</option>
-              </optgroup>
-              <optgroup label="🇷🇴 Bucharest (Romania)">
-                <option value="bucharest-universitate">Piața Universității (Kilometrul 0)</option>
-                <option value="bucharest-arctriumf">Arcul de Triumf (Kiseleff)</option>
-              </optgroup>
-              <optgroup label="📍 Custom Coordinates">
-                <option value="custom">📍 Click anywhere on map</option>
-              </optgroup>
-            </select>
-          </div>
-        </div>
-
-        <div style="margin-bottom:12px;">
-          <label style="font-size:0.72rem;color:var(--muted);display:block;margin-bottom:4px;" id="lblAdminDropClue">Secret Geocaching Clue / Mystery Hint</label>
-          <input type="text" id="newDropClue" placeholder="e.g. Look near the grand stone staircase facing the Montreal downtown skyline..." class="adm-input" style="width:100%;margin-bottom:0;padding:8px 10px;font-size:0.82rem;" value="Secret digital cache hidden at this iconic Montreal spot! Claim your coins!">
-        </div>
-
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-          <div style="font-size:0.72rem;color:#fde047;">
-            ⚡ <span id="lblAdminDropTip">Drop is published in real-time to all users on MONT-RADAR!</span>
-          </div>
-          <div style="display:flex;gap:8px;">
-            <button class="shop-btn" style="padding:6px 12px;background:linear-gradient(135deg,#f59e0b,#ec4899);border:none;color:#fff;font-size:0.75rem;font-weight:800;" onclick="triggerAdminFlashDrop()" id="btnTriggerAdminFlash">⚡ Start 15-Min Flash Drop</button>
-            <button class="shop-btn" style="padding:6px 14px;background:var(--bg3);border:1px solid var(--border2);color:#94a3b8;font-size:0.8rem;" onclick="toggleRadarAdminDropDrawer(false)" id="btnCancelAdminDrop">Cancel</button>
-            <button class="btn-filter-spot" style="padding:8px 18px;font-size:0.82rem;background:linear-gradient(135deg,#f59e0b,#ec4899);color:#fff;font-weight:800;" onclick="submitRadarAdminCyberDrop()" id="btnSubmitAdminDrop">
-              <span>🚀 Deploy Cyber Drop</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
       <!-- Active Selected Hotspot Detail Card -->
       <div class="map-active-spot-card" id="radarSpotDetailsCard">
         <div style="flex:1;">
@@ -7362,17 +7251,17 @@
             <span id="activeSpotBadge" style="font-size:0.65rem;background:rgba(244,63,94,0.2);border:1px solid #f43f5e;color:#f43f5e;padding:2px 8px;border-radius:10px;font-weight:800;">WORLD TOUR LIVE</span>
           </div>
           <p style="margin:4px 0 0;font-size:0.78rem;color:var(--muted);" id="activeSpotDesc">Final decisive stage! World champions battle on Mont-Royal & Camillien-Houde climbs.</p>
-          <div style="margin-top:4px;font-size:0.72rem;color:#38bdf8;display:flex;align-items:center;gap:12px;" id="activeSpotMeta">
-            <span>📍 Parc Jeanne-Mance / Mont-Royal</span>
-            <span>⏱️ Today 10:00 - 16:30</span>
+          <div style="margin-top:4px;font-size:0.72rem;color:#38bdf8;display:flex;align-items:center;gap:12px;flex-wrap:wrap;" id="activeSpotMeta">
+            <span id="activeSpotLocText">📍 Parc Jeanne-Mance / Mont-Royal</span>
+            <span id="activeSpotTimeText">⏱️ Today 10:00 - 16:30</span>
           </div>
         </div>
         <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;flex-wrap:wrap;">
+          <button class="btn-filter-spot" id="btnDirectionsRadarSpot" onclick="openRadarSpotDirections()" style="background:linear-gradient(135deg,#3b82f6,#06b6d4);" title="Open GPS directions in Google Maps">
+            <span>🧭 Directions</span>
+          </button>
           <button class="btn-filter-spot" id="btnFilterByRadarSpot" onclick="filterFeedByRadarSpot()">
             <span>🎯 Filter Feed</span>
-          </button>
-          <button class="btn-filter-spot" id="btnUnlockDropSpot" onclick="claimRadarSecretDrop()" style="display:none;background:linear-gradient(135deg,#f59e0b,#ec4899);">
-            <span>💎 Claim Drop</span>
           </button>
           <button class="btn-filter-spot" id="btnAdminDeleteRadarSpot" onclick="promptDeleteCurrentRadarEvent()" style="display:none !important;background:linear-gradient(135deg,#ef4444,#dc2626);border:1px solid #f87171;color:#fff;padding:6px 12px;font-size:0.78rem;">
             <span>🗑️ Delete Event</span>
@@ -11284,42 +11173,29 @@ function applyCommunityLanguage(lang) {
   const navChat = document.getElementById('lblNavChat'); if (navChat) navChat.textContent = lang === 'fr' ? 'Salons Discussion MTL' : 'Montreal Chat Rooms';
   const hdrVipPill = document.getElementById('hdrVipPill'); if (hdrVipPill) hdrVipPill.innerHTML = '<span>⚜️ VIP #0001</span>';
 
-  // CYBER EARTH™ Real Live Map Modal
-  const radarTitle = document.getElementById('lbl-radar-modal-title'); if (radarTitle) radarTitle.textContent = lang === 'fr' ? 'CYBER EARTH™ Radar Mondial' : 'CYBER EARTH™ World Radar';
-  const radarSub = document.getElementById('lbl-radar-modal-sub'); if (radarSub) radarSub.textContent = lang === 'fr' ? 'Événements réels en direct dans le monde entier, spots et cyber drops secrets' : 'Real-time interactive worldwide events, hot spots & secret geocaches';
+  // REALMONT™ Events Radar Modal
+  const radarTitle = document.getElementById('lbl-radar-modal-title'); if (radarTitle) radarTitle.textContent = lang === 'fr' ? 'REALMONT™ Radar d\'Événements' : 'REALMONT™ Events Radar';
+  const radarSub = document.getElementById('lbl-radar-modal-sub'); if (radarSub) radarSub.textContent = lang === 'fr' ? 'Carte interactive en temps réel des événements, rassemblements et sorties dans votre ville' : 'Interactive real-time map of community events, meetups & hot spots in your city and worldwide';
   const btnAddEv = document.getElementById('btnToggleAddEventDrawer'); if (btnAddEv) btnAddEv.innerHTML = `<span>${lang === 'fr' ? '➕ Ajouter un Événement' : '➕ Add Event'}</span>`;
-  const pillAll = document.getElementById('pillCatAll'); if (pillAll) pillAll.innerHTML = `🌐 ${lang === 'fr' ? 'Tous les Événements' : 'All Events'} (<span id="countAllPins">${typeof getAllMontrealEvents === 'function' ? getAllMontrealEvents().length : 7}</span>)`;
+  const pillAll = document.getElementById('pillCatAll'); if (pillAll) pillAll.innerHTML = `🌐 ${lang === 'fr' ? 'Tous les Événements' : 'All Events'} (<span id="countAllPins">${typeof getAllMontrealEvents === 'function' ? getAllMontrealEvents().length : 12}</span>)`;
   const pillSports = document.getElementById('pillCatSports'); if (pillSports) pillSports.textContent = lang === 'fr' ? '🚴 Sports & Cyclisme' : '🚴 Sports & Cycling';
   const pillMusic = document.getElementById('pillCatMusic'); if (pillMusic) pillMusic.textContent = lang === 'fr' ? '🎵 Musique & Festivals' : '🎵 Music & Festivals';
-  const pillFood = document.getElementById('pillCatFood'); if (pillFood) pillFood.textContent = lang === 'fr' ? '🥯 Gastronomie & MTL' : '🥯 Food & Gourmet';
+  const pillFood = document.getElementById('pillCatFood'); if (pillFood) pillFood.textContent = lang === 'fr' ? '🥯 Resto & Food' : '🥯 Food & Gourmet';
   const pillArt = document.getElementById('pillCatArt'); if (pillArt) pillArt.textContent = lang === 'fr' ? '🎨 Art & Culture' : '🎨 Art & Culture';
-  const pillDrop = document.getElementById('pillCatDrop'); if (pillDrop) pillDrop.textContent = lang === 'fr' ? '💎 Drops Secrets' : '💎 Secret Drops';
-  const addEvTitle = document.getElementById('lbl-add-event-drawer-title'); if (addEvTitle) addEvTitle.textContent = lang === 'fr' ? 'Ajouter un Événement Réel à Montréal' : 'Add Montreal Live Event';
+  const pillCommunity = document.getElementById('pillCatCommunity'); if (pillCommunity) pillCommunity.textContent = lang === 'fr' ? '💡 Rassemblements' : '💡 Meetups & Social';
+  const addEvTitle = document.getElementById('lbl-add-event-drawer-title'); if (addEvTitle) addEvTitle.textContent = lang === 'fr' ? 'Ajouter un Événement dans Votre Ville' : 'Add Live Event (Montréal & Worldwide)';
   const addEvName = document.getElementById('lbl-add-event-name'); if (addEvName) addEvName.textContent = lang === 'fr' ? 'Titre de l\'Événement' : 'Event Title / Name';
   const addEvCat = document.getElementById('lbl-add-event-category'); if (addEvCat) addEvCat.textContent = lang === 'fr' ? 'Catégorie' : 'Category';
-  const addEvLoc = document.getElementById('lbl-add-event-location'); if (addEvLoc) addEvLoc.textContent = lang === 'fr' ? 'Emplacement à Montréal' : 'Montreal Location';
-  const addEvTime = document.getElementById('lbl-add-event-time'); if (addEvTime) addEvTime.textContent = lang === 'fr' ? 'Horaire / Heure' : 'Time / Schedule';
-  const addEvDesc = document.getElementById('lbl-add-event-desc'); if (addEvDesc) addEvDesc.textContent = lang === 'fr' ? 'Description & Points Forts' : 'Description & Highlights';
+  const addEvLoc = document.getElementById('lbl-add-event-location'); if (addEvLoc) addEvLoc.textContent = lang === 'fr' ? 'Ville & Emplacement' : 'City & Location';
+  const addEvTime = document.getElementById('lbl-add-event-time'); if (addEvTime) addEvTime.textContent = lang === 'fr' ? 'Horaire & Durée (combien de temps ça dure)' : 'Time & Duration (How long it lasts)';
+  const addEvDesc = document.getElementById('lbl-add-event-desc'); if (addEvDesc) addEvDesc.textContent = lang === 'fr' ? 'Description & Détails de l\'Événement' : 'Description & Event Details (Ce eveniment este)';
   const btnCancelEv = document.getElementById('btnCancelAddEvent'); if (btnCancelEv) btnCancelEv.textContent = lang === 'fr' ? 'Annuler' : 'Cancel';
   const btnSubmitEv = document.getElementById('btnSubmitAddEvent'); if (btnSubmitEv) btnSubmitEv.innerHTML = `<span>${lang === 'fr' ? '🚀 Publier sur le Radar (+20 🪙)' : '🚀 Publish to Radar (+20 🪙)'}</span>`;
   const btnAdminDel = document.getElementById('btnAdminDeleteRadarSpot'); if (btnAdminDel) btnAdminDel.innerHTML = `<span>🗑️ ${lang === 'fr' ? 'Supprimer' : 'Delete Event'}</span>`;
-  const adminDrwT = document.getElementById('lblAdminDrawerTitle'); if (adminDrwT) adminDrwT.textContent = lang === 'fr' ? 'Gestion des Événements MONT-RADAR (Admin)' : 'MONT-RADAR Event Manager (Admin)';
-  const adminDrwS = document.getElementById('lblAdminDrawerSubtitle'); if (adminDrwS) adminDrwS.textContent = lang === 'fr' ? 'Supprimez les événements expirés, gérez les événements ou réinitialisez' : 'Delete expired events, manage Montreal happenings, or reset';
+  const adminDrwT = document.getElementById('lblAdminDrawerTitle'); if (adminDrwT) adminDrwT.textContent = lang === 'fr' ? 'Gestion des Événements REALMONT (Admin)' : 'REALMONT Event Manager (Admin)';
+  const adminDrwS = document.getElementById('lblAdminDrawerSubtitle'); if (adminDrwS) adminDrwS.textContent = lang === 'fr' ? 'Supprimez les événements expirés, gérez les événements ou réinitialisez' : 'Delete expired events, manage city happenings, or reset';
   const btnRst = document.getElementById('btnResetEvents'); if (btnRst) btnRst.textContent = lang === 'fr' ? '🔄 Réinitialiser' : '🔄 Reset Defaults';
 
-
-
-  // Admin Cyber Drop Spawner Drawer
-  const adminDropT = document.getElementById('lblAdminDropTitle'); if (adminDropT) adminDropT.textContent = lang === 'fr' ? 'Créateur de Drops Cyber MONT-RADAR™ (Admin)' : 'MONT-RADAR™ Cyber Drop Spawner (Admin)';
-  const adminDropS = document.getElementById('lblAdminDropSubtitle'); if (adminDropS) adminDropS.textContent = lang === 'fr' ? 'Déployez des trésors numériques et personnalisez les récompenses en pièces GENIUS IA sur la carte' : 'Deploy secret digital treasures & customize GENIUS IA coin rewards on the map';
-  const adminDropN = document.getElementById('lblAdminDropName'); if (adminDropN) adminDropN.textContent = lang === 'fr' ? 'Nom du Trésor / Titre' : 'Treasure Name / Title';
-  const adminDropC = document.getElementById('lblAdminDropCoins'); if (adminDropC) adminDropC.textContent = lang === 'fr' ? 'Récompense en Pièces (GENIUS IA 🪙)' : 'Coin Reward (GENIUS IA 🪙)';
-  const adminDropI = document.getElementById('lblAdminDropIcon'); if (adminDropI) adminDropI.textContent = lang === 'fr' ? 'Icône du Trésor' : 'Treasure Icon';
-  const adminDropL = document.getElementById('lblAdminDropLoc'); if (adminDropL) adminDropL.textContent = lang === 'fr' ? 'Emplacement à Montréal' : 'Montreal Location';
-  const adminDropClue = document.getElementById('lblAdminDropClue'); if (adminDropClue) adminDropClue.textContent = lang === 'fr' ? 'Indice Géocaching Secret / Indication Mystère' : 'Secret Geocaching Clue / Mystery Hint';
-  const adminDropTip = document.getElementById('lblAdminDropTip'); if (adminDropTip) adminDropTip.textContent = lang === 'fr' ? 'Le Drop est publié en direct pour tous les utilisateurs sur MONT-RADAR !' : 'Drop is published in real-time to all users on MONT-RADAR!';
-  const btnCancelDrop = document.getElementById('btnCancelAdminDrop'); if (btnCancelDrop) btnCancelDrop.textContent = lang === 'fr' ? 'Annuler' : 'Cancel';
-  const btnSubmitDrop = document.getElementById('btnSubmitAdminDrop'); if (btnSubmitDrop) btnSubmitDrop.innerHTML = `<span>${lang === 'fr' ? '🚀 Déployer le Drop Cyber' : '🚀 Deploy Cyber Drop'}</span>`;
 
 
   if (typeof updateRadarAdminUI === 'function') updateRadarAdminUI();
@@ -18000,7 +17876,7 @@ function scrollToDuelsWidget() {
 // 3. MONT-RADAR™ 100% FREE LEAFLET MAP ENGINE & COMMUNITY EVENTS
 let realMontrealLeafletMap = null;
 let currentMapTileLayer = null;
-let activeTileLayerType = 'dark';
+let activeTileLayerType = 'streets';
 let radarLeafletMarkers = [];
 let activeRadarFilter = 'all';
 let selectedRadarEvent = null;
@@ -18017,8 +17893,8 @@ const DEFAULT_REALMONT_EVENTS = [
     badge: 'WORLD TOUR LIVE 🚴',
     coords: [45.5175, -73.5855],
     locationName: 'Parc Jeanne-Mance / Avenue du Parc',
-    descEn: 'Today is the decisive stage! 18 laps of the Mont-Royal circuit, Camillien-Houde wall and Côte de la Polytechnique. Watch the world\'s elite climbers battle live!',
-    descFr: 'Aujourd\'hui c\'est l\'étape décisive ! 18 tours du circuit Mont-Royal, montée Camillien-Houde et Côte de la Polytechnique. Venez encourager l\'élite mondiale !',
+    descEn: 'Decisive WorldTour stage! 18 laps of the Mont-Royal circuit, Camillien-Houde wall and Côte de la Polytechnique. Watch the world\'s elite climbers battle live!',
+    descFr: 'Étape décisive du WorldTour ! 18 tours du circuit Mont-Royal, montée Camillien-Houde et Côte de la Polytechnique. Venez encourager l\'élite mondiale !',
     time: 'Today / Aujourd\'hui • 10:00 - 16:45',
     color: '#f43f5e'
   },
@@ -18093,116 +17969,88 @@ const DEFAULT_REALMONT_EVENTS = [
     color: '#ef4444'
   },
   {
-    id: 'secret-drop-1',
-    titleEn: 'Secret Geocache Drop #1 💎',
-    titleFr: 'Drop Géocache Secrète #1 💎',
-    cat: 'drop',
-    icon: '💎',
-    badge: 'SECRET DROP +100 🪙',
-    coords: [45.5048, -73.5876],
-    locationName: 'Belvédère Kondiaronk (Mont-Royal Lookout)',
-    descEn: 'Exclusive digital cache at the Montreal panoramic summit! Claim +100 🪙 GENIUS IA coins!',
-    descFr: 'Cache numérique exclusive au sommet panoramique de Montréal ! Réclamez +100 🪙 GENIUS IA !',
-    time: 'Active Now',
-    color: '#ffd700',
-    isDrop: true,
-    coins: 100
+    id: 'spectacles-mtl',
+    titleEn: 'Quartier des Spectacles / Live Stage',
+    titleFr: 'Quartier des Spectacles / Grande Scène',
+    cat: 'art',
+    icon: '🎭',
+    badge: 'ARTS & FESTIVALS 🎭',
+    coords: [45.5078, -73.5678],
+    locationName: 'Place des Festivals / Rue Sainte-Catherine',
+    descEn: 'Major outdoor concert stage, multimedia interactive fountains, luminous installations and street art.',
+    descFr: 'Grande scène de concerts extérieurs, fontaines multimédias, installations lumineuses et art de rue.',
+    time: 'Every Evening • 18:00 - 23:00',
+    color: '#ec4899'
   },
   {
-    id: 'secret-drop-nyc',
-    titleEn: 'Secret Cyber Drop #NYC 🗽 💎',
-    titleFr: 'Drop Cyber Secret #NYC 🗽 💎',
-    cat: 'drop',
-    icon: '💎',
-    badge: 'WORLD DROP +150 🪙',
-    coords: [40.7580, -73.9855],
-    locationName: 'Times Square, New York, USA',
-    descEn: 'High-tech neon Cyber Drop located in the heart of Times Square! Claim +150 🪙 GENIUS IA coins!',
-    descFr: 'Trésor Cyber haute technologie situé au cœur de Times Square ! Réclamez +150 🪙 GENIUS IA !',
-    time: 'Active Now',
-    color: '#06b6d4',
-    isDrop: true,
-    coins: 150
+    id: 'lafontaine-park',
+    titleEn: 'Parc La Fontaine Open-Air Theatre',
+    titleFr: 'Théâtre de Verdure Parc La Fontaine',
+    cat: 'community',
+    icon: '🌳',
+    badge: 'PARC & CULTURE 🌳',
+    coords: [45.5265, -73.5695],
+    locationName: 'Parc La Fontaine, Plateau-Mont-Royal',
+    descEn: 'Beautiful lagoon park, free open-air theatre performances, community picnics, cycling paths and ice cream.',
+    descFr: 'Magnifique parc avec bassin, spectacles gratuits au Théâtre de Verdure, pique-niques et pistes cyclables.',
+    time: 'All Day • 08:00 - 22:00',
+    color: '#14b8a6'
   },
   {
-    id: 'secret-drop-paris',
-    titleEn: 'Secret Cyber Drop #Paris 🗼 💎',
-    titleFr: 'Drop Cyber Secret #Paris 🗼 💎',
-    cat: 'drop',
-    icon: '💎',
-    badge: 'WORLD DROP +150 🪙',
+    id: 'paris-eiffel-fest',
+    titleEn: 'Paris Live Art & Street Music Festival',
+    titleFr: 'Paris Festival d\'Art & Musique Live',
+    cat: 'art',
+    icon: '🗼',
+    badge: 'PARIS LIVE 🗼',
     coords: [48.8584, 2.2945],
     locationName: 'Tour Eiffel / Champ de Mars, Paris, France',
-    descEn: 'Futuristic Paris Cyber Drop at the foot of the Eiffel Tower! Claim +150 🪙 GENIUS IA coins!',
-    descFr: 'Trésor Cyber futuriste au pied de la Tour Eiffel ! Réclamez +150 🪙 GENIUS IA !',
-    time: 'Active Now',
-    color: '#a855f7',
-    isDrop: true,
-    coins: 150
+    descEn: 'Outdoor music sessions, sunset picnics, street artists and light illumination by the Eiffel Tower.',
+    descFr: 'Sessions de musique en plein air, pique-niques au coucher de soleil, artistes et illuminations de la Tour Eiffel.',
+    time: 'Today • 15:00 - 23:00',
+    color: '#a855f7'
   },
   {
-    id: 'secret-drop-tokyo',
-    titleEn: 'Secret Cyber Drop #Tokyo 🏯 💎',
-    titleFr: 'Drop Cyber Secret #Tokyo 🏯 💎',
-    cat: 'drop',
-    icon: '💎',
-    badge: 'WORLD DROP +150 🪙',
+    id: 'nyc-centralpark-fest',
+    titleEn: 'New York Central Park Concert & Meetup',
+    titleFr: 'Concert & Rencontre Central Park New York',
+    cat: 'music',
+    icon: '🗽',
+    badge: 'NYC LIVE 🗽',
+    coords: [40.7829, -73.9654],
+    locationName: 'Central Park (Sheep Meadow), New York, USA',
+    descEn: 'Acoustic jam sessions, community creators gathering and skyline views in Central Park.',
+    descFr: 'Jam sessions acoustiques, rassemblement de créateurs et vue sur la skyline dans Central Park.',
+    time: 'Saturday • 13:00 - 19:00',
+    color: '#06b6d4'
+  },
+  {
+    id: 'tokyo-shibuya-expo',
+    titleEn: 'Tokyo Shibuya Cyber & Street Food Expo',
+    titleFr: 'Expo Cyber & Street Food Tokyo Shibuya',
+    cat: 'food',
+    icon: '🏯',
+    badge: 'TOKYO LIVE 🏯',
     coords: [35.6595, 139.7004],
-    locationName: 'Shibuya Crossing & Cyber District, Tokyo, Japan',
-    descEn: 'Cyberpunk world hub drop at Shibuya Crossing! Claim +150 🪙 GENIUS IA coins!',
-    descFr: 'Trésor Cyber au cœur battant de Shibuya ! Réclamez +150 🪙 GENIUS IA !',
-    time: 'Active Now',
-    color: '#f43f5e',
-    isDrop: true,
-    coins: 150
+    locationName: 'Shibuya Crossing & Miyashita Park, Tokyo, Japan',
+    descEn: 'Cyberpunk neon district, gourmet street ramen, indie gaming stalls and creative pop-ups.',
+    descFr: 'Quartier néon cyberpunk, ramen de rue gastronomiques, jeux indés et pop-ups créatifs.',
+    time: 'Daily • 17:00 - 23:30',
+    color: '#f43f5e'
   },
   {
-    id: 'secret-drop-london',
-    titleEn: 'Secret Cyber Drop #London 🏰 💎',
-    titleFr: 'Drop Cyber Secret #London 🏰 💎',
-    cat: 'drop',
-    icon: '💎',
-    badge: 'WORLD DROP +150 🪙',
-    coords: [51.5007, -0.1246],
-    locationName: 'Big Ben & Westminster, London, UK',
-    descEn: 'Historic cyber beacon drop near Big Ben and the Thames! Claim +150 🪙 GENIUS IA coins!',
-    descFr: 'Trésor Cyber légendaire près de Big Ben et de la Tamise ! Réclamez +150 🪙 GENIUS IA !',
-    time: 'Active Now',
-    color: '#10b981',
-    isDrop: true,
-    coins: 150
-  },
-  {
-    id: 'secret-drop-dubai',
-    titleEn: 'Secret Cyber Drop #Dubai 🌆 💎',
-    titleFr: 'Drop Cyber Secret #Dubai 🌆 💎',
-    cat: 'drop',
-    icon: '💎',
-    badge: 'WORLD DROP +150 🪙',
-    coords: [25.1972, 55.2744],
-    locationName: 'Burj Khalifa & Downtown Dubai, UAE',
-    descEn: 'Sky-high futuristic Cyber Drop at the pinnacle of modern architecture! Claim +150 🪙 GENIUS IA coins!',
-    descFr: 'Trésor Cyber futuriste au pied du plus haut gratte-ciel du monde ! Réclamez +150 🪙 GENIUS IA !',
-    time: 'Active Now',
-    color: '#fbbf24',
-    isDrop: true,
-    coins: 150
-  },
-  {
-    id: 'secret-drop-bucharest',
-    titleEn: 'Secret Cyber Drop #Bucharest 🇷🇴 💎',
-    titleFr: 'Drop Cyber Secret #Bucarest 🇷🇴 💎',
-    cat: 'drop',
-    icon: '💎',
-    badge: 'WORLD DROP +150 🪙',
+    id: 'bucharest-tech-fest',
+    titleEn: 'Bucharest Tech & Street Food Fiesta',
+    titleFr: 'Fiesta Tech & Street Food Bucarest',
+    cat: 'community',
+    icon: '🇷🇴',
+    badge: 'BUCHAREST LIVE 🇷🇴',
     coords: [44.4355, 26.1025],
     locationName: 'Piața Universității, Bucharest, Romania',
-    descEn: 'Eastern European Tech Valley Cyber Drop at University Square! Claim +150 🪙 GENIUS IA coins!',
-    descFr: 'Trésor Cyber de la Tech Valley à Piața Universității ! Réclamez +150 🪙 GENIUS IA !',
-    time: 'Active Now',
-    color: '#38bdf8',
-    isDrop: true,
-    coins: 150
+    descEn: 'Vibrant city center gathering, tech developer lounges, live street food trucks and music.',
+    descFr: 'Rassemblement vivant au centre-ville, salons pour développeurs tech, food trucks et musique.',
+    time: 'Weekend • 12:00 - 22:00',
+    color: '#38bdf8'
   }
 ];
 
@@ -18244,19 +18092,19 @@ function createMapTileLayer(type) {
       attribution: '&copy; Esri, Maxar, Earthstar Geographics',
       maxZoom: 19
     });
-  } else if (type === 'streets') {
-    if (mapContainer) mapContainer.classList.remove('dark-leaflet-tiles');
+  } else if (type === 'dark') {
+    // 🌙 High-Contrast Dark Map via OpenStreetMap + Invert Filter (100% Free, NO API KEY, NO WATERMARK)
+    if (mapContainer) mapContainer.classList.add('dark-leaflet-tiles');
     return L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       maxZoom: 19
     });
   } else {
-    // 🌙 CartoDB Dark Matter (100% Free, NO API KEY, High Contrast, Razor-sharp roads & labels)
+    // 🗺️ Default Streets: Crisp, High-Contrast OpenStreetMap (100% Free, NO API KEY, NO WATERMARK)
     if (mapContainer) mapContainer.classList.remove('dark-leaflet-tiles');
-    return L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      subdomains: 'abcd',
-      maxZoom: 20
+    return L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19
     });
   }
 }
@@ -18429,12 +18277,7 @@ function renderRadarMarkers() {
 
   filtered.forEach(ev => {
     const pinColor = ev.color || '#06b6d4';
-    const pinIconHtml = ev.isDrop ? `
-      <div class="radar-drop-pin" title="${lang === 'fr' ? (ev.titleFr || ev.titleEn) : ev.titleEn}">
-        <span class="radar-drop-pulse"></span>
-        <span style="font-size:1.25rem;">${ev.icon || '💎'}</span>
-      </div>
-    ` : `
+    const pinIconHtml = `
       <div class="radar-leaflet-pin" style="background:${pinColor};border-color:#fff;" title="${lang === 'fr' ? (ev.titleFr || ev.titleEn) : ev.titleEn}">
         <span class="pin-pulse" style="background:${pinColor}88;"></span>
         <span style="font-size:1.1rem;">${ev.icon || '📍'}</span>
@@ -18452,16 +18295,22 @@ function renderRadarMarkers() {
     const marker = L.marker(ev.coords, { icon: customDivIcon }).addTo(realMontrealLeafletMap);
 
     const popupHtml = `
-      <div style="font-family:'Inter',sans-serif;min-width:200px;">
+      <div style="font-family:'Inter',sans-serif;min-width:210px;padding:4px 2px;">
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-          <span style="font-size:1.2rem;">${ev.icon}</span>
+          <span style="font-size:1.2rem;">${ev.icon || '📍'}</span>
           <strong style="color:#fff;font-size:0.9rem;">${lang === 'fr' ? (ev.titleFr || ev.titleEn) : ev.titleEn}</strong>
         </div>
-        <div style="font-size:0.7rem;color:#38bdf8;margin-bottom:6px;font-weight:700;">${ev.locationName || 'Montréal'} • ${ev.time || 'Live'}</div>
+        <div style="font-size:0.72rem;color:#38bdf8;margin-bottom:4px;font-weight:700;">📍 ${ev.locationName || 'Montréal'}</div>
+        <div style="font-size:0.7rem;color:#fde047;margin-bottom:6px;font-weight:600;">⏱️ ${ev.time || 'Live'}</div>
         <p style="font-size:0.75rem;color:#cbd5e1;margin:0 0 8px;line-height:1.35;">${lang === 'fr' ? (ev.descFr || ev.descEn) : ev.descEn}</p>
-        <button onclick="selectRadarSpot('${ev.id}', true)" style="width:100%;padding:5px 8px;background:linear-gradient(135deg,#06b6d4,#3b82f6);border:none;border-radius:6px;color:#fff;font-size:0.75rem;font-weight:700;cursor:pointer;">
-          ${lang === 'fr' ? 'Voir Détails 🔍' : 'View Details 🔍'}
-        </button>
+        <div style="display:flex;gap:6px;">
+          <button onclick="selectRadarSpot('${ev.id}', true)" style="flex:1;padding:6px 10px;background:linear-gradient(135deg,#06b6d4,#3b82f6);border:none;border-radius:6px;color:#fff;font-size:0.75rem;font-weight:700;cursor:pointer;">
+            ${lang === 'fr' ? 'Détails 🔍' : 'Details 🔍'}
+          </button>
+          <button onclick="selectRadarSpot('${ev.id}', false);openRadarSpotDirections()" style="padding:6px 10px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:6px;color:#fff;font-size:0.75rem;font-weight:700;cursor:pointer;" title="Google Maps Directions">
+            🧭 GPS
+          </button>
+        </div>
       </div>
     `;
 
@@ -18490,179 +18339,31 @@ function filterRadarCategory(cat, pillBtn) {
   renderRadarMarkers();
 }
 
-// ═════════════════════════════════════════════════════════════
-// 🧭 TRUE PHYSICAL GEOLOCATION & HAVERSINE PROXIMITY SYSTEM
-// ═════════════════════════════════════════════════════════════
-let realUserPhysicalCoords = null; // [lat, lng] - ONLY true physical location, NEVER map center!
-let currentCachedUserCoords = null; // Legacy alias pointing to physical location
-
-function formatDistanceDisplay(distMeters, lang) {
-  if (typeof distMeters !== 'number' || isNaN(distMeters)) return '—';
-  if (distMeters >= 1000000) {
-    // 1,000 km or more: show integer km e.g. "5,223 km"
-    const km = Math.round(distMeters / 1000);
-    return km.toLocaleString(lang === 'fr' ? 'fr-FR' : 'en-US') + ' km';
-  } else if (distMeters >= 1000) {
-    // 1 km to 999.9 km: show 1 decimal e.g. "533.2 km"
-    return (distMeters / 1000).toFixed(1) + ' km';
-  } else {
-    // Under 1 km: show meters e.g. "180m"
-    return Math.round(distMeters) + 'm';
-  }
-}
-
-function getUserPhysicalLocation() {
-  if (realUserPhysicalCoords && Array.isArray(realUserPhysicalCoords) && realUserPhysicalCoords.length >= 2) {
-    return realUserPhysicalCoords;
-  }
-  try {
-    const saved = JSON.parse(localStorage.getItem('realmont_user_real_gps') || 'null');
-    if (saved && Array.isArray(saved) && saved.length >= 2) {
-      realUserPhysicalCoords = saved;
-      currentCachedUserCoords = saved;
-      return realUserPhysicalCoords;
-    }
-  } catch (e) {}
-  // Default physical home base of REALMONT is Montreal [45.5048, -73.5876]
-  return [45.5048, -73.5876];
-}
-
-function setRealUserPhysicalCoords(lat, lng) {
-  if (typeof lat === 'number' && typeof lng === 'number' && !isNaN(lat) && !isNaN(lng)) {
-    realUserPhysicalCoords = [lat, lng];
-    currentCachedUserCoords = [lat, lng];
-    try {
-      localStorage.setItem('realmont_user_real_gps', JSON.stringify([lat, lng]));
-    } catch (e) {}
-  }
-}
-
-function calculateGeoDistanceMeters(lat1, lon1, lat2, lon2) {
-  const R = 6371e3; // Earth radius in meters
-  const phi1 = (lat1 * Math.PI) / 180;
-  const phi2 = (lat2 * Math.PI) / 180;
-  const deltaPhi = ((lat2 - lat1) * Math.PI) / 180;
-  const deltaLambda = ((lon2 - lon1) * Math.PI) / 180;
-
-  const a = Math.sin(deltaPhi / 2) * Math.sin(deltaPhi / 2) +
-            Math.cos(phi1) * Math.cos(phi2) *
-            Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
-
-function requestUserGpsLocationForRadar() {
-  const lang = getCommunityLang();
-  const dBadge = document.getElementById('activeSpotDistanceBadge');
-  if (dBadge) {
-    dBadge.innerHTML = `<span style="color:#38bdf8;">📡 ${lang === 'fr' ? 'Recherche GPS en cours...' : 'Detecting GPS...'}</span>`;
-  }
-  if (!navigator.geolocation) {
-    toast(lang === 'fr' ? 'GPS non disponible sur cet appareil' : 'GPS not available on this device', 'error');
-    return;
-  }
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      setRealUserPhysicalCoords(pos.coords.latitude, pos.coords.longitude);
-      if (selectedRadarEvent && selectedRadarEvent.isDrop && selectedRadarEvent.coords) {
-        checkRadarDropDistanceLive(selectedRadarEvent.coords[0], selectedRadarEvent.coords[1]);
-      }
-      toast(lang === 'fr' ? '📍 Position GPS trouvée avec succès !' : '📍 GPS location detected successfully!', 'success');
-    },
-    (err) => {
-      console.warn('GPS location request error:', err);
-      if (selectedRadarEvent && selectedRadarEvent.isDrop && selectedRadarEvent.coords) {
-        checkRadarDropDistanceLive(selectedRadarEvent.coords[0], selectedRadarEvent.coords[1]);
-      }
-      toast(lang === 'fr' 
-        ? '📍 Cliquez sur le cadenas 🔒 près de l\'adresse web pour autoriser la localisation' 
-        : '📍 Click the lock icon 🔒 near the address bar to allow location', 'info');
-    },
-    { enableHighAccuracy: true, timeout: 10000, maximumAge: 15000 }
-  );
-}
-
-function checkRadarDropDistanceLive(dropLat, dropLng) {
-  const badge = document.getElementById('activeSpotDistanceBadge');
-  const lang = getCommunityLang();
-
-  const updateBadgeWithCoords = (uLat, uLng) => {
-    const dist = calculateGeoDistanceMeters(uLat, uLng, dropLat, dropLng);
-    const dBadge = document.getElementById('activeSpotDistanceBadge');
-    if (!dBadge) return;
-    const dStr = formatDistanceDisplay(dist, lang);
-    if (dist <= 250) {
-      dBadge.innerHTML = `<span style="color:#10b981;font-weight:700;">🟢 ${lang === 'fr' ? 'À portée (' + dStr + ')' : 'In Range (' + dStr + ')'}</span>`;
-    } else {
-      dBadge.innerHTML = `<span style="color:#f43f5e;font-weight:700;" title="${lang === 'fr' ? 'Doit être à moins de 250m' : 'Must be within 250m'}">🧭 ${lang === 'fr' ? 'Distance: ' + dStr + ' (Trop loin)' : 'Distance: ' + dStr + ' (Too far)'}</span>`;
-    }
-  };
-
-  // 1. Immediately show distance based on user's real physical coordinates (Montreal or saved GPS)
-  const userCoords = getUserPhysicalLocation();
-  if (userCoords) {
-    updateBadgeWithCoords(userCoords[0], userCoords[1]);
-  }
-
-  // 2. Query hardware GPS in background if available
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setRealUserPhysicalCoords(pos.coords.latitude, pos.coords.longitude);
-        updateBadgeWithCoords(pos.coords.latitude, pos.coords.longitude);
-      },
-      (err) => {
-        // Keeps user's physical base (Montreal) distance, no disruption
-      },
-      { enableHighAccuracy: true, timeout: 6000, maximumAge: 30000 }
-    );
-  }
-}
-
 function selectRadarSpot(eventId, shouldPan = false) {
   const allEvents = getAllMontrealEvents();
   const ev = allEvents.find(e => e.id === eventId);
   if (!ev) return;
   selectedRadarEvent = ev;
 
+  try { progressDailyQuest('radar'); } catch(e) {}
+
   const lang = getCommunityLang();
   const title = document.getElementById('activeSpotTitle');
   const desc = document.getElementById('activeSpotDesc');
   const icon = document.getElementById('activeSpotIcon');
   const badge = document.getElementById('activeSpotBadge');
+  const locText = document.getElementById('activeSpotLocText');
+  const timeText = document.getElementById('activeSpotTimeText');
   const meta = document.getElementById('activeSpotMeta');
-  const btnFilter = document.getElementById('btnFilterByRadarSpot');
-  const btnDrop = document.getElementById('btnUnlockDropSpot');
 
   if (title) title.textContent = lang === 'fr' ? (ev.titleFr || ev.titleEn) : ev.titleEn;
   if (desc) desc.textContent = lang === 'fr' ? (ev.descFr || ev.descEn) : ev.descEn;
   if (icon) icon.textContent = ev.icon || '📍';
-  if (badge) badge.textContent = ev.badge || (ev.cat ? ev.cat.toUpperCase() : 'MTL LIVE');
-  if (meta) {
-    meta.innerHTML = `<span>📍 ${ev.locationName || 'Montréal'}</span><span>⏱️ ${ev.time || 'Live'}</span>`;
-  }
-
-  if (ev.isDrop) {
-    if (btnFilter) btnFilter.style.display = 'none';
-    if (btnDrop) {
-      btnDrop.style.display = 'inline-flex';
-      const claimed = localStorage.getItem(`radar_drop_${ev.id}_claimed`);
-      btnDrop.disabled = !!claimed;
-      const coinReward = Number(ev.coins) || 100;
-      btnDrop.textContent = claimed
-        ? (lang === 'fr' ? '✓ Déjà Réclamé' : '✓ Already Claimed')
-        : (lang === 'fr' ? `💎 Réclamer le Drop (+${coinReward} 🪙)` : `💎 Claim Drop (+${coinReward} 🪙)`);
-    }
-
-    if (ev.coords && Array.isArray(ev.coords) && ev.coords.length >= 2) {
-      if (meta) {
-        meta.innerHTML = `<span>📍 ${ev.locationName || 'Montréal'}</span><span>💎 ${ev.coins || 100} Coins</span><span id="activeSpotDistanceBadge" style="color:#38bdf8;">🧭 ${lang === 'fr' ? 'Calcul distance GPS...' : 'Calculating distance...'}</span>`;
-      }
-      checkRadarDropDistanceLive(ev.coords[0], ev.coords[1]);
-    }
-  } else {
-    if (btnFilter) btnFilter.style.display = 'inline-flex';
-    if (btnDrop) btnDrop.style.display = 'none';
+  if (badge) badge.textContent = ev.badge || (ev.cat ? ev.cat.toUpperCase() : 'LIVE');
+  if (locText) locText.textContent = `📍 ${ev.locationName || 'Montréal'}`;
+  if (timeText) timeText.textContent = `⏱️ ${ev.time || 'Live'}`;
+  if (meta && (!locText || !timeText)) {
+    meta.innerHTML = `<span id="activeSpotLocText">📍 ${ev.locationName || 'Montréal'}</span><span id="activeSpotTimeText">⏱️ ${ev.time || 'Live'}</span>`;
   }
 
   updateRadarAdminUI();
@@ -18670,6 +18371,13 @@ function selectRadarSpot(eventId, shouldPan = false) {
   if (shouldPan && realMontrealLeafletMap && ev.coords) {
     realMontrealLeafletMap.panTo(ev.coords, { animate: true, duration: 0.8 });
   }
+}
+
+function openRadarSpotDirections() {
+  if (!selectedRadarEvent || !selectedRadarEvent.coords) return;
+  const [lat, lng] = selectedRadarEvent.coords;
+  const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+  window.open(url, '_blank');
 }
 
 function toggleRadarAddEventDrawer(forceState) {
@@ -18693,20 +18401,83 @@ function onRadarLocationPresetChange(val) {
     'jean-drapeau': [45.5108, -73.5332],
     'mile-end': [45.5226, -73.5982],
     'spectacles': [45.5078, -73.5678],
-    'notre-dame': [45.5005, -73.5262]
+    'notre-dame': [45.5005, -73.5262],
+    'paris-eiffel': [48.8584, 2.2945],
+    'paris-louvre': [48.8606, 2.3376],
+    'ny-centralpark': [40.7750, -73.9712],
+    'ny-timessquare': [40.7580, -73.9855],
+    'tokyo-shibuya': [35.6595, 139.7005],
+    'london-bigben': [51.5007, -0.1246],
+    'bucharest-universitate': [44.4355, 26.1025]
   };
+
+  const presetInp = document.getElementById('newEventLocationPreset');
+  const locNameInp = document.getElementById('newEventLocationName');
+
   if (presets[val]) {
     mapUserPlacementCoords = presets[val];
+    if (locNameInp && presetInp) {
+      locNameInp.value = presetInp.options[presetInp.selectedIndex].text.replace(/^[^\s]+\s+—\s+/, '');
+    }
     if (realMontrealLeafletMap) {
       realMontrealLeafletMap.panTo(mapUserPlacementCoords, { animate: true });
+      if (mapPlacementTempMarker) realMontrealLeafletMap.removeLayer(mapPlacementTempMarker);
+      const tempIcon = L.divIcon({
+        className: 'custom-leaflet-divicon',
+        html: `<div class="radar-leaflet-pin" style="background:#10b981;border-color:#34d399;"><span class="pin-pulse" style="background:rgba(16,185,129,0.5);"></span><span style="font-size:1.1rem;">📍</span></div>`,
+        iconSize: [36, 36],
+        iconAnchor: [18, 18]
+      });
+      mapPlacementTempMarker = L.marker(presets[val], { icon: tempIcon }).addTo(realMontrealLeafletMap);
     }
+  } else if (val === 'custom') {
+    toast(getCommunityLang() === 'fr' ? 'Touchez la carte pour placer le repère de votre événement !' : 'Tap anywhere on the map to place your event pin!', 'info');
   }
+}
+
+function useMyGpsForNewEvent() {
+  const lang = getCommunityLang();
+  if (!navigator.geolocation) {
+    toast(lang === 'fr' ? 'Géolocalisation non supportée par votre navigateur.' : 'Geolocation not supported by your browser.', 'warning');
+    return;
+  }
+  toast(lang === 'fr' ? '📡 Recherche de votre position GPS...' : '📡 Locating your GPS position...', 'info');
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const lat = parseFloat(pos.coords.latitude.toFixed(5));
+      const lng = parseFloat(pos.coords.longitude.toFixed(5));
+      mapUserPlacementCoords = [lat, lng];
+      if (realMontrealLeafletMap) {
+        realMontrealLeafletMap.flyTo([lat, lng], 15, { duration: 1.2 });
+        if (mapPlacementTempMarker) realMontrealLeafletMap.removeLayer(mapPlacementTempMarker);
+        const tempIcon = L.divIcon({
+          className: 'custom-leaflet-divicon',
+          html: `<div class="radar-leaflet-pin" style="background:#10b981;border-color:#34d399;"><span class="pin-pulse" style="background:rgba(16,185,129,0.5);"></span><span style="font-size:1.1rem;">📍</span></div>`,
+          iconSize: [36, 36],
+          iconAnchor: [18, 18]
+        });
+        mapPlacementTempMarker = L.marker([lat, lng], { icon: tempIcon }).addTo(realMontrealLeafletMap);
+      }
+      const locInp = document.getElementById('newEventLocationName');
+      if (locInp && !locInp.value) {
+        locInp.value = `${lang === 'fr' ? 'Position GPS' : 'GPS Location'} (${lat}, ${lng})`;
+      }
+      const presetInp = document.getElementById('newEventLocationPreset');
+      if (presetInp) presetInp.value = 'custom';
+      toast(lang === 'fr' ? `📍 Position GPS trouvée (${lat}, ${lng}) !` : `📍 GPS Location detected (${lat}, ${lng})!`, 'success');
+    },
+    (err) => {
+      toast(lang === 'fr' ? 'Position GPS introuvable ou permission refusée.' : 'GPS location unavailable or permission denied.', 'warning');
+    },
+    { enableHighAccuracy: true, timeout: 6000, maximumAge: 10000 }
+  );
 }
 
 async function submitRadarCustomEvent() {
   const titleInp = document.getElementById('newEventTitle');
   const catInp = document.getElementById('newEventCategory');
   const presetInp = document.getElementById('newEventLocationPreset');
+  const locNameInp = document.getElementById('newEventLocationName');
   const timeInp = document.getElementById('newEventTime');
   const descInp = document.getElementById('newEventDesc');
 
@@ -18717,8 +18488,8 @@ async function submitRadarCustomEvent() {
   }
 
   const category = (catInp && catInp.value) || 'community';
-  const time = (timeInp && timeInp.value.trim()) || 'Today';
-  const desc = (descInp && descInp.value.trim()) || 'Montreal community event';
+  const time = (timeInp && timeInp.value.trim()) || 'Aujourd\'hui / Live';
+  const desc = (descInp && descInp.value.trim()) || 'Événement communautaire en direct';
 
   let coords = mapUserPlacementCoords;
   if (!coords) {
@@ -18729,7 +18500,14 @@ async function submitRadarCustomEvent() {
       'jean-drapeau': [45.5108, -73.5332],
       'mile-end': [45.5226, -73.5982],
       'spectacles': [45.5078, -73.5678],
-      'notre-dame': [45.5005, -73.5262]
+      'notre-dame': [45.5005, -73.5262],
+      'paris-eiffel': [48.8584, 2.2945],
+      'paris-louvre': [48.8606, 2.3376],
+      'ny-centralpark': [40.7750, -73.9712],
+      'ny-timessquare': [40.7580, -73.9855],
+      'tokyo-shibuya': [35.6595, 139.7005],
+      'london-bigben': [51.5007, -0.1246],
+      'bucharest-universitate': [44.4355, 26.1025]
     };
     coords = presets[presetInp ? presetInp.value : 'jeanne-mance'] || [45.5125, -73.5750];
   }
@@ -18742,15 +18520,21 @@ async function submitRadarCustomEvent() {
     community: '💡'
   };
 
+  const locName = (locNameInp && locNameInp.value.trim())
+    ? locNameInp.value.trim()
+    : (presetInp && presetInp.selectedIndex >= 0 && presetInp.value !== 'custom'
+        ? presetInp.options[presetInp.selectedIndex].text.replace(/^[^\s]+\s+—\s+/, '')
+        : 'Montréal');
+
   const newEvent = {
     id: 'user-ev-' + Date.now(),
     titleEn: title,
     titleFr: title,
     cat: category,
     icon: categoryEmojis[category] || '📍',
-    badge: `${category.toUpperCase()} MTL 🌟`,
+    badge: `${category.toUpperCase()} • LIVE 🌟`,
     coords: coords,
-    locationName: presetInp ? presetInp.options[presetInp.selectedIndex].text : 'Montréal',
+    locationName: locName,
     descEn: desc,
     descFr: desc,
     time: time,
@@ -18802,19 +18586,20 @@ async function submitRadarCustomEvent() {
   }
 
   if (titleInp) titleInp.value = '';
+  if (locNameInp) locNameInp.value = '';
   if (descInp) descInp.value = '';
   toggleRadarAddEventDrawer(false);
 
   renderRadarMarkers();
-  selectRadarSpot(newEvent.id);
+  selectRadarSpot(newEvent.id, true);
   if (document.getElementById('radarAdminEventsDrawer')?.style.display === 'block') {
     renderAdminEventsList();
   }
 
   if (typeof addCoinsLocally === 'function') {
-    addCoinsLocally(20, 'Event Added to MONT-RADAR');
+    addCoinsLocally(20, 'Event Added to Events Radar');
   } else if (typeof giveUserCoins === 'function') {
-    giveUserCoins(20, 'Event Added to MONT-RADAR');
+    giveUserCoins(20, 'Event Added to Events Radar');
   } else {
     const cur = parseInt(localStorage.getItem('genius_user_coins') || '0', 10);
     localStorage.setItem('genius_user_coins', cur + 20);
@@ -18823,7 +18608,7 @@ async function submitRadarCustomEvent() {
   }
   playSoundFx('coin');
 
-  toast(getCommunityLang() === 'fr' ? '🎉 Événement ajouté sur MONT-RADAR ! +20 🪙 GENIUS IA' : '🎉 Event added to MONT-RADAR! +20 🪙 GENIUS IA', 'success');
+  toast(getCommunityLang() === 'fr' ? '🎉 Événement ajouté sur le Radar ! +20 🪙 GENIUS IA' : '🎉 Event added to Events Radar! +20 🪙 GENIUS IA', 'success');
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -19207,283 +18992,19 @@ function filterFeedByRadarSpot() {
   toast((lang === 'fr' ? 'Lieu sélectionné: ' : 'Selected location: ') + (lang === 'fr' ? (selectedRadarEvent.titleFr || selectedRadarEvent.titleEn) : selectedRadarEvent.titleEn), 'info');
 }
 
-let virtualRadarScanActive = false;
-
-function executeRadarDropDetection(centerLat, centerLng, isVirtualScan = false) {
-  const lang = getCommunityLang();
-  virtualRadarScanActive = isVirtualScan;
-
-  // IMPORTANT: Only update user physical coords if from real GPS hardware, NEVER from map center!
-  if (!isVirtualScan) {
-    setRealUserPhysicalCoords(centerLat, centerLng);
-  }
-
-  let allEvents = [];
-  try {
-    if (typeof getAllMontrealEvents === 'function') {
-      allEvents = getAllMontrealEvents();
-    } else if (typeof DEFAULT_REALMONT_EVENTS !== 'undefined') {
-      allEvents = [...DEFAULT_REALMONT_EVENTS];
-    }
-  } catch (e) {
-    allEvents = (typeof DEFAULT_REALMONT_EVENTS !== 'undefined') ? [...DEFAULT_REALMONT_EVENTS] : [];
-  }
-
-  // Filter for valid drops with coordinates first
-  let candidates = allEvents.filter(ev => ev.isDrop && ev.coords && Array.isArray(ev.coords) && ev.coords.length >= 2);
-  if (candidates.length === 0) {
-    candidates = allEvents.filter(ev => ev.coords && Array.isArray(ev.coords) && ev.coords.length >= 2);
-  }
-
-  if (candidates.length === 0) {
-    toast(lang === 'fr' ? 'Aucun Cyber Drop trouvé.' : 'No Cyber Drop found.', 'info');
-    return;
-  }
-
-  let closestPin = null;
-  let minDistance = Infinity;
-
-  candidates.forEach(ev => {
-    const dist = calculateGeoDistanceMeters(centerLat, centerLng, ev.coords[0], ev.coords[1]);
-    if (dist < minDistance) {
-      minDistance = dist;
-      closestPin = ev;
-    }
-  });
-
-  if (!closestPin) {
-    toast(lang === 'fr' ? 'Aucun Cyber Drop trouvé dans ce secteur.' : 'No Cyber Drop found in this area.', 'info');
-    return;
-  }
-
-  // Haptic & Sound FX
-  if (typeof triggerHaptic === 'function') triggerHaptic('heavy');
-  if (typeof playSoundFx === 'function') playSoundFx('coin');
-
-  // If current filter hides secret drops, ensure drops are shown on map
-  if (activeRadarFilter !== 'all' && activeRadarFilter !== 'drop') {
-    filterRadarCategory('all');
-  }
-
-  // Select the spot using selectRadarSpot (updates active card, title, icon, and claim button)
-  if (typeof selectRadarSpot === 'function') {
-    selectRadarSpot(closestPin.id);
-  }
-
-  // Smoothly fly map to drop coordinates
-  if (realMontrealLeafletMap && closestPin.coords) {
-    realMontrealLeafletMap.flyTo(closestPin.coords, 16, { duration: 1.5 });
-  }
-
-  // Open marker popup on map if available
-  if (Array.isArray(radarLeafletMarkers)) {
-    const targetMarker = radarLeafletMarkers.find(m => {
-      try {
-        const ll = m.getLatLng();
-        return Math.abs(ll.lat - closestPin.coords[0]) < 0.001 && Math.abs(ll.lng - closestPin.coords[1]) < 0.001;
-      } catch (e) {
-        return false;
-      }
-    });
-    if (targetMarker && typeof targetMarker.openPopup === 'function') {
-      setTimeout(() => {
-        try { targetMarker.openPopup(); } catch (e) {}
-      }, 1600);
-    }
-  }
-
-  // Smoothly scroll modal down to reveal active spot details card
-  const mbContainer = document.querySelector('.mont-radar-modal-card .mb');
-  if (mbContainer) {
-    setTimeout(() => {
-      const card = document.getElementById('radarSpotDetailsCard');
-      if (card && typeof mbContainer.scrollTo === 'function') mbContainer.scrollTo({ top: card.offsetTop - 30, behavior: 'smooth' });
-    }, 450);
-  }
-
-  const pinTitle = lang === 'fr' ? (closestPin.titleFr || closestPin.titleEn) : closestPin.titleEn;
-  const coinsReward = Number(closestPin.coins) || 100;
-
-  // Real physical distance from user's true location (Montreal or GPS) to this drop
-  const userLoc = getUserPhysicalLocation();
-  const physicalDist = calculateGeoDistanceMeters(userLoc[0], userLoc[1], closestPin.coords[0], closestPin.coords[1]);
-  const distStr = formatDistanceDisplay(physicalDist, lang);
-
-  if (physicalDist <= 250) {
-    toast(lang === 'fr'
-      ? `💎 DROP DÉTECTÉ À PROXIMITÉ : "${pinTitle}" (+${coinsReward} 🪙) ! Vous êtes à portée (${distStr}) !`
-      : `💎 NEARBY DROP DETECTED: "${pinTitle}" (+${coinsReward} 🪙)! You are in range (${distStr})!`, 'success');
-  } else {
-    toast(lang === 'fr'
-      ? `💎 DROP DÉTECTÉ : "${pinTitle}" (+${coinsReward} 🪙) ! À ${distStr} de votre position réelle.`
-      : `💎 DROP DETECTED: "${pinTitle}" (+${coinsReward} 🪙)! ${distStr} from your real location.`, 'info');
-  }
-}
-
 function scanNearbyCyberDrops() {
-  if (typeof triggerHaptic === 'function') triggerHaptic('medium');
+  if (typeof triggerHaptic === 'function') triggerHaptic('light');
   try { progressDailyQuest('radar'); } catch(e) {}
   const lang = getCommunityLang();
-
-  // Instant visual feedback: map pulse
-  const mapEl = document.getElementById('realMontrealMap');
-  if (mapEl) {
-    mapEl.style.boxShadow = '0 0 35px #06b6d4, inset 0 0 25px rgba(6,182,212,0.45)';
-    setTimeout(() => { if (mapEl) mapEl.style.boxShadow = ''; }, 1200);
-  }
-
-  const runVirtualFallbackScan = () => {
-    let mapCenter = [45.5048, -73.5876];
-    if (realMontrealLeafletMap) {
-      try {
-        const c = realMontrealLeafletMap.getCenter();
-        if (c && typeof c.lat === 'number') mapCenter = [c.lat, c.lng];
-      } catch (e) {}
-    }
-    toast(lang === 'fr' ? '🧭 Scan Radar Virtuel activé sur la zone...' : '🧭 Virtual Radar Scan activated in area...', 'info');
-    executeRadarDropDetection(mapCenter[0], mapCenter[1], true);
-  };
-
-  if (!navigator.geolocation) {
-    runVirtualFallbackScan();
-    return;
-  }
-
-  toast(lang === 'fr' ? '📡 Scan Radar en cours...' : '📡 Radar Scanning nearby...', 'info');
-
-  let hasResponded = false;
-  const gpsTimeoutId = setTimeout(() => {
-    if (!hasResponded) {
-      hasResponded = true;
-      runVirtualFallbackScan();
-    }
-  }, 1200);
-
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      if (hasResponded) return;
-      hasResponded = true;
-      clearTimeout(gpsTimeoutId);
-      const uLat = pos.coords.latitude;
-      const uLng = pos.coords.longitude;
-      setRealUserPhysicalCoords(uLat, uLng);
-      executeRadarDropDetection(uLat, uLng, false);
-    },
-    (err) => {
-      if (hasResponded) return;
-      hasResponded = true;
-      clearTimeout(gpsTimeoutId);
-      runVirtualFallbackScan();
-    },
-    { enableHighAccuracy: true, timeout: 1200, maximumAge: 10000 }
-  );
+  toast(lang === 'fr' ? '🗺️ Explorez les événements en direct sur la carte !' : '🗺️ Explore live events on the map!', 'info');
 }
 
-async function claimRadarSecretDrop() {
-  if (!selectedRadarEvent || !selectedRadarEvent.isDrop) return;
-  const dropKey = `radar_drop_${selectedRadarEvent.id}_claimed`;
-  const claimed = localStorage.getItem(dropKey);
-  const lang = getCommunityLang();
-  if (claimed) {
-    toast(lang === 'fr' ? 'Drop déjà réclamé pour aujourd\'hui !' : 'Drop already claimed for today!', 'info');
-    return;
-  }
+function claimRadarSecretDrop() {
+  // Legacy stub - treasure hunting removed, replaced with Community Live Events
+}
 
-  const dropCoords = selectedRadarEvent.coords;
-  const isAdmin = isRadarAdmin();
-
-  const awardDropCoins = () => {
-    const coinsReward = Number(selectedRadarEvent.coins) || 100;
-    try { progressDailyQuest('radar'); } catch(e) {}
-    localStorage.setItem(dropKey, 'true');
-    if (typeof addCoinsLocally === 'function') {
-      addCoinsLocally(coinsReward, 'MONT-RADAR Secret Drop');
-    } else if (typeof giveUserCoins === 'function') {
-      giveUserCoins(coinsReward, 'MONT-RADAR Secret Drop');
-    } else {
-      const cur = parseInt(localStorage.getItem('genius_user_coins') || '0', 10);
-      localStorage.setItem('genius_user_coins', cur + coinsReward);
-      const bEl = document.getElementById('hdrCoinBalance');
-      if (bEl) bEl.textContent = cur + coinsReward;
-    }
-    playSoundFx('coin');
-    if (typeof triggerFlyingCoins === 'function') {
-      triggerFlyingCoins();
-    }
-    toast(lang === 'fr' ? `🎉 Drop Secret débloqué ! +${coinsReward} 🪙 GENIUS IA` : `🎉 Secret Drop Unlocked! +${coinsReward} 🪙 GENIUS IA`, 'success');
-    const btnDrop = document.getElementById('btnUnlockDropSpot');
-    if (btnDrop) {
-      btnDrop.disabled = true;
-      btnDrop.textContent = lang === 'fr' ? '✓ Réclamé' : '✓ Claimed';
-    }
-  };
-
-  if (!dropCoords || !Array.isArray(dropCoords) || dropCoords.length < 2) {
-    awardDropCoins();
-    return;
-  }
-
-  const btnDrop = document.getElementById('btnUnlockDropSpot');
-  if (btnDrop) {
-    btnDrop.disabled = true;
-    btnDrop.textContent = lang === 'fr' ? '📡 Vérification GPS...' : '📡 Verifying GPS...';
-  }
-
-  const getGpsDist = () => {
-    return new Promise((resolve) => {
-      const userPhysical = getUserPhysicalLocation();
-      if (!navigator.geolocation) {
-        const dist = calculateGeoDistanceMeters(userPhysical[0], userPhysical[1], dropCoords[0], dropCoords[1]);
-        resolve({ ok: true, dist, uLat: userPhysical[0], uLng: userPhysical[1] });
-        return;
-      }
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const uLat = pos.coords.latitude;
-          const uLng = pos.coords.longitude;
-          setRealUserPhysicalCoords(uLat, uLng);
-          const dist = calculateGeoDistanceMeters(uLat, uLng, dropCoords[0], dropCoords[1]);
-          resolve({ ok: true, dist, uLat, uLng });
-        },
-        (err) => {
-          const dist = calculateGeoDistanceMeters(userPhysical[0], userPhysical[1], dropCoords[0], dropCoords[1]);
-          resolve({ ok: true, dist, uLat: userPhysical[0], uLng: userPhysical[1] });
-        },
-        { enableHighAccuracy: true, timeout: 6000, maximumAge: 15000 }
-      );
-    });
-  };
-
-  const gpsResult = await getGpsDist();
-  const MAX_RADIUS_METERS = 250;
-
-  if (gpsResult.dist <= MAX_RADIUS_METERS) {
-    awardDropCoins();
-    return;
-  }
-
-  // If farther than 250m:
-  if (btnDrop) {
-    btnDrop.disabled = false;
-    const coinReward = Number(selectedRadarEvent.coins) || 100;
-    btnDrop.textContent = lang === 'fr' ? `💎 Réclamer le Drop (+${coinReward} 🪙)` : `💎 Claim Drop (+${coinReward} 🪙)`;
-  }
-  const distStr = formatDistanceDisplay(gpsResult.dist, lang);
-
-  if (isAdmin || virtualRadarScanActive) {
-    awardDropCoins();
-    return;
-  }
-
-  // Virtual claim reward: awards coins and completes quest
-  toast(lang === 'fr' 
-    ? `🎉 Drop Secret débloqué en mode Explorateur Virtuel !` 
-    : `🎉 Secret Drop Unlocked in Virtual Explorer mode!`, 'success');
-  awardDropCoins();
-  return;
-
-  // Physical proximity verified (<= 250m)
-  awardDropCoins();
+function executeRadarDropDetection() {
+  // Legacy stub
 }
 
 // 5. PASSEPORT FONDATEUR VIP #0001
@@ -19996,207 +19517,9 @@ function sendRoomMessage() {
 // ═════════════════════════════════════════════════════════════
 let dropSelectedCoinAmount = 100;
 let dropSelectedIcon = '💎';
-let dropTempMapCoords = null;
+function toggleRadarAdminDropDrawer() {}
+function submitRadarAdminCyberDrop() {}
 
-function toggleRadarAdminDropDrawer(forceState) {
-  if (!isRadarAdmin()) return;
-  const drawer = document.getElementById('radarAdminDropDrawer');
-  if (!drawer) return;
-  const isShown = forceState !== undefined ? forceState : drawer.style.display === 'block';
-
-  drawer.style.display = isShown ? 'none' : 'block';
-  if (!isShown) {
-    const mb = (drawer.closest ? drawer.closest('.mb') : null) || document.querySelector('.mont-radar-modal-card .mb');
-    if (mb && typeof mb.scrollTo === 'function') {
-      setTimeout(() => { mb.scrollTo({ top: drawer.offsetTop - 15, behavior: 'smooth' }); }, 60);
-    }
-  }
-}
-
-function setDropCoinValue(val, btnEl) {
-  dropSelectedCoinAmount = parseInt(val, 10) || 100;
-  const inp = document.getElementById('newDropCoins');
-  if (inp) inp.value = dropSelectedCoinAmount;
-  document.querySelectorAll('.drop-coin-chip').forEach(b => b.classList.remove('active'));
-  if (btnEl) btnEl.classList.add('active');
-}
-
-function setDropIcon(icon, btnEl) {
-  dropSelectedIcon = icon;
-  document.querySelectorAll('.drop-icon-chip').forEach(b => b.classList.remove('active'));
-  if (btnEl) btnEl.classList.add('active');
-}
-
-function onRadarDropLocationPresetChange(val) {
-  const presets = {
-    'kondiaronk': [45.5048, -73.5876],
-    'tam-tams': [45.5134, -73.5873],
-    'vieux-port': [45.5074, -73.5518],
-    'mile-end': [45.5226, -73.5982],
-    'spectacles': [45.5078, -73.5678],
-    'lafontaine': [45.5270, -73.5700],
-    'jean-drapeau': [45.5108, -73.5332],
-    'notre-dame': [45.5005, -73.5262],
-    'paris-eiffel': [48.8584, 2.2945],
-    'paris-louvre': [48.8606, 2.3376],
-    'paris-montmartre': [48.8867, 2.3431],
-    'ny-timessquare': [40.7580, -73.9855],
-    'ny-centralpark': [40.7750, -73.9712],
-    'ny-brooklynbridge': [40.7061, -73.9969],
-    'tokyo-shibuya': [35.6595, 139.7005],
-    'tokyo-sensoji': [35.7148, 139.7967],
-    'london-bigben': [51.5007, -0.1246],
-    'london-towerbridge': [51.5055, -0.0754],
-    'dubai-burj': [25.1972, 55.2744],
-    'bucharest-universitate': [44.4355, 26.1025],
-    'bucharest-arctriumf': [44.4671, 26.0781]
-  };
-
-  if (presets[val]) {
-    dropTempMapCoords = presets[val];
-    if (realMontrealLeafletMap) {
-      realMontrealLeafletMap.panTo(presets[val], { animate: true, duration: 0.6 });
-      if (mapPlacementTempMarker) realMontrealLeafletMap.removeLayer(mapPlacementTempMarker);
-      const tempIcon = L.divIcon({
-        className: 'custom-leaflet-divicon',
-        html: `<div class="radar-drop-pin"><span class="radar-drop-pulse"></span><span style="font-size:1.25rem;">${dropSelectedIcon}</span></div>`,
-        iconSize: [38, 38],
-        iconAnchor: [19, 19]
-      });
-      mapPlacementTempMarker = L.marker(presets[val], { icon: tempIcon }).addTo(realMontrealLeafletMap);
-    }
-  } else if (val === 'custom') {
-    toast(getCommunityLang() === 'fr' ? 'Cliquez n\'importe où sur la carte pour placer le trésor !' : 'Click anywhere on map to drop treasure!', 'info');
-  }
-}
-
-async function submitRadarAdminCyberDrop() {
-  if (!isRadarAdmin()) return;
-  const lang = getCommunityLang();
-
-  const titleInp = document.getElementById('newDropTitle');
-  const coinsInp = document.getElementById('newDropCoins');
-  const clueInp = document.getElementById('newDropClue');
-  const presetInp = document.getElementById('newDropLocationPreset');
-
-  const title = (titleInp && titleInp.value.trim()) ? titleInp.value.trim() : 'Secret Mont-Royal Cyber Drop 💎';
-  const coins = (coinsInp && parseInt(coinsInp.value, 10)) ? parseInt(coinsInp.value, 10) : dropSelectedCoinAmount;
-  const clue = (clueInp && clueInp.value.trim()) ? clueInp.value.trim() : 'Secret digital treasure on Montreal map!';
-
-  let coords = [45.5048, -73.5876];
-  let locName = 'Belvédère Kondiaronk (Mont-Royal)';
-
-  if (presetInp && presetInp.value === 'custom' && mapUserPlacementCoords) {
-    coords = mapUserPlacementCoords;
-    locName = `Custom Coordinates [${coords[0]}, ${coords[1]}]`;
-  } else if (presetInp && presetInp.value !== 'custom') {
-    const presets = {
-      'kondiaronk': [45.5048, -73.5876],
-      'tam-tams': [45.5134, -73.5873],
-      'vieux-port': [45.5074, -73.5518],
-      'mile-end': [45.5226, -73.5982],
-      'spectacles': [45.5078, -73.5678],
-      'lafontaine': [45.5270, -73.5700],
-      'jean-drapeau': [45.5108, -73.5332],
-      'notre-dame': [45.5005, -73.5262],
-      'paris-eiffel': [48.8584, 2.2945],
-      'paris-louvre': [48.8606, 2.3376],
-      'paris-montmartre': [48.8867, 2.3431],
-      'ny-timessquare': [40.7580, -73.9855],
-      'ny-centralpark': [40.7750, -73.9712],
-      'ny-brooklynbridge': [40.7061, -73.9969],
-      'tokyo-shibuya': [35.6595, 139.7005],
-      'tokyo-sensoji': [35.7148, 139.7967],
-      'london-bigben': [51.5007, -0.1246],
-      'london-towerbridge': [51.5055, -0.0754],
-      'dubai-burj': [25.1972, 55.2744],
-      'bucharest-universitate': [44.4355, 26.1025],
-      'bucharest-arctriumf': [44.4671, 26.0781]
-    };
-    if (presets[presetInp.value]) {
-      coords = presets[presetInp.value];
-      locName = presetInp.options[presetInp.selectedIndex].text;
-    }
-  }
-
-  const dropId = 'drop-' + Date.now();
-  const newDrop = {
-    id: dropId,
-    titleEn: title,
-    titleFr: title,
-    cat: 'drop',
-    icon: dropSelectedIcon || '💎',
-    badge: `SECRET DROP +${coins} 🪙`,
-    coords: coords,
-    locationName: locName,
-    descEn: `${clue} (Secret Cache: Claim +${coins} 🪙 GENIUS IA coins!)`,
-    descFr: `${clue} (Cache Secrète : Réclamez +${coins} 🪙 GENIUS IA !)`,
-    time: 'Active Now',
-    color: '#ffd700',
-    isDrop: true,
-    isCustom: true,
-    coins: coins,
-    createdBy: user ? user.email : 'admin'
-  };
-
-  // 1. Save locally in custom events list
-  let localSaved = [];
-  try {
-    localSaved = JSON.parse(localStorage.getItem('realmont_custom_radar_events') || '[]');
-  } catch (e) {
-    localSaved = [];
-  }
-  localSaved.push(newDrop);
-  localStorage.setItem('realmont_custom_radar_events', JSON.stringify(localSaved));
-
-  // 2. Persist to Firestore: master config doc + individual doc with auth uid
-  try {
-    if (typeof db !== 'undefined') {
-      const currentUid = (typeof user !== 'undefined' && user && user.uid) ? user.uid : (firebase.auth().currentUser ? firebase.auth().currentUser.uid : 'admin_drop');
-      const authorName = (typeof user !== 'undefined' && user && user.displayName) ? user.displayName : 'Admin';
-      const authorEmail = (typeof user !== 'undefined' && user && user.email) ? user.email : 'andart1174@gmail.com';
-
-      // Master config document for instant cross-device realtime sync
-      await db.collection('devsocial_posts').doc('config_radar_events').set({
-        drops: firebase.firestore.FieldValue.arrayUnion(newDrop),
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      }, { merge: true }).catch(e => console.warn('Radar master config write notice:', e));
-
-      // Individual doc in devsocial_posts collection
-      await db.collection('devsocial_posts').doc(dropId).set({
-        ...newDrop,
-        uid: currentUid,
-        user: authorName,
-        displayName: authorName,
-        userEmail: authorEmail,
-        type: 'radar_drop',
-        category: 'radar_drop',
-        content: title,
-        caption: title,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      }).catch(e => console.warn('Radar drop doc write notice:', e));
-    }
-  } catch (e) {
-    console.warn('Radar drop cloud save warning:', e);
-  }
-
-  if (mapPlacementTempMarker && realMontrealLeafletMap) {
-    realMontrealLeafletMap.removeLayer(mapPlacementTempMarker);
-    mapPlacementTempMarker = null;
-  }
-
-  toggleRadarAdminDropDrawer(false);
-  activeRadarFilter = 'drop';
-  document.querySelectorAll('.radar-cat-pill').forEach(btn => btn.classList.remove('active'));
-  const pillDrop = document.getElementById('pillCatDrop');
-  if (pillDrop) pillDrop.classList.add('active');
-
-  renderRadarMarkers();
-  selectRadarSpot(newDrop.id);
-
-  playSoundFx('coin');
-  toast(lang === 'fr' ? `💎 Trésor Cyber déployé avec succès ! (+${coins} 🪙)` : `💎 Cyber Drop deployed successfully! (+${coins} 🪙)`, 'success');
-}
 
 // ⚜️ Smooth Horizontal Swipe & Mouse Drag for Top Navigation Bar
 (function initHeaderSwipe() {
