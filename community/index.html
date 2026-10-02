@@ -5159,7 +5159,200 @@
       background: rgba(168, 85, 247, 0.15);
       color: #fff;
     }
-  </style>
+  
+    /* 🔥 DAILY STREAK & 🏆 LEADERBOARD HEADER PILLS */
+    .hdr-streak-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, rgba(249,115,22,0.18), rgba(239,68,68,0.18));
+      border: 1.5px solid rgba(249,115,22,0.5);
+      padding: 5px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      color: #fdba74;
+      font-size: 0.78rem;
+      font-weight: 800;
+      transition: all 0.25s ease;
+      box-shadow: 0 0 15px rgba(249,115,22,0.2);
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .hdr-streak-pill:hover {
+      transform: translateY(-1px) scale(1.03);
+      border-color: #f97316;
+      box-shadow: 0 0 25px rgba(249,115,22,0.45);
+      background: linear-gradient(135deg, rgba(249,115,22,0.28), rgba(239,68,68,0.28));
+    }
+    .hdr-leaderboard-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, rgba(234,179,8,0.16), rgba(168,85,247,0.16));
+      border: 1.5px solid rgba(234,179,8,0.45);
+      padding: 5px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      color: #fde047;
+      font-size: 0.78rem;
+      font-weight: 800;
+      transition: all 0.25s ease;
+      box-shadow: 0 0 15px rgba(234,179,8,0.2);
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .hdr-leaderboard-pill:hover {
+      transform: translateY(-1px) scale(1.03);
+      border-color: #eab308;
+      box-shadow: 0 0 25px rgba(234,179,8,0.45);
+    }
+    @media (max-width: 900px) {
+      .hdr-streak-pill .streak-tag,
+      .hdr-leaderboard-pill .leaderboard-tag {
+        display: none;
+      }
+      .hdr-streak-pill,
+      .hdr-leaderboard-pill {
+        padding: 4px 8px !important;
+        font-size: 0.74rem !important;
+      }
+    }
+
+    /* 🎯 DAILY QUESTS MODAL STYLING */
+    .quest-item-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: all 0.2s ease;
+    }
+    .quest-item-card:hover {
+      border-color: rgba(249,115,22,0.4);
+      background: rgba(249,115,22,0.04);
+    }
+    .quest-item-card.completed {
+      border-color: rgba(16,185,129,0.5);
+      background: rgba(16,185,129,0.06);
+    }
+    .milestone-box {
+      padding: 10px 4px;
+      border-radius: 10px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    .milestone-box.active {
+      border-color: rgba(255,215,0,0.6);
+      background: rgba(255,215,0,0.08);
+      box-shadow: 0 0 12px rgba(255,215,0,0.2);
+    }
+
+    /* ⚡ 15-MIN FLASH SUPER DROP BANNER */
+    .radar-flash-drop-banner {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: linear-gradient(135deg, rgba(245,158,11,0.25), rgba(236,72,153,0.25));
+      border: 1px solid #f59e0b;
+      border-radius: 12px;
+      padding: 9px 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 0 20px rgba(245,158,11,0.3);
+      animation: flashBannerPulse 2s infinite ease-in-out;
+    }
+    @keyframes flashBannerPulse {
+      0%, 100% { box-shadow: 0 0 14px rgba(245,158,11,0.3); }
+      50% { box-shadow: 0 0 28px rgba(236,72,153,0.5); border-color: #ec4899; }
+    }
+
+    /* 📸 9:16 STORY CARD MODAL PREVIEW */
+    .story-preview-container {
+      width: 270px;
+      height: 480px;
+      margin: 0 auto 16px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 0 35px rgba(124,58,237,0.35);
+      border: 2px solid rgba(255,255,255,0.18);
+      position: relative;
+      background: #060810;
+    }
+    #storyCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+    }
+
+    /* 🏆 GLOBAL LEADERBOARD STYLING */
+    .podium-container {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 22px;
+      padding-top: 10px;
+    }
+    .podium-col {
+      flex: 1;
+      max-width: 130px;
+      text-align: center;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px 16px 10px 10px;
+      padding: 14px 8px 10px;
+      position: relative;
+      transition: all 0.2s;
+    }
+    .podium-col.first {
+      border-color: rgba(255,215,0,0.6);
+      background: linear-gradient(180deg, rgba(255,215,0,0.15), var(--bg2));
+      box-shadow: 0 0 25px rgba(255,215,0,0.25);
+      transform: translateY(-10px);
+    }
+    .podium-col.second {
+      border-color: rgba(148,163,184,0.5);
+      background: linear-gradient(180deg, rgba(148,163,184,0.12), var(--bg2));
+    }
+    .podium-col.third {
+      border-color: rgba(245,158,11,0.4);
+      background: linear-gradient(180deg, rgba(245,158,11,0.1), var(--bg2));
+    }
+    .leader-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      margin-bottom: 8px;
+      transition: all 0.15s ease;
+    }
+    .leader-row:hover {
+      border-color: var(--accent);
+      background: rgba(124,58,237,0.06);
+    }
+    .user-rank-sticky {
+      position: sticky;
+      bottom: 0;
+      background: linear-gradient(135deg, #1e1b4b, #0f172a);
+      border: 1.5px solid #a855f7;
+      border-radius: 14px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+      margin-top: 14px;
+    }
+
+</style>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -5231,6 +5424,19 @@
   <!-- VIP FOUNDER PASS BUTTON -->
   <button class="hdr-vip-pill" id="hdrVipPill" onclick="openFounderPassModal()" title="Founder VIP Pass #0001" style="display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,rgba(255,215,0,0.15),rgba(244,63,94,0.15));border:1px solid rgba(255,215,0,0.4);border-radius:20px;padding:4px 10px;color:#ffd700;font-size:0.75rem;font-weight:800;cursor:pointer;white-space:nowrap;margin-left:auto;">
     <span>⚜️ VIP #0001</span>
+  </button>
+
+  <!-- 🔥 DAILY STREAK PILL -->
+  <button class="hdr-streak-pill" id="hdrStreakPill" onclick="openDailyQuestsModal()" title="Daily Quests & Streak Flame">
+    <span>🔥</span>
+    <span id="hdrStreakValue">1</span>
+    <span class="streak-tag" id="lblHdrStreakTag">Streak</span>
+  </button>
+
+  <!-- 🏆 GLOBAL LEADERBOARD PILL -->
+  <button class="hdr-leaderboard-pill" id="hdrLeaderboardPill" onclick="openLeaderboardModal()" title="Global Leaderboard & Hall of Fame">
+    <span>🏆</span>
+    <span class="leaderboard-tag" id="lblHdrLeaderboardTag">Ranks</span>
   </button>
 
   <!-- GENIUS IA COIN WIDGET -->
@@ -5307,6 +5513,12 @@
         </button>
         <button class="cat-btn" style="display:flex;align-items:center;gap:8px;font-size:0.8rem;justify-content:flex-start;padding:8px 12px;" onclick="openVoiceStudioModal()" id="btnNavVoice">
           <span style="font-size:1.05rem;">🎙️</span> <span id="lblNavVoice">Spark Voice™ 30s</span>
+        </button>
+        <button class="cat-btn" style="display:flex;align-items:center;gap:8px;font-size:0.8rem;justify-content:flex-start;padding:8px 12px;" onclick="openDailyQuestsModal()" id="btnNavQuests">
+          <span style="font-size:1.05rem;">🔥</span> <span id="lblNavQuests">Daily Quests & Streaks</span>
+        </button>
+        <button class="cat-btn" style="display:flex;align-items:center;gap:8px;font-size:0.8rem;justify-content:flex-start;padding:8px 12px;" onclick="openLeaderboardModal()" id="btnNavLeaderboard">
+          <span style="font-size:1.05rem;">🏆</span> <span id="lblNavLeaderboard">Global Leaderboard</span>
         </button>
         <button class="cat-btn" style="display:flex;align-items:center;gap:8px;font-size:0.8rem;justify-content:flex-start;padding:8px 12px;" onclick="openFounderPassModal()" id="btnNavFounder">
           <span style="font-size:1.05rem;">⚜️</span> <span id="lblNavFounder">VIP Pass #0001</span>
@@ -6812,6 +7024,20 @@
         <button type="button" class="btn-radar-nav-arrow" onclick="scrollRadarBar('radarTeleportBar', 1)" aria-label="Next city" title="Next">›</button>
       </div>
 
+      <!-- ⚡ 15-MIN FLASH SUPER DROP LIVE BANNER -->
+      <div class="radar-flash-drop-banner" id="radarFlashDropBanner" onclick="focusOnFlashSuperDrop()">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:1.4rem;">⚡</span>
+          <div>
+            <div style="font-weight:900;color:#fff;font-size:0.86rem;" id="lblFlashBannerTitle">SUPER DROP FLASH EVENT (+300 🪙)</div>
+            <div style="font-size:0.72rem;color:#fde047;" id="lblFlashBannerSub">Active for 15 minutes! Tap to fly to Golden Beacon</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-family:'Outfit',sans-serif;font-weight:900;color:#fff;font-size:1rem;background:rgba(0,0,0,0.4);padding:4px 10px;border-radius:10px;border:1px solid #f59e0b;" id="flashTimerCountdown">14:59</span>
+        </div>
+      </div>
+
       <!-- Real Montreal Leaflet Map Container with Free Layer Switcher -->
       <div style="position:relative;width:100%;margin-bottom:12px;">
         <div id="realMontrealMap" class="dark-leaflet-tiles" style="width:100%;height:380px;min-height:220px;border-radius:14px;overflow:hidden;position:relative;background:#090d16;border:1px solid rgba(6,182,212,0.4);z-index:1;display:block;"></div>
@@ -6999,6 +7225,7 @@
             ⚡ <span id="lblAdminDropTip">Drop is published in real-time to all users on MONT-RADAR!</span>
           </div>
           <div style="display:flex;gap:8px;">
+            <button class="shop-btn" style="padding:6px 12px;background:linear-gradient(135deg,#f59e0b,#ec4899);border:none;color:#fff;font-size:0.75rem;font-weight:800;" onclick="triggerAdminFlashDrop()" id="btnTriggerAdminFlash">⚡ Start 15-Min Flash Drop</button>
             <button class="shop-btn" style="padding:6px 14px;background:var(--bg3);border:1px solid var(--border2);color:#94a3b8;font-size:0.8rem;" onclick="toggleRadarAdminDropDrawer(false)" id="btnCancelAdminDrop">Cancel</button>
             <button class="btn-filter-spot" style="padding:8px 18px;font-size:0.82rem;background:linear-gradient(135deg,#f59e0b,#ec4899);color:#fff;font-weight:800;" onclick="submitRadarAdminCyberDrop()" id="btnSubmitAdminDrop">
               <span>🚀 Deploy Cyber Drop</span>
@@ -7317,35 +7544,144 @@
             <span>📥 Download 3D Pass Image</span>
           </button>
         </div>
+      <!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 🔥 DAILY CYBER QUESTS & STREAKS MODAL (DUOLINGO STYLE)       -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="dailyQuestsModalOverlay" onclick="closeDailyQuestsModal(event)">
+  <div class="modal quests-modal-card" onclick="event.stopPropagation()" style="max-width:540px;width:92%;padding:0;overflow:hidden;">
+    <div class="mh" style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border2);background:rgba(0,0,0,0.25);">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:1.6rem;filter:drop-shadow(0 0 10px #f97316);">🔥</span>
+        <div>
+          <h3 style="margin:0;font-size:1.15rem;font-weight:900;color:#fff;" id="lblQuestsModalTitle">Daily Cyber Quests</h3>
+          <p style="margin:2px 0 0;font-size:0.75rem;color:var(--muted);" id="lblQuestsModalSub">Complete all 3 missions daily to fuel your Streak Flame!</p>
+        </div>
+      </div>
+      <button class="mc" onclick="closeDailyQuestsModal()">✕</button>
+    </div>
+
+    <div class="mb" style="padding:20px;max-height:78vh;overflow-y:auto;">
+      <!-- Big Flame Streak Stage -->
+      <div class="streak-stage-card" style="background:linear-gradient(135deg,rgba(249,115,22,0.15),rgba(239,68,68,0.1),var(--bg2));border:1px solid rgba(249,115,22,0.4);border-radius:18px;padding:18px;text-align:center;margin-bottom:18px;box-shadow:0 0 25px rgba(249,115,22,0.15);">
+        <div style="font-size:2.8rem;line-height:1;margin-bottom:6px;filter:drop-shadow(0 0 14px rgba(249,115,22,0.7));">🔥</div>
+        <div style="font-size:1.5rem;font-weight:900;color:#fff;letter-spacing:0.02em;" id="streakStageCount">1 DAY STREAK</div>
+        <p style="font-size:0.78rem;color:#fdba74;margin:4px 0 12px;" id="streakStageDesc">You are on fire! Complete today's missions to keep your streak alive.</p>
+        <div style="display:flex;justify-content:center;gap:8px;">
+          <button class="shop-btn" style="padding:7px 16px;background:rgba(249,115,22,0.2);border:1px solid #f97316;color:#fff;font-size:0.78rem;font-weight:800;" onclick="openStoryCardGenerator('streak')">
+            <span>📸 Share Streak to Story</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 3 Quests List -->
+      <div style="display:flex;flex-direction:column;gap:10px;" id="questsListContainer">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Streak Milestones Bar -->
+      <div style="margin-top:20px;padding:14px;background:var(--bg3);border:1px solid var(--border2);border-radius:14px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span style="font-size:0.78rem;font-weight:800;color:#ffd700;" id="lblMilestonesTitle">🏆 Streak Milestones</span>
+          <span style="font-size:0.7rem;color:var(--muted);" id="lblMilestonesSub">Extra Rewards</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;">
+          <div class="milestone-box active" id="mstone-3">
+            <div style="font-size:1rem;">🥉</div>
+            <div style="font-size:0.72rem;font-weight:800;color:#fff;">3 Days</div>
+            <div style="font-size:0.65rem;color:#f97316;">+100 🪙</div>
+          </div>
+          <div class="milestone-box" id="mstone-7">
+            <div style="font-size:1rem;">🥈</div>
+            <div style="font-size:0.72rem;font-weight:800;color:#fff;">7 Days</div>
+            <div style="font-size:0.65rem;color:#ffd700;">+250 🪙</div>
+          </div>
+          <div class="milestone-box" id="mstone-14">
+            <div style="font-size:1rem;">🥇</div>
+            <div style="font-size:0.72rem;font-weight:800;color:#fff;">14 Days</div>
+            <div style="font-size:0.65rem;color:#06b6d4;">+500 🪙</div>
+          </div>
+          <div class="milestone-box" id="mstone-30">
+            <div style="font-size:1rem;">💎</div>
+            <div style="font-size:0.72rem;font-weight:800;color:#fff;">30 Days</div>
+            <div style="font-size:0.65rem;color:#a855f7;">+1,000 🪙</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-          <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.15);padding-top:12px;font-size:0.75rem;color:#cbd5e1;">
-            <div>
-              <div style="color:var(--muted);font-size:0.68rem;" id="lbl-founder-perks">LIFETIME STATUS</div>
-              <div style="font-weight:800;color:#fcd34d;">2X COIN MULTIPLIER ⚡</div>
-            </div>
-            <div style="text-align:right;">
-              <div style="color:var(--muted);font-size:0.68rem;" id="lbl-founder-edition">GENESIS EDITION</div>
-              <div style="font-weight:800;color:#38bdf8;">FOUNDER BADGE 💎</div>
-            </div>
-          </div>
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 📸 9:16 STORY CARD GENERATOR (TIKTOK & INSTAGRAM STORIES)    -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="storyGeneratorModalOverlay" onclick="closeStoryGeneratorModal(event)">
+  <div class="modal story-generator-modal-card" onclick="event.stopPropagation()" style="max-width:440px;width:92%;padding:0;overflow:hidden;text-align:center;">
+    <div class="mh" style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border2);background:rgba(0,0,0,0.3);">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:1.3rem;">📸</span>
+        <div style="text-align:left;">
+          <h4 style="margin:0;font-size:0.98rem;font-weight:800;color:#fff;" id="lblStoryGenTitle">Instagram & TikTok Stories</h4>
+          <span style="font-size:0.68rem;color:var(--muted);" id="lblStoryGenSub">High-Res 9:16 Viral Card Generator</span>
         </div>
       </div>
+      <button class="mc" onclick="closeStoryGeneratorModal()">✕</button>
+    </div>
 
-      <h3 style="font-family:'Outfit',sans-serif;font-size:1.2rem;color:#fff;margin-bottom:6px;" id="lbl-invite-crew-title">Invite Friends & Earn +50 🪙</h3>
-      <p style="color:var(--muted);font-size:0.82rem;margin-bottom:16px;" id="lbl-invite-crew-sub">Share your exclusive Montreal VIP invite link. Each friend who joins unlocks 50 coins for you!</p>
+    <div class="mb" style="padding:16px;">
+      <!-- Tab Selector -->
+      <div style="display:flex;gap:6px;justify-content:center;margin-bottom:14px;">
+        <button class="v-tab active" id="storyTab-passport" onclick="switchStoryType('passport')" style="padding:5px 10px;font-size:0.72rem;">🪪 Passport</button>
+        <button class="v-tab" id="storyTab-streak" onclick="switchStoryType('streak')" style="padding:5px 10px;font-size:0.72rem;">🔥 Streak</button>
+        <button class="v-tab" id="storyTab-drop" onclick="switchStoryType('drop')" style="padding:5px 10px;font-size:0.72rem;">💎 Drop</button>
+        <button class="v-tab" id="storyTab-duel" onclick="switchStoryType('duel')" style="padding:5px 10px;font-size:0.72rem;">⚔️ Duel</button>
+      </div>
 
+      <!-- Preview Stage -->
+      <div class="story-preview-container">
+        <canvas id="storyCanvas" width="1080" height="1920"></canvas>
+      </div>
+
+      <!-- Action Buttons -->
       <div style="display:flex;gap:10px;justify-content:center;">
-        <button class="shop-btn buy" style="flex:1;padding:10px;" onclick="shareFounderPassWhatsapp()" id="btnFounderWhatsapp">
-          <span>💬 WhatsApp Invite</span>
+        <button class="shop-btn buy" style="flex:1;padding:10px;background:linear-gradient(135deg,#ec4899,#f43f5e);font-size:0.82rem;font-weight:800;" onclick="downloadStoryCardImage()" id="btnDownloadStory">
+          <span>📥 Download (.PNG)</span>
         </button>
-        <button class="shop-btn" style="flex:1;padding:10px;background:var(--bg3);border:1px solid var(--border2);color:#fff;" onclick="copyFounderPassLink()" id="btnFounderCopyLink">
-          <span>📋 Copy Link</span>
+        <button class="shop-btn" style="flex:1;padding:10px;background:linear-gradient(135deg,#7c3aed,#06b6d4);color:#fff;border:none;font-size:0.82rem;font-weight:800;" onclick="shareStoryCardNative()" id="btnShareStoryNative">
+          <span>📲 Share to App</span>
         </button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 🏆 CLASAMENTUL GLOBAL (GLOBAL LEADERBOARD & HALL OF FAME)   -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="leaderboardModalOverlay" onclick="closeLeaderboardModal(event)">
+  <div class="modal leaderboard-modal-card" onclick="event.stopPropagation()" style="max-width:580px;width:92%;padding:0;overflow:hidden;display:flex;flex-direction:column;max-height:85vh;">
+    <!-- Header -->
+    <div class="mh" style="padding:16px 20px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,0.3);">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:1.6rem;filter:drop-shadow(0 0 10px #ffd700);">🏆</span>
+        <div>
+          <h3 style="margin:0;font-size:1.15rem;font-weight:900;color:#fff;" id="lblLeaderboardTitle">Global Hall of Fame</h3>
+          <p style="margin:2px 0 0;font-size:0.75rem;color:var(--muted);" id="lblLeaderboardSub">World Citizens, Top Explorers & City Champions</p>
+        </div>
+      </div>
+      <button class="mc" onclick="closeLeaderboardModal()">✕</button>
+    </div>
+
+    <!-- Category Tabs -->
+    <div style="display:flex;gap:6px;padding:10px 16px;background:rgba(0,0,0,0.15);border-bottom:1px solid var(--border2);overflow-x:auto;">
+      <button class="v-tab active" id="lbTab-explorers" onclick="switchLeaderboardTab('explorers')">💎 Explorers</button>
+      <button class="v-tab" id="lbTab-streaks" onclick="switchLeaderboardTab('streaks')">🔥 Streaks</button>
+      <button class="v-tab" id="lbTab-creators" onclick="switchLeaderboardTab('creators')">👑 Creators</button>
+      <button class="v-tab" id="lbTab-citywars" onclick="switchLeaderboardTab('citywars')">🏙️ City Wars</button>
+    </div>
+
+    <!-- Body / List -->
+    <div class="mb" style="padding:16px;overflow-y:auto;flex:1;" id="leaderboardBodyContainer">
+      <!-- Injected dynamically -->
     </div>
   </div>
 </div>
@@ -9372,6 +9708,7 @@ async function publish() {
 // LIKES
 // ══════════════════════════════════════════
 async function toggleLike(postId, liked) {
+  try { progressDailyQuest('pulse'); } catch(e) {}
   if (!user) { promptGuestLogin('like'); return; }
   const btn = document.getElementById('lb-' + postId);
   const cnt = document.getElementById('lc-' + postId);
@@ -10728,6 +11065,46 @@ function toggleCommunityLanguage() {
 
 function applyCommunityLanguage(lang) {
   const t = I18N[lang] || I18N.en;
+
+  // Viral Systems Language Refresh
+  try {
+    const isFr = lang === 'fr';
+    const streakTag = document.getElementById('lblHdrStreakTag');
+    if (streakTag) streakTag.textContent = isFr ? 'Série' : 'Streak';
+    const lbTag = document.getElementById('lblHdrLeaderboardTag');
+    if (lbTag) lbTag.textContent = isFr ? 'Rangs' : 'Ranks';
+    const navQuests = document.getElementById('lblNavQuests');
+    if (navQuests) navQuests.textContent = isFr ? 'Missions & Séries' : 'Daily Quests & Streaks';
+    const navLb = document.getElementById('lblNavLeaderboard');
+    if (navLb) navLb.textContent = isFr ? 'Classement Mondial' : 'Global Leaderboard';
+    const catQuests = document.getElementById('lblCatSheetQuests');
+    if (catQuests) catQuests.textContent = isFr ? 'Missions' : 'Daily Quests';
+    const catLb = document.getElementById('lblCatSheetLeaderboard');
+    if (catLb) catLb.textContent = isFr ? 'Classement' : 'Leaderboard';
+
+    const qTitle = document.getElementById('lblQuestsModalTitle');
+    if (qTitle) qTitle.textContent = isFr ? 'Missions Cyber Quotidiennes' : 'Daily Cyber Quests';
+    const qSub = document.getElementById('lblQuestsModalSub');
+    if (qSub) qSub.textContent = isFr ? 'Accomplissez les 3 missions pour alimenter votre flamme !' : 'Complete all 3 missions daily to fuel your Streak Flame!';
+
+    const storyTitle = document.getElementById('lblStoryGenTitle');
+    if (storyTitle) storyTitle.textContent = isFr ? 'Stories Instagram & TikTok' : 'Instagram & TikTok Stories';
+    const storySub = document.getElementById('lblStoryGenSub');
+    if (storySub) storySub.textContent = isFr ? 'Générateur de Carte Virale 9:16' : 'High-Res 9:16 Viral Card Generator';
+
+    const lbTitle = document.getElementById('lblLeaderboardTitle');
+    if (lbTitle) lbTitle.textContent = isFr ? 'Panthéon Mondial des Légendes' : 'Global Hall of Fame';
+    const lbSub = document.getElementById('lblLeaderboardSub');
+    if (lbSub) lbSub.textContent = isFr ? 'Citoyens, Top Explorateurs & Champions des Villes' : 'World Citizens, Top Explorers & City Champions';
+
+    const flashTitle = document.getElementById('lblFlashBannerTitle');
+    if (flashTitle) flashTitle.textContent = isFr ? 'ÉVÉNEMENT SUPER DROP FLASH (+300 🪙)' : 'SUPER DROP FLASH EVENT (+300 🪙)';
+    const flashSub = document.getElementById('lblFlashBannerSub');
+    if (flashSub) flashSub.textContent = isFr ? 'Actif 15 minutes ! Touchez pour voler vers la Balise Dorée' : 'Active for 15 minutes! Tap to fly to Golden Beacon';
+
+    const btnFlashAdmin = document.getElementById('btnTriggerAdminFlash');
+    if (btnFlashAdmin) btnFlashAdmin.textContent = isFr ? '⚡ Lancer Drop Flash 15-Min' : '⚡ Start 15-Min Flash Drop';
+  } catch(e) {}
   
   // Header
   const flagEl = document.getElementById('langFlag');
@@ -17182,6 +17559,7 @@ function voteModalDuel(team, event) {
 
 function voteDuel(team, event) {
   triggerHaptic('heavy');
+  try { progressDailyQuest('duel'); } catch(e) {}
   if (event) {
     event.preventDefault();
     event.stopPropagation();
@@ -18775,6 +19153,7 @@ function executeRadarDropDetection(centerLat, centerLng, isVirtualScan = false) 
 
 function scanNearbyCyberDrops() {
   if (typeof triggerHaptic === 'function') triggerHaptic('medium');
+  try { progressDailyQuest('radar'); } catch(e) {}
   const lang = getCommunityLang();
 
   const runVirtualFallbackScan = () => {
@@ -18839,6 +19218,7 @@ async function claimRadarSecretDrop() {
 
   const awardDropCoins = () => {
     const coinsReward = Number(selectedRadarEvent.coins) || 100;
+    try { progressDailyQuest('radar'); } catch(e) {}
     localStorage.setItem(dropKey, 'true');
     if (typeof addCoinsLocally === 'function') {
       addCoinsLocally(coinsReward, 'MONT-RADAR Secret Drop');
@@ -19050,17 +19430,8 @@ function closeFounderPassModal(e) {
 
 async function sharePassportToStories() {
   triggerHaptic('light');
-  const vipNum = getOrGenerateUserVipPassportNum();
-  const lang = getCommunityLang();
-  const url = `https://ia-codestudio.com/community/?ref=VIP${vipNum}`;
-  const shareData = {
-    title: '⚜️ REALMONT 3D VIP Passport',
-    text: lang === 'fr'
-      ? `Regardez mon Passeport 3D Officiel REALMONT #${vipNum} ! Rejoignez le nouveau réseau social créatif 3D :`
-      : `Check out my official REALMONT 3D VIP Passport #${vipNum}! Join the future of creative 3D social networking:`,
-    url: url
-  };
-
+  openStoryCardGenerator('passport');
+  return;
   if (navigator.share) {
     try {
       await navigator.share(shareData);
@@ -19705,6 +20076,969 @@ async function submitRadarAdminCyberDrop() {
   }
 })();
 
+
+// ═════════════════════════════════════════════════════════════
+// 🚀 REALMONT VIRAL ENGINES (QUESTS, STREAKS, STORIES, FLASH, LEADERBOARD)
+// ═════════════════════════════════════════════════════════════
+
+// -------------------------------------------------------------
+// 1. DAILY CYBER QUESTS & STREAKS ENGINE (DUOLINGO STYLE)
+// -------------------------------------------------------------
+function getTodayDateString() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function getYesterdayDateString() {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function getDailyQuestsState() {
+  const today = getTodayDateString();
+  const defState = {
+    streak: 1,
+    lastActiveDate: today,
+    lastCompletedDate: null,
+    allBonusClaimed: false,
+    quests: {
+      radar: { current: 0, target: 1, reward: 35, completed: false },
+      duel: { current: 0, target: 1, reward: 25, completed: false },
+      pulse: { current: 0, target: 1, reward: 30, completed: false }
+    }
+  };
+
+  try {
+    const raw = localStorage.getItem('realmont_quests_state');
+    if (!raw) return defState;
+    const parsed = JSON.parse(raw);
+    if (!parsed || !parsed.quests) return defState;
+
+    // Check if new day
+    if (parsed.lastActiveDate !== today) {
+      const yesterday = getYesterdayDateString();
+      if (parsed.lastCompletedDate === yesterday) {
+        // Maintained streak from yesterday
+      } else if (parsed.lastActiveDate !== yesterday) {
+        // Missed more than 1 day, reset streak
+        parsed.streak = 1;
+      }
+      parsed.lastActiveDate = today;
+      parsed.allBonusClaimed = false;
+      parsed.quests = {
+        radar: { current: 0, target: 1, reward: 35, completed: false },
+        duel: { current: 0, target: 1, reward: 25, completed: false },
+        pulse: { current: 0, target: 1, reward: 30, completed: false }
+      };
+      localStorage.setItem('realmont_quests_state', JSON.stringify(parsed));
+    }
+    return parsed;
+  } catch (e) {
+    return defState;
+  }
+}
+
+function saveDailyQuestsState(state) {
+  try {
+    localStorage.setItem('realmont_quests_state', JSON.stringify(state));
+  } catch (e) {}
+  updateStreakPillUI(state.streak);
+}
+
+function updateStreakPillUI(streakCount) {
+  const el = document.getElementById('hdrStreakValue');
+  if (el) el.textContent = String(streakCount || 1);
+}
+
+function progressDailyQuest(type) {
+  const state = getDailyQuestsState();
+  if (!state.quests || !state.quests[type]) return;
+  const q = state.quests[type];
+  if (q.completed) return;
+
+  q.current = Math.min(q.target, q.current + 1);
+  if (q.current >= q.target) {
+    q.completed = true;
+    const lang = getCommunityLang();
+    const reward = q.reward || 30;
+
+    // Award quest coins
+    if (typeof addCoinsLocally === 'function') {
+      addCoinsLocally(reward, `Daily Quest: ${type}`);
+    } else {
+      const cur = parseInt(localStorage.getItem('genius_user_coins') || '0', 10);
+      localStorage.setItem('genius_user_coins', cur + reward);
+      const bEl = document.getElementById('hdrCoinBalance');
+      if (bEl) bEl.textContent = cur + reward;
+    }
+    if (typeof playSoundFx === 'function') playSoundFx('coin');
+    if (typeof triggerHaptic === 'function') triggerHaptic('medium');
+
+    const questTitles = {
+      radar: lang === 'fr' ? 'Radar Explorateur' : 'Radar Explorer',
+      duel: lang === 'fr' ? 'Guerrier de Duel' : 'Duel Warrior',
+      pulse: lang === 'fr' ? 'Pouls Communautaire' : 'Community Pulse'
+    };
+
+    toast(lang === 'fr'
+      ? `🎯 Mission Accomplie : ${questTitles[type] || type} (+${reward} 🪙) !`
+      : `🎯 Quest Completed: ${questTitles[type] || type} (+${reward} 🪙)!`, 'success');
+
+    // Check if ALL 3 are completed
+    const allDone = state.quests.radar.completed && state.quests.duel.completed && state.quests.pulse.completed;
+    if (allDone && !state.allBonusClaimed) {
+      state.allBonusClaimed = true;
+      state.lastCompletedDate = getTodayDateString();
+      state.streak = (Number(state.streak) || 1) + 1;
+
+      // Bonus 50 coins for all 3
+      if (typeof addCoinsLocally === 'function') addCoinsLocally(50, 'Daily Streak Complete Bonus');
+      if (typeof triggerFlyingCoins === 'function') triggerFlyingCoins();
+
+      setTimeout(() => {
+        toast(lang === 'fr'
+          ? `🔥 SÉRIE DE ${state.streak} JOURS ! Toutes les missions accomplies ! Bonus +50 🪙`
+          : `🔥 ${state.streak}-DAY STREAK ACHIEVED! All daily quests complete! Bonus +50 🪙`, 'success');
+      }, 1200);
+    }
+  }
+
+  saveDailyQuestsState(state);
+  renderDailyQuestsModalUI();
+}
+
+function openDailyQuestsModal() {
+  triggerHaptic('light');
+  renderDailyQuestsModalUI();
+  const m = document.getElementById('dailyQuestsModalOverlay');
+  if (m) m.classList.add('open');
+}
+
+function closeDailyQuestsModal(e) {
+  if (e && e.target !== document.getElementById('dailyQuestsModalOverlay') && !e.target.classList.contains('mc')) return;
+  const m = document.getElementById('dailyQuestsModalOverlay');
+  if (m) m.classList.remove('open');
+}
+
+function renderDailyQuestsModalUI() {
+  const state = getDailyQuestsState();
+  const lang = getCommunityLang();
+
+  const countEl = document.getElementById('streakStageCount');
+  if (countEl) countEl.textContent = lang === 'fr' ? `SÉRIE DE ${state.streak} JOURS 🔥` : `${state.streak} DAY STREAK 🔥`;
+
+  const descEl = document.getElementById('streakStageDesc');
+  if (descEl) {
+    descEl.textContent = state.allBonusClaimed
+      ? (lang === 'fr' ? '🎉 Toutes les missions du jour sont réussies ! Revenez demain pour continuer votre série.' : '🎉 All missions completed today! Return tomorrow to keep your flame burning.')
+      : (lang === 'fr' ? 'Accomplissez les 3 missions pour entretenir votre flamme et gagner +50 🪙 de bonus !' : 'Complete all 3 missions to fuel your flame and earn a +50 🪙 bonus!');
+  }
+
+  // Update milestones
+  const s = Number(state.streak) || 1;
+  const m3 = document.getElementById('mstone-3');
+  const m7 = document.getElementById('mstone-7');
+  const m14 = document.getElementById('mstone-14');
+  const m30 = document.getElementById('mstone-30');
+  if (m3) m3.className = 'milestone-box ' + (s >= 3 ? 'active' : '');
+  if (m7) m7.className = 'milestone-box ' + (s >= 7 ? 'active' : '');
+  if (m14) m14.className = 'milestone-box ' + (s >= 14 ? 'active' : '');
+  if (m30) m30.className = 'milestone-box ' + (s >= 30 ? 'active' : '');
+
+  // Render Quests list
+  const container = document.getElementById('questsListContainer');
+  if (!container) return;
+
+  const questDefs = [
+    {
+      key: 'radar',
+      icon: '📡',
+      titleEn: 'World Radar Explorer',
+      titleFr: 'Explorateur du World Radar',
+      descEn: 'Scan the radar or claim a cyber drop nearby',
+      descFr: 'Scannez le radar ou réclamez un drop secret',
+      actionBtnEn: 'Scan Radar 🗺️',
+      actionBtnFr: 'Scanner 🗺️',
+      actionFn: "closeDailyQuestsModal();openRadarModal();"
+    },
+    {
+      key: 'duel',
+      icon: '⚡',
+      titleEn: 'Cyber Duelist',
+      titleFr: 'Duelliste Cyber',
+      descEn: 'Cast your vote in an active city duel or war',
+      descFr: 'Votez dans un duel actif ou guerre des villes',
+      actionBtnEn: 'Vote Duels ⚔️',
+      actionBtnFr: 'Voter Duels ⚔️',
+      actionFn: "closeDailyQuestsModal();openDuelsModal();"
+    },
+    {
+      key: 'pulse',
+      icon: '💬',
+      titleEn: 'Community Pulse',
+      titleFr: 'Pouls de la Communauté',
+      descEn: 'Like, comment, or share a creation in the feed',
+      descFr: 'Aimez, commentez ou publiez une création',
+      actionBtnEn: 'Explore Feed 📰',
+      actionBtnFr: 'Explorer Feed 📰',
+      actionFn: "closeDailyQuestsModal();window.scrollTo({top:0,behavior:'smooth'});"
+    }
+  ];
+
+  container.innerHTML = questDefs.map(def => {
+    const q = state.quests[def.key] || { current: 0, target: 1, reward: 30, completed: false };
+    const pct = Math.min(100, Math.round((q.current / q.target) * 100));
+    const title = lang === 'fr' ? def.titleFr : def.titleEn;
+    const desc = lang === 'fr' ? def.descFr : def.descEn;
+    const btnLabel = lang === 'fr' ? def.actionBtnFr : def.actionBtnEn;
+
+    return `
+      <div class="quest-item-card ${q.completed ? 'completed' : ''}">
+        <div style="font-size:1.6rem;flex-shrink:0;">${def.icon}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;">
+            <div style="font-size:0.86rem;font-weight:800;color:#fff;">${title}</div>
+            <span style="font-size:0.7rem;font-weight:800;color:#ffd700;background:rgba(255,215,0,0.12);padding:2px 6px;border-radius:8px;">+${q.reward} 🪙</span>
+          </div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-bottom:6px;">${desc}</div>
+          <div style="width:100%;height:5px;background:rgba(255,255,255,0.1);border-radius:10px;overflow:hidden;">
+            <div style="width:${pct}%;height:100%;background:${q.completed ? '#10b981' : '#f97316'};transition:width 0.3s;"></div>
+          </div>
+        </div>
+        <div style="flex-shrink:0;">
+          ${q.completed
+            ? `<span style="color:#10b981;font-size:0.78rem;font-weight:800;display:inline-flex;align-items:center;gap:4px;">✓ ${lang === 'fr' ? 'Fait' : 'Done'}</span>`
+            : `<button class="cat-btn" style="padding:6px 10px;font-size:0.74rem;background:rgba(249,115,22,0.15);border:1px solid rgba(249,115,22,0.4);color:#fdba74;" onclick="${def.actionFn}">${btnLabel}</button>`
+          }
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+
+// -------------------------------------------------------------
+// 2. 9:16 STORY CARD GENERATOR 📸 (TIKTOK & INSTAGRAM STORIES)
+// -------------------------------------------------------------
+let currentStoryCardType = 'passport';
+let currentStoryCustomData = null;
+
+function openStoryCardGenerator(type = 'passport', customData = null) {
+  triggerHaptic('light');
+  currentStoryCardType = type;
+  currentStoryCustomData = customData;
+
+  const m = document.getElementById('storyGeneratorModalOverlay');
+  if (m) m.classList.add('open');
+
+  // Update tabs active state
+  ['passport', 'streak', 'drop', 'duel'].forEach(t => {
+    const tabEl = document.getElementById('storyTab-' + t);
+    if (tabEl) {
+      if (t === type) tabEl.classList.add('active');
+      else tabEl.classList.remove('active');
+    }
+  });
+
+  renderStoryCardCanvas(type, customData);
+}
+
+function closeStoryGeneratorModal(e) {
+  if (e && e.target !== document.getElementById('storyGeneratorModalOverlay') && !e.target.classList.contains('mc')) return;
+  const m = document.getElementById('storyGeneratorModalOverlay');
+  if (m) m.classList.remove('open');
+}
+
+function switchStoryType(type) {
+  currentStoryCardType = type;
+  ['passport', 'streak', 'drop', 'duel'].forEach(t => {
+    const tabEl = document.getElementById('storyTab-' + t);
+    if (tabEl) {
+      if (t === type) tabEl.classList.add('active');
+      else tabEl.classList.remove('active');
+    }
+  });
+  renderStoryCardCanvas(type, currentStoryCustomData);
+}
+
+function renderStoryCardCanvas(type, customData) {
+  const canvas = document.getElementById('storyCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = 1080;
+  const H = 1920;
+  canvas.width = W;
+  canvas.height = H;
+
+  const lang = getCommunityLang();
+  const state = getDailyQuestsState();
+  const streak = state.streak || 1;
+  const vipNum = getOrGenerateUserVipPassportNum();
+  const userName = (typeof user !== 'undefined' && user && user.displayName)
+    ? user.displayName
+    : (localStorage.getItem('genius_user_name') || 'Founding Creator');
+  const coins = parseInt(localStorage.getItem('genius_user_coins') || '100', 10);
+
+  // 1. Background gradient (Cyberpunk Dark Neon)
+  const bgGrad = ctx.createLinearGradient(0, 0, W, H);
+  bgGrad.addColorStop(0, '#05070f');
+  bgGrad.addColorStop(0.3, '#100c24');
+  bgGrad.addColorStop(0.7, '#1b1236');
+  bgGrad.addColorStop(1, '#05070f');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle grid lines
+  ctx.strokeStyle = 'rgba(124, 58, 237, 0.08)';
+  ctx.lineWidth = 2;
+  for (let x = 60; x < W; x += 120) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+  }
+  for (let y = 60; y < H; y += 120) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+  }
+
+  // Glowing Outer Border
+  ctx.strokeStyle = 'rgba(255, 215, 0, 0.4)';
+  ctx.lineWidth = 14;
+  ctx.strokeRect(40, 40, W - 80, H - 80);
+
+  ctx.strokeStyle = 'rgba(168, 85, 247, 0.6)';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(54, 54, W - 108, H - 108);
+
+  // Top Header: ⚜️ REALMONT
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#ffd700';
+  ctx.font = '900 64px sans-serif';
+  ctx.shadowColor = 'rgba(255, 215, 0, 0.6)';
+  ctx.shadowBlur = 25;
+  ctx.fillText('⚜️ REALMONT', W / 2, 170);
+  ctx.shadowBlur = 0;
+
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '700 28px sans-serif';
+  ctx.letterSpacing = '4px';
+  ctx.fillText('WORLDWIDE 3D CYBER NETWORK • MONTRÉAL', W / 2, 220);
+
+  // User Capsule
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.roundRect(W / 2 - 320, 260, 640, 110, 55);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '800 36px sans-serif';
+  ctx.fillText(userName, W / 2, 312);
+
+  ctx.fillStyle = '#38bdf8';
+  ctx.font = '700 24px sans-serif';
+  ctx.fillText(`VIP Pass #${vipNum} • 🪙 ${coins} Coins`, W / 2, 348);
+
+  // 2. CENTER STAGE (Dynamic by Type)
+  if (type === 'streak') {
+    // 🔥 Streak Card
+    ctx.shadowColor = 'rgba(249, 115, 22, 0.8)';
+    ctx.shadowBlur = 40;
+    ctx.font = '160px sans-serif';
+    ctx.fillText('🔥', W / 2, 600);
+    ctx.shadowBlur = 0;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '900 76px sans-serif';
+    ctx.fillText(`${streak} DAY STREAK`, W / 2, 730);
+
+    ctx.fillStyle = '#fdba74';
+    ctx.font = '700 34px sans-serif';
+    ctx.fillText(lang === 'fr' ? 'CITOYEN EN FEU À MONTRÉAL' : 'CITIZEN ON FIRE IN MONTRÉAL', W / 2, 790);
+
+    // Box Perks
+    ctx.fillStyle = 'rgba(249, 115, 22, 0.12)';
+    ctx.strokeStyle = 'rgba(249, 115, 22, 0.5)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.roundRect(140, 870, 800, 360, 30);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = '#fff';
+    ctx.font = '800 42px sans-serif';
+    ctx.fillText('⚡ 100% DAILY COMMITMENT', W / 2, 960);
+    ctx.fillStyle = '#cbd5e1';
+    ctx.font = '500 30px sans-serif';
+    ctx.fillText('Daily Radar Scans • Cyber Duels • Feed Pulse', W / 2, 1030);
+    ctx.fillStyle = '#ffd700';
+    ctx.font = '800 34px sans-serif';
+    ctx.fillText('STATUS: FLAME PIONEER 🔥', W / 2, 1130);
+
+  } else if (type === 'drop') {
+    // 💎 Drop Card
+    ctx.shadowColor = 'rgba(6, 182, 212, 0.8)';
+    ctx.shadowBlur = 40;
+    ctx.font = '160px sans-serif';
+    ctx.fillText('💎', W / 2, 600);
+    ctx.shadowBlur = 0;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '900 72px sans-serif';
+    ctx.fillText('CYBER DROP UNLOCKED', W / 2, 730);
+
+    ctx.fillStyle = '#38bdf8';
+    ctx.font = '700 34px sans-serif';
+    ctx.fillText('+150 🪙 GENIUS IA REWARD', W / 2, 790);
+
+    ctx.fillStyle = 'rgba(6, 182, 212, 0.12)';
+    ctx.strokeStyle = 'rgba(6, 182, 212, 0.5)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.roundRect(140, 870, 800, 360, 30);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = '#fff';
+    ctx.font = '800 40px sans-serif';
+    ctx.fillText('🗺️ MONT-RADAR™ GEOCACHE', W / 2, 960);
+    ctx.fillStyle = '#cbd5e1';
+    ctx.font = '500 30px sans-serif';
+    ctx.fillText('Mont-Royal Belvédère • Panoramic Summit', W / 2, 1030);
+    ctx.fillStyle = '#ffd700';
+    ctx.font = '800 34px sans-serif';
+    ctx.fillText('VERIFIED VIA HAVERSINE GPS 🧭', W / 2, 1130);
+
+  } else if (type === 'duel') {
+    // ⚔️ Duel Victory Card
+    ctx.shadowColor = 'rgba(236, 72, 153, 0.8)';
+    ctx.shadowBlur = 40;
+    ctx.font = '160px sans-serif';
+    ctx.fillText('⚔️', W / 2, 600);
+    ctx.shadowBlur = 0;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '900 72px sans-serif';
+    ctx.fillText('DUEL CHAMPION', W / 2, 730);
+
+    ctx.fillStyle = '#f43f5e';
+    ctx.font = '700 34px sans-serif';
+    ctx.fillText('CITY WARS: MONTRÉAL vs PARIS', W / 2, 790);
+
+    ctx.fillStyle = 'rgba(236, 72, 153, 0.12)';
+    ctx.strokeStyle = 'rgba(236, 72, 153, 0.5)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.roundRect(140, 870, 800, 360, 30);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = '#fff';
+    ctx.font = '800 40px sans-serif';
+    ctx.fillText('⚜️ CITIZEN REPUTATION +100', W / 2, 960);
+    ctx.fillStyle = '#cbd5e1';
+    ctx.font = '500 30px sans-serif';
+    ctx.fillText('Community Consensus • AI Generative Battle', W / 2, 1030);
+    ctx.fillStyle = '#fde047';
+    ctx.font = '800 34px sans-serif';
+    ctx.fillText('VICTORY FOR TEAM MONTRÉAL 🏆', W / 2, 1130);
+
+  } else {
+    // 🪪 VIP Passport Card (Default)
+    ctx.shadowColor = 'rgba(255, 215, 0, 0.8)';
+    ctx.shadowBlur = 45;
+    ctx.font = '160px sans-serif';
+    ctx.fillText('⚜️', W / 2, 600);
+    ctx.shadowBlur = 0;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '900 72px sans-serif';
+    ctx.fillText('3D VIP PASSPORT', W / 2, 730);
+
+    ctx.fillStyle = '#ffd700';
+    ctx.font = '800 36px sans-serif';
+    ctx.fillText(`CITIZEN #${vipNum} / 10,000`, W / 2, 790);
+
+    ctx.fillStyle = 'rgba(255, 215, 0, 0.1)';
+    ctx.strokeStyle = 'rgba(255, 215, 0, 0.5)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.roundRect(140, 870, 800, 360, 30);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = '#fcd34d';
+    ctx.font = '800 38px sans-serif';
+    ctx.fillText('⚡ 2X COIN MULTIPLIER ACTIVE', W / 2, 960);
+    ctx.fillStyle = '#38bdf8';
+    ctx.font = '700 32px sans-serif';
+    ctx.fillText('GENESIS FOUNDER BADGE 💎', W / 2, 1030);
+    ctx.fillStyle = '#cbd5e1';
+    ctx.font = '500 28px sans-serif';
+    ctx.fillText('Official Digital Identity • Mont-Royal District', W / 2, 1130);
+  }
+
+  // 3. Bottom Call To Action & Mock QR Code
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.roundRect(140, 1340, 800, 420, 28);
+  ctx.fill();
+  ctx.stroke();
+
+  // Draw simulated crisp high-contrast QR pattern in center
+  const qrX = W / 2 - 110;
+  const qrY = 1380;
+  const qrS = 220;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(qrX - 10, qrY - 10, qrS + 20, qrS + 20);
+
+  ctx.fillStyle = '#090d16';
+  // Standard corner targets
+  ctx.fillRect(qrX, qrY, 60, 60);
+  ctx.clearRect(qrX + 12, qrY + 12, 36, 36);
+  ctx.fillRect(qrX + 22, qrY + 22, 16, 16);
+
+  ctx.fillRect(qrX + qrS - 60, qrY, 60, 60);
+  ctx.clearRect(qrX + qrS - 48, qrY + 12, 36, 36);
+  ctx.fillRect(qrX + qrS - 38, qrY + 22, 16, 16);
+
+  ctx.fillRect(qrX, qrY + qrS - 60, 60, 60);
+  ctx.clearRect(qrX + 12, qrY + qrS - 48, 36, 36);
+  ctx.fillRect(qrX + 22, qrY + qrS - 38, 16, 16);
+
+  // Internal data dots pattern
+  for (let r = 0; r < 9; r++) {
+    for (let c = 0; c < 9; c++) {
+      if ((r + c * 3) % 2 === 0 && !(r < 3 && c < 3) && !(r < 3 && c > 5) && !(r > 5 && c < 3)) {
+        ctx.fillRect(qrX + 70 + c * 9, qrY + 70 + r * 9, 8, 8);
+      }
+    }
+  }
+
+  // QR Center Realmont emblem
+  ctx.fillStyle = '#ffd700';
+  ctx.beginPath();
+  ctx.arc(qrX + qrS / 2, qrY + qrS / 2, 16, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = '#ffd700';
+  ctx.font = '900 34px sans-serif';
+  ctx.fillText('SCAN TO JOIN & CLAIM +100 🪙', W / 2, 1660);
+
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '600 26px sans-serif';
+  ctx.fillText('realmont.com • iOS • Android • PWA', W / 2, 1715);
+}
+
+function downloadStoryCardImage() {
+  triggerHaptic('medium');
+  const canvas = document.getElementById('storyCanvas');
+  if (!canvas) return;
+
+  const dataUrl = canvas.toDataURL('image/png');
+  const a = document.createElement('a');
+  a.href = dataUrl;
+  a.download = `realmont-${currentStoryCardType}-story.png`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  const lang = getCommunityLang();
+  toast(lang === 'fr'
+    ? '📥 Image de Story téléchargée ! Partagez-la sur TikTok ou Instagram !'
+    : '📥 Story card downloaded! Post it on Instagram or TikTok Stories!', 'success');
+  if (typeof playSoundFx === 'function') playSoundFx('coin');
+}
+
+async function shareStoryCardNative() {
+  triggerHaptic('medium');
+  const canvas = document.getElementById('storyCanvas');
+  if (!canvas) return;
+
+  const lang = getCommunityLang();
+  const vipNum = getOrGenerateUserVipPassportNum();
+  const shareText = lang === 'fr'
+    ? `Rejoignez-moi sur REALMONT 3D ! Réclamez votre Passeport VIP #${vipNum} et +100 🪙 : https://ia-codestudio.com/community/?ref=VIP${vipNum}`
+    : `Join me on REALMONT 3D! Claim your VIP Passport #${vipNum} and +100 🪙: https://ia-codestudio.com/community/?ref=VIP${vipNum}`;
+
+  if (navigator.share && canvas.toBlob) {
+    try {
+      canvas.toBlob(async (blob) => {
+        if (!blob) { downloadStoryCardImage(); return; }
+        const file = new File([blob], 'realmont-story.png', { type: 'image/png' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            title: 'REALMONT 3D',
+            text: shareText,
+            files: [file]
+          });
+          toast(lang === 'fr' ? '🎉 Story partagée avec succès !' : '🎉 Story shared successfully!', 'success');
+        } else {
+          await navigator.share({
+            title: 'REALMONT 3D',
+            text: shareText,
+            url: `https://ia-codestudio.com/community/?ref=VIP${vipNum}`
+          });
+          downloadStoryCardImage();
+        }
+      }, 'image/png');
+    } catch (e) {
+      downloadStoryCardImage();
+    }
+  } else {
+    downloadStoryCardImage();
+  }
+}
+
+
+// -------------------------------------------------------------
+// 3. 15-MINUTE SUPER DROP FLASH EVENT ⚡ (BEREAL STYLE)
+// -------------------------------------------------------------
+let flashDropTimerInterval = null;
+
+function getFlashDropState() {
+  try {
+    const raw = localStorage.getItem('realmont_flash_drop_info');
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch (e) {
+    return null;
+  }
+}
+
+function initFlashDropSystem() {
+  let state = getFlashDropState();
+  const now = Date.now();
+
+  // If no state or past expiration, trigger automatic initial event for demo
+  if (!state || (now > state.expiresAt && !state.hasRunDemo)) {
+    state = {
+      active: true,
+      expiresAt: now + (15 * 60 * 1000), // 15 minutes from now
+      claimed: false,
+      hasRunDemo: true,
+      coins: 300
+    };
+    try { localStorage.setItem('realmont_flash_drop_info', JSON.stringify(state)); } catch (e) {}
+  }
+
+  updateFlashDropUI();
+  if (flashDropTimerInterval) clearInterval(flashDropTimerInterval);
+  flashDropTimerInterval = setInterval(updateFlashDropUI, 1000);
+}
+
+function updateFlashDropUI() {
+  const state = getFlashDropState();
+  const banner = document.getElementById('radarFlashDropBanner');
+  const timerEl = document.getElementById('flashTimerCountdown');
+  if (!banner || !timerEl) return;
+
+  if (!state || !state.active || state.claimed) {
+    banner.style.display = 'none';
+    return;
+  }
+
+  const remaining = state.expiresAt - Date.now();
+  if (remaining <= 0) {
+    banner.style.display = 'none';
+    state.active = false;
+    try { localStorage.setItem('realmont_flash_drop_info', JSON.stringify(state)); } catch (e) {}
+    return;
+  }
+
+  banner.style.display = 'flex';
+  const m = Math.floor(remaining / 60000);
+  const s = Math.floor((remaining % 60000) / 1000);
+  timerEl.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
+function triggerAdminFlashDrop() {
+  triggerHaptic('heavy');
+  const lang = getCommunityLang();
+  const now = Date.now();
+  const state = {
+    active: true,
+    expiresAt: now + (15 * 60 * 1000),
+    claimed: false,
+    coins: 300
+  };
+  try { localStorage.setItem('realmont_flash_drop_info', JSON.stringify(state)); } catch (e) {}
+
+  initFlashDropSystem();
+  if (typeof playSoundFx === 'function') playSoundFx('coin');
+
+  toast(lang === 'fr'
+    ? '⚡ SUPER DROP FLASH ACTIVÉ POUR 15 MINUTES (+300 🪙) !'
+    : '⚡ 15-MINUTE SUPER DROP FLASH EVENT ACTIVATED (+300 🪙)!', 'success');
+
+  focusOnFlashSuperDrop();
+}
+
+function focusOnFlashSuperDrop() {
+  triggerHaptic('medium');
+  const flashCoords = [45.5048, -73.5876]; // Kondiaronk Belvédère Summit
+  if (realMontrealLeafletMap) {
+    realMontrealLeafletMap.flyTo(flashCoords, 16, { duration: 1.5 });
+  }
+
+  // Inject or select the flash drop
+  selectRadarSpot('secret-drop-1');
+  const lang = getCommunityLang();
+  toast(lang === 'fr'
+    ? '⚡ Balise Dorée Localisée ! Réclamez vos +300 🪙 avant expiration du chrono !'
+    : '⚡ Golden Beacon Located! Claim your +300 🪙 before the timer expires!', 'info');
+}
+
+
+// -------------------------------------------------------------
+// 4. GLOBAL LEADERBOARD & HALL OF FAME 🏆
+// -------------------------------------------------------------
+let currentLeaderboardTab = 'explorers';
+
+function openLeaderboardModal() {
+  triggerHaptic('light');
+  renderLeaderboardUI(currentLeaderboardTab);
+  const m = document.getElementById('leaderboardModalOverlay');
+  if (m) m.classList.add('open');
+}
+
+function closeLeaderboardModal(e) {
+  if (e && e.target !== document.getElementById('leaderboardModalOverlay') && !e.target.classList.contains('mc')) return;
+  const m = document.getElementById('leaderboardModalOverlay');
+  if (m) m.classList.remove('open');
+}
+
+function switchLeaderboardTab(tab) {
+  currentLeaderboardTab = tab;
+  ['explorers', 'streaks', 'creators', 'citywars'].forEach(t => {
+    const el = document.getElementById('lbTab-' + t);
+    if (el) {
+      if (t === tab) el.classList.add('active');
+      else el.classList.remove('active');
+    }
+  });
+  renderLeaderboardUI(tab);
+}
+
+function renderLeaderboardUI(tab) {
+  const container = document.getElementById('leaderboardBodyContainer');
+  if (!container) return;
+
+  const lang = getCommunityLang();
+  const questsState = getDailyQuestsState();
+  const userStreak = questsState.streak || 1;
+  const userName = (typeof user !== 'undefined' && user && user.displayName)
+    ? user.displayName
+    : (localStorage.getItem('genius_user_name') || 'You');
+
+  // Count claimed drops
+  let userClaimedDrops = 0;
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith('radar_drop_') && k.endsWith('_claimed')) userClaimedDrops++;
+  }
+
+  if (tab === 'citywars') {
+    // City Wars Scoreboard
+    container.innerHTML = `
+      <div style="text-align:center;margin-bottom:18px;">
+        <h4 style="margin:0;font-size:1.1rem;font-weight:900;color:#fff;">${lang === 'fr' ? 'Bataille des Villes • Saison 1' : 'City Wars • Season 1'}</h4>
+        <p style="margin:3px 0 0;font-size:0.75rem;color:var(--muted);">${lang === 'fr' ? 'Chaque vote et scan renforce le territoire de votre ville' : 'Every vote and scan expands your city\'s global territory'}</p>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="leader-row" style="border-color:rgba(244,63,94,0.4);background:rgba(244,63,94,0.06);">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:1.4rem;">⚜️</span>
+            <div>
+              <div style="font-weight:900;color:#fff;font-size:0.92rem;">Montréal</div>
+              <div style="font-size:0.7rem;color:#f43f5e;">4,250 PTS • 42% Territory (Leading)</div>
+            </div>
+          </div>
+          <span style="font-size:0.8rem;font-weight:900;color:#ffd700;">🥇 1ST PLACE</span>
+        </div>
+
+        <div class="leader-row" style="border-color:rgba(168,85,247,0.3);">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:1.4rem;">🗼</span>
+            <div>
+              <div style="font-weight:900;color:#fff;font-size:0.92rem;">Paris</div>
+              <div style="font-size:0.7rem;color:#c084fc;">2,840 PTS • 28% Territory</div>
+            </div>
+          </div>
+          <span style="font-size:0.8rem;font-weight:800;color:#cbd5e1;">🥈 2ND PLACE</span>
+        </div>
+
+        <div class="leader-row" style="border-color:rgba(6,182,212,0.3);">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:1.4rem;">🗽</span>
+            <div>
+              <div style="font-weight:900;color:#fff;font-size:0.92rem;">New York</div>
+              <div style="font-size:0.7rem;color:#38bdf8;">1,620 PTS • 16% Territory</div>
+            </div>
+          </div>
+          <span style="font-size:0.8rem;font-weight:800;color:#f59e0b;">🥉 3RD PLACE</span>
+        </div>
+
+        <div class="leader-row">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:1.4rem;">🏯</span>
+            <div>
+              <div style="font-weight:900;color:#fff;font-size:0.92rem;">Tokyo</div>
+              <div style="font-size:0.7rem;color:var(--muted);">1,150 PTS • 11% Territory</div>
+            </div>
+          </div>
+          <span style="font-size:0.75rem;color:var(--muted);">#4</span>
+        </div>
+
+        <div class="leader-row">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:1.4rem;">🏰</span>
+            <div>
+              <div style="font-weight:900;color:#fff;font-size:0.92rem;">London</div>
+              <div style="font-size:0.7rem;color:var(--muted);">840 PTS • 8% Territory</div>
+            </div>
+          </div>
+          <span style="font-size:0.75rem;color:var(--muted);">#5</span>
+        </div>
+
+        <div class="leader-row">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:1.4rem;">🇷🇴</span>
+            <div>
+              <div style="font-weight:900;color:#fff;font-size:0.92rem;">Bucharest</div>
+              <div style="font-size:0.7rem;color:var(--muted);">650 PTS • 6% Territory</div>
+            </div>
+          </div>
+          <span style="font-size:0.75rem;color:var(--muted);">#6</span>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  // Data by tab
+  let podiumData = [];
+  let tableData = [];
+  let userStatText = '';
+
+  if (tab === 'streaks') {
+    podiumData = [
+      { rank: 2, name: 'Amelie_Art', stat: '35 Days 🔥', city: 'Paris 🗼' },
+      { rank: 1, name: 'Jean-Luc MTL', stat: '42 Days 🔥', city: 'Montréal ⚜️' },
+      { rank: 3, name: 'Kenji_Tokyo', stat: '28 Days 🔥', city: 'Tokyo 🏯' }
+    ];
+    tableData = [
+      { rank: 4, name: 'Sarah_NY', stat: '21 Days 🔥', city: 'New York' },
+      { rank: 5, name: 'Alex_Bucharest', stat: '19 Days 🔥', city: 'Bucharest' },
+      { rank: 6, name: 'Liam_London', stat: '16 Days 🔥', city: 'London' }
+    ];
+    userStatText = `${userStreak} Day Streak 🔥`;
+  } else if (tab === 'creators') {
+    podiumData = [
+      { rank: 2, name: 'VoxelQueen', stat: '1,180 Likes 👑', city: 'Montréal ⚜️' },
+      { rank: 1, name: 'StudioNeon', stat: '1,420 Likes 👑', city: 'Paris 🗼' },
+      { rank: 3, name: 'CyberAndrei', stat: '950 Likes 👑', city: 'Montréal ⚜️' }
+    ];
+    tableData = [
+      { rank: 4, name: 'AI_Samurai', stat: '810 Likes', city: 'Tokyo' },
+      { rank: 5, name: 'DevRadu', stat: '680 Likes', city: 'Bucharest' },
+      { rank: 6, name: 'Chloe_UK', stat: '540 Likes', city: 'London' }
+    ];
+    userStatText = '120 Likes 👑';
+  } else {
+    // Explorers (Default)
+    podiumData = [
+      { rank: 2, name: 'CyberMarc_MTL', stat: '37 Drops 💎', city: 'Montréal ⚜️' },
+      { rank: 1, name: 'Elena_V', stat: '48 Drops 💎', city: 'Montréal ⚜️' },
+      { rank: 3, name: 'Kaito_Japan', stat: '31 Drops 💎', city: 'Tokyo 🏯' }
+    ];
+    tableData = [
+      { rank: 4, name: 'Sarah_Paris', stat: '24 Drops', city: 'Paris' },
+      { rank: 5, name: 'Dan_Bucharest', stat: '19 Drops', city: 'Bucharest' },
+      { rank: 6, name: 'James_London', stat: '14 Drops', city: 'London' }
+    ];
+    userStatText = `${userClaimedDrops} Drops 💎`;
+  }
+
+  // Render Podium + Table
+  container.innerHTML = `
+    <!-- Podium Top 3 -->
+    <div class="podium-container">
+      <!-- 2nd -->
+      <div class="podium-col second">
+        <div style="font-size:1.4rem;">🥈</div>
+        <div style="font-size:0.82rem;font-weight:900;color:#fff;margin-top:4px;">${podiumData[0].name}</div>
+        <div style="font-size:0.68rem;color:#38bdf8;">${podiumData[0].city}</div>
+        <div style="font-size:0.75rem;font-weight:800;color:#ffd700;margin-top:6px;">${podiumData[0].stat}</div>
+      </div>
+
+      <!-- 1st Gold -->
+      <div class="podium-col first">
+        <div style="font-size:1.8rem;filter:drop-shadow(0 0 10px #ffd700);">🥇</div>
+        <div style="font-size:0.88rem;font-weight:900;color:#fff;margin-top:4px;">${podiumData[1].name}</div>
+        <div style="font-size:0.68rem;color:#fcd34d;">${podiumData[1].city}</div>
+        <div style="font-size:0.78rem;font-weight:900;color:#ffd700;margin-top:6px;">${podiumData[1].stat}</div>
+        <div style="font-size:0.62rem;background:#ffd700;color:#000;padding:1px 6px;border-radius:10px;font-weight:900;margin-top:4px;display:inline-block;">CHAMPION</div>
+      </div>
+
+      <!-- 3rd -->
+      <div class="podium-col third">
+        <div style="font-size:1.4rem;">🥉</div>
+        <div style="font-size:0.82rem;font-weight:900;color:#fff;margin-top:4px;">${podiumData[2].name}</div>
+        <div style="font-size:0.68rem;color:#38bdf8;">${podiumData[2].city}</div>
+        <div style="font-size:0.75rem;font-weight:800;color:#ffd700;margin-top:6px;">${podiumData[2].stat}</div>
+      </div>
+    </div>
+
+    <!-- Ranks 4 to 10 -->
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      ${tableData.map(row => `
+        <div class="leader-row">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="font-size:0.82rem;font-weight:900;color:var(--muted);width:20px;">#${row.rank}</span>
+            <div>
+              <div style="font-size:0.82rem;font-weight:800;color:#fff;">${row.name}</div>
+              <div style="font-size:0.68rem;color:var(--muted);">${row.city}</div>
+            </div>
+          </div>
+          <span style="font-size:0.78rem;font-weight:700;color:#38bdf8;">${row.stat}</span>
+        </div>
+      `).join('')}
+    </div>
+
+    <!-- Sticky Live User Rank -->
+    <div class="user-rank-sticky">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:1.1rem;">⭐</span>
+        <div>
+          <div style="font-size:0.84rem;font-weight:900;color:#fff;">${userName} (${lang === 'fr' ? 'Vous' : 'You'})</div>
+          <div style="font-size:0.7rem;color:#c084fc;">Montréal ⚜️ • ${userStatText}</div>
+        </div>
+      </div>
+      <button class="shop-btn" style="padding:5px 12px;font-size:0.74rem;background:rgba(255,215,0,0.15);border:1px solid #ffd700;color:#ffd700;" onclick="openStoryCardGenerator('streak')">
+        <span>📸 Flex on Story</span>
+      </button>
+    </div>
+  `;
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    initDailyQuestsSystem();
+    initFlashDropSystem();
+  } catch(e) {}
+});
+setTimeout(() => {
+  try {
+    initDailyQuestsSystem();
+    initFlashDropSystem();
+  } catch(e) {}
+}, 500);
+
 </script>
 
 <!-- 📲 REALMONT PWA FLOATING PROMPT (+100 🪙 BOUNTY) -->
@@ -19769,6 +21103,12 @@ async function submitRadarAdminCyberDrop() {
           </button>
           <button class="cat-sheet-btn" onclick="closeCategoriesSheet();openDailyPulseModal();" style="display:flex;align-items:center;gap:6px;font-size:0.8rem;background:linear-gradient(135deg,rgba(251,191,36,0.12),rgba(244,63,94,0.12));border-color:rgba(251,191,36,0.4);color:#fde047;">
             <span>⚜️</span> <span>Montreal Daily Pulse™</span>
+          </button>
+          <button class="cat-sheet-btn" onclick="closeCategoriesSheet();openDailyQuestsModal();" style="display:flex;align-items:center;gap:6px;font-size:0.8rem;">
+            <span>🔥</span> <span id="lblCatSheetQuests">Daily Quests</span>
+          </button>
+          <button class="cat-sheet-btn" onclick="closeCategoriesSheet();openLeaderboardModal();" style="display:flex;align-items:center;gap:6px;font-size:0.8rem;">
+            <span>🏆</span> <span id="lblCatSheetLeaderboard">Leaderboard</span>
           </button>
           <button class="cat-sheet-btn" onclick="closeCategoriesSheet();openFounderPassModal();" style="display:flex;align-items:center;gap:6px;font-size:0.8rem;">
             <span>⚜️</span> <span>VIP #0001</span>
