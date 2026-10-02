@@ -4409,6 +4409,19 @@
       min-height: 0 !important;
       padding: 16px 20px 48px 20px !important;
     }
+    /* 🛡️ ULTRA-STABLE ZERO-GPU-CRASH MOBILE RADAR OVERLAY */
+    #radarMapModal {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      background: rgba(3, 7, 18, 0.94) !important;
+      transition: opacity 0.15s ease-out !important;
+    }
+    #radarMapModal .mont-radar-modal-card {
+      transform: none !important;
+      -webkit-transform: none !important;
+      transition: none !important;
+      animation: none !important;
+    }
     #realMontrealMap {
       width: 100% !important;
       height: 380px !important;
@@ -4421,15 +4434,15 @@
       z-index: 1;
       display: block !important;
       box-shadow: inset 0 0 35px rgba(0,0,0,0.85);
-      transform: translate3d(0, 0, 0);
-      -webkit-transform: translate3d(0, 0, 0);
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
+      transform: none !important;
+      -webkit-transform: none !important;
     }
     @media (max-width: 640px) {
       #realMontrealMap { height: 240px !important; min-height: 200px !important; }
       .mont-radar-modal-card { max-height: 94vh !important; width: 98% !important; border-radius: 18px 18px 0 0 !important; }
       .mont-radar-modal-card .mb { padding: 12px 10px 48px 10px !important; }
+      .radar-leaflet-pin .pin-pulse { display: none !important; }
+      .radar-drop-pin .radar-drop-pulse { display: none !important; }
     }
     /* Radar Navigation arrows & pills wrapper */
     .radar-scroll-nav-wrapper {
@@ -7052,7 +7065,7 @@
         <div id="realMontrealMap" class="dark-leaflet-tiles" style="width:100%;height:380px;min-height:220px;border-radius:14px;overflow:hidden;position:relative;background:#090d16;border:1px solid rgba(6,182,212,0.4);z-index:1;display:block;"></div>
         
         <!-- 100% FREE NO-API-KEY Tile Layer Switcher Control -->
-        <div class="map-layer-selector-bar" style="position:absolute;top:10px;right:10px;z-index:999;display:flex;gap:4px;background:rgba(9,13,22,0.88);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.18);padding:4px;border-radius:20px;box-shadow:0 6px 18px rgba(0,0,0,0.7);">
+        <div class="map-layer-selector-bar" style="position:absolute;top:10px;right:10px;z-index:999;display:flex;gap:4px;background:rgba(9,13,22,0.96);border:1px solid rgba(255,255,255,0.18);padding:4px;border-radius:20px;box-shadow:0 6px 18px rgba(0,0,0,0.7);">
           <button class="map-layer-btn active" id="btnLayerDark" onclick="switchMapLayer('dark', this)" style="background:linear-gradient(135deg,#06b6d4,#3b82f6);border:none;color:#fff;font-size:0.72rem;font-weight:700;padding:4px 10px;border-radius:16px;cursor:pointer;">🌙 Dark</button>
           <button class="map-layer-btn" id="btnLayerStreets" onclick="switchMapLayer('streets', this)" style="background:transparent;border:none;color:#94a3b8;font-size:0.72rem;font-weight:700;padding:4px 10px;border-radius:16px;cursor:pointer;">🗺️ Streets</button>
           <button class="map-layer-btn" id="btnLayerSatellite" onclick="switchMapLayer('satellite', this)" style="background:transparent;border:none;color:#94a3b8;font-size:0.72rem;font-weight:700;padding:4px 10px;border-radius:16px;cursor:pointer;">🛰️ Satellite</button>
@@ -18141,13 +18154,16 @@ function createMapTileLayer(type) {
       maxZoom: 19
     });
   } else {
-    // 🌙 Native Cyberpunk Dark Matter tiles (100% free, 0 filters, silky smooth on mobile)
+    // 🌙 Native Cyberpunk Dark Gray Canvas (100% Free, NO API KEY, NO WATERMARK, Silky Smooth on Mobile)
     if (mapContainer) mapContainer.classList.remove('dark-leaflet-tiles');
-    return L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      subdomains: 'abcd',
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    const darkBase = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+      attribution: '&copy; Esri, HERE, Garmin, &copy; OpenStreetMap contributors',
       maxZoom: 19
     });
+    const darkLabels = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19
+    });
+    return L.layerGroup([darkBase, darkLabels]);
   }
 }
 
@@ -19036,10 +19052,10 @@ function openRadarModal() {
   const m = document.getElementById('radarMapModal');
   if (m) {
     m.classList.add('open');
-    initMontrealRealMap();
     setTimeout(() => {
+      initMontrealRealMap();
       if (realMontrealLeafletMap) realMontrealLeafletMap.invalidateSize({ pan: false });
-    }, 200);
+    }, 60);
     updateRadarAdminUI();
     syncRadarEventsWithFirestore();
   }
