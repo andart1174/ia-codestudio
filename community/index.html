@@ -4481,7 +4481,12 @@
       overflow-x: auto;
       padding-bottom: 4px;
       margin-bottom: 12px;
-      scrollbar-width: thin;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .radar-cat-pills-bar::-webkit-scrollbar {
+      display: none;
     }
     .radar-cat-pill {
       background: var(--bg3);
@@ -7544,6 +7549,11 @@
             <span>📥 Download 3D Pass Image</span>
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
       <!-- ═══════════════════════════════════════════════════════════ -->
 <!-- 🔥 DAILY CYBER QUESTS & STREAKS MODAL (DUOLINGO STYLE)       -->
 <!-- ═══════════════════════════════════════════════════════════ -->
@@ -17298,12 +17308,13 @@ function makeHorizontalScrollable(el) {
   let isDown = false;
   let startX = 0;
   let scrollLeft = 0;
+  let hasDragged = false;
 
   el.addEventListener('mousedown', (e) => {
     isDown = true;
+    hasDragged = false;
     startX = e.pageX - el.offsetLeft;
     scrollLeft = el.scrollLeft;
-    el.style.cursor = 'grabbing';
   });
   const stopDrag = () => {
     isDown = false;
@@ -17313,10 +17324,13 @@ function makeHorizontalScrollable(el) {
   el.addEventListener('mouseup', stopDrag);
   el.addEventListener('mousemove', (e) => {
     if (!isDown) return;
-    e.preventDefault();
     const x = e.pageX - el.offsetLeft;
     const walk = (x - startX) * 1.5;
-    el.scrollLeft = scrollLeft - walk;
+    if (Math.abs(walk) > 6) {
+      hasDragged = true;
+      el.style.cursor = 'grabbing';
+      el.scrollLeft = scrollLeft - walk;
+    }
   });
 }
 
@@ -18554,7 +18568,10 @@ function toggleRadarAddEventDrawer(forceState) {
   const isShown = forceState !== undefined ? forceState : drawer.style.display === 'block';
   drawer.style.display = isShown ? 'none' : 'block';
   if (!isShown) {
-    drawer.scrollIntoView({ behavior: 'smooth' });
+    const mb = (drawer.closest ? drawer.closest('.mb') : null) || document.querySelector('.mont-radar-modal-card .mb');
+    if (mb && typeof mb.scrollTo === 'function') {
+      setTimeout(() => { mb.scrollTo({ top: drawer.offsetTop - 15, behavior: 'smooth' }); }, 60);
+    }
   }
 }
 
@@ -18711,7 +18728,10 @@ function toggleRadarAdminEventsDrawer(forceState) {
   drawer.style.display = isShown ? 'none' : 'block';
   if (!isShown) {
     renderAdminEventsList();
-    drawer.scrollIntoView({ behavior: 'smooth' });
+    const mb = (drawer.closest ? drawer.closest('.mb') : null) || document.querySelector('.mont-radar-modal-card .mb');
+    if (mb && typeof mb.scrollTo === 'function') {
+      setTimeout(() => { mb.scrollTo({ top: drawer.offsetTop - 15, behavior: 'smooth' }); }, 60);
+    }
   }
 }
 
@@ -19097,6 +19117,11 @@ function executeRadarDropDetection(centerLat, centerLng, isVirtualScan = false) 
   if (typeof triggerHaptic === 'function') triggerHaptic('heavy');
   if (typeof playSoundFx === 'function') playSoundFx('coin');
 
+  // If current filter hides secret drops, ensure drops are shown on map
+  if (activeRadarFilter !== 'all' && activeRadarFilter !== 'drop') {
+    filterRadarCategory('all');
+  }
+
   // Select the spot using selectRadarSpot (updates active card, title, icon, and claim button)
   if (typeof selectRadarSpot === 'function') {
     selectRadarSpot(closestPin.id);
@@ -19122,6 +19147,15 @@ function executeRadarDropDetection(centerLat, centerLng, isVirtualScan = false) 
         try { targetMarker.openPopup(); } catch (e) {}
       }, 1600);
     }
+  }
+
+  // Smoothly scroll modal down to reveal active spot details card
+  const mbContainer = document.querySelector('.mont-radar-modal-card .mb');
+  if (mbContainer) {
+    setTimeout(() => {
+      const card = document.getElementById('radarSpotDetailsCard');
+      if (card && typeof mbContainer.scrollTo === 'function') mbContainer.scrollTo({ top: card.offsetTop - 30, behavior: 'smooth' });
+    }, 450);
   }
 
   // Scroll active spot details card into view smoothly
@@ -19156,6 +19190,13 @@ function scanNearbyCyberDrops() {
   try { progressDailyQuest('radar'); } catch(e) {}
   const lang = getCommunityLang();
 
+  // Instant visual feedback: map pulse
+  const mapEl = document.getElementById('realMontrealMap');
+  if (mapEl) {
+    mapEl.style.boxShadow = '0 0 35px #06b6d4, inset 0 0 25px rgba(6,182,212,0.45)';
+    setTimeout(() => { if (mapEl) mapEl.style.boxShadow = ''; }, 1200);
+  }
+
   const runVirtualFallbackScan = () => {
     let mapCenter = [45.5048, -73.5876];
     if (realMontrealLeafletMap) {
@@ -19164,7 +19205,7 @@ function scanNearbyCyberDrops() {
         if (c && typeof c.lat === 'number') mapCenter = [c.lat, c.lng];
       } catch (e) {}
     }
-    toast(lang === 'fr' ? '🧭 Scan Radar Virtuel activé sur la carte...' : '🧭 Virtual Radar Scan activated on map...', 'info');
+    toast(lang === 'fr' ? '🧭 Scan Radar Virtuel activé sur la zone...' : '🧭 Virtual Radar Scan activated in area...', 'info');
     executeRadarDropDetection(mapCenter[0], mapCenter[1], true);
   };
 
@@ -19173,7 +19214,7 @@ function scanNearbyCyberDrops() {
     return;
   }
 
-  toast(lang === 'fr' ? '📡 Scan Radar GPS en cours...' : '📡 Scanning GPS Radar nearby...', 'info');
+  toast(lang === 'fr' ? '📡 Scan Radar en cours...' : '📡 Radar Scanning nearby...', 'info');
 
   let hasResponded = false;
   const gpsTimeoutId = setTimeout(() => {
@@ -19181,7 +19222,7 @@ function scanNearbyCyberDrops() {
       hasResponded = true;
       runVirtualFallbackScan();
     }
-  }, 3500);
+  }, 1200);
 
   navigator.geolocation.getCurrentPosition(
     (pos) => {
@@ -19199,7 +19240,7 @@ function scanNearbyCyberDrops() {
       clearTimeout(gpsTimeoutId);
       runVirtualFallbackScan();
     },
-    { enableHighAccuracy: true, timeout: 3000, maximumAge: 10000 }
+    { enableHighAccuracy: true, timeout: 1200, maximumAge: 10000 }
   );
 }
 
@@ -19294,27 +19335,16 @@ async function claimRadarSecretDrop() {
   }
   const distStr = formatDistanceDisplay(gpsResult.dist, lang);
 
-  if (isAdmin) {
-    const adminConfirm = confirm(lang === 'fr'
-      ? `🛡️ CONTRÔLE ADMIN : Vous êtes à ${distStr} du drop (> 250m).\n\nVoulez-vous forcer la réclamation en mode test administrateur ?`
-      : `🛡️ ADMIN CONTROL: You are ${distStr} away (> 250m).\n\nDo you want to force-claim this drop in admin test mode?`);
-    if (adminConfirm) {
-      awardDropCoins();
-      return;
-    }
-  }
-
-  const virtualClaimConfirm = confirm(lang === 'fr'
-    ? `📡 Vous êtes à ${distStr} de ce Cyber Drop.\n\nVoulez-vous le débloquer en mode Explorateur Virtuel ?`
-    : `📡 You are ${distStr} from this Cyber Drop.\n\nDo you want to unlock it in Virtual Explorer mode?`);
-  if (virtualClaimConfirm) {
+  if (isAdmin || virtualRadarScanActive) {
     awardDropCoins();
     return;
   }
 
-  toast(lang === 'fr'
-    ? `❌ Trop loin ! Vous êtes à ${distStr}. Vous devez vous déplacer physiquement à moins de 250 m du trésor pour le réclamer !`
-    : `❌ Out of range! You are ${distStr} away. You must physically be within 250m of the treasure to claim it!`, 'error');
+  // Virtual claim reward: awards coins and completes quest
+  toast(lang === 'fr' 
+    ? `🎉 Drop Secret débloqué en mode Explorateur Virtuel !` 
+    : `🎉 Secret Drop Unlocked in Virtual Explorer mode!`, 'success');
+  awardDropCoins();
   return;
 
   // Physical proximity verified (<= 250m)
@@ -19841,7 +19871,10 @@ function toggleRadarAdminDropDrawer(forceState) {
 
   drawer.style.display = isShown ? 'none' : 'block';
   if (!isShown) {
-    drawer.scrollIntoView({ behavior: 'smooth' });
+    const mb = (drawer.closest ? drawer.closest('.mb') : null) || document.querySelector('.mont-radar-modal-card .mb');
+    if (mb && typeof mb.scrollTo === 'function') {
+      setTimeout(() => { mb.scrollTo({ top: drawer.offsetTop - 15, behavior: 'smooth' }); }, 60);
+    }
   }
 }
 
@@ -20149,6 +20182,15 @@ function saveDailyQuestsState(state) {
 function updateStreakPillUI(streakCount) {
   const el = document.getElementById('hdrStreakValue');
   if (el) el.textContent = String(streakCount || 1);
+}
+
+function initDailyQuestsSystem() {
+  try {
+    const state = getDailyQuestsState();
+    updateStreakPillUI(state.streak || 1);
+  } catch (e) {
+    console.warn('initDailyQuestsSystem notice:', e);
+  }
 }
 
 function progressDailyQuest(type) {
