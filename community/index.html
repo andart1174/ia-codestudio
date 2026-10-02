@@ -4436,6 +4436,8 @@
       box-shadow: inset 0 0 35px rgba(0,0,0,0.85);
       transform: none !important;
       -webkit-transform: none !important;
+      touch-action: pan-x pan-y !important;
+      overscroll-behavior: contain !important;
     }
     @media (max-width: 640px) {
       #realMontrealMap { height: 240px !important; min-height: 200px !important; }
@@ -5292,7 +5294,29 @@
       50% { box-shadow: 0 0 28px rgba(236,72,153,0.5); border-color: #ec4899; }
     }
 
-    /* 📸 9:16 STORY CARD MODAL PREVIEW */
+    /* 📸 9:16 STORY CARD MODAL PREVIEW & RESPONSIVE ACTION BUTTONS */
+    .story-generator-modal-card {
+      max-width: 440px !important;
+      width: 92% !important;
+      max-height: 94vh !important;
+      display: flex !important;
+      flex-direction: column !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+      text-align: center;
+      background: var(--bg2) !important;
+    }
+    .story-generator-modal-card .mh {
+      flex-shrink: 0 !important;
+    }
+    .story-generator-modal-card .mb {
+      flex: 1 1 auto !important;
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      overscroll-behavior: contain !important;
+      min-height: 0 !important;
+      padding: 14px 16px 20px !important;
+    }
     .story-preview-container {
       width: 270px;
       height: 480px;
@@ -5309,6 +5333,37 @@
       height: 100%;
       display: block;
       object-fit: contain;
+    }
+    .story-actions-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 4px;
+    }
+    @media (max-width: 640px) {
+      .story-generator-modal-card {
+        max-height: 94vh !important;
+        width: 96% !important;
+      }
+      .story-preview-container {
+        width: auto !important;
+        max-width: 210px !important;
+        height: 370px !important;
+        max-height: 48vh !important;
+        aspect-ratio: 9 / 16 !important;
+        margin: 0 auto 12px !important;
+      }
+      .story-generator-modal-card .mb {
+        padding: 10px 12px 18px !important;
+      }
+      .story-actions-row {
+        position: sticky;
+        bottom: 0;
+        background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(8px);
+        padding: 8px 0 2px;
+        z-index: 5;
+      }
     }
 
     /* 🏆 GLOBAL LEADERBOARD STYLING */
@@ -7642,7 +7697,7 @@
 <!-- 📸 9:16 STORY CARD GENERATOR (TIKTOK & INSTAGRAM STORIES)    -->
 <!-- ═══════════════════════════════════════════════════════════ -->
 <div class="overlay" id="storyGeneratorModalOverlay" onclick="closeStoryGeneratorModal(event)">
-  <div class="modal story-generator-modal-card" onclick="event.stopPropagation()" style="max-width:440px;width:92%;padding:0;overflow:hidden;text-align:center;">
+  <div class="modal story-generator-modal-card" onclick="event.stopPropagation()">
     <div class="mh" style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border2);background:rgba(0,0,0,0.3);">
       <div style="display:flex;align-items:center;gap:8px;">
         <span style="font-size:1.3rem;">📸</span>
@@ -7654,7 +7709,7 @@
       <button class="mc" onclick="closeStoryGeneratorModal()">✕</button>
     </div>
 
-    <div class="mb" style="padding:16px;">
+    <div class="mb">
       <!-- Tab Selector -->
       <div style="display:flex;gap:6px;justify-content:center;margin-bottom:14px;">
         <button class="v-tab active" id="storyTab-passport" onclick="switchStoryType('passport')" style="padding:5px 10px;font-size:0.72rem;">🪪 Passport</button>
@@ -7668,8 +7723,8 @@
         <canvas id="storyCanvas" width="1080" height="1920"></canvas>
       </div>
 
-      <!-- Action Buttons -->
-      <div style="display:flex;gap:10px;justify-content:center;">
+      <!-- Action Buttons (Always visible on mobile) -->
+      <div class="story-actions-row">
         <button class="shop-btn buy" style="flex:1;padding:10px;background:linear-gradient(135deg,#ec4899,#f43f5e);font-size:0.82rem;font-weight:800;" onclick="downloadStoryCardImage()" id="btnDownloadStory">
           <span>📥 Download (.PNG)</span>
         </button>
@@ -18267,7 +18322,8 @@ function initMontrealRealMap() {
       center: initialCenter,
       zoom: initialZoom,
       zoomControl: true,
-      worldCopyJump: true
+      worldCopyJump: true,
+      tap: false // Disable 300ms tap emulation that causes mobile jumping
     });
 
     const activeChip = document.getElementById('tp-' + initialCity);
@@ -18303,8 +18359,13 @@ function initMontrealRealMap() {
       toast(getCommunityLang() === 'fr' ? `Coordonnées sélectionnées: ${lat}, ${lng}` : `Coords selected: ${lat}, ${lng}`, 'info');
     });
 
+    let lastWindowWidth = window.innerWidth;
     window.addEventListener('resize', () => {
-      if (realMontrealLeafletMap) realMontrealLeafletMap.invalidateSize();
+      // Only invalidate when screen width changes (e.g. orientation change), NOT on vertical scroll / URL bar shift!
+      if (Math.abs(window.innerWidth - lastWindowWidth) > 40) {
+        lastWindowWidth = window.innerWidth;
+        if (realMontrealLeafletMap) realMontrealLeafletMap.invalidateSize({ pan: false });
+      }
     });
   }
 
@@ -18359,7 +18420,7 @@ function renderRadarMarkers() {
         </div>
         <div style="font-size:0.7rem;color:#38bdf8;margin-bottom:6px;font-weight:700;">${ev.locationName || 'Montréal'} • ${ev.time || 'Live'}</div>
         <p style="font-size:0.75rem;color:#cbd5e1;margin:0 0 8px;line-height:1.35;">${lang === 'fr' ? (ev.descFr || ev.descEn) : ev.descEn}</p>
-        <button onclick="selectRadarSpot('${ev.id}')" style="width:100%;padding:5px 8px;background:linear-gradient(135deg,#06b6d4,#3b82f6);border:none;border-radius:6px;color:#fff;font-size:0.75rem;font-weight:700;cursor:pointer;">
+        <button onclick="selectRadarSpot('${ev.id}', true)" style="width:100%;padding:5px 8px;background:linear-gradient(135deg,#06b6d4,#3b82f6);border:none;border-radius:6px;color:#fff;font-size:0.75rem;font-weight:700;cursor:pointer;">
           ${lang === 'fr' ? 'Voir Détails 🔍' : 'View Details 🔍'}
         </button>
       </div>
@@ -18367,14 +18428,14 @@ function renderRadarMarkers() {
 
     marker.bindPopup(popupHtml);
     marker.on('click', () => {
-      selectRadarSpot(ev.id);
+      selectRadarSpot(ev.id, true);
     });
 
     radarLeafletMarkers.push(marker);
   });
 
   if (!selectedRadarEvent) {
-    selectRadarSpot('grand-prix-cycliste');
+    selectRadarSpot('grand-prix-cycliste', false);
   }
 }
 
@@ -18519,7 +18580,7 @@ function checkRadarDropDistanceLive(dropLat, dropLng) {
   }
 }
 
-function selectRadarSpot(eventId) {
+function selectRadarSpot(eventId, shouldPan = false) {
   const allEvents = getAllMontrealEvents();
   const ev = allEvents.find(e => e.id === eventId);
   if (!ev) return;
@@ -18567,7 +18628,7 @@ function selectRadarSpot(eventId) {
 
   updateRadarAdminUI();
 
-  if (realMontrealLeafletMap && ev.coords) {
+  if (shouldPan && realMontrealLeafletMap && ev.coords) {
     realMontrealLeafletMap.panTo(ev.coords, { animate: true, duration: 0.8 });
   }
 }
@@ -19051,6 +19112,7 @@ async function syncRadarEventsWithFirestore() {
 function openRadarModal() {
   const m = document.getElementById('radarMapModal');
   if (m) {
+    document.body.style.overflow = 'hidden';
     m.classList.add('open');
     setTimeout(() => {
       initMontrealRealMap();
@@ -19064,7 +19126,10 @@ function openRadarModal() {
 function closeRadarModal(e) {
   if (e && e.target !== document.getElementById('radarMapModal') && !e.target.classList.contains('mc')) return;
   const m = document.getElementById('radarMapModal');
-  if (m) m.classList.remove('open');
+  if (m) {
+    m.classList.remove('open');
+    document.body.style.overflow = '';
+  }
 }
 
 function filterFeedByRadarSpot() {
@@ -19167,14 +19232,6 @@ function executeRadarDropDetection(centerLat, centerLng, isVirtualScan = false) 
       if (card && typeof mbContainer.scrollTo === 'function') mbContainer.scrollTo({ top: card.offsetTop - 30, behavior: 'smooth' });
     }, 450);
   }
-
-  // Scroll active spot details card into view smoothly
-  setTimeout(() => {
-    const detailsCard = document.getElementById('radarSpotDetailsCard');
-    if (detailsCard) {
-      detailsCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-  }, 400);
 
   const pinTitle = lang === 'fr' ? (closestPin.titleFr || closestPin.titleEn) : closestPin.titleEn;
   const coinsReward = Number(closestPin.coins) || 100;
@@ -20382,7 +20439,10 @@ function openStoryCardGenerator(type = 'passport', customData = null) {
   currentStoryCustomData = customData;
 
   const m = document.getElementById('storyGeneratorModalOverlay');
-  if (m) m.classList.add('open');
+  if (m) {
+    document.body.style.overflow = 'hidden';
+    m.classList.add('open');
+  }
 
   // Update tabs active state
   ['passport', 'streak', 'drop', 'duel'].forEach(t => {
@@ -20399,7 +20459,10 @@ function openStoryCardGenerator(type = 'passport', customData = null) {
 function closeStoryGeneratorModal(e) {
   if (e && e.target !== document.getElementById('storyGeneratorModalOverlay') && !e.target.classList.contains('mc')) return;
   const m = document.getElementById('storyGeneratorModalOverlay');
-  if (m) m.classList.remove('open');
+  if (m) {
+    m.classList.remove('open');
+    document.body.style.overflow = '';
+  }
 }
 
 function switchStoryType(type) {
