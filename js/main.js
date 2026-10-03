@@ -1,9 +1,12 @@
-var currentLang = 'fr'; // Default language
-window.currentLang = 'fr';
+var currentLang = 'en'; // Default language for global search & users
+window.currentLang = 'en';
 
 function applyTranslations(lang) {
   currentLang = lang;
   window.currentLang = lang;
+  if (document.documentElement) {
+    document.documentElement.lang = lang;
+  }
   if (typeof translations === 'undefined') return;
   const elements = document.querySelectorAll('[data-i18n]');
   elements.forEach(el => {
@@ -45,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
   const urlLang = urlParams.get('lang');
   
-  let initialLang = 'fr';
+  let initialLang = 'en';
   if (urlLang && (urlLang === 'en' || urlLang === 'fr')) {
     initialLang = urlLang;
     localStorage.setItem('hub_lang', urlLang);
@@ -53,6 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedLang = localStorage.getItem('hub_lang');
     if (savedLang && (savedLang === 'en' || savedLang === 'fr')) {
       initialLang = savedLang;
+    } else if (navigator.language && navigator.language.toLowerCase().startsWith('fr')) {
+      initialLang = 'fr';
     }
   }
   

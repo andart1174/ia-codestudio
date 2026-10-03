@@ -1,4 +1,4 @@
-﻿import urllib.request
+import urllib.request
 import json
 
 payload = {
@@ -8,11 +8,19 @@ payload = {
     "urlList": [
         "https://ia-codestudio.com/",
         "https://ia-codestudio.com/ia-architecte-studio-ultra/",
+        "https://ia-codestudio.com/ia-architecte-studio-pro/",
         "https://ia-codestudio.com/cyber-creative-studio/",
+        "https://ia-codestudio.com/hyperstudio-3d-4d/",
+        "https://ia-codestudio.com/cyber-arcade/",
+        "https://ia-codestudio.com/community/",
+        "https://ia-codestudio.com/free-tools/",
+        "https://ia-codestudio.com/studio-3d-4d-pro/",
+        "https://ia-codestudio.com/3d-marketing-lab/",
+        "https://ia-codestudio.com/ad-genius-ai/",
         "https://ia-codestudio.com/how-to-create-3d-video-intro-ai-robot.html",
         "https://ia-codestudio.com/how-to-build-web-apps-with-ai-prompts.html",
-        "https://ia-codestudio.com/cyber-arcade/",
-        "https://ia-codestudio.com/hyperstudio-3d-4d/"
+        "https://ia-codestudio.com/how-to-convert-files-offline.html",
+        "https://ia-codestudio.com/3d-product-showroom-ai.html"
     ]
 }
 

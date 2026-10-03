@@ -1,435 +1,284 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <!-- ===== PAGE PRINCIPALE ===== -->
+  <!-- ===== HOMEPAGE / MAIN HUB ===== -->
   <url>
     <loc>https://ia-codestudio.com/</loc>
-    <lastmod>2026-09-26</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
-  <url>
-    <loc>https://ia-codestudio.com/?lang=fr</loc>
-    <lastmod>2026-09-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/?lang=en</loc>
-    <lastmod>2026-09-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
 
-  <!-- ===== IA ARCHITECTE STUDIO ULTRA v2.0 (FLAGSHIP AI WEB IDE & REAL APPS) ===== -->
+  <!-- ===== FLAGSHIP AI STUDIOS & 3D ENGINES ===== -->
   <url>
     <loc>https://ia-codestudio.com/ia-architecte-studio-ultra/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/ia-architecte-studio-ultra/?lang=en</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
   </url>
-  <url>
-    <loc>https://ia-codestudio.com/ia-architecte-studio-ultra/?lang=fr</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.95</priority>
-  </url>
-
-  <!-- ===== CYBER CREATIVE STUDIO (3D VIDEO INTRO & SYNTHWAVE BEAT MAKER) ===== -->
-  <url>
-    <loc>https://ia-codestudio.com/cyber-creative-studio/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/cyber-creative-studio/?lang=en</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.95</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/cyber-creative-studio/?lang=fr</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.95</priority>
-  </url>
-
-  <!-- ===== HYPERSTUDIO 3D/4D & FLIGHT SIMULATOR (FLAGSHIP 3D ENGINE) ===== -->
-  <url>
-    <loc>https://ia-codestudio.com/hyperstudio-3d-4d/</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-
-  
-  <!-- ===== CYBER ARCADE 3D ARENA & AR REALITY (FLAGSHIP 9-GAME SUITE) ===== -->
-  <url>
-    <loc>https://ia-codestudio.com/cyber-arcade/</loc>
-    <lastmod>2026-08-25</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/cyber-arcade/?lang=en</loc>
-    <lastmod>2026-08-25</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.95</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/cyber-arcade/?lang=fr</loc>
-    <lastmod>2026-08-25</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.95</priority>
-  </url>
-
-  <!-- ===== IA ARCHITECTE STUDIO PRO — FLAGSHIP (AI Web IDE) ===== -->
   <url>
     <loc>https://ia-codestudio.com/ia-architecte-studio-pro/</loc>
-    <lastmod>2026-08-24</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>daily</changefreq>
-    <priority>1.0</priority>
+    <priority>0.95</priority>
   </url>
   <url>
     <loc>https://ia-codestudio.com/ia-architecte-app/</loc>
-    <lastmod>2026-09-21</lastmod>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/hyperstudio-3d-4d/</loc>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
   </url>
-
-  <!-- ===== COMMUNITY & GENIUS IA COIN VAULT ===== -->
+  <url>
+    <loc>https://ia-codestudio.com/cyber-creative-studio/</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/cyber-arcade/</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
   <url>
     <loc>https://ia-codestudio.com/community/</loc>
-    <lastmod>2026-08-24</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>daily</changefreq>
-    <priority>1.0</priority>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/studio-3d-4d-pro/</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/devsocial-ai-hub/</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/widget-studio/</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/ad-genius-ai/</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/3d-marketing-lab/</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/3d-creative-studio/</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/hologram-hud-builder/</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
   </url>
 
-  <!-- ===== STUDIO 3D/4D PRO ===== -->
+  <!-- ===== FREE DEVELOPER TOOLS & CONVERTERS ===== -->
   <url>
-    <loc>https://ia-codestudio.com/studio-3d-4d-pro/index.html?lang=fr</loc>
-    <lastmod>2026-08-23</lastmod>
+    <loc>https://ia-codestudio.com/free-tools/</loc>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://ia-codestudio.com/studio-3d-4d-pro/index.html?lang=en</loc>
-    <lastmod>2026-08-23</lastmod>
+    <loc>https://ia-codestudio.com/free-tools/omni-convert/</loc>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- ===== DEVSOCIAL AI HUB ===== -->
-  <url>
-    <loc>https://ia-codestudio.com/devsocial-ai-hub/index.html?lang=fr</loc>
-    <lastmod>2026-06-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://ia-codestudio.com/devsocial-ai-hub/index.html?lang=en</loc>
-    <lastmod>2026-06-17</lastmod>
+    <loc>https://ia-codestudio.com/free-tools/playground/</loc>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- ===== AI AD & WIDGET STUDIO ===== -->
-  <url>
-    <loc>https://ia-codestudio.com/widget-studio/index.html?lang=fr</loc>
-    <lastmod>2026-06-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://ia-codestudio.com/widget-studio/index.html?lang=en</loc>
-    <lastmod>2026-06-17</lastmod>
+    <loc>https://ia-codestudio.com/free-tools/converters/text-to-html/</loc>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- ===== AD-GENIUS AI PRO (NOUVEAU) ===== -->
-  <url>
-    <loc>https://ia-codestudio.com/ad-genius-ai/index.html?lang=fr</loc>
-    <lastmod>2026-06-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://ia-codestudio.com/ad-genius-ai/index.html?lang=en</loc>
-    <lastmod>2026-06-17</lastmod>
+    <loc>https://ia-codestudio.com/free-tools/converters/tailwind-to-vanilla/</loc>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- ===== 3D MARKETING LAB (NOUVEAU) ===== -->
-  <url>
-    <loc>https://ia-codestudio.com/3d-marketing-lab/index.html?lang=fr</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://ia-codestudio.com/3d-marketing-lab/index.html?lang=en</loc>
-    <lastmod>2026-06-18</lastmod>
+    <loc>https://ia-codestudio.com/free-tools/converters/svg-optimizer/</loc>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/free-tools/converters/font-previewer-3d/</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/free-tools/converters/markdown-to-html/</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/free-tools/converters/base64/</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
   </url>
 
-  <!-- ===== 3D CREATIVE STUDIO (NOUVEAU) ===== -->
-  <url>
-    <loc>https://ia-codestudio.com/3d-creative-studio/index.html?lang=fr</loc>
-    <lastmod>2026-07-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/3d-creative-studio/index.html?lang=en</loc>
-    <lastmod>2026-07-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- ===== QUANTUM 3D HUD BUILDER (NOUVEAU) ===== -->
-  <url>
-    <loc>https://ia-codestudio.com/hologram-hud-builder/index.html?lang=fr</loc>
-    <lastmod>2026-07-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/hologram-hud-builder/index.html?lang=en</loc>
-    <lastmod>2026-07-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-
-  <!-- ===== TEMPLATES ===== -->
+  <!-- ===== 3D TEMPLATES & CODE EXAMPLES ===== -->
   <url>
     <loc>https://ia-codestudio.com/templates/threejs-basic-scene.html</loc>
-    <lastmod>2026-06-17</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
   </url>
   <url>
     <loc>https://ia-codestudio.com/templates/steampunk-chrono.html</loc>
-    <lastmod>2026-06-17</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
   </url>
   <url>
     <loc>https://ia-codestudio.com/templates/webcam-avatar.html</loc>
-    <lastmod>2026-06-17</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
   </url>
   <url>
     <loc>https://ia-codestudio.com/templates/video-mesh-projection.html</loc>
-    <lastmod>2026-06-17</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
   </url>
 
-  <!-- ===== ARTICLES / PAGES SEO ===== -->
+  <!-- ===== INTERACTIVE 3D DEMOS ===== -->
   <url>
-    <loc>https://ia-codestudio.com/how-to-embed-3d-model-website.html</loc>
-    <lastmod>2026-06-17</lastmod>
+    <loc>https://ia-codestudio.com/demo-procedural-galaxy.html</loc>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://ia-codestudio.com/how-to-convert-files-offline.html?lang=fr</loc>
-    <lastmod>2026-06-22</lastmod>
+    <loc>https://ia-codestudio.com/demo-neon-fluid-simulation.html</loc>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://ia-codestudio.com/how-to-convert-files-offline.html?lang=en</loc>
-    <lastmod>2026-06-22</lastmod>
+    <loc>https://ia-codestudio.com/demo-text-particle-explosion.html</loc>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
   </url>
 
-  <!-- ===== DEDICATED SEO LANDING PAGES (AD-GENIUS AI PRO) ===== -->
+  <!-- ===== SEO HIGH-INTENT LANDING PAGES & GENERATORS ===== -->
   <url>
     <loc>https://ia-codestudio.com/ai-scratch-card-generator.html</loc>
-    <lastmod>2026-07-07</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://ia-codestudio.com/spin-wheel-ad-maker.html</loc>
-    <lastmod>2026-07-07</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://ia-codestudio.com/certificate-generator-online.html</loc>
-    <lastmod>2026-07-07</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://ia-codestudio.com/3d-product-showroom-ai.html</loc>
-    <lastmod>2026-07-07</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://ia-codestudio.com/digital-business-card-generator.html</loc>
-    <lastmod>2026-07-07</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.85</priority>
   </url>
 
-  <!-- ===== SEO BLOG ARTICLES ===== -->
+  <!-- ===== SEO GUIDES & TUTORIALS ===== -->
   <url>
-    <loc>https://ia-codestudio.com/blog-3d-product-viewer-online.html</loc>
-    <lastmod>2026-07-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/blog-scratch-card-widget-website.html</loc>
-    <lastmod>2026-07-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/blog-digital-business-card-generator.html</loc>
-    <lastmod>2026-07-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- ===== FREE TOOLS & SANDBOX HUB (NOUVEAU) ===== -->
-  <url>
-    <loc>https://ia-codestudio.com/free-tools/index.html?lang=fr</loc>
-    <lastmod>2026-06-18</lastmod>
+    <loc>https://ia-codestudio.com/how-to-embed-3d-model-website.html</loc>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://ia-codestudio.com/free-tools/index.html?lang=en</loc>
-    <lastmod>2026-06-18</lastmod>
+    <loc>https://ia-codestudio.com/how-to-convert-files-offline.html</loc>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.85</priority>
   </url>
-  <url>
-    <loc>https://ia-codestudio.com/free-tools/omni-convert/index.html?lang=fr</loc>
-    <lastmod>2026-06-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/free-tools/omni-convert/index.html?lang=en</loc>
-    <lastmod>2026-06-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/free-tools/playground/index.html?lang=fr</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/free-tools/playground/index.html?lang=en</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/free-tools/converters/text-to-html/index.html?lang=fr</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/free-tools/converters/text-to-html/index.html?lang=en</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/free-tools/converters/tailwind-to-vanilla/index.html?lang=fr</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/free-tools/converters/tailwind-to-vanilla/index.html?lang=en</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/free-tools/converters/svg-optimizer/index.html?lang=fr</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/free-tools/converters/svg-optimizer/index.html?lang=en</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/free-tools/converters/font-previewer-3d/index.html?lang=fr</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/free-tools/converters/font-previewer-3d/index.html?lang=en</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/free-tools/converters/markdown-to-html/index.html?lang=fr</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/free-tools/converters/markdown-to-html/index.html?lang=en</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/free-tools/converters/base64/index.html?lang=fr</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ia-codestudio.com/free-tools/converters/base64/index.html?lang=en</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <!-- ===== SEO TUTORIALS & GUIDES (ORGANIC LONG-TAIL ACQUISITION) ===== -->
   <url>
     <loc>https://ia-codestudio.com/how-to-create-3d-video-intro-ai-robot.html</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
     <loc>https://ia-codestudio.com/how-to-build-web-apps-with-ai-prompts.html</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/blog-3d-product-viewer-online.html</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/blog-scratch-card-widget-website.html</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/blog-digital-business-card-generator.html</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- ===== LEGAL & COMPLIANCE ===== -->
+  <url>
+    <loc>https://ia-codestudio.com/privacy-policy.html</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.50</priority>
   </url>
 
 </urlset>
