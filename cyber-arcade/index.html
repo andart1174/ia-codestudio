@@ -1068,7 +1068,7 @@
     <div class="modal-backdrop" id="modal-site-auth-required">
         <div class="modal-cyber-card auth-card">
             <div class="modal-hdr-row">
-                <h3><i class="fa-solid fa-shield-halved" style="color:var(--accent-cyan);"></i> <span data-i18n="site_auth_modal_title">IA CODE STUDIO ACCOUNT REQUIRED</span></h3>
+                <h3><i class="fa-solid fa-shield-halved" style="color:var(--accent-cyan);"></i> <span id="cyber-auth-modal-title" data-i18n="login_title">Se connecter</span></h3>
                 <button class="btn-close-modal" id="btn-close-auth"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
@@ -1078,28 +1078,63 @@
                 </div>
                 <p class="auth-sub" data-i18n="site_auth_sub">To play the 9 3D &amp; AR Arcade Games, save your high scores, and climb the Global Leaderboard, please log in with your IA Code Studio account.</p>
 
-                <div class="site-auth-status-box" id="site-auth-status-box">
-                    <i class="fa-solid fa-circle-user auth-large-icon"></i>
-                    <h4 id="site-auth-status-title">You are not logged in to IA Code Studio</h4>
-                    <p id="site-auth-status-desc">Use your existing site credentials or register for free on the platform. No duplicate accounts needed!</p>
+                <!-- 1-Click Google Sign-In (Photo 2) -->
+                <button type="button" class="btn-google-auth" id="btn-cyber-google-auth" onclick="window.arcadeLeaderboard &amp;&amp; window.arcadeLeaderboard.handleGoogleSignIn()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" style="flex-shrink:0;">
+                        <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+                        <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+                        <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+                        <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+                    </svg>
+                    <span id="cyber-auth-google-text" data-i18n="login_google_btn">Continuer avec Google</span>
+                </button>
+
+                <!-- Divider Line -->
+                <div class="auth-divider" id="cyber-auth-divider">
+                    <span data-i18n="login_divider">OU AVEC EMAIL</span>
                 </div>
 
-                <div class="auth-actions-row">
-                    <!-- Connect via Site -->
-                    <button type="button" id="btn-goto-site-login" class="btn-play-hero pulse-btn">
-                        <i class="fa-solid fa-arrow-right-to-bracket"></i> <span data-i18n="btn_site_login">LOG IN / REGISTER ON IA CODE STUDIO</span>
-                    </button>
-                    
-                    <!-- Quick Login if Testing Standalone -->
-                    <div class="standalone-login-box">
-                        <span class="or-divider">── OR QUICK SIGN IN ──</span>
-                        <div class="quick-input-row">
-                            <input type="text" id="quick-pilot-name" placeholder="Enter your site username / email">
-                            <button type="button" id="btn-quick-site-connect" class="btn-secondary-glow">
-                                <i class="fa-solid fa-bolt"></i> <span>CONNECT</span>
-                            </button>
-                        </div>
+                <!-- Email & Password Form -->
+                <form id="cyber-auth-form" onsubmit="window.arcadeLeaderboard &amp;&amp; window.arcadeLeaderboard.handleAuthSubmit(event)">
+                    <!-- Name Input (shown in SignUp mode) -->
+                    <div class="auth-input-wrap" id="cyber-auth-name-group" style="display:none;">
+                        <span class="auth-icon">
+                            <i class="fa-solid fa-user"></i>
+                        </span>
+                        <input type="text" class="cyber-auth-input" id="cyber-auth-name" placeholder="Votre nom" data-i18n-placeholder="signup_name">
                     </div>
+
+                    <!-- Email Input -->
+                    <div class="auth-input-wrap">
+                        <span class="auth-icon">
+                            <i class="fa-solid fa-envelope"></i>
+                        </span>
+                        <input type="email" class="cyber-auth-input" id="cyber-auth-email" placeholder="Email" required autocomplete="email">
+                    </div>
+
+                    <!-- Password Input -->
+                    <div class="auth-input-wrap">
+                        <span class="auth-icon">
+                            <i class="fa-solid fa-lock"></i>
+                        </span>
+                        <input type="password" class="cyber-auth-input" id="cyber-auth-password" placeholder="Mot de passe" required autocomplete="current-password" data-i18n-placeholder="login_password">
+                    </div>
+
+                    <div style="text-align: right; margin-bottom: 14px; margin-top: -4px;">
+                        <a href="#" id="cyber-auth-forgot-link" onclick="window.arcadeLeaderboard &amp;&amp; window.arcadeLeaderboard.toggleRecoveryMode(event)" data-i18n="login_forgot">Mot de passe oublié ?</a>
+                    </div>
+
+                    <p id="cyber-recovery-hint" style="display:none; color:#10b981; font-size:12px; margin-bottom:12px; text-align:center;" data-i18n="recovery_hint">
+                        Entrez votre email et votre nouveau mot de passe.
+                    </p>
+
+                    <div id="cyber-auth-error" style="display:none; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.35); color: #f87171; padding: 10px 14px; border-radius: 10px; font-size: 13px; margin-bottom: 14px; text-align: center;"></div>
+
+                    <button type="submit" class="btn-auth-submit" id="cyber-auth-submit-btn" data-i18n="login_btn">Connexion</button>
+                </form>
+
+                <div class="auth-bottom-switch">
+                    <a href="#" id="cyber-auth-toggle-link" onclick="window.arcadeLeaderboard &amp;&amp; window.arcadeLeaderboard.toggleAuthMode(event)" data-i18n="login_no_account">Pas de compte ? Inscrivez-vous</a>
                 </div>
             </div>
         </div>

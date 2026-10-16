@@ -18,6 +18,11 @@ class CyberLeaderboard {
         // 🪙 Global Unified GENIUS IA Coins Sync with Community & Website
         this.coins = this.getInitialCoins();
 
+        // 🔐 Unified Authentication State
+        this.isSignUpMode = false;
+        this.isRecoveryMode = false;
+        this.pendingGameType = null;
+
         this.siteUser = this.getWebsiteSession();
         this.highScores = JSON.parse(localStorage.getItem('cyber_highscores') || '{}');
         this.inventory = JSON.parse(localStorage.getItem('cyber_inventory') || '{"crafts":["apex_starfighter"],"lasers":["#00f2fe"],"trails":["trail_plasma"],"upgrades":[],"titles":["Cadet Pilot"],"avatar":"🧑‍🚀"}');
@@ -126,7 +131,31 @@ class CyberLeaderboard {
                 upg_magnet_desc: "Automatically pulls nearby crystals & power-ups toward your craft!",
                 upg_shield_desc: "Increases overall shield durability by 50% for maximum survival.",
                 upg_missiles_desc: "Start every battle with 8 lock-on homing missiles instead of 4.",
-                upg_nitro_desc: "Turbo boost and Nitro gates recharge twice as fast."
+                upg_nitro_desc: "Turbo boost and Nitro gates recharge twice as fast.",
+                // 🔐 Real Authentication Modal Translations
+                login_title: "Sign In",
+                signup_title: "Create an Account",
+                recovery_title: "Reset Password",
+                login_google_btn: "Continue with Google",
+                login_divider: "OR WITH EMAIL",
+                signup_name: "Your name",
+                login_password: "Password",
+                login_forgot: "Forgot password?",
+                recovery_hint: "Enter your email and your new password.",
+                recovery_btn: "Save & Sign In",
+                login_btn: "Sign In",
+                signup_btn: "Create Account",
+                login_no_account: "No account? Sign up",
+                login_has_account: "Already have an account? Sign in",
+                logged_as: "Pilot:",
+                btn_logout: "Logout",
+                auth_err_email_req: "Please enter a valid email address.",
+                auth_err_pwd_req: "Password must be at least 4 characters.",
+                auth_err_not_found: "Account not found.",
+                auth_err_taken: "Email already registered.",
+                auth_err_invalid: "Incorrect email or password.",
+                auth_google_fail: "Google sign in failed.",
+                auth_required_prompt: "Site Login Required 🔒"
             },
             fr: {
                 brand_title: "CYBER ARCADE 3D",
@@ -208,7 +237,31 @@ class CyberLeaderboard {
                 upg_magnet_desc: "Attire automatiquement les cristaux et bonus proches vers votre vaisseau !",
                 upg_shield_desc: "Augmente la résistance totale du bouclier de 50% pour une survie maximale.",
                 upg_missiles_desc: "Commencez chaque combat avec 8 missiles à tête chercheuse au lieu de 4.",
-                upg_nitro_desc: "Le Turbo Boost et les portes Nitro se rechargent deux fois plus vite."
+                upg_nitro_desc: "Le Turbo Boost et les portes Nitro se rechargent deux fois plus vite.",
+                // 🔐 Real Authentication Modal Translations
+                login_title: "Se connecter",
+                signup_title: "Créer un compte",
+                recovery_title: "Récupération",
+                login_google_btn: "Continuer avec Google",
+                login_divider: "OU AVEC EMAIL",
+                signup_name: "Votre nom",
+                login_password: "Mot de passe",
+                login_forgot: "Mot de passe oublié ?",
+                recovery_hint: "Entrez votre email et votre nouveau mot de passe.",
+                recovery_btn: "Sauvegarder et Connecter",
+                login_btn: "Connexion",
+                signup_btn: "S'inscrire",
+                login_no_account: "Pas de compte ? Inscrivez-vous",
+                login_has_account: "Déjà un compte ? Connectez-vous",
+                logged_as: "Pilote :",
+                btn_logout: "Déconnexion",
+                auth_err_email_req: "Veuillez entrer une adresse email valide.",
+                auth_err_pwd_req: "Le mot de passe doit comporter au moins 4 caractères.",
+                auth_err_not_found: "Compte introuvable.",
+                auth_err_taken: "Email déjà utilisé.",
+                auth_err_invalid: "Email ou mot de passe incorrect.",
+                auth_google_fail: "Échec de la connexion avec Google.",
+                auth_required_prompt: "Connexion Requise 🔒"
             }
         };
 
@@ -236,14 +289,26 @@ class CyberLeaderboard {
             } catch (e) {}
         }
 
+        // Try retro arcade session if genius_session is not set
+        if (!user) {
+            const retroSession = localStorage.getItem('retro_arcade_user');
+            if (retroSession) {
+                try {
+                    user = JSON.parse(retroSession);
+                } catch (e) {}
+            }
+        }
+
         // Try active Firebase Auth user
         if (!user && typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) {
             const fbUser = firebase.auth().currentUser;
-            user = {
-                name: fbUser.displayName || fbUser.email.split('@')[0],
-                email: fbUser.email,
-                uid: fbUser.uid
-            };
+            if (fbUser && fbUser.email) {
+                user = {
+                    name: fbUser.displayName || fbUser.email.split('@')[0],
+                    email: fbUser.email,
+                    uid: fbUser.uid
+                };
+            }
         }
 
         // Try other stored user session keys across site
@@ -263,18 +328,25 @@ class CyberLeaderboard {
             }
         }
 
-        if (user && (user.email || user.name || user.displayName || user.username)) {
-            const email = (user.email || '').trim();
-            let customName = (email ? localStorage.getItem('custom_display_name_' + email) : null) ||
-                             localStorage.getItem('hub_custom_name') ||
-                             localStorage.getItem('genius_user_name') ||
+        if (user) {
+            const email = (user.email || '').trim().toLowerCase();
+            const name = (user.name || user.displayName || user.username || '').trim();
+
+            // 🚫 CRITICAL SECURITY FIX: Reject and purge any fake dummy accounts generated by old quick-connect bug!
+            if (!email || !email.includes('@') || email.endsWith('@iacodestudio.com') || name.startsWith('StudioMember_')) {
+                localStorage.removeItem('genius_session');
+                localStorage.removeItem('retro_arcade_user');
+                return null;
+            }
+
+            let customName = localStorage.getItem('custom_display_name_' + email) ||
                              user.displayName ||
-                             user.username ||
                              user.name ||
-                             (email ? email.split('@')[0] : 'Pilot');
+                             user.username ||
+                             email.split('@')[0];
 
             const ADMIN_EMAILS = ['andart1174@gmail.com', 'andart1174@yahoo.com'];
-            const isAdmin = ADMIN_EMAILS.includes(email.toLowerCase()) || 
+            const isAdmin = ADMIN_EMAILS.includes(email) || 
                             (user.role && user.role.toLowerCase() === 'admin') || 
                             customName.toUpperCase().includes('NEXUS111');
 
@@ -282,7 +354,8 @@ class CyberLeaderboard {
                 name: customName,
                 email: email,
                 uid: user.uid || email,
-                role: isAdmin ? 'Admin' : (user.role || 'Member'),
+                photoURL: user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(customName)}&background=7c3aed&color=fff&bold=true`,
+                role: isAdmin ? 'Admin' : 'User', // Simple user, NEVER premium
                 isAdmin: isAdmin,
                 isSiteUser: true
             };
@@ -337,13 +410,31 @@ class CyberLeaderboard {
 
         if (this.siteUser && this.siteUser.isSiteUser) {
             const roleBadge = this.siteUser.isAdmin ? ' <span style="background:linear-gradient(135deg,#ff8c00,#ff007f); color:#fff; font-size:10px; font-weight:900; padding:2px 8px; border-radius:10px; margin-left:6px; letter-spacing:0.5px; box-shadow:0 0 10px rgba(255,140,0,0.6);">ADMIN</span>' : '';
-            if (display) display.innerHTML = `Pilot: <strong>${this.siteUser.name}</strong>${roleBadge}`;
+            const logoutTxt = (this.currentLang === 'fr') ? 'Déconnexion' : 'Logout';
+            if (display) {
+                display.innerHTML = `Pilot: <strong>${this.siteUser.name}</strong>${roleBadge} <a href="#" id="cyber-btn-logout" style="color:#ff0055; font-size:10px; margin-left:8px; text-decoration:underline; font-weight:700; cursor:pointer;">(${logoutTxt})</a>`;
+                const logoutBtn = document.getElementById('cyber-btn-logout');
+                if (logoutBtn) {
+                    logoutBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.handleLogout();
+                    });
+                }
+            }
             if (dot) {
                 dot.style.background = '#00ffcc';
                 dot.style.boxShadow = '0 0 12px #00ffcc';
             }
         } else {
-            if (display) display.textContent = (this.currentLang === 'fr') ? 'Connexion Requise 🔒' : 'Site Login Required 🔒';
+            const promptTxt = (this.currentLang === 'fr') ? 'Connexion Requise 🔒' : 'Site Login Required 🔒';
+            if (display) {
+                display.innerHTML = `<span id="cyber-btn-login-prompt" style="cursor:pointer; text-decoration:underline;">${promptTxt}</span>`;
+                const loginPrompt = document.getElementById('cyber-btn-login-prompt');
+                if (loginPrompt) {
+                    loginPrompt.addEventListener('click', () => this.openAuthModal());
+                }
+            }
             if (dot) {
                 dot.style.background = '#ff0055';
                 dot.style.boxShadow = '0 0 10px #ff0055';
@@ -353,11 +444,6 @@ class CyberLeaderboard {
 
     initFirebaseSync() {
         if (typeof firebase === 'undefined') return;
-
-        // Auto sign-in anonymously if needed to grant full Firestore read permissions
-        if (firebase.auth && !firebase.auth().currentUser) {
-            firebase.auth().signInAnonymously().catch(() => {});
-        }
 
         if (firebase.auth) {
             try {
@@ -412,7 +498,7 @@ class CyberLeaderboard {
                     this.coins = this.getInitialCoins();
                     this.updateCoinDisplay();
                 }
-                if (e.key === 'genius_session' || e.key === 'hub_custom_name' || (e.key && e.key.startsWith('custom_display_name_'))) {
+                if (e.key === 'genius_session' || e.key === 'retro_arcade_user' || e.key === 'hub_custom_name' || (e.key && e.key.startsWith('custom_display_name_'))) {
                     this.siteUser = this.getWebsiteSession();
                     this.updateAuthDisplay();
                     if (this.siteUser && this.siteUser.email) {
@@ -423,55 +509,445 @@ class CyberLeaderboard {
         }
     }
 
+    openAuthModal(gameType) {
+        if (gameType) {
+            this.pendingGameType = gameType;
+        }
+        const modal = document.getElementById('modal-site-auth-required');
+        const errBox = document.getElementById('cyber-auth-error');
+        if (errBox) errBox.style.display = 'none';
+        this.updateAuthModalUI();
+        if (modal) modal.classList.add('active');
+    }
+
+    closeAuthModal() {
+        const modal = document.getElementById('modal-site-auth-required');
+        if (modal) modal.classList.remove('active');
+    }
+
+    toggleAuthMode(e) {
+        if (e && e.preventDefault) e.preventDefault();
+        this.isSignUpMode = !this.isSignUpMode;
+        this.isRecoveryMode = false;
+        this.updateAuthModalUI();
+    }
+
+    toggleRecoveryMode(e) {
+        if (e && e.preventDefault) e.preventDefault();
+        this.isRecoveryMode = true;
+        this.isSignUpMode = false;
+        this.updateAuthModalUI();
+    }
+
+    updateAuthModalUI() {
+        const title = document.getElementById('cyber-auth-modal-title');
+        const googleBtn = document.getElementById('btn-cyber-google-auth');
+        const divider = document.getElementById('cyber-auth-divider');
+        const nameGroup = document.getElementById('cyber-auth-name-group');
+        const nameInput = document.getElementById('cyber-auth-name');
+        const forgotLink = document.getElementById('cyber-auth-forgot-link');
+        const recoveryHint = document.getElementById('cyber-recovery-hint');
+        const submitBtn = document.getElementById('cyber-auth-submit-btn');
+        const toggleLink = document.getElementById('cyber-auth-toggle-link');
+        const errBox = document.getElementById('cyber-auth-error');
+        if (errBox) errBox.style.display = 'none';
+
+        const dict = this.translations[this.currentLang] || this.translations.en;
+
+        if (this.isRecoveryMode) {
+            if (nameGroup) { nameGroup.style.display = 'none'; if (nameInput) nameInput.required = false; }
+            if (googleBtn) googleBtn.style.display = 'none';
+            if (divider) divider.style.display = 'none';
+            if (forgotLink) forgotLink.style.display = 'none';
+            if (recoveryHint) recoveryHint.style.display = 'block';
+            if (title) title.textContent = dict.recovery_title || 'Reset Password';
+            if (submitBtn) submitBtn.textContent = dict.recovery_btn || 'Save & Sign In';
+            if (toggleLink) {
+                toggleLink.textContent = dict.login_has_account || 'Already have an account? Sign in';
+                toggleLink.onclick = (e) => {
+                    e.preventDefault();
+                    this.isRecoveryMode = false;
+                    this.isSignUpMode = false;
+                    this.updateAuthModalUI();
+                };
+            }
+        } else if (this.isSignUpMode) {
+            if (nameGroup) { nameGroup.style.display = 'block'; if (nameInput) nameInput.required = true; }
+            if (googleBtn) googleBtn.style.display = 'flex';
+            if (divider) divider.style.display = 'flex';
+            if (forgotLink) forgotLink.style.display = 'none';
+            if (recoveryHint) recoveryHint.style.display = 'none';
+            if (title) title.textContent = dict.signup_title || 'Create Account';
+            if (submitBtn) submitBtn.textContent = dict.signup_btn || 'Create Account';
+            if (toggleLink) {
+                toggleLink.textContent = dict.login_has_account || 'Already have an account? Sign in';
+                toggleLink.onclick = (e) => this.toggleAuthMode(e);
+            }
+        } else {
+            if (nameGroup) { nameGroup.style.display = 'none'; if (nameInput) nameInput.required = false; }
+            if (googleBtn) googleBtn.style.display = 'flex';
+            if (divider) divider.style.display = 'flex';
+            if (forgotLink) forgotLink.style.display = 'inline-block';
+            if (recoveryHint) recoveryHint.style.display = 'none';
+            if (title) title.textContent = dict.login_title || 'Sign In';
+            if (submitBtn) submitBtn.textContent = dict.login_btn || 'Sign In';
+            if (toggleLink) {
+                toggleLink.textContent = dict.login_no_account || 'No account? Sign up';
+                toggleLink.onclick = (e) => this.toggleAuthMode(e);
+            }
+        }
+    }
+
+    async handleGoogleSignIn() {
+        const errBox = document.getElementById('cyber-auth-error');
+        if (errBox) errBox.style.display = 'none';
+
+        try {
+            if (typeof firebase === 'undefined' || !firebase.auth) {
+                throw new Error(this.currentLang === 'fr' ? "Service d'authentification indisponible." : "Authentication service unavailable.");
+            }
+
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.setCustomParameters({ prompt: 'select_account' });
+
+            const result = await firebase.auth().signInWithPopup(provider);
+            const fbUser = result.user;
+            if (!fbUser || !fbUser.email) {
+                throw new Error("No user email returned");
+            }
+
+            const email = fbUser.email.toLowerCase();
+            const ADMIN_EMAILS = ['andart1174@gmail.com', 'andart1174@yahoo.com'];
+            const isAdmin = ADMIN_EMAILS.includes(email);
+            const displayName = fbUser.displayName || email.split('@')[0];
+            const photoURL = fbUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=7c3aed&color=fff&bold=true`;
+
+            // Check if banned in Firestore
+            if (firebase.firestore) {
+                try {
+                    const uDoc = await firebase.firestore().collection('users').doc(email).get();
+                    if (uDoc.exists && uDoc.data().banned === true) {
+                        await firebase.auth().signOut();
+                        if (errBox) {
+                            errBox.textContent = this.currentLang === 'fr' ? "Votre compte a été banni." : "Your account has been banned.";
+                            errBox.style.display = 'block';
+                        }
+                        return;
+                    }
+                } catch (e) {
+                    console.warn("Ban check note:", e);
+                }
+            }
+
+            // Save unified session (role: 'User' for standard users, NEVER premium)
+            const sessionUser = {
+                email: email,
+                name: displayName,
+                username: displayName,
+                role: isAdmin ? 'Admin' : 'User', // Simple user
+                photoURL: photoURL,
+                uid: fbUser.uid,
+                loginAt: Date.now()
+            };
+
+            localStorage.setItem('genius_session', JSON.stringify(sessionUser));
+            localStorage.setItem('retro_arcade_user', JSON.stringify(sessionUser));
+            localStorage.setItem('custom_display_name_' + email, displayName);
+
+            // Update local users array (ia_users)
+            let users = JSON.parse(localStorage.getItem('ia_users') || '[]');
+            users = users.filter(u => u.email !== email);
+            users.push(sessionUser);
+            localStorage.setItem('ia_users', JSON.stringify(users));
+
+            // Sync Firestore
+            if (firebase.firestore) {
+                try {
+                    await firebase.firestore().collection('users').doc(email).set({
+                        email: email,
+                        displayName: displayName,
+                        name: displayName,
+                        photoURL: photoURL,
+                        uid: fbUser.uid,
+                        role: isAdmin ? 'Admin' : 'User',
+                        lastLogin: Date.now(),
+                        lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+                } catch (e) {
+                    console.warn("Firestore sync note:", e);
+                }
+            }
+
+            this.siteUser = this.getWebsiteSession();
+            this.closeAuthModal();
+            this.updateAuthDisplay();
+
+            if (typeof confetti === 'function') confetti({ particleCount: 120, spread: 80 });
+            if (window.arcadeEngine) window.arcadeEngine.playSFX('respawn');
+
+            // Launch pending game if waiting
+            if (this.pendingGameType) {
+                const game = this.pendingGameType;
+                this.pendingGameType = null;
+                if (window.arcadeEngine) {
+                    window.arcadeEngine.startGame(game);
+                }
+            }
+        } catch (err) {
+            console.error("Cyber Arcade Google Auth Error:", err);
+            if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
+                return;
+            }
+            if (errBox) {
+                let msg = err.message || ((this.currentLang === 'fr') ? "Échec de la connexion avec Google." : "Google sign in failed.");
+                if (err.code === 'auth/unauthorized-domain') {
+                    msg = (this.currentLang === 'fr') ? "Domaine non autorisé dans Firebase Console." : "Unauthorized domain in Firebase Console.";
+                }
+                errBox.textContent = msg;
+                errBox.style.display = 'block';
+            }
+        }
+    }
+
+    async handleAuthSubmit(e) {
+        if (e && e.preventDefault) e.preventDefault();
+        const emailInput = document.getElementById('cyber-auth-email');
+        const passwordInput = document.getElementById('cyber-auth-password');
+        const nameInput = document.getElementById('cyber-auth-name');
+        const errBox = document.getElementById('cyber-auth-error');
+        const submitBtn = document.getElementById('cyber-auth-submit-btn');
+
+        const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+        const password = passwordInput ? passwordInput.value : '';
+        const name = nameInput ? nameInput.value.trim() : '';
+
+        const dict = this.translations[this.currentLang] || this.translations.en;
+
+        if (!email || !email.includes('@')) {
+            if (errBox) {
+                errBox.textContent = dict.auth_err_email_req || "Please enter a valid email address.";
+                errBox.style.display = 'block';
+            }
+            return;
+        }
+        if (!password || password.length < 4) {
+            if (errBox) {
+                errBox.textContent = dict.auth_err_pwd_req || "Password must be at least 4 characters.";
+                errBox.style.display = 'block';
+            }
+            return;
+        }
+
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳...';
+        }
+
+        const ADMIN_EMAILS = ['andart1174@gmail.com', 'andart1174@yahoo.com'];
+        const isAdmin = ADMIN_EMAILS.includes(email);
+        let users = JSON.parse(localStorage.getItem('ia_users') || '[]');
+        const db = (typeof firebase !== 'undefined' && firebase.firestore) ? firebase.firestore() : null;
+
+        // Check if banned
+        if (db) {
+            try {
+                const fbUserDoc = await db.collection('users').doc(email).get();
+                if (fbUserDoc.exists && fbUserDoc.data().banned === true) {
+                    if (errBox) {
+                        errBox.textContent = this.currentLang === 'fr' ? "Votre compte a été banni." : "Your account has been banned.";
+                        errBox.style.display = 'block';
+                    }
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        this.updateAuthModalUI();
+                    }
+                    return;
+                }
+            } catch (err) { console.warn(err); }
+        }
+
+        if (this.isRecoveryMode) {
+            let userToReset = users.find(u => u.email === email);
+            if (!userToReset && db) {
+                try {
+                    const doc = await db.collection('users').doc(email).get();
+                    if (doc.exists) userToReset = doc.data();
+                } catch (e) { console.warn(e); }
+            }
+
+            if (userToReset) {
+                userToReset.password = password;
+                if (isAdmin && userToReset.role !== 'Admin') userToReset.role = 'Admin';
+
+                if (db) {
+                    try { await db.collection('users').doc(userToReset.email).set(userToReset, { merge: true }); } catch (e) {}
+                }
+
+                users = users.filter(u => u.email !== userToReset.email);
+                users.push(userToReset);
+                localStorage.setItem('ia_users', JSON.stringify(users));
+
+                const sessionUser = {
+                    email: userToReset.email,
+                    name: userToReset.name || userToReset.email.split('@')[0],
+                    username: userToReset.name || userToReset.email.split('@')[0],
+                    role: userToReset.role || (isAdmin ? 'Admin' : 'User'),
+                    loginAt: Date.now()
+                };
+                localStorage.setItem('genius_session', JSON.stringify(sessionUser));
+                localStorage.setItem('retro_arcade_user', JSON.stringify(sessionUser));
+
+                this.siteUser = this.getWebsiteSession();
+                this.closeAuthModal();
+                this.updateAuthDisplay();
+
+                if (this.pendingGameType) {
+                    const game = this.pendingGameType;
+                    this.pendingGameType = null;
+                    if (window.arcadeEngine) window.arcadeEngine.startGame(game);
+                }
+            } else {
+                if (errBox) {
+                    errBox.textContent = dict.auth_err_not_found || "Account not found.";
+                    errBox.style.display = 'block';
+                }
+            }
+        } else if (this.isSignUpMode) {
+            let existingUser = users.find(u => u.email === email);
+            if (!existingUser && db) {
+                try {
+                    const doc = await db.collection('users').doc(email).get();
+                    if (doc.exists) existingUser = doc.data();
+                } catch (e) { console.warn(e); }
+            }
+
+            if (existingUser) {
+                if (errBox) {
+                    errBox.textContent = dict.auth_err_taken || "Email already registered.";
+                    errBox.style.display = 'block';
+                }
+            } else {
+                const finalName = name || email.split('@')[0];
+                const newUser = {
+                    email: email,
+                    password: password,
+                    name: finalName,
+                    username: finalName,
+                    role: isAdmin ? 'Admin' : 'User', // Simple user
+                    createdAt: Date.now()
+                };
+
+                if (db) {
+                    try { await db.collection('users').doc(newUser.email).set(newUser, { merge: true }); } catch (e) {}
+                }
+
+                users.push(newUser);
+                localStorage.setItem('ia_users', JSON.stringify(users));
+
+                const sessionUser = {
+                    email: newUser.email,
+                    name: newUser.name,
+                    username: newUser.name,
+                    role: newUser.role,
+                    loginAt: Date.now()
+                };
+                localStorage.setItem('genius_session', JSON.stringify(sessionUser));
+                localStorage.setItem('retro_arcade_user', JSON.stringify(sessionUser));
+
+                this.siteUser = this.getWebsiteSession();
+                this.closeAuthModal();
+                this.updateAuthDisplay();
+
+                if (typeof confetti === 'function') confetti({ particleCount: 120, spread: 80 });
+                if (window.arcadeEngine) window.arcadeEngine.playSFX('respawn');
+
+                if (this.pendingGameType) {
+                    const game = this.pendingGameType;
+                    this.pendingGameType = null;
+                    if (window.arcadeEngine) window.arcadeEngine.startGame(game);
+                }
+            }
+        } else {
+            // Sign In Mode
+            let match = users.find(u => u.email === email && u.password === password);
+            if (!match && db) {
+                try {
+                    const doc = await db.collection('users').doc(email).get();
+                    if (doc.exists) {
+                        const fbUser = doc.data();
+                        if (fbUser.password === password) {
+                            match = fbUser;
+                            users.push(fbUser);
+                            localStorage.setItem('ia_users', JSON.stringify(users));
+                        }
+                    }
+                } catch (e) { console.warn(e); }
+            }
+
+            if (match) {
+                const sessionUser = {
+                    email: match.email,
+                    name: match.name || match.email.split('@')[0],
+                    username: match.name || match.email.split('@')[0],
+                    role: match.role || (isAdmin ? 'Admin' : 'User'),
+                    loginAt: Date.now()
+                };
+                localStorage.setItem('genius_session', JSON.stringify(sessionUser));
+                localStorage.setItem('retro_arcade_user', JSON.stringify(sessionUser));
+
+                this.siteUser = this.getWebsiteSession();
+                this.closeAuthModal();
+                this.updateAuthDisplay();
+
+                if (typeof confetti === 'function') confetti({ particleCount: 120, spread: 80 });
+                if (window.arcadeEngine) window.arcadeEngine.playSFX('respawn');
+
+                if (this.pendingGameType) {
+                    const game = this.pendingGameType;
+                    this.pendingGameType = null;
+                    if (window.arcadeEngine) window.arcadeEngine.startGame(game);
+                }
+            } else {
+                if (errBox) {
+                    errBox.textContent = dict.auth_err_invalid || "Incorrect email or password.";
+                    errBox.style.display = 'block';
+                }
+            }
+        }
+
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            this.updateAuthModalUI();
+        }
+    }
+
+    async handleLogout() {
+        localStorage.removeItem('genius_session');
+        localStorage.removeItem('retro_arcade_user');
+        this.siteUser = null;
+        if (typeof firebase !== 'undefined' && firebase.auth) {
+            try { await firebase.auth().signOut(); } catch (e) {}
+        }
+        this.updateAuthDisplay();
+    }
+
     initSiteAuthModal() {
         const btnPilot = document.getElementById('btn-pilot-profile');
         const modalAuth = document.getElementById('modal-site-auth-required');
         const btnCloseAuth = document.getElementById('btn-close-auth');
-        const btnGotoSite = document.getElementById('btn-goto-site-login');
-        const btnQuickConnect = document.getElementById('btn-quick-site-connect');
 
         if (btnPilot && modalAuth) {
             btnPilot.addEventListener('click', () => {
-                if (!this.siteUser) modalAuth.classList.add('active');
+                if (!this.siteUser) this.openAuthModal();
             });
         }
         if (btnCloseAuth && modalAuth) {
-            btnCloseAuth.addEventListener('click', () => modalAuth.classList.remove('active'));
+            btnCloseAuth.addEventListener('click', () => this.closeAuthModal());
         }
 
-        if (btnGotoSite) {
-            btnGotoSite.addEventListener('click', () => {
-                if (window.parent && window.parent.openLoginModal) {
-                    window.parent.openLoginModal();
-                } else {
-                    alert((this.currentLang === 'fr') 
-                        ? 'Redirection vers la page de connexion de IA Code Studio...' 
-                        : 'Redirecting to IA Code Studio login page...');
-                }
-            });
-        }
-
-        if (btnQuickConnect) {
-            btnQuickConnect.addEventListener('click', () => {
-                const inputName = document.getElementById('quick-pilot-name');
-                const val = inputName && inputName.value.trim() ? inputName.value.trim() : 'StudioMember_' + Math.floor(Math.random() * 1000);
-                
-                const sessionUser = {
-                    name: val,
-                    email: val.includes('@') ? val : `${val.toLowerCase()}@iacodestudio.com`,
-                    role: 'Member'
-                };
-                localStorage.setItem('genius_session', JSON.stringify(sessionUser));
-                this.siteUser = sessionUser;
-                this.siteUser.isSiteUser = true;
-
-                this.updateAuthDisplay();
-                if (modalAuth) modalAuth.classList.remove('active');
-
-                if (typeof confetti === 'function') confetti({ particleCount: 120, spread: 80 });
-                if (window.arcadeEngine) window.arcadeEngine.playSFX('respawn');
-                const grid = document.getElementById('arena-games-grid');
-                if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        if (modalAuth) {
+            modalAuth.addEventListener('click', (e) => {
+                if (e.target === modalAuth) this.closeAuthModal();
             });
         }
     }
@@ -974,11 +1450,8 @@ class CyberLeaderboard {
                 
                 this.siteUser = this.getWebsiteSession();
                 if (!this.siteUser) {
-                    const modalAuth = document.getElementById('modal-site-auth-required');
-                    if (modalAuth) {
-                        modalAuth.classList.add('active');
-                        return;
-                    }
+                    this.openAuthModal(gameType);
+                    return;
                 }
 
                 if (window.arcadeEngine) {
@@ -1045,7 +1518,15 @@ class CyberLeaderboard {
             }
         });
 
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-i18n-placeholder');
+            if (dict[key]) {
+                el.placeholder = dict[key];
+            }
+        });
+
         this.updateAuthDisplay();
+        this.updateAuthModalUI();
         this.updateShopUI();
         this.renderWeeklyTable();
     }
@@ -1129,3 +1610,4 @@ class CyberLeaderboard {
 
 // Global Leaderboard instance
 window.cyberLeaderboard = new CyberLeaderboard();
+window.arcadeLeaderboard = window.cyberLeaderboard;

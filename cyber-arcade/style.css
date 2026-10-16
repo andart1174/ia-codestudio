@@ -2823,40 +2823,147 @@ body.ar-active-mode .arcade-header {
     line-height: 1.5;
 }
 
-.standalone-login-box {
-    margin-top: 14px;
-    text-align: center;
-}
-
-.or-divider {
-    display: block;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    letter-spacing: 1px;
-    margin-bottom: 12px;
-    font-family: var(--font-code);
-}
-
-.quick-input-row {
+/* Unified Auth Modal Styles */
+.btn-google-auth {
+    width: 100%;
+    background: #ffffff;
+    color: #111827;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 20px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
     display: flex;
-    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.btn-google-auth:hover {
+    background: #f8fafc;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(0, 242, 254, 0.4);
+}
+.btn-google-auth:active {
+    transform: scale(0.99);
 }
 
-.quick-input-row input {
+.auth-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0 18px 0;
+}
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
     flex: 1;
-    background: #090e1f;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    padding: 10px 14px;
-    color: #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+.auth-divider span {
+    padding: 0 14px;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
     font-family: var(--font-code);
-    font-size: 0.9rem;
-    outline: none;
 }
 
-.quick-input-row input:focus {
+.auth-input-wrap {
+    position: relative;
+    margin-bottom: 14px;
+}
+.auth-input-wrap .auth-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    pointer-events: none;
+    font-size: 0.95rem;
+}
+.cyber-auth-input {
+    width: 100%;
+    background: #090e1f;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 12px;
+    color: #ffffff;
+    padding: 13px 16px 13px 44px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+    box-sizing: border-box;
+    font-family: var(--font-code);
+}
+.cyber-auth-input::placeholder {
+    color: #64748b;
+}
+.cyber-auth-input:focus {
     border-color: var(--accent-cyan);
-    box-shadow: 0 0 12px rgba(0, 242, 254, 0.4);
+    background: rgba(0, 242, 254, 0.05);
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.35);
+}
+
+#cyber-auth-forgot-link {
+    color: #64748b;
+    font-size: 12px;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+#cyber-auth-forgot-link:hover {
+    color: var(--accent-cyan);
+}
+
+.btn-auth-submit {
+    width: 100%;
+    background: linear-gradient(135deg, #00f2fe, #4facfe);
+    color: #030816;
+    border: none;
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+    box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4);
+    font-family: var(--font-heading);
+}
+.btn-auth-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 242, 254, 0.6);
+}
+.btn-auth-submit:active {
+    transform: scale(0.99);
+}
+.btn-auth-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.auth-bottom-switch {
+    text-align: center;
+    margin-top: 18px;
+}
+.auth-bottom-switch a {
+    color: #94a3b8;
+    font-size: 13px;
+    text-decoration: none;
+    transition: color 0.2s;
+    cursor: pointer;
+}
+.auth-bottom-switch a:hover {
+    color: #ffffff;
+    text-decoration: underline;
 }
 
 /* ══════════════════════════════════════════════════════════════════════ */

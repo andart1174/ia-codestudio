@@ -849,6 +849,19 @@ class CyberArcadeEngine {
     }
 
     async startGame(gameType = 'blaster', rivalTarget = 0, rivalName = '') {
+        // 🔒 STRICT SECURITY GATE: Enforce authentication before launching any game
+        const lb = window.arcadeLeaderboard || window.cyberLeaderboard;
+        const user = lb ? lb.getWebsiteSession() : null;
+        if (!user) {
+            if (lb && lb.openAuthModal) {
+                lb.openAuthModal(gameType);
+            } else {
+                const modal = document.getElementById('modal-site-auth-required');
+                if (modal) modal.classList.add('active');
+            }
+            return;
+        }
+
         this.initAudio();
         this.activeGame = gameType;
         this.targetRivalScore = rivalTarget;
