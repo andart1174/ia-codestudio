@@ -6,6 +6,11 @@
   <title>Retro 80s Arcade & Classic Games — IA CODE STUDIO</title>
   <meta name="description" content="Play 12 authentic 80s retro arcade & classic games in your browser. Pinball, Pac-Man, Space Invaders, Asteroids, Pong, Tetris, Breakout, and Outrun.">
   <link rel="canonical" href="https://ia-codestudio.com/retro-arcade/">
+
+  <!-- Firebase SDK Compat (Shared with IA Code Studio) -->
+  <script src="../js/app-service-core.js?v=20260922_v2"></script>
+  <script src="../js/app-service-auth.js?v=20260922_v2"></script>
+  <script src="../js/app-service-db.js?v=20260922_v2"></script>
   <style>
     :root {
       --bg: #070714;
@@ -314,13 +319,13 @@
       box-shadow: 0 6px 18px var(--accent-glow);
     }
 
-    /* Modal Overlay */
+    /* Modal Overlay & Card (matches Photo 2 / Main Site) */
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(3, 2, 10, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(3, 4, 15, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       display: none;
       align-items: center;
       justify-content: center;
@@ -331,22 +336,22 @@
       display: flex;
     }
     .modal-box {
-      background: #0f1026;
-      border: 1.5px solid var(--accent);
-      border-radius: 18px;
-      padding: 34px 28px;
+      background: #0d1527;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 34px 30px;
       width: 100%;
-      max-width: 440px;
+      max-width: 420px;
       position: relative;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 35px var(--accent-glow);
-      text-align: center;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(59, 130, 246, 0.15);
+      text-align: left;
     }
     .modal-close {
       position: absolute;
-      top: 14px;
-      right: 14px;
-      background: rgba(255, 255, 255, 0.08);
-      border: none;
+      top: 16px;
+      right: 16px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       color: #94a3b8;
       width: 32px;
       height: 32px;
@@ -359,84 +364,160 @@
       transition: all 0.2s;
     }
     .modal-close:hover {
-      background: var(--accent);
-      color: #fff;
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border-color: rgba(239, 68, 68, 0.4);
     }
-    .modal-icon {
-      font-size: 3.2rem;
-      margin-bottom: 12px;
-    }
-    .modal-title {
-      font-size: 1.4rem;
+    .auth-modal-title {
+      font-size: 22px;
       font-weight: 800;
-      margin-bottom: 8px;
-      background: linear-gradient(90deg, #fff, #fda4af);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .modal-subtitle {
-      font-size: 0.86rem;
-      color: var(--muted);
-      line-height: 1.45;
+      color: #ffffff;
+      text-align: center;
       margin-bottom: 22px;
+      letter-spacing: -0.3px;
     }
-    .auth-form {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      text-align: left;
-    }
-    .form-group label {
-      display: block;
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: #cbd5e1;
-      margin-bottom: 5px;
-    }
-    .form-input {
+    .btn-google-auth {
       width: 100%;
-      padding: 11px 14px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border);
-      color: #fff;
-      font-size: 0.9rem;
-      outline: none;
-      transition: border 0.2s;
-    }
-    .form-input:focus {
-      border-color: var(--cyan);
-      box-shadow: 0 0 10px var(--cyan-glow);
-    }
-    .submit-btn {
-      width: 100%;
-      padding: 13px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, var(--accent), #e11d48);
+      background: #ffffff;
+      color: #111827;
       border: none;
-      color: #fff;
-      font-size: 0.95rem;
-      font-weight: 800;
+      border-radius: 50px;
+      padding: 12px 20px;
+      font-size: 15px;
+      font-weight: 700;
       cursor: pointer;
-      margin-top: 8px;
-      box-shadow: 0 4px 15px var(--accent-glow);
-      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
     }
-    .submit-btn:hover {
+    .btn-google-auth:hover {
+      background: #f8fafc;
       transform: translateY(-1px);
-      box-shadow: 0 6px 20px var(--accent-glow);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
     }
-    .switch-mode {
-      margin-top: 14px;
-      font-size: 0.8rem;
-      color: var(--muted);
+    .btn-google-auth:active {
+      transform: scale(0.99);
+    }
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 22px 0 20px 0;
+    }
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .auth-divider span {
+      padding: 0 14px;
+      color: #64748b;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+    .auth-input-wrap {
+      position: relative;
+      margin-bottom: 14px;
+    }
+    .auth-input-wrap .auth-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      pointer-events: none;
+    }
+    .auth-input-wrap input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      color: #ffffff;
+      padding: 13px 16px 13px 44px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+      box-sizing: border-box;
+    }
+    .auth-input-wrap input::placeholder {
+      color: #64748b;
+    }
+    .auth-input-wrap input:focus {
+      border-color: #3b82f6;
+      background: rgba(59, 130, 246, 0.05);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+    }
+    #auth-forgot-link {
+      color: #64748b;
+      font-size: 12px;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    #auth-forgot-link:hover {
+      color: #3b82f6;
+    }
+    #auth-error {
+      display: none;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 14px;
       text-align: center;
     }
-    .switch-link {
-      color: #38bdf8;
-      text-decoration: underline;
-      cursor: pointer;
+    .btn-auth-submit {
+      width: 100%;
+      background: #2563eb;
+      color: #ffffff;
+      border: none;
+      padding: 14px 20px;
+      border-radius: 14px;
+      font-size: 15px;
       font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.2s;
+      letter-spacing: 0.2px;
+      margin-top: 4px;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+    }
+    .btn-auth-submit:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
+    }
+    .btn-auth-submit:active {
+      transform: scale(0.99);
+    }
+    .btn-auth-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .auth-bottom-switch {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .auth-bottom-switch a {
+      color: #94a3b8;
+      font-size: 13px;
+      text-decoration: none;
+      transition: color 0.2s;
+      cursor: pointer;
+    }
+    .auth-bottom-switch a:hover {
+      color: #ffffff;
+      text-decoration: underline;
     }
 
     /* Game Viewer Modal */
@@ -740,35 +821,79 @@
     </div>
   </main>
 
-  <!-- Registration / Sign In Modal -->
+  <!-- Registration / Sign In Modal (matches Photo 2) -->
   <div class="modal-backdrop" id="authModal">
     <div class="modal-box">
       <button class="modal-close" onclick="closeAuthModal()">✕</button>
-      <div class="modal-icon">🎮</div>
-      <h3 class="modal-title" id="authTitle" data-i18n="modal_auth_title">Player Registration Required</h3>
-      <p class="modal-subtitle" id="authSub" data-i18n="modal_auth_sub">Create your free account to unlock instant access to all 12 Retro 80s Arcade &amp; Classic Games!</p>
 
-      <form class="auth-form" id="arcadeAuthForm" onsubmit="handleAuthSubmit(event)">
-        <div class="form-group" id="grpUsername">
-          <label for="inputUsername" data-i18n="lbl_username">Player Name / Handle</label>
-          <input type="text" class="form-input" id="inputUsername" placeholder="e.g. RetroGamer80" required>
+      <h2 class="auth-modal-title" id="auth-title" data-i18n="login_title">Se connecter</h2>
+
+      <!-- 1-Click Google Sign-In (Photo 2) -->
+      <button type="button" class="btn-google-auth" id="btn-google-auth" onclick="handleGoogleSignIn()">
+        <svg width="20" height="20" viewBox="0 0 24 24" style="flex-shrink:0;">
+          <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+          <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+          <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+          <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+        </svg>
+        <span id="auth-google-text" data-i18n="login_google_btn">Continuer avec Google</span>
+      </button>
+
+      <!-- Divider Line (Photo 2) -->
+      <div class="auth-divider" id="auth-divider">
+        <span data-i18n="login_divider">OU AVEC EMAIL</span>
+      </div>
+
+      <!-- Email & Password Form -->
+      <form id="arcadeAuthForm" onsubmit="handleAuthSubmit(event)">
+        <!-- Name Input (shown in SignUp mode) -->
+        <div class="auth-input-wrap" id="auth-name-group" style="display:none;">
+          <span class="auth-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </span>
+          <input type="text" class="auth-input" id="auth-name" placeholder="Votre nom" data-i18n-placeholder="signup_name">
         </div>
-        <div class="form-group">
-          <label for="inputEmail" data-i18n="lbl_email">Email Address</label>
-          <input type="email" class="form-input" id="inputEmail" placeholder="yourname@domain.com" required>
+
+        <!-- Email Input -->
+        <div class="auth-input-wrap">
+          <span class="auth-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+            </svg>
+          </span>
+          <input type="email" class="auth-input" id="auth-email" placeholder="Email" required autocomplete="email">
         </div>
-        <div class="form-group">
-          <label for="inputPassword" data-i18n="lbl_password">Password</label>
-          <input type="password" class="form-input" id="inputPassword" placeholder="••••••••" required minlength="4">
+
+        <!-- Password Input -->
+        <div class="auth-input-wrap">
+          <span class="auth-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </span>
+          <input type="password" class="auth-input" id="auth-password" placeholder="Mot de passe" required autocomplete="current-password" data-i18n-placeholder="login_password">
         </div>
-        <button type="submit" class="submit-btn" id="btnSubmitAuth" data-i18n="btn_submit_signup">
-          🚀 Create Free Account &amp; Play
-        </button>
+
+        <div style="text-align: right; margin-bottom: 14px; margin-top: -4px;">
+          <a href="#" id="auth-forgot-link" onclick="toggleRecoveryMode(event)" data-i18n="login_forgot">Mot de passe oublié ?</a>
+        </div>
+
+        <p id="recovery-hint" style="display:none; color:#10b981; font-size:12px; margin-bottom:12px; text-align:center;" data-i18n="recovery_hint">
+          Entrez votre email et votre nouveau mot de passe.
+        </p>
+
+        <div id="auth-error"></div>
+
+        <button type="submit" class="btn-auth-submit" id="auth-submit-btn" data-i18n="login_btn">Connexion</button>
       </form>
 
-      <div class="switch-mode">
-        <span id="txtSwitchPrompt" data-i18n="txt_have_account">Already have an account?</span>
-        <a class="switch-link" id="linkToggleMode" onclick="toggleAuthMode()" data-i18n="link_signin">Sign In</a>
+      <div class="auth-bottom-switch">
+        <a href="#" id="auth-toggle-link" onclick="toggleAuthMode(event)" data-i18n="login_no_account">Pas de compte ? Inscrivez-vous</a>
       </div>
     </div>
   </div>
@@ -794,6 +919,32 @@
   </footer>
 
   <script>
+    /* ============================================================
+       IA CODE STUDIO — Retro 80s Arcade Auth & Game Controller
+       Synchronized with Main Site (ia-codestudio.com) genius_session
+       ============================================================ */
+
+    // Firebase Initialization (matching main site credentials)
+    const firebaseConfig = {
+      apiKey: "AIzaSyBXJ0LstZF7c3-GI2eDtv6V7vsx0scgXHk",
+      authDomain: "ia-codestudio.firebaseapp.com",
+      projectId: "ia-codestudio",
+      storageBucket: "ia-codestudio.firebasestorage.app",
+      messagingSenderId: "977495027432",
+      appId: "1:977495027432:web:fb93e8ae7712c70df2635d",
+      measurementId: "G-YVNWE5Q6KB"
+    };
+
+    if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+      try {
+        firebase.initializeApp(firebaseConfig);
+      } catch (e) {
+        console.warn("Firebase init warning:", e);
+      }
+    }
+    const db = (typeof firebase !== 'undefined' && firebase.firestore) ? firebase.firestore() : null;
+    const auth = (typeof firebase !== 'undefined' && firebase.auth) ? firebase.auth() : null;
+
     const I18N = {
       en: {
         nav_back: "IA Code Studio",
@@ -809,19 +960,31 @@
         feat_4: "Keyboard & Touch Responsive",
         btn_play: "PLAY NOW",
         btn_close_game: "✕ Close Game",
-        modal_auth_title: "Player Registration Required",
-        modal_auth_sub: "Create your free account to unlock instant access to all 12 Retro 80s Arcade & Classic Games!",
-        lbl_username: "Player Name / Handle",
-        lbl_email: "Email Address",
-        lbl_password: "Password",
-        btn_submit_signup: "🚀 Create Free Account & Play",
-        btn_submit_signin: "🔓 Sign In & Play",
-        txt_have_account: "Already have an account?",
-        txt_need_account: "Need an account?",
-        link_signin: "Sign In",
-        link_signup: "Register Now",
+
+        // Auth Modal (Photo 2)
+        login_title: "Sign In",
+        signup_title: "Create an Account",
+        recovery_title: "Reset Password",
+        login_google_btn: "Continue with Google",
+        login_divider: "OR WITH EMAIL",
+        signup_name: "Your name",
+        login_password: "Password",
+        login_forgot: "Forgot password?",
+        recovery_hint: "Enter your email and your new password.",
+        recovery_btn: "Save & Sign In",
+        login_btn: "Sign In",
+        signup_btn: "Create Account",
+        login_no_account: "No account? Sign up",
+        login_has_account: "Already have an account? Sign in",
         logged_as: "Player:",
         btn_logout: "Logout",
+        auth_err_email_req: "Please enter a valid email address.",
+        auth_err_pwd_req: "Password must be at least 4 characters.",
+        auth_err_not_found: "Account not found.",
+        auth_err_taken: "Email already registered.",
+        auth_err_invalid: "Incorrect email or password.",
+
+        // Controls & Games
         ctrl_pinball: "Controls: Left/Right Flippers, Space / Plunger",
         ctrl_arrow: "Controls: Arrow keys / Swipe gestures / D-Pad",
         ctrl_invaders: "Controls: Left/Right to move, Space / Tap to shoot",
@@ -873,19 +1036,31 @@
         feat_4: "Contrôles Clavier et Tactile Réactifs",
         btn_play: "JOUER",
         btn_close_game: "✕ Fermer le Jeu",
-        modal_auth_title: "Inscription Joueur Requise",
-        modal_auth_sub: "Créez votre compte gratuit pour débloquer l'accès instantané aux 12 Jeux Rétro Arcade & Classiques !",
-        lbl_username: "Nom de Joueur / Pseudo",
-        lbl_email: "Adresse Email",
-        lbl_password: "Mot de Passe",
-        btn_submit_signup: "🚀 Créer mon Compte & Jouer",
-        btn_submit_signin: "🔓 Se Connecter & Jouer",
-        txt_have_account: "Vous avez déjà un compte ?",
-        txt_need_account: "Pas encore de compte ?",
-        link_signin: "Connexion",
-        link_signup: "Inscription",
+
+        // Auth Modal (Photo 2)
+        login_title: "Se connecter",
+        signup_title: "Créer un compte",
+        recovery_title: "Récupération",
+        login_google_btn: "Continuer avec Google",
+        login_divider: "OU AVEC EMAIL",
+        signup_name: "Votre nom",
+        login_password: "Mot de passe",
+        login_forgot: "Mot de passe oublié ?",
+        recovery_hint: "Entrez votre email et votre nouveau mot de passe.",
+        recovery_btn: "Sauvegarder et Connecter",
+        login_btn: "Connexion",
+        signup_btn: "S'inscrire",
+        login_no_account: "Pas de compte ? Inscrivez-vous",
+        login_has_account: "Déjà un compte ? Connectez-vous",
         logged_as: "Joueur :",
         btn_logout: "Déconnexion",
+        auth_err_email_req: "Veuillez entrer une adresse email valide.",
+        auth_err_pwd_req: "Le mot de passe doit comporter au moins 4 caractères.",
+        auth_err_not_found: "Compte introuvable.",
+        auth_err_taken: "Email déjà utilisé.",
+        auth_err_invalid: "Email ou mot de passe incorrect.",
+
+        // Controls & Games
         ctrl_pinball: "Commandes : Flips Gauche/Droite, Espace / Lance-bille",
         ctrl_arrow: "Commandes : Flèches / Glissement tactile / D-Pad",
         ctrl_invaders: "Commandes : Flèches Gauche/Droite, Espace / Tactile pour tirer",
@@ -925,14 +1100,18 @@
       }
     };
 
-    let currentLang = 'en';
-    let isSignUpMode = true;
+    let currentLang = localStorage.getItem('hub_lang') || 'en';
+    let isSignUpMode = false;
+    let isRecoveryMode = false;
     let pendingGameUrl = null;
     let pendingGameTitle = null;
 
     function setLanguage(lang) {
+      if (!I18N[lang]) lang = 'en';
       currentLang = lang;
       document.documentElement.lang = lang;
+      localStorage.setItem('hub_lang', lang);
+
       document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
       });
@@ -942,6 +1121,13 @@
           el.textContent = I18N[lang][k];
         }
       });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const k = el.getAttribute('data-i18n-placeholder');
+        if (I18N[lang] && I18N[lang][k]) {
+          el.placeholder = I18N[lang][k];
+        }
+      });
+      updateAuthModalUI();
       renderAuthNav();
     }
 
@@ -949,12 +1135,18 @@
       b.addEventListener('click', () => setLanguage(b.getAttribute('data-lang')));
     });
 
-    // Check Authentication
+    // Check Authentication (Unified with genius_session & retro_arcade_user)
     function getCurrentUser() {
       try {
         const raw = localStorage.getItem('genius_session') || localStorage.getItem('retro_arcade_user');
         if (!raw) return null;
-        return typeof raw === 'string' && raw.startsWith('{') ? JSON.parse(raw) : { username: raw };
+        const u = (typeof raw === 'string' && raw.startsWith('{')) ? JSON.parse(raw) : { name: raw, username: raw };
+        const displayName = u.name || u.username || (u.email ? u.email.split('@')[0] : 'Player');
+        return {
+          ...u,
+          displayName: displayName,
+          role: u.role || 'User' // Default to standard user
+        };
       } catch (e) {
         return null;
       }
@@ -963,11 +1155,14 @@
     function renderAuthNav() {
       const user = getCurrentUser();
       const area = document.getElementById('authArea');
-      if (user && user.username) {
+      if (user && user.displayName) {
+        const avatarHtml = user.photoURL 
+          ? `<img src="${user.photoURL}" style="width:20px;height:20px;border-radius:50%;object-fit:cover;vertical-align:middle;border:1px solid #38bdf8;" />`
+          : `<span>👤</span>`;
         area.innerHTML = `
           <div class="user-badge">
-            <span>👤</span>
-            <span>${I18N[currentLang].logged_as} <strong>${user.username}</strong></span>
+            ${avatarHtml}
+            <span>${I18N[currentLang].logged_as} <strong>${user.displayName}</strong></span>
             <button onclick="handleLogout()" style="background:none; border:none; color:#fda4af; cursor:pointer; font-size:0.75rem; font-weight:700; margin-left:6px; text-decoration:underline;">
               (${I18N[currentLang].btn_logout})
             </button>
@@ -987,6 +1182,9 @@
         pendingGameUrl = forGameUrl;
         pendingGameTitle = forGameTitle;
       }
+      const errBox = document.getElementById('auth-error');
+      if (errBox) errBox.style.display = 'none';
+      updateAuthModalUI();
       document.getElementById('authModal').classList.add('active');
     }
 
@@ -994,73 +1192,394 @@
       document.getElementById('authModal').classList.remove('active');
     }
 
-    function toggleAuthMode() {
+    function toggleAuthMode(e) {
+      if (e) e.preventDefault();
       isSignUpMode = !isSignUpMode;
-      const grpUsername = document.getElementById('grpUsername');
-      const inputUsername = document.getElementById('inputUsername');
-      const authTitle = document.getElementById('authTitle');
-      const btnSubmit = document.getElementById('btnSubmitAuth');
-      const txtPrompt = document.getElementById('txtSwitchPrompt');
-      const linkToggle = document.getElementById('linkToggleMode');
+      isRecoveryMode = false;
+      updateAuthModalUI();
+    }
 
-      if (isSignUpMode) {
-        grpUsername.style.display = 'block';
-        inputUsername.required = true;
-        authTitle.textContent = I18N[currentLang].modal_auth_title;
-        btnSubmit.textContent = I18N[currentLang].btn_submit_signup;
-        txtPrompt.textContent = I18N[currentLang].txt_have_account;
-        linkToggle.textContent = I18N[currentLang].link_signin;
+    function toggleRecoveryMode(e) {
+      if (e) e.preventDefault();
+      isRecoveryMode = true;
+      isSignUpMode = false;
+      updateAuthModalUI();
+    }
+
+    function updateAuthModalUI() {
+      const title = document.getElementById('auth-title');
+      const googleBtn = document.getElementById('btn-google-auth');
+      const divider = document.getElementById('auth-divider');
+      const nameGroup = document.getElementById('auth-name-group');
+      const nameInput = document.getElementById('auth-name');
+      const forgotLink = document.getElementById('auth-forgot-link');
+      const recoveryHint = document.getElementById('recovery-hint');
+      const submitBtn = document.getElementById('auth-submit-btn');
+      const toggleLink = document.getElementById('auth-toggle-link');
+      const errBox = document.getElementById('auth-error');
+      if (errBox) errBox.style.display = 'none';
+
+      const t = I18N[currentLang] || I18N.en;
+
+      if (isRecoveryMode) {
+        if (nameGroup) { nameGroup.style.display = 'none'; nameInput.required = false; }
+        if (googleBtn) googleBtn.style.display = 'none';
+        if (divider) divider.style.display = 'none';
+        if (forgotLink) forgotLink.style.display = 'none';
+        if (recoveryHint) recoveryHint.style.display = 'block';
+        if (title) title.textContent = t.recovery_title;
+        if (submitBtn) submitBtn.textContent = t.recovery_btn;
+        if (toggleLink) {
+          toggleLink.textContent = t.login_has_account;
+          toggleLink.onclick = (e) => { e.preventDefault(); isRecoveryMode = false; isSignUpMode = false; updateAuthModalUI(); };
+        }
+      } else if (isSignUpMode) {
+        if (nameGroup) { nameGroup.style.display = 'block'; nameInput.required = true; }
+        if (googleBtn) googleBtn.style.display = 'flex';
+        if (divider) divider.style.display = 'flex';
+        if (forgotLink) forgotLink.style.display = 'none';
+        if (recoveryHint) recoveryHint.style.display = 'none';
+        if (title) title.textContent = t.signup_title;
+        if (submitBtn) submitBtn.textContent = t.signup_btn;
+        if (toggleLink) {
+          toggleLink.textContent = t.login_has_account;
+          toggleLink.onclick = toggleAuthMode;
+        }
       } else {
-        grpUsername.style.display = 'none';
-        inputUsername.required = false;
-        authTitle.textContent = I18N[currentLang].link_signin;
-        btnSubmit.textContent = I18N[currentLang].btn_submit_signin;
-        txtPrompt.textContent = I18N[currentLang].txt_need_account;
-        linkToggle.textContent = I18N[currentLang].link_signup;
+        if (nameGroup) { nameGroup.style.display = 'none'; nameInput.required = false; }
+        if (googleBtn) googleBtn.style.display = 'flex';
+        if (divider) divider.style.display = 'flex';
+        if (forgotLink) forgotLink.style.display = 'inline-block';
+        if (recoveryHint) recoveryHint.style.display = 'none';
+        if (title) title.textContent = t.login_title;
+        if (submitBtn) submitBtn.textContent = t.login_btn;
+        if (toggleLink) {
+          toggleLink.textContent = t.login_no_account;
+          toggleLink.onclick = toggleAuthMode;
+        }
       }
     }
 
-    function handleAuthSubmit(e) {
+    // Google Sign-In with 1-Click Popup (matching Photo 2 & Admin Portal)
+    async function handleGoogleSignIn() {
+      const errBox = document.getElementById('auth-error');
+      if (errBox) errBox.style.display = 'none';
+
+      try {
+        if (!auth) {
+          throw new Error(currentLang === 'fr' ? "Service d'authentification indisponible." : "Authentication service unavailable.");
+        }
+
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
+
+        const result = await auth.signInWithPopup(provider);
+        const fbUser = result.user;
+        if (!fbUser || !fbUser.email) {
+          throw new Error("No user email returned");
+        }
+
+        const email = fbUser.email.toLowerCase();
+        const isAdmin = email === 'andart1174@gmail.com';
+        const displayName = fbUser.displayName || email.split('@')[0];
+        const photoURL = fbUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=7c3aed&color=fff&bold=true`;
+
+        // Check if banned
+        if (db) {
+          try {
+            const uDoc = await db.collection('users').doc(email).get();
+            if (uDoc.exists && uDoc.data().banned === true) {
+              await auth.signOut();
+              if (errBox) {
+                errBox.textContent = currentLang === 'en' ? "Your account has been banned." : "Votre compte a été banni.";
+                errBox.style.display = 'block';
+              }
+              return;
+            }
+          } catch (e) {
+            console.warn("Ban check warning:", e);
+          }
+        }
+
+        // Save session with role: 'User' (Simple user, NOT premium/admin)
+        const sessionUser = {
+          email: email,
+          name: displayName,
+          username: displayName,
+          role: isAdmin ? 'Admin' : 'User', // Simple user role
+          photoURL: photoURL,
+          uid: fbUser.uid,
+          loginAt: Date.now()
+        };
+
+        localStorage.setItem('genius_session', JSON.stringify(sessionUser));
+        localStorage.setItem('retro_arcade_user', JSON.stringify(sessionUser));
+        localStorage.setItem('custom_display_name_' + email, displayName);
+
+        // Update local users array (ia_users)
+        let users = JSON.parse(localStorage.getItem('ia_users') || '[]');
+        users = users.filter(u => u.email !== email);
+        users.push(sessionUser);
+        localStorage.setItem('ia_users', JSON.stringify(users));
+
+        // Sync Firestore
+        if (db) {
+          const userData = {
+            email: email,
+            displayName: displayName,
+            name: displayName,
+            photoURL: photoURL,
+            uid: fbUser.uid,
+            role: isAdmin ? 'Admin' : 'User',
+            lastLogin: Date.now(),
+            lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+          };
+          try {
+            await db.collection('users').doc(email).set(userData, { merge: true });
+          } catch (e) {
+            console.warn("Firestore sync warning:", e);
+          }
+        }
+
+        closeAuthModal();
+        renderAuthNav();
+
+        // Launch pending game if waiting
+        if (pendingGameUrl) {
+          const url = pendingGameUrl;
+          const title = pendingGameTitle;
+          pendingGameUrl = null;
+          pendingGameTitle = null;
+          launchGame(url, title);
+        }
+      } catch (err) {
+        console.error("Google Auth Error:", err);
+        if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
+          return;
+        }
+        if (errBox) {
+          let msg = err.message || (currentLang === 'fr' ? "Échec de la connexion avec Google." : "Google sign in failed.");
+          if (err.code === 'auth/unauthorized-domain') {
+            msg = currentLang === 'fr' ? "Domaine non autorisé dans Firebase Console." : "Unauthorized domain in Firebase Console.";
+          }
+          errBox.textContent = msg;
+          errBox.style.display = 'block';
+        }
+      }
+    }
+    window.handleGoogleSignIn = handleGoogleSignIn;
+
+    // Email / Password Form Submit (Sign In, Sign Up, Recovery)
+    async function handleAuthSubmit(e) {
       e.preventDefault();
-      const email = document.getElementById('inputEmail').value.trim();
-      const username = isSignUpMode 
-        ? document.getElementById('inputUsername').value.trim() 
-        : email.split('@')[0];
+      const emailInput = document.getElementById('auth-email');
+      const passwordInput = document.getElementById('auth-password');
+      const nameInput = document.getElementById('auth-name');
+      const errBox = document.getElementById('auth-error');
+      const submitBtn = document.getElementById('auth-submit-btn');
 
-      const sessionObj = {
-        username: username,
-        email: email,
-        loginDate: new Date().toISOString()
-      };
+      const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+      const password = passwordInput ? passwordInput.value : '';
+      const name = nameInput ? nameInput.value.trim() : '';
 
-      localStorage.setItem('genius_session', JSON.stringify(sessionObj));
-      localStorage.setItem('retro_arcade_user', JSON.stringify(sessionObj));
+      const t = I18N[currentLang] || I18N.en;
 
-      closeAuthModal();
-      renderAuthNav();
-
-      if (pendingGameUrl) {
-        const url = pendingGameUrl;
-        const title = pendingGameTitle;
-        pendingGameUrl = null;
-        pendingGameTitle = null;
-        launchGame(url, title);
+      if (!email || !email.includes('@')) {
+        if (errBox) {
+          errBox.textContent = t.auth_err_email_req;
+          errBox.style.display = 'block';
+        }
+        return;
       }
-    }
+      if (!password || password.length < 4) {
+        if (errBox) {
+          errBox.textContent = t.auth_err_pwd_req;
+          errBox.style.display = 'block';
+        }
+        return;
+      }
 
-    function handleLogout() {
+      submitBtn.disabled = true;
+      submitBtn.textContent = '⏳...';
+
+      let users = JSON.parse(localStorage.getItem('ia_users') || '[]');
+      const isAdmin = email === 'andart1174@gmail.com';
+
+      // Check if banned
+      if (db) {
+        try {
+          const fbUserDoc = await db.collection('users').doc(email).get();
+          if (fbUserDoc.exists && fbUserDoc.data().banned === true) {
+            errBox.textContent = currentLang === 'en' ? "Your account has been banned." : "Votre compte a été banni.";
+            errBox.style.display = 'block';
+            submitBtn.disabled = false;
+            updateAuthModalUI();
+            return;
+          }
+        } catch (err) { console.warn(err); }
+      }
+
+      if (isRecoveryMode) {
+        let userToReset = users.find(u => u.email === email);
+        if (!userToReset && db) {
+          try {
+            const doc = await db.collection('users').doc(email).get();
+            if (doc.exists) userToReset = doc.data();
+          } catch (e) { console.warn(e); }
+        }
+
+        if (userToReset) {
+          userToReset.password = password;
+          if (isAdmin && userToReset.role !== 'Admin') userToReset.role = 'Admin';
+
+          if (db) {
+            try { await db.collection('users').doc(userToReset.email).set(userToReset, { merge: true }); } catch (e) {}
+          }
+
+          users = users.filter(u => u.email !== userToReset.email);
+          users.push(userToReset);
+          localStorage.setItem('ia_users', JSON.stringify(users));
+
+          const sessionUser = {
+            email: userToReset.email,
+            name: userToReset.name || userToReset.email.split('@')[0],
+            username: userToReset.name || userToReset.email.split('@')[0],
+            role: userToReset.role || 'User',
+            loginAt: Date.now()
+          };
+          localStorage.setItem('genius_session', JSON.stringify(sessionUser));
+          localStorage.setItem('retro_arcade_user', JSON.stringify(sessionUser));
+
+          closeAuthModal();
+          renderAuthNav();
+          if (pendingGameUrl) {
+            const url = pendingGameUrl;
+            const title = pendingGameTitle;
+            pendingGameUrl = null;
+            pendingGameTitle = null;
+            launchGame(url, title);
+          }
+        } else {
+          errBox.textContent = t.auth_err_not_found;
+          errBox.style.display = 'block';
+        }
+      } else if (isSignUpMode) {
+        let existingUser = users.find(u => u.email === email);
+        if (!existingUser && db) {
+          try {
+            const doc = await db.collection('users').doc(email).get();
+            if (doc.exists) existingUser = doc.data();
+          } catch (e) { console.warn(e); }
+        }
+
+        if (existingUser) {
+          errBox.textContent = t.auth_err_taken;
+          errBox.style.display = 'block';
+        } else {
+          const finalName = name || email.split('@')[0];
+          // User role is strictly simple user 'User', NOT premium
+          const newUser = {
+            email: email,
+            password: password,
+            name: finalName,
+            username: finalName,
+            role: isAdmin ? 'Admin' : 'User', // Simple user
+            createdAt: Date.now()
+          };
+
+          if (db) {
+            try { await db.collection('users').doc(newUser.email).set(newUser, { merge: true }); } catch (e) {}
+          }
+
+          users.push(newUser);
+          localStorage.setItem('ia_users', JSON.stringify(users));
+
+          const sessionUser = {
+            email: newUser.email,
+            name: newUser.name,
+            username: newUser.name,
+            role: newUser.role,
+            loginAt: Date.now()
+          };
+          localStorage.setItem('genius_session', JSON.stringify(sessionUser));
+          localStorage.setItem('retro_arcade_user', JSON.stringify(sessionUser));
+
+          closeAuthModal();
+          renderAuthNav();
+          if (pendingGameUrl) {
+            const url = pendingGameUrl;
+            const title = pendingGameTitle;
+            pendingGameUrl = null;
+            pendingGameTitle = null;
+            launchGame(url, title);
+          }
+        }
+      } else {
+        // Sign In Mode
+        let match = users.find(u => u.email === email && u.password === password);
+        if (!match && db) {
+          try {
+            const doc = await db.collection('users').doc(email).get();
+            if (doc.exists) {
+              const fbUser = doc.data();
+              if (fbUser.password === password) {
+                match = fbUser;
+                users.push(fbUser);
+                localStorage.setItem('ia_users', JSON.stringify(users));
+              }
+            }
+          } catch (e) { console.warn(e); }
+        }
+
+        if (match) {
+          const sessionUser = {
+            email: match.email,
+            name: match.name || match.email.split('@')[0],
+            username: match.name || match.email.split('@')[0],
+            role: match.role || 'User', // Simple user
+            loginAt: Date.now()
+          };
+          localStorage.setItem('genius_session', JSON.stringify(sessionUser));
+          localStorage.setItem('retro_arcade_user', JSON.stringify(sessionUser));
+
+          closeAuthModal();
+          renderAuthNav();
+          if (pendingGameUrl) {
+            const url = pendingGameUrl;
+            const title = pendingGameTitle;
+            pendingGameUrl = null;
+            pendingGameTitle = null;
+            launchGame(url, title);
+          }
+        } else {
+          errBox.textContent = t.auth_err_invalid;
+          errBox.style.display = 'block';
+        }
+      }
+
+      submitBtn.disabled = false;
+      updateAuthModalUI();
+    }
+    window.handleAuthSubmit = handleAuthSubmit;
+
+    // Logout
+    async function handleLogout() {
       localStorage.removeItem('genius_session');
       localStorage.removeItem('retro_arcade_user');
+      if (auth) {
+        try { await auth.signOut(); } catch (e) {}
+      }
       renderAuthNav();
     }
+    window.handleLogout = handleLogout;
 
+    // Game Launcher
     function launchGame(fileUrl, title) {
       const user = getCurrentUser();
       if (!user) {
         openAuthModal(fileUrl, title);
         return;
       }
-      // Open in fullscreen overlay modal
       const modal = document.getElementById('gameModal');
       const frame = document.getElementById('gameFrame');
       const titleEl = document.getElementById('gameModalTitleText');
@@ -1070,6 +1589,7 @@
       modal.classList.add('active');
       document.body.style.overflow = 'hidden';
     }
+    window.launchGame = launchGame;
 
     function closeGameModal() {
       const modal = document.getElementById('gameModal');
@@ -1078,9 +1598,46 @@
       modal.classList.remove('active');
       document.body.style.overflow = '';
     }
+    window.closeGameModal = closeGameModal;
 
-    // Initialize
-    setLanguage('en');
+    // Firebase Auth State Listener (Automatic Background Two-Way Sync)
+    if (auth) {
+      auth.onAuthStateChanged((fbUser) => {
+        if (fbUser && fbUser.email) {
+          const current = getCurrentUser();
+          if (!current || !current.email) {
+            const email = fbUser.email.toLowerCase();
+            const isAdmin = email === 'andart1174@gmail.com';
+            const displayName = fbUser.displayName || email.split('@')[0];
+            const photoURL = fbUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=7c3aed&color=fff&bold=true`;
+            const sessionUser = {
+              email: email,
+              name: displayName,
+              username: displayName,
+              role: isAdmin ? 'Admin' : 'User',
+              photoURL: photoURL,
+              uid: fbUser.uid,
+              loginAt: Date.now()
+            };
+            localStorage.setItem('genius_session', JSON.stringify(sessionUser));
+            localStorage.setItem('retro_arcade_user', JSON.stringify(sessionUser));
+            renderAuthNav();
+          }
+        }
+      });
+    }
+
+    // Export methods to global window for inline event handlers
+    window.getCurrentUser = getCurrentUser;
+    window.renderAuthNav = renderAuthNav;
+    window.openAuthModal = openAuthModal;
+    window.closeAuthModal = closeAuthModal;
+    window.toggleAuthMode = toggleAuthMode;
+    window.toggleRecoveryMode = toggleRecoveryMode;
+    window.setLanguage = setLanguage;
+
+    // Initialize UI
+    setLanguage(currentLang);
     renderAuthNav();
   </script>
 </body>
