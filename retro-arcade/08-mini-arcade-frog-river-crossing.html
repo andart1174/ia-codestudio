@@ -1,0 +1,875 @@
+<!--ULP-META{"id":"mini-arcade-frog-river-crossing","category":"retro-arcade","icon":"🐸","name":{"en":"1981 Tabletop Arcade: Frog River Crossing","fr":"Mini Borne Arcade 1981 : La Traversée du Fleuve"},"desc":{"en":"Authentic 1981 tabletop mini-arcade cabinet with mechanical joystick, illuminated marquee, and classic road & river crossing gameplay.","fr":"Mini-borne d'arcade de table authentique de 1981 avec joystick mécanique, bandeau lumineux et traversée classique de route et rivière."},"tags":["retro-arcade","frogger","tabletop","arcade","1981","vintage","8bit"],"features":{"en":["Photorealistic Coleco-style tabletop mini arcade cabinet with illuminated marquee and red joystick","Classic 2-phase crossing: 5 lanes of high-speed retro traffic and 5 lanes of hazardous river rapids","Interactive diving turtles, floating logs, and 5 lily pad goal bays with bonus flies","Authentic 8-bit chiptune audio with hopping chirps, splash/squash sound effects, and stage victory jingle","Touchscreen arcade joystick and D-pad on mobile or Arrow keys and WASD on desktop"],"fr":["Mini-borne d'arcade de table réaliste style Coleco avec bandeau éclairé et joystick rouge","Traversée classique en 2 phases : 5 voies de trafic rétro et 5 voies de rapides de rivière","Tortues plongeuses, rondins flottants et 5 nénuphars d'arrivée avec mouches bonus","Bande-son chiptune 8-bit avec bips de saut, bruitages d'éclaboussure et jingle de victoire","Joystick tactile sur mobile/tablette ou touches directionnelles et ZQSD sur ordinateur"]}}--><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title data-ulp="name">1981 Tabletop Arcade: Frog River Crossing</title>
+  <style>
+    :root {
+      --accent: #22c55e;
+      --accent-hover: #16a34a;
+      --accent-glow: rgba(34, 197, 94, 0.4);
+      --bg: #090e17;
+      --surface: #111a2e;
+      --surface-card: #182746;
+      --border: #243b6b;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --cabinet-body: #ea580c;
+      --cabinet-trim: #9a3412;
+      --marquee-bg: #facc15;
+      --screen-bezel: #1e293b;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: var(--surface);
+      border-bottom: 2px solid var(--border);
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      z-index: 20;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-icon {
+      font-size: 1.6rem;
+      filter: drop-shadow(0 0 10px var(--accent-glow));
+    }
+    .brand h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      font-family: "Courier New", Courier, monospace;
+      letter-spacing: 0.5px;
+    }
+    .brand p {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    button {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 0.82rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    button:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    button.active {
+      background: var(--accent);
+      color: #090e17;
+      border-color: var(--accent);
+      font-weight: 600;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+    .lang-btn {
+      font-weight: 600;
+      padding: 4px 8px;
+      font-size: 0.75rem;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+    }
+
+    /* 1981 Coleco Tabletop Arcade Housing */
+    .mini-cabinet {
+      width: 100%;
+      max-width: 420px;
+      background: linear-gradient(180deg, #f97316 0%, #ea580c 40%, #c2410c 100%);
+      border: 4px solid var(--cabinet-trim);
+      border-radius: 24px 24px 36px 36px;
+      padding: 14px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+    }
+
+    /* Illuminated Marquee */
+    .marquee {
+      background: linear-gradient(180deg, #fef08a 0%, #facc15 50%, #eab308 100%);
+      border: 3px solid #713f12;
+      border-radius: 12px;
+      padding: 6px 10px;
+      text-align: center;
+      box-shadow: 0 0 16px rgba(250, 204, 21, 0.6), inset 0 1px 2px #fff;
+    }
+    .marquee-text {
+      font-family: "Courier New", Courier, monospace;
+      font-size: 1rem;
+      font-weight: 900;
+      color: #1c1917;
+      letter-spacing: 2px;
+      text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+    }
+
+    /* Screen Bezel & Canvas */
+    .cabinet-screen-bezel {
+      background: #0f172a;
+      border: 4px solid #1e293b;
+      border-radius: 16px;
+      padding: 10px;
+      box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.9);
+      position: relative;
+    }
+
+    .screen-hud {
+      display: flex;
+      justify-content: space-between;
+      font-family: monospace;
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: #4ade80;
+      margin-bottom: 6px;
+      padding: 0 4px;
+    }
+
+    .canvas-wrap {
+      position: relative;
+      width: 100%;
+      height: 290px;
+      background: #020603;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.95);
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+    }
+
+    /* CRT Scanline Overlay */
+    .crt-scanlines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0),
+        rgba(255,255,255,0) 50%,
+        rgba(0, 0, 0, 0.45) 50%,
+        rgba(0, 0, 0, 0.45)
+      );
+      background-size: 100% 4px;
+      pointer-events: none;
+      z-index: 5;
+      opacity: 0.75;
+    }
+
+    /* Lower Control Panel */
+    .control-deck {
+      background: #1e293b;
+      border: 3px solid #0f172a;
+      border-radius: 16px;
+      padding: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.1), 0 4px 10px rgba(0,0,0,0.5);
+    }
+
+    /* Joystick Area */
+    .joystick-base {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 40%, #334155 0%, #0f172a 70%);
+      border: 3px solid #475569;
+      box-shadow: inset 0 3px 8px rgba(0,0,0,0.8), 0 4px 8px rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .joy-stick-knob {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #f87171 0%, #dc2626 55%, #991b1b 100%);
+      border: 2px solid #7f1d1d;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.7), inset 0 2px 4px rgba(255,255,255,0.6);
+      position: absolute;
+      cursor: pointer;
+      touch-action: none;
+      transition: transform 0.08s ease-out;
+    }
+
+    /* D-Pad overlay buttons around joystick for crisp taps */
+    .joy-btn {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #f8fafc;
+      font-size: 0.8rem;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .joy-btn:active { background: var(--accent); color: #000; }
+    .j-up { top: 4px; left: calc(50% - 14px); width: 28px; height: 24px; }
+    .j-down { bottom: 4px; left: calc(50% - 14px); width: 28px; height: 24px; }
+    .j-left { left: 4px; top: calc(50% - 14px); width: 24px; height: 28px; }
+    .j-right { right: 4px; top: calc(50% - 14px); width: 24px; height: 28px; }
+
+    /* Action Buttons (Jump / Start / Mode) */
+    .action-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-big-jump {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #4ade80 0%, #16a34a 60%, #14532d 100%);
+      border: 3px solid #14532d;
+      box-shadow: 0 4px 0 #052e16, inset 0 2px 4px rgba(255,255,255,0.6);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+    .btn-big-jump:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #052e16;
+    }
+
+    .aux-row {
+      display: flex;
+      gap: 6px;
+    }
+    .aux-btn {
+      padding: 4px 8px;
+      font-size: 0.7rem;
+      background: #334155;
+      border: 1px solid #475569;
+    }
+
+    @media (max-width: 600px) {
+      .mini-cabinet { padding: 10px; gap: 8px; }
+      .canvas-wrap { height: 260px; }
+      .joystick-base { width: 100px; height: 100px; }
+      .btn-big-jump { width: 60px; height: 60px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <span class="brand-icon">🐸</span>
+      <div>
+        <h1 data-ulp="name">1981 Tabletop Arcade: Frog River Crossing</h1>
+        <p id="subTitle">Classic Coleco-Style Miniature Arcade Console</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="lang-btn" data-lang="en" id="btnLangEn">EN</button>
+      <button class="lang-btn" data-lang="fr" id="btnLangFr">FR</button>
+      <button id="btnSound">
+        <span id="sndIcon">🔊</span> <span id="txtSound">Sound</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="mini-cabinet">
+      <!-- Illuminated Marquee -->
+      <div class="marquee">
+        <div class="marquee-text">FROGGER // 1981 TABLETOP</div>
+      </div>
+
+      <!-- Screen Bezel -->
+      <div class="cabinet-screen-bezel">
+        <div class="screen-hud">
+          <span><span id="lblScore">SCORE:</span> <span id="valScore">00000</span></span>
+          <span><span id="lblHi">HI:</span> <span id="valHi">04200</span></span>
+          <span><span id="lblFrogs">LIVES:</span> <span id="valLives">🐸🐸🐸</span></span>
+        </div>
+
+        <div class="canvas-wrap">
+          <canvas id="gameCanvas" width="320" height="360"></canvas>
+          <div class="crt-scanlines"></div>
+        </div>
+      </div>
+
+      <!-- Lower Control Deck -->
+      <div class="control-deck">
+        <!-- Mechanical Joystick with 4-way direction pads -->
+        <div class="joystick-base" id="joyBase">
+          <div class="joy-stick-knob" id="joyKnob"></div>
+          <div class="joy-btn j-up" id="btnJUp">▲</div>
+          <div class="joy-btn j-down" id="btnJDown">▼</div>
+          <div class="joy-btn j-left" id="btnJLeft">◀</div>
+          <div class="joy-btn j-right" id="btnJRight">▶</div>
+        </div>
+
+        <!-- Jump Action Button & Function Controls -->
+        <div class="action-panel">
+          <div class="btn-big-jump" id="btnJumpAction">
+            <span>▲</span>
+            <span id="lblJump">HOP</span>
+          </div>
+          <div class="aux-row">
+            <button class="aux-btn" id="btnStartGame">START</button>
+            <button class="aux-btn" id="btnPauseGame">PAUSE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // --- Internationalization ---
+    window.I18N = {
+      en: {
+        appName: "1981 Tabletop Arcade: Frog River Crossing",
+        subTitle: "Classic Coleco-Style Miniature Arcade Console",
+        sound: "Sound",
+        score: "SCORE:",
+        hiScore: "HI:",
+        lives: "LIVES:",
+        hop: "HOP",
+        start: "START",
+        pause: "PAUSE",
+        gameOver: "GAME OVER",
+        youWin: "VICTORY! ALL FROGS HOME",
+        pressStart: "PRESS START TO PLAY"
+      },
+      fr: {
+        appName: "Mini Borne Arcade 1981 : La Traversée du Fleuve",
+        subTitle: "Console Miniature d'Arcade Style Coleco",
+        sound: "Son",
+        score: "SCORE :",
+        hiScore: "MEILLEUR :",
+        lives: "VIES :",
+        hop: "SAUT",
+        start: "DÉPART",
+        pause: "PAUSE",
+        gameOver: "PARTIE TERMINÉE",
+        youWin: "VICTOIRE ! GRENOUILLES SAUVÉES",
+        pressStart: "APPUYEZ SUR DÉPART"
+      }
+    };
+
+    let currentLang = 'en';
+
+    function setLanguage(lang) {
+      if (!window.I18N[lang]) return;
+      currentLang = lang;
+      const t = window.I18N[lang];
+
+      document.querySelectorAll('[data-ulp="name"]').forEach(el => el.textContent = t.appName);
+      document.getElementById('subTitle').textContent = t.subTitle;
+      document.getElementById('txtSound').textContent = t.sound;
+      document.getElementById('lblScore').textContent = t.score;
+      document.getElementById('lblHi').textContent = t.hiScore;
+      document.getElementById('lblFrogs').textContent = t.lives;
+      document.getElementById('lblJump').textContent = t.hop;
+      document.getElementById('btnStartGame').textContent = t.start;
+      document.getElementById('btnPauseGame').textContent = t.pause;
+
+      document.getElementById('btnLangEn').classList.toggle('active', lang === 'en');
+      document.getElementById('btnLangFr').classList.toggle('active', lang === 'fr');
+      document.documentElement.lang = lang;
+    }
+
+    document.getElementById('btnLangEn').addEventListener('click', () => setLanguage('en'));
+    document.getElementById('btnLangFr').addEventListener('click', () => setLanguage('fr'));
+
+    // --- Audio Synthesizer (8-Bit Chiptune) ---
+    class FroggerAudio {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+      init() {
+        if (this.ctx) return;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        this.ctx = new AudioCtx();
+      }
+      toggle() {
+        this.enabled = !this.enabled;
+        return this.enabled;
+      }
+      playHop() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(320, now);
+        osc.frequency.exponentialRampToValueAtTime(700, now + 0.06);
+
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.07);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.08);
+      }
+      playSquash() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(140, now);
+        osc.frequency.exponentialRampToValueAtTime(40, now + 0.25);
+
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.28);
+      }
+      playWin() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        [523, 659, 783, 1046].forEach((f, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(f, now + idx * 0.08);
+          gain.gain.setValueAtTime(0.09, now + idx * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.08 + 0.07);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + idx * 0.08);
+          osc.stop(now + idx * 0.08 + 0.08);
+        });
+      }
+    }
+
+    const audio = new FroggerAudio();
+    const btnSound = document.getElementById('btnSound');
+    const sndIcon = document.getElementById('sndIcon');
+    btnSound.addEventListener('click', () => {
+      const active = audio.toggle();
+      sndIcon.textContent = active ? '🔊' : '🔇';
+      btnSound.classList.toggle('active', active);
+    });
+
+    // --- Game Logic & Grid Setup ---
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const GW = 320;
+    const GH = 360;
+    const ROW_H = 24;
+    const ROWS = 14;
+
+    let score = 0;
+    let hiScore = 4200;
+    let lives = 3;
+    let isPlaying = false;
+    let isGameOver = false;
+    let isPaused = false;
+
+    // Frog
+    let frog = { x: 148, y: 13 * ROW_H + 2, w: 20, h: 20, dir: 'up' };
+
+    // 5 Bays at Row 1 (y: 24)
+    const bays = [
+      { x: 20, occupied: false },
+      { x: 85, occupied: false },
+      { x: 150, occupied: false },
+      { x: 215, occupied: false },
+      { x: 280, occupied: false }
+    ];
+
+    // Obstacles
+    // Row 2-6: River Rapids (moving right or left)
+    // Row 7: Safe purple median
+    // Row 8-12: Road traffic
+    // Row 13: Starting grass
+    let riverItems = [];
+    let roadVehicles = [];
+
+    function initObstacles() {
+      riverItems = [
+        // Row 2: Logs (Speed 1.2 Right)
+        { row: 2, x: 20, w: 80, speed: 1.2, type: 'log' },
+        { row: 2, x: 180, w: 80, speed: 1.2, type: 'log' },
+
+        // Row 3: Turtles (Speed -1.4 Left)
+        { row: 3, x: 50, w: 55, speed: -1.4, type: 'turtle', dive: false },
+        { row: 3, x: 170, w: 55, speed: -1.4, type: 'turtle', dive: false },
+        { row: 3, x: 270, w: 55, speed: -1.4, type: 'turtle', dive: false },
+
+        // Row 4: Big Logs (Speed 1.8 Right)
+        { row: 4, x: 10, w: 110, speed: 1.8, type: 'log' },
+        { row: 4, x: 200, w: 110, speed: 1.8, type: 'log' },
+
+        // Row 5: Logs (Speed 1.0 Right)
+        { row: 5, x: 60, w: 70, speed: 1.0, type: 'log' },
+        { row: 5, x: 220, w: 70, speed: 1.0, type: 'log' },
+
+        // Row 6: Diving Turtles (Speed -1.2 Left)
+        { row: 6, x: 30, w: 55, speed: -1.2, type: 'turtle', dive: true },
+        { row: 6, x: 150, w: 55, speed: -1.2, type: 'turtle', dive: true },
+        { row: 6, x: 260, w: 55, speed: -1.2, type: 'turtle', dive: true }
+      ];
+
+      roadVehicles = [
+        // Row 8: Yellow Taxis (Speed -1.5 Left)
+        { row: 8, x: 40, w: 32, speed: -1.5, color: '#facc15' },
+        { row: 8, x: 180, w: 32, speed: -1.5, color: '#facc15' },
+
+        // Row 9: White Sedans (Speed 1.2 Right)
+        { row: 9, x: 20, w: 30, speed: 1.2, color: '#ffffff' },
+        { row: 9, x: 160, w: 30, speed: 1.2, color: '#ffffff' },
+
+        // Row 10: Purple Racers (Speed -2.4 Left)
+        { row: 10, x: 80, w: 28, speed: -2.4, color: '#c084fc' },
+        { row: 10, x: 240, w: 28, speed: -2.4, color: '#c084fc' },
+
+        // Row 11: Green Trucks (Speed 1.0 Right)
+        { row: 11, x: 30, w: 50, speed: 1.0, color: '#4ade80' },
+        { row: 11, x: 200, w: 50, speed: 1.0, color: '#4ade80' },
+
+        // Row 12: Red Coupes (Speed -1.8 Left)
+        { row: 12, x: 60, w: 30, speed: -1.8, color: '#f87171' },
+        { row: 12, x: 220, w: 30, speed: -1.8, color: '#f87171' }
+      ];
+    }
+    initObstacles();
+
+    function resetFrog() {
+      frog.x = 148;
+      frog.y = 13 * ROW_H + 2;
+      frog.dir = 'up';
+    }
+
+    function die() {
+      audio.playSquash();
+      lives--;
+      updateLivesDisplay();
+      if (lives <= 0) {
+        isGameOver = true;
+        isPlaying = false;
+      } else {
+        resetFrog();
+      }
+    }
+
+    function updateLivesDisplay() {
+      let str = '';
+      for (let i = 0; i < lives; i++) str += '🐸';
+      document.getElementById('valLives').textContent = str;
+    }
+
+    // --- Controls ---
+    function moveFrog(dx, dy, dir) {
+      if (!isPlaying || isGameOver || isPaused) return;
+
+      audio.playHop();
+      frog.x += dx * 22;
+      frog.y += dy * ROW_H;
+      frog.dir = dir;
+
+      // Bounds
+      if (frog.x < 10) frog.x = 10;
+      if (frog.x > GW - 30) frog.x = GW - 30;
+
+      // Forward step score
+      if (dy < 0) {
+        score += 10;
+        document.getElementById('valScore').textContent = String(score).padStart(5, '0');
+        if (score > hiScore) {
+          hiScore = score;
+          document.getElementById('valHi').textContent = String(hiScore).padStart(5, '0');
+        }
+      }
+
+      // Check Bays (Row 1, y: 24)
+      if (frog.y <= ROW_H + 4) {
+        let reachedBay = false;
+        bays.forEach(bay => {
+          if (!bay.occupied && Math.abs(frog.x + 10 - (bay.x + 12)) < 18) {
+            bay.occupied = true;
+            reachedBay = true;
+            score += 200;
+            audio.playWin();
+            document.getElementById('valScore').textContent = String(score).padStart(5, '0');
+            resetFrog();
+
+            // All bays filled -> Level clear
+            if (bays.every(b => b.occupied)) {
+              bays.forEach(b => b.occupied = false);
+              score += 1000;
+              document.getElementById('valScore').textContent = String(score).padStart(5, '0');
+            }
+          }
+        });
+
+        if (!reachedBay) {
+          die(); // Hit the green bank hedge
+        }
+      }
+    }
+
+    // Joystick knob animation
+    const joyKnob = document.getElementById('joyKnob');
+    function deflectJoy(x, y) {
+      joyKnob.style.transform = `translate(${x}px, ${y}px)`;
+      setTimeout(() => { joyKnob.style.transform = 'translate(0, 0)'; }, 120);
+    }
+
+    document.getElementById('btnJUp').addEventListener('click', () => { deflectJoy(0, -14); moveFrog(0, -1, 'up'); });
+    document.getElementById('btnJDown').addEventListener('click', () => { deflectJoy(0, 14); moveFrog(0, 1, 'down'); });
+    document.getElementById('btnJLeft').addEventListener('click', () => { deflectJoy(-14, 0); moveFrog(-1, 0, 'left'); });
+    document.getElementById('btnJRight').addEventListener('click', () => { deflectJoy(14, 0); moveFrog(1, 0, 'right'); });
+    document.getElementById('btnJumpAction').addEventListener('click', () => { deflectJoy(0, -14); moveFrog(0, -1, 'up'); });
+
+    // Keyboard support
+    window.addEventListener('keydown', (e) => {
+      const k = e.key.toLowerCase();
+      if (k === 'arrowup' || k === 'w') { moveFrog(0, -1, 'up'); deflectJoy(0, -14); }
+      else if (k === 'arrowdown' || k === 's') { moveFrog(0, 1, 'down'); deflectJoy(0, 14); }
+      else if (k === 'arrowleft' || k === 'a') { moveFrog(-1, 0, 'left'); deflectJoy(-14, 0); }
+      else if (k === 'arrowright' || k === 'd') { moveFrog(1, 0, 'right'); deflectJoy(14, 0); }
+      else if (k === ' ') { moveFrog(0, -1, 'up'); deflectJoy(0, -14); }
+    });
+
+    document.getElementById('btnStartGame').addEventListener('click', () => {
+      score = 0;
+      lives = 3;
+      isGameOver = false;
+      isPlaying = true;
+      isPaused = false;
+      bays.forEach(b => b.occupied = false);
+      updateLivesDisplay();
+      document.getElementById('valScore').textContent = '00000';
+      resetFrog();
+    });
+
+    document.getElementById('btnPauseGame').addEventListener('click', () => {
+      if (isPlaying) isPaused = !isPaused;
+    });
+
+    // --- Main Physics Loop ---
+    let frame = 0;
+    function update() {
+      if (!isPlaying || isPaused || isGameOver) return;
+      frame++;
+
+      // Update Road Vehicles
+      roadVehicles.forEach(v => {
+        v.x += v.speed;
+        if (v.speed > 0 && v.x > GW) v.x = -v.w;
+        if (v.speed < 0 && v.x < -v.w) v.x = GW;
+
+        // Collision with Frog on road rows (8 to 12)
+        const rowY = v.row * ROW_H;
+        if (frog.y >= rowY - 4 && frog.y <= rowY + 14) {
+          if (frog.x + frog.w > v.x + 4 && frog.x < v.x + v.w - 4) {
+            die();
+          }
+        }
+      });
+
+      // Update River Items (Row 2 to 6)
+      let onPlatform = false;
+      let platformSpeed = 0;
+
+      riverItems.forEach(item => {
+        item.x += item.speed;
+        if (item.speed > 0 && item.x > GW) item.x = -item.w;
+        if (item.speed < 0 && item.x < -item.w) item.x = GW;
+
+        const rowY = item.row * ROW_H;
+        if (frog.y >= rowY - 4 && frog.y <= rowY + 14) {
+          if (frog.x + frog.w > item.x && frog.x < item.x + item.w) {
+            onPlatform = true;
+            platformSpeed = item.speed;
+          }
+        }
+      });
+
+      // If frog is in river zone (Row 2 to 6, y <= 6 * ROW_H) and NOT on platform -> drown
+      if (frog.y <= 6 * ROW_H + 10 && frog.y > ROW_H + 4) {
+        if (onPlatform) {
+          frog.x += platformSpeed;
+          if (frog.x < 0 || frog.x > GW - frog.w) die();
+        } else {
+          die();
+        }
+      }
+    }
+
+    // --- Pixel Art Render Loop ---
+    function draw() {
+      ctx.fillStyle = '#020603';
+      ctx.fillRect(0, 0, GW, GH);
+
+      // Top Goal Bays Area (Row 0 & 1: Dark Blue water & Green bank)
+      ctx.fillStyle = '#0f766e';
+      ctx.fillRect(0, 0, GW, ROW_H * 2);
+
+      // 5 Lily pad bays
+      bays.forEach(bay => {
+        ctx.fillStyle = '#022c22';
+        ctx.fillRect(bay.x, 22, 28, 22);
+        if (bay.occupied) {
+          ctx.fillStyle = '#22c55e';
+          ctx.beginPath();
+          ctx.arc(bay.x + 14, 33, 9, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
+
+      // River Water Area (Row 2 to 6: Deep Blue)
+      ctx.fillStyle = '#0369a1';
+      ctx.fillRect(0, ROW_H * 2, GW, ROW_H * 5);
+
+      // Draw Logs & Turtles
+      riverItems.forEach(item => {
+        const y = item.row * ROW_H + 2;
+        if (item.type === 'log') {
+          ctx.fillStyle = '#78350f';
+          ctx.fillRect(item.x, y, item.w, ROW_H - 4);
+          ctx.fillStyle = '#92400e';
+          ctx.fillRect(item.x + 4, y + 3, item.w - 8, ROW_H - 10);
+        } else {
+          // Turtles (green circles)
+          ctx.fillStyle = '#15803d';
+          for (let tx = 0; tx < item.w; tx += 18) {
+            ctx.beginPath();
+            ctx.arc(item.x + tx + 8, y + 10, 8, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      });
+
+      // Safe Median Bank (Row 7: Purple Grass)
+      ctx.fillStyle = '#4c1d95';
+      ctx.fillRect(0, ROW_H * 7, GW, ROW_H);
+
+      // Roadway Asphalt (Row 8 to 12: Dark Asphalt)
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(0, ROW_H * 8, GW, ROW_H * 5);
+
+      // Draw Road Vehicles
+      roadVehicles.forEach(v => {
+        const y = v.row * ROW_H + 3;
+        ctx.fillStyle = v.color;
+        ctx.fillRect(v.x, y, v.w, ROW_H - 6);
+        // Windshield
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(v.x + (v.speed > 0 ? v.w - 10 : 4), y + 3, 6, ROW_H - 12);
+      });
+
+      // Bottom Starting Grass Bank (Row 13: Purple Grass)
+      ctx.fillStyle = '#4c1d95';
+      ctx.fillRect(0, ROW_H * 13, GW, ROW_H * 2);
+
+      // Draw Frog
+      if (isPlaying) {
+        ctx.fillStyle = '#22c55e';
+        ctx.beginPath();
+        ctx.arc(frog.x + frog.w / 2, frog.y + frog.h / 2, 8, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Eyes
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(frog.x + 5, frog.y + 4, 3, 0, Math.PI * 2);
+        ctx.arc(frog.x + 15, frog.y + 4, 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#000000';
+        ctx.beginPath();
+        ctx.arc(frog.x + 5, frog.y + 3, 1.5, 0, Math.PI * 2);
+        ctx.arc(frog.x + 15, frog.y + 3, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Game Over / Attract Screen
+      const t = window.I18N[currentLang];
+      if (!isPlaying) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        ctx.fillRect(0, 0, GW, GH);
+        ctx.fillStyle = '#facc15';
+        ctx.font = 'bold 18px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(isGameOver ? t.gameOver : 'FROGGER 1981', GW / 2, GH / 2 - 15);
+        ctx.fillStyle = '#4ade80';
+        ctx.font = 'bold 12px monospace';
+        ctx.fillText(t.pressStart, GW / 2, GH / 2 + 15);
+      }
+    }
+
+    function loop() {
+      update();
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    setLanguage('en');
+    loop();
+  </script>
+</body>
+</html>

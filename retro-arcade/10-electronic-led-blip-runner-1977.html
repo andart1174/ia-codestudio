@@ -1,0 +1,1142 @@
+<!--ULP-META{"id":"electronic-led-blip-runner-1977","category":"retro-arcade","icon":"🏈","name":{"en":"1977 Electronic LED Blip Runner","fr":"Coureur Électronique LED 1977"},"desc":{"en":"Authentic 1977 handheld electronic football simulator with glowing red LED blips, piezo buzzer audio, and tactile controls.","fr":"Simulateur de football électronique portable de 1977 avec diodes LED rouges lumineuses, son buzzer piézo et commandes tactiles."},"tags":["retro","arcade","1977","led","handheld","sports","vintage"],"features":{"en":["Authentic red LED matrix blip display with field yard lines","Tactile mechanical buttons with realistic piezo audio chirps","Pro 1 and Pro 2 difficulty modes with defensive AI blitz","Downs, field position, touchdown fanfare, and high score saving"],"fr":["Affichage matriciel à diodes LED rouges authentique avec lignes de terrain","Boutons mécaniques tactiles avec bips sonores piézoélectriques réalistes","Modes de difficulté Pro 1 et Pro 2 avec IA défensive","Système d'essais, score de touchdown avec fanfare et sauvegarde"]}}-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title data-ulp="name">1977 Electronic LED Blip Runner</title>
+  <style>
+    :root {
+      --accent: #dc2626;
+      --accent-glow: rgba(220, 38, 38, 0.45);
+      --casing-bg: #dfd7c2;
+      --casing-shadow: #b2a890;
+      --casing-dark: #8c826b;
+      --screen-glass: #180808;
+      --led-bright: #ff2222;
+      --led-dim: #660a0a;
+      --field-green: #1a331a;
+      --field-lines: #2d5a2d;
+      --text-gold: #cbb479;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    body {
+      background: #121316;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #eee;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 10px;
+      overflow-x: hidden;
+    }
+
+    .app-header {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .app-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ffb703;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lang-switcher {
+      display: flex;
+      gap: 4px;
+      background: #222;
+      padding: 2px;
+      border-radius: 6px;
+      border: 1px solid #444;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: #aaa;
+      padding: 3px 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .lang-btn.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* Handheld Device Enclosure */
+    .handheld-unit {
+      width: 100%;
+      max-width: 440px;
+      background: linear-gradient(145deg, #eee5cf, #d2c8b0);
+      border-radius: 28px;
+      padding: 18px 16px 22px;
+      box-shadow: 
+        inset 0 2px 4px rgba(255,255,255,0.7),
+        inset 0 -3px 6px rgba(0,0,0,0.3),
+        0 14px 28px rgba(0,0,0,0.7),
+        0 4px 10px rgba(0,0,0,0.5);
+      border: 3px solid #b5ab92;
+      position: relative;
+    }
+
+    /* Top Emblem & Speaker Grill */
+    .unit-branding {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding: 0 6px;
+    }
+
+    .unit-logo {
+      font-family: 'Arial Black', Impact, sans-serif;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      color: #7c2222;
+      text-transform: uppercase;
+      text-shadow: 1px 1px 0 rgba(255,255,255,0.6);
+    }
+
+    .speaker-grill {
+      display: grid;
+      grid-template-columns: repeat(4, 5px);
+      gap: 5px;
+    }
+
+    .speaker-hole {
+      width: 5px;
+      height: 5px;
+      background: #605743;
+      border-radius: 50%;
+      box-shadow: inset 1px 1px 2px #222;
+    }
+
+    /* Smoked Display Bezel */
+    .display-bezel {
+      background: #0f0909;
+      border: 4px solid #3d3528;
+      border-radius: 12px;
+      padding: 8px;
+      box-shadow: 
+        inset 0 0 16px rgba(0,0,0,0.9),
+        0 2px 4px rgba(255,255,255,0.3);
+      position: relative;
+    }
+
+    /* Seven Segment LED Scoreboard Header */
+    .scoreboard {
+      display: flex;
+      justify-content: space-around;
+      background: #1f0505;
+      border: 2px solid #330808;
+      border-radius: 6px;
+      padding: 6px 4px;
+      margin-bottom: 8px;
+      font-family: 'Courier New', Courier, monospace;
+      color: #ff3333;
+      text-shadow: 0 0 8px #ff1111;
+    }
+
+    .score-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .score-label {
+      font-size: 0.55rem;
+      text-transform: uppercase;
+      color: #a84b4b;
+      margin-bottom: 2px;
+      letter-spacing: 0.5px;
+      font-weight: bold;
+    }
+
+    .score-val {
+      font-size: 1.15rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+      min-width: 28px;
+      text-align: center;
+    }
+
+    /* Canvas for the Field and Glowing LEDs */
+    .canvas-container {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1.25;
+      background: #091209;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.9);
+    }
+
+    #ledCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Control Panel Section */
+    .control-panel {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sliders-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #c9bea2;
+      padding: 8px 12px;
+      border-radius: 10px;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    .switch-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .switch-label {
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: #4a4030;
+      text-transform: uppercase;
+    }
+
+    .rocker-btn {
+      background: linear-gradient(to bottom, #444, #222);
+      color: #ddd;
+      border: 2px solid #666;
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 0.65rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .rocker-btn.on {
+      background: linear-gradient(to bottom, #b91c1c, #991b1b);
+      color: #fff;
+      border-color: #ef4444;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.4), 0 0 6px rgba(239,68,68,0.5);
+    }
+
+    /* Tactile Directional & Action Buttons */
+    .tactile-buttons-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 4px 0;
+    }
+
+    /* D-PAD Style Movement Pad */
+    .dpad-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: #c3b89a;
+      padding: 8px;
+      border-radius: 14px;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.25);
+    }
+
+    .dpad-row {
+      display: flex;
+      gap: 4px;
+    }
+
+    .tactile-btn {
+      width: 44px;
+      height: 42px;
+      background: linear-gradient(to bottom, #3a3b40, #1f2024);
+      border: 2px solid #5a5c66;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 0 #111, 0 6px 8px rgba(0,0,0,0.5);
+      transition: transform 0.05s, box-shadow 0.05s;
+    }
+
+    .tactile-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #111, 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .tactile-btn.run-btn {
+      width: 52px;
+      background: linear-gradient(to bottom, #2563eb, #1d4ed8);
+      border-color: #60a5fa;
+    }
+
+    .action-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: #c3b89a;
+      padding: 8px 10px;
+      border-radius: 14px;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.25);
+      gap: 8px;
+    }
+
+    .action-big-btn {
+      width: 100%;
+      height: 40px;
+      background: linear-gradient(to bottom, #d97706, #b45309);
+      border: 2px solid #fcd34d;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 0 #78350f, 0 5px 6px rgba(0,0,0,0.4);
+    }
+
+    .action-big-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #78350f, 0 2px 3px rgba(0,0,0,0.4);
+    }
+
+    .action-big-btn.kick-btn {
+      background: linear-gradient(to bottom, #059669, #047857);
+      border-color: #34d399;
+      box-shadow: 0 4px 0 #064e3b, 0 5px 6px rgba(0,0,0,0.4);
+    }
+
+    .action-big-btn.kick-btn:active {
+      box-shadow: 0 1px 0 #064e3b;
+    }
+
+    /* Instruction info strip */
+    .unit-instructions {
+      margin-top: 10px;
+      font-size: 0.65rem;
+      color: #554a35;
+      text-align: center;
+      line-height: 1.3;
+      font-weight: 600;
+      padding: 0 4px;
+    }
+
+    /* Screen Overlay Message for Game Over / Touchdown */
+    .canvas-message {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10, 5, 5, 0.82);
+      color: #ff3333;
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: bold;
+      text-align: center;
+      padding: 12px;
+      gap: 6px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      text-shadow: 0 0 10px #ff0000;
+    }
+
+    .canvas-message.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .canvas-message h2 {
+      font-size: 1.25rem;
+      letter-spacing: 1px;
+    }
+
+    .canvas-message p {
+      font-size: 0.8rem;
+      color: #ffaaaa;
+    }
+
+    .restart-tap-btn {
+      margin-top: 6px;
+      background: #b91c1c;
+      color: #fff;
+      border: 1px solid #ff6666;
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: bold;
+    }
+
+    @media (max-width: 380px) {
+      .handheld-unit {
+        padding: 12px 10px 16px;
+      }
+      .tactile-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 0.75rem;
+      }
+      .tactile-btn.run-btn {
+        width: 44px;
+      }
+      .action-big-btn {
+        height: 36px;
+        font-size: 0.7rem;
+      }
+      .score-val {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="app-title">
+      <span>🏈</span>
+      <h1 data-ulp="name" style="font-size: inherit; font-weight: inherit; margin: 0;">1977 Electronic LED Blip Runner</h1>
+    </div>
+    <div class="lang-switcher">
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="fr">FR</button>
+    </div>
+  </header>
+
+  <main class="handheld-unit">
+    <!-- Top Branding & Speaker -->
+    <div class="unit-branding">
+      <div class="unit-logo">ELECTRONIC BLIP 1977</div>
+      <div class="speaker-grill">
+        <div class="speaker-hole"></div><div class="speaker-hole"></div>
+        <div class="speaker-hole"></div><div class="speaker-hole"></div>
+        <div class="speaker-hole"></div><div class="speaker-hole"></div>
+        <div class="speaker-hole"></div><div class="speaker-hole"></div>
+        <div class="speaker-hole"></div><div class="speaker-hole"></div>
+        <div class="speaker-hole"></div><div class="speaker-hole"></div>
+      </div>
+    </div>
+
+    <!-- Smoked Screen Bezel -->
+    <div class="display-bezel">
+      <!-- Digital Scoreboard -->
+      <div class="scoreboard">
+        <div class="score-item">
+          <span class="score-label" data-i18n="score">HOME</span>
+          <span class="score-val" id="dispHome">00</span>
+        </div>
+        <div class="score-item">
+          <span class="score-label" data-i18n="down">DOWN</span>
+          <span class="score-val" id="dispDown">1</span>
+        </div>
+        <div class="score-item">
+          <span class="score-label" data-i18n="field">FIELD</span>
+          <span class="score-val" id="dispField">20</span>
+        </div>
+        <div class="score-item">
+          <span class="score-label" data-i18n="togo">TO GO</span>
+          <span class="score-val" id="dispToGo">10</span>
+        </div>
+        <div class="score-item">
+          <span class="score-label" data-i18n="time">TIME</span>
+          <span class="score-val" id="dispTime">45</span>
+        </div>
+      </div>
+
+      <!-- LED Grid Canvas -->
+      <div class="canvas-container">
+        <canvas id="ledCanvas" width="400" height="300"></canvas>
+        <div class="canvas-message" id="screenOverlay">
+          <h2 id="overlayTitle">TOUCHDOWN!</h2>
+          <p id="overlaySub">+6 POINTS!</p>
+          <button class="restart-tap-btn" id="overlayBtn" data-i18n="pressSnap">NEXT PLAY</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Control Panel -->
+    <div class="control-panel">
+      <!-- Hardware Switches -->
+      <div class="sliders-row">
+        <div class="switch-group">
+          <span class="switch-label" data-i18n="power">PWR:</span>
+          <button class="rocker-btn on" id="btnPower">ON</button>
+        </div>
+        <div class="switch-group">
+          <span class="switch-label" data-i18n="mode">SKILL:</span>
+          <button class="rocker-btn" id="btnSkill">PRO 1</button>
+        </div>
+        <div class="switch-group">
+          <span class="switch-label" data-i18n="sound">AUDIO:</span>
+          <button class="rocker-btn on" id="btnAudio">PIEZO</button>
+        </div>
+      </div>
+
+      <!-- Tactile Buttons -->
+      <div class="tactile-buttons-grid">
+        <!-- Directional Pad -->
+        <div class="dpad-container">
+          <button class="tactile-btn" id="btnUp" title="Move Up">▲</button>
+          <div class="dpad-row">
+            <button class="tactile-btn" id="btnBack" title="Reverse">◀</button>
+            <button class="tactile-btn run-btn" id="btnForward" title="Run Forward">RUN ▶</button>
+          </div>
+          <button class="tactile-btn" id="btnDown" title="Move Down">▼</button>
+        </div>
+
+        <!-- Action Pad -->
+        <div class="action-panel">
+          <button class="action-big-btn" id="btnSnap" data-i18n="btnSnap">SNAP / START</button>
+          <button class="action-big-btn kick-btn" id="btnKick" data-i18n="btnKick">KICK / PASS</button>
+          <button class="action-big-btn" id="btnScore" style="background: linear-gradient(to bottom, #4b5563, #374151); border-color: #9ca3af;" data-i18n="btnScore">STATUS</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Instruction Guide -->
+    <div class="unit-instructions" data-i18n="instructions">
+      Use RUN & Up/Down buttons to avoid blinking defenders. Reach the goal line for Touchdown!
+    </div>
+  </main>
+
+  <script>
+    window.I18N = {
+      en: {
+        score: "HOME",
+        down: "DOWN",
+        field: "FIELD",
+        togo: "TO GO",
+        time: "TIME",
+        power: "PWR:",
+        mode: "SKILL:",
+        sound: "AUDIO:",
+        btnSnap: "SNAP / START",
+        btnKick: "KICK / PASS",
+        btnScore: "STATUS",
+        pressSnap: "NEXT PLAY",
+        instructions: "Use RUN & Up/Down buttons to avoid blinking defenders. Reach the goal line for Touchdown! Keyboard: Arrows, Space (Run), K (Kick).",
+        touchdown: "TOUCHDOWN!",
+        tackled: "TACKLED!",
+        turnover: "TURNOVER ON DOWNS!",
+        gameOver: "GAME OVER",
+        kickGood: "FIELD GOAL GOOD! +3",
+        kickMiss: "KICK MISSED!",
+        pressToStart: "PRESS SNAP TO START"
+      },
+      fr: {
+        score: "SCORE",
+        down: "ESSAI",
+        field: "TERRAIN",
+        togo: "RESTANT",
+        time: "TEMPS",
+        power: "ALIM:",
+        mode: "NIVEAU:",
+        sound: "AUDIO:",
+        btnSnap: "ENGAGER / SNAP",
+        btnKick: "TIRER / PASSE",
+        btnScore: "SCORE",
+        pressSnap: "JEU SUIVANT",
+        instructions: "Utilisez COURIR et Haut/Bas pour esquiver les défenseurs clignotants. Atteignez l'en-but pour marquer ! Clavier: Flèches, Espace, K.",
+        touchdown: "TOUCHDOWN !",
+        tackled: "PLAQUÉ !",
+        turnover: "PERTE DE BALLE !",
+        gameOver: "FIN DE PARTIE",
+        kickGood: "TIR RÉUSSI ! +3",
+        kickMiss: "TIR MANQUÉ !",
+        pressToStart: "APPUYEZ SUR ENGAGER"
+      }
+    };
+
+    let currentLang = 'en';
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      });
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (window.I18N[lang] && window.I18N[lang][key]) {
+          el.textContent = window.I18N[lang][key];
+        }
+      });
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setLanguage(btn.getAttribute('data-lang'));
+      });
+    });
+
+    /* --- Sound Synthesizer (Authentic 1977 Piezo Buzzer) --- */
+    class RetroPiezoAudio {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume().catch(() => {});
+        }
+      }
+      beep(freq, duration = 0.04, type = 'square') {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          
+          gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + duration);
+        } catch(e) {}
+      }
+      blip() { this.beep(980, 0.03); }
+      move() { this.beep(1250, 0.025); }
+      tackle() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(140, this.ctx.currentTime);
+          osc.frequency.linearRampToValueAtTime(60, this.ctx.currentTime + 0.25);
+          gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.25);
+        } catch(e) {}
+      }
+      fanfare() {
+        if (!this.enabled) return;
+        const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 1046.50];
+        const times = [0, 0.1, 0.2, 0.3, 0.45, 0.6];
+        notes.forEach((freq, i) => {
+          setTimeout(() => {
+            this.beep(freq, 0.12, 'square');
+          }, times[i] * 1000);
+        });
+      }
+      click() { this.beep(600, 0.015, 'triangle'); }
+    }
+
+    const sound = new RetroPiezoAudio();
+
+    /* --- Game Mechanics & State --- */
+    const canvas = document.getElementById('ledCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Field configuration: 9 columns (yard lines) x 3 rows (lanes: top, mid, bot)
+    const COLS = 9;
+    const ROWS = 3;
+
+    let powerOn = true;
+    let proMode = false; // false = PRO 1, true = PRO 2
+    let audioOn = true;
+
+    let gameState = 'ready'; // ready, playing, tackled, touchdown, turnover, gameover
+    let score = 0;
+    let down = 1;
+    let ballYard = 20; // 0 to 100
+    let yardsToGo = 10;
+    let firstDownLine = 30;
+    let timeLeft = 45; // game clock
+
+    // Player position on 9x3 field: x: 0..8, y: 0..2
+    let player = { x: 1, y: 1, pulse: 0 };
+    // Defenders: array of {x, y, active: true}
+    let defenders = [];
+
+    let animFrame = null;
+    let lastTick = 0;
+    let defenderSpeed = 480; // ms per AI step
+    let lastAiMove = 0;
+    let clockTimer = null;
+
+    function initDefenders() {
+      defenders = [];
+      // 4 to 5 defenders depending on skill
+      const count = proMode ? 5 : 4;
+      const initialPositions = [
+        { x: 4, y: 0 },
+        { x: 5, y: 1 },
+        { x: 6, y: 2 },
+        { x: 7, y: 0 },
+        { x: 8, y: 1 }
+      ];
+      for (let i = 0; i < count; i++) {
+        defenders.push({
+          x: initialPositions[i].x,
+          y: initialPositions[i].y,
+          flash: i % 2 === 0
+        });
+      }
+    }
+
+    function snapBall() {
+      if (!powerOn) return;
+      sound.click();
+      if (gameState === 'touchdown' || gameState === 'turnover' || gameState === 'gameover') {
+        if (gameState === 'gameover') {
+          score = 0;
+          timeLeft = 45;
+        }
+        ballYard = 20;
+        firstDownLine = 30;
+        yardsToGo = 10;
+        down = 1;
+      }
+
+      hideOverlay();
+      gameState = 'playing';
+      player.x = 1;
+      player.y = 1;
+      initDefenders();
+      updateScoreboard();
+
+      if (!clockTimer) {
+        clockTimer = setInterval(() => {
+          if (gameState === 'playing' && powerOn) {
+            timeLeft--;
+            if (timeLeft <= 0) {
+              timeLeft = 0;
+              endGame();
+            }
+            updateScoreboard();
+          }
+        }, 1000);
+      }
+    }
+
+    function updateScoreboard() {
+      document.getElementById('dispHome').textContent = String(score).padStart(2, '0');
+      document.getElementById('dispDown').textContent = down;
+      document.getElementById('dispField').textContent = String(ballYard).padStart(2, '0');
+      document.getElementById('dispToGo').textContent = String(yardsToGo).padStart(2, '0');
+      document.getElementById('dispTime').textContent = String(timeLeft).padStart(2, '0');
+    }
+
+    function movePlayer(dx, dy) {
+      if (!powerOn || gameState !== 'playing') return;
+
+      const newX = player.x + dx;
+      const newY = player.y + dy;
+
+      if (newY >= 0 && newY < ROWS) {
+        player.y = newY;
+        sound.move();
+      }
+
+      if (dx > 0) {
+        // Advanced forward
+        player.x = Math.min(COLS - 1, player.x + 1);
+        ballYard += 2;
+        yardsToGo = Math.max(0, firstDownLine - ballYard);
+        sound.move();
+
+        if (ballYard >= 100) {
+          triggerTouchdown();
+          return;
+        }
+
+        // Check first down
+        if (ballYard >= firstDownLine) {
+          down = 1;
+          firstDownLine = Math.min(100, ballYard + 10);
+          yardsToGo = firstDownLine - ballYard;
+          sound.blip();
+        }
+
+        // Shift field when player passes column 6
+        if (player.x >= 6) {
+          player.x = 2;
+          // Respawn defenders ahead
+          initDefenders();
+        }
+      } else if (dx < 0 && player.x > 0) {
+        player.x--;
+        ballYard = Math.max(0, ballYard - 1);
+        yardsToGo = firstDownLine - ballYard;
+        sound.move();
+      }
+
+      checkCollisions();
+      updateScoreboard();
+    }
+
+    function kickBall() {
+      if (!powerOn || gameState !== 'playing') return;
+      sound.click();
+      sound.blip();
+
+      // Field goal attempt
+      const distance = 100 - ballYard;
+      const successChance = distance < 45 ? 0.8 : (distance < 60 ? 0.5 : 0.2);
+
+      if (Math.random() < successChance) {
+        score += 3;
+        showOverlay(
+          window.I18N[currentLang].kickGood || "FIELD GOAL GOOD!",
+          "+3 PTS",
+          window.I18N[currentLang].pressSnap
+        );
+        sound.fanfare();
+      } else {
+        showOverlay(
+          window.I18N[currentLang].kickMiss || "KICK MISSED!",
+          "TURNOVER",
+          window.I18N[currentLang].pressSnap
+        );
+        sound.tackle();
+      }
+
+      gameState = 'turnover';
+      ballYard = 20;
+      yardsToGo = 10;
+      firstDownLine = 30;
+      down = 1;
+      updateScoreboard();
+    }
+
+    function updateAI(now) {
+      if (gameState !== 'playing' || !powerOn) return;
+      const speed = proMode ? 320 : 480;
+
+      if (now - lastAiMove > speed) {
+        lastAiMove = now;
+
+        defenders.forEach(d => {
+          // Pursue player
+          const moveX = Math.random() > 0.35;
+          if (moveX) {
+            if (d.x > player.x) d.x--;
+            else if (d.x < player.x && Math.random() < 0.2) d.x++;
+          } else {
+            if (d.y > player.y) d.y--;
+            else if (d.y < player.y) d.y++;
+          }
+          // Wrap around boundary
+          if (d.x < 0) {
+            d.x = COLS - 1;
+            d.y = Math.floor(Math.random() * ROWS);
+          }
+        });
+
+        checkCollisions();
+      }
+    }
+
+    function checkCollisions() {
+      for (let d of defenders) {
+        if (d.x === player.x && d.y === player.y) {
+          triggerTackle();
+          return;
+        }
+      }
+    }
+
+    function triggerTackle() {
+      gameState = 'tackled';
+      sound.tackle();
+
+      if (down < 4) {
+        down++;
+        showOverlay(
+          window.I18N[currentLang].tackled,
+          `DOWN ${down} - ${yardsToGo} YDS TO GO`,
+          window.I18N[currentLang].pressSnap
+        );
+      } else {
+        gameState = 'turnover';
+        showOverlay(
+          window.I18N[currentLang].turnover,
+          "BALL GOES OVER",
+          window.I18N[currentLang].pressSnap
+        );
+      }
+      updateScoreboard();
+    }
+
+    function triggerTouchdown() {
+      gameState = 'touchdown';
+      score += 6;
+      sound.fanfare();
+      showOverlay(
+        window.I18N[currentLang].touchdown,
+        "+6 POINTS!",
+        window.I18N[currentLang].pressSnap
+      );
+      updateScoreboard();
+    }
+
+    function endGame() {
+      gameState = 'gameover';
+      sound.tackle();
+      showOverlay(
+        window.I18N[currentLang].gameOver,
+        `FINAL SCORE: ${score}`,
+        window.I18N[currentLang].pressSnap
+      );
+      if (clockTimer) {
+        clearInterval(clockTimer);
+        clockTimer = null;
+      }
+    }
+
+    function showOverlay(title, sub, btnText) {
+      const overlay = document.getElementById('screenOverlay');
+      document.getElementById('overlayTitle').textContent = title;
+      document.getElementById('overlaySub').textContent = sub;
+      document.getElementById('overlayBtn').textContent = btnText || window.I18N[currentLang].pressSnap;
+      overlay.classList.add('visible');
+    }
+
+    function hideOverlay() {
+      document.getElementById('screenOverlay').classList.remove('visible');
+    }
+
+    document.getElementById('overlayBtn').addEventListener('click', snapBall);
+
+    /* --- Canvas LED Rendering --- */
+    function renderField(timestamp) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (!powerOn) {
+        // Dark unlit screen
+        ctx.fillStyle = '#060606';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        return;
+      }
+
+      // 1. Dark green field background
+      ctx.fillStyle = '#0b190b';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const colWidth = canvas.width / COLS;
+      const rowHeight = canvas.height / ROWS;
+
+      // 2. Yard Lines & Hash Marks
+      ctx.strokeStyle = '#1b3a1b';
+      ctx.lineWidth = 2;
+      for (let i = 1; i < COLS; i++) {
+        const x = i * colWidth;
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+
+        // Yard numbers
+        ctx.fillStyle = '#1c441c';
+        ctx.font = 'bold 11px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(((i * 10) % 50 || 50), x, 18);
+        ctx.fillText(((i * 10) % 50 || 50), x, canvas.height - 8);
+      }
+
+      // End zones subtle markers
+      ctx.fillStyle = 'rgba(255, 30, 30, 0.05)';
+      ctx.fillRect(canvas.width - colWidth, 0, colWidth, canvas.height);
+
+      // 3. Render all matrix positions as unlit dark red LED slots
+      for (let c = 0; c < COLS; c++) {
+        for (let r = 0; r < ROWS; r++) {
+          const cx = c * colWidth + colWidth / 2;
+          const cy = r * rowHeight + rowHeight / 2;
+          drawLedSlot(cx, cy);
+        }
+      }
+
+      // 4. Render Defenders (dimmer blinking red bars)
+      const blink = Math.floor(timestamp / 160) % 2 === 0;
+      if (blink && gameState === 'playing') {
+        defenders.forEach(d => {
+          const cx = d.x * colWidth + colWidth / 2;
+          const cy = d.y * rowHeight + rowHeight / 2;
+          drawGlowingLed(cx, cy, '#ff2222', 0.55, 12, 4);
+        });
+      }
+
+      // 5. Render Player Runner (solid bright glowing pulsed red bar)
+      if (gameState === 'playing' || gameState === 'touchdown') {
+        const cx = player.x * colWidth + colWidth / 2;
+        const cy = player.y * rowHeight + rowHeight / 2;
+        const pulse = 1 + Math.sin(timestamp / 80) * 0.15;
+        drawGlowingLed(cx, cy, '#ff1111', 1.0, 16 * pulse, 6 * pulse);
+      }
+
+      // 6. Smoked glass scanlines overlay
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.18)';
+      for (let y = 0; y < canvas.height; y += 4) {
+        ctx.fillRect(0, y, canvas.width, 1.5);
+      }
+    }
+
+    function drawLedSlot(x, y) {
+      ctx.fillStyle = '#220808';
+      ctx.beginPath();
+      ctx.roundRect(x - 8, y - 3, 16, 6, 2);
+      ctx.fill();
+    }
+
+    function drawGlowingLed(x, y, color, alpha, w = 14, h = 5) {
+      ctx.save();
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 10 * alpha;
+      ctx.fillStyle = color;
+      ctx.globalAlpha = alpha;
+
+      ctx.beginPath();
+      ctx.roundRect(x - w / 2, y - h / 2, w, h, 2);
+      ctx.fill();
+
+      // Bright inner core
+      ctx.fillStyle = '#ffffff';
+      ctx.globalAlpha = alpha * 0.8;
+      ctx.beginPath();
+      ctx.roundRect(x - w / 4, y - h / 4, w / 2, h / 2, 1);
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function loop(timestamp) {
+      updateAI(timestamp);
+      renderField(timestamp);
+      animFrame = requestAnimationFrame(loop);
+    }
+
+    /* --- Event Listeners & Hardware Controls --- */
+    document.getElementById('btnPower').addEventListener('click', () => {
+      powerOn = !powerOn;
+      const btn = document.getElementById('btnPower');
+      btn.classList.toggle('on', powerOn);
+      btn.textContent = powerOn ? 'ON' : 'OFF';
+      sound.click();
+
+      if (!powerOn) {
+        hideOverlay();
+        if (clockTimer) clearInterval(clockTimer);
+        document.querySelectorAll('.score-val').forEach(el => el.textContent = '--');
+      } else {
+        gameState = 'ready';
+        updateScoreboard();
+        showOverlay("ELECTRONIC 1977", window.I18N[currentLang].pressToStart, window.I18N[currentLang].btnSnap);
+      }
+    });
+
+    document.getElementById('btnSkill').addEventListener('click', () => {
+      proMode = !proMode;
+      const btn = document.getElementById('btnSkill');
+      btn.textContent = proMode ? 'PRO 2' : 'PRO 1';
+      btn.classList.toggle('on', proMode);
+      sound.click();
+      initDefenders();
+    });
+
+    document.getElementById('btnAudio').addEventListener('click', () => {
+      audioOn = !audioOn;
+      sound.enabled = audioOn;
+      const btn = document.getElementById('btnAudio');
+      btn.classList.toggle('on', audioOn);
+      btn.textContent = audioOn ? 'PIEZO' : 'MUTE';
+      if (audioOn) sound.blip();
+    });
+
+    // Directional buttons
+    document.getElementById('btnUp').addEventListener('click', () => movePlayer(0, -1));
+    document.getElementById('btnDown').addEventListener('click', () => movePlayer(0, 1));
+    document.getElementById('btnForward').addEventListener('click', () => movePlayer(1, 0));
+    document.getElementById('btnBack').addEventListener('click', () => movePlayer(-1, 0));
+
+    // Action buttons
+    document.getElementById('btnSnap').addEventListener('click', snapBall);
+    document.getElementById('btnKick').addEventListener('click', kickBall);
+    document.getElementById('btnScore').addEventListener('click', () => {
+      sound.click();
+      sound.blip();
+      showOverlay("STATUS", `SCORE: ${score} | TIME: ${timeLeft}s`, "CONTINUE");
+    });
+
+    // Keyboard support
+    window.addEventListener('keydown', (e) => {
+      if (e.repeat) return;
+      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
+        movePlayer(0, -1);
+      } else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') {
+        movePlayer(0, 1);
+      } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D' || e.key === ' ') {
+        movePlayer(1, 0);
+      } else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+        movePlayer(-1, 0);
+      } else if (e.key === 'Enter') {
+        snapBall();
+      } else if (e.key === 'k' || e.key === 'K') {
+        kickBall();
+      }
+    });
+
+    // Initial setup
+    setLanguage('en');
+    updateScoreboard();
+    showOverlay("ELECTRONIC 1977", window.I18N['en'].pressToStart, window.I18N['en'].btnSnap);
+    animFrame = requestAnimationFrame(loop);
+  </script>
+</body>
+</html>

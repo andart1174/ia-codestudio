@@ -1,0 +1,701 @@
+<!--ULP-META{"id":"tabletop-pong-1972-arcade","category":"retro-arcade","icon":"🏓","name":{"en":"1972 Vintage Tabletop Pong Arcade","fr":"Borne Pong Vintage 1972 de Salon"},"desc":{"en":"Authentic 1972 woodgrain tabletop Pong machine with analog rotary paddle dials, curved CRT scanlines, and 2-player or AI mode.","fr":"Machine Pong de salon authentique de 1972 avec cadrans rotatifs analogiques, lignes CRT et mode 2 joueurs ou IA."},"tags":["retro-arcade","pong","1972","vintage","tabletop","crt","2player"],"features":{"en":["Photorealistic 1972 woodgrain tabletop cabinet with brushed metal faceplate and power toggle","Curved phosphor CRT monitor with authentic scanlines, screen bloom, and deflection physics","Dual analog rotary paddle dials with touch rotation, mouse drag, and keyboard controls","1-Player mode against adaptive vintage AI or 2-Player simultaneous local co-op battle","Authentic 1972 sound synthesis with 490Hz paddle hit and 226Hz wall bounce square waves"],"fr":["Meuble vintage 1972 en placage bois avec plaque frontale en aluminium et interrupteur","Écran CRT phosphore incurvé avec lignes de balayage, rémanence et physique de rebond","Deux cadrans rotatifs analogiques avec rotation tactile, glissement souris et touches clavier","Mode 1 Joueur contre IA vintage adaptative ou affrontement local à 2 Joueurs","Synthèse sonore authentique de 1972 avec bips carrés à 490 Hz et rebonds muraux à 226 Hz"]}}--><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title data-ulp="name">1972 Vintage Tabletop Pong Arcade</title>
+  <style>
+    :root {
+      --accent: #f59e0b;
+      --accent-hover: #d97706;
+      --accent-glow: rgba(245, 158, 11, 0.4);
+      --bg: #0c0804;
+      --surface: #1c140d;
+      --surface-card: #2e1d13;
+      --border: #4a301f;
+      --text: #fef3c7;
+      --muted: #b48a68;
+      --wood-dark: #3b1d0c;
+      --wood-mid: #5a2e14;
+      --metal: #cbd5e1;
+      --crt-bg: #070b08;
+      --crt-fg: #f4fbf4;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: var(--surface);
+      border-bottom: 2px solid var(--border);
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      z-index: 20;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-icon {
+      font-size: 1.6rem;
+      filter: drop-shadow(0 0 10px var(--accent-glow));
+    }
+    .brand h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      font-family: "Courier New", Courier, monospace;
+      letter-spacing: 1px;
+    }
+    .brand p {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    button {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 0.82rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    button:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    button.active {
+      background: var(--accent);
+      color: #0c0804;
+      border-color: var(--accent);
+      font-weight: 600;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+    .lang-btn {
+      font-weight: 600;
+      padding: 4px 8px;
+      font-size: 0.75rem;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+    }
+
+    /* 1972 Vintage Woodgrain Tabletop Housing */
+    .cabinet-tabletop {
+      width: 100%;
+      max-width: 580px;
+      background: repeating-linear-gradient(
+        90deg,
+        #451a03 0px,
+        #3b1803 8px,
+        #542306 18px,
+        #341503 30px
+      );
+      border: 6px solid #230f03;
+      border-radius: 20px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      position: relative;
+    }
+
+    /* Brushed Aluminum Faceplate */
+    .aluminum-header {
+      background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 50%, #94a3b8 100%);
+      border: 2px solid #64748b;
+      border-radius: 8px;
+      padding: 8px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: inset 0 1px 2px #fff, 0 2px 5px rgba(0,0,0,0.5);
+    }
+    .logo-badge {
+      font-family: "Courier New", Courier, monospace;
+      font-weight: 900;
+      font-size: 1.1rem;
+      letter-spacing: 3px;
+      color: #0f172a;
+      text-transform: uppercase;
+    }
+    .toggle-power {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      font-weight: bold;
+      color: #1e293b;
+      font-family: monospace;
+    }
+
+    /* CRT Bezel & Display */
+    .crt-bezel {
+      background: #0f172a;
+      border: 4px solid #1e293b;
+      border-radius: 18px;
+      padding: 12px;
+      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.95);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .crt-screen-wrap {
+      position: relative;
+      width: 100%;
+      height: 280px;
+      background: #030805;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.9);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      cursor: crosshair;
+    }
+
+    /* CRT Scanlines Overlay */
+    .crt-scanlines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0),
+        rgba(255,255,255,0) 50%,
+        rgba(0, 0, 0, 0.45) 50%,
+        rgba(0, 0, 0, 0.45)
+      );
+      background-size: 100% 4px;
+      pointer-events: none;
+      z-index: 5;
+      opacity: 0.85;
+    }
+
+    /* Vintage Rotary Paddle Dials (Player 1 & Player 2) */
+    .paddle-dials-row {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      background: linear-gradient(180deg, #cbd5e1 0%, #94a3b8 100%);
+      border: 2px solid #64748b;
+      border-radius: 12px;
+      padding: 12px 14px;
+      box-shadow: inset 0 1px 2px #fff, 0 3px 6px rgba(0,0,0,0.5);
+    }
+
+    .dial-controller {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .dial-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      font-family: monospace;
+      color: #0f172a;
+      letter-spacing: 1px;
+    }
+
+    /* The Large Aluminum Dial Knob */
+    .rotary-knob {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 40%, #ffffff 0%, #cbd5e1 45%, #475569 100%);
+      border: 3px solid #334155;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.6), inset 0 2px 4px rgba(255,255,255,0.7);
+      position: relative;
+      cursor: ns-resize;
+      touch-action: none;
+      user-select: none;
+    }
+    .knob-notch {
+      position: absolute;
+      top: 6px;
+      left: calc(50% - 2px);
+      width: 4px;
+      height: 14px;
+      background: #0f172a;
+      border-radius: 2px;
+    }
+
+    /* Game Mode Switches */
+    .mode-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .toggle-group {
+      display: flex;
+      gap: 6px;
+    }
+
+    @media (max-width: 600px) {
+      .cabinet-tabletop { padding: 10px; gap: 10px; }
+      .crt-screen-wrap { height: 220px; }
+      .rotary-knob { width: 64px; height: 64px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <span class="brand-icon">🏓</span>
+      <div>
+        <h1 data-ulp="name">1972 Vintage Tabletop Pong Arcade</h1>
+        <p id="subTitle">The Pioneer Video Table Tennis Console</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="lang-btn" data-lang="en" id="btnLangEn">EN</button>
+      <button class="lang-btn" data-lang="fr" id="btnLangFr">FR</button>
+      <button id="btnSound">
+        <span id="sndIcon">🔊</span> <span id="txtSound">Sound</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="cabinet-tabletop">
+      <!-- Aluminum Top Plate -->
+      <div class="aluminum-header">
+        <div class="logo-badge">PONG // 1972</div>
+        <div class="toggle-power">
+          <span id="lblPower">POWER</span>
+          <button id="btnPowerSwitch" class="active" style="padding: 3px 8px; font-size: 0.7rem;">ON</button>
+        </div>
+      </div>
+
+      <!-- Curved CRT Display -->
+      <div class="crt-bezel">
+        <div class="crt-screen-wrap">
+          <canvas id="pongCanvas"></canvas>
+          <div class="crt-scanlines"></div>
+        </div>
+      </div>
+
+      <!-- Game Options Bar -->
+      <div class="mode-bar">
+        <div class="toggle-group" id="modeGroup">
+          <button class="active" data-mode="1p" id="btnMode1P">1P VS AI</button>
+          <button data-mode="2p" id="btnMode2P">2P LOCAL</button>
+        </div>
+        <div class="toggle-group">
+          <button id="btnSpeedToggle">
+            <span>⚡</span> <span id="txtSpeed">SPEED: NORMAL</span>
+          </button>
+          <button id="btnResetGame">
+            <span>🔄</span> <span id="txtReset">SERVE</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Vintage Rotary Paddle Dials (Touch and Drag Controllers) -->
+      <div class="paddle-dials-row">
+        <!-- Player 1 Dial -->
+        <div class="dial-controller">
+          <span class="dial-label" id="lblPlayer1">PLAYER 1 (LEFT)</span>
+          <div class="rotary-knob" id="dialP1" title="Drag up/down to rotate paddle">
+            <div class="knob-notch" id="notchP1"></div>
+          </div>
+        </div>
+
+        <div style="font-family: monospace; font-size: 0.75rem; color: #0f172a; text-align: center; max-width: 140px; font-weight: bold;" id="txtDialInstructions">
+          ROTATE KNOBS OR USE W/S & ARROWS
+        </div>
+
+        <!-- Player 2 / AI Dial -->
+        <div class="dial-controller">
+          <span class="dial-label" id="lblPlayer2">PLAYER 2 (RIGHT)</span>
+          <div class="rotary-knob" id="dialP2" title="Drag up/down to rotate paddle">
+            <div class="knob-notch" id="notchP2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // --- Internationalization ---
+    window.I18N = {
+      en: {
+        appName: "1972 Vintage Tabletop Pong Arcade",
+        subTitle: "The Pioneer Video Table Tennis Console",
+        sound: "Sound",
+        power: "POWER",
+        mode1p: "1P VS AI",
+        mode2p: "2P LOCAL",
+        speedNormal: "SPEED: NORMAL",
+        speedFast: "SPEED: FAST",
+        serve: "SERVE",
+        player1: "PLAYER 1 (LEFT)",
+        player2: "PLAYER 2 (RIGHT)",
+        dialHint: "ROTATE KNOBS OR USE W/S & ARROWS"
+      },
+      fr: {
+        appName: "Borne Pong Vintage 1972 de Salon",
+        subTitle: "La Console Pionnière de Tennis de Table Vidéo",
+        sound: "Son",
+        power: "ALIMENTATION",
+        mode1p: "1J VS IA",
+        mode2p: "2J LOCAL",
+        speedNormal: "VITESSE : NORMALE",
+        speedFast: "VITESSE : RAPIDE",
+        serve: "ENGAGER",
+        player1: "JOUEUR 1 (GAUCHE)",
+        player2: "JOUEUR 2 (DROITE)",
+        dialHint: "TOURNEZ LES CADRANS OU TOUCHES Z/S & FLÈCHES"
+      }
+    };
+
+    let currentLang = 'en';
+
+    function setLanguage(lang) {
+      if (!window.I18N[lang]) return;
+      currentLang = lang;
+      const t = window.I18N[lang];
+
+      document.querySelectorAll('[data-ulp="name"]').forEach(el => el.textContent = t.appName);
+      document.getElementById('subTitle').textContent = t.subTitle;
+      document.getElementById('txtSound').textContent = t.sound;
+      document.getElementById('lblPower').textContent = t.power;
+      document.getElementById('btnMode1P').textContent = t.mode1p;
+      document.getElementById('btnMode2P').textContent = t.mode2p;
+      document.getElementById('txtSpeed').textContent = isFastSpeed ? t.speedFast : t.speedNormal;
+      document.getElementById('txtReset').textContent = t.serve;
+      document.getElementById('lblPlayer1').textContent = t.player1;
+      document.getElementById('lblPlayer2').textContent = t.player2;
+      document.getElementById('txtDialInstructions').textContent = t.dialHint;
+
+      document.getElementById('btnLangEn').classList.toggle('active', lang === 'en');
+      document.getElementById('btnLangFr').classList.toggle('active', lang === 'fr');
+      document.documentElement.lang = lang;
+    }
+
+    document.getElementById('btnLangEn').addEventListener('click', () => setLanguage('en'));
+    document.getElementById('btnLangFr').addEventListener('click', () => setLanguage('fr'));
+
+    // --- 1972 Audio Synthesizer (Exact Frequencies) ---
+    class PongAudio {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+      init() {
+        if (this.ctx) return;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        this.ctx = new AudioCtx();
+      }
+      toggle() {
+        this.enabled = !this.enabled;
+        return this.enabled;
+      }
+      playTone(freq, dur = 0.06) {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(freq, now);
+
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + dur + 0.02);
+      }
+      hitPaddle() { this.playTone(490, 0.06); }  // 490Hz paddle beep
+      hitWall() { this.playTone(226, 0.04); }    // 226Hz wall bounce
+      scorePoint() { this.playTone(180, 0.35); } // low point score buzz
+    }
+
+    const audio = new PongAudio();
+    const btnSound = document.getElementById('btnSound');
+    const sndIcon = document.getElementById('sndIcon');
+    btnSound.addEventListener('click', () => {
+      const active = audio.toggle();
+      sndIcon.textContent = active ? '🔊' : '🔇';
+      btnSound.classList.toggle('active', active);
+    });
+
+    // --- Pong Physics Simulation ---
+    const canvas = document.getElementById('pongCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const V_WIDTH = 640;
+    const V_HEIGHT = 400;
+    canvas.width = V_WIDTH;
+    canvas.height = V_HEIGHT;
+
+    let isPoweredOn = true;
+    let is2Player = false;
+    let isFastSpeed = false;
+
+    // Paddle specs
+    const PADDLE_H = 60;
+    const PADDLE_W = 12;
+    const PADDLE_OFFSET = 30;
+
+    let p1Y = (V_HEIGHT - PADDLE_H) / 2;
+    let p2Y = (V_HEIGHT - PADDLE_H) / 2;
+
+    let score1 = 0;
+    let score2 = 0;
+
+    // Ball specs
+    const BALL_SIZE = 12;
+    let ballX = V_WIDTH / 2;
+    let ballY = V_HEIGHT / 2;
+    let ballVx = 4;
+    let ballVy = 2;
+
+    let rotP1 = 0;
+    let rotP2 = 0;
+
+    function resetBall(servingPlayer = 1) {
+      ballX = V_WIDTH / 2;
+      ballY = V_HEIGHT / 2;
+      const baseSpeed = isFastSpeed ? 6.5 : 4.5;
+      ballVx = (servingPlayer === 1 ? -1 : 1) * baseSpeed;
+      ballVy = (Math.random() - 0.5) * baseSpeed;
+    }
+
+    // --- Inputs Handling ---
+    // Rotary Dials Pointer / Touch Drag
+    function setupDial(dialEl, notchEl, onChange) {
+      let isDragging = false;
+      let lastY = 0;
+      let angle = 0;
+
+      dialEl.addEventListener('pointerdown', (e) => {
+        isDragging = true;
+        lastY = e.clientY;
+      });
+
+      window.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        const dy = e.clientY - lastY;
+        lastY = e.clientY;
+
+        angle += dy * 3;
+        notchEl.style.transform = `rotate(${angle}deg)`;
+
+        onChange(dy * 3);
+      });
+
+      window.addEventListener('pointerup', () => { isDragging = false; });
+      window.addEventListener('pointercancel', () => { isDragging = false; });
+    }
+
+    setupDial(document.getElementById('dialP1'), document.getElementById('notchP1'), (delta) => {
+      p1Y = Math.max(10, Math.min(V_HEIGHT - PADDLE_H - 10, p1Y + delta));
+    });
+
+    setupDial(document.getElementById('dialP2'), document.getElementById('notchP2'), (delta) => {
+      if (is2Player) {
+        p2Y = Math.max(10, Math.min(V_HEIGHT - PADDLE_H - 10, p2Y + delta));
+      }
+    });
+
+    // Keyboard support
+    const keys = {};
+    window.addEventListener('keydown', (e) => {
+      keys[e.key.toLowerCase()] = true;
+      if (['w', 's', 'arrowup', 'arrowdown', ' '].includes(e.key.toLowerCase())) {
+        e.preventDefault();
+      }
+    });
+    window.addEventListener('keyup', (e) => { keys[e.key.toLowerCase()] = false; });
+
+    // Mode Toggle
+    document.querySelectorAll('#modeGroup button').forEach(b => {
+      b.addEventListener('click', () => {
+        document.querySelectorAll('#modeGroup button').forEach(el => el.classList.remove('active'));
+        b.classList.add('active');
+        is2Player = b.dataset.mode === '2p';
+      });
+    });
+
+    const btnSpeedToggle = document.getElementById('btnSpeedToggle');
+    btnSpeedToggle.addEventListener('click', () => {
+      isFastSpeed = !isFastSpeed;
+      btnSpeedToggle.classList.toggle('active', isFastSpeed);
+      const t = window.I18N[currentLang];
+      document.getElementById('txtSpeed').textContent = isFastSpeed ? t.speedFast : t.speedNormal;
+      resetBall();
+    });
+
+    document.getElementById('btnResetGame').addEventListener('click', () => {
+      resetBall(Math.random() < 0.5 ? 1 : 2);
+    });
+
+    const btnPowerSwitch = document.getElementById('btnPowerSwitch');
+    btnPowerSwitch.addEventListener('click', () => {
+      isPoweredOn = !isPoweredOn;
+      btnPowerSwitch.classList.toggle('active', isPoweredOn);
+      btnPowerSwitch.textContent = isPoweredOn ? 'ON' : 'OFF';
+    });
+
+    // --- Game Logic Update ---
+    function updatePhysics() {
+      if (!isPoweredOn) return;
+
+      // Keyboard Controls
+      if (keys['w']) p1Y = Math.max(10, p1Y - 6);
+      if (keys['s']) p1Y = Math.min(V_HEIGHT - PADDLE_H - 10, p1Y + 6);
+
+      if (is2Player) {
+        if (keys['arrowup']) p2Y = Math.max(10, p2Y - 6);
+        if (keys['arrowdown']) p2Y = Math.min(V_HEIGHT - PADDLE_H - 10, p2Y + 6);
+      } else {
+        // AI Paddle 2
+        const targetY = ballY - PADDLE_H / 2;
+        const aiSpeed = isFastSpeed ? 4.8 : 3.6;
+        if (p2Y < targetY - 4) p2Y += aiSpeed;
+        else if (p2Y > targetY + 4) p2Y -= aiSpeed;
+        p2Y = Math.max(10, Math.min(V_HEIGHT - PADDLE_H - 10, p2Y));
+      }
+
+      // Ball Movement
+      ballX += ballVx;
+      ballY += ballVy;
+
+      // Top / Bottom Wall Collision
+      if (ballY <= 10) {
+        ballY = 10;
+        ballVy = -ballVy;
+        audio.hitWall();
+      } else if (ballY >= V_HEIGHT - BALL_SIZE - 10) {
+        ballY = V_HEIGHT - BALL_SIZE - 10;
+        ballVy = -ballVy;
+        audio.hitWall();
+      }
+
+      // Left Paddle Collision (Player 1)
+      const p1X = PADDLE_OFFSET;
+      if (ballX <= p1X + PADDLE_W && ballX >= p1X && ballY + BALL_SIZE >= p1Y && ballY <= p1Y + PADDLE_H) {
+        ballX = p1X + PADDLE_W;
+        ballVx = -ballVx * 1.05; // slight speedup
+        // Segmented deflection angle
+        const hitOffset = (ballY + BALL_SIZE / 2 - (p1Y + PADDLE_H / 2)) / (PADDLE_H / 2);
+        ballVy = hitOffset * (isFastSpeed ? 6.5 : 5);
+        audio.hitPaddle();
+      }
+
+      // Right Paddle Collision (Player 2 / AI)
+      const p2X = V_WIDTH - PADDLE_OFFSET - PADDLE_W;
+      if (ballX + BALL_SIZE >= p2X && ballX + BALL_SIZE <= p2X + PADDLE_W && ballY + BALL_SIZE >= p2Y && ballY <= p2Y + PADDLE_H) {
+        ballX = p2X - BALL_SIZE;
+        ballVx = -ballVx * 1.05;
+        const hitOffset = (ballY + BALL_SIZE / 2 - (p2Y + PADDLE_H / 2)) / (PADDLE_H / 2);
+        ballVy = hitOffset * (isFastSpeed ? 6.5 : 5);
+        audio.hitPaddle();
+      }
+
+      // Out of bounds: Scoring
+      if (ballX < 0) {
+        score2++;
+        audio.scorePoint();
+        resetBall(2);
+      } else if (ballX > V_WIDTH) {
+        score1++;
+        audio.scorePoint();
+        resetBall(1);
+      }
+    }
+
+    // --- CRT Render Loop ---
+    function renderCRT() {
+      ctx.fillStyle = '#060a08';
+      ctx.fillRect(0, 0, V_WIDTH, V_HEIGHT);
+
+      if (!isPoweredOn) {
+        // CRT powered off screen
+        ctx.fillStyle = '#010402';
+        ctx.fillRect(0, 0, V_WIDTH, V_HEIGHT);
+        return;
+      }
+
+      ctx.save();
+      // Phosphor White Glow
+      ctx.fillStyle = '#f8fafc';
+      ctx.shadowColor = '#ffffff';
+      ctx.shadowBlur = 8;
+
+      // Center dashed net
+      const netWidth = 6;
+      const netDash = 16;
+      for (let y = 10; y < V_HEIGHT - 10; y += netDash * 2) {
+        ctx.fillRect(V_WIDTH / 2 - netWidth / 2, y, netWidth, netDash);
+      }
+
+      // 7-Segment Retro Score Digits
+      ctx.font = 'bold 54px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(String(score1), V_WIDTH / 2 - 90, 70);
+      ctx.fillText(String(score2), V_WIDTH / 2 + 90, 70);
+
+      // Paddles
+      ctx.fillRect(PADDLE_OFFSET, p1Y, PADDLE_W, PADDLE_H);
+      ctx.fillRect(V_WIDTH - PADDLE_OFFSET - PADDLE_W, p2Y, PADDLE_W, PADDLE_H);
+
+      // Ball
+      ctx.fillRect(ballX, ballY, BALL_SIZE, BALL_SIZE);
+
+      ctx.restore();
+    }
+
+    function loop() {
+      updatePhysics();
+      renderCRT();
+      requestAnimationFrame(loop);
+    }
+    setLanguage('en');
+    loop();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Retro 80s Arcade & Classic Games — IA CODE STUDIO</title>
+  <meta name="description" content="Play 12 authentic 80s retro arcade & classic games in your browser. Pinball, Pac-Man, Space Invaders, Asteroids, Pong, Tetris, Breakout, and Outrun.">
+  <link rel="canonical" href="https://ia-codestudio.com/retro-arcade/">
+  <style>
+    :root {
+      --bg: #070714;
+      --surface: #0e0f24;
+      --card: #141634;
+      --card-hover: #1b1e46;
+      --border: #252854;
+      --accent: #f43f5e;
+      --accent-glow: rgba(244, 63, 94, 0.4);
+      --cyan: #06b6d4;
+      --cyan-glow: rgba(6, 182, 212, 0.35);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(244, 63, 94, 0.18), transparent),
+        radial-gradient(ellipse 60% 40% at 50% 120%, rgba(6, 182, 212, 0.15), transparent);
+    }
+
+    /* Header */
+    header {
+      background: rgba(14, 15, 36, 0.85);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border-color: var(--cyan);
+    }
+    .brand-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--accent), #8b5cf6);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      background: linear-gradient(90deg, #fff, #fda4af, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-sub {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .user-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.35);
+      color: #38bdf8;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    .auth-btn {
+      padding: 7px 16px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), #e11d48);
+      border: none;
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 2px 10px var(--accent-glow);
+      transition: all 0.2s;
+    }
+    .auth-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+    .lang-toggle {
+      display: flex;
+      gap: 4px;
+    }
+    .lang-btn {
+      padding: 5px 10px;
+      border-radius: 6px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+    .lang-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      max-width: 1240px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 35px 20px 60px;
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: rgba(244, 63, 94, 0.15);
+      border: 1px solid rgba(244, 63, 94, 0.35);
+      color: #fda4af;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .hero-title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+      line-height: 1.15;
+    }
+    .hero-desc {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 650px;
+      margin: 0 auto 20px;
+      line-height: 1.5;
+    }
+    .features-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .feat-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      color: #cbd5e1;
+    }
+
+    /* Games Grid */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 22px;
+    }
+    .game-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+    .game-card:hover {
+      transform: translateY(-4px);
+      background: var(--card-hover);
+      border-color: var(--accent);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(244, 63, 94, 0.2);
+    }
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+    .game-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.7rem;
+    }
+    .year-tag {
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      background: rgba(6, 182, 212, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(6, 182, 212, 0.35);
+      font-family: monospace;
+    }
+    .game-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .game-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.45;
+      margin-bottom: 18px;
+      flex: 1;
+    }
+    .game-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-bottom: 16px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+    }
+    .play-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--accent), #e11d48);
+      color: #fff;
+      padding: 11px 18px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px var(--accent-glow);
+      width: 100%;
+    }
+    .play-btn:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 18px var(--accent-glow);
+    }
+
+    /* Modal Overlay */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 2, 10, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+    .modal-backdrop.active {
+      display: flex;
+    }
+    .modal-box {
+      background: #0f1026;
+      border: 1.5px solid var(--accent);
+      border-radius: 18px;
+      padding: 34px 28px;
+      width: 100%;
+      max-width: 440px;
+      position: relative;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 35px var(--accent-glow);
+      text-align: center;
+    }
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: #94a3b8;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .modal-close:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+    .modal-icon {
+      font-size: 3.2rem;
+      margin-bottom: 12px;
+    }
+    .modal-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      background: linear-gradient(90deg, #fff, #fda4af);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .modal-subtitle {
+      font-size: 0.86rem;
+      color: var(--muted);
+      line-height: 1.45;
+      margin-bottom: 22px;
+    }
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-align: left;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      margin-bottom: 5px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: #fff;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .form-input:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan-glow);
+    }
+    .submit-btn {
+      width: 100%;
+      padding: 13px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), #e11d48);
+      border: none;
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 8px;
+      box-shadow: 0 4px 15px var(--accent-glow);
+      transition: all 0.2s;
+    }
+    .submit-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px var(--accent-glow);
+    }
+    .switch-mode {
+      margin-top: 14px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+    }
+    .switch-link {
+      color: #38bdf8;
+      text-decoration: underline;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    /* Game Viewer Modal */
+    .game-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 10000;
+      display: none;
+      flex-direction: column;
+    }
+    .game-modal.active {
+      display: flex;
+    }
+    .game-modal-header {
+      background: #090614;
+      border-bottom: 1px solid var(--border);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .game-modal-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .game-modal-close {
+      background: rgba(244, 63, 94, 0.2);
+      border: 1px solid var(--accent);
+      color: #fda4af;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+    .game-modal-close:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+    .game-frame {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #000;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 20px;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--muted);
+      background: rgba(14, 15, 36, 0.7);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-left">
+      <a href="../index.html" class="back-btn">
+        <span>←</span> <span data-i18n="nav_back">IA Code Studio</span>
+      </a>
+      <div class="brand-box">
+        <div class="brand-icon">🕹️</div>
+        <div>
+          <div class="brand-title" data-i18n="brand_title">Retro 80s Arcade &amp; Classic Games</div>
+          <div class="brand-sub" data-i18n="brand_sub">12 FULL GAMES • 100% OFFLINE</div>
+        </div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div id="authArea">
+        <button class="auth-btn" id="btnOpenAuth" onclick="openAuthModal()">
+          <span>🔐</span> <span data-i18n="btn_login_register">Sign In / Register</span>
+        </button>
+      </div>
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="fr">FR</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <section class="hero">
+      <div class="hero-badge" data-i18n="hero_badge">12 Complete Standalone Arcade Games</div>
+      <h1 class="hero-title" data-i18n="hero_title">Select a Game &amp; Play Directly in Browser</h1>
+      <p class="hero-desc" data-i18n="hero_desc">Step into the Golden Age of Gaming with authentic chiptune audio, vector phosphor glow, mechanical pinball chimes, and smooth 60 FPS controls. Create a free player account to play instantly!</p>
+      <div class="features-row">
+        <span class="feat-tag">⚡ <span data-i18n="feat_1">100% Offline (No Server Required)</span></span>
+        <span class="feat-tag">📱 <span data-i18n="feat_2">Desktop, Tablet &amp; Smartphone Ready</span></span>
+        <span class="feat-tag">🔊 <span data-i18n="feat_3">Synthesized Retro Web Audio</span></span>
+        <span class="feat-tag">🎮 <span data-i18n="feat_4">Keyboard &amp; Touch Responsive</span></span>
+      </div>
+    </section>
+
+    <!-- Games Grid -->
+    <div class="games-grid">
+      <!-- 01 Pinball -->
+      <div class="game-card">
+        <div>
+          <div class="card-top">
+            <div class="game-icon">🎰</div>
+            <span class="year-tag">1979 CLASSIC</span>
+          </div>
+          <div class="game-title" data-i18n="g1_t">Vintage Electro-Mechanical Pinball</div>
+          <div class="game-desc" data-i18n="g1_d">Authentic electro-mechanical pinball with real chime chiptunes, solenoid flippers, passive/active bumpers, score reels, and spring plunger.</div>
+          <div class="game-controls">🎮 <span data-i18n="ctrl_pinball">Controls: Left/Right Flippers, Space / Plunger</span></div>
+        </div>
+        <button class="play-btn" onclick="launchGame('01-vintage-electro-mechanical-pinball-1979.html', 'Vintage Electro-Mechanical Pinball 1979')">
+          <span>▶</span> <span data-i18n="btn_play">PLAY NOW</span>
+        </button>
+      </div>
+
+      <!-- 02 Pac-Man -->
+      <div class="game-card">
+        <div>
+          <div class="card-top">
+            <div class="game-icon">🟡</div>
+            <span class="year-tag">1980 ARCADE</span>
+          </div>
+          <div class="game-title" data-i18n="g2_t">Pac-Man Maze Retro Arcade</div>
+          <div class="game-desc" data-i18n="g2_d">Legendary neon maze chase with 4 ghost AI personalities (Blinky, Pinky, Inky, Clyde), power pellets, fruit bonuses, and classic arcade sound synthesizer.</div>
+          <div class="game-controls">🎮 <span data-i18n="ctrl_arrow">Controls: Arrow keys / Swipe gestures / D-Pad</span></div>
+        </div>
+        <button class="play-btn" onclick="launchGame('02-pacman-maze-retro-arcade.html', 'Pac-Man Maze Retro Arcade')">
+          <span>▶</span> <span data-i18n="btn_play">PLAY NOW</span>
+        </button>
+      </div>
+
+      <!-- 03 Space Invaders -->
+      <div class="game-card">
+        <div>
+          <div class="card-top">
+            <div class="game-icon">👾</div>
+            <span class="year-tag">1978 ARCADE</span>
+          </div>
+          <div class="game-title" data-i18n="g3_t">Space Invaders Retro 1978</div>
+          <div class="game-desc" data-i18n="g3_d">The arcade forefather! Defend Earth against descending alien waves, destructible shield bunkers, red mystery saucer UFO, and authentic 4-beat march sound.</div>
+          <div class="game-controls">🎮 <span data-i18n="ctrl_invaders">Controls: Left/Right to move, Space / Tap to shoot</span></div>
+        </div>
+        <button class="play-btn" onclick="launchGame('03-space-invaders-retro-arcade.html', 'Space Invaders Retro 1978')">
+          <span>▶</span> <span data-i18n="btn_play">PLAY NOW</span>
+        </button>
+      </div>
+
+      <!-- 04 Brick Breaker -->
+      <div class="game-card">
+        <div>
+          <div class="card-top">
+            <div class="game-icon">🧱</div>
+            <span class="year-tag">ARCADE BREAKOUT</span>
+          </div>
+          <div class="game-title" data-i18n="g4_t">Brick Breaker Arcade</div>
+          <div class="game-desc" data-i18n="g4_d">Dynamic paddle breakout with colorful multi-layer brick patterns, angle physics, laser blasters, multiballs, paddle expanders, and high-score saving.</div>
+          <div class="game-controls">🎮 <span data-i18n="ctrl_paddle">Controls: Mouse / Touch drag / Left &amp; Right arrows</span></div>
+        </div>
+        <button class="play-btn" onclick="launchGame('04-brick-breaker-arcade.html', 'Brick Breaker Arcade')">
+          <span>▶</span> <span data-i18n="btn_play">PLAY NOW</span>
+        </button>
+      </div>
+
+      <!-- 05 Asteroids -->
+      <div class="game-card">
+        <div>
+          <div class="card-top">
+            <div class="game-icon">🚀</div>
+            <span class="year-tag">1979 VECTOR</span>
+          </div>
+          <div class="game-title" data-i18n="g5_t">Asteroids Space Vector Arcade</div>
+          <div class="game-desc" data-i18n="g5_d">Authentic vector phosphor glow simulation! Pilot your spaceship through deep space, split rocks into floating debris, dodge saucers, and use hyperspace jump.</div>
+          <div class="game-controls">🎮 <span data-i18n="ctrl_asteroids">Controls: Left/Right rotate, Up thrust, Space shoot</span></div>
+        </div>
+        <button class="play-btn" onclick="launchGame('05-asteroids-space-vector-arcade.html', 'Asteroids Space Vector Arcade')">
+          <span>▶</span> <span data-i18n="btn_play">PLAY NOW</span>
+        </button>
+      </div>
+
+      <!-- 06 Tabletop Pong -->
+      <div class="game-card">
+        <div>
+          <div class="card-top">
+            <div class="game-icon">🏓</div>
+            <span class="year-tag">1972 ORIGINAL</span>
+          </div>
+          <div class="game-title" data-i18n="g6_t">Tabletop Pong 1972 Arcade</div>
+          <div class="game-desc" data-i18n="g6_d">Where video gaming started! Faithful simulation with CRT scanlines, curved screen curvature, authentic square ball blips, and 1-Player vs AI or 2-Player duel.</div>
+          <div class="game-controls">🎮 <span data-i18n="ctrl_pong">Controls: W/S or Up/Down arrows, Touch drag</span></div>
+        </div>
+        <button class="play-btn" onclick="launchGame('06-tabletop-pong-1972-arcade.html', 'Tabletop Pong 1972 Arcade')">
+          <span>▶</span> <span data-i18n="btn_play">PLAY NOW</span>
+        </button>
+      </div>
+
+      <!-- 07 Game & Watch Fire -->
+      <div class="game-card">
+        <div>
+          <div class="card-top">
+            <div class="game-icon">🚒</div>
+            <span class="year-tag">1982 LCD RETRO</span>
+          </div>
+          <div class="game-title" data-i18n="g7_t">Game &amp; Watch Fire Rescue 1982</div>
+          <div class="game-desc" data-i18n="g7_d">True dual-tone LCD segment handheld simulator! Position your rescue team with the trampoline to catch victims jumping from the burning building.</div>
+          <div class="game-controls">🎮 <span data-i18n="ctrl_gw">Controls: Left / Right buttons or Arrow keys</span></div>
+        </div>
+        <button class="play-btn" onclick="launchGame('07-game-and-watch-fire-rescue-1982.html', 'Game & Watch Fire Rescue 1982')">
+          <span>▶</span> <span data-i18n="btn_play">PLAY NOW</span>
+        </button>
+      </div>
+
+      <!-- 08 Frogger -->
+      <div class="game-card">
+        <div>
+          <div class="card-top">
+            <div class="game-icon">🐸</div>
+            <span class="year-tag">1981 ARCADE</span>
+          </div>
+          <div class="game-title" data-i18n="g8_t">Mini Arcade Frog River Crossing</div>
+          <div class="game-desc" data-i18n="g8_d">Dodge heavy road traffic, leap on floating logs and turtles across the treacherous river, and guide all frogs safely into their lily pads before the timer expires!</div>
+          <div class="game-controls">🎮 <span data-i18n="ctrl_frog">Controls: Arrow keys or on-screen directional buttons</span></div>
+        </div>
+        <button class="play-btn" onclick="launchGame('08-mini-arcade-frog-river-crossing.html', 'Mini Arcade Frog River Crossing')">
+          <span>▶</span> <span data-i18n="btn_play">PLAY NOW</span>
+        </button>
+      </div>
+
+      <!-- 09 Vectrex Dogfight -->
+      <div class="game-card">
+        <div>
+          <div class="card-top">
+            <div class="game-icon">🛸</div>
+            <span class="year-tag">1982 VECTOR 3D</span>
+          </div>
+          <div class="game-title" data-i18n="g9_t">Vectrex Vector Space Dogfight 1982</div>
+          <div class="game-desc" data-i18n="g9_d">A tribute to the Vectrex vector console. 3D cockpit perspective dogfight with wireframe enemy starfighters, crosshair targeting, and tactical radar HUD.</div>
+          <div class="game-controls">🎮 <span data-i18n="ctrl_vectrex">Controls: Pitch/Yaw steering, Laser cannons fire</span></div>
+        </div>
+        <button class="play-btn" onclick="launchGame('09-vectrex-vector-space-dogfight-1982.html', 'Vectrex Vector Space Dogfight 1982')">
+          <span>▶</span> <span data-i18n="btn_play">PLAY NOW</span>
+        </button>
+      </div>
+
+      <!-- 10 LED Blip Runner -->
+      <div class="game-card">
+        <div>
+          <div class="card-top">
+            <div class="game-icon">🔴</div>
+            <span class="year-tag">1977 LED VINTAGE</span>
+          </div>
+          <div class="game-title" data-i18n="g10_t">Electronic LED Blip Runner 1977</div>
+          <div class="game-desc" data-i18n="g10_d">The golden era of handheld LED blip games! Real red 7-segment display optics, retro clicker sound synthesized in real-time, hurdle jumping, and speed pacing.</div>
+          <div class="game-controls">🎮 <span data-i18n="ctrl_blip">Controls: Action Jump button / Space bar</span></div>
+        </div>
+        <button class="play-btn" onclick="launchGame('10-electronic-led-blip-runner-1977.html', 'Electronic LED Blip Runner 1977')">
+          <span>▶</span> <span data-i18n="btn_play">PLAY NOW</span>
+        </button>
+      </div>
+
+      <!-- 11 Tetris Neon -->
+      <div class="game-card">
+        <div>
+          <div class="card-top">
+            <div class="game-icon">🔷</div>
+            <span class="year-tag">1984 NEON CLASSIC</span>
+          </div>
+          <div class="game-title" data-i18n="g11_t">Tetris Neon Retro Arcade</div>
+          <div class="game-desc" data-i18n="g11_d">The most famous puzzle game in history! Neon glowing tetrominos, ghost piece projection, line clear animations, level speed escalation, and high scores.</div>
+          <div class="game-controls">🎮 <span data-i18n="ctrl_tetris">Controls: Left/Right move, Up rotate, Down/Space drop</span></div>
+        </div>
+        <button class="play-btn" onclick="launchGame('11-tetris-neon-arcade.html', 'Tetris Neon Retro Arcade')">
+          <span>▶</span> <span data-i18n="btn_play">PLAY NOW</span>
+        </button>
+      </div>
+
+      <!-- 12 Outrun Highway Racer -->
+      <div class="game-card">
+        <div>
+          <div class="card-top">
+            <div class="game-icon">🏎️</div>
+            <span class="year-tag">80s OUTRUN SPEED</span>
+          </div>
+          <div class="game-title" data-i18n="g12_t">Retro Highway Traffic Racer 80s</div>
+          <div class="game-desc" data-i18n="g12_d">High-speed outrun neon highway racer! Overtake civilian traffic with close-call bonuses, trigger nitro turbo boosts, and listen to synthesized RPM engine acoustics.</div>
+          <div class="game-controls">🎮 <span data-i18n="ctrl_racer">Controls: Touch drag / Left &amp; Right arrows / Nitro key</span></div>
+        </div>
+        <button class="play-btn" onclick="launchGame('12-retro-highway-traffic-racer.html', 'Retro Highway Traffic Racer 80s')">
+          <span>▶</span> <span data-i18n="btn_play">PLAY NOW</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Registration / Sign In Modal -->
+  <div class="modal-backdrop" id="authModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeAuthModal()">✕</button>
+      <div class="modal-icon">🎮</div>
+      <h3 class="modal-title" id="authTitle" data-i18n="modal_auth_title">Player Registration Required</h3>
+      <p class="modal-subtitle" id="authSub" data-i18n="modal_auth_sub">Create your free account to unlock instant access to all 12 Retro 80s Arcade &amp; Classic Games!</p>
+
+      <form class="auth-form" id="arcadeAuthForm" onsubmit="handleAuthSubmit(event)">
+        <div class="form-group" id="grpUsername">
+          <label for="inputUsername" data-i18n="lbl_username">Player Name / Handle</label>
+          <input type="text" class="form-input" id="inputUsername" placeholder="e.g. RetroGamer80" required>
+        </div>
+        <div class="form-group">
+          <label for="inputEmail" data-i18n="lbl_email">Email Address</label>
+          <input type="email" class="form-input" id="inputEmail" placeholder="yourname@domain.com" required>
+        </div>
+        <div class="form-group">
+          <label for="inputPassword" data-i18n="lbl_password">Password</label>
+          <input type="password" class="form-input" id="inputPassword" placeholder="••••••••" required minlength="4">
+        </div>
+        <button type="submit" class="submit-btn" id="btnSubmitAuth" data-i18n="btn_submit_signup">
+          🚀 Create Free Account &amp; Play
+        </button>
+      </form>
+
+      <div class="switch-mode">
+        <span id="txtSwitchPrompt" data-i18n="txt_have_account">Already have an account?</span>
+        <a class="switch-link" id="linkToggleMode" onclick="toggleAuthMode()" data-i18n="link_signin">Sign In</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fullscreen In-Page Game Runner Modal -->
+  <div class="game-modal" id="gameModal">
+    <div class="game-modal-header">
+      <div class="game-modal-title">
+        <span>🕹️</span>
+        <span id="gameModalTitleText">Retro Arcade</span>
+      </div>
+      <button class="game-modal-close" onclick="closeGameModal()" data-i18n="btn_close_game">
+        ✕ Close Game / Fermer
+      </button>
+    </div>
+    <iframe class="game-frame" id="gameFrame" src="about:blank" allow="autoplay; accelerometer; gyroscope"></iframe>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div>Retro 80s Arcade &amp; Classic Games • Powered by <strong>IA CODE STUDIO</strong></div>
+    <div style="margin-top:6px; color:#64748b; font-size:0.75rem;">Pure HTML5 • Canvas 2D • Web Audio API • 100% Offline Compatible</div>
+  </footer>
+
+  <script>
+    const I18N = {
+      en: {
+        nav_back: "IA Code Studio",
+        brand_title: "Retro 80s Arcade & Classic Games",
+        brand_sub: "12 FULL GAMES • 100% OFFLINE",
+        btn_login_register: "Sign In / Register",
+        hero_badge: "12 Complete Standalone Arcade Games",
+        hero_title: "Select a Game & Play Directly in Browser",
+        hero_desc: "Step into the Golden Age of Gaming with authentic chiptune audio, vector phosphor glow, mechanical pinball chimes, and smooth 60 FPS controls. Create a free player account to play instantly!",
+        feat_1: "100% Offline (No Server Required)",
+        feat_2: "Desktop, Tablet & Smartphone Ready",
+        feat_3: "Synthesized Retro Web Audio",
+        feat_4: "Keyboard & Touch Responsive",
+        btn_play: "PLAY NOW",
+        btn_close_game: "✕ Close Game",
+        modal_auth_title: "Player Registration Required",
+        modal_auth_sub: "Create your free account to unlock instant access to all 12 Retro 80s Arcade & Classic Games!",
+        lbl_username: "Player Name / Handle",
+        lbl_email: "Email Address",
+        lbl_password: "Password",
+        btn_submit_signup: "🚀 Create Free Account & Play",
+        btn_submit_signin: "🔓 Sign In & Play",
+        txt_have_account: "Already have an account?",
+        txt_need_account: "Need an account?",
+        link_signin: "Sign In",
+        link_signup: "Register Now",
+        logged_as: "Player:",
+        btn_logout: "Logout",
+        ctrl_pinball: "Controls: Left/Right Flippers, Space / Plunger",
+        ctrl_arrow: "Controls: Arrow keys / Swipe gestures / D-Pad",
+        ctrl_invaders: "Controls: Left/Right to move, Space / Tap to shoot",
+        ctrl_paddle: "Controls: Mouse / Touch drag / Left & Right arrows",
+        ctrl_asteroids: "Controls: Left/Right rotate, Up thrust, Space shoot",
+        ctrl_pong: "Controls: W/S or Up/Down arrows, Touch drag",
+        ctrl_gw: "Controls: Left / Right buttons or Arrow keys",
+        ctrl_frog: "Controls: Arrow keys or on-screen directional buttons",
+        ctrl_vectrex: "Controls: Pitch/Yaw steering, Laser cannons fire",
+        ctrl_blip: "Controls: Action Jump button / Space bar",
+        ctrl_tetris: "Controls: Left/Right move, Up rotate, Down/Space drop",
+        ctrl_racer: "Controls: Touch drag / Left & Right arrows / Nitro key",
+        g1_t: "Vintage Electro-Mechanical Pinball",
+        g1_d: "Authentic electro-mechanical pinball with real chime chiptunes, solenoid flippers, passive/active bumpers, score reels, and spring plunger.",
+        g2_t: "Pac-Man Maze Retro Arcade",
+        g2_d: "Legendary neon maze chase with 4 ghost AI personalities (Blinky, Pinky, Inky, Clyde), power pellets, fruit bonuses, and classic arcade sound synthesizer.",
+        g3_t: "Space Invaders Retro 1978",
+        g3_d: "The arcade forefather! Defend Earth against descending alien waves, destructible shield bunkers, red mystery saucer UFO, and authentic 4-beat march sound.",
+        g4_t: "Brick Breaker Arcade",
+        g4_d: "Dynamic paddle breakout with colorful multi-layer brick patterns, angle physics, laser blasters, multiballs, paddle expanders, and high-score saving.",
+        g5_t: "Asteroids Space Vector Arcade",
+        g5_d: "Authentic vector phosphor glow simulation! Pilot your spaceship through deep space, split rocks into floating debris, dodge saucers, and use hyperspace jump.",
+        g6_t: "Tabletop Pong 1972 Arcade",
+        g6_d: "Where video gaming started! Faithful simulation with CRT scanlines, curved screen curvature, authentic square ball blips, and 1-Player vs AI or 2-Player duel.",
+        g7_t: "Game & Watch Fire Rescue 1982",
+        g7_d: "True dual-tone LCD segment handheld simulator! Position your rescue team with the trampoline to catch victims jumping from the burning building.",
+        g8_t: "Mini Arcade Frog River Crossing",
+        g8_d: "Dodge heavy road traffic, leap on floating logs and turtles across the treacherous river, and guide all frogs safely into their lily pads before the timer expires!",
+        g9_t: "Vectrex Vector Space Dogfight 1982",
+        g9_d: "A tribute to the Vectrex vector console. 3D cockpit perspective dogfight with wireframe enemy starfighters, crosshair targeting, and tactical radar HUD.",
+        g10_t: "Electronic LED Blip Runner 1977",
+        g10_d: "The golden era of handheld LED blip games! Real red 7-segment display optics, retro clicker sound synthesized in real-time, hurdle jumping, and speed pacing.",
+        g11_t: "Tetris Neon Retro Arcade",
+        g11_d: "The most famous puzzle game in history! Neon glowing tetrominos, ghost piece projection, line clear animations, level speed escalation, and high scores.",
+        g12_t: "Retro Highway Traffic Racer 80s",
+        g12_d: "High-speed outrun neon highway racer! Overtake civilian traffic with close-call bonuses, trigger nitro turbo boosts, and listen to synthesized RPM engine acoustics."
+      },
+      fr: {
+        nav_back: "IA Code Studio",
+        brand_title: "Jeux Rétro Arcade Années 80 & Classiques",
+        brand_sub: "12 JEUX COMPLETS • 100% HORS-LIGNE",
+        btn_login_register: "Se Connecter / S'inscrire",
+        hero_badge: "12 Jeux d'Arcade Complets et Autonomes",
+        hero_title: "Choisissez un Jeu et Jouez Directement dans le Navigateur",
+        hero_desc: "Plongez dans l'Âge d'Or du jeu vidéo avec des sons chiptune rétro, le phosphore vectoriel, les carillons de flipper mécanique et des contrôles fluides à 60 FPS. Créez un compte joueur gratuit pour jouer immédiatement !",
+        feat_1: "100% Hors-Ligne (Aucun Serveur Requis)",
+        feat_2: "Compatible Ordinateur, Tablette et Mobile",
+        feat_3: "Sons Rétro Synthétisés Web Audio",
+        feat_4: "Contrôles Clavier et Tactile Réactifs",
+        btn_play: "JOUER",
+        btn_close_game: "✕ Fermer le Jeu",
+        modal_auth_title: "Inscription Joueur Requise",
+        modal_auth_sub: "Créez votre compte gratuit pour débloquer l'accès instantané aux 12 Jeux Rétro Arcade & Classiques !",
+        lbl_username: "Nom de Joueur / Pseudo",
+        lbl_email: "Adresse Email",
+        lbl_password: "Mot de Passe",
+        btn_submit_signup: "🚀 Créer mon Compte & Jouer",
+        btn_submit_signin: "🔓 Se Connecter & Jouer",
+        txt_have_account: "Vous avez déjà un compte ?",
+        txt_need_account: "Pas encore de compte ?",
+        link_signin: "Connexion",
+        link_signup: "Inscription",
+        logged_as: "Joueur :",
+        btn_logout: "Déconnexion",
+        ctrl_pinball: "Commandes : Flips Gauche/Droite, Espace / Lance-bille",
+        ctrl_arrow: "Commandes : Flèches / Glissement tactile / D-Pad",
+        ctrl_invaders: "Commandes : Flèches Gauche/Droite, Espace / Tactile pour tirer",
+        ctrl_paddle: "Commandes : Souris / Tactile / Flèches Gauche & Droite",
+        ctrl_asteroids: "Commandes : Flèches pour pivoter, Haut pour réacteurs, Espace pour tirer",
+        ctrl_pong: "Commandes : W/S ou Flèches Haut/Bas, Glisser tactile",
+        ctrl_gw: "Commandes : Boutons Gauche / Droite ou Flèches",
+        ctrl_frog: "Commandes : Flèches directionnelles ou boutons à l'écran",
+        ctrl_vectrex: "Commandes : Pilotage tangage/lacet, Tir canons laser",
+        ctrl_blip: "Commandes : Bouton Saut / Barre d'espace",
+        ctrl_tetris: "Commandes : Flèches Gauche/Droite, Haut pour pivoter, Espace pour lâcher",
+        ctrl_racer: "Commandes : Glisser tactile / Flèches / Touche Nitro",
+        g1_t: "Flipper Électromécanique Vintage 1979",
+        g1_d: "Véritable flipper électromécanique avec carillons mécaniques, flips à solénoïdes, bumpers passifs et actifs, compteurs à rouleaux et lanceur à ressort.",
+        g2_t: "Pac-Man Labyrinthe Rétro Arcade",
+        g2_d: "Course-poursuite légendaire dans un labyrinthe néon avec 4 fantômes aux IA uniques, pac-gommes énergétiques, fruits bonus et sons d'arcade rétro.",
+        g3_t: "Space Invaders Rétro 1978",
+        g3_d: "L'ancêtre de l'arcade ! Défendez la Terre contre les vagues d'extraterrestres, bunkers destructibles, soucoupe mystère et marche cadencée culte.",
+        g4_t: "Casse-Briques Arcade Breakout",
+        g4_d: "Casse-briques dynamique avec briques multicouleurs, physique des rebonds, tirs laser, multibilles, raquettes extensibles et records sauvegardés.",
+        g5_t: "Asteroids Vectoriel Espace 1979",
+        g5_d: "Simulation authentique de phosphore vectoriel vert ! Pilotez votre vaisseau dans l'espace, détruisez les astéroïdes et déclenchez l'hyperspace.",
+        g6_t: "Tabletop Pong 1972 Arcade",
+        g6_d: "Là où l'histoire du jeu vidéo a commencé ! Fidèle simulation avec scanlines CRT, bips authentiques et modes 1 Joueur vs IA ou Duel 2 Joueurs.",
+        g7_t: "Game & Watch Fire Rescue 1982",
+        g7_d: "Véritable console portable LCD deux tons ! Positionnez l'équipe de sauveteurs avec le trampoline pour rattraper les résidents de l'immeuble en flammes.",
+        g8_t: "Mini Arcade Traversée de Grenouille",
+        g8_d: "Esquivez la circulation intense, sautez sur les troncs et tortues sur la rivière, et amenez les grenouilles sur leurs nénuphars avant la fin du chronomètre !",
+        g9_t: "Vectrex Combat Spatial Vectoriel 1982",
+        g9_d: "Hommage à la célèbre console Vectrex. Combat spatial 3D en cockpit avec chasseurs filaires luminescents, réticule de visée et radar tactique.",
+        g10_t: "Blip Runner LED Électronique 1977",
+        g10_d: "L'âge d'or des jeux de poche à segments LED rouges ! Affichage numérique authentique, bips sonores en temps réel et franchissement d'obstacles.",
+        g11_t: "Tetris Néon Rétro Arcade",
+        g11_d: "Le jeu de puzzle le plus célèbre au monde ! Pièces luminescentes, projection de chute fantôme, animations de lignes et accélération par palier.",
+        g12_t: "Course de Trafic Autoroute Rétro 80s",
+        g12_d: "Course d'autoroute néon style outrun ! Dépassez les véhicules civils avec bonus de frôlement, accélérez avec la nitro et écoutez le régime moteur."
+      }
+    };
+
+    let currentLang = 'en';
+    let isSignUpMode = true;
+    let pendingGameUrl = null;
+    let pendingGameTitle = null;
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      });
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const k = el.getAttribute('data-i18n');
+        if (I18N[lang] && I18N[lang][k]) {
+          el.textContent = I18N[lang][k];
+        }
+      });
+      renderAuthNav();
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(b => {
+      b.addEventListener('click', () => setLanguage(b.getAttribute('data-lang')));
+    });
+
+    // Check Authentication
+    function getCurrentUser() {
+      try {
+        const raw = localStorage.getItem('genius_session') || localStorage.getItem('retro_arcade_user');
+        if (!raw) return null;
+        return typeof raw === 'string' && raw.startsWith('{') ? JSON.parse(raw) : { username: raw };
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function renderAuthNav() {
+      const user = getCurrentUser();
+      const area = document.getElementById('authArea');
+      if (user && user.username) {
+        area.innerHTML = `
+          <div class="user-badge">
+            <span>👤</span>
+            <span>${I18N[currentLang].logged_as} <strong>${user.username}</strong></span>
+            <button onclick="handleLogout()" style="background:none; border:none; color:#fda4af; cursor:pointer; font-size:0.75rem; font-weight:700; margin-left:6px; text-decoration:underline;">
+              (${I18N[currentLang].btn_logout})
+            </button>
+          </div>
+        `;
+      } else {
+        area.innerHTML = `
+          <button class="auth-btn" id="btnOpenAuth" onclick="openAuthModal()">
+            <span>🔐</span> <span>${I18N[currentLang].btn_login_register}</span>
+          </button>
+        `;
+      }
+    }
+
+    function openAuthModal(forGameUrl, forGameTitle) {
+      if (forGameUrl) {
+        pendingGameUrl = forGameUrl;
+        pendingGameTitle = forGameTitle;
+      }
+      document.getElementById('authModal').classList.add('active');
+    }
+
+    function closeAuthModal() {
+      document.getElementById('authModal').classList.remove('active');
+    }
+
+    function toggleAuthMode() {
+      isSignUpMode = !isSignUpMode;
+      const grpUsername = document.getElementById('grpUsername');
+      const inputUsername = document.getElementById('inputUsername');
+      const authTitle = document.getElementById('authTitle');
+      const btnSubmit = document.getElementById('btnSubmitAuth');
+      const txtPrompt = document.getElementById('txtSwitchPrompt');
+      const linkToggle = document.getElementById('linkToggleMode');
+
+      if (isSignUpMode) {
+        grpUsername.style.display = 'block';
+        inputUsername.required = true;
+        authTitle.textContent = I18N[currentLang].modal_auth_title;
+        btnSubmit.textContent = I18N[currentLang].btn_submit_signup;
+        txtPrompt.textContent = I18N[currentLang].txt_have_account;
+        linkToggle.textContent = I18N[currentLang].link_signin;
+      } else {
+        grpUsername.style.display = 'none';
+        inputUsername.required = false;
+        authTitle.textContent = I18N[currentLang].link_signin;
+        btnSubmit.textContent = I18N[currentLang].btn_submit_signin;
+        txtPrompt.textContent = I18N[currentLang].txt_need_account;
+        linkToggle.textContent = I18N[currentLang].link_signup;
+      }
+    }
+
+    function handleAuthSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('inputEmail').value.trim();
+      const username = isSignUpMode 
+        ? document.getElementById('inputUsername').value.trim() 
+        : email.split('@')[0];
+
+      const sessionObj = {
+        username: username,
+        email: email,
+        loginDate: new Date().toISOString()
+      };
+
+      localStorage.setItem('genius_session', JSON.stringify(sessionObj));
+      localStorage.setItem('retro_arcade_user', JSON.stringify(sessionObj));
+
+      closeAuthModal();
+      renderAuthNav();
+
+      if (pendingGameUrl) {
+        const url = pendingGameUrl;
+        const title = pendingGameTitle;
+        pendingGameUrl = null;
+        pendingGameTitle = null;
+        launchGame(url, title);
+      }
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('genius_session');
+      localStorage.removeItem('retro_arcade_user');
+      renderAuthNav();
+    }
+
+    function launchGame(fileUrl, title) {
+      const user = getCurrentUser();
+      if (!user) {
+        openAuthModal(fileUrl, title);
+        return;
+      }
+      // Open in fullscreen overlay modal
+      const modal = document.getElementById('gameModal');
+      const frame = document.getElementById('gameFrame');
+      const titleEl = document.getElementById('gameModalTitleText');
+
+      titleEl.textContent = title || 'Retro Arcade Game';
+      frame.src = fileUrl;
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeGameModal() {
+      const modal = document.getElementById('gameModal');
+      const frame = document.getElementById('gameFrame');
+      frame.src = 'about:blank';
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Initialize
+    setLanguage('en');
+    renderAuthNav();
+  </script>
+</body>
+</html>

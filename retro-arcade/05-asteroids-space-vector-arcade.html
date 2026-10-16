@@ -1,0 +1,824 @@
+<!--ULP-META{"id":"asteroids-space-vector-arcade","category":"games","icon":"🌠","name":{"en":"Retro Vector Asteroids Arcade","fr":"Astéroïdes Rétro Vector Arcade"},"desc":{"en":"Classic 1979-style vector arcade space game with Newtonian inertia flight physics, splitting asteroid rocks, hyperspace warp, and synthesized 8-bit sound effects.","fr":"Jeu d'arcade vectoriel spatial culte avec physique d'inertie newtonienne, fragmentation d'astéroïdes, saut hyperespace et bruitages 8-bit."},"tags":["arcade","retro","asteroids","vector","space","physics","games"],"features":{"en":["Newtonian space inertia flight with rotation, thrust acceleration, and screen wrap","Tiered asteroid splitting physics: Large rocks break into Medium, then Small debris","Emergency Hyperspace quantum jump warp with random coordinates","Real-time particle thruster plumes and multi-spark explosive debris","Touch controls and keyboard support with synthesized Web Audio FX"],"fr":["Physique de vol spatiale newtonienne avec inertie, poussée et franchissement d'écran","Fragmentation physique réaliste des roches : Grand se brise en Moyen puis Petits débris","Saut d'urgence hyperespace quantique avec téléportation aléatoire","Panache de particules de réacteur et explosions d'étincelles en temps réel","Contrôles tactiles et clavier complets avec synthèse sonore Web Audio"]}}--><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-ulp="name">Retro Vector Asteroids Arcade</title>
+  <style>
+    :root {
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.3);
+      --bg: #030712;
+      --surface: #0b1120;
+      --border: #1e293b;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace, system-ui; }
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-icon {
+      font-size: 1.4rem;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid var(--accent);
+      padding: 6px;
+      border-radius: 8px;
+    }
+    h1 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #fff;
+    }
+    .subtitle {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 6px;
+    }
+    .lang-btn {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: var(--text);
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+    .lang-btn.active {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+
+    main {
+      flex: 1;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 760px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .scoreboard {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 620px;
+      background: #090e1a;
+      border: 1px solid var(--border);
+      border-radius: 8px 8px 0 0;
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+    .score-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .score-lbl {
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+    .score-val {
+      font-size: 1.1rem;
+      color: var(--accent);
+      letter-spacing: 1px;
+    }
+
+    .arcade-cabinet {
+      position: relative;
+      background: #000;
+      border: 2px solid var(--accent);
+      border-radius: 0 0 8px 8px;
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.2);
+      max-width: 620px;
+      width: 100%;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #02040a;
+      image-rendering: pixelated;
+    }
+
+    .screen-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      text-align: center;
+      z-index: 10;
+    }
+    .overlay-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent);
+      text-shadow: 0 0 12px rgba(56, 189, 248, 0.8);
+      margin-bottom: 12px;
+      letter-spacing: 2px;
+    }
+    .overlay-desc {
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      max-width: 440px;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .btn {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+    }
+    .btn:hover {
+      background: #7dd3fc;
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    /* On-screen Flight Controls */
+    .touch-controls {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 620px;
+      margin-top: 10px;
+      gap: 8px;
+    }
+    .touch-btn {
+      flex: 1;
+      height: 48px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #fff;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      cursor: pointer;
+    }
+    .touch-btn:active {
+      background: var(--accent);
+      color: #000;
+    }
+    .btn-fire-action {
+      background: #ef4444;
+      border-color: #f87171;
+    }
+    .btn-fire-action:active {
+      background: #dc2626;
+      color: #fff;
+    }
+
+    .options-bar {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 620px;
+      margin-top: 8px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-icon">🌠</div>
+      <div>
+        <h1 data-ulp="name" data-i18n="appTitle">Retro Vector Asteroids Arcade</h1>
+        <div class="subtitle" data-i18n="appSubtitle">Classic 1979-style vector arcade space game with Newtonian inertia physics</div>
+      </div>
+    </div>
+    <div class="lang-switch">
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="fr">FR</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Scoreboard -->
+    <div class="scoreboard">
+      <div class="score-item">
+        <span class="score-lbl" data-i18n="lblScore">SCORE</span>
+        <span class="score-val" id="txtScore">0000</span>
+      </div>
+      <div class="score-item">
+        <span class="score-lbl" data-i18n="lblWave">WAVE</span>
+        <span class="score-val" id="txtWave">01</span>
+      </div>
+      <div class="score-item">
+        <span class="score-lbl" data-i18n="lblHigh">HIGH SCORE</span>
+        <span class="score-val" id="txtHigh">1000</span>
+      </div>
+      <div class="score-item">
+        <span class="score-lbl" data-i18n="lblLives">SHIPS</span>
+        <span class="score-val" id="txtLives" style="color:#38bdf8;">▲▲▲</span>
+      </div>
+    </div>
+
+    <!-- Cabinet Canvas -->
+    <div class="arcade-cabinet">
+      <canvas id="gameCanvas" width="560" height="520"></canvas>
+
+      <!-- Start / Game Over Overlay -->
+      <div class="screen-overlay" id="gameOverlay">
+        <div class="overlay-title" id="overlayTitle">ASTEROIDS VECTOR</div>
+        <div class="overlay-desc" id="overlayDesc" data-i18n="introDesc">
+          Pilot your vector scout ship through high-velocity asteroid fields! Master zero-gravity inertia thrusters, blast splitting rocks, and use Hyperspace warp in emergencies!
+        </div>
+        <button class="btn" id="btnStart" data-i18n="btnStart">ENGAGE THRUSTERS</button>
+      </div>
+    </div>
+
+    <!-- On-screen controls -->
+    <div class="touch-controls">
+      <button class="touch-btn" id="btnRotateLeft">↺</button>
+      <button class="touch-btn" id="btnThrust">▲ <span data-i18n="lblThrust">Thrust</span></button>
+      <button class="touch-btn" id="btnRotateRight">↻</button>
+      <button class="touch-btn btn-fire-action" id="btnFire">💥 <span data-i18n="lblFire">Fire</span></button>
+      <button class="touch-btn" id="btnHyper" style="background:#6366f1;">⚡ <span data-i18n="lblHyper">Warp</span></button>
+    </div>
+
+    <div class="options-bar">
+      <span>⌨ <span data-i18n="keyHint">[Left/Right] Rotate, [Up] Thrust, [Space] Fire, [Shift] Warp</span></span>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+        <input type="checkbox" id="chkAudio" checked style="accent-color:var(--accent);">
+        <span data-i18n="lblSound">Vector Audio FX</span>
+      </label>
+    </div>
+  </main>
+
+  <script>
+    const I18N = {
+      en: {
+        appTitle: "Retro Vector Asteroids Arcade",
+        appSubtitle: "Classic 1979-style vector arcade space game with Newtonian inertia physics",
+        lblScore: "SCORE",
+        lblWave: "WAVE",
+        lblHigh: "HIGH SCORE",
+        lblLives: "SHIPS",
+        btnStart: "ENGAGE THRUSTERS",
+        lblThrust: "Thrust",
+        lblFire: "Fire",
+        lblHyper: "Warp",
+        keyHint: "[Left/Right] Rotate, [Up] Thrust, [Space] Fire, [Shift] Warp",
+        lblSound: "Vector Audio FX",
+        introDesc: "Pilot your vector scout ship through high-velocity asteroid fields! Master zero-gravity inertia thrusters, blast splitting rocks, and use Hyperspace warp in emergencies!",
+        gameOverTitle: "HULL DESTROYED",
+        gameOverDesc: "Your ship was crushed in the asteroid belt! Press button to relaunch.",
+        waveClearedTitle: "SECTOR CLEARED",
+        waveClearedDesc: "Hyperspace jump successful! Incoming denser asteroid field..."
+      },
+      fr: {
+        appTitle: "Astéroïdes Rétro Vector Arcade",
+        appSubtitle: "Jeu d'arcade vectoriel spatial culte avec physique d'inertie newtonienne",
+        lblScore: "SCORE",
+        lblWave: "VAGUE",
+        lblHigh: "MEILLEUR",
+        lblLives: "VAISSEAUX",
+        btnStart: "ALLUMER LES RÉACTEURS",
+        lblThrust: "Poussée",
+        lblFire: "Tirer",
+        lblHyper: "Saut",
+        keyHint: "[Gauche/Droite] Tourner, [Haut] Poussée, [Espace] Tirer, [Maj] Saut",
+        lblSound: "Effets Vectoriels",
+        introDesc: "Pilotez votre vaisseau dans des champs d'astéroïdes denses ! Maîtrisez l'inertie en apesanteur, fragmentez les roches et utilisez le saut d'urgence hyperespace !",
+        gameOverTitle: "COQUE DÉTRUITE",
+        gameOverDesc: "Votre vaisseau a été anéanti ! Cliquez pour relancer une mission.",
+        waveClearedTitle: "SECTEUR SÉCURISÉ",
+        waveClearedDesc: "Saut réussi ! Attention, le prochain champ d'astéroïdes arrive..."
+      }
+    };
+
+    let currentLang = 'en';
+
+    // Canvas
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // UI elements
+    const txtScore = document.getElementById('txtScore');
+    const txtWave = document.getElementById('txtWave');
+    const txtHigh = document.getElementById('txtHigh');
+    const txtLives = document.getElementById('txtLives');
+    const gameOverlay = document.getElementById('gameOverlay');
+    const overlayTitle = document.getElementById('overlayTitle');
+    const overlayDesc = document.getElementById('overlayDesc');
+    const btnStart = document.getElementById('btnStart');
+    const chkAudio = document.getElementById('chkAudio');
+
+    // Audio synthesizer
+    let audioCtx = null;
+    function playVectorSound(type) {
+      if (!chkAudio.checked) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+
+        if (type === 'laser') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 0.1);
+          g.gain.setValueAtTime(0.12, audioCtx.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+          osc.connect(g); g.connect(audioCtx.destination);
+          osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+        } else if (type === 'thrust') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(70 + Math.random() * 20, audioCtx.currentTime);
+          g.gain.setValueAtTime(0.08, audioCtx.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+          osc.connect(g); g.connect(audioCtx.destination);
+          osc.start(); osc.stop(audioCtx.currentTime + 0.08);
+        } else if (type === 'boom') {
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(140, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.3);
+          g.gain.setValueAtTime(0.2, audioCtx.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+          osc.connect(g); g.connect(audioCtx.destination);
+          osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        } else if (type === 'warp') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.25);
+          g.gain.setValueAtTime(0.18, audioCtx.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+          osc.connect(g); g.connect(audioCtx.destination);
+          osc.start(); osc.stop(audioCtx.currentTime + 0.25);
+        }
+      } catch (e) {}
+    }
+
+    // Game variables
+    let score = 0;
+    let highScore = 1000;
+    let wave = 1;
+    let lives = 3;
+    let isPlaying = false;
+    let gameLoopId = null;
+
+    // Ship Model
+    const ship = {
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      r: 11,
+      angle: -Math.PI / 2,
+      rotSpeed: 0.075,
+      thrust: 0.14,
+      friction: 0.988,
+      vx: 0,
+      vy: 0,
+      isThrusting: false,
+      isRotatingLeft: false,
+      isRotatingRight: false,
+      invulnerableTimer: 0
+    };
+
+    let lasers = [];
+    let asteroids = [];
+    let particles = [];
+
+    // Helper: Generate jagged irregular vector asteroid
+    function createAsteroid(x, y, radius, level) {
+      const numVerts = 10 + Math.floor(Math.random() * 5);
+      const offsets = [];
+      for (let i = 0; i < numVerts; i++) {
+        offsets.push(radius * (0.75 + Math.random() * 0.5));
+      }
+      const speed = (4 - level) * 0.7 + (wave * 0.15);
+      const angle = Math.random() * Math.PI * 2;
+      return {
+        x: x,
+        y: y,
+        radius: radius,
+        level: level, // 3: Large (40px), 2: Med (22px), 1: Small (12px)
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        rot: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.03,
+        numVerts: numVerts,
+        offsets: offsets
+      };
+    }
+
+    function spawnAsteroidWave() {
+      asteroids = [];
+      const count = 4 + wave * 2;
+      for (let i = 0; i < count; i++) {
+        let ax, ay;
+        // Keep initial spawn away from center ship
+        do {
+          ax = Math.random() * canvas.width;
+          ay = Math.random() * canvas.height;
+        } while (Math.hypot(ax - canvas.width / 2, ay - canvas.height / 2) < 140);
+        asteroids.push(createAsteroid(ax, ay, 40, 3));
+      }
+    }
+
+    function updateScoreUI() {
+      txtScore.textContent = score.toString().padStart(4, '0');
+      txtWave.textContent = wave.toString().padStart(2, '0');
+      txtHigh.textContent = highScore.toString().padStart(4, '0');
+      txtLives.textContent = "▲".repeat(Math.max(0, lives));
+    }
+
+    function startGame() {
+      score = 0;
+      wave = 1;
+      lives = 3;
+      resetShip();
+      lasers = [];
+      particles = [];
+      spawnAsteroidWave();
+      updateScoreUI();
+      isPlaying = true;
+      gameOverlay.style.display = 'none';
+      if (gameLoopId) cancelAnimationFrame(gameLoopId);
+      gameLoop();
+    }
+
+    function resetShip() {
+      ship.x = canvas.width / 2;
+      ship.y = canvas.height / 2;
+      ship.vx = 0;
+      ship.vy = 0;
+      ship.angle = -Math.PI / 2;
+      ship.invulnerableTimer = 120; // 2 seconds flash shield
+    }
+
+    function fireLaser() {
+      if (lasers.length >= 5) return;
+      lasers.push({
+        x: ship.x + Math.cos(ship.angle) * ship.r,
+        y: ship.y + Math.sin(ship.angle) * ship.r,
+        vx: Math.cos(ship.angle) * 8.5 + ship.vx * 0.5,
+        vy: Math.sin(ship.angle) * 8.5 + ship.vy * 0.5,
+        life: 55
+      });
+      playVectorSound('laser');
+    }
+
+    function hyperspaceWarp() {
+      ship.x = 40 + Math.random() * (canvas.width - 80);
+      ship.y = 40 + Math.random() * (canvas.height - 80);
+      ship.vx = 0;
+      ship.vy = 0;
+      ship.invulnerableTimer = 60;
+      playVectorSound('warp');
+      createExplosion(ship.x, ship.y, '#38bdf8', 12);
+    }
+
+    function createExplosion(x, y, color = '#f8fafc', count = 18) {
+      for (let i = 0; i < count; i++) {
+        const ang = Math.random() * Math.PI * 2;
+        const spd = 1 + Math.random() * 4.5;
+        particles.push({
+          x: x,
+          y: y,
+          vx: Math.cos(ang) * spd,
+          vy: Math.sin(ang) * spd,
+          color: color,
+          life: 25 + Math.random() * 20
+        });
+      }
+    }
+
+    function gameOver() {
+      isPlaying = false;
+      playVectorSound('boom');
+      if (score > highScore) highScore = score;
+      updateScoreUI();
+      overlayTitle.textContent = I18N[currentLang].gameOverTitle;
+      overlayDesc.textContent = I18N[currentLang].gameOverDesc;
+      btnStart.textContent = I18N[currentLang].btnStart;
+      gameOverlay.style.display = 'flex';
+    }
+
+    // Input Handlers
+    window.addEventListener('keydown', (e) => {
+      if (!isPlaying) return;
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') ship.isRotatingLeft = true;
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') ship.isRotatingRight = true;
+      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') { ship.isThrusting = true; e.preventDefault(); }
+      if (e.key === ' ' || e.key === 'Spacebar') { fireLaser(); e.preventDefault(); }
+      if (e.key === 'Shift') { hyperspaceWarp(); e.preventDefault(); }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') ship.isRotatingLeft = false;
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') ship.isRotatingRight = false;
+      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') ship.isThrusting = false;
+    });
+
+    // Touch button bindings
+    const bindTouch = (elem, startFn, stopFn) => {
+      elem.addEventListener('mousedown', startFn);
+      elem.addEventListener('mouseup', stopFn);
+      elem.addEventListener('mouseleave', stopFn);
+      elem.addEventListener('touchstart', (e) => { e.preventDefault(); startFn(); }, { passive: false });
+      elem.addEventListener('touchend', (e) => { e.preventDefault(); stopFn(); }, { passive: false });
+    };
+
+    bindTouch(document.getElementById('btnRotateLeft'), () => ship.isRotatingLeft = true, () => ship.isRotatingLeft = false);
+    bindTouch(document.getElementById('btnRotateRight'), () => ship.isRotatingRight = true, () => ship.isRotatingRight = false);
+    bindTouch(document.getElementById('btnThrust'), () => ship.isThrusting = true, () => ship.isThrusting = false);
+    document.getElementById('btnFire').addEventListener('click', () => { if (isPlaying) fireLaser(); });
+    document.getElementById('btnHyper').addEventListener('click', () => { if (isPlaying) hyperspaceWarp(); });
+
+    btnStart.addEventListener('click', startGame);
+
+    // Main Simulation Update
+    function update() {
+      // 1. Rotation & Thrust Physics
+      if (ship.isRotatingLeft) ship.angle -= ship.rotSpeed;
+      if (ship.isRotatingRight) ship.angle += ship.rotSpeed;
+
+      if (ship.isThrusting) {
+        ship.vx += Math.cos(ship.angle) * ship.thrust;
+        ship.vy += Math.sin(ship.angle) * ship.thrust;
+        playVectorSound('thrust');
+
+        // Thruster exhaust particles
+        particles.push({
+          x: ship.x - Math.cos(ship.angle) * ship.r,
+          y: ship.y - Math.sin(ship.angle) * ship.r,
+          vx: -Math.cos(ship.angle) * (2 + Math.random() * 2) + (Math.random() - 0.5),
+          vy: -Math.sin(ship.angle) * (2 + Math.random() * 2) + (Math.random() - 0.5),
+          color: '#f97316',
+          life: 14
+        });
+      }
+
+      // Inertia & Friction
+      ship.vx *= ship.friction;
+      ship.vy *= ship.friction;
+      ship.x += ship.vx;
+      ship.y += ship.vy;
+
+      // Toroidal screen wrap-around
+      if (ship.x < 0) ship.x = canvas.width;
+      if (ship.x > canvas.width) ship.x = 0;
+      if (ship.y < 0) ship.y = canvas.height;
+      if (ship.y > canvas.height) ship.y = 0;
+
+      if (ship.invulnerableTimer > 0) ship.invulnerableTimer--;
+
+      // 2. Move Lasers
+      for (let i = lasers.length - 1; i >= 0; i--) {
+        const l = lasers[i];
+        l.x += l.vx;
+        l.y += l.vy;
+        l.life--;
+
+        // Screen wrap
+        if (l.x < 0) l.x = canvas.width;
+        if (l.x > canvas.width) l.x = 0;
+        if (l.y < 0) l.y = canvas.height;
+        if (l.y > canvas.height) l.y = 0;
+
+        if (l.life <= 0) {
+          lasers.splice(i, 1);
+          continue;
+        }
+
+        // Laser vs Asteroid collision
+        let laserHit = false;
+        for (let j = asteroids.length - 1; j >= 0; j--) {
+          const a = asteroids[j];
+          if (Math.hypot(l.x - a.x, l.y - a.y) < a.radius) {
+            laserHit = true;
+            playVectorSound('boom');
+            createExplosion(a.x, a.y, '#38bdf8', 16);
+
+            // Points based on size
+            score += (4 - a.level) * 20;
+            updateScoreUI();
+
+            // Split into two smaller asteroids
+            if (a.level > 1) {
+              const newRadius = a.level === 3 ? 22 : 12;
+              asteroids.push(createAsteroid(a.x, a.y, newRadius, a.level - 1));
+              asteroids.push(createAsteroid(a.x, a.y, newRadius, a.level - 1));
+            }
+
+            asteroids.splice(j, 1);
+            break;
+          }
+        }
+        if (laserHit) lasers.splice(i, 1);
+      }
+
+      // 3. Move Asteroids
+      asteroids.forEach(a => {
+        a.x += a.vx;
+        a.y += a.vy;
+        a.rot += a.rotSpeed;
+
+        if (a.x < -a.radius) a.x = canvas.width + a.radius;
+        if (a.x > canvas.width + a.radius) a.x = -a.radius;
+        if (a.y < -a.radius) a.y = canvas.height + a.radius;
+        if (a.y > canvas.height + a.radius) a.y = -a.radius;
+
+        // Collision with Ship
+        if (ship.invulnerableTimer === 0) {
+          if (Math.hypot(ship.x - a.x, ship.y - a.y) < a.radius + ship.r * 0.75) {
+            lives--;
+            updateScoreUI();
+            createExplosion(ship.x, ship.y, '#ef4444', 30);
+            playVectorSound('boom');
+            if (lives <= 0) {
+              gameOver();
+            } else {
+              resetShip();
+            }
+          }
+        }
+      });
+
+      // 4. Update Particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life--;
+        if (p.life <= 0) particles.splice(i, 1);
+      }
+
+      // 5. Check Wave Completion
+      if (asteroids.length === 0) {
+        wave++;
+        spawnAsteroidWave();
+        updateScoreUI();
+        playVectorSound('warp');
+      }
+    }
+
+    // Render Vector Graphics
+    function draw() {
+      ctx.fillStyle = '#02040a';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Distant Stars
+      ctx.fillStyle = '#334155';
+      for (let i = 0; i < 40; i++) {
+        ctx.fillRect((i * 67) % canvas.width, (i * 89) % canvas.height, 1.5, 1.5);
+      }
+
+      // Draw Particles
+      particles.forEach(p => {
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x, p.y, 2, 2);
+      });
+
+      // Draw Lasers
+      ctx.fillStyle = '#38bdf8';
+      lasers.forEach(l => {
+        ctx.beginPath();
+        ctx.arc(l.x, l.y, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Draw Vector Asteroids
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 1.8;
+      asteroids.forEach(a => {
+        ctx.save();
+        ctx.translate(a.x, a.y);
+        ctx.rotate(a.rot);
+        ctx.beginPath();
+        const angleStep = (Math.PI * 2) / a.numVerts;
+        for (let i = 0; i < a.numVerts; i++) {
+          const ang = i * angleStep;
+          const r = a.offsets[i];
+          const px = Math.cos(ang) * r;
+          const py = Math.sin(ang) * r;
+          if (i === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.stroke();
+        ctx.restore();
+      });
+
+      // Draw Player Ship (Vector Triangle)
+      if (ship.invulnerableTimer === 0 || Math.floor(ship.invulnerableTimer / 6) % 2 === 0) {
+        ctx.save();
+        ctx.translate(ship.x, ship.y);
+        ctx.rotate(ship.angle);
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
+
+        ctx.beginPath();
+        // Nose
+        ctx.moveTo(ship.r, 0);
+        // Back Left
+        ctx.lineTo(-ship.r * 0.8, -ship.r * 0.7);
+        // Inner notch
+        ctx.lineTo(-ship.r * 0.4, 0);
+        // Back Right
+        ctx.lineTo(-ship.r * 0.8, ship.r * 0.7);
+        ctx.closePath();
+        ctx.stroke();
+
+        // Thrust Flame
+        if (ship.isThrusting) {
+          ctx.strokeStyle = '#f97316';
+          ctx.beginPath();
+          ctx.moveTo(-ship.r * 0.4, -ship.r * 0.3);
+          ctx.lineTo(-ship.r * 1.3 - (Math.random() * 4), 0);
+          ctx.lineTo(-ship.r * 0.4, ship.r * 0.3);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+    }
+
+    function gameLoop() {
+      if (isPlaying) {
+        update();
+        draw();
+        gameLoopId = requestAnimationFrame(gameLoop);
+      }
+    }
+
+    // Language switcher
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+      const t = I18N[lang];
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const k = el.dataset.i18n;
+        if (t && t[k]) el.textContent = t[k];
+      });
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+    });
+
+    window.addEventListener('message', (e) => {
+      if (e.data && e.data.type === 'SET_LANGUAGE') {
+        const lang = e.data.lang;
+        if (lang === 'fr' || lang === 'en') setLanguage(lang);
+      }
+    });
+
+    // Initial preview
+    spawnAsteroidWave();
+    draw();
+  </script>
+</body>
+</html>

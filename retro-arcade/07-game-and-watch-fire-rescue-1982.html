@@ -1,0 +1,838 @@
+<!--ULP-META{"id":"game-and-watch-fire-rescue-1982","category":"retro-arcade","icon":"🚒","name":{"en":"1982 Game & Watch Fire Rescue","fr":"Game & Watch Sauvetage Incendie 1982"},"desc":{"en":"Authentic 1982 Game & Watch dual-switch LCD handheld simulator featuring pre-etched liquid crystal silhouettes, bouncing trampoline physics, and Game A/B modes.","fr":"Simulateur Game & Watch 1982 authentique avec silhouettes LCD gravées, physique de trampoline rebondissant et modes Jeu A/B."},"tags":["retro","arcade","1982","game-and-watch","lcd","nintendo","fireman","handheld"],"features":{"en":["Pre-etched segmented LCD silhouette rendering with authentic shadow ghosting","Dual firemen trampoline slider with 3 catch positions","Game A and Game B difficulty modes with accelerating pace","Original piezo audio beeps, miss angel animation, and real-time digital clock"],"fr":["Rendu de silhouettes LCD gravées avec ombrage fantôme authentique","Deux pompiers maniant la civière sur 3 positions de réception","Modes Jeu A et Jeu B à cadence progressive accélérée","Bips piézoélectriques originaux, animation d'anges et horloge numérique"]}}-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title data-ulp="name">1982 Game & Watch Fire Rescue</title>
+  <style>
+    :root {
+      --accent: #b91c1c;
+      --accent-hover: #991b1b;
+      --casing-burgundy: #6b141d;
+      --casing-gold: #e2c082;
+      --casing-plate: #d8c29d;
+      --lcd-bg: #c9cbb0;
+      --lcd-ghost: #b6b99f;
+      --lcd-ink: #141712;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    body {
+      background: #0f1115;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #eee;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 10px;
+      overflow-x: hidden;
+    }
+
+    .app-header {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .app-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fbbf24;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lang-switcher {
+      display: flex;
+      gap: 4px;
+      background: #222;
+      padding: 2px;
+      border-radius: 6px;
+      border: 1px solid #444;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: #aaa;
+      padding: 3px 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .lang-btn.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* Game & Watch Handheld Body */
+    .gw-console {
+      width: 100%;
+      max-width: 440px;
+      background: linear-gradient(135deg, #7c1522 0%, #520d15 100%);
+      border-radius: 24px;
+      padding: 14px 14px 18px;
+      border: 3px solid #8e1c2a;
+      box-shadow: 
+        inset 0 2px 4px rgba(255,255,255,0.4),
+        inset 0 -3px 6px rgba(0,0,0,0.6),
+        0 14px 28px rgba(0,0,0,0.7),
+        0 4px 10px rgba(0,0,0,0.5);
+      position: relative;
+    }
+
+    /* Brushed Metal Front Plate */
+    .metal-plate {
+      background: linear-gradient(135deg, #dfc699 0%, #caa970 50%, #e8d5b0 100%);
+      border-radius: 16px;
+      padding: 12px 10px 14px;
+      border: 2px solid #a3824c;
+      box-shadow: inset 0 1px 3px rgba(255,255,255,0.6), 0 2px 5px rgba(0,0,0,0.4);
+    }
+
+    /* Brand Header */
+    .plate-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      padding: 0 4px;
+    }
+
+    .gw-brand {
+      font-family: 'Arial Black', Impact, sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 1.5px;
+      color: #500a11;
+      text-transform: uppercase;
+    }
+
+    .game-title-strip {
+      font-family: 'Arial Black', Impact, sans-serif;
+      font-size: 1.05rem;
+      color: #b91c1c;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 0 rgba(255,255,255,0.6);
+    }
+
+    /* Small Function Buttons (Game A, Game B, Time, Audio) */
+    .function-buttons-strip {
+      display: flex;
+      gap: 6px;
+    }
+
+    .fn-btn {
+      background: #eee;
+      border: 1px solid #777;
+      border-radius: 3px;
+      padding: 2px 6px;
+      font-size: 0.6rem;
+      font-weight: 800;
+      color: #333;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .fn-btn.active {
+      background: #b91c1c;
+      color: #fff;
+      border-color: #7f1d1d;
+    }
+
+    /* LCD Screen Bezel */
+    .lcd-bezel {
+      background: #111;
+      border-radius: 10px;
+      padding: 6px;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.8), 0 1px 2px rgba(255,255,255,0.4);
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    /* The Authentic Olive/Grey Segmented LCD Screen */
+    .lcd-screen {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1.35;
+      background: #c3c7ac;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.15);
+      border: 1px solid #999d85;
+    }
+
+    #lcdCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Handheld Lower Deck with Large Tactile Red Rubber Buttons */
+    .gw-controls-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 12px;
+    }
+
+    .gw-big-btn {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #dc2626, #991b1b);
+      border: 3px solid #7f1d1d;
+      color: #fff;
+      font-size: 1.4rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 
+        inset 0 2px 4px rgba(255,255,255,0.4),
+        0 5px 0 #4c0d13,
+        0 8px 12px rgba(0,0,0,0.5);
+      transition: transform 0.05s, box-shadow 0.05s;
+    }
+
+    .gw-big-btn:active {
+      transform: translateY(4px);
+      box-shadow: 
+        inset 0 1px 2px rgba(255,255,255,0.4),
+        0 1px 0 #4c0d13,
+        0 3px 6px rgba(0,0,0,0.5);
+    }
+
+    .gw-center-info {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .gw-model-text {
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: #614620;
+      letter-spacing: 1px;
+    }
+
+    .gw-speaker-vents {
+      display: flex;
+      gap: 3px;
+      justify-content: center;
+    }
+
+    .vent-slit {
+      width: 3px;
+      height: 12px;
+      background: #4a3415;
+      border-radius: 2px;
+    }
+
+    /* Footer guide text */
+    .gw-guide {
+      margin-top: 10px;
+      font-size: 0.65rem;
+      color: #4b0c13;
+      text-align: center;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    @media (max-width: 380px) {
+      .gw-console {
+        padding: 10px 8px 14px;
+      }
+      .gw-big-btn {
+        width: 54px;
+        height: 54px;
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="app-title">
+      <span>🚒</span>
+      <h1 data-ulp="name" style="font-size: inherit; font-weight: inherit; margin: 0;">1982 Game & Watch Fire Rescue</h1>
+    </div>
+    <div class="lang-switcher">
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="fr">FR</button>
+    </div>
+  </header>
+
+  <main class="gw-console">
+    <div class="metal-plate">
+      <!-- Plate Header & Function Buttons -->
+      <div class="plate-header">
+        <div class="gw-brand">WIDE SCREEN</div>
+        <div class="game-title-strip">FIRE</div>
+        <div class="function-buttons-strip">
+          <button class="fn-btn active" id="btnGameA">GAME A</button>
+          <button class="fn-btn" id="btnGameB">GAME B</button>
+          <button class="fn-btn" id="btnAudioToggle">SOUND</button>
+        </div>
+      </div>
+
+      <!-- LCD Display Bezel -->
+      <div class="lcd-bezel">
+        <div class="lcd-screen">
+          <canvas id="lcdCanvas" width="400" height="290"></canvas>
+        </div>
+      </div>
+
+      <!-- Tactile Red Rubber Buttons Deck -->
+      <div class="gw-controls-row">
+        <button class="gw-big-btn" id="btnLeft" title="Move Left">◀</button>
+
+        <div class="gw-center-info">
+          <div class="gw-model-text">RC-04 • 1982</div>
+          <div class="gw-speaker-vents">
+            <div class="vent-slit"></div>
+            <div class="vent-slit"></div>
+            <div class="vent-slit"></div>
+            <div class="vent-slit"></div>
+          </div>
+        </div>
+
+        <button class="gw-big-btn" id="btnRight" title="Move Right">▶</button>
+      </div>
+
+      <div class="gw-guide" data-i18n="instructions">
+        Slide the firemen left & right to bounce falling victims safely into the ambulance! Game A: standard, Game B: frantic. Keyboard: Left & Right arrows.
+      </div>
+    </div>
+  </main>
+
+  <script>
+    window.I18N = {
+      en: {
+        instructions: "Slide the firemen left & right to bounce falling victims safely into the ambulance! Game A: standard, Game B: frantic. Keyboard: Left & Right arrows.",
+        gameOver: "GAME OVER",
+        scoreText: "SCORE",
+        missText: "MISS"
+      },
+      fr: {
+        instructions: "Déplacez les pompiers à gauche et à droite pour faire rebondir les victimes jusqu'à l'ambulance ! Jeu A: normal, Jeu B: rapide. Clavier: Flèches Gauche et Droite.",
+        gameOver: "FIN DE PARTIE",
+        scoreText: "SCORE",
+        missText: "FAUTES"
+      }
+    };
+
+    let currentLang = 'en';
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      });
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (window.I18N[lang] && window.I18N[lang][key]) {
+          el.textContent = window.I18N[lang][key];
+        }
+      });
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setLanguage(btn.getAttribute('data-lang'));
+      });
+    });
+
+    /* --- Piezo Buzzer Audio (Exact Game & Watch Pitch & Beeps) --- */
+    class GWPiezoAudio {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) this.ctx = new AudioContext();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume().catch(() => {});
+        }
+      }
+      tone(freq, dur = 0.035) {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + dur);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + dur);
+        } catch(e) {}
+      }
+      step() { this.tone(2048, 0.025); } // high pitch chirp for fall step
+      bounce() { this.tone(1024, 0.04); } // medium bounce beep
+      score() {
+        this.tone(1536, 0.04);
+        setTimeout(() => this.tone(2048, 0.05), 50);
+      }
+      miss() {
+        this.tone(512, 0.15);
+      }
+      click() { this.tone(1800, 0.015); }
+    }
+
+    const sound = new GWPiezoAudio();
+
+    /* --- LCD Discrete State & Positions --- */
+    // Firemen positions: 0 (Left), 1 (Center), 2 (Right)
+    let firemanPos = 1;
+    let score = 0;
+    let misses = 0;
+    const MAX_MISSES = 3;
+    let gameMode = 'A'; // 'A' or 'B'
+    let isGameOver = false;
+
+    // A victim moves through discrete trajectory slots:
+    // Slot 0: Jump out of window (Top Left)
+    // Slot 1: Mid air fall 1
+    // Slot 2: Low air fall 1 -> Catch at Trampoline 0 (Left)
+    // Slot 3: High bounce arc 1
+    // Slot 4: Mid air fall 2
+    // Slot 5: Low air fall 2 -> Catch at Trampoline 1 (Center)
+    // Slot 6: High bounce arc 2
+    // Slot 7: Mid air fall 3
+    // Slot 8: Low air fall 3 -> Catch at Trampoline 2 (Right)
+    // Slot 9: Safe bounce into Ambulance!
+
+    // The fixed pre-etched coordinates for each victim slot (x, y)
+    const VICTIM_SLOTS = [
+      { x: 55, y: 78, pose: 'jump' },    // 0: window jump
+      { x: 75, y: 110, pose: 'dive' },   // 1: drop
+      { x: 92, y: 172, pose: 'spread' }, // 2: catch 0
+      { x: 125, y: 105, pose: 'tumble' },// 3: arc 1 peak
+      { x: 148, y: 140, pose: 'dive' },  // 4: fall 2
+      { x: 168, y: 172, pose: 'spread' },// 5: catch 1
+      { x: 200, y: 105, pose: 'tumble' },// 6: arc 2 peak
+      { x: 228, y: 140, pose: 'dive' },  // 7: fall 3
+      { x: 248, y: 172, pose: 'spread' },// 8: catch 2
+      { x: 300, y: 180, pose: 'safe' }   // 9: into ambulance!
+    ];
+
+    // Splat positions if missed at each catch zone
+    const SPLAT_SLOTS = [
+      { x: 92, y: 220 },
+      { x: 168, y: 220 },
+      { x: 248, y: 220 }
+    ];
+
+    // Firemen trampoline X coords:
+    const TRAMPOLINE_X = [78, 154, 234];
+
+    let victims = [];
+    let splatEffect = null; // { index, timer }
+    let tickSpeed = 380; // ms per step
+    let lastStepTime = 0;
+    let spawnTimer = 0;
+
+    function resetGame(mode = 'A') {
+      gameMode = mode;
+      score = 0;
+      misses = 0;
+      firemanPos = 1;
+      victims = [];
+      splatEffect = null;
+      isGameOver = false;
+      tickSpeed = mode === 'A' ? 420 : 320;
+      spawnTimer = 0;
+
+      document.getElementById('btnGameA').classList.toggle('active', mode === 'A');
+      document.getElementById('btnGameB').classList.toggle('active', mode === 'B');
+    }
+
+    function spawnVictim() {
+      // Don't spawn if already one in slot 0
+      if (victims.some(v => v.step === 0)) return;
+      victims.push({ step: 0 });
+      sound.step();
+    }
+
+    function gameStep() {
+      if (isGameOver) return;
+
+      // Handle splat timeout
+      if (splatEffect) {
+        splatEffect.timer--;
+        if (splatEffect.timer <= 0) splatEffect = null;
+      }
+
+      // Progress each victim along their discrete LCD path
+      for (let i = victims.length - 1; i >= 0; i--) {
+        const v = victims[i];
+
+        // Check if victim is at a trampoline catch position (step 2, 5, 8)
+        if (v.step === 2) {
+          if (firemanPos === 0) {
+            // Caught at Left trampoline!
+            sound.bounce();
+            score++;
+            v.step++;
+          } else {
+            // Missed!
+            triggerMiss(0);
+            victims.splice(i, 1);
+            continue;
+          }
+        } else if (v.step === 5) {
+          if (firemanPos === 1) {
+            // Caught at Center trampoline!
+            sound.bounce();
+            score++;
+            v.step++;
+          } else {
+            triggerMiss(1);
+            victims.splice(i, 1);
+            continue;
+          }
+        } else if (v.step === 8) {
+          if (firemanPos === 2) {
+            // Caught at Right trampoline!
+            sound.bounce();
+            score++;
+            v.step++;
+          } else {
+            triggerMiss(2);
+            victims.splice(i, 1);
+            continue;
+          }
+        } else if (v.step === 9) {
+          // Entered ambulance safely!
+          score += 2;
+          sound.score();
+          victims.splice(i, 1);
+          continue;
+        } else {
+          // Standard falling step
+          v.step++;
+          sound.step();
+        }
+      }
+
+      // Progressive speedup
+      const targetSpeed = gameMode === 'A' 
+        ? Math.max(220, 420 - Math.floor(score / 10) * 15)
+        : Math.max(160, 320 - Math.floor(score / 10) * 18);
+      tickSpeed = targetSpeed;
+
+      // Spawning logic
+      spawnTimer++;
+      const spawnRate = gameMode === 'A' ? 6 : 4;
+      if (spawnTimer >= spawnRate) {
+        spawnTimer = 0;
+        if (victims.length < (gameMode === 'A' ? 3 : 4)) {
+          spawnVictim();
+        }
+      }
+    }
+
+    function triggerMiss(catchIndex) {
+      sound.miss();
+      splatEffect = { index: catchIndex, timer: 3 };
+      misses++;
+
+      if (misses >= MAX_MISSES) {
+        isGameOver = true;
+      }
+    }
+
+    /* --- LCD Canvas Renderer --- */
+    const canvas = document.getElementById('lcdCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function renderLCD() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 1. Permanent Pre-Printed Artwork (Burning building, Ambulance, Pavement)
+      drawPermanentArtwork();
+
+      // 2. LCD Ghosting (all silhouettes faintly visible in unlit grey)
+      drawAllSilhouettes(false);
+
+      // 3. LCD Active Elements (jet black opaque ink)
+      drawAllSilhouettes(true);
+
+      // 4. Digital Score & Miss Display
+      drawLCDHeader();
+
+      // 5. Game Over overlay if applicable
+      if (isGameOver) {
+        ctx.fillStyle = '#141712';
+        ctx.font = 'bold 22px "Courier New", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(window.I18N[currentLang].gameOver, canvas.width / 2, 80);
+      }
+    }
+
+    function drawPermanentArtwork() {
+      ctx.save();
+      // Burning Building on the left
+      ctx.strokeStyle = '#5f644e';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(10, 40, 50, 210);
+
+      // Windows
+      ctx.fillStyle = '#9da186';
+      ctx.fillRect(20, 60, 30, 24);
+      ctx.fillRect(20, 105, 30, 24);
+      ctx.fillRect(20, 150, 30, 24);
+      ctx.fillRect(20, 195, 30, 24);
+
+      // Flames on roof & top window
+      ctx.fillStyle = '#b91c1c';
+      ctx.font = '14px sans-serif';
+      ctx.fillText('🔥', 18, 36);
+      ctx.fillText('🔥', 36, 36);
+
+      // Ground pavement line
+      ctx.strokeStyle = '#5f644e';
+      ctx.beginPath();
+      ctx.moveTo(10, 250);
+      ctx.lineTo(390, 250);
+      ctx.stroke();
+
+      // Ambulance on the right
+      ctx.strokeRect(310, 175, 75, 75);
+      ctx.fillStyle = '#9da186';
+      ctx.fillRect(345, 185, 30, 25); // window
+      // Red Cross on Ambulance
+      ctx.fillStyle = '#b91c1c';
+      ctx.fillRect(324, 198, 14, 4);
+      ctx.fillRect(329, 193, 4, 14);
+      // Wheels
+      ctx.fillStyle = '#141712';
+      ctx.beginPath();
+      ctx.arc(328, 250, 10, 0, Math.PI * 2);
+      ctx.arc(368, 250, 10, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function drawAllSilhouettes(activeOnly) {
+      ctx.save();
+
+      // If activeOnly is true, only draw energized slots with dark ink;
+      // if false, draw all slots faintly for the authentic LCD "ghosting" look.
+      const ghostColor = 'rgba(120, 125, 102, 0.18)';
+      const inkColor = '#141712';
+
+      // --- Draw Firemen Trampoline ---
+      for (let pos = 0; pos < 3; pos++) {
+        const isActive = (firemanPos === pos);
+        if (activeOnly && !isActive) continue;
+        if (!activeOnly && isActive) continue;
+
+        ctx.fillStyle = activeOnly ? inkColor : ghostColor;
+        drawFiremenSilhouettes(TRAMPOLINE_X[pos], 200);
+      }
+
+      // --- Draw Victims in their slots ---
+      for (let s = 0; s < VICTIM_SLOTS.length; s++) {
+        const isOccupied = victims.some(v => v.step === s);
+        if (activeOnly && !isOccupied) continue;
+        if (!activeOnly && isOccupied) continue;
+
+        ctx.fillStyle = activeOnly ? inkColor : ghostColor;
+        const slot = VICTIM_SLOTS[s];
+        drawVictimSilhouette(slot.x, slot.y, slot.pose);
+      }
+
+      // --- Draw Miss Splat Silhouettes ---
+      for (let m = 0; m < 3; m++) {
+        const isSplatted = splatEffect && splatEffect.index === m;
+        if (activeOnly && !isSplatted) continue;
+        if (!activeOnly && isSplatted) continue;
+
+        ctx.fillStyle = activeOnly ? inkColor : ghostColor;
+        drawSplatSilhouette(SPLAT_SLOTS[m].x, SPLAT_SLOTS[m].y);
+      }
+
+      ctx.restore();
+    }
+
+    function drawFiremenSilhouettes(x, y) {
+      // Two firemen facing each other holding a taut canvas stretcher
+      // Left fireman
+      ctx.beginPath();
+      ctx.arc(x, y - 10, 5, 0, Math.PI * 2); // head
+      ctx.rect(x - 3, y - 5, 6, 18); // torso
+      ctx.rect(x - 5, y + 13, 4, 14); // leg 1
+      ctx.rect(x + 1, y + 13, 4, 14); // leg 2
+      // Trampoline bar
+      ctx.rect(x + 4, y + 2, 44, 4); // stretcher
+      // Right fireman
+      ctx.arc(x + 52, y - 10, 5, 0, Math.PI * 2);
+      ctx.rect(x + 49, y - 5, 6, 18);
+      ctx.rect(x + 47, y + 13, 4, 14);
+      ctx.rect(x + 53, y + 13, 4, 14);
+      ctx.fill();
+    }
+
+    function drawVictimSilhouette(x, y, pose) {
+      ctx.beginPath();
+      if (pose === 'jump' || pose === 'dive') {
+        // Tumbling head first
+        ctx.arc(x, y + 12, 4, 0, Math.PI * 2);
+        ctx.rect(x - 3, y, 6, 12);
+        ctx.rect(x - 6, y - 6, 4, 8); // arms back
+        ctx.rect(x + 2, y - 6, 4, 8);
+      } else if (pose === 'spread') {
+        // Spread eagle catching on trampoline
+        ctx.arc(x, y - 8, 4, 0, Math.PI * 2);
+        ctx.rect(x - 4, y - 4, 8, 10);
+        ctx.rect(x - 10, y - 2, 6, 3); // arms spread
+        ctx.rect(x + 4, y - 2, 6, 3);
+        ctx.rect(x - 6, y + 6, 4, 8); // legs
+        ctx.rect(x + 2, y + 6, 4, 8);
+      } else if (pose === 'safe') {
+        // Running into ambulance hands up
+        ctx.arc(x, y - 10, 4, 0, Math.PI * 2);
+        ctx.rect(x - 3, y - 6, 6, 14);
+        ctx.rect(x - 7, y - 12, 4, 8);
+        ctx.rect(x + 3, y - 12, 4, 8);
+      } else {
+        // Tumble
+        ctx.arc(x, y, 4, 0, Math.PI * 2);
+        ctx.rect(x - 6, y - 3, 12, 6);
+      }
+      ctx.fill();
+    }
+
+    function drawSplatSilhouette(x, y) {
+      // Broken angel silhouette
+      ctx.beginPath();
+      ctx.arc(x, y - 6, 4, 0, Math.PI * 2);
+      ctx.rect(x - 8, y, 16, 4);
+      ctx.rect(x - 12, y - 6, 6, 2); // angel wings
+      ctx.rect(x + 6, y - 6, 6, 2);
+      ctx.fill();
+    }
+
+    function drawLCDHeader() {
+      ctx.save();
+      ctx.fillStyle = '#141712';
+      ctx.font = 'bold 16px "Courier New", monospace';
+
+      // Digital Score
+      ctx.fillText(`SCORE ${String(score).padStart(3, '0')}`, 140, 32);
+
+      // Miss Angels / Indicators
+      ctx.font = 'bold 13px sans-serif';
+      let missStr = '';
+      for (let i = 0; i < misses; i++) missStr += ' 👼';
+      ctx.fillText(`${window.I18N[currentLang].missText}:${missStr}`, 270, 32);
+
+      // Realtime LCD clock in corner
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      ctx.font = 'bold 12px "Courier New", monospace';
+      ctx.fillText(timeStr, 80, 32);
+
+      ctx.restore();
+    }
+
+    /* --- Animation & Main Timer Loop --- */
+    function mainLoop(timestamp) {
+      if (timestamp - lastStepTime > tickSpeed) {
+        lastStepTime = timestamp;
+        gameStep();
+      }
+      renderLCD();
+      requestAnimationFrame(mainLoop);
+    }
+
+    /* --- Controls & Input --- */
+    function moveLeft() {
+      if (isGameOver) {
+        resetGame(gameMode);
+        return;
+      }
+      if (firemanPos > 0) {
+        firemanPos--;
+        sound.click();
+      }
+    }
+
+    function moveRight() {
+      if (isGameOver) {
+        resetGame(gameMode);
+        return;
+      }
+      if (firemanPos < 2) {
+        firemanPos++;
+        sound.click();
+      }
+    }
+
+    document.getElementById('btnLeft').addEventListener('click', moveLeft);
+    document.getElementById('btnRight').addEventListener('click', moveRight);
+
+    document.getElementById('btnGameA').addEventListener('click', () => {
+      sound.click();
+      resetGame('A');
+    });
+
+    document.getElementById('btnGameB').addEventListener('click', () => {
+      sound.click();
+      resetGame('B');
+    });
+
+    document.getElementById('btnAudioToggle').addEventListener('click', () => {
+      sound.enabled = !sound.enabled;
+      document.getElementById('btnAudioToggle').classList.toggle('active', sound.enabled);
+      if (sound.enabled) sound.bounce();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+        moveLeft();
+      } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+        moveRight();
+      } else if (e.key === '1') {
+        resetGame('A');
+      } else if (e.key === '2') {
+        resetGame('B');
+      }
+    });
+
+    // Init
+    setLanguage('en');
+    resetGame('A');
+    requestAnimationFrame(mainLoop);
+  </script>
+</body>
+</html>

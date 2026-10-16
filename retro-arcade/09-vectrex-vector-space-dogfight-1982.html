@@ -1,0 +1,1136 @@
+<!--ULP-META{"id":"vectrex-vector-space-dogfight-1982","category":"retro-arcade","icon":"🚀","name":{"en":"1982 Vectrex Vector Space Dogfight","fr":"Combat Spatial Vectrex 1982"},"desc":{"en":"Authentic 1982 Vectrex vector beam CRT console simulator with glowing phosphor wireframe graphics, analog space dogfight physics, and color overlays.","fr":"Simulateur de console CRT vectorielle Vectrex 1982 avec graphismes fil de fer phosphorescents, combat spatial analogique et calques colorés."},"tags":["retro","arcade","1982","vectrex","vector","crt","space","dogfight"],"features":{"en":["Authentic vector CRT beam simulation with phosphor glow and bloom","Color overlay slides: Cyan, Orange, Phosphor Green, and B&W","Full 360-degree Newtonian physics with inertia and thruster particles","Tactile 4-button console controller with analog-style sound synthesizer"],"fr":["Simulation de faisceau CRT vectoriel avec luminescence phosphorescente","Calques colorés interchangeables : Cyan, Orange, Vert et N&B","Physique newtonienne à 360 degrés avec inertie et traînées de propulsion","Manette console 4 boutons avec synthétiseur sonore rétro analogique"]}}-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title data-ulp="name">1982 Vectrex Vector Space Dogfight</title>
+  <style>
+    :root {
+      --accent: #06b6d4;
+      --accent-glow: rgba(6, 182, 212, 0.5);
+      --casing-dark: #1e2024;
+      --casing-rim: #2d3139;
+      --vector-color: #38bdf8;
+      --vector-glow: #0284c7;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    body {
+      background: #0d0e12;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #eee;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 10px;
+      overflow-x: hidden;
+    }
+
+    .app-header {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .app-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lang-switcher {
+      display: flex;
+      gap: 4px;
+      background: #222;
+      padding: 2px;
+      border-radius: 6px;
+      border: 1px solid #444;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: #aaa;
+      padding: 3px 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .lang-btn.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* Vectrex Console Tower Cabinet */
+    .vectrex-tower {
+      width: 100%;
+      max-width: 440px;
+      background: linear-gradient(to right, #1b1d22 0%, #292d34 30%, #292d34 70%, #17181c 100%);
+      border: 4px solid #363b45;
+      border-radius: 20px;
+      box-shadow: 
+        inset 0 2px 4px rgba(255,255,255,0.1),
+        inset 0 -4px 10px rgba(0,0,0,0.8),
+        0 14px 28px rgba(0,0,0,0.7),
+        0 0 30px rgba(6, 182, 212, 0.15);
+      padding: 16px 14px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+    }
+
+    /* Brand Header Badge */
+    .vectrex-badge {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 4px;
+      border-bottom: 2px solid #3a3f4b;
+      padding-bottom: 8px;
+    }
+
+    .vectrex-logo-text {
+      font-family: 'Arial Black', Impact, sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+      color: #e2e8f0;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+    }
+
+    .vectrex-model {
+      font-size: 0.65rem;
+      color: #94a3b8;
+      letter-spacing: 1px;
+      font-weight: bold;
+    }
+
+    /* 9-inch Vertical 3:4 CRT Bezel */
+    .crt-bezel-outer {
+      background: #090a0d;
+      border: 4px solid #1a1b20;
+      border-radius: 18px;
+      padding: 10px;
+      box-shadow: 
+        inset 0 0 25px rgba(0,0,0,0.95),
+        0 4px 10px rgba(0,0,0,0.5);
+      position: relative;
+    }
+
+    .crt-screen-container {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 0.85; /* Vertical CRT display ratio */
+      background: #030407;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: inset 0 0 35px rgba(0,0,0,0.9);
+      border: 2px solid #222630;
+    }
+
+    #vectorCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Translucent Colored Plastic Screen Overlays */
+    .screen-overlay-tint {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      opacity: 0.35;
+      transition: background 0.3s ease, opacity 0.3s ease;
+    }
+
+    .tint-cyan {
+      background: linear-gradient(180deg, rgba(6,182,212,0.5) 0%, rgba(14,165,233,0.2) 60%, rgba(56,189,248,0.6) 100%);
+    }
+    .tint-orange {
+      background: linear-gradient(180deg, rgba(249,115,22,0.6) 0%, rgba(234,88,12,0.2) 60%, rgba(251,146,60,0.6) 100%);
+    }
+    .tint-green {
+      background: linear-gradient(180deg, rgba(34,197,94,0.6) 0%, rgba(16,185,129,0.2) 60%, rgba(74,222,128,0.6) 100%);
+    }
+    .tint-mono {
+      background: transparent;
+    }
+
+    /* Phosphor CRT Scanlines & Curved Glass Flare */
+    .crt-glass-glare {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 30%, rgba(255,255,255,0.06) 0%, transparent 70%);
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+    }
+
+    /* Vectrex Controls Compartment */
+    .controller-unit {
+      background: #17181c;
+      border: 2px solid #2c3038;
+      border-radius: 14px;
+      padding: 12px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .preset-selector-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 4px;
+      font-size: 0.75rem;
+    }
+
+    .overlay-buttons {
+      display: flex;
+      gap: 4px;
+    }
+
+    .overlay-btn {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #555;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+
+    .overlay-btn:hover {
+      transform: scale(1.15);
+    }
+
+    .overlay-btn.active {
+      border-color: #fff;
+      box-shadow: 0 0 8px #fff;
+    }
+
+    /* 4 Distinct Horizontal Action Buttons (1, 2, 3, 4) */
+    .vectrex-keypad {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    /* Virtual Joystick / D-Pad */
+    .analog-stick-zone {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      max-width: 140px;
+      margin: 0 auto;
+    }
+
+    .stick-btn {
+      height: 38px;
+      background: linear-gradient(to bottom, #373c47, #22252c);
+      border: 1px solid #4e5563;
+      border-radius: 6px;
+      color: #94a3b8;
+      font-size: 0.85rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 0 #111, 0 4px 6px rgba(0,0,0,0.5);
+    }
+
+    .stick-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #111;
+      color: #38bdf8;
+      border-color: #38bdf8;
+    }
+
+    /* Action Buttons (1: Shield, 2: Warp, 3: Fire, 4: Thrust) */
+    .action-buttons-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+    }
+
+    .action-circle-btn {
+      height: 40px;
+      background: linear-gradient(to bottom, #3b4252, #242933);
+      border: 2px solid #4c566a;
+      border-radius: 8px;
+      color: #eceff4;
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 0 #16181f, 0 4px 6px rgba(0,0,0,0.4);
+    }
+
+    .action-circle-btn span.num {
+      font-size: 0.55rem;
+      color: #88c0d0;
+    }
+
+    .action-circle-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #16181f;
+    }
+
+    .action-circle-btn.btn-fire {
+      background: linear-gradient(to bottom, #dc2626, #991b1b);
+      border-color: #f87171;
+    }
+
+    .action-circle-btn.btn-thrust {
+      background: linear-gradient(to bottom, #0284c7, #0369a1);
+      border-color: #38bdf8;
+    }
+
+    /* Modal Message overlay */
+    .screen-prompt {
+      position: absolute;
+      inset: 0;
+      background: rgba(3, 4, 7, 0.85);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 16px;
+      color: #38bdf8;
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: bold;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      text-shadow: 0 0 10px #0284c7;
+    }
+
+    .screen-prompt.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .screen-prompt h2 {
+      font-size: 1.3rem;
+      margin-bottom: 6px;
+      letter-spacing: 2px;
+    }
+
+    .screen-prompt p {
+      font-size: 0.85rem;
+      color: #bae6fd;
+      margin-bottom: 12px;
+    }
+
+    .prompt-action-btn {
+      background: #0284c7;
+      color: #fff;
+      border: 1px solid #38bdf8;
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: bold;
+    }
+
+    .guide-text {
+      font-size: 0.65rem;
+      color: #64748b;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    @media (max-width: 380px) {
+      .vectrex-tower {
+        padding: 12px 10px 16px;
+      }
+      .stick-btn {
+        height: 34px;
+        font-size: 0.75rem;
+      }
+      .action-circle-btn {
+        height: 36px;
+        font-size: 0.65rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="app-title">
+      <span>🚀</span>
+      <h1 data-ulp="name" style="font-size: inherit; font-weight: inherit; margin: 0;">1982 Vectrex Vector Space Dogfight</h1>
+    </div>
+    <div class="lang-switcher">
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="fr">FR</button>
+    </div>
+  </header>
+
+  <main class="vectrex-tower">
+    <!-- Console Brand Header -->
+    <div class="vectrex-badge">
+      <div class="vectrex-logo-text">VECTREX</div>
+      <div class="vectrex-model">HP 3000 • 1982</div>
+    </div>
+
+    <!-- CRT Screen Bezel -->
+    <div class="crt-bezel-outer">
+      <div class="crt-screen-container">
+        <canvas id="vectorCanvas" width="400" height="470"></canvas>
+        <div class="screen-overlay-tint tint-cyan" id="colorOverlay"></div>
+        <div class="crt-glass-glare"></div>
+
+        <!-- In-Screen Prompt Overlay -->
+        <div class="screen-prompt visible" id="screenPrompt">
+          <h2 id="promptTitle">SPACE DOGFIGHT</h2>
+          <p id="promptSub">DEFEND VECTOR SECTOR</p>
+          <button class="prompt-action-btn" id="btnPromptAction" data-i18n="startMission">START MISSION</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controller Deck -->
+    <div class="controller-unit">
+      <div class="preset-selector-row">
+        <span style="color: #94a3b8; font-size: 0.7rem; font-weight: bold;" data-i18n="colorFilter">OVERLAY:</span>
+        <div class="overlay-buttons">
+          <button class="overlay-btn active" data-tint="tint-cyan" style="background: #06b6d4;" title="Cyan Tint"></button>
+          <button class="overlay-btn" data-tint="tint-orange" style="background: #f97316;" title="Orange Tint"></button>
+          <button class="overlay-btn" data-tint="tint-green" style="background: #22c55e;" title="Green Tint"></button>
+          <button class="overlay-btn" data-tint="tint-mono" style="background: #ffffff;" title="Monochrome White"></button>
+        </div>
+        <button id="btnAudioToggle" style="background: #282c35; border: 1px solid #4b5263; color: #38bdf8; font-size: 0.65rem; border-radius: 4px; padding: 2px 6px; cursor: pointer;">AUDIO: ON</button>
+      </div>
+
+      <div class="vectrex-keypad">
+        <!-- Directional Joystick Area -->
+        <div class="analog-stick-zone">
+          <div></div>
+          <button class="stick-btn" id="btnTurnUp" title="Thrust">▲</button>
+          <div></div>
+          <button class="stick-btn" id="btnTurnLeft" title="Turn Left">◀</button>
+          <button class="stick-btn" id="btnHyperspace" style="color: #c084fc; font-size: 0.65rem;" title="Shield">🛡️</button>
+          <button class="stick-btn" id="btnTurnRight" title="Turn Right">▶</button>
+          <div></div>
+          <button class="stick-btn" id="btnBrake" title="Brake">▼</button>
+          <div></div>
+        </div>
+
+        <!-- 4 Authentic Console Action Buttons -->
+        <div class="action-buttons-row">
+          <button class="action-circle-btn" id="btnAction1">
+            <span class="num">1</span>
+            <span data-i18n="shield">SHIELD</span>
+          </button>
+          <button class="action-circle-btn" id="btnAction2">
+            <span class="num">2</span>
+            <span data-i18n="warp">WARP</span>
+          </button>
+          <button class="action-circle-btn btn-fire" id="btnAction3">
+            <span class="num">3</span>
+            <span data-i18n="fire">FIRE</span>
+          </button>
+          <button class="action-circle-btn btn-thrust" id="btnAction4">
+            <span class="num">4</span>
+            <span data-i18n="thrust">THRUST</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Instructions Guide -->
+    <div class="guide-text" data-i18n="instructions">
+      Turn with Left/Right, Thrust forward, Fire lasers to eliminate hostile vector squadrons. Keyboard: Arrows, Space (Fire), Shift (Thrust), Z (Shield).
+    </div>
+  </main>
+
+  <script>
+    window.I18N = {
+      en: {
+        colorFilter: "OVERLAY:",
+        shield: "SHIELD",
+        warp: "WARP",
+        fire: "FIRE",
+        thrust: "THRUST",
+        startMission: "START MISSION",
+        gameOver: "MISSION FAILED",
+        victory: "SECTOR SECURED",
+        instructions: "Turn with Left/Right, Thrust forward, Fire lasers to eliminate hostile vector squadrons. Keyboard: Arrows, Space (Fire), Shift (Thrust), Z (Shield)."
+      },
+      fr: {
+        colorFilter: "CALQUE :",
+        shield: "BOUCLIER",
+        warp: "SAUT",
+        fire: "TIRER",
+        thrust: "PROPULSION",
+        startMission: "DÉMARRER LA MISSION",
+        gameOver: "ÉCHEC DE LA MISSION",
+        victory: "SECTEUR SÉCURISÉ",
+        instructions: "Tournez avec Gauche/Droite, propulsez-vous, détruisez les escadrons ennemis au laser. Clavier : Flèches, Espace (Tir), Maj (Moteur), Z (Bouclier)."
+      }
+    };
+
+    let currentLang = 'en';
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      });
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (window.I18N[lang] && window.I18N[lang][key]) {
+          el.textContent = window.I18N[lang][key];
+        }
+      });
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setLanguage(btn.getAttribute('data-lang'));
+      });
+    });
+
+    /* --- Sound Synthesizer (Vectrex Analog Sound Generator) --- */
+    class VectrexSound {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume().catch(() => {});
+        }
+      }
+      playLaser() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(880, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(110, this.ctx.currentTime + 0.12);
+
+          gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.12);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.12);
+        } catch(e) {}
+      }
+      playThrust() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(75, this.ctx.currentTime);
+          osc.frequency.linearRampToValueAtTime(50, this.ctx.currentTime + 0.08);
+
+          gain.gain.setValueAtTime(0.06, this.ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.08);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.08);
+        } catch(e) {}
+      }
+      playExplosion() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(120, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(30, this.ctx.currentTime + 0.35);
+
+          gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.35);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.35);
+        } catch(e) {}
+      }
+      playShield() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(440, this.ctx.currentTime);
+          osc.frequency.linearRampToValueAtTime(660, this.ctx.currentTime + 0.15);
+
+          gain.gain.setValueAtTime(0.06, this.ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.15);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.15);
+        } catch(e) {}
+      }
+    }
+
+    const sound = new VectrexSound();
+
+    /* --- Vector Graphics & Dogfight Simulation --- */
+    const canvas = document.getElementById('vectorCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let gameState = 'ready'; // ready, playing, gameover
+    let score = 0;
+    let wave = 1;
+
+    // Player state
+    const ship = {
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      angle: -Math.PI / 2,
+      vx: 0,
+      vy: 0,
+      thrusting: false,
+      shield: 100,
+      shieldActive: false,
+      radius: 12
+    };
+
+    let lasers = [];
+    let enemies = [];
+    let particles = [];
+    let stars = [];
+
+    // Initialize decorative 3D vector stars
+    for (let i = 0; i < 40; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 1.5 + 0.5,
+        speed: Math.random() * 0.4 + 0.1
+      });
+    }
+
+    function spawnEnemies() {
+      enemies = [];
+      const count = 3 + wave * 2;
+      for (let i = 0; i < count; i++) {
+        const side = Math.floor(Math.random() * 4);
+        let ex, ey;
+        if (side === 0) { ex = Math.random() * canvas.width; ey = 20; }
+        else if (side === 1) { ex = canvas.width - 20; ey = Math.random() * canvas.height; }
+        else if (side === 2) { ex = Math.random() * canvas.width; ey = canvas.height - 20; }
+        else { ex = 20; ey = Math.random() * canvas.height; }
+
+        enemies.push({
+          x: ex,
+          y: ey,
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: (Math.random() - 0.5) * 1.5,
+          angle: 0,
+          rotSpeed: (Math.random() - 0.5) * 0.05,
+          type: i % 2 === 0 ? 'saucer' : 'fighter',
+          radius: 14,
+          shootCooldown: Math.random() * 120 + 80
+        });
+      }
+    }
+
+    function startMission() {
+      score = 0;
+      wave = 1;
+      ship.x = canvas.width / 2;
+      ship.y = canvas.height / 2;
+      ship.vx = 0;
+      ship.vy = 0;
+      ship.angle = -Math.PI / 2;
+      ship.shield = 100;
+      lasers = [];
+      particles = [];
+      spawnEnemies();
+
+      document.getElementById('screenPrompt').classList.remove('visible');
+      gameState = 'playing';
+    }
+
+    function triggerGameOver() {
+      gameState = 'gameover';
+      sound.playExplosion();
+      document.getElementById('promptTitle').textContent = window.I18N[currentLang].gameOver;
+      document.getElementById('promptSub').textContent = `FINAL SCORE: ${score}`;
+      document.getElementById('btnPromptAction').textContent = window.I18N[currentLang].startMission;
+      document.getElementById('screenPrompt').classList.add('visible');
+    }
+
+    function fireLaser() {
+      if (gameState !== 'playing') return;
+      const speed = 7;
+      lasers.push({
+        x: ship.x + Math.cos(ship.angle) * 14,
+        y: ship.y + Math.sin(ship.angle) * 14,
+        vx: Math.cos(ship.angle) * speed + ship.vx * 0.3,
+        vy: Math.sin(ship.angle) * speed + ship.vy * 0.3,
+        life: 50,
+        isEnemy: false
+      });
+      sound.playLaser();
+    }
+
+    function triggerShield() {
+      if (gameState !== 'playing' || ship.shield <= 0) return;
+      ship.shieldActive = true;
+      sound.playShield();
+      setTimeout(() => {
+        ship.shieldActive = false;
+      }, 1500);
+    }
+
+    function triggerWarp() {
+      if (gameState !== 'playing') return;
+      ship.x = Math.random() * (canvas.width - 60) + 30;
+      ship.y = Math.random() * (canvas.height - 60) + 30;
+      ship.vx = 0;
+      ship.vy = 0;
+      sound.playShield();
+      createExplosion(ship.x, ship.y, '#38bdf8', 12);
+    }
+
+    function createExplosion(x, y, color = '#38bdf8', count = 16) {
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const spd = Math.random() * 4 + 1;
+        particles.push({
+          x, y,
+          vx: Math.cos(angle) * spd,
+          vy: Math.sin(angle) * spd,
+          life: 30 + Math.random() * 20,
+          maxLife: 50,
+          color
+        });
+      }
+    }
+
+    /* --- Vector Drawing Helpers (Clean Wireframes with Vector Bloom) --- */
+    function drawVectorLine(p1, p2, color = '#38bdf8', width = 1.6) {
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = width;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.moveTo(p1.x, p1.y);
+      ctx.lineTo(p2.x, p2.y);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawVectorShip() {
+      ctx.save();
+      ctx.translate(ship.x, ship.y);
+      ctx.rotate(ship.angle);
+
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1.8;
+      ctx.shadowColor = '#38bdf8';
+      ctx.shadowBlur = 10;
+
+      // Classic arrowhead vector starfighter
+      ctx.beginPath();
+      ctx.moveTo(14, 0);
+      ctx.lineTo(-10, -8);
+      ctx.lineTo(-6, 0);
+      ctx.lineTo(-10, 8);
+      ctx.closePath();
+      ctx.stroke();
+
+      // Cockpit internal diamond vector
+      ctx.beginPath();
+      ctx.moveTo(4, 0);
+      ctx.lineTo(-2, -3);
+      ctx.lineTo(-6, 0);
+      ctx.lineTo(-2, 3);
+      ctx.closePath();
+      ctx.stroke();
+
+      // Thruster flame when accelerating
+      if (ship.thrusting) {
+        ctx.strokeStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.moveTo(-6, -4);
+        ctx.lineTo(-14 - Math.random() * 6, 0);
+        ctx.lineTo(-6, 4);
+        ctx.stroke();
+      }
+
+      // Force field bubble
+      if (ship.shieldActive) {
+        ctx.strokeStyle = '#a855f7';
+        ctx.shadowColor = '#c084fc';
+        ctx.shadowBlur = 14;
+        ctx.beginPath();
+        ctx.arc(0, 0, ship.radius + 6, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    function drawVectorEnemy(e) {
+      ctx.save();
+      ctx.translate(e.x, e.y);
+      ctx.rotate(e.angle);
+
+      ctx.strokeStyle = e.type === 'saucer' ? '#f43f5e' : '#fb923c';
+      ctx.shadowColor = e.type === 'saucer' ? '#f43f5e' : '#fb923c';
+      ctx.shadowBlur = 8;
+      ctx.lineWidth = 1.5;
+
+      if (e.type === 'saucer') {
+        // Vector Flying Saucer
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 14, 6, 0, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(0, -2, 6, Math.PI, 0);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(-10, 1);
+        ctx.lineTo(10, 1);
+        ctx.stroke();
+      } else {
+        // Vector Geometric Interceptor
+        ctx.beginPath();
+        ctx.moveTo(12, 0);
+        ctx.lineTo(0, -10);
+        ctx.lineTo(-10, -5);
+        ctx.lineTo(-4, 0);
+        ctx.lineTo(-10, 5);
+        ctx.lineTo(0, 10);
+        ctx.closePath();
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(0, -10);
+        ctx.lineTo(0, 10);
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    /* --- Game Update Loop --- */
+    function update() {
+      if (gameState !== 'playing') return;
+
+      // Update Player Physics
+      if (ship.thrusting) {
+        ship.vx += Math.cos(ship.angle) * 0.12;
+        ship.vy += Math.sin(ship.angle) * 0.12;
+        if (Math.random() < 0.3) sound.playThrust();
+      }
+
+      // Friction / Dampening
+      ship.vx *= 0.985;
+      ship.vy *= 0.985;
+      ship.x += ship.vx;
+      ship.y += ship.vy;
+
+      // Screen wrapping
+      if (ship.x < 0) ship.x = canvas.width;
+      if (ship.x > canvas.width) ship.x = 0;
+      if (ship.y < 0) ship.y = canvas.height;
+      if (ship.y > canvas.height) ship.y = 0;
+
+      // Update Lasers
+      for (let i = lasers.length - 1; i >= 0; i--) {
+        const l = lasers[i];
+        l.x += l.vx;
+        l.y += l.vy;
+        l.life--;
+
+        // Screen wrap
+        if (l.x < 0) l.x = canvas.width;
+        if (l.x > canvas.width) l.x = 0;
+        if (l.y < 0) l.y = canvas.height;
+        if (l.y > canvas.height) l.y = 0;
+
+        if (l.life <= 0) {
+          lasers.splice(i, 1);
+          continue;
+        }
+
+        // Collision with enemies
+        if (!l.isEnemy) {
+          for (let j = enemies.length - 1; j >= 0; j--) {
+            const e = enemies[j];
+            const dist = Math.hypot(l.x - e.x, l.y - e.y);
+            if (dist < e.radius + 4) {
+              // Destroyed enemy
+              createExplosion(e.x, e.y, e.type === 'saucer' ? '#f43f5e' : '#fb923c', 16);
+              sound.playExplosion();
+              score += e.type === 'saucer' ? 250 : 150;
+              enemies.splice(j, 1);
+              lasers.splice(i, 1);
+              break;
+            }
+          }
+        }
+      }
+
+      // Update Enemies
+      enemies.forEach(e => {
+        e.angle += e.rotSpeed;
+        e.x += e.vx;
+        e.y += e.vy;
+
+        if (e.x < 0) e.x = canvas.width;
+        if (e.x > canvas.width) e.x = 0;
+        if (e.y < 0) e.y = canvas.height;
+        if (e.y > canvas.height) e.y = 0;
+
+        // Collision with player
+        const distToShip = Math.hypot(e.x - ship.x, e.y - ship.y);
+        if (distToShip < e.radius + ship.radius) {
+          if (ship.shieldActive) {
+            createExplosion(e.x, e.y, '#a855f7', 12);
+            e.x = -100; // eliminate enemy safely
+          } else {
+            triggerGameOver();
+          }
+        }
+      });
+
+      // Wave cleared
+      if (enemies.length === 0) {
+        wave++;
+        score += 500;
+        spawnEnemies();
+      }
+
+      // Update Particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life--;
+        if (p.life <= 0) particles.splice(i, 1);
+      }
+    }
+
+    /* --- Render Vector Screen --- */
+    function render() {
+      // Clear with dark phosphor persistence
+      ctx.fillStyle = 'rgba(2, 4, 8, 0.4)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Render vector stars
+      ctx.fillStyle = '#64748b';
+      stars.forEach(s => {
+        ctx.fillRect(s.x, s.y, s.size, s.size);
+      });
+
+      // Render HUD
+      ctx.save();
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowColor = '#38bdf8';
+      ctx.shadowBlur = 6;
+      ctx.font = 'bold 12px "Courier New", monospace';
+      ctx.fillText(`SCORE: ${score}`, 16, 24);
+      ctx.fillText(`SECTOR: ${wave}`, canvas.width - 110, 24);
+      ctx.restore();
+
+      // Render Ship
+      if (gameState === 'playing') {
+        drawVectorShip();
+      }
+
+      // Render Enemies
+      enemies.forEach(drawVectorEnemy);
+
+      // Render Lasers
+      lasers.forEach(l => {
+        ctx.save();
+        ctx.strokeStyle = '#ffffff';
+        ctx.shadowColor = '#38bdf8';
+        ctx.shadowBlur = 10;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(l.x, l.y);
+        ctx.lineTo(l.x - l.vx * 1.5, l.y - l.vy * 1.5);
+        ctx.stroke();
+        ctx.restore();
+      });
+
+      // Render Particles
+      particles.forEach(p => {
+        ctx.save();
+        ctx.fillStyle = p.color;
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = 6;
+        ctx.globalAlpha = p.life / p.maxLife;
+        ctx.fillRect(p.x, p.y, 2, 2);
+        ctx.restore();
+      });
+    }
+
+    function mainLoop() {
+      update();
+      render();
+      requestAnimationFrame(mainLoop);
+    }
+
+    /* --- Control Bindings & Touch Handlers --- */
+    let turnLeftInterval = null;
+    let turnRightInterval = null;
+
+    function startTurnLeft() {
+      if (turnLeftInterval) return;
+      turnLeftInterval = setInterval(() => { ship.angle -= 0.1; }, 30);
+    }
+    function stopTurnLeft() {
+      if (turnLeftInterval) { clearInterval(turnLeftInterval); turnLeftInterval = null; }
+    }
+
+    function startTurnRight() {
+      if (turnRightInterval) return;
+      turnRightInterval = setInterval(() => { ship.angle += 0.1; }, 30);
+    }
+    function stopTurnRight() {
+      if (turnRightInterval) { clearInterval(turnRightInterval); turnRightInterval = null; }
+    }
+
+    // Touch & Pointer for steering
+    const btnTurnLeft = document.getElementById('btnTurnLeft');
+    btnTurnLeft.addEventListener('pointerdown', startTurnLeft);
+    window.addEventListener('pointerup', stopTurnLeft);
+
+    const btnTurnRight = document.getElementById('btnTurnRight');
+    btnTurnRight.addEventListener('pointerdown', startTurnRight);
+    window.addEventListener('pointerup', stopTurnRight);
+
+    // Thrust
+    const btnThrust = document.getElementById('btnAction4');
+    const btnTurnUp = document.getElementById('btnTurnUp');
+    const startThrust = () => { ship.thrusting = true; };
+    const stopThrust = () => { ship.thrusting = false; };
+
+    btnThrust.addEventListener('pointerdown', startThrust);
+    window.addEventListener('pointerup', stopThrust);
+    btnTurnUp.addEventListener('pointerdown', startThrust);
+
+    // Brake
+    document.getElementById('btnBrake').addEventListener('pointerdown', () => {
+      ship.vx *= 0.5;
+      ship.vy *= 0.5;
+    });
+
+    // Fire laser
+    document.getElementById('btnAction3').addEventListener('click', fireLaser);
+
+    // Shield
+    document.getElementById('btnAction1').addEventListener('click', triggerShield);
+    document.getElementById('btnHyperspace').addEventListener('click', triggerShield);
+
+    // Warp
+    document.getElementById('btnAction2').addEventListener('click', triggerWarp);
+
+    // Start mission
+    document.getElementById('btnPromptAction').addEventListener('click', startMission);
+
+    // Overlay color switches
+    document.querySelectorAll('.overlay-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.overlay-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const overlay = document.getElementById('colorOverlay');
+        overlay.className = 'screen-overlay-tint ' + btn.getAttribute('data-tint');
+      });
+    });
+
+    // Audio toggle
+    document.getElementById('btnAudioToggle').addEventListener('click', () => {
+      sound.enabled = !sound.enabled;
+      document.getElementById('btnAudioToggle').textContent = sound.enabled ? 'AUDIO: ON' : 'AUDIO: OFF';
+    });
+
+    // Keyboard controls
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+        ship.angle -= 0.12;
+      } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+        ship.angle += 0.12;
+      } else if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W' || e.key === 'Shift') {
+        ship.thrusting = true;
+      } else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') {
+        ship.vx *= 0.7;
+        ship.vy *= 0.7;
+      } else if (e.key === ' ' || e.key === 'Enter') {
+        fireLaser();
+      } else if (e.key === 'z' || e.key === 'Z') {
+        triggerShield();
+      } else if (e.key === 'x' || e.key === 'X') {
+        triggerWarp();
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W' || e.key === 'Shift') {
+        ship.thrusting = false;
+      }
+    });
+
+    // Init
+    setLanguage('en');
+    requestAnimationFrame(mainLoop);
+  </script>
+</body>
+</html>
