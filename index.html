@@ -298,8 +298,120 @@
     <script src="js/app-service-db.js?v=20260922_v2"></script>
     <!-- Chart.js for Admin Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Top Announcement Bar Styles & Script -->
+    <style>
+      .top-announcement-bar {
+        position: relative;
+        z-index: 1000;
+        background: linear-gradient(90deg, rgba(0, 242, 254, 0.18) 0%, rgba(255, 0, 127, 0.22) 50%, rgba(0, 242, 254, 0.18) 100%);
+        border-bottom: 1px solid rgba(0, 242, 254, 0.4);
+        box-shadow: 0 4px 20px rgba(0, 242, 254, 0.2);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        padding: 9px 16px;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        color: #ffffff;
+        font-size: 13.5px;
+      }
+      .top-announcement-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        text-align: center;
+      }
+      .announcement-tag {
+        background: linear-gradient(135deg, #00f2fe, #ff007f);
+        color: #fff;
+        font-weight: 800;
+        font-size: 11px;
+        letter-spacing: 0.8px;
+        padding: 3px 10px;
+        border-radius: 999px;
+        text-transform: uppercase;
+        box-shadow: 0 0 12px rgba(255, 0, 127, 0.6);
+        animation: pulseTag 2s infinite ease-in-out;
+      }
+      @keyframes pulseTag {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.05); opacity: 0.92; }
+      }
+      .announcement-text {
+        font-weight: 500;
+        color: #f1f5f9;
+      }
+      .announcement-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: linear-gradient(135deg, #00f2fe, #ff007f);
+        color: #fff !important;
+        text-decoration: none !important;
+        font-weight: 700;
+        font-size: 12.5px;
+        padding: 5px 15px;
+        border-radius: 999px;
+        box-shadow: 0 2px 12px rgba(0, 242, 254, 0.45);
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .announcement-cta:hover {
+        transform: translateY(-1px) scale(1.04);
+        box-shadow: 0 4px 18px rgba(255, 0, 127, 0.7);
+      }
+      .announcement-close {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #94a3b8;
+        font-size: 20px;
+        line-height: 1;
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 4px;
+        transition: color 0.2s;
+      }
+      .announcement-close:hover {
+        color: #ffffff;
+      }
+      @media (max-width: 768px) {
+        .top-announcement-bar { padding: 8px 36px 8px 12px; font-size: 12px; }
+        .top-announcement-inner { gap: 8px; justify-content: flex-start; text-align: left; }
+        .announcement-cta { font-size: 11px; padding: 4px 10px; }
+      }
+    </style>
+    <script>
+      function closeAnnouncementBar() {
+        var bar = document.getElementById('top-announcement-bar');
+        if (bar) {
+          bar.style.display = 'none';
+          sessionStorage.setItem('hide_chrome_banner', '1');
+        }
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        if (sessionStorage.getItem('hide_chrome_banner') === '1') {
+          var bar = document.getElementById('top-announcement-bar');
+          if (bar) bar.style.display = 'none';
+        }
+      });
+    </script>
 </head>
 <body>
+
+    <!-- Top Announcement Bar for 3D Liquid Chrome Studio -->
+    <div id="top-announcement-bar" class="top-announcement-bar">
+        <div class="top-announcement-inner">
+            <span class="announcement-tag" data-i18n="banner_new">🔥 NOUVEAU</span>
+            <span class="announcement-text" data-i18n="banner_chrome_text">3D Liquid Chrome &amp; Neon Studio est en ligne ! 18 compartiments 4D, Cyber-Mecha &amp; export 3MF.</span>
+            <a href="3d-liquid-chrome-studio/index.html" class="announcement-cta" data-i18n="banner_chrome_cta">Tester le Studio ➔</a>
+        </div>
+        <button class="announcement-close" onclick="closeAnnouncementBar()" aria-label="Fermer">×</button>
+    </div>
 
     <!-- Dynamic Glowing Background -->
     <div class="aura-container">
@@ -1431,6 +1543,7 @@
                 <h4 class="footer-col-title" data-i18n="footer_col_studios">3D &amp; AI Studios</h4>
                 <ul class="footer-links">
                     <li><a href="3d-liquid-chrome-studio/" data-i18n="footer_link_chrome">3D Liquid Chrome &amp; Neon Studio</a></li>
+                    <li><a href="3d-liquid-chrome-generator.html" data-i18n="footer_link_chrome_guide">Générateur 3D Chrome &amp; Guide 3MF</a></li>
                     <li><a href="hyperstudio-3d-4d/" data-i18n="footer_link_hyperstudio">HyperStudio 3D/4D Flight Simulator</a></li>
                     <li><a href="ia-architecte-studio-pro/" data-i18n="footer_link_architecte">IA Architecte Studio Pro</a></li>
                     <li><a href="ia-architecte-studio-ultra/" data-i18n="footer_link_ultra">IA Architecte Studio Ultra</a></li>

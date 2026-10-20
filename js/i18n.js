@@ -12,6 +12,8 @@ const translations = {
     app_chrome_title: "3D LIQUID CHROME & NEON STUDIO",
     app_chrome_desc: "Studio WebGL 3D nouvelle génération avec 18 compartiments créatifs de pointe : Cyber-Mecha 4D, Tourbillon Haute Horlogerie, Hypercar Aérodynamique, Stargate Cosmique, Vaisseau-Mère Alien, Fractales Vivantes, Métaballes, fabrication 3MF multi-couleurs et réactivité audio. Accès Premium requis pour l'exportation.",
     footer_link_chrome: "3D Liquid Chrome & Neon Studio",
+    footer_link_chrome_guide: "3D Chrome Generator & 3MF Guide",
+    footer_link_chrome_guide: "Générateur 3D Chrome & Guide 3MF",
     app_creative_title: "CYBER CREATIVE STUDIO",
     app_creative_desc: "Studio cinématographique 3D & Beat Maker : Générateur d'intros 3D animées avec robots IA parlants, export vidéo 60 FPS, synthétiseurs darksynth et composition musicale complète.",
     app2_title: "STUDIO 3D/4D PRO",
@@ -192,6 +194,9 @@ const translations = {
     footer_link_community: "Communauté REALMONT",
     footer_link_embed: "Comment intégrer la 3D sur le web",
     footer_link_privacy: "Politique de Confidentialité",
+    banner_new: "🔥 NOUVEAU",
+    banner_chrome_text: "3D Liquid Chrome & Neon Studio est en ligne ! 18 compartiments 4D, Cyber-Mecha & export 3MF.",
+    banner_chrome_cta: "Tester le Studio ➔",
     footer_rights: "© 2026 IA CODE STUDIO. Tous droits réservés."
   },
   en: {
@@ -207,6 +212,8 @@ const translations = {
     app_chrome_title: "3D LIQUID CHROME & NEON STUDIO",
     app_chrome_desc: "Next-gen 3D WebGL Studio featuring 18 high-end creative compartments: Cyber-Mecha 4D, Haute Horlogerie Tourbillon, Aerodynamic Hypercar, Cosmic Stargate, Alien Mothership, Living Fractals, Metaballs, 3MF multi-color manufacturing, and real-time audio reactivity. Premium membership required for export.",
     footer_link_chrome: "3D Liquid Chrome & Neon Studio",
+    footer_link_chrome_guide: "3D Chrome Generator & 3MF Guide",
+    footer_link_chrome_guide: "Générateur 3D Chrome & Guide 3MF",
     app_creative_title: "CYBER CREATIVE STUDIO",
     app_creative_desc: "3D Cinematic Video & Beat Maker Studio: Create 3D motion intros with talking AI robot hosts, 60 FPS HD video export, darksynth synthesizers, and complete music composition.",
     app2_title: "STUDIO 3D/4D PRO",
@@ -387,6 +394,9 @@ const translations = {
     footer_link_community: "REALMONT Community Hub",
     footer_link_embed: "How to Embed 3D Models in Web",
     footer_link_privacy: "Privacy Policy",
+    banner_new: "🔥 NEW LAUNCH",
+    banner_chrome_text: "3D Liquid Chrome & Neon Studio is live! 18 4D compartments, Cyber-Mecha & 3MF export.",
+    banner_chrome_cta: "Launch Studio ➔",
     footer_rights: "© 2026 IA CODE STUDIO. All rights reserved."
   }
 };
