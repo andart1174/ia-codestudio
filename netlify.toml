@@ -74,25 +74,30 @@
   [headers.values]
     Cache-Control = "public, max-age=2592000, immutable"
 
-# Redirect old DevSocial URL (with spaces, encoded, or uppercase) to lowercase hyphenated path
+# Redirect retired DevSocial URLs to active Community Hub
+[[redirects]]
+  from = "/devsocial-ai-hub/*"
+  to = "/community/:splat"
+  status = 301
+
 [[redirects]]
   from = "/devsocial%20ai%20hub/*"
-  to = "/devsocial-ai-hub/:splat"
+  to = "/community/:splat"
   status = 301
 
 [[redirects]]
   from = "/devsocial ai hub/*"
-  to = "/devsocial-ai-hub/:splat"
+  to = "/community/:splat"
   status = 301
 
 [[redirects]]
   from = "/DEVSOCIAL%20AI%20HUB/*"
-  to = "/devsocial-ai-hub/:splat"
+  to = "/community/:splat"
   status = 301
 
 [[redirects]]
   from = "/DEVSOCIAL AI HUB/*"
-  to = "/devsocial-ai-hub/:splat"
+  to = "/community/:splat"
   status = 301
 
 # Redirect old Studio 3D URL (with spaces, encoded, or uppercase) to lowercase hyphenated path
