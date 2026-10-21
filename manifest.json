@@ -1,8 +1,8 @@
 {
-  "name": "IA Code Studio - 3D AI WebGL Community",
+  "name": "IA Code Studio - 3D AI WebGL Platform",
   "short_name": "IA Studio",
   "description": "Explore, remix, and share 3D WebGL creations, Three.js scenes, and AI code. Earn GENIUS IA coins and connect with creators worldwide.",
-  "start_url": "/community/",
+  "start_url": "/index.html",
   "scope": "/",
   "display": "standalone",
   "orientation": "any",
@@ -31,8 +31,8 @@
   "categories": ["developer", "productivity", "graphics", "social"],
   "shortcuts": [
     {
-      "name": "Community Feed",
-      "url": "/community/",
+      "name": "Liquid Chrome 3D",
+      "url": "/",
       "description": "Browse 3D WebGL creations and AI apps"
     },
     {

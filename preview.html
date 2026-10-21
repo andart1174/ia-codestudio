@@ -243,7 +243,7 @@
       <div class="err-title" id="err-title">Project Not Found</div>
       <div class="err-text" id="err-desc">The requested creation could not be found or has expired.</div>
       <a href="index.html" class="hud-btn hud-btn-primary" style="display:inline-flex;justify-content:center;padding:10px 20px;">
-        ← Back to Community
+        ← Back to IA Code Studio
       </a>
     </div>
   </div>
@@ -263,7 +263,7 @@
     <a href="#" id="btn-studio-edit" class="hud-btn hud-btn-primary">
       ⚡ <span class="lbl-studio">Studio</span>
     </a>
-    <a href="index.html" class="hud-btn" title="Exit to Community">
+    <a href="index.html" class="hud-btn" title="Home">
       ✕
     </a>
   </header>
@@ -317,6 +317,12 @@
 
     async function loadProject() {
       const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('embed') === 'true' || urlParams.get('embed') === '1') {
+        const hud = document.getElementById('floating-hud');
+        if (hud) hud.style.display = 'none';
+        const toggleBtn = document.querySelector('.hud-toggle-btn');
+        if (toggleBtn) toggleBtn.style.display = 'none';
+      }
       const postId = urlParams.get('id');
 
       if (!postId) {
@@ -327,13 +333,13 @@
       // Set link to open in studio
       const studioLink = document.getElementById('btn-studio-edit');
       if (studioLink) {
-        studioLink.href = `../ia-architecte-app/index.html?fork=${encodeURIComponent(postId)}`;
+        studioLink.href = `ia-architecte-app/index.html?fork=${encodeURIComponent(postId)}`;
       }
 
       try {
         const doc = await db.collection('devsocial_posts').doc(postId).get();
         if (!doc.exists) {
-          showError('Project Not Found', 'This creation may have been removed or is no longer available in the community feed.');
+          showError('Project Not Found', 'This 3D project was not found or is no longer available.');
           return;
         }
 
