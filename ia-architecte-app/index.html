@@ -1582,51 +1582,5 @@
   </div>
 
   <script src="js/share-triage.js?v=601"></script>
-
-  <!-- MOBILE BOTTOM NAVIGATION (Smartphones & Tablets only) -->
-  <nav class="iaa-mobile-nav" id="iaa-mobile-nav">
-    <button class="iaa-mobile-btn active" id="iaa-mob-tab-preview" onclick="switchIaaMobileTab('preview')">
-      <i class="fa-solid fa-eye"></i>
-      <span>Live 3D/Web</span>
-    </button>
-    <button class="iaa-mobile-btn" id="iaa-mob-tab-ai" onclick="switchIaaMobileTab('ai')">
-      <i class="fa-solid fa-robot"></i>
-      <span>AI Studio</span>
-    </button>
-    <button class="iaa-mobile-btn" id="iaa-mob-tab-code" onclick="switchIaaMobileTab('code')">
-      <i class="fa-solid fa-code"></i>
-      <span>Code Editor</span>
-    </button>
-  </nav>
-
-  <script>
-    function switchIaaMobileTab(tab) {
-      const body = document.querySelector('.studio-body');
-      const btnPreview = document.getElementById('iaa-mob-tab-preview');
-      const btnAi = document.getElementById('iaa-mob-tab-ai');
-      const btnCode = document.getElementById('iaa-mob-tab-code');
-      
-      [btnPreview, btnAi, btnCode].forEach(b => b && b.classList.remove('active'));
-      
-      if (!body) return;
-      body.classList.remove('mobile-tab-ai', 'mobile-tab-code');
-      
-      if (tab === 'preview') {
-        if (btnPreview) btnPreview.classList.add('active');
-        if (typeof runCode === 'function') runCode();
-      } else if (tab === 'ai') {
-        body.classList.add('mobile-tab-ai');
-        if (btnAi) btnAi.classList.add('active');
-      } else if (tab === 'code') {
-        body.classList.add('mobile-tab-code');
-        if (btnCode) btnCode.classList.add('active');
-      }
-      
-      setTimeout(() => {
-        window.dispatchEvent(new Event('resize'));
-      }, 100);
-    }
-    window.switchIaaMobileTab = switchIaaMobileTab;
-  </script>
 </body>
 </html>
