@@ -1053,6 +1053,273 @@
   box-shadow: 0 0 16px rgba(56, 189, 248, 0.4) !important;
   border-radius: 4px;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   MOBILE & TABLET RESPONSIVE (Screens < 850px)
+   100% UNTOUCHED on PC / Desktop screens >= 850px
+═══════════════════════════════════════════════════════════ */
+@media (max-width: 850px) {
+  /* 1. Header / Topbar */
+  .topbar {
+    height: 48px !important;
+    padding: 0 6px !important;
+    gap: 4px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    white-space: nowrap !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+  }
+  .topbar::-webkit-scrollbar { display: none !important; }
+  #btn-return-portal {
+    padding: 5px 8px !important;
+    font-size: 11px !important;
+    margin-right: 2px !important;
+  }
+  #lbl-return-portal { display: none !important; }
+  .topbar-brand {
+    gap: 6px !important;
+    cursor: pointer !important;
+  }
+  .brand-icon {
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 13px !important;
+  }
+  .brand-name {
+    font-size: 11px !important;
+    font-weight: 800 !important;
+  }
+  .brand-sub { display: none !important; }
+  .topbar-sep {
+    height: 18px !important;
+    margin: 0 2px !important;
+  }
+  .topbar-scroll-wrapper {
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+  .topbar-scroll-track {
+    gap: 4px !important;
+    padding: 0 2px !important;
+  }
+  .tb-btn, .tb-btn-nocode {
+    padding: 4px 7px !important;
+    font-size: 0.72rem !important;
+  }
+  .tb-nav-arrow { display: none !important; }
+
+  /* 2. IDE Split Layout */
+  body {
+    height: 100dvh !important;
+    height: 100vh !important;
+  }
+  .ide-layout {
+    flex-direction: column !important;
+    height: calc(100dvh - 48px - 48px - env(safe-area-inset-bottom, 0px)) !important;
+    height: calc(100vh - 48px - 48px - env(safe-area-inset-bottom, 0px)) !important;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+
+  .resizer {
+    display: none !important;
+  }
+
+  /* Default on mobile: AI Studio view (Left Panel) */
+  .panel-left {
+    display: flex !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    flex: 1 1 100% !important;
+    border-right: none !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .panel-right {
+    display: none !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    flex: 1 1 100% !important;
+  }
+
+  /* Prompt section on mobile */
+  .prompt-section {
+    padding: 8px 10px !important;
+  }
+  #prompt-input {
+    height: 60px !important;
+    font-size: 0.82rem !important;
+  }
+  .prompt-actions {
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+  #btn-generate, #btn-quick-run {
+    flex: 1 1 130px !important;
+    padding: 8px 10px !important;
+    font-size: 0.8rem !important;
+    justify-content: center !important;
+  }
+
+  /* Snippets & copilot horizontal scroll on mobile */
+  .snippets-bar {
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 6px 8px !important;
+  }
+  .snippets-bar::-webkit-scrollbar { display: none !important; }
+
+  .html-copilot-bar {
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 4px 8px !important;
+  }
+  .html-copilot-bar::-webkit-scrollbar { display: none !important; }
+
+  .file-tabs {
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    height: 36px !important;
+  }
+  .file-tabs::-webkit-scrollbar { display: none !important; }
+  .file-tab {
+    height: 36px !important;
+    padding: 0 10px !important;
+    font-size: 0.75rem !important;
+  }
+
+  /* Mobile Mode: Live Preview active */
+  .ide-layout.mobile-view-preview .panel-left {
+    display: none !important;
+  }
+  .ide-layout.mobile-view-preview .panel-right {
+    display: flex !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    flex: 1 1 100% !important;
+  }
+
+  /* Mobile Mode: Code Editor active (Full Screen Editor) */
+  .ide-layout.mobile-view-code .panel-left {
+    display: flex !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    flex: 1 1 100% !important;
+    overflow: hidden !important;
+  }
+  .ide-layout.mobile-view-code .prompt-section,
+  .ide-layout.mobile-view-code .snippets-bar,
+  .ide-layout.mobile-view-code .html-copilot-bar {
+    display: none !important;
+  }
+  .ide-layout.mobile-view-code .panel-right {
+    display: none !important;
+  }
+  .ide-layout.mobile-view-code .editor-wrap {
+    flex: 1 1 100% !important;
+    height: 100% !important;
+  }
+
+  /* Preview optimizations on phone */
+  .device-toolbar {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    white-space: nowrap !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    height: 36px !important;
+    padding: 0 6px !important;
+    gap: 4px !important;
+  }
+  .device-toolbar::-webkit-scrollbar { display: none !important; }
+
+  .iframe-outer {
+    padding: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+  .iframe-container,
+  .iframe-container.mobile,
+  .iframe-container.tablet {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  /* Chat section: compact header on mobile by default */
+  .chat-section {
+    height: 38px !important;
+    flex-shrink: 0 !important;
+  }
+  .chat-section:not(.collapsed) {
+    height: 200px !important;
+  }
+
+  .modal-box {
+    width: 96vw !important;
+    max-width: 96vw !important;
+    max-height: 90vh !important;
+    padding: 12px !important;
+  }
+
+  /* 3. Mobile Bottom Navigation Bar */
+  .ultra-mobile-nav {
+    display: flex !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: calc(48px + env(safe-area-inset-bottom, 0px)) !important;
+    background: rgba(8, 12, 20, 0.98) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border-top: 1px solid var(--border) !important;
+    z-index: 9999 !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    padding: 0 4px env(safe-area-inset-bottom, 0px) !important;
+  }
+  .ultra-mob-btn {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 3px !important;
+    background: transparent !important;
+    border: none !important;
+    color: var(--muted) !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    padding: 4px 0 !important;
+    border-radius: 6px !important;
+    transition: all 0.2s !important;
+  }
+  .ultra-mob-btn.active {
+    color: #a855f7 !important;
+    background: rgba(168, 85, 247, 0.15) !important;
+  }
+  .ultra-mob-btn i {
+    font-size: 15px !important;
+  }
+}
+
+@media (min-width: 851px) {
+  .ultra-mobile-nav {
+    display: none !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -8005,6 +8272,74 @@ if (document.readyState === 'loading') {
   initTopbarDraggable();
 }
 </script>
+
+
+  <!-- MOBILE BOTTOM NAVIGATION (Smartphones & Tablets only) -->
+  <nav class="ultra-mobile-nav" id="ultra-mobile-nav">
+    <button class="ultra-mob-btn active" id="ultra-mob-ai" onclick="switchUltraMobileTab('ai')">
+      <i class="fa-solid fa-wand-magic-sparkles"></i>
+      <span>AI Studio</span>
+    </button>
+    <button class="ultra-mob-btn" id="ultra-mob-preview" onclick="switchUltraMobileTab('preview')">
+      <i class="fa-solid fa-eye"></i>
+      <span>Live Preview</span>
+    </button>
+    <button class="ultra-mob-btn" id="ultra-mob-code" onclick="switchUltraMobileTab('code')">
+      <i class="fa-solid fa-code"></i>
+      <span>Code Editor</span>
+    </button>
+  </nav>
+
+  <script>
+    function switchUltraMobileTab(tab) {
+      const layout = document.querySelector('.ide-layout');
+      const btnAi = document.getElementById('ultra-mob-ai');
+      const btnPreview = document.getElementById('ultra-mob-preview');
+      const btnCode = document.getElementById('ultra-mob-code');
+
+      [btnAi, btnPreview, btnCode].forEach(b => b && b.classList.remove('active'));
+      if (!layout) return;
+
+      layout.classList.remove('mobile-view-preview', 'mobile-view-code');
+
+      if (tab === 'preview') {
+        layout.classList.add('mobile-view-preview');
+        if (btnPreview) btnPreview.classList.add('active');
+        if (typeof refreshPreview === 'function') {
+          try { refreshPreview(); } catch(e) {}
+        }
+      } else if (tab === 'code') {
+        layout.classList.add('mobile-view-code');
+        if (btnCode) btnCode.classList.add('active');
+        try {
+          if (window.APP && window.APP.editor && typeof window.APP.editor.refresh === 'function') {
+            setTimeout(() => window.APP.editor.refresh(), 120);
+          }
+        } catch(e) {}
+      } else {
+        // 'ai' - Studio
+        if (btnAi) btnAi.classList.add('active');
+      }
+
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+      }, 100);
+    }
+    window.switchUltraMobileTab = switchUltraMobileTab;
+
+    // Default chat to collapsed on mobile phones
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.innerWidth <= 850) {
+        const chatSec = document.getElementById('chat-section');
+        const chatBtn = document.getElementById('btn-toggle-chat');
+        if (chatSec && !chatSec.classList.contains('collapsed')) {
+          chatSec.classList.add('collapsed');
+          if (chatBtn) chatBtn.textContent = '+';
+          if (window.APP) APP.chatCollapsed = true;
+        }
+      }
+    });
+  </script>
 
 </body>
 </html>
