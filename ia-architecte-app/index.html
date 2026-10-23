@@ -1582,5 +1582,58 @@
   </div>
 
   <script src="js/share-triage.js?v=601"></script>
+
+  <!-- MOBILE BOTTOM NAVIGATION (Smartphones & Tablets only) -->
+  <nav class="iaa-mobile-nav" id="iaa-mobile-nav">
+    <button class="iaa-mob-btn active" id="iaa-mob-ai" onclick="switchIaaMobileTab('ai')">
+      <i class="fa-solid fa-robot"></i>
+      <span>AI Studio</span>
+    </button>
+    <button class="iaa-mob-btn" id="iaa-mob-preview" onclick="switchIaaMobileTab('preview')">
+      <i class="fa-solid fa-eye"></i>
+      <span>Live Preview</span>
+    </button>
+    <button class="iaa-mob-btn" id="iaa-mob-code" onclick="switchIaaMobileTab('code')">
+      <i class="fa-solid fa-code"></i>
+      <span>Code Editor</span>
+    </button>
+  </nav>
+
+  <script>
+    function switchIaaMobileTab(tab) {
+      const body = document.querySelector('.studio-body');
+      const btnAi = document.getElementById('iaa-mob-ai');
+      const btnPreview = document.getElementById('iaa-mob-preview');
+      const btnCode = document.getElementById('iaa-mob-code');
+      
+      [btnAi, btnPreview, btnCode].forEach(b => b && b.classList.remove('active'));
+      if (!body) return;
+      
+      body.classList.remove('mobile-view-preview', 'mobile-view-code');
+      
+      if (tab === 'preview') {
+        body.classList.add('mobile-view-preview');
+        if (btnPreview) btnPreview.classList.add('active');
+        if (typeof runPreview === 'function') runPreview();
+      } else if (tab === 'code') {
+        body.classList.add('mobile-view-code');
+        if (btnCode) btnCode.classList.add('active');
+        try {
+          const ed = window.editor || (typeof editor !== 'undefined' ? editor : null);
+          if (ed) {
+            if (typeof ed.layout === 'function') setTimeout(() => ed.layout(), 120);
+            if (typeof ed.refresh === 'function') setTimeout(() => ed.refresh(), 120);
+          }
+        } catch(e) {}
+      } else {
+        if (btnAi) btnAi.classList.add('active');
+      }
+      
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+      }, 100);
+    }
+    window.switchIaaMobileTab = switchIaaMobileTab;
+  </script>
 </body>
 </html>
