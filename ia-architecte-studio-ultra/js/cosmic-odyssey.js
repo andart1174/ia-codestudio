@@ -1084,6 +1084,52 @@
         }
       }, { passive: true });
       this.canvas.addEventListener('touchend', () => { this.mouse.down = false; }, { passive: true });
+
+      // Mobile Touch On-Screen Controls
+      const thrustBtn = document.getElementById('cosmic-touch-thrust');
+      if (thrustBtn) {
+        const startT = (e) => { e.preventDefault(); e.stopPropagation(); this.keys['w'] = true; this.keys['shift'] = true; thrustBtn.classList.add('active'); };
+        const stopT = (e) => { e.preventDefault(); e.stopPropagation(); this.keys['w'] = false; this.keys['shift'] = false; thrustBtn.classList.remove('active'); };
+        thrustBtn.addEventListener('touchstart', startT, { passive: false });
+        thrustBtn.addEventListener('touchend', stopT, { passive: false });
+        thrustBtn.addEventListener('mousedown', startT);
+        thrustBtn.addEventListener('mouseup', stopT);
+      }
+
+      const fireBtn = document.getElementById('cosmic-touch-fire');
+      if (fireBtn) {
+        let fInt = null;
+        const startF = (e) => {
+          e.preventDefault(); e.stopPropagation();
+          AudioEngine.init();
+          this.firePlayerWeapon();
+          fireBtn.classList.add('active');
+          if (!fInt) fInt = setInterval(() => this.firePlayerWeapon(), 150);
+        };
+        const stopF = (e) => {
+          e.preventDefault(); e.stopPropagation();
+          fireBtn.classList.remove('active');
+          if (fInt) { clearInterval(fInt); fInt = null; }
+        };
+        fireBtn.addEventListener('touchstart', startF, { passive: false });
+        fireBtn.addEventListener('touchend', stopF, { passive: false });
+        fireBtn.addEventListener('mousedown', startF);
+        fireBtn.addEventListener('mouseup', stopF);
+      }
+
+      const empBtn = document.getElementById('cosmic-touch-emp');
+      if (empBtn) {
+        const doEmp = (e) => { e.preventDefault(); e.stopPropagation(); this.triggerEMP(); };
+        empBtn.addEventListener('touchstart', doEmp, { passive: false });
+        empBtn.addEventListener('click', doEmp);
+      }
+
+      const warpBtn = document.getElementById('cosmic-touch-warp');
+      if (warpBtn) {
+        const doWarp = (e) => { e.preventDefault(); e.stopPropagation(); this.triggerWarp(); };
+        warpBtn.addEventListener('touchstart', doWarp, { passive: false });
+        warpBtn.addEventListener('click', doWarp);
+      }
     },
 
     // ── FIRE WEAPON ──────────────────────────────────────────────────────────
@@ -2661,7 +2707,19 @@
 
   // ── PUBLIC API ─────────────────────────────────────────────────────────────
   window.CosmicOdyssey = {
-    open()          { const m=document.getElementById('modal-cosmic-odyssey'); if(!m)return; m.classList.add('show'); setTimeout(()=>{Game.init();Game.start();Game.onResize();},80); },
+    open()          {
+      const m = document.getElementById('modal-cosmic-odyssey');
+      if (!m) return;
+      m.classList.add('show');
+      setTimeout(() => {
+        Game.init();
+        Game.start();
+        Game.onResize();
+      }, 100);
+      setTimeout(() => {
+        if (Game.onResize) Game.onResize();
+      }, 350);
+    },
     close()         { const m=document.getElementById('modal-cosmic-odyssey'); if(m)m.classList.remove('show'); Game.running=false; if(Game.animId){cancelAnimationFrame(Game.animId);Game.animId=null;} },
     restart()       { Game.start(); },
     scan()          { Game.triggerScan(); },

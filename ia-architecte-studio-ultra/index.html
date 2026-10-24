@@ -1264,14 +1264,427 @@
     height: 200px !important;
   }
 
-  .modal-box {
-    width: 96vw !important;
-    max-width: 96vw !important;
-    max-height: 90vh !important;
-    padding: 12px !important;
+  /* ═══════════════════════════════════════════════════════════
+     3. GLOBAL MODALS RESPONSIVE FIX (ALL 70+ MODALS)
+  ═══════════════════════════════════════════════════════════ */
+  .modal-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 100000 !important; /* Above the 9999 mobile nav bar */
+    padding: 6px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
-  /* 3. Mobile Bottom Navigation Bar */
+  .modal-box {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 98vw !important;
+    max-width: 98vw !important;
+    height: 92dvh !important;
+    height: 92vh !important;
+    max-height: 92dvh !important;
+    max-height: 92vh !important;
+    padding: 0 !important;
+    border-radius: 14px !important;
+    overflow: hidden !important;
+  }
+
+  .modal-header {
+    flex-shrink: 0 !important;
+    padding: 10px 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+
+  .modal-body {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 12px 10px !important;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     4. AI AGENCY MODAL SPECIFIC MOBILE POLISH
+  ═══════════════════════════════════════════════════════════ */
+  .agency-modal-box {
+    width: 98vw !important;
+    max-width: 98vw !important;
+    height: 92dvh !important;
+    height: 92vh !important;
+    max-height: 92dvh !important;
+  }
+
+  .agency-modal-body {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 12px 10px !important;
+  }
+
+  .agency-agents-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+    margin: 8px 0 !important;
+    flex-shrink: 0 !important;
+  }
+
+  .agent-card {
+    padding: 8px 6px !important;
+    border-radius: 10px !important;
+  }
+
+  .agent-avatar-wrap {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 1.15rem !important;
+    margin-bottom: 4px !important;
+  }
+
+  .agent-name {
+    font-size: 0.78rem !important;
+    margin-bottom: 2px !important;
+  }
+
+  .agent-role {
+    font-size: 0.65rem !important;
+    margin-bottom: 4px !important;
+  }
+
+  .agent-status-pill {
+    font-size: 0.62rem !important;
+    padding: 1px 6px !important;
+  }
+
+  .agency-terminal {
+    height: 80px !important;
+    min-height: 80px !important;
+    flex-shrink: 0 !important;
+    font-size: 0.72rem !important;
+    padding: 8px 10px !important;
+    margin: 6px 0 !important;
+  }
+
+  .agency-catalog-section {
+    padding: 10px !important;
+    margin: 8px 0 !important;
+    flex-shrink: 0 !important;
+  }
+
+  .agency-catalog-top {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+  }
+
+  .agency-catalog-title {
+    font-size: 0.82rem !important;
+  }
+
+  .agency-search-inp {
+    width: 100% !important;
+    font-size: 0.8rem !important;
+    padding: 8px 12px !important;
+    box-sizing: border-box !important;
+  }
+
+  .agency-chips-row {
+    display: flex !important;
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    white-space: nowrap !important;
+    gap: 6px !important;
+    padding-bottom: 6px !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+  }
+  .agency-chips-row::-webkit-scrollbar { display: none !important; }
+
+  .agency-cat-chip {
+    flex-shrink: 0 !important;
+    font-size: 0.72rem !important;
+    padding: 5px 11px !important;
+  }
+
+  .agency-apps-container {
+    max-height: 280px !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 6px !important;
+  }
+
+  .agency-app-row {
+    grid-template-columns: 36px 1fr auto !important;
+    gap: 8px !important;
+    padding: 8px !important;
+  }
+
+  .agency-app-icon {
+    font-size: 1.25rem !important;
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  .agency-app-name {
+    font-size: 0.78rem !important;
+  }
+
+  .agency-app-desc {
+    font-size: 0.68rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .agency-footer-bar {
+    flex-direction: column !important;
+    gap: 8px !important;
+    align-items: stretch !important;
+    padding: 10px 0 !important;
+    flex-shrink: 0 !important;
+  }
+
+  .agency-footer-bar > div:last-child {
+    flex-direction: column !important;
+    gap: 6px !important;
+    width: 100% !important;
+  }
+
+  .agency-footer-bar button {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 9px !important;
+    font-size: 0.82rem !important;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     5. COSMIC ODYSSEY MOBILE RESPONSIVE
+  ═══════════════════════════════════════════════════════════ */
+  #modal-cosmic-odyssey {
+    padding: 0 !important;
+    z-index: 100000 !important;
+  }
+  #modal-cosmic-odyssey .cosmic-game-box {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    height: 100vh !important;
+    max-height: 100dvh !important;
+    border-radius: 0 !important;
+    border: none !important;
+    margin: 0 !important;
+  }
+
+  #cosmic-cockpit-header {
+    height: 44px !important;
+    min-height: 44px !important;
+    max-height: 44px !important;
+    padding: 0 8px !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    white-space: nowrap !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 6px !important;
+  }
+  #cosmic-cockpit-header::-webkit-scrollbar { display: none !important; }
+
+  .cosmic-brand-group {
+    gap: 6px !important;
+    flex-shrink: 0 !important;
+  }
+  .cosmic-brand-group span {
+    font-size: 1.1rem !important;
+  }
+  .cosmic-brand-group div > div:first-child {
+    font-size: 0.82rem !important;
+    white-space: nowrap !important;
+  }
+  .cosmic-sub-label {
+    display: none !important;
+  }
+
+  .cosmic-vitals-group {
+    gap: 6px !important;
+    flex-wrap: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+  .cosmic-vitals-group > div {
+    min-width: 42px !important;
+  }
+  .cosmic-vitals-group > div > div:first-child {
+    font-size: 0.52rem !important;
+  }
+
+  .cosmic-stats-group {
+    gap: 4px !important;
+    flex-wrap: nowrap !important;
+    flex-shrink: 0 !important;
+    margin-left: auto !important;
+  }
+  .cosmic-stats-group > div {
+    padding: 2px 5px !important;
+    font-size: 0.68rem !important;
+  }
+  .cosmic-stats-group button.tb-btn {
+    padding: 3px 6px !important;
+    font-size: 0.68rem !important;
+  }
+  .cosmic-stats-group .modal-close {
+    font-size: 1.3rem !important;
+    padding: 4px 10px !important;
+    color: #f43f5e !important;
+    cursor: pointer !important;
+  }
+
+  #cosmic-cockpit-footer {
+    height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+    padding: 4px 8px !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    white-space: nowrap !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 8px !important;
+  }
+  #cosmic-cockpit-footer::-webkit-scrollbar { display: none !important; }
+
+  .cosmic-flight-guide {
+    display: none !important; /* Hide keyboard controls text on mobile */
+  }
+
+  .cosmic-weapons-bar {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    scrollbar-width: none !important;
+    gap: 4px !important;
+    flex-shrink: 0 !important;
+  }
+  .cosmic-weapons-bar::-webkit-scrollbar { display: none !important; }
+  .cosmic-weapons-label {
+    display: none !important;
+  }
+  .cosmic-wep-btn {
+    padding: 4px 8px !important;
+    font-size: 0.7rem !important;
+    flex-shrink: 0 !important;
+    border-radius: 6px !important;
+  }
+
+  .cosmic-actions-bar {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    scrollbar-width: none !important;
+    gap: 4px !important;
+    flex-shrink: 0 !important;
+  }
+  .cosmic-actions-bar::-webkit-scrollbar { display: none !important; }
+  .cosmic-act-btn {
+    padding: 4px 8px !important;
+    font-size: 0.7rem !important;
+    flex-shrink: 0 !important;
+    border-radius: 6px !important;
+  }
+
+  /* Floating on-screen mobile touch buttons inside 3D viewport */
+  .cosmic-mobile-controls {
+    display: flex !important;
+    position: absolute !important;
+    inset: 0 !important;
+    pointer-events: none !important;
+    z-index: 25 !important;
+    justify-content: space-between !important;
+    align-items: flex-end !important;
+    padding: 12px 14px 18px 14px !important;
+  }
+  .cosmic-touch-stick {
+    pointer-events: auto !important;
+    width: 60px !important;
+    height: 60px !important;
+    border-radius: 50% !important;
+    background: rgba(56, 189, 248, 0.25) !important;
+    border: 2px solid #38bdf8 !important;
+    backdrop-filter: blur(8px) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #fff !important;
+    font-weight: 800 !important;
+    box-shadow: 0 0 16px rgba(56, 189, 248, 0.4) !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    touch-action: none !important;
+    cursor: pointer !important;
+    transition: transform 0.1s, background 0.1s !important;
+  }
+  .cosmic-touch-stick.active {
+    background: rgba(56, 189, 248, 0.55) !important;
+    transform: scale(0.92) !important;
+    box-shadow: 0 0 24px rgba(56, 189, 248, 0.8) !important;
+  }
+  .cosmic-touch-stick span {
+    font-size: 1.3rem !important;
+    line-height: 1 !important;
+  }
+  .cosmic-touch-stick small {
+    font-size: 0.58rem !important;
+    letter-spacing: 0.5px !important;
+  }
+
+  .cosmic-touch-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    align-items: flex-end !important;
+  }
+  .cosmic-touch-btn {
+    pointer-events: auto !important;
+    padding: 8px 14px !important;
+    border-radius: 20px !important;
+    background: rgba(15, 23, 42, 0.82) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(8px) !important;
+    color: #fff !important;
+    font-weight: 800 !important;
+    font-size: 0.78rem !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.5) !important;
+    transition: transform 0.1s, background 0.1s !important;
+  }
+  #cosmic-touch-fire {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.85), rgba(220, 38, 38, 0.95)) !important;
+    border-color: #f87171 !important;
+    box-shadow: 0 0 16px rgba(239, 68, 68, 0.5) !important;
+    padding: 10px 18px !important;
+    font-size: 0.85rem !important;
+  }
+  #cosmic-touch-fire.active {
+    transform: scale(0.92) !important;
+    background: #dc2626 !important;
+  }
+  #cosmic-touch-emp {
+    border-color: #38bdf8 !important;
+    color: #38bdf8 !important;
+  }
+  #cosmic-touch-warp {
+    border-color: #c084fc !important;
+    color: #c084fc !important;
+  }
+
+  /* 6. Mobile Bottom Navigation Bar */
   .ultra-mobile-nav {
     display: flex !important;
     position: fixed !important;
@@ -1315,6 +1728,9 @@
 }
 
 @media (min-width: 851px) {
+  .cosmic-mobile-controls {
+    display: none !important;
+  }
   .ultra-mobile-nav {
     display: none !important;
   }
@@ -5523,17 +5939,17 @@ window.addEventListener('load', () => {
 <div class="modal-overlay" id="modal-cosmic-odyssey">
   <div class="modal-box cosmic-game-box" style="max-width:98vw;width:98vw;height:94vh;max-height:94vh;display:flex;flex-direction:column;padding:0;background:#030611;border:1px solid rgba(56,189,248,0.4);border-radius:18px;overflow:hidden;box-shadow:0 0 60px rgba(56,189,248,0.3)">
     <!-- Top Cockpit Header -->
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 18px;background:#090e1c;border-bottom:1px solid rgba(56,189,248,0.2);flex-shrink:0;flex-wrap:wrap;gap:8px">
-      <div style="display:flex;align-items:center;gap:12px">
+    <div class="cosmic-cockpit-header" id="cosmic-cockpit-header" style="display:flex;align-items:center;justify-content:space-between;padding:10px 18px;background:#090e1c;border-bottom:1px solid rgba(56,189,248,0.2);flex-shrink:0;flex-wrap:wrap;gap:8px">
+      <div class="cosmic-brand-group" style="display:flex;align-items:center;gap:12px">
         <span style="font-size:1.4rem">&#128760;</span>
         <div>
           <div style="color:#fff;font-weight:800;font-size:1rem;letter-spacing:0.5px">COSMIC ODYSSEY: <span style="color:#38bdf8">Deep Space Commander</span></div>
-          <div style="color:#64748b;font-size:0.72rem">USS Chronos Vanguard &#183; Solar System Explorer &amp; Combat Vessel</div>
+          <div class="cosmic-sub-label" style="color:#64748b;font-size:0.72rem">USS Chronos Vanguard &#183; Solar System Explorer &amp; Combat Vessel</div>
         </div>
       </div>
 
       <!-- Vitals Bars -->
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <div class="cosmic-vitals-group" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
         <div style="display:flex;flex-direction:column;gap:3px;min-width:82px">
           <div style="font-size:0.66rem;color:#f43f5e;font-weight:700">HULL / COQUE</div>
           <div style="width:100%;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden"><div id="cosmic-hull-bar" style="width:100%;height:100%;background:#f43f5e;transition:width .15s"></div></div>
@@ -5553,7 +5969,7 @@ window.addEventListener('load', () => {
       </div>
 
       <!-- Stats & Controls -->
-      <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+      <div class="cosmic-stats-group" style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
         <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:4px 9px;border-radius:8px;font-size:0.75rem"><span style="color:#94a3b8">Score:</span> <strong id="cosmic-score" style="color:#4ade80">0</strong></div>
         <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(251,191,36,0.25);padding:4px 9px;border-radius:8px;font-size:0.75rem"><span style="color:#94a3b8">&#128179;</span> <strong id="cosmic-credits" style="color:#fbbf24">0</strong></div>
         <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(244,63,94,0.3);padding:4px 9px;border-radius:8px;font-size:0.75rem"><span style="color:#94a3b8">Wave:</span> <strong id="cosmic-wave-num" style="color:#f43f5e">1</strong></div>
@@ -5567,7 +5983,7 @@ window.addEventListener('load', () => {
     </div>
 
     <!-- Main Canvas Area -->
-    <div style="flex:1;position:relative;overflow:hidden;background:#030611">
+    <div class="cosmic-viewport-area" id="cosmic-viewport-area" style="flex:1;position:relative;overflow:hidden;background:#030611">
       <canvas id="cosmic-canvas" style="display:block;width:100%;height:100%"></canvas>
 
       <!-- Tactical 3D Targeting & Alien Tracking HUD Overlay -->
@@ -5664,13 +6080,26 @@ window.addEventListener('load', () => {
           <div id="cosmic-lb-list" style="flex:1;overflow-y:auto;padding-right:4px"></div>
         </div>
       </div>
+    
+      <!-- Mobile On-Screen Flight & Combat Controls (active on mobile) -->
+      <div id="cosmic-mobile-controls" class="cosmic-mobile-controls">
+        <div class="cosmic-touch-stick" id="cosmic-touch-thrust" title="Hold to Thrust / Boost">
+          <span>🚀</span>
+          <small>THRUST</small>
+        </div>
+        <div class="cosmic-touch-actions">
+          <button class="cosmic-touch-btn" id="cosmic-touch-fire">🎯 FIRE</button>
+          <button class="cosmic-touch-btn" id="cosmic-touch-emp">⚡ EMP</button>
+          <button class="cosmic-touch-btn" id="cosmic-touch-warp">🌀 WARP</button>
+        </div>
+      </div>
     </div>
 
     <!-- Bottom Tactical Console -->
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 16px;background:#090e1c;border-top:1px solid rgba(56,189,248,0.2);flex-shrink:0;flex-wrap:wrap;gap:7px">
+    <div class="cosmic-cockpit-footer" id="cosmic-cockpit-footer" style="display:flex;align-items:center;justify-content:space-between;padding:9px 16px;background:#090e1c;border-top:1px solid rgba(56,189,248,0.2);flex-shrink:0;flex-wrap:wrap;gap:7px">
       <!-- 6 Weapons -->
-      <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
-        <span style="color:#64748b;font-size:0.7rem;font-weight:700;margin-right:3px">WEAPONS / ARMES:</span>
+      <div class="cosmic-weapons-bar" style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
+        <span class="cosmic-weapons-label" style="color:#64748b;font-size:0.7rem;font-weight:700;margin-right:3px">WEAPONS / ARMES:</span>
         <button class="cosmic-wep-btn active" data-wep="pulse"       onclick="CosmicOdyssey.setWeapon('pulse')">[1] Photon Pulse</button>
         <button class="cosmic-wep-btn"        data-wep="scatter"     onclick="CosmicOdyssey.setWeapon('scatter')">[2] Tachyon Scatter</button>
         <button class="cosmic-wep-btn"        data-wep="railgun"     onclick="CosmicOdyssey.setWeapon('railgun')">[3] Plasma Rail</button>
@@ -5680,7 +6109,7 @@ window.addEventListener('load', () => {
       </div>
 
       <!-- Action Buttons -->
-      <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap">
+      <div class="cosmic-actions-bar" style="display:flex;gap:7px;align-items:center;flex-wrap:wrap">
         <button class="cosmic-act-btn scan-btn" onclick="CosmicOdyssey.scan()">&#8982; [E] Scan Planet</button>
         <div style="display:flex;flex-direction:column;gap:2px">
           <button class="cosmic-act-btn emp-btn" id="cosmic-emp-btn" onclick="CosmicOdyssey.emp()">&#9889; [Space] EMP Blast</button>
@@ -5692,7 +6121,7 @@ window.addEventListener('load', () => {
       </div>
 
       <!-- Flight Guide -->
-      <div style="color:#4b5563;font-size:0.69rem;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <div class="cosmic-flight-guide" style="color:#4b5563;font-size:0.69rem;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
         <span>
           <kbd style="background:rgba(255,255,255,0.07);padding:1px 5px;border-radius:3px">W/S</kbd> Thrust &#183;
           <kbd style="background:rgba(255,255,255,0.07);padding:1px 5px;border-radius:3px">A/D</kbd> Yaw &#183;
