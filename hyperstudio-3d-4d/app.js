@@ -643,6 +643,12 @@
     let isEditorOpen = false;
 
     function toggleCodeEditor(forceState) {
+        if (window.innerWidth <= 850 && typeof switchHyperMobileView === 'function') {
+            isEditorOpen = (typeof forceState === 'boolean') ? forceState : !isEditorOpen;
+            playClickSFX();
+            switchHyperMobileView(isEditorOpen ? 'editor' : 'scene');
+            return;
+        }
         isEditorOpen = (typeof forceState === 'boolean') ? forceState : !isEditorOpen;
         playClickSFX();
 
@@ -4964,6 +4970,121 @@
         setTimeout(updateCanvasViewSize, 400);
     });
 
+    // ── Mobile Bottom Navigation View Switcher (Scene, 4D, Inspector, Code) ──
+    const switchHyperMobileView = (view) => {
+        const navBtns = document.querySelectorAll('.hm-nav-btn');
+        navBtns.forEach(b => b.classList.toggle('active', b.dataset.view === view));
+
+        const panel4D = document.getElementById('panel-4d-controls');
+        const panelInspector = document.getElementById('panel-transform-inspector');
+        const panelShader = document.getElementById('panel-shader-studio');
+        const panelPhoto = document.getElementById('panel-photo-import');
+        const btnToggle4D = document.getElementById('btn-toggle-4d-panel');
+        const btnToggleInspector = document.getElementById('btn-toggle-inspector');
+
+        if (view === 'scene') {
+            if (panel4D) panel4D.classList.remove('mobile-sheet-open');
+            if (panelInspector) panelInspector.classList.remove('mobile-sheet-open');
+            if (panelShader) panelShader.classList.remove('mobile-sheet-open');
+            if (panelPhoto) panelPhoto.classList.remove('mobile-sheet-open');
+
+            if (btnToggle4D) btnToggle4D.classList.remove('active');
+            if (btnToggleInspector) btnToggleInspector.classList.remove('active');
+
+            if (paneViewport) paneViewport.classList.remove('mobile-hidden');
+            if (paneEditor) paneEditor.classList.remove('mobile-active');
+
+            setTimeout(updateCanvasViewSize, 60);
+        } else if (view === '4d') {
+            if (paneViewport) paneViewport.classList.remove('mobile-hidden');
+            if (paneEditor) paneEditor.classList.remove('mobile-active');
+
+            if (panelInspector) panelInspector.classList.remove('mobile-sheet-open');
+            if (panelShader) panelShader.classList.remove('mobile-sheet-open');
+            if (panelPhoto) panelPhoto.classList.remove('mobile-sheet-open');
+            if (btnToggleInspector) btnToggleInspector.classList.remove('active');
+
+            if (panel4D) {
+                const isOpen = panel4D.classList.contains('mobile-sheet-open');
+                if (isOpen) {
+                    panel4D.classList.remove('mobile-sheet-open');
+                    if (btnToggle4D) btnToggle4D.classList.remove('active');
+                    document.getElementById('hm-nav-scene')?.classList.add('active');
+                    document.getElementById('hm-nav-4d')?.classList.remove('active');
+                } else {
+                    panel4D.classList.add('mobile-sheet-open');
+                    panel4D.classList.remove('hidden');
+                    if (btnToggle4D) btnToggle4D.classList.add('active');
+                }
+            }
+        } else if (view === 'inspector') {
+            if (paneViewport) paneViewport.classList.remove('mobile-hidden');
+            if (paneEditor) paneEditor.classList.remove('mobile-active');
+
+            if (panel4D) panel4D.classList.remove('mobile-sheet-open');
+            if (panelShader) panelShader.classList.remove('mobile-sheet-open');
+            if (panelPhoto) panelPhoto.classList.remove('mobile-sheet-open');
+            if (btnToggle4D) btnToggle4D.classList.remove('active');
+
+            if (panelInspector) {
+                const isOpen = panelInspector.classList.contains('mobile-sheet-open');
+                if (isOpen) {
+                    panelInspector.classList.remove('mobile-sheet-open');
+                    if (btnToggleInspector) btnToggleInspector.classList.remove('active');
+                    document.getElementById('hm-nav-scene')?.classList.add('active');
+                    document.getElementById('hm-nav-inspector')?.classList.remove('active');
+                } else {
+                    panelInspector.classList.add('mobile-sheet-open');
+                    panelInspector.classList.remove('hidden');
+                    if (btnToggleInspector) btnToggleInspector.classList.add('active');
+                }
+            }
+        } else if (view === 'editor') {
+            if (panel4D) panel4D.classList.remove('mobile-sheet-open');
+            if (panelInspector) panelInspector.classList.remove('mobile-sheet-open');
+            if (panelShader) panelShader.classList.remove('mobile-sheet-open');
+            if (panelPhoto) panelPhoto.classList.remove('mobile-sheet-open');
+
+            if (paneEditor) paneEditor.classList.add('mobile-active');
+            if (paneViewport) paneViewport.classList.add('mobile-hidden');
+        }
+    };
+    window.switchHyperMobileView = switchHyperMobileView;
+
+    // Attach click listeners to mobile bottom navigation
+    document.querySelectorAll('.hm-nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            playClickSFX();
+            switchHyperMobileView(btn.dataset.view);
+        });
+    });
+
+    // Close buttons on panels to sync mobile nav
+    ['btn-close-4d', 'btn-close-inspector', 'btn-close-shader', 'btn-close-photo-import'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('click', () => {
+                if (window.innerWidth <= 850) {
+                    document.getElementById('panel-4d-controls')?.classList.remove('mobile-sheet-open');
+                    document.getElementById('panel-transform-inspector')?.classList.remove('mobile-sheet-open');
+                    document.getElementById('panel-shader-studio')?.classList.remove('mobile-sheet-open');
+                    document.getElementById('panel-photo-import')?.classList.remove('mobile-sheet-open');
+                    document.querySelectorAll('.hm-nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === 'scene'));
+                    setTimeout(updateCanvasViewSize, 60);
+                }
+            });
+        }
+    });
+
+    // On initial load on mobile, ensure panels start closed and canvas is clean
+    if (window.innerWidth <= 850) {
+        document.getElementById('panel-4d-controls')?.classList.remove('mobile-sheet-open');
+        document.getElementById('panel-transform-inspector')?.classList.remove('mobile-sheet-open');
+        document.getElementById('btn-toggle-4d-panel')?.classList.remove('active');
+        document.getElementById('btn-toggle-inspector')?.classList.remove('active');
+        setTimeout(updateCanvasViewSize, 120);
+    }
+
     // ----------------------------------------------------------------------
     // 3D PHOTO / IMAGE IMPORT ENGINE LOGIC  +  PHOTO CONTROL PANEL
     // ----------------------------------------------------------------------
@@ -6039,6 +6160,10 @@
 
     document.getElementById('btn-toggle-inspector').addEventListener('click', (e) => {
         playClickSFX();
+        if (window.innerWidth <= 850) {
+            switchHyperMobileView('inspector');
+            return;
+        }
         const btn = e.currentTarget;
         btn.classList.toggle('active');
         document.getElementById('panel-transform-inspector').classList.toggle('hidden', !btn.classList.contains('active'));
@@ -6487,6 +6612,10 @@
 
     document.getElementById('btn-toggle-4d-panel').addEventListener('click', (e) => {
         playClickSFX();
+        if (window.innerWidth <= 850) {
+            switchHyperMobileView('4d');
+            return;
+        }
         const btn = e.currentTarget;
         btn.classList.toggle('active');
         document.getElementById('panel-4d-controls').classList.toggle('hidden', !btn.classList.contains('active'));
