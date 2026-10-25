@@ -667,10 +667,19 @@
     if (btnToggleEditor) btnToggleEditor.addEventListener('click', () => toggleCodeEditor());
     if (btnVpToggleEditor) btnVpToggleEditor.addEventListener('click', () => toggleCodeEditor());
     if (btnFloatingEditorToggle) btnFloatingEditorToggle.addEventListener('click', () => toggleCodeEditor(true));
-    if (btnCloseEditorPane) btnCloseEditorPane.addEventListener('click', () => toggleCodeEditor(false));
+    if (btnCloseEditorPane) btnCloseEditorPane.addEventListener('click', () => {
+        if (window.innerWidth <= 850 && typeof switchHyperMobileView === 'function') {
+            switchHyperMobileView('scene');
+        } else {
+            toggleCodeEditor(false);
+        }
+    });
     if (btnRunEditor) btnRunEditor.addEventListener('click', () => {
         playRunSFX();
         parseAndRender();
+        if (window.innerWidth <= 850 && typeof switchHyperMobileView === 'function') {
+            switchHyperMobileView('scene');
+        }
     });
 
     let isResizing = false;
@@ -1742,6 +1751,10 @@
         const modelSelect = document.getElementById('inspector-model-select');
         if (modelSelect) modelSelect.value = presetKey;
         syncInspectorSlidersFromModelTag(presetKey);
+        if (window.innerWidth <= 850) {
+            // On mobile, touching the canvas model should not force open an inspector popup
+            return;
+        }
         document.getElementById('panel-transform-inspector').classList.remove('hidden');
         document.getElementById('btn-toggle-inspector').classList.add('active');
     }
@@ -4933,9 +4946,12 @@
     const paneViewport = document.getElementById('pane-viewport');
 
     const updateCanvasViewSize = () => {
-        if (paneViewport && renderer && camera) {
-            const w = paneViewport.clientWidth || window.innerWidth;
-            const h = paneViewport.clientHeight || (window.innerHeight - 80);
+        if (window.onViewportResize) {
+            window.onViewportResize();
+        } else if (paneViewport && renderer && camera) {
+            const cont = document.getElementById('canvas-container');
+            const w = cont ? cont.clientWidth : (paneViewport.clientWidth || window.innerWidth);
+            const h = cont ? cont.clientHeight : (paneViewport.clientHeight || (window.innerHeight - 80));
             if (w > 0 && h > 0) {
                 renderer.setSize(w, h);
                 camera.aspect = w / h;
@@ -4982,6 +4998,9 @@
         const btnToggle4D = document.getElementById('btn-toggle-4d-panel');
         const btnToggleInspector = document.getElementById('btn-toggle-inspector');
 
+        // Always keep 3D viewport active in scene, 4d, and inspector modes
+        if (paneViewport) paneViewport.classList.remove('mobile-hidden');
+
         if (view === 'scene') {
             if (panel4D) panel4D.classList.remove('mobile-sheet-open');
             if (panelInspector) panelInspector.classList.remove('mobile-sheet-open');
@@ -4991,14 +5010,13 @@
             if (btnToggle4D) btnToggle4D.classList.remove('active');
             if (btnToggleInspector) btnToggleInspector.classList.remove('active');
 
-            if (paneViewport) paneViewport.classList.remove('mobile-hidden');
             if (paneEditor) paneEditor.classList.remove('mobile-active');
 
-            setTimeout(updateCanvasViewSize, 60);
+            setTimeout(() => {
+                if (window.onViewportResize) window.onViewportResize();
+            }, 60);
         } else if (view === '4d') {
-            if (paneViewport) paneViewport.classList.remove('mobile-hidden');
             if (paneEditor) paneEditor.classList.remove('mobile-active');
-
             if (panelInspector) panelInspector.classList.remove('mobile-sheet-open');
             if (panelShader) panelShader.classList.remove('mobile-sheet-open');
             if (panelPhoto) panelPhoto.classList.remove('mobile-sheet-open');
@@ -5017,10 +5035,11 @@
                     if (btnToggle4D) btnToggle4D.classList.add('active');
                 }
             }
+            setTimeout(() => {
+                if (window.onViewportResize) window.onViewportResize();
+            }, 60);
         } else if (view === 'inspector') {
-            if (paneViewport) paneViewport.classList.remove('mobile-hidden');
             if (paneEditor) paneEditor.classList.remove('mobile-active');
-
             if (panel4D) panel4D.classList.remove('mobile-sheet-open');
             if (panelShader) panelShader.classList.remove('mobile-sheet-open');
             if (panelPhoto) panelPhoto.classList.remove('mobile-sheet-open');
@@ -5039,6 +5058,9 @@
                     if (btnToggleInspector) btnToggleInspector.classList.add('active');
                 }
             }
+            setTimeout(() => {
+                if (window.onViewportResize) window.onViewportResize();
+            }, 60);
         } else if (view === 'editor') {
             if (panel4D) panel4D.classList.remove('mobile-sheet-open');
             if (panelInspector) panelInspector.classList.remove('mobile-sheet-open');
@@ -5046,7 +5068,6 @@
             if (panelPhoto) panelPhoto.classList.remove('mobile-sheet-open');
 
             if (paneEditor) paneEditor.classList.add('mobile-active');
-            if (paneViewport) paneViewport.classList.add('mobile-hidden');
         }
     };
     window.switchHyperMobileView = switchHyperMobileView;
