@@ -29,6 +29,12 @@ document.addEventListener('DOMContentLoaded', () => {
             tab.classList.add('active');
             targetEl.classList.add('active');
 
+            if (targetModule === 'beat') {
+                document.body.classList.add('beat-module-active');
+            } else {
+                document.body.classList.remove('beat-module-active');
+            }
+
             if (targetModule === 'intro' && window.introEngine) {
                 window.introEngine.onResize();
             }

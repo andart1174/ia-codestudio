@@ -173,13 +173,25 @@
                     </button>
                     <div class="laser-scan-line"></div>
                     <canvas id="intro-3d-canvas"></canvas>
+
+                    <!-- Floating Quick Action Buttons on Mobile -->
+                    <div class="cyber-mobile-floating-actions">
+                        <button type="button" class="cyber-mob-float-btn" onclick="triggerMobilePreview()">
+                            <span>▶</span>
+                            <span data-i18n="mob_btn_preview">Preview Intro</span>
+                        </button>
+                        <button type="button" class="cyber-mob-float-btn" onclick="switchCyberMobileView('robot')">
+                            <span>🤖</span>
+                            <span data-i18n="mob_btn_robot">Robot &amp; Voix</span>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Customization Panel -->
                 <div class="studio-control-panel">
                     
                     <!-- 🚀 MASTER ACTION & EXPORT SUITE (RIGHT CONTROL PANEL - ALWAYS VISIBLE) -->
-                    <div class="export-suite-card" id="export-suite-card">
+                    <div class="export-suite-card" id="export-suite-card" data-mob-cat="export">
                         <div class="export-card-title">
                             <i class="fa-solid fa-rocket"></i> <span data-i18n="export_section_title">RENDER & EXPORT STUDIO</span>
                         </div>
@@ -210,7 +222,7 @@
                     </div>
                     
                     <!-- 🤖 3D AI ROBOT HOST CONFIGURATION CARD -->
-                    <div class="robot-config-card">
+                    <div class="robot-config-card" id="card-robot-host" data-mob-cat="robot">
                         <div class="robot-card-header">
                             <div class="robot-card-title">
                                 <i class="fa-solid fa-robot"></i> <span data-i18n="robot_section_title">🤖 3D AI ROBOT HOST (GENIUS IA)</span>
@@ -361,7 +373,7 @@
                     </div>
 
                     <!-- 📦 CUSTOM 3D MODEL STUDIO (.GLB / .GLTF) CARD -->
-                    <div class="robot-config-card" style="border-color:var(--accent-gold);">
+                    <div class="robot-config-card" id="card-custom-model" style="border-color:var(--accent-gold);" data-mob-cat="robot">
                         <div class="robot-card-header">
                             <div class="robot-card-title">
                                 <i class="fa-solid fa-cube"></i> <span data-i18n="custom_model_section_title">📦 CUSTOM 3D MODEL STUDIO (.GLB)</span>
@@ -456,7 +468,7 @@
                     </div>
 
                     <!-- 🌌 SCI-FI CINEMATICS & HUD CARD -->
-                    <div class="robot-config-card" style="border-color:var(--accent-cyan);">
+                    <div class="robot-config-card" id="card-cinematics" style="border-color:var(--accent-cyan);" data-mob-cat="cinematics">
                         <div class="robot-card-header">
                             <div class="robot-card-title">
                                 <i class="fa-solid fa-vr-cardboard"></i> <span data-i18n="cinematics_section_title">🌌 SCI-FI CINEMATICS & HUD</span>
@@ -531,7 +543,7 @@
                     </div>
 
                     <!-- 💥 INTERACTIVE 3D COMBAT SUPERPOWERS CARD -->
-                    <div class="robot-config-card" style="border-color: #ef4444;">
+                    <div class="robot-config-card" id="card-combat-fx" style="border-color: #ef4444;" data-mob-cat="cinematics">
                         <div class="robot-card-header">
                             <div class="robot-card-title" style="color: #ef4444;">
                                 <i class="fa-solid fa-shield-halved"></i> <span data-i18n="combat_fx_title">💥 INTERACTIVE 3D COMBAT SUPERPOWERS</span>
@@ -550,97 +562,104 @@
                         </div>
                     </div>
 
-                    <!-- Main Text Controls -->
-                    <div class="control-group">
-                        <label data-i18n="label_title_text">Main Title / Brand Name</label>
-                        <input type="text" id="intro-input-title" class="studio-input" value="CYBER ARENA" maxlength="24">
-                    </div>
-
-                    <div class="control-group">
-                        <label data-i18n="label_subtitle_text">Subtitle / Tagline</label>
-                        <input type="text" id="intro-input-sub" class="studio-input" value="BY IA CODE STUDIO" maxlength="32">
-                    </div>
-
-                    <!-- Custom Logo Upload -->
-                    <div class="control-group">
-                        <label data-i18n="label_upload_logo">Upload Custom Logo / Icon</label>
-                        <label for="intro-file-logo" class="file-upload-btn">
-                            <i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="label_btn_upload">📁 Upload 3D Logo Badge</span>
-                        </label>
-                        <input type="file" id="intro-file-logo" accept="image/png, image/jpeg" style="display:none;">
-                    </div>
-
-                    <div class="control-group">
-                        <label data-i18n="label_aspect">Format / Aspect Ratio</label>
-                        <select id="intro-select-aspect" class="studio-select">
-                            <option value="16:9" data-i18n="aspect_landscape" selected>16:9 Landscape (YouTube / PC)</option>
-                            <option value="9:16" data-i18n="aspect_portrait">9:16 Vertical (TikTok / Shorts / Reels)</option>
-                            <option value="1:1" data-i18n="aspect_square">1:1 Square (Instagram / Discord)</option>
-                            <option value="4:5" data-i18n="aspect_social_portrait">4:5 Social Portrait (Instagram / FB)</option>
-                            <option value="21:9" data-i18n="aspect_ultrawide">21:9 UltraWide Cinema (Gaming / 21:9)</option>
-                            <option value="full" data-i18n="aspect_fullscreen">🖥️ Fullscreen / Fill Window</option>
-                        </select>
-                    </div>
-
-                    <div class="control-group">
-                        <label data-i18n="label_preset">Cinematic 3D World Preset</label>
-                        <select id="intro-select-preset" class="studio-select">
-                            <option value="cyberpunk" data-i18n="preset_cyberpunk">🌆 Cyberpunk 2077 Neon City</option>
-                            <option value="cosmic" data-i18n="preset_cosmic">✨ Quantum Supernova Particle Blast</option>
-                            <option value="titan" data-i18n="preset_titan">🤖 Titan Mech Heavy Metal & Sparks</option>
-                            <option value="sunset" data-i18n="preset_sunset">🌅 80s Outrun Synthwave Sunset</option>
-                            <option value="hyperspace" data-i18n="preset_hyperspace">🚀 Hyperspace Warp Speed Vortex</option>
-                        </select>
-                    </div>
-
-                    <div class="control-group">
-                        <label data-i18n="label_camera_anim">Cinematic Camera Motion</label>
-                        <select id="intro-select-anim" class="studio-select">
-                            <option value="flyin" data-i18n="anim_flyin">Cinematic Fly-In Blast</option>
-                            <option value="orbit" data-i18n="anim_orbit">360° Smooth Orbital Scan</option>
-                            <option value="zoom_blast" data-i18n="anim_zoom_blast">Hyper-Speed Sonic Zoom</option>
-                            <option value="matrix_scan" data-i18n="anim_matrix_scan">Matrix Glitch Tactical Sweep</option>
-                            <option value="trailer" data-i18n="cam_trailer">🎬 Movie Trailer Director Cuts</option>
-                        </select>
-                    </div> 
-
-                    <div class="control-group">
-                        <label data-i18n="label_duration">Video Clip Duration</label>
-                        <select id="intro-select-duration" class="studio-select">
-                            <option value="10" data-i18n="dur_10s">10 Seconds (Quick Intro)</option>
-                            <option value="15" data-i18n="dur_15s" selected>15 Seconds (Story & Reels)</option>
-                            <option value="20" data-i18n="dur_20s">20 Seconds (Full Promo)</option>
-                            <option value="30" data-i18n="dur_30s">30 Seconds (Extended Cinematic)</option>
-                        </select>
-                    </div>
-
-                    
-
-                    <!-- Custom Music / Audio Track Upload -->
-                    <div class="control-group">
-                        <label data-i18n="label_custom_audio">Custom Music / Voiceover (.MP3 / .WAV)</label>
-                        <div style="display:flex; gap:8px;">
-                            <label for="intro-file-audio" class="file-upload-btn" style="flex:2; margin:0; padding:8px 12px; font-size:0.75rem;">
-                                <i class="fa-solid fa-music"></i> <span data-i18n="btn_upload_audio">📁 Upload Audio Track</span>
-                            </label>
-                            <input type="file" id="intro-file-audio" accept="audio/mp3, audio/wav, audio/mpeg" style="display:none;">
-                            <button type="button" id="btn-reset-audio" class="action-btn-glow" style="flex:1; padding:8px 10px; font-size:0.72rem; background:#1e293b; border:1px solid #475569;" title="Reset Audio">
-                                <i class="fa-solid fa-rotate-left"></i> <span data-i18n="btn_reset_audio">🔄 Default</span>
-                            </button>
-                        </div>
-                        <div id="intro-audio-filename" style="font-size:0.72rem; color:var(--accent-gold); margin-top:4px; font-family:var(--font-mono); display:none;"></div>
-                    </div>
-
-                    <div class="control-group">
-                        <label data-i18n="label_color_primary">Glow & Lighting Colors</label>
-                        <div class="color-pickers-row">
-                            <div class="color-box">
-                                <input type="color" id="intro-color-primary" value="#00f2fe">
-                                <span>Neon 1</span>
+                    <!-- 🎬 TITLES & CINEMATIC FORMAT CARD -->
+                    <div class="robot-config-card" id="card-general-settings" data-mob-cat="cinematics">
+                        <div class="robot-card-header">
+                            <div class="robot-card-title">
+                                <i class="fa-solid fa-sliders"></i> <span data-i18n="general_settings_title">🎬 TITRES &amp; FORMAT CINÉMA</span>
                             </div>
-                            <div class="color-box">
-                                <input type="color" id="intro-color-secondary" value="#ff007f">
-                                <span>Neon 2</span>
+                        </div>
+
+                        <!-- Main Text Controls -->
+                        <div class="control-group">
+                            <label data-i18n="label_title_text">Main Title / Brand Name</label>
+                            <input type="text" id="intro-input-title" class="studio-input" value="CYBER ARENA" maxlength="24">
+                        </div>
+
+                        <div class="control-group">
+                            <label data-i18n="label_subtitle_text">Subtitle / Tagline</label>
+                            <input type="text" id="intro-input-sub" class="studio-input" value="BY IA CODE STUDIO" maxlength="32">
+                        </div>
+
+                        <!-- Custom Logo Upload -->
+                        <div class="control-group">
+                            <label data-i18n="label_upload_logo">Upload Custom Logo / Icon</label>
+                            <label for="intro-file-logo" class="file-upload-btn">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="label_btn_upload">📁 Upload 3D Logo Badge</span>
+                            </label>
+                            <input type="file" id="intro-file-logo" accept="image/png, image/jpeg" style="display:none;">
+                        </div>
+
+                        <div class="control-group">
+                            <label data-i18n="label_aspect">Format / Aspect Ratio</label>
+                            <select id="intro-select-aspect" class="studio-select">
+                                <option value="16:9" data-i18n="aspect_landscape" selected>16:9 Landscape (YouTube / PC)</option>
+                                <option value="9:16" data-i18n="aspect_portrait">9:16 Vertical (TikTok / Shorts / Reels)</option>
+                                <option value="1:1" data-i18n="aspect_square">1:1 Square (Instagram / Discord)</option>
+                                <option value="4:5" data-i18n="aspect_social_portrait">4:5 Social Portrait (Instagram / FB)</option>
+                                <option value="21:9" data-i18n="aspect_ultrawide">21:9 UltraWide Cinema (Gaming / 21:9)</option>
+                                <option value="full" data-i18n="aspect_fullscreen">🖥️ Fullscreen / Fill Window</option>
+                            </select>
+                        </div>
+
+                        <div class="control-group">
+                            <label data-i18n="label_preset">Cinematic 3D World Preset</label>
+                            <select id="intro-select-preset" class="studio-select">
+                                <option value="cyberpunk" data-i18n="preset_cyberpunk">🌆 Cyberpunk 2077 Neon City</option>
+                                <option value="cosmic" data-i18n="preset_cosmic">✨ Quantum Supernova Particle Blast</option>
+                                <option value="titan" data-i18n="preset_titan">🤖 Titan Mech Heavy Metal & Sparks</option>
+                                <option value="sunset" data-i18n="preset_sunset">🌅 80s Outrun Synthwave Sunset</option>
+                                <option value="hyperspace" data-i18n="preset_hyperspace">🚀 Hyperspace Warp Speed Vortex</option>
+                            </select>
+                        </div>
+
+                        <div class="control-group">
+                            <label data-i18n="label_camera_anim">Cinematic Camera Motion</label>
+                            <select id="intro-select-anim" class="studio-select">
+                                <option value="flyin" data-i18n="anim_flyin">Cinematic Fly-In Blast</option>
+                                <option value="orbit" data-i18n="anim_orbit">360° Smooth Orbital Scan</option>
+                                <option value="zoom_blast" data-i18n="anim_zoom_blast">Hyper-Speed Sonic Zoom</option>
+                                <option value="matrix_scan" data-i18n="anim_matrix_scan">Matrix Glitch Tactical Sweep</option>
+                                <option value="trailer" data-i18n="cam_trailer">🎬 Movie Trailer Director Cuts</option>
+                            </select>
+                        </div> 
+
+                        <div class="control-group">
+                            <label data-i18n="label_duration">Video Clip Duration</label>
+                            <select id="intro-select-duration" class="studio-select">
+                                <option value="10" data-i18n="dur_10s">10 Seconds (Quick Intro)</option>
+                                <option value="15" data-i18n="dur_15s" selected>15 Seconds (Story & Reels)</option>
+                                <option value="20" data-i18n="dur_20s">20 Seconds (Full Promo)</option>
+                                <option value="30" data-i18n="dur_30s">30 Seconds (Extended Cinematic)</option>
+                            </select>
+                        </div>
+
+                        <!-- Custom Music / Audio Track Upload -->
+                        <div class="control-group">
+                            <label data-i18n="label_custom_audio">Custom Music / Voiceover (.MP3 / .WAV)</label>
+                            <div style="display:flex; gap:8px;">
+                                <label for="intro-file-audio" class="file-upload-btn" style="flex:2; margin:0; padding:8px 12px; font-size:0.75rem;">
+                                    <i class="fa-solid fa-music"></i> <span data-i18n="btn_upload_audio">📁 Upload Audio Track</span>
+                                </label>
+                                <input type="file" id="intro-file-audio" accept="audio/mp3, audio/wav, audio/mpeg" style="display:none;">
+                                <button type="button" id="btn-reset-audio" class="action-btn-glow" style="flex:1; padding:8px 10px; font-size:0.72rem; background:#1e293b; border:1px solid #475569;" title="Reset Audio">
+                                    <i class="fa-solid fa-rotate-left"></i> <span data-i18n="btn_reset_audio">🔄 Default</span>
+                                </button>
+                            </div>
+                            <div id="intro-audio-filename" style="font-size:0.72rem; color:var(--accent-gold); margin-top:4px; font-family:var(--font-mono); display:none;"></div>
+                        </div>
+
+                        <div class="control-group">
+                            <label data-i18n="label_color_primary">Glow & Lighting Colors</label>
+                            <div class="color-pickers-row">
+                                <div class="color-box">
+                                    <input type="color" id="intro-color-primary" value="#00f2fe">
+                                    <span>Neon 1</span>
+                                </div>
+                                <div class="color-box">
+                                    <input type="color" id="intro-color-secondary" value="#ff007f">
+                                    <span>Neon 2</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1570,5 +1589,93 @@
     <script src="intro-creator.js?v=58"></script>
     <script src="beat-maker.js?v=58"></script>
     <script src="app.js?v=58"></script>
+    <!-- MOBILE BOTTOM NAVIGATION (Smartphones & Tablets only) -->
+    <nav class="cyber-mobile-nav" id="cyber-mobile-nav">
+        <button type="button" class="cyber-mob-btn active" id="cyber-btn-scene" onclick="switchCyberMobileView('scene')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+            <span data-i18n="mob_nav_3d">Vue 3D</span>
+        </button>
+        <button type="button" class="cyber-mob-btn" id="cyber-btn-robot" onclick="switchCyberMobileView('robot')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+                <circle cx="12" cy="5" r="2"></circle>
+                <path d="M12 7v4"></path>
+                <line x1="8" y1="16" x2="8" y2="16"></line>
+                <line x1="16" y1="16" x2="16" y2="16"></line>
+            </svg>
+            <span data-i18n="mob_nav_robot">Robot &amp; Voix</span>
+        </button>
+        <button type="button" class="cyber-mob-btn" id="cyber-btn-cinematics" onclick="switchCyberMobileView('cinematics')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+            <span data-i18n="mob_nav_cinematics">Cinématiques</span>
+        </button>
+        <button type="button" class="cyber-mob-btn" id="cyber-btn-export" onclick="switchCyberMobileView('export')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span data-i18n="mob_nav_export">Export</span>
+        </button>
+    </nav>
+
+    <script>
+        function switchCyberMobileView(view) {
+            const layout = document.querySelector('.intro-creator-layout');
+            const panel = document.querySelector('.studio-control-panel');
+            const btnScene = document.getElementById('cyber-btn-scene');
+            const btnRobot = document.getElementById('cyber-btn-robot');
+            const btnCinematics = document.getElementById('cyber-btn-cinematics');
+            const btnExport = document.getElementById('cyber-btn-export');
+
+            [btnScene, btnRobot, btnCinematics, btnExport].forEach(b => b && b.classList.remove('active'));
+
+            if (!layout || !panel) return;
+
+            if (view === 'scene') {
+                layout.classList.remove('mobile-show-panel');
+                if (btnScene) btnScene.classList.add('active');
+                setTimeout(() => {
+                    if (window.introEngine && typeof window.introEngine.onResize === 'function') {
+                        window.introEngine.onResize();
+                    } else {
+                        window.dispatchEvent(new Event('resize'));
+                    }
+                }, 120);
+            } else {
+                layout.classList.add('mobile-show-panel');
+                panel.setAttribute('data-active-cat', view);
+                if (view === 'robot' && btnRobot) btnRobot.classList.add('active');
+                else if (view === 'cinematics' && btnCinematics) btnCinematics.classList.add('active');
+                else if (view === 'export' && btnExport) btnExport.classList.add('active');
+                panel.scrollTop = 0;
+            }
+        }
+        window.switchCyberMobileView = switchCyberMobileView;
+
+        function triggerMobilePreview() {
+            const btnPreview = document.getElementById('btn-intro-preview');
+            if (btnPreview) btnPreview.click();
+        }
+        window.triggerMobilePreview = triggerMobilePreview;
+
+        // Auto return to scene view when previewing from control panel on mobile
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnPreview = document.getElementById('btn-intro-preview');
+            if (btnPreview) {
+                btnPreview.addEventListener('click', () => {
+                    if (window.innerWidth <= 850) {
+                        switchCyberMobileView('scene');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

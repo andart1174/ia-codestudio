@@ -11,6 +11,15 @@ const translations = {
         tab_intro: "🎬 3D CINEMATIC INTRO & VIDEO FX",
         tab_beat: "🎹 CYBER BEAT & FULL SYNTH STUDIO",
         
+        // Mobile Navigation & Floating Actions
+        mob_nav_3d: "3D View",
+        mob_nav_robot: "Robot & Voice",
+        mob_nav_cinematics: "Cinematics",
+        mob_nav_export: "Export",
+        mob_btn_preview: "Preview Intro",
+        mob_btn_robot: "Robot & Voice",
+        general_settings_title: "🎬 Titles & Cinematic Format",
+        
         // Intro Creator
         intro_heading: "3D CINEMATIC VIDEO & INTRO GENERATOR",
         intro_sub: "Create pro 3D motion intros with talking AI robot hosts, custom logo badges, audio-reactive lasers, and 60FPS video export!",
@@ -494,6 +503,15 @@ const translations = {
         btn_community: "Communauté",
         tab_intro: "🎬 INTRO 3D CINÉMATIQUE & EFFETS VIDÉO",
         tab_beat: "🎹 STUDIO BEAT MAKER & SYNTHÈSE COMPLÈTE",
+        
+        // Navigation & Actions Mobile
+        mob_nav_3d: "Vue 3D",
+        mob_nav_robot: "Robot & Voix",
+        mob_nav_cinematics: "Cinématiques",
+        mob_nav_export: "Export",
+        mob_btn_preview: "Aperçu Intro",
+        mob_btn_robot: "Robot & Voix",
+        general_settings_title: "🎬 Titres & Format Cinéma",
         
         // Intro Creator
         intro_heading: "GÉNÉRATEUR D'INTRO 3D & VIDÉO CINÉMATIQUE",
