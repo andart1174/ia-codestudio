@@ -172,6 +172,17 @@
         <div class="viewport-footer-hint" data-i18n="drag_hint">
           Click and drag to rotate • Scroll to zoom • Right-click to pan
         </div>
+              <!-- Floating Quick Action Buttons on Mobile -->
+        <div class="mobile-3d-floating-actions">
+          <button type="button" class="mob-float-btn" onclick="switchChromeMobileView('material')">
+            <span>✨</span>
+            <span data-i18n="mob_btn_materials">Matériaux &amp; Styles</span>
+          </button>
+          <button type="button" class="mob-float-btn" onclick="switchChromeMobileView('text')">
+            <span>✍️</span>
+            <span data-i18n="mob_btn_text">Texte &amp; Formes</span>
+          </button>
+        </div>
       </section>
 
       <!-- Glassmorphic Controls Sidebar -->
@@ -3779,5 +3790,98 @@
   <script src="js/i18n.js"></script>
   <script src="js/premium-lock.js"></script>
   <script src="js/studio-app.js"></script>
+  <!-- MOBILE BOTTOM NAVIGATION (Smartphones & Tablets only) -->
+  <nav class="chrome-mobile-nav" id="chrome-mobile-nav">
+    <button class="chrome-mob-btn active" id="mob-btn-scene" onclick="switchChromeMobileView('scene')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+      </svg>
+      <span data-i18n="mob_view_3d">Vue 3D</span>
+    </button>
+    <button class="chrome-mob-btn" id="mob-btn-text" onclick="switchChromeMobileView('text')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="4 7 4 4 20 4 20 7"></polyline>
+        <line x1="9" y1="20" x2="15" y2="20"></line>
+        <line x1="12" y1="4" x2="12" y2="20"></line>
+      </svg>
+      <span data-i18n="mob_view_text">Texte &amp; Formes</span>
+    </button>
+    <button class="chrome-mob-btn" id="mob-btn-material" onclick="switchChromeMobileView('material')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+        <path d="M2 12h20"></path>
+      </svg>
+      <span data-i18n="mob_view_mat">Matériaux</span>
+    </button>
+    <button class="chrome-mob-btn" id="mob-btn-export" onclick="switchChromeMobileView('export')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
+      </svg>
+      <span data-i18n="mob_view_export">Export</span>
+    </button>
+  </nav>
+
+  <script>
+    function switchChromeMobileView(view) {
+      const container = document.querySelector('.workspace-layout');
+      const btnScene = document.getElementById('mob-btn-scene');
+      const btnText = document.getElementById('mob-btn-text');
+      const btnMat = document.getElementById('mob-btn-material');
+      const btnExport = document.getElementById('mob-btn-export');
+
+      [btnScene, btnText, btnMat, btnExport].forEach(b => b && b.classList.remove('active'));
+
+      if (!container) return;
+
+      if (view === 'scene') {
+        container.classList.remove('mobile-show-sidebar');
+        if (btnScene) btnScene.classList.add('active');
+        setTimeout(() => {
+          window.dispatchEvent(new Event('resize'));
+        }, 120);
+      } else {
+        container.classList.add('mobile-show-sidebar');
+        if (view === 'text') {
+          if (btnText) btnText.classList.add('active');
+          const tab = document.querySelector('.tab-btn[data-tab="text"]');
+          if (tab) tab.click();
+        } else if (view === 'material') {
+          if (btnMat) btnMat.classList.add('active');
+          const tab = document.querySelector('.tab-btn[data-tab="material"]');
+          if (tab) tab.click();
+        } else if (view === 'export') {
+          if (btnExport) btnExport.classList.add('active');
+          const tab = document.querySelector('.tab-btn[data-tab="export"]');
+          if (tab) tab.click();
+        }
+        const contentArea = document.querySelector('.tab-content-area');
+        if (contentArea) contentArea.scrollTop = 0;
+      }
+    }
+    window.switchChromeMobileView = switchChromeMobileView;
+
+    // Keep mobile bottom navigation tabs in sync when user clicks top tabs
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (window.innerWidth > 850) return;
+          const tab = btn.getAttribute('data-tab');
+          const btnText = document.getElementById('mob-btn-text');
+          const btnMat = document.getElementById('mob-btn-material');
+          const btnExport = document.getElementById('mob-btn-export');
+          const btnScene = document.getElementById('mob-btn-scene');
+          [btnScene, btnText, btnMat, btnExport].forEach(b => b && b.classList.remove('active'));
+          if (tab === 'text' && btnText) btnText.classList.add('active');
+          else if (tab === 'material' && btnMat) btnMat.classList.add('active');
+          else if (tab === 'export' && btnExport) btnExport.classList.add('active');
+        });
+      });
+    });
+  </script>
 </body>
 </html>

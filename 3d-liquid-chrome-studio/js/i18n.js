@@ -12,6 +12,14 @@ const studioTranslations = {
     tab_studio: "Studio & Lights",
     tab_export: "Export",
 
+    // Mobile Navigation & Actions
+    mob_view_3d: "3D View",
+    mob_view_text: "Text & Shapes",
+    mob_view_mat: "Materials",
+    mob_view_export: "Export",
+    mob_btn_materials: "Materials & Styles",
+    mob_btn_text: "Text & Shapes",
+
     // Section 1: Text & Logo
     mode_text: "3D Text",
     mode_shape: "3D Shape",
@@ -707,6 +715,14 @@ const studioTranslations = {
     tab_animation: "Animations",
     tab_studio: "Studio & Lumières",
     tab_export: "Exporter",
+
+    // Navigation & Actions Mobile
+    mob_view_3d: "Vue 3D",
+    mob_view_text: "Texte & Formes",
+    mob_view_mat: "Matériaux",
+    mob_view_export: "Export",
+    mob_btn_materials: "Matériaux & Styles",
+    mob_btn_text: "Texte & Formes",
 
     // Section 1: Texte & Logo
     mode_text: "Texte 3D",

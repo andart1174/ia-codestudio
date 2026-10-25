@@ -1331,28 +1331,258 @@ html, body {
 }
 
 /* Responsive */
-@media (max-width: 900px) {
+/* ═══════════════════════════════════════════════════════════
+   MOBILE & TABLET RESPONSIVE (Screens <= 850px)
+   100% UNTOUCHED on PC / Desktop screens >= 851px
+═══════════════════════════════════════════════════════════ */
+@media (max-width: 850px) {
+  /* 1. App container & Workspace */
+  html, body {
+    height: 100dvh !important;
+    height: 100vh !important;
+    overflow: hidden !important;
+  }
   .app-container {
-    overflow-y: auto;
-    height: auto;
+    height: 100dvh !important;
+    height: 100vh !important;
+    overflow: hidden !important;
+    position: relative !important;
   }
+
+  /* 2. Compact Studio Header */
+  .studio-header {
+    height: 48px !important;
+    padding: 0 10px !important;
+    gap: 8px !important;
+    border-bottom: 1px solid var(--panel-border) !important;
+    flex-shrink: 0 !important;
+  }
+  .brand-section {
+    gap: 8px !important;
+    flex-shrink: 0 !important;
+  }
+  .brand-badge {
+    padding: 3px 8px !important;
+    font-size: 9px !important;
+    letter-spacing: 0.5px !important;
+  }
+  .app-heading h1 {
+    font-size: 13px !important;
+    white-space: nowrap !important;
+  }
+  .app-heading p {
+    display: none !important; /* Hide long paragraph on mobile to prevent overlapping */
+  }
+  .header-actions {
+    gap: 6px !important;
+    margin-left: auto !important;
+  }
+  .lang-switcher {
+    padding: 2px !important;
+  }
+  .lang-btn {
+    padding: 3px 8px !important;
+    font-size: 11px !important;
+  }
+  .site-back-link {
+    padding: 6px 9px !important;
+    font-size: 11px !important;
+  }
+  .site-back-link span {
+    display: none !important; /* Hide text, keep sleek back arrow */
+  }
+
+  /* 3. Main Workspace Layout */
   .workspace-layout {
-    flex-direction: column;
-    height: auto;
+    flex-direction: column !important;
+    height: calc(100dvh - 48px - 50px - env(safe-area-inset-bottom, 0px)) !important;
+    height: calc(100vh - 48px - 50px - env(safe-area-inset-bottom, 0px)) !important;
+    overflow: hidden !important;
+    position: relative !important;
   }
+
+  /* Default on mobile: Full-Screen 3D Scene View */
   .canvas-area {
-    height: 55vh;
+    display: flex !important;
+    width: 100% !important;
+    height: 100% !important;
+    flex: 1 1 100% !important;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+  #three-canvas {
+    width: 100% !important;
+    height: 100% !important;
   }
   .sidebar-panel {
-    width: 100%;
-    height: auto;
-    border-left: none;
-    border-top: 1px solid var(--panel-border);
+    display: none !important;
+    width: 100% !important;
+    height: 100% !important;
+    flex: 1 1 100% !important;
+    border-left: none !important;
+    border-top: none !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+    flex-direction: column !important;
   }
+
+  /* Mobile Mode: Controls active */
+  .workspace-layout.mobile-show-sidebar .canvas-area {
+    display: none !important;
+  }
+  .workspace-layout.mobile-show-sidebar .sidebar-panel {
+    display: flex !important;
+  }
+
+  /* 4. Floating HUD & Camera Controls on Mobile */
+  .viewport-hud {
+    top: 10px !important;
+    left: 10px !important;
+    gap: 6px !important;
+  }
+  .hud-pill {
+    padding: 4px 10px !important;
+    font-size: 10px !important;
+  }
+
   .camera-controls-floating {
-    right: 20px;
+    top: 10px !important;
+    right: 10px !important;
+    bottom: auto !important;
+    gap: 5px !important;
   }
-  .toast-notice {
-    right: 20px;
+  .icon-action-btn {
+    padding: 5px 9px !important;
+    font-size: 10px !important;
+  }
+
+  .viewport-footer-hint {
+    bottom: 58px !important; /* Above floating action buttons */
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    white-space: nowrap !important;
+    font-size: 10px !important;
+    padding: 4px 12px !important;
+    background: rgba(13, 17, 26, 0.75) !important;
+    backdrop-filter: blur(8px) !important;
+  }
+
+  /* Floating Quick Action Buttons on 3D View */
+  .mobile-3d-floating-actions {
+    position: absolute !important;
+    bottom: 12px !important;
+    left: 0 !important;
+    right: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    z-index: 15 !important;
+    pointer-events: none !important;
+    padding: 0 12px !important;
+  }
+  .mob-float-btn {
+    pointer-events: auto !important;
+    background: rgba(13, 17, 26, 0.88) !important;
+    border: 1px solid rgba(0, 240, 255, 0.4) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 0 12px rgba(0, 240, 255, 0.25) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    color: var(--accent-cyan) !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    padding: 8px 16px !important;
+    border-radius: var(--radius-full) !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+  .mob-float-btn:active {
+    transform: scale(0.95) !important;
+    background: rgba(0, 240, 255, 0.2) !important;
+  }
+
+  /* 5. Mobile Tab Navigation in Sidebar */
+  .tab-nav {
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    flex-shrink: 0 !important;
+  }
+  .tab-nav::-webkit-scrollbar { display: none !important; }
+  .tab-btn {
+    padding: 12px 14px !important;
+    font-size: 11px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .tab-content-area {
+    padding: 14px 14px 30px !important;
+    flex: 1 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Mode switchers grid on mobile */
+  .mode-toggle-group {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 5px !important;
+  }
+  .mode-btn {
+    font-size: 10px !important;
+    padding: 7px 3px !important;
+  }
+
+  /* 6. Mobile Bottom Navigation Bar */
+  .chrome-mobile-nav {
+    display: flex !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: calc(50px + env(safe-area-inset-bottom, 0px)) !important;
+    background: rgba(7, 9, 14, 0.98) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border-top: 1px solid var(--panel-border) !important;
+    z-index: 100 !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    padding: 0 4px env(safe-area-inset-bottom, 0px) !important;
+  }
+  .chrome-mob-btn {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 3px !important;
+    background: transparent !important;
+    border: none !important;
+    color: var(--text-muted) !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    padding: 5px 0 !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+  }
+  .chrome-mob-btn svg {
+    stroke: currentColor !important;
+  }
+  .chrome-mob-btn.active {
+    color: var(--accent-cyan) !important;
+    background: rgba(0, 240, 255, 0.12) !important;
+  }
+}
+
+@media (min-width: 851px) {
+  .chrome-mobile-nav {
+    display: none !important;
+  }
+  .mobile-3d-floating-actions {
+    display: none !important;
   }
 }
