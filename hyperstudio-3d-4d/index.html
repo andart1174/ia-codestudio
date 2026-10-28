@@ -69,6 +69,68 @@
             "price": "0",
             "priceCurrency": "USD"
           }
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://ia-codestudio.com/hyperstudio-3d-4d/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "How to generate 3D WebGL HTML code with AI for free? / Comment générer du code HTML 3D avec l'IA gratuitement ?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "In HyperStudio 3D/4D, select any 3D preset or type your prompt into the AI Prompt Bar (e.g., 'Space fighter with neon engine thrusters'). The engine instantly compiles custom HTML 3D tags (<model-3d>, <hyper-cube>, <liquid-metal>) and Three.js WebGL shaders rendered live at 60 FPS with zero setup required."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How to share an interactive 3D model with friends or clients via a link? / Comment partager un modèle 3D par lien ?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Click the 'Share 3D 🚀' button to generate a unique deep-link containing your active preset (e.g., https://ia-codestudio.com/hyperstudio-3d-4d/#preset=cosmic_starship). You can share it directly via WhatsApp, Telegram, Twitter/X, LinkedIn, or use the native mobile share sheet to send it to any phone app."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How to fly spaceships and drive mechas in browser with mobile touch controls? / Comment piloter en 3D sur téléphone ?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Enable 'Pilot & Drive Mode' to activate the 3D Cosmic Space Flight Simulator. On desktop, use WASD keys, Space for warp nitro boost, and mouse/F to fire lasers. On mobile smartphones and tablets, an intuitive virtual touch gamepad appears with climbing, diving, steering, nitro, and laser blasting controls."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I export standalone HTML, 3D OBJ, React, and Vue code without Blender? / Puis-je exporter le code HTML, React ou OBJ sans Blender ?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes! HyperStudio provides 1-click export options: download a standalone 100% self-contained .HTML file that runs in any browser offline, export raw .OBJ 3D geometry, or open Framework Export to generate production-ready React JSX, Vue.js, Webflow, and Shopify Liquid components."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is 4D Dimension Morphing (Tesseract, 24-Cell) in WebGL? / Qu'est-ce que le morphing 4D en WebGL ?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "HyperStudio includes a real-time 4D-to-3D stereographic perspective projection engine. It mathematically rotates four-dimensional polytopes (Hypercube/Tesseract, 16-cell, 24-cell, 120-cell) along the XW, YW, and ZW planes, casting dynamic 3D shadow meshes directly into your browser canvas."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I import my own 2D photos or 3D OBJ models into HyperStudio? / Puis-je importer mes propres photos ou modèles 3D ?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. In the 'Import / Export' tab, click 'Import Photo' to project any JPG/PNG into a 3D hologram or glass photo frame with customizable lighting, or click 'Import 3D Model' to load any external .OBJ file and edit its materials, scale, and shaders."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is HyperStudio 3D/4D free for commercial use? / HyperStudio est-il gratuit pour un usage commercial ?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, all procedural 3D models and HTML/WebGL code generated in HyperStudio 3D/4D can be freely used in commercial client websites, ecommerce stores, video intros, games, and web apps without royalties."
+              }
+            }
+          ]
         }
       ]
     }
@@ -136,6 +198,12 @@
 
                 <!-- Always-visible Action Buttons (Run, Export etc.) -->
                 <div class="header-actions">
+                    <button id="btn-share-3d-main" class="btn btn-glow-accent" style="background:linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); color:#05070d; font-weight:700; border-color:#00f2fe;" title="Share 3D Model / Partager le modèle 3D">
+                        <i class="fa-solid fa-share-nodes"></i> <span data-i18n="btn_share_3d">Share 3D 🚀</span>
+                    </button>
+                    <button id="btn-open-faq-modal" class="btn btn-secondary" title="FAQ & Complete 3D Guide / Foire Aux Questions">
+                        <i class="fa-solid fa-circle-question"></i> <span data-i18n="btn_faq">FAQ 💡</span>
+                    </button>
                     <button id="btn-toggle-editor" class="btn btn-secondary" title="Open / Close 3D Code Editor">
                         <i class="fa-solid fa-code"></i> <span data-i18n="btn_code_editor">Code Editor</span>
                     </button>
@@ -259,6 +327,9 @@
                 <!-- GROUP: SETTINGS -->
                 <div class="toolbar-panel" id="group-settings">
                     <div class="tpanel-label"><i class="fa-solid fa-gear"></i> <span data-i18n="group_settings">Settings &amp; Options</span></div>
+                    <button id="btn-open-faq-settings" class="btn btn-secondary" title="FAQ & Complete 3D Guide / Foire Aux Questions">
+                        <i class="fa-solid fa-circle-question"></i> <span data-i18n="btn_faq">FAQ &amp; Guide 💡</span>
+                    </button>
                     <button id="btn-open-install-guide" class="btn btn-primary btn-glow-accent" title="Install App on Phone & Tablet / Installer sur Mobile" data-i18n-title="btn_install_app">
                         <i class="fa-solid fa-mobile-screen-button"></i> <span data-i18n="btn_install_app">Install App 📲</span>
                     </button>
@@ -421,6 +492,9 @@
                             <!-- ── CODE EDITOR TOGGLE ──────────────── -->
                             <button id="btn-vp-toggle-editor" class="v-btn btn-glow-accent" title="Open / Close 3D Code Editor">
                                 <i class="fa-solid fa-code"></i> <span data-i18n="btn_code_editor">Code Editor</span>
+                            </button>
+                            <button id="btn-vp-share" class="v-btn btn-glow-accent" style="color:#00f2fe; border-color:rgba(0,242,254,0.4);" title="Share this 3D Model / Partager ce modèle 3D">
+                                <i class="fa-solid fa-share-nodes"></i> <span data-i18n="btn_share_3d">Share 3D 🚀</span>
                             </button>
 
                             <span class="vp-separator">|</span>
@@ -1935,7 +2009,201 @@
         </div>
     </div>
 
-    <!-- Application JavaScript Entry Point -->
+        <!-- MODAL: 1-CLICK VIRAL 3D MODEL & SCENE SHARING -->
+    <div class="modal-overlay" id="modal-share-3d">
+        <div class="modal-card gallery-modal" style="max-width:580px; background:linear-gradient(145deg, #0b1120, #040714); border:1px solid rgba(0, 242, 254, 0.45); box-shadow:0 25px 60px rgba(0,0,0,0.85), 0 0 35px rgba(0, 242, 254, 0.25);">
+            <div class="modal-header" style="border-bottom:1px solid rgba(0, 242, 254, 0.3);">
+                <h3 style="color:#00f2fe; display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-share-nodes"></i>
+                    <span>Share 3D Model &amp; Interactive Scene 🚀</span>
+                </h3>
+                <button class="btn-close-modal" id="btn-close-share-3d"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" style="display:flex; flex-direction:column; gap:16px; padding:20px;">
+                <!-- Active Model Highlight Banner -->
+                <div style="background:rgba(0,242,254,0.08); border:1px solid rgba(0,242,254,0.3); border-radius:12px; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+                    <div>
+                        <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:#00ffcc; font-weight:700;">Active 3D Preset</div>
+                        <div id="share-modal-preset-name" style="color:#ffffff; font-size:1.05rem; font-weight:700; margin-top:2px;">🛸 Cyber Recon Drone 3D</div>
+                        <div style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">Anyone who clicks your link sees this exact 3D scene in 60 FPS WebGL!</div>
+                    </div>
+                    <span class="badge-4d" style="background:#00f2fe; color:#05070d; font-weight:800; padding:4px 10px; border-radius:20px; font-size:0.75rem;">LIVE 3D</span>
+                </div>
+
+                <!-- Native Mobile Share Trigger -->
+                <button type="button" id="btn-native-share" class="btn btn-primary btn-glow-accent" style="width:100%; justify-content:center; padding:12px; font-size:0.95rem; font-weight:700; background:linear-gradient(135deg, #00f2fe 0%, #7928ca 100%);">
+                    <i class="fa-solid fa-mobile-screen-button"></i> <span>Share via Phone Apps 📲 (WhatsApp, AirDrop, etc.)</span>
+                </button>
+
+                <!-- Copy Link Bar -->
+                <div>
+                    <label style="font-size:0.8rem; font-weight:600; color:#e2f1f5; display:block; margin-bottom:6px;">
+                        <i class="fa-solid fa-link" style="color:#00f2fe;"></i> Direct Sharable 3D Deep-Link:
+                    </label>
+                    <div style="display:flex; gap:8px;">
+                        <input type="text" id="share-deep-link-input" readonly value="https://ia-codestudio.com/hyperstudio-3d-4d/#preset=cyber_drone" class="styled-select" style="flex:1; font-family:var(--font-code); font-size:0.82rem; background:#05070d; border-color:rgba(0,242,254,0.3); color:#00ffcc; cursor:text;">
+                        <button type="button" id="btn-copy-deep-link" class="btn btn-primary" style="white-space:nowrap; padding:0 16px; font-weight:700;">
+                            <i class="fa-solid fa-copy"></i> <span id="copy-btn-text">Copy Link</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 1-Click Social Media Sharing Grid -->
+                <div>
+                    <label style="font-size:0.8rem; font-weight:600; color:#e2f1f5; display:block; margin-bottom:8px;">
+                        <i class="fa-solid fa-paper-plane" style="color:#00ffcc;"></i> Share directly to Social Networks:
+                    </label>
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(110px, 1fr)); gap:10px;">
+                        <button type="button" id="btn-share-whatsapp" class="btn btn-outline" style="border-color:#25d366; color:#25d366; justify-content:center; padding:10px 8px; font-size:0.82rem; gap:6px;">
+                            <i class="fa-brands fa-whatsapp" style="font-size:1.1rem;"></i> WhatsApp
+                        </button>
+                        <button type="button" id="btn-share-twitter" class="btn btn-outline" style="border-color:#1da1f2; color:#1da1f2; justify-content:center; padding:10px 8px; font-size:0.82rem; gap:6px;">
+                            <i class="fa-brands fa-x-twitter" style="font-size:1.1rem;"></i> X (Twitter)
+                        </button>
+                        <button type="button" id="btn-share-linkedin" class="btn btn-outline" style="border-color:#0077b5; color:#0077b5; justify-content:center; padding:10px 8px; font-size:0.82rem; gap:6px;">
+                            <i class="fa-brands fa-linkedin" style="font-size:1.1rem;"></i> LinkedIn
+                        </button>
+                        <button type="button" id="btn-share-facebook" class="btn btn-outline" style="border-color:#1877f2; color:#1877f2; justify-content:center; padding:10px 8px; font-size:0.82rem; gap:6px;">
+                            <i class="fa-brands fa-facebook" style="font-size:1.1rem;"></i> Facebook
+                        </button>
+                        <button type="button" id="btn-share-telegram" class="btn btn-outline" style="border-color:#0088cc; color:#0088cc; justify-content:center; padding:10px 8px; font-size:0.82rem; gap:6px;">
+                            <i class="fa-brands fa-telegram" style="font-size:1.1rem;"></i> Telegram
+                        </button>
+                        <button type="button" id="btn-share-reddit" class="btn btn-outline" style="border-color:#ff4500; color:#ff4500; justify-content:center; padding:10px 8px; font-size:0.82rem; gap:6px;">
+                            <i class="fa-brands fa-reddit" style="font-size:1.1rem;"></i> Reddit
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Embed Quick Copy Section -->
+                <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:12px;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+                        <span style="font-size:0.78rem; font-weight:600; color:#94a3b8;"><i class="fa-solid fa-code"></i> Embed on your Website (iframe):</span>
+                        <button type="button" id="btn-copy-quick-embed" class="btn-icon-sm" style="font-size:0.75rem; color:#00f2fe; cursor:pointer;" title="Copy Embed Code"><i class="fa-solid fa-copy"></i> Copy Embed</button>
+                    </div>
+                    <input type="text" id="share-quick-embed-input" readonly value='<iframe src="https://ia-codestudio.com/hyperstudio-3d-4d/#preset=cyber_drone" width="100%" height="500" frameborder="0" allow="accelerometer; gyroscope" allowfullscreen></iframe>' class="styled-select" style="width:100%; font-family:var(--font-code); font-size:0.75rem; background:#000; color:#cbd5e1;">
+                </div>
+            </div>
+            <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(0,242,254,0.2);">
+                <div style="font-size:0.75rem; color:#00ffcc;">
+                    <i class="fa-solid fa-coins"></i> +20 GENIUS Coins earned when friends open your link!
+                </div>
+                <button id="btn-close-share-3d-footer" class="btn btn-secondary">
+                    <span>Close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: FAQ & COMPLETE 3D GUIDE (OPTIMIZED FOR RICH SEARCH & GEO) -->
+    <div class="modal-overlay" id="modal-faq-3d">
+        <div class="modal-card gallery-modal" style="max-width:760px; max-height:90vh; background:linear-gradient(145deg, #0b1120, #040714); border:1px solid rgba(0, 242, 254, 0.45); box-shadow:0 25px 60px rgba(0,0,0,0.85), 0 0 40px rgba(0, 242, 254, 0.2);">
+            <div class="modal-header" style="border-bottom:1px solid rgba(0, 242, 254, 0.3);">
+                <h3 style="color:#00f2fe; display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-circle-question"></i>
+                    <span>HyperStudio 3D/4D FAQ &amp; Creator Guide 💡</span>
+                </h3>
+                <button class="btn-close-modal" id="btn-close-faq-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" style="padding:20px; overflow-y:auto; display:flex; flex-direction:column; gap:16px;">
+                <!-- Search & Language switcher row -->
+                <div style="display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+                    <div style="position:relative; flex:1; min-width:240px;">
+                        <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#94a3b8; font-size:0.85rem;"></i>
+                        <input type="text" id="faq-search-input" placeholder="Search questions (e.g., flight simulator, export, share, 4D)..." class="styled-select" style="width:100%; padding-left:34px; font-size:0.85rem;">
+                    </div>
+                    <div style="display:flex; gap:6px;">
+                        <button type="button" class="btn btn-secondary active faq-lang-btn" data-lang="en" style="padding:6px 12px; font-size:0.8rem;">🇬🇧 English</button>
+                        <button type="button" class="btn btn-secondary faq-lang-btn" data-lang="fr" style="padding:6px 12px; font-size:0.8rem;">🇫🇷 Français</button>
+                    </div>
+                </div>
+
+                <!-- FAQ Accordion List -->
+                <div class="faq-accordion-list" id="faq-accordion-container" style="display:flex; flex-direction:column; gap:10px;">
+                    <!-- Static fallback items for SEO & accessibility -->
+                    <div class="faq-accordion-item open">
+                        <button type="button" class="faq-accordion-header">
+                            <span><i class="fa-solid fa-wand-magic-sparkles" style="color:#00f2fe; margin-right:8px;"></i> How to generate 3D WebGL HTML code with AI for free?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-accordion-content" style="display:block;">
+                            In HyperStudio 3D/4D, select any 3D preset or type your custom prompt into the AI Prompt Bar (e.g., 'Space fighter with neon engine thrusters'). The engine instantly compiles custom HTML 3D tags (&lt;model-3d&gt;, &lt;hyper-cube&gt;, &lt;liquid-metal&gt;) and Three.js WebGL shaders rendered live at 60 FPS with zero setup required.
+                        </div>
+                    </div>
+
+                    <div class="faq-accordion-item">
+                        <button type="button" class="faq-accordion-header">
+                            <span><i class="fa-solid fa-share-nodes" style="color:#00ffcc; margin-right:8px;"></i> How to share an interactive 3D model with friends or clients via a link?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-accordion-content">
+                            Click the 'Share 3D 🚀' button to generate a unique deep-link containing your active preset (e.g., https://ia-codestudio.com/hyperstudio-3d-4d/#preset=cosmic_starship). You can share it directly via WhatsApp, Telegram, Twitter/X, LinkedIn, or use the native mobile share sheet to send it to any phone app. Anyone who opens the link sees the exact 3D scene loaded in real time.
+                        </div>
+                    </div>
+
+                    <div class="faq-accordion-item">
+                        <button type="button" class="faq-accordion-header">
+                            <span><i class="fa-solid fa-gamepad" style="color:#ff007f; margin-right:8px;"></i> How to fly spaceships and drive mechas in browser with mobile touch controls?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-accordion-content">
+                            Enable 'Pilot &amp; Drive Mode' to activate the 3D Cosmic Space Flight Simulator. On desktop, use WASD keys, Space for warp nitro boost, and mouse/F to fire lasers. On mobile smartphones and tablets, an intuitive virtual touch gamepad appears with climbing, diving, steering, nitro, and laser blasting controls.
+                        </div>
+                    </div>
+
+                    <div class="faq-accordion-item">
+                        <button type="button" class="faq-accordion-header">
+                            <span><i class="fa-solid fa-file-code" style="color:#ffb703; margin-right:8px;"></i> Can I export standalone HTML, 3D OBJ, React, and Vue code without Blender?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-accordion-content">
+                            Yes! HyperStudio provides 1-click export options: download a standalone 100% self-contained .HTML file that runs in any browser offline, export raw .OBJ 3D geometry, or open Framework Export to generate production-ready React JSX, Vue.js, Webflow, and Shopify Liquid components.
+                        </div>
+                    </div>
+
+                    <div class="faq-accordion-item">
+                        <button type="button" class="faq-accordion-header">
+                            <span><i class="fa-solid fa-infinity" style="color:#a855f7; margin-right:8px;"></i> What is 4D Dimension Morphing (Tesseract, 24-Cell) in WebGL?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-accordion-content">
+                            HyperStudio includes a real-time 4D-to-3D stereographic perspective projection engine. It mathematically rotates four-dimensional polytopes (Hypercube/Tesseract, 16-cell, 24-cell, 120-cell) along the XW, YW, and ZW planes, casting dynamic 3D shadow meshes directly into your browser canvas.
+                        </div>
+                    </div>
+
+                    <div class="faq-accordion-item">
+                        <button type="button" class="faq-accordion-header">
+                            <span><i class="fa-solid fa-image" style="color:#38bdf8; margin-right:8px;"></i> Can I import my own 2D photos or 3D OBJ models into HyperStudio?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-accordion-content">
+                            Yes. In the 'Import / Export' tab, click 'Import Photo' to project any JPG/PNG into a 3D hologram or glass photo frame with customizable lighting, or click 'Import 3D Model' to load any external .OBJ file and edit its materials, scale, and shaders.
+                        </div>
+                    </div>
+
+                    <div class="faq-accordion-item">
+                        <button type="button" class="faq-accordion-header">
+                            <span><i class="fa-solid fa-scale-balanced" style="color:#4ade80; margin-right:8px;"></i> Is HyperStudio 3D/4D free for commercial use?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-accordion-content">
+                            Yes, all procedural 3D models and HTML/WebGL code generated in HyperStudio 3D/4D can be freely used in commercial client websites, ecommerce stores, video intros, games, and web apps without royalties.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(0,242,254,0.2);">
+                <a href="https://ia-codestudio.com" target="_blank" style="color:#00ffcc; font-size:0.8rem; text-decoration:none; display:flex; align-items:center; gap:6px;">
+                    <i class="fa-solid fa-globe"></i> Visit IA Code Studio Portal
+                </a>
+                <button id="btn-close-faq-modal-footer" class="btn btn-secondary">
+                    <span>Close Guide</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+<!-- Application JavaScript Entry Point -->
     <script src="app.js"></script>
 </body>
 </html>

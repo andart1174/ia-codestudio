@@ -46,6 +46,8 @@
             btn_embed: "Get Embed Code",
             btn_export_html: "Export .HTML",
             btn_export_obj: "Export .OBJ",
+            btn_share_3d: "Share 3D 🚀",
+            btn_faq: "FAQ 💡",
             btn_audio: "Audio Beats",
             btn_physics: "3D Physics",
             timeline_speed: "Speed:",
@@ -194,6 +196,8 @@
             btn_embed: "Obtenir Code Intégré",
             btn_export_html: "Exporter .HTML",
             btn_export_obj: "Exporter .OBJ",
+            btn_share_3d: "Partager 3D 🚀",
+            btn_faq: "FAQ 💡",
             btn_audio: "Rythme Audio",
             btn_physics: "Physique 3D",
             timeline_speed: "Vitesse:",
@@ -5795,7 +5799,8 @@
     const shareSocialIntent = (platform) => {
         playClickSFX();
         const caption = socialCaptionArea ? encodeURIComponent(socialCaptionArea.value) : '';
-        const url = encodeURIComponent('https://hyperstudio3d.app');
+        const currentP = (document.getElementById('preset-select') && document.getElementById('preset-select').value) || 'cyber_drone';
+        const url = encodeURIComponent('https://ia-codestudio.com/hyperstudio-3d-4d/#preset=' + currentP);
 
         if (platform === 'tiktok') {
             window.open('https://www.tiktok.com/upload', '_blank');
@@ -6610,6 +6615,7 @@
     document.getElementById('preset-select').addEventListener('change', (e) => {
         playClickSFX();
         const val = e.target.value;
+        if (typeof updateUrlHash === 'function') updateUrlHash(val);
         if (presetTemplates[val]) {
             codeEditor.value = presetTemplates[val];
             updateLineNumbers();
@@ -8468,6 +8474,364 @@ onUnmounted(() => {
     const btnShareClipInstagram = document.getElementById('btn-share-clip-instagram');
     if (btnShareClipInstagram) btnShareClipInstagram.addEventListener('click', () => shareRecordedClip('instagram'));
     const btnShareClipWhatsapp = document.getElementById('btn-share-clip-whatsapp');
+    
+    // ══════════════════════════════════════════════════════════════════════
+    // 🚀 VIRAL DEEP-LINKING & 1-CLICK SHARE 3D SYSTEM (PILONUL B)
+    // ══════════════════════════════════════════════════════════════════════
+    function checkUrlHashPreset() {
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('preset') && presetTemplates[urlParams.get('preset')]) {
+                return urlParams.get('preset');
+            }
+            if (urlParams.has('model') && presetTemplates[urlParams.get('model')]) {
+                return urlParams.get('model');
+            }
+            if (window.location.hash) {
+                const hash = window.location.hash.substring(1);
+                if (hash.startsWith('preset=') && presetTemplates[hash.replace('preset=', '')]) {
+                    return hash.replace('preset=', '');
+                }
+                if (hash.startsWith('model=') && presetTemplates[hash.replace('model=', '')]) {
+                    return hash.replace('model=', '');
+                }
+                if (presetTemplates[hash]) {
+                    return hash;
+                }
+            }
+        } catch (e) {
+            console.warn('Error reading URL preset params:', e);
+        }
+        return null;
+    }
+
+    function updateUrlHash(presetKey) {
+        if (!presetKey) return;
+        try {
+            if (window.history && window.history.replaceState) {
+                const newUrl = window.location.pathname + '#preset=' + encodeURIComponent(presetKey);
+                window.history.replaceState(null, '', newUrl);
+            }
+        } catch (e) {}
+    }
+
+    function getPresetDisplayName(presetKey) {
+        const select = document.getElementById('preset-select');
+        if (select) {
+            for (let i = 0; i < select.options.length; i++) {
+                if (select.options[i].value === presetKey) {
+                    return select.options[i].textContent;
+                }
+            }
+        }
+        return '🛸 ' + presetKey.replace(/_/g, ' ').toUpperCase() + ' 3D';
+    }
+
+    function initShare3DSystem() {
+        const modalShare = document.getElementById('modal-share-3d');
+        if (!modalShare) return;
+
+        const btnMainShare = document.getElementById('btn-share-3d-main');
+        const btnVpShare = document.getElementById('btn-vp-share');
+        const btnCloseShare = document.getElementById('btn-close-share-3d');
+        const btnCloseShareFooter = document.getElementById('btn-close-share-3d-footer');
+        const btnNativeShare = document.getElementById('btn-native-share');
+        const btnCopyLink = document.getElementById('btn-copy-deep-link');
+        const inputLink = document.getElementById('share-deep-link-input');
+        const btnCopyEmbed = document.getElementById('btn-copy-quick-embed');
+        const inputEmbed = document.getElementById('share-quick-embed-input');
+        const lblPresetName = document.getElementById('share-modal-preset-name');
+        const copyBtnText = document.getElementById('copy-btn-text');
+
+        function openShareModal() {
+            playClickSFX();
+            const select = document.getElementById('preset-select');
+            const currentKey = (select && select.value) || activePresetKey || 'cyber_drone';
+            const displayName = getPresetDisplayName(currentKey);
+            const fullUrl = 'https://ia-codestudio.com/hyperstudio-3d-4d/#preset=' + encodeURIComponent(currentKey);
+            const embedSnippet = '<iframe src="' + fullUrl + '" width="100%" height="500" frameborder="0" allow="accelerometer; gyroscope" allowfullscreen></iframe>';
+
+            if (lblPresetName) lblPresetName.textContent = displayName;
+            if (inputLink) inputLink.value = fullUrl;
+            if (inputEmbed) inputEmbed.value = embedSnippet;
+            if (copyBtnText) copyBtnText.textContent = 'Copy Link';
+
+            updateUrlHash(currentKey);
+            modalShare.classList.add('active');
+        }
+
+        function closeShareModal() {
+            playClickSFX();
+            modalShare.classList.remove('active');
+        }
+
+        if (btnMainShare) btnMainShare.addEventListener('click', openShareModal);
+        if (btnVpShare) btnVpShare.addEventListener('click', openShareModal);
+        if (btnCloseShare) btnCloseShare.addEventListener('click', closeShareModal);
+        if (btnCloseShareFooter) btnCloseShareFooter.addEventListener('click', closeShareModal);
+
+        function copyShareLink() {
+            playClickSFX();
+            if (!inputLink) return;
+            const textToCopy = inputLink.value;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    if (copyBtnText) copyBtnText.textContent = 'Copied! ✨';
+                    setTimeout(() => {
+                        if (copyBtnText) copyBtnText.textContent = 'Copy Link';
+                    }, 2000);
+                }).catch(() => fallbackCopy(inputLink));
+            } else {
+                fallbackCopy(inputLink);
+            }
+        }
+
+        function fallbackCopy(inputEl) {
+            inputEl.select();
+            inputEl.setSelectionRange(0, 99999);
+            try {
+                document.execCommand('copy');
+                if (copyBtnText) copyBtnText.textContent = 'Copied! ✨';
+                setTimeout(() => {
+                    if (copyBtnText) copyBtnText.textContent = 'Copy Link';
+                }, 2000);
+            } catch (err) {
+                alert('Copied to clipboard: ' + inputEl.value);
+            }
+        }
+
+        if (btnCopyLink) btnCopyLink.addEventListener('click', copyShareLink);
+
+        if (btnNativeShare) {
+            btnNativeShare.addEventListener('click', () => {
+                playClickSFX();
+                const select = document.getElementById('preset-select');
+                const currentKey = (select && select.value) || activePresetKey || 'cyber_drone';
+                const displayName = getPresetDisplayName(currentKey);
+                const fullUrl = inputLink ? inputLink.value : ('https://ia-codestudio.com/hyperstudio-3d-4d/#preset=' + currentKey);
+
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'HyperStudio 3D/4D — ' + displayName,
+                        text: 'Check out this 3D WebGL scene rendered live in browser at 60 FPS! 🛸🚀',
+                        url: fullUrl
+                    }).catch(() => {});
+                } else {
+                    copyShareLink();
+                }
+            });
+        }
+
+        if (btnCopyEmbed && inputEmbed) {
+            btnCopyEmbed.addEventListener('click', () => {
+                playClickSFX();
+                inputEmbed.select();
+                try {
+                    navigator.clipboard.writeText(inputEmbed.value);
+                    const originalHTML = btnCopyEmbed.innerHTML;
+                    btnCopyEmbed.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+                    setTimeout(() => { btnCopyEmbed.innerHTML = originalHTML; }, 2000);
+                } catch (e) {
+                    document.execCommand('copy');
+                }
+            });
+        }
+
+        const shareToPlatform = (platform) => {
+            playClickSFX();
+            const select = document.getElementById('preset-select');
+            const currentKey = (select && select.value) || activePresetKey || 'cyber_drone';
+            const displayName = getPresetDisplayName(currentKey);
+            const targetUrl = 'https://ia-codestudio.com/hyperstudio-3d-4d/#preset=' + encodeURIComponent(currentKey);
+            const msg = 'Check out this interactive 3D ' + displayName + ' on HyperStudio 3D! 🛸🚀';
+
+            if (platform === 'whatsapp') {
+                window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(msg + ' ' + targetUrl), '_blank');
+            } else if (platform === 'twitter') {
+                window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(msg) + '&url=' + encodeURIComponent(targetUrl), '_blank');
+            } else if (platform === 'linkedin') {
+                window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(targetUrl), '_blank');
+            } else if (platform === 'facebook') {
+                window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(targetUrl), '_blank');
+            } else if (platform === 'telegram') {
+                window.open('https://t.me/share/url?url=' + encodeURIComponent(targetUrl) + '&text=' + encodeURIComponent(msg), '_blank');
+            } else if (platform === 'reddit') {
+                window.open('https://reddit.com/submit?url=' + encodeURIComponent(targetUrl) + '&title=' + encodeURIComponent('Interactive 3D ' + displayName + ' in WebGL 60 FPS'), '_blank');
+            }
+        };
+
+        ['whatsapp', 'twitter', 'linkedin', 'facebook', 'telegram', 'reddit'].forEach(plat => {
+            const btn = document.getElementById('btn-share-' + plat);
+            if (btn) btn.addEventListener('click', () => shareToPlatform(plat));
+        });
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // 💡 FAQ & CREATOR GUIDE ACCORDION SYSTEM (PILONUL A - SEO / GEO)
+    // ══════════════════════════════════════════════════════════════════════
+    const faqData = [
+        {
+            q_en: "How to generate 3D WebGL HTML code with AI for free?",
+            a_en: "In HyperStudio 3D/4D, select any 3D preset or type your custom prompt into the AI Prompt Bar (e.g., 'Space fighter with neon engine thrusters'). The engine instantly compiles custom HTML 3D tags (&lt;model-3d&gt;, &lt;hyper-cube&gt;, &lt;liquid-metal&gt;) and Three.js WebGL shaders rendered live at 60 FPS with zero setup required.",
+            q_fr: "Comment générer du code HTML 3D avec l'IA gratuitement ?",
+            a_fr: "Dans HyperStudio 3D/4D, sélectionnez un préréglage ou saisissez votre invite dans la barre d'invite IA (ex: 'Chasseur spatial avec réacteurs néon'). Le moteur compile instantanément les balises HTML 3D personnalisées (&lt;model-3d&gt;, &lt;hyper-cube&gt;, &lt;liquid-metal&gt;) et les shaders Three.js WebGL affichés en direct à 60 FPS sans aucune configuration requise.",
+            icon: "fa-wand-magic-sparkles",
+            color: "#00f2fe"
+        },
+        {
+            q_en: "How to share an interactive 3D model with friends or clients via a link?",
+            a_en: "Click the 'Share 3D 🚀' button to generate a unique deep-link containing your active preset (e.g., https://ia-codestudio.com/hyperstudio-3d-4d/#preset=cosmic_starship). You can share it directly via WhatsApp, Telegram, Twitter/X, LinkedIn, or use the native mobile share sheet to send it to any phone app. Anyone who opens the link sees the exact 3D scene loaded in real time.",
+            q_fr: "Comment partager un modèle 3D interactif par lien ?",
+            a_fr: "Cliquez sur le bouton 'Partager 3D 🚀' pour générer un lien direct contenant votre modèle actif (ex: https://ia-codestudio.com/hyperstudio-3d-4d/#preset=cosmic_starship). Vous pouvez le partager directement via WhatsApp, Telegram, Twitter/X, LinkedIn, ou utiliser le partage natif sur mobile. Toute personne qui ouvre le lien voit exactement ce modèle 3D en direct.",
+            icon: "fa-share-nodes",
+            color: "#00ffcc"
+        },
+        {
+            q_en: "How to fly spaceships and drive mechas in browser with mobile touch controls?",
+            a_en: "Enable 'Pilot & Drive Mode' to activate the 3D Cosmic Space Flight Simulator. On desktop, use WASD keys, Space for warp nitro boost, and mouse/F to fire lasers. On mobile smartphones and tablets, an intuitive virtual touch gamepad appears with climbing, diving, steering, nitro, and laser blasting controls.",
+            q_fr: "Comment piloter en 3D avec les commandes tactiles sur mobile ?",
+            a_fr: "Activez le 'Mode Pilote & Conduite' pour lancer le Simulateur de Vol Spatial Cosmique 3D. Sur ordinateur, utilisez les touches ZQSD/WASD, Espace pour le boost nitro et la souris/F pour tirer. Sur smartphone et tablette tactile, une manette virtuelle s'affiche avec montée, descente, direction, nitro et tirs plasma.",
+            icon: "fa-gamepad",
+            color: "#ff007f"
+        },
+        {
+            q_en: "Can I export standalone HTML, 3D OBJ, React, and Vue code without Blender?",
+            a_en: "Yes! HyperStudio provides 1-click export options: download a standalone 100% self-contained .HTML file that runs in any browser offline, export raw .OBJ 3D geometry, or open Framework Export to generate production-ready React JSX, Vue.js, Webflow, and Shopify Liquid components.",
+            q_fr: "Puis-je exporter du code HTML autonome, 3D OBJ, React ou Vue sans Blender ?",
+            a_fr: "Oui ! HyperStudio propose des exports en un clic : téléchargez un fichier .HTML autonome fonctionnant hors-ligne sans dépendances, exportez la géométrie brute .OBJ 3D, ou ouvrez l'Export Framework pour générer du code React JSX, Vue.js, Webflow et Shopify Liquid prêt pour la production.",
+            icon: "fa-file-code",
+            color: "#ffb703"
+        },
+        {
+            q_en: "What is 4D Dimension Morphing (Tesseract, 24-Cell) in WebGL?",
+            a_en: "HyperStudio includes a real-time 4D-to-3D stereographic perspective projection engine. It mathematically rotates four-dimensional polytopes (Hypercube/Tesseract, 16-cell, 24-cell, 120-cell) along the XW, YW, and ZW planes, casting dynamic 3D shadow meshes directly into your browser canvas.",
+            q_fr: "Qu'est-ce que le morphing dimensionnel 4D (Tesseract, 24-Cell) en WebGL ?",
+            a_fr: "HyperStudio intègre un moteur de projection stéréographique 4D vers 3D en temps réel. Il fait tourner mathématiquement des polytopes à 4 dimensions (Hypercube/Tesseract, 16-cell, 24-cell, 120-cell) le long des plans XW, YW et ZW, projetant un maillage d'ombre 3D dynamique dans votre navigateur.",
+            icon: "fa-infinity",
+            color: "#a855f7"
+        },
+        {
+            q_en: "Can I import my own 2D photos or 3D OBJ models into HyperStudio?",
+            a_en: "Yes. In the 'Import / Export' tab, click 'Import Photo' to project any JPG/PNG into a 3D hologram or glass photo frame with customizable lighting, or click 'Import 3D Model' to load any external .OBJ file and edit its materials, scale, and shaders.",
+            q_fr: "Puis-je importer mes propres photos 2D ou modèles 3D OBJ ?",
+            a_fr: "Oui. Dans l'onglet 'Import / Export', cliquez sur 'Importer Photo' pour projeter n'importe quelle image JPG/PNG dans un cadre 3D holographique ou en verre avec éclairage personnalisable, ou cliquez sur 'Importer Modèle 3D' pour charger un fichier .OBJ externe.",
+            icon: "fa-image",
+            color: "#38bdf8"
+        },
+        {
+            q_en: "Is HyperStudio 3D/4D free for commercial use?",
+            a_en: "Yes, all procedural 3D models and HTML/WebGL code generated in HyperStudio 3D/4D can be freely used in commercial client websites, ecommerce stores, video intros, games, and web apps without royalties.",
+            q_fr: "HyperStudio 3D/4D est-il gratuit pour un usage commercial ?",
+            a_fr: "Oui, tous les modèles 3D procéduraux et le code HTML/WebGL générés dans HyperStudio 3D/4D peuvent être utilisés librement dans des sites web clients commerciaux, boutiques ecommerce, intros vidéo, jeux et applications sans aucune redevance.",
+            icon: "fa-scale-balanced",
+            color: "#4ade80"
+        }
+    ];
+
+    let currentFaqLang = 'en';
+
+    function renderFaqList(searchTerm = '') {
+        const container = document.getElementById('faq-accordion-container');
+        if (!container) return;
+
+        const term = searchTerm.toLowerCase().trim();
+        const filtered = faqData.filter(item => {
+            if (!term) return true;
+            const q = currentFaqLang === 'fr' ? item.q_fr : item.q_en;
+            const a = currentFaqLang === 'fr' ? item.a_fr : item.a_en;
+            return q.toLowerCase().includes(term) || a.toLowerCase().includes(term);
+        });
+
+        if (filtered.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:30px; color:#94a3b8; font-size:0.9rem;"><i class="fa-solid fa-magnifying-glass" style="font-size:1.5rem; margin-bottom:8px; display:block;"></i>No questions matched your search. Try keywords like flight, export, or share.</div>';
+            return;
+        }
+
+        let html = '';
+        filtered.forEach((item, idx) => {
+            const q = currentFaqLang === 'fr' ? item.q_fr : item.q_en;
+            const a = currentFaqLang === 'fr' ? item.a_fr : item.a_en;
+            const isOpen = idx === 0 && !term ? ' open' : '';
+            const displayStyle = isOpen ? ' style="display:block;"' : '';
+            html += '<div class="faq-accordion-item' + isOpen + '">';
+            html += '<button type="button" class="faq-accordion-header">';
+            html += '<span><i class="fa-solid ' + item.icon + '" style="color:' + item.color + '; margin-right:8px;"></i> ' + q + '</span>';
+            html += '<i class="fa-solid fa-chevron-down"></i>';
+            html += '</button>';
+            html += '<div class="faq-accordion-content"' + displayStyle + '>' + a + '</div>';
+            html += '</div>';
+        });
+
+        container.innerHTML = html;
+
+        container.querySelectorAll('.faq-accordion-header').forEach(btn => {
+            btn.addEventListener('click', () => {
+                playClickSFX();
+                const parent = btn.closest('.faq-accordion-item');
+                if (parent) {
+                    const wasOpen = parent.classList.contains('open');
+                    container.querySelectorAll('.faq-accordion-item').forEach(it => {
+                        it.classList.remove('open');
+                        const content = it.querySelector('.faq-accordion-content');
+                        if (content) content.style.display = 'none';
+                    });
+                    if (!wasOpen) {
+                        parent.classList.add('open');
+                        const content = parent.querySelector('.faq-accordion-content');
+                        if (content) content.style.display = 'block';
+                    }
+                }
+            });
+        });
+    }
+
+    function initFaq3DSystem() {
+        const modalFaq = document.getElementById('modal-faq-3d');
+        if (!modalFaq) return;
+
+        const btnOpenFaq = document.getElementById('btn-open-faq-modal');
+        const btnOpenFaqSettings = document.getElementById('btn-open-faq-settings');
+        const btnCloseFaq = document.getElementById('btn-close-faq-modal');
+        const btnCloseFaqFooter = document.getElementById('btn-close-faq-modal-footer');
+        const searchInput = document.getElementById('faq-search-input');
+        const langBtns = document.querySelectorAll('.faq-lang-btn');
+
+        function openFaqModal() {
+            playClickSFX();
+            modalFaq.classList.add('active');
+            renderFaqList(searchInput ? searchInput.value : '');
+        }
+
+        function closeFaqModal() {
+            playClickSFX();
+            modalFaq.classList.remove('active');
+        }
+
+        if (btnOpenFaq) btnOpenFaq.addEventListener('click', openFaqModal);
+        if (btnOpenFaqSettings) btnOpenFaqSettings.addEventListener('click', openFaqModal);
+        if (btnCloseFaq) btnCloseFaq.addEventListener('click', closeFaqModal);
+        if (btnCloseFaqFooter) btnCloseFaqFooter.addEventListener('click', closeFaqModal);
+
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                renderFaqList(e.target.value);
+            });
+        }
+
+        langBtns.forEach(b => {
+            b.addEventListener('click', () => {
+                playClickSFX();
+                langBtns.forEach(x => x.classList.remove('active'));
+                b.classList.add('active');
+                currentFaqLang = b.getAttribute('data-lang') || 'en';
+                renderFaqList(searchInput ? searchInput.value : '');
+            });
+        });
+
+        renderFaqList();
+    }
+
+
     if (btnShareClipWhatsapp) btnShareClipWhatsapp.addEventListener('click', () => shareRecordedClip('whatsapp'));
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -8526,7 +8890,16 @@ onUnmounted(() => {
             el.addEventListener('mouseenter', playHoverSFX);
         });
 
-        codeEditor.value = presetTemplates.cyber_drone;
+        const urlPreset = checkUrlHashPreset();
+        const initialPreset = urlPreset || 'cyber_drone';
+        const presetSelectEl = document.getElementById('preset-select');
+        if (presetSelectEl) presetSelectEl.value = initialPreset;
+        codeEditor.value = presetTemplates[initialPreset] || presetTemplates.cyber_drone;
+        if (urlPreset) updateUrlHash(urlPreset);
+
+        // Initialize Share 3D & FAQ Systems
+        initShare3DSystem();
+        initFaq3DSystem();
         updateLineNumbers();
         runCode();
         setTimeout(() => {
