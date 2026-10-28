@@ -268,7 +268,14 @@
         </div>
 
         <!-- Core Banner Builder Workspace -->
-        <div id="core-ad-genius-workspace" class="workspace" style="display:none; flex:1; width:100%; height:100%; grid-template-columns: 360px 1fr 350px; gap: 24px;">
+        <div id="core-ad-genius-workspace" class="workspace core-ad-genius-workspace" data-mobile-tab="controls" style="display:none;">
+            <!-- Mobile Segmented Switcher (Visible only on <= 992px) -->
+            <div class="mobile-genius-switcher" id="mobile-genius-switcher">
+                <button type="button" class="mg-tab-btn active" data-tab="controls"><span class="mg-icon">⚙️</span> <span data-i18n="tab_config">Config</span></button>
+                <button type="button" class="mg-tab-btn" data-tab="preview"><span class="mg-icon">👁️</span> <span data-i18n="tab_preview">Live Preview</span></button>
+                <button type="button" class="mg-tab-btn" data-tab="code"><span class="mg-icon">💻</span> <span data-i18n="tab_code">Code</span></button>
+                <button type="button" class="mg-tab-btn" data-tab="all"><span class="mg-icon">📜</span> <span data-i18n="tab_all">All</span></button>
+            </div>
             <!-- COLUMN 1: Settings & Copywriting Controls -->
         <aside class="panel controls-panel">
             <div class="panel-header">
@@ -364,6 +371,11 @@
                         <input type="checkbox" id="switch-glow" checked>
                     </div>
                 </div>
+
+                <!-- Mobile Quick Jump to Preview Button -->
+                <button type="button" id="btn-m-jump-preview" class="btn-primary mobile-jump-btn" style="margin-top:14px; width:100%;">
+                    <span class="icon">👁️</span> <span>View Live Preview ➡️</span>
+                </button>
             </div>
         </aside>
 
@@ -412,6 +424,16 @@
                         <p class="dash-tip-text" id="dash-tip" data-i18n="dash_tip_default">Add a clear sense of urgency (e.g. "Limited Time") to increase clicks by up to 25%.</p>
                     </div>
                 </div>
+            </div>
+
+            <!-- Mobile Quick Actions Row -->
+            <div class="mobile-preview-actions" style="padding: 12px 18px; display: flex; gap: 10px; background: rgba(255,255,255,0.02); border-top: 1px solid var(--glass-border);">
+                <button type="button" id="btn-m-jump-config" class="btn-secondary" style="flex:1; justify-content:center;">
+                    <span>⬅️ Edit Config</span>
+                </button>
+                <button type="button" id="btn-m-jump-code" class="btn-primary" style="flex:1; justify-content:center;">
+                    <span>Get Code 💻 ➡️</span>
+                </button>
             </div>
         </main>
 
@@ -518,20 +540,20 @@
             <div id="ktp-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#020617;overflow:hidden;"></div>
             <div id="ktp-right" class="right-panel" style="width:300px;background:#0f172a;display:y:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
         </div>
-        <div id="mockup-master-workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
-            <div id="mm-center" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;">
+        <div id="mockup-master-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="mm-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;">
             </div>
-            <div id="mm-right" style="width:300px;background:#0f172a;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
+            <div id="mm-right" class="right-panel" style="width:300px;background:#0f172a;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
         </div>
         <div id="mockup-box-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
             <div id="mbs-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#1e293b;overflow:hidden;perspective:1000px;"></div>
             <div id="mbs-right" class="right-panel" style="width:300px;background:#0f172a;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
         </div>
-        <div id="brand-ad-workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
-            <div id="ba-center" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #222;">
+        <div id="brand-ad-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="ba-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #222;">
                 <canvas id="ba-canvas" style="width:100%;height:100%;max-width:100%;object-fit:contain;"></canvas>
             </div>
-            <div id="ba-right" style="width:320px;background:#0a0a0a;display:flex;flex-direction:column;padding:20px;gap:15px;overflow-y:auto;border-left:1px solid #222;">
+            <div id="ba-right" class="right-panel" style="width:320px;background:#0a0a0a;display:flex;flex-direction:column;padding:20px;gap:15px;overflow-y:auto;border-left:1px solid #222;">
                 <!-- Controls injected via JS -->
             </div>
         </div>

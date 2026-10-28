@@ -52,7 +52,11 @@ const translations = {
         card_sr_title: "3D Product Showroom",
         card_sr_desc: "Create interactive 3D product banners with custom labels.",
         card_sc_title: "Scratch Card Studio",
-        card_sc_desc: "Design gamified scratch-off cards to reveal promotions."
+        card_sc_desc: "Design gamified scratch-off cards to reveal promotions.",
+        tab_config: "Config",
+        tab_preview: "Live Preview",
+        tab_code: "Code",
+        tab_all: "All"
     },
     fr: {
         panel_settings_title: "Configuration de la Pub",
@@ -102,7 +106,11 @@ const translations = {
         card_sr_title: "Showroom Produit 3D",
         card_sr_desc: "Créez des bannières produits 3D interactives avec étiquettes personnalisées.",
         card_sc_title: "Studio Carte à Gratter",
-        card_sc_desc: "Concevez des cartes à gratter ludiques pour révéler des promotions."
+        card_sc_desc: "Concevez des cartes à gratter ludiques pour révéler des promotions.",
+        tab_config: "Config",
+        tab_preview: "Aperçu Direct",
+        tab_code: "Code",
+        tab_all: "Tout"
     }
 };
 
@@ -228,7 +236,61 @@ function translatePage() {
 // ==========================================
 // 6. EVENT BINDING
 // ==========================================
+
+function initMobileGeniusTabs() {
+    const switcher = document.getElementById('mobile-genius-switcher');
+    if (!switcher) return;
+    const tabBtns = switcher.querySelectorAll('.mg-tab-btn');
+    const ws = document.getElementById('core-ad-genius-workspace');
+    if (!ws) return;
+
+    function setMobileTab(tab) {
+        tabBtns.forEach(b => b.classList.toggle('active', b.getAttribute('data-tab') === tab));
+        ws.setAttribute('data-mobile-tab', tab);
+        ws.scrollTo({ top: 0, behavior: 'smooth' });
+
+        if (tab === 'preview' || tab === 'all') {
+            setTimeout(() => {
+                if (typeof triggerWidgetRender === 'function') triggerWidgetRender();
+            }, 80);
+        }
+    }
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            setMobileTab(btn.getAttribute('data-tab'));
+        });
+    });
+
+    const jumpPrev = document.getElementById('btn-m-jump-preview');
+    if (jumpPrev) {
+        jumpPrev.addEventListener('click', () => setMobileTab('preview'));
+    }
+
+    const jumpConfig = document.getElementById('btn-m-jump-config');
+    if (jumpConfig) {
+        jumpConfig.addEventListener('click', () => setMobileTab('controls'));
+    }
+
+    const jumpCode = document.getElementById('btn-m-jump-code');
+    if (jumpCode) {
+        jumpCode.addEventListener('click', () => setMobileTab('code'));
+    }
+
+    const btnGenCopy = document.getElementById('btn-generate-copy');
+    if (btnGenCopy) {
+        btnGenCopy.addEventListener('click', () => {
+            if (window.innerWidth <= 992) {
+                setTimeout(() => {
+                    setMobileTab('preview');
+                }, 350);
+            }
+        });
+    }
+}
+
 function bindEvents() {
+    initMobileGeniusTabs();
     // Language Switcher
     els.langBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -793,13 +855,25 @@ window.activateWorkspace = function(id) {
     window.activeTab = id;
     
     if (id === 'core-ad-genius') {
-        document.getElementById('core-ad-genius-workspace').style.display = 'grid';
+        const coreWs = document.getElementById('core-ad-genius-workspace');
+        if (coreWs) {
+            coreWs.style.display = window.innerWidth <= 992 ? 'flex' : 'grid';
+            if (!coreWs.getAttribute('data-mobile-tab')) {
+                coreWs.setAttribute('data-mobile-tab', 'controls');
+            }
+            if (typeof triggerWidgetRender === 'function') triggerWidgetRender();
+        }
     } else {
         // Run the renderTab chain for copied modules
         if (window.renderTab) {
             window.renderTab(id);
         }
     }
+    
+    // Trigger resize event for Three.js and canvases on mobile
+    setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+    }, 120);
     
     // Apply premium guards to export buttons after module renders
     setTimeout(applyPremiumGuardsToExportButtons, 400);
@@ -1203,5 +1277,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.activateWorkspace(studio);
             }
         }, 400);
+    }
+});
+
+// Handle window resize dynamically between desktop grid and mobile flex
+window.addEventListener('resize', () => {
+    if (window.activeTab === 'core-ad-genius') {
+        const coreWs = document.getElementById('core-ad-genius-workspace');
+        if (coreWs && coreWs.style.display !== 'none') {
+            coreWs.style.display = window.innerWidth <= 992 ? 'flex' : 'grid';
+        }
     }
 });

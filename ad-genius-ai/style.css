@@ -867,3 +867,335 @@ input[type="checkbox"]:checked::before {
   z-index: 1;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
+
+
+/* ==========================================================================
+   AD-GENIUS AI PRO - Mobile & Responsive Layout Engine (Pro Edition)
+   ========================================================================== */
+
+/* Desktop Core Ad Genius Grid */
+.core-ad-genius-workspace {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 360px 1fr 350px;
+  gap: 24px;
+  overflow: hidden;
+}
+
+.mobile-genius-switcher,
+.mobile-jump-btn,
+.mobile-preview-actions {
+  display: none !important;
+}
+
+/* Base rules for Copied Studio Workspaces on desktop */
+.workspace:not(.core-ad-genius-workspace) {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  background: #050505;
+  color: #fff;
+  flex-direction: row;
+}
+
+/* ==========================================================================
+   TABLET & MOBILE RESPONSIVE MEDIA QUERIES (<= 992px)
+   ========================================================================== */
+@media (max-width: 992px) {
+  /* Navbar */
+  .navbar {
+    height: 60px !important;
+    padding: 0 12px !important;
+    gap: 8px !important;
+    justify-content: space-between !important;
+  }
+  .navbar > div:first-child {
+    gap: 8px !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+  .logo {
+    gap: 6px !important;
+    flex-shrink: 0 !important;
+  }
+  .logo-icon {
+    font-size: 18px !important;
+  }
+  .logo-text {
+    font-size: 15px !important;
+    white-space: nowrap !important;
+    letter-spacing: 0 !important;
+  }
+  .badge-pro {
+    font-size: 9px !important;
+    padding: 1px 5px !important;
+    margin-left: 3px !important;
+  }
+  #btn-back-dashboard {
+    padding: 5px 9px !important;
+    font-size: 11px !important;
+    white-space: nowrap !important;
+    border-radius: 6px !important;
+  }
+  .nav-controls {
+    flex-shrink: 0 !important;
+  }
+  .lang-toggle {
+    padding: 2px !important;
+  }
+  .lang-btn {
+    padding: 4px 8px !important;
+    font-size: 11px !important;
+  }
+
+  /* App Container */
+  .app-container {
+    padding: 8px 6px !important;
+    height: calc(100dvh - 60px) !important;
+    max-height: calc(100vh - 60px) !important;
+    overflow: hidden !important;
+  }
+
+  /* Initial Dashboard Grid of 22 Studios */
+  .dashboard-grid-view {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    padding: 4px 4px 60px 4px !important;
+  }
+  .dash-card-item {
+    padding: 14px 16px !important;
+    gap: 12px !important;
+  }
+  .card-item-icon {
+    font-size: 26px !important;
+  }
+  .card-item-content h4 {
+    font-size: 15px !important;
+  }
+  .card-item-content p {
+    font-size: 11.5px !important;
+  }
+
+  /* ==========================================================================
+     CORE AD GENIUS WORKSPACE ON MOBILE (TAB SWITCHER + FULL VISIBILITY)
+     ========================================================================== */
+  .core-ad-genius-workspace {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Mobile Segmented Switcher */
+  .mobile-genius-switcher {
+    display: flex !important;
+    gap: 6px !important;
+    padding: 4px !important;
+    background: rgba(15, 23, 42, 0.95) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 12px !important;
+    backdrop-filter: blur(12px) !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 50 !important;
+    margin-bottom: 6px !important;
+    width: 100% !important;
+    flex-shrink: 0 !important;
+  }
+  .mg-tab-btn {
+    flex: 1 !important;
+    padding: 8px 6px !important;
+    border: none !important;
+    background: transparent !important;
+    color: var(--text-secondary) !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    transition: all 0.2s ease !important;
+    white-space: nowrap !important;
+  }
+  .mg-tab-btn.active {
+    background: var(--color-primary) !important;
+    color: #fff !important;
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.5) !important;
+  }
+  .mg-icon {
+    font-size: 13px !important;
+  }
+
+  /* Core Ad Genius Tab View Control */
+  .core-ad-genius-workspace[data-mobile-tab="controls"] .controls-panel {
+    display: flex !important;
+    width: 100% !important;
+    flex: 1 !important;
+  }
+  .core-ad-genius-workspace[data-mobile-tab="controls"] .preview-panel,
+  .core-ad-genius-workspace[data-mobile-tab="controls"] .code-panel {
+    display: none !important;
+  }
+
+  .core-ad-genius-workspace[data-mobile-tab="preview"] .preview-panel {
+    display: flex !important;
+    width: 100% !important;
+    flex: 1 !important;
+  }
+  .core-ad-genius-workspace[data-mobile-tab="preview"] .controls-panel,
+  .core-ad-genius-workspace[data-mobile-tab="preview"] .code-panel {
+    display: none !important;
+  }
+
+  .core-ad-genius-workspace[data-mobile-tab="code"] .code-panel {
+    display: flex !important;
+    width: 100% !important;
+    flex: 1 !important;
+  }
+  .core-ad-genius-workspace[data-mobile-tab="code"] .controls-panel,
+  .core-ad-genius-workspace[data-mobile-tab="code"] .preview-panel {
+    display: none !important;
+  }
+
+  .core-ad-genius-workspace[data-mobile-tab="all"] .controls-panel,
+  .core-ad-genius-workspace[data-mobile-tab="all"] .preview-panel,
+  .core-ad-genius-workspace[data-mobile-tab="all"] .code-panel {
+    display: flex !important;
+    width: 100% !important;
+    margin-bottom: 14px !important;
+  }
+
+  .mobile-jump-btn,
+  .mobile-preview-actions {
+    display: flex !important;
+  }
+
+  /* Panels on mobile */
+  .panel {
+    border-radius: 14px !important;
+    width: 100% !important;
+  }
+  .panel-header {
+    padding: 14px 16px !important;
+  }
+  .panel-body {
+    padding: 16px 14px !important;
+    gap: 18px !important;
+    overflow-y: visible !important;
+    max-height: none !important;
+  }
+  .preview-area {
+    padding: 12px 6px !important;
+    min-height: 320px !important;
+  }
+  .iframe-container {
+    max-height: none !important;
+    min-height: 280px !important;
+    height: 300px !important;
+  }
+  .dashboard-section {
+    padding: 16px 14px !important;
+  }
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  .code-actions {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ==========================================================================
+     ALL 22 FLAGSHIP STUDIOS RESPONSIVENESS ON MOBILE
+     ========================================================================== */
+  .workspace:not(.core-ad-genius-workspace),
+  #mockup-master-workspace,
+  #brand-ad-workspace {
+    flex-direction: column !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: flex !important;
+    padding-bottom: 24px !important;
+  }
+
+  /* Center Panel (Canvas / 3D Scene / Interactive Ad Component) */
+  .center-panel,
+  #mm-center,
+  #ba-center {
+    width: 100% !important;
+    height: 44vh !important;
+    min-height: 300px !important;
+    max-height: 48vh !important;
+    flex: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+    padding: 8px !important;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+
+  .center-panel > *,
+  .center-panel canvas,
+  #ba-canvas,
+  .center-panel iframe {
+    max-width: 100% !important;
+    max-height: 100% !important;
+  }
+
+  /* Right Panel (Controls, inputs, sliders, export buttons) */
+  .right-panel,
+  #mm-right,
+  #ba-right {
+    width: 100% !important;
+    flex: 1 !important;
+    min-height: 260px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    border-left: none !important;
+    padding: 14px 10px 40px 10px !important;
+    gap: 12px !important;
+  }
+
+  .right-panel input,
+  .right-panel select,
+  .right-panel textarea,
+  .right-panel button,
+  #mm-right input,
+  #mm-right button,
+  #ba-right input,
+  #ba-right button {
+    max-width: 100% !important;
+  }
+
+  /* Mockup specific adjustments for mobile */
+  .mockup-wrapper {
+    padding: 10px !important;
+  }
+  .mockup-phone {
+    width: 270px !important;
+    height: 480px !important;
+    border-radius: 28px !important;
+    padding: 8px !important;
+  }
+  .mockup-phone iframe {
+    border-radius: 20px !important;
+  }
+  .mockup-laptop {
+    width: 95% !important;
+    height: 240px !important;
+  }
+  .scratch-card-preview-container {
+    width: 280px !important;
+    height: 360px !important;
+  }
+}
