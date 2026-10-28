@@ -277,6 +277,11 @@ function initMobileGeniusTabs() {
         jumpCode.addEventListener('click', () => setMobileTab('code'));
     }
 
+    const jumpBackPrev = document.getElementById('btn-m-jump-back-preview');
+    if (jumpBackPrev) {
+        jumpBackPrev.addEventListener('click', () => setMobileTab('preview'));
+    }
+
     const btnGenCopy = document.getElementById('btn-generate-copy');
     if (btnGenCopy) {
         btnGenCopy.addEventListener('click', () => {
@@ -838,25 +843,36 @@ window.activeTab = null;
 
 window.activateWorkspace = function(id) {
     // Hide dashboard grid view
-    document.getElementById('dashboard-grid-view').style.display = 'none';
+    const dashGrid = document.getElementById('dashboard-grid-view');
+    if (dashGrid) dashGrid.style.display = 'none';
     
     // Show back to dashboard button
-    document.getElementById('btn-back-dashboard').style.display = 'block';
+    const btnBack = document.getElementById('btn-back-dashboard');
+    if (btnBack) btnBack.style.display = 'inline-flex';
     
-    // Hide all workspaces
-    document.querySelectorAll('.workspace').forEach(el => el.style.display = 'none');
+    // Hide all workspaces and remove active-workspace class
+    document.querySelectorAll('.workspace').forEach(el => {
+        el.style.display = 'none';
+        el.classList.remove('active-workspace');
+    });
     
     // Hide extra non-workspace wrapper elements
     const mmWs = document.getElementById('mockup-master-workspace');
-    if (mmWs) mmWs.style.display = 'none';
+    if (mmWs) { mmWs.style.display = 'none'; mmWs.classList.remove('active-workspace'); }
     const baWs = document.getElementById('brand-ad-workspace');
-    if (baWs) baWs.style.display = 'none';
+    if (baWs) { baWs.style.display = 'none'; baWs.classList.remove('active-workspace'); }
     
     window.activeTab = id;
+    
+    const targetWs = document.getElementById(id + '-workspace') || document.getElementById(id);
+    if (targetWs) {
+        targetWs.classList.add('active-workspace');
+    }
     
     if (id === 'core-ad-genius') {
         const coreWs = document.getElementById('core-ad-genius-workspace');
         if (coreWs) {
+            coreWs.classList.add('active-workspace');
             coreWs.style.display = window.innerWidth <= 992 ? 'flex' : 'grid';
             if (!coreWs.getAttribute('data-mobile-tab')) {
                 coreWs.setAttribute('data-mobile-tab', 'controls');
@@ -868,6 +884,15 @@ window.activateWorkspace = function(id) {
         if (window.renderTab) {
             window.renderTab(id);
         }
+        if (targetWs) {
+            targetWs.classList.add('active-workspace');
+            targetWs.style.display = 'flex';
+        }
+    }
+    
+    // Scroll active workspace to top
+    if (targetWs) {
+        targetWs.scrollTo({ top: 0, behavior: 'instant' });
     }
     
     // Trigger resize event for Three.js and canvases on mobile
@@ -881,21 +906,33 @@ window.activateWorkspace = function(id) {
 
 window.goBackToDashboard = function() {
     // Show dashboard grid view
-    document.getElementById('dashboard-grid-view').style.display = 'grid';
+    const dashGrid = document.getElementById('dashboard-grid-view');
+    if (dashGrid) {
+        dashGrid.style.display = 'grid';
+        dashGrid.scrollTo({ top: 0, behavior: 'smooth' });
+    }
     
     // Hide back to dashboard button
-    document.getElementById('btn-back-dashboard').style.display = 'none';
+    const btnBack = document.getElementById('btn-back-dashboard');
+    if (btnBack) btnBack.style.display = 'none';
     
     // Hide all workspaces
-    document.querySelectorAll('.workspace').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.workspace').forEach(el => {
+        el.style.display = 'none';
+        el.classList.remove('active-workspace');
+    });
     
     // Hide extra non-workspace wrapper elements
     const mmWs = document.getElementById('mockup-master-workspace');
-    if (mmWs) mmWs.style.display = 'none';
+    if (mmWs) { mmWs.style.display = 'none'; mmWs.classList.remove('active-workspace'); }
     const baWs = document.getElementById('brand-ad-workspace');
-    if (baWs) baWs.style.display = 'none';
+    if (baWs) { baWs.style.display = 'none'; baWs.classList.remove('active-workspace'); }
     
     window.activeTab = null;
+    
+    setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+    }, 60);
 };
 
 // ==========================================
