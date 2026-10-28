@@ -3941,6 +3941,13 @@ function exportStandaloneHTML() {
             animate();
         };
     </script>
+
+    <!-- IA Code Studio Discreet Attribution Badge -->
+    <div style="position:fixed;bottom:10px;right:14px;z-index:999999;font-family:system-ui,-apple-system,sans-serif;pointer-events:auto;">
+        <a href="https://ia-codestudio.com" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:14px;background:rgba(5,10,25,0.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(0,243,255,0.3);color:rgba(0,243,255,0.85);font-size:11px;text-decoration:none;font-weight:700;letter-spacing:0.5px;font-family:'Orbitron',sans-serif;transition:all 0.2s;" onmouseover="this.style.color='#fff';this.style.borderColor='#00f3ff';this.style.boxShadow='0 0 12px rgba(0,243,255,0.4)'" onmouseout="this.style.color='rgba(0,243,255,0.85)';this.style.borderColor='rgba(0,243,255,0.3)';this.style.boxShadow='none'">
+            <span>⚡</span><span>MADE WITH IA CODE STUDIO</span>
+        </a>
+    </div>
 </body>
 </html>`;
 
@@ -4298,6 +4305,92 @@ function bindEvents() {
         }
         exportStandaloneHTML();
     });
+
+    // 5-Second HD Video Loop Recording for TikTok / Reels
+    const btnRecordVideoHud = document.getElementById('btn-export-video-hud');
+    if (btnRecordVideoHud) {
+        let isRecordingHud = false;
+        btnRecordVideoHud.addEventListener('click', () => {
+            if (isRecordingHud) return;
+            const canvas = (renderer && renderer.domElement) || document.querySelector('#viewport-canvas-stage canvas');
+            if (!canvas) {
+                logTerminal('Error: 3D canvas not found for recording.');
+                return;
+            }
+
+            let stream;
+            try {
+                stream = canvas.captureStream ? canvas.captureStream(60) : canvas.mozCaptureStream(60);
+            } catch (e) {
+                console.warn(e);
+            }
+
+            if (!stream) {
+                alert('Video capture is not supported on this browser.');
+                return;
+            }
+
+            let mimeType = 'video/webm; codecs=vp9';
+            if (!MediaRecorder.isTypeSupported(mimeType)) {
+                mimeType = MediaRecorder.isTypeSupported('video/webm') ? 'video/webm' : 'video/mp4';
+            }
+
+            let recorder;
+            try {
+                recorder = new MediaRecorder(stream, { mimeType });
+            } catch (e) {
+                recorder = new MediaRecorder(stream);
+            }
+
+            const chunks = [];
+            recorder.ondataavailable = (e) => {
+                if (e.data && e.data.size > 0) chunks.push(e.data);
+            };
+
+            const progressWrap = document.getElementById('hud-recording-progress');
+            const bar = document.getElementById('hud-rec-bar');
+            const text = document.getElementById('hud-rec-text');
+
+            recorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'video/webm' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `sci-fi-hud-loop-${activePreset}-5s.webm`;
+                a.click();
+                URL.revokeObjectURL(url);
+
+                isRecordingHud = false;
+                btnRecordVideoHud.disabled = false;
+                btnRecordVideoHud.innerHTML = '<i class="fa-solid fa-video" style="color:#ec4899;"></i> <span>RECORD 5s HD VIDEO LOOP (TIKTOK / REELS)</span>';
+                if (progressWrap) progressWrap.style.display = 'none';
+                if (bar) bar.style.width = '0%';
+                logTerminal('Video Loop exported: sci-fi-hud-loop-5s.webm');
+            };
+
+            isRecordingHud = true;
+            btnRecordVideoHud.disabled = true;
+            btnRecordVideoHud.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="color:#00f3ff;"></i> <span>RECORDING LOOP (5s)...</span>';
+            if (progressWrap) progressWrap.style.display = 'flex';
+            logTerminal('Recording 60FPS 3D HUD video loop for TikTok & Reels...');
+
+            const duration = 5;
+            const startTime = performance.now();
+            recorder.start(100);
+
+            const timer = setInterval(() => {
+                const elapsed = (performance.now() - startTime) / 1000;
+                const pct = Math.min(100, Math.floor((elapsed / duration) * 100));
+                if (bar) bar.style.width = pct + '%';
+                if (text) text.textContent = pct + '% (' + elapsed.toFixed(1) + 's / 5s)';
+
+                if (elapsed >= duration) {
+                    clearInterval(timer);
+                    if (recorder.state === 'recording') recorder.stop();
+                }
+            }, 100);
+        });
+    }
 
     // Audio hover sounds for all buttons and sliders
     const interactiveElements = document.querySelectorAll('button, select, input[type="range"], input[type="checkbox"]');

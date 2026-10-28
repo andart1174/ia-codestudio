@@ -17,6 +17,15 @@
     <link rel="alternate" hreflang="fr" href="https://ia-codestudio.com/?lang=fr">
     <link rel="alternate" hreflang="x-default" href="https://ia-codestudio.com/">
     
+    <!-- PWA & Mobile App Support -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#7c3aed">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="IA Studio">
+    <link rel="apple-touch-icon" href="/logo-ia-codestudio.png">
+    
     <!-- Open Graph / Facebook / LinkedIn / WhatsApp -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://ia-codestudio.com/">
@@ -1707,6 +1716,222 @@
                 if (pill) pill.style.display = 'none';
             }
         });
+    </script>
+
+    <!-- Smart PWA App Install Banner (Mobile & Desktop) -->
+    <div id="pwa-install-banner" class="pwa-install-banner" style="display:none;" aria-live="polite">
+        <div class="pwa-content">
+            <div class="pwa-icon">
+                <img src="/logo-ia-codestudio.png" alt="IA Code Studio" width="34" height="34" style="border-radius:8px; object-fit:contain; display:block;">
+            </div>
+            <div class="pwa-text">
+                <strong id="pwa-title">IA Code Studio App</strong>
+                <span id="pwa-desc">Install 60 FPS 3D & AI Web Engine on your device</span>
+            </div>
+        </div>
+        <div class="pwa-actions">
+            <button type="button" id="pwa-btn-install" class="pwa-btn-install">
+                <span>📲</span> <span id="pwa-btn-text">Install App</span>
+            </button>
+            <button type="button" id="pwa-btn-dismiss" class="pwa-btn-dismiss" title="Dismiss" aria-label="Close">✕</button>
+        </div>
+    </div>
+
+    <style>
+    .pwa-install-banner {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(120px);
+        z-index: 99998;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        background: rgba(15, 23, 42, 0.94);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(124, 58, 237, 0.45);
+        box-shadow: 0 10px 32px rgba(0, 0, 0, 0.65), 0 0 24px rgba(124, 58, 237, 0.3);
+        border-radius: 16px;
+        padding: 10px 16px;
+        max-width: 440px;
+        width: calc(100% - 28px);
+        opacity: 0;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+        pointer-events: auto;
+    }
+    .pwa-install-banner.pwa-visible {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+    .pwa-content {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+        flex: 1;
+    }
+    .pwa-text {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+    }
+    .pwa-text strong {
+        font-size: 13.5px;
+        color: #fff;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .pwa-text span {
+        font-size: 11px;
+        color: #94a3b8;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 1px;
+    }
+    .pwa-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+    .pwa-btn-install {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 14px;
+        background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 0 12px rgba(124, 58, 237, 0.4);
+        transition: transform 0.2s, box-shadow 0.2s;
+        white-space: nowrap;
+    }
+    .pwa-btn-install:hover {
+        transform: scale(1.03);
+        box-shadow: 0 0 16px rgba(124, 58, 237, 0.65);
+    }
+    .pwa-btn-dismiss {
+        background: transparent;
+        border: none;
+        color: #64748b;
+        font-size: 16px;
+        cursor: pointer;
+        padding: 4px 6px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.2s;
+    }
+    .pwa-btn-dismiss:hover {
+        color: #fff;
+    }
+    @media (max-width: 480px) {
+        .pwa-install-banner {
+            bottom: 12px;
+            padding: 8px 12px;
+            gap: 10px;
+        }
+        .pwa-text span {
+            display: none;
+        }
+        .pwa-text strong {
+            font-size: 12px;
+        }
+        .pwa-btn-install {
+            padding: 6px 11px;
+            font-size: 11.5px;
+        }
+    }
+    </style>
+
+    <script>
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js').catch(() => {});
+        });
+    }
+
+    // Smart PWA Install Prompt Engine
+    (function initPwaInstall() {
+        let deferredInstallPrompt = null;
+        const banner = document.getElementById('pwa-install-banner');
+        const btnInstall = document.getElementById('pwa-btn-install');
+        const btnDismiss = document.getElementById('pwa-btn-dismiss');
+        if (!banner || !btnInstall || !btnDismiss) return;
+
+        // Check if already in standalone app mode
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        if (isStandalone) return;
+
+        // Check dismissal cooldown (7 days)
+        const dismissedAt = localStorage.getItem('pwa_banner_dismissed_at');
+        if (dismissedAt && (Date.now() - parseInt(dismissedAt, 10)) < 7 * 24 * 60 * 60 * 1000) {
+            return;
+        }
+
+        const isFr = (window.lang === 'fr' || (document.documentElement.lang && document.documentElement.lang.startsWith('fr')));
+        const pwaTitle = document.getElementById('pwa-title');
+        const pwaDesc = document.getElementById('pwa-desc');
+        const pwaBtnText = document.getElementById('pwa-btn-text');
+
+        if (isFr) {
+            if (pwaTitle) pwaTitle.textContent = "Application IA Code Studio";
+            if (pwaDesc) pwaDesc.textContent = "Installez l'app 3D & IA 60 FPS sur votre écran";
+            if (pwaBtnText) pwaBtnText.textContent = "Installer";
+        }
+
+        // Android / Chrome / Edge native beforeinstallprompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredInstallPrompt = e;
+            setTimeout(() => {
+                banner.style.display = 'flex';
+                requestAnimationFrame(() => banner.classList.add('pwa-visible'));
+            }, 8000);
+        });
+
+        // iOS Safari detection if not standalone
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        if (isIOS && !isStandalone) {
+            setTimeout(() => {
+                banner.style.display = 'flex';
+                requestAnimationFrame(() => banner.classList.add('pwa-visible'));
+            }, 10000);
+        }
+
+        btnInstall.addEventListener('click', async () => {
+            if (deferredInstallPrompt) {
+                deferredInstallPrompt.prompt();
+                const choiceResult = await deferredInstallPrompt.userChoice;
+                deferredInstallPrompt = null;
+                banner.classList.remove('pwa-visible');
+                setTimeout(() => banner.style.display = 'none', 400);
+            } else if (isIOS) {
+                alert(isFr ? "Pour installer sur iPhone/iPad : appuyez sur le bouton Partager (⎋) puis 'Sur l'écran d'accueil' 📲" : "To install on iPhone/iPad: tap the Share button (⎋) then 'Add to Home Screen' 📲");
+            } else {
+                banner.classList.remove('pwa-visible');
+                setTimeout(() => banner.style.display = 'none', 400);
+            }
+        });
+
+        btnDismiss.addEventListener('click', () => {
+            banner.classList.remove('pwa-visible');
+            setTimeout(() => banner.style.display = 'none', 400);
+            localStorage.setItem('pwa_banner_dismissed_at', Date.now().toString());
+        });
+    })();
     </script>
 
 </body>

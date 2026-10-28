@@ -810,6 +810,7 @@ function buildExportCode() {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AD-GENIUS AI AD</title>
+    <!-- ⚡ Created with IA Code Studio (https://ia-codestudio.com) — Free 3D WebGL & AI Code Engine -->
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
     <style>
@@ -828,6 +829,13 @@ function buildExportCode() {
 <body>
 
     ${bodyLayoutHTML}
+
+    <!-- Discreet Attribution & Growth Badge -->
+    <div style="position:fixed;bottom:6px;right:10px;z-index:999999;font-family:system-ui,-apple-system,sans-serif;pointer-events:auto;">
+        <a href="https://ia-codestudio.com" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:12px;background:rgba(3,7,18,0.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.14);color:rgba(255,255,255,0.65);font-size:10px;text-decoration:none;font-weight:600;letter-spacing:0.2px;transition:all 0.2s;" onmouseover="this.style.color='#fff';this.style.borderColor='#3b82f6'" onmouseout="this.style.color='rgba(255,255,255,0.65)';this.style.borderColor='rgba(255,255,255,0.14)'">
+            <span>⚡</span><span>Made with IA Code Studio</span>
+        </a>
+    </div>
 
     <script>
         ${behaviorScript}

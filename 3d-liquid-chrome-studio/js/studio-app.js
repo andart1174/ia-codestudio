@@ -13523,9 +13523,9 @@
 
   // --- Export Video Loop (WebM 60 FPS) ---
   function recordVideoLoop(durationSeconds) {
-    if (typeof window.isUserPremium === 'function' && !window.isUserPremium()) {
+    if (durationSeconds > 5 && typeof window.isUserPremium === 'function' && !window.isUserPremium()) {
       if (typeof window.showPaywallModal === 'function') {
-        window.showPaywallModal(currentLang === 'fr' ? 'Export Vidéo 60 FPS' : '60 FPS Video Export');
+        window.showPaywallModal(currentLang === 'fr' ? 'Export Vidéo 10s HD' : '10s HD Video Export');
       }
       return;
     }

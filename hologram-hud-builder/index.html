@@ -1566,6 +1566,15 @@
                     <p class="export-desc">Download a fully functional, responsive single-page HTML file containing this customized interactive holographic HUD.</p>
                     <button id="btn-export-html" class="btn-primary"><i class="fa-solid fa-file-code"></i> EXPORT STANDALONE HTML</button>
                     <button id="btn-export-blueprint" class="btn-ctrl" style="width: 100%; justify-content: center; margin-top: 10px;"><i class="fa-solid fa-drafting-compass"></i> EXPORT BLUEPRINT SVG</button>
+                    <button id="btn-export-video-hud" class="btn-ctrl" style="width: 100%; justify-content: center; margin-top: 10px; background: linear-gradient(135deg, rgba(236,72,153,0.2) 0%, rgba(168,85,247,0.2) 100%); border: 1px solid rgba(236,72,153,0.5); color: #fff; font-weight: 700;">
+                        <i class="fa-solid fa-video" style="color:#ec4899;"></i> <span>RECORD 5s HD VIDEO LOOP (TIKTOK / REELS)</span>
+                    </button>
+                    <div id="hud-recording-progress" style="display:none; margin-top:8px; align-items:center; gap:8px;">
+                        <div style="flex:1; height:6px; background:rgba(255,255,255,0.1); border-radius:3px; overflow:hidden;">
+                            <div id="hud-rec-bar" style="width:0%; height:100%; background:linear-gradient(90deg, #ec4899, #00f3ff); transition:width 0.1s linear;"></div>
+                        </div>
+                        <span id="hud-rec-text" style="font-size:11px; color:#00f3ff; font-family:Orbitron, monospace;">0%</span>
+                    </div>
                     
                     <div style="margin-top: 15px; border-top: 1px solid rgba(0, 243, 255, 0.15); padding-top: 15px;">
                         <h3 style="font-size: 0.75rem; color: var(--hud-accent); margin-bottom: 8px; text-transform: uppercase; font-family: Orbitron;"><i class="fa-solid fa-cube"></i> Export 3D Model</h3>
