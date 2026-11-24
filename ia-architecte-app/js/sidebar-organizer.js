@@ -33,7 +33,7 @@
         "📱 MOBILE UI KIT": ["mobileuikit", "appstoremockup"],
         "📢 ADVERTISING STUDIO": ["productad", "adbannerpro", "ythumb", "socialproof", "podcast", "licarousel", "webticket", "rollup", "billboard", "fencebanner", "floatingprod", "lightbox", "pedestal", "printflyer", "doohsim", "iabbanner", "promobanner", "videoad", "storiesad", "gamifiedad", "smartpopup"],
         "📈 MARKETING & BIZ": ["devscore", "pricing", "invoice", "ratecalc", "monetizecalc", "privacy", "cookies", "paywall", "socialshowcase", "lpscore", "appstore", "fintech", "pitchdeck", "brandkit", "funnel", "outreach", "roicalc", "competitor", "testimonial", "contentcal", "contract", "proposal", "analytics", "pricingpage", "newsletter", "autobio", "digicard", "emailsig"],
-        "📊 DATA & NET": ["dataforge", "webhooklab", "data", "mockdata", "dbarch", "jsonviz", "sqlbuilder", "apihub", "headers", "web3ui", "sites", "sitemap", "hosting", "seo", "oauthflow"],
+        "📊 DATA & NET": ["dataforge", "webhooklab", "data", "mockdata", "dbarch", "jsonviz", "sqlbuilder", "headers", "web3ui", "sites", "sitemap", "hosting", "seo", "oauthflow"],
         "🎬 MEDIA & AUDIO": ["cssanim", "cinematic", "timelapse", "animforge", "audioui", "soundfx", "sonic", "voicereader", "media", "transcode", "assets", "assetvault", "anim", "record", "sonicsynth"],
         "🧪 TEST & AUDIT": ["bundleradar", "audit", "launchcheck", "codestats", "deadcss", "cssspec", "heatmap", "abtest", "eco", "codeaudit", "security", "password", "a11y", "speedbudget", "neuroux"],
         "🔬 NEXT-GEN LABS": ["agisentience", "deepspace", "hyper4d", "spacenet", "timewormhole", "quantumdebugger", "tesseract", "codeevolution", "devbiometrics"],
