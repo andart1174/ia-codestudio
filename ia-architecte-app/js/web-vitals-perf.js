@@ -393,11 +393,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (typeof oRT === 'function') oRT(tab);
   };
 
-  // Decorate runPreview
+  // Decorate runPreview (only inject when Web Vitals tab is active)
   const originalRunPreview = window.runPreview;
   window.runPreview = function() {
     const ed = window.editor;
-    if (ed && typeof originalRunPreview === 'function') {
+    if (window.activeTab === 'webvitalsperf' && ed && typeof originalRunPreview === 'function') {
       const originalGetValue = ed.getValue;
       ed.getValue = function() {
         let val = originalGetValue.apply(ed);

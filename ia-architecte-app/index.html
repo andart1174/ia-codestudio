@@ -75,9 +75,6 @@
 </head>
 <body>
 
-  <!-- 🚀 CACHE VERIFICATION BADGE -->
-  <div id="v-badge" style="position:fixed;top:5px;right:5px;background:#ef4444;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:10px;z-index:999999;box-shadow:0 0 15px rgba(239,68,68,0.5);pointer-events:none;">V3.7 STABLE</div>
-
   <!-- ══ TOP BAR ══════════════════════════════════════ -->
   <header class="topbar">
     <a href="../index.html" class="panel-toggle" id="btn-return-portal" style="text-decoration: none; border-color: rgba(239, 68, 68, 0.4); color: #f87171; background: rgba(239, 68, 68, 0.05); display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 11px; margin-right: 10px; cursor: pointer; flex-shrink: 0;">
@@ -87,7 +84,7 @@
     <div class="topbar-brand">
       <div class="brand-icon">🏛️</div>
       <div class="brand-text">
-        <span class="brand-name">IA <span class="brand-accent">Architecte</span></span>
+        <span class="brand-name">IA <span class="brand-accent">Architecte</span> <span id="v-badge" style="background:rgba(16,185,129,0.18);color:#34d399;border:1px solid rgba(16,185,129,0.35);font-size:8px;font-weight:800;padding:1px 5px;border-radius:6px;margin-left:4px;vertical-align:middle;">V3.8</span></span>
         <span class="brand-sub" id="lbl-subtitle">Professional Code Studio</span>
       </div>
     </div>
@@ -115,6 +112,7 @@
       </button>
     </div>
 
+    <div class="topbar-actions">
       <div class="topbar-actions-group">
         <button class="action-btn icon-btn" id="btn-undo" title="Undo (Ctrl+Z)">↩</button>
         <button class="action-btn icon-btn" id="btn-redo" title="Redo (Ctrl+Y)">↪</button>
@@ -160,11 +158,9 @@
         <button class="ltab" data-tab="promo" id="tab-promo" style="background:linear-gradient(90deg,rgba(236,72,153,0.2),rgba(244,63,94,0.2));border:1px solid rgba(236,72,153,0.4);">🚀<span class="ltab-lbl" id="lbl-tab-promo" style="color:#fb7185;">Promo AI</span></button>
         <button class="ltab" data-tab="a11y" id="tab-a11y" style="background:linear-gradient(90deg,rgba(236,72,153,0.2),rgba(219,39,119,0.2));border:1px solid rgba(236,72,153,0.4);">🧪<span class="ltab-lbl" id="lbl-tab-a11y" style="color:#f472b6;">A11y</span></button>
         <button class="ltab" data-tab="anim" id="tab-anim" style="background:linear-gradient(90deg,rgba(139,92,246,0.2),rgba(109,40,217,0.2));border:1px solid rgba(139,92,246,0.4);">🎞️<span class="ltab-lbl" id="lbl-tab-anim" style="color:#a78bfa;">Animate</span></button>
-        <button class="ltab" data-tab="i18n" id="tab-i18n" style="background:linear-gradient(90deg,rgba(20,184,166,0.2),rgba(13,148,136,0.2));border:1px solid rgba(20,184,166,0.4);">🌍<span class="ltab-lbl" id="lbl-tab-i18n" style="color:#14b8a6;">i18n</span></button>
         <button class="ltab" data-tab="forge" id="tab-forge" style="background:linear-gradient(90deg,rgba(234,179,8,0.2),rgba(202,138,4,0.2));border:1px solid rgba(234,179,8,0.4);">🧩<span class="ltab-lbl" id="lbl-tab-forge" style="color:#eab308;">Forge</span></button>
         <button class="ltab" data-tab="record" id="tab-record" style="background:linear-gradient(90deg,rgba(239,68,68,0.2),rgba(220,38,38,0.2));border:1px solid rgba(239,68,68,0.4);">📹<span class="ltab-lbl" id="lbl-tab-record" style="color:#ef4444;">Record</span></button>
         <button class="ltab" data-tab="stack" id="tab-stack" style="background:linear-gradient(90deg,rgba(56,189,248,0.2),rgba(2,132,199,0.2));border:1px solid rgba(56,189,248,0.4);">🏗️<span class="ltab-lbl" id="lbl-tab-stack" style="color:#38bdf8;">Stack</span></button>
-        <button class="ltab" data-tab="pwa" id="tab-pwa" style="background:linear-gradient(90deg,rgba(16,185,129,0.2),rgba(5,150,105,0.2));border:1px solid rgba(16,185,129,0.4);">🚀<span class="ltab-lbl" id="lbl-tab-pwa" style="color:#34d399;">PWA</span></button>
         <button class="ltab" data-tab="mock" id="tab-mock" style="background:linear-gradient(90deg,rgba(245,158,11,0.2),rgba(217,119,6,0.2));border:1px solid rgba(245,158,11,0.4);">🗄️<span class="ltab-lbl" id="lbl-tab-mock" style="color:#fcd34d;">Backend</span></button>
         <button class="ltab" data-tab="collab" id="tab-collab" style="background:linear-gradient(90deg,rgba(59,130,246,0.2),rgba(29,78,216,0.2));border:1px solid rgba(59,130,246,0.4);">🧑‍💻<span class="ltab-lbl" id="lbl-tab-collab" style="color:#60a5fa;">Collab</span></button>
         <button class="ltab" data-tab="pm" id="tab-pm" style="background:linear-gradient(90deg,rgba(168,85,247,0.2),rgba(126,34,206,0.2));border:1px solid rgba(168,85,247,0.4);">📁<span class="ltab-lbl" id="lbl-tab-pm" style="color:#d8b4fe;">Projects</span></button>
@@ -211,7 +207,6 @@
         <button class="ltab"        data-tab="vision"    id="tab-vision" style="background:linear-gradient(90deg,rgba(88,28,135,0.5),rgba(37,99,235,0.5));border:1px solid #8b5cf655;">📷<span class="ltab-lbl" id="lbl-tab-vision" style="color:#c4b5fd;">Vision</span></button>
         <button class="ltab" data-tab="voice" id="tab-voice" style="background:linear-gradient(90deg,rgba(59,130,246,0.2),rgba(37,99,235,0.2));border:1px solid rgba(59,130,246,0.4);">🎙️<span class="ltab-lbl" id="lbl-tab-voice" style="color:#60a5fa;">Voice AI</span></button>
         <button class="ltab" data-tab="nodelogic" id="tab-nodelogic" style="background:linear-gradient(90deg,rgba(245,158,11,0.2),rgba(217,119,6,0.2));border:1px solid rgba(245,158,11,0.4);">🔗<span class="ltab-lbl" id="lbl-tab-nodelogic" style="color:#fcd34d;">Node Logic</span></button>
-        <button class="ltab" data-tab="codeaudit" id="tab-codeaudit" style="background:linear-gradient(90deg,rgba(16,185,129,0.2),rgba(5,150,105,0.2));border:1px solid rgba(16,185,129,0.4);">🛡️<span class="ltab-lbl" id="lbl-tab-codeaudit" style="color:#34d399;">Code Audit</span></button>
         <button class="ltab" data-tab="dbarch" id="tab-dbarch" style="background:linear-gradient(90deg,rgba(139,92,246,0.2),rgba(109,40,217,0.2));border:1px solid rgba(139,92,246,0.4);">🗃️<span class="ltab-lbl" id="lbl-tab-dbarch" style="color:#a78bfa;">DB Architect</span></button>
         <button class="ltab" data-tab="autodocs" id="tab-autodocs" style="background:linear-gradient(90deg,rgba(99,102,241,0.2),rgba(79,70,229,0.2));border:1px solid rgba(99,102,241,0.4);">📚<span class="ltab-lbl" id="lbl-tab-autodocs" style="color:#818cf8;">Auto-Docs</span></button>
         <button class="ltab" data-tab="svgstudio" id="tab-svgstudio" style="background:linear-gradient(90deg,rgba(236,72,153,0.2),rgba(219,39,119,0.2));border:1px solid rgba(236,72,153,0.4);">✒️<span class="ltab-lbl" id="lbl-tab-svgstudio" style="color:#f472b6;">SVG Studio</span></button>
@@ -227,7 +222,6 @@
         <button class="ltab" data-tab="liquidgooey" id="tab-liquidgooey" style="background:linear-gradient(90deg,rgba(14,165,233,0.2),rgba(2,132,199,0.2));border:1px solid rgba(14,165,233,0.4);">💧<span class="ltab-lbl" id="lbl-tab-liquidgooey" style="color:#7dd3fc;">Liquid Gooey</span></button>
         <button class="ltab" data-tab="cursorspot" id="tab-cursorspot" style="background:linear-gradient(90deg,rgba(244,63,94,0.2),rgba(225,29,72,0.2));border:1px solid rgba(244,63,94,0.4);">🔦<span class="ltab-lbl" id="lbl-tab-cursorspot" style="color:#fb7185;">Spotlight</span></button>
         <button class="ltab" data-tab="webgldistort" id="tab-webgldistort" style="background:linear-gradient(90deg,rgba(16,185,129,0.2),rgba(5,150,105,0.2));border:1px solid rgba(16,185,129,0.4);">🌊<span class="ltab-lbl" id="lbl-tab-webgldistort" style="color:#34d399;">WebGL Ripple</span></button>
-        <button class="ltab" data-tab="svgmorph" id="tab-svgmorph" style="background:linear-gradient(90deg,rgba(139,92,246,0.2),rgba(109,40,217,0.2));border:1px solid rgba(139,92,246,0.4);">🔀<span class="ltab-lbl" id="lbl-tab-svgmorph" style="color:#a78bfa;">SVG Morph</span></button>
         <button class="ltab" data-tab="scrollreveal" id="tab-scrollreveal" style="background:linear-gradient(90deg,rgba(245,158,11,0.2),rgba(217,119,6,0.2));border:1px solid rgba(245,158,11,0.4);">📜<span class="ltab-lbl" id="lbl-tab-scrollreveal" style="color:#fcd34d;">Scroll Reveal</span></button>
         <button class="ltab" data-tab="kinetictypo" id="tab-kinetictypo" style="background:linear-gradient(90deg,rgba(236,72,153,0.2),rgba(219,39,119,0.2));border:1px solid rgba(236,72,153,0.4);">🔠<span class="ltab-lbl" id="lbl-tab-kinetictypo" style="color:#f472b6;">Kinetic Typo</span></button>
         <button class="ltab" data-tab="comments" id="tab-comments" style="background:linear-gradient(90deg,rgba(99,102,241,0.2),rgba(79,70,229,0.2));border:1px solid rgba(99,102,241,0.4);">💬<span class="ltab-lbl" id="lbl-tab-comments" style="color:#818cf8;">Comments</span></button>
@@ -245,12 +239,10 @@
         <button class="ltab"        data-tab="timetravel" id="tab-timetravel" style="background:linear-gradient(90deg,rgba(239,68,68,0.2),rgba(245,158,11,0.2));border:1px solid rgba(239,68,68,0.4);">⏪<span class="ltab-lbl" id="lbl-tab-timetravel" style="color:#f87171;">Time Travel</span></button>
         <button class="ltab"        data-tab="microphysics" id="tab-microphysics" style="background:linear-gradient(90deg,rgba(236,72,153,0.2),rgba(168,85,247,0.2));border:1px solid rgba(236,72,153,0.4);">🧲<span class="ltab-lbl" id="lbl-tab-microphysics" style="color:#f472b6;">Micro-Physics</span></button>
         <button class="ltab"        data-tab="skeleton" id="tab-skeleton" style="background:linear-gradient(90deg,rgba(148,163,184,0.2),rgba(100,116,139,0.2));border:1px solid rgba(148,163,184,0.4);">🦴<span class="ltab-lbl" id="lbl-tab-skeleton" style="color:#cbd5e1;">Skeleton UI</span></button>
-        <button class="ltab"        data-tab="holographic" id="tab-holographic" style="background:linear-gradient(90deg,rgba(16,185,129,0.2),rgba(6,182,212,0.2));border:1px solid rgba(16,185,129,0.4);">🃏<span class="ltab-lbl" id="lbl-tab-holographic" style="color:#34d399;">Hologram 3D</span></button>
         <button class="ltab"        data-tab="thanos" id="tab-thanos" style="background:linear-gradient(90deg,rgba(168,85,247,0.2),rgba(236,72,153,0.2));border:1px solid rgba(168,85,247,0.4);">🎭<span class="ltab-lbl" id="lbl-tab-thanos" style="color:#d8b4fe;">Dematerialize</span></button>
         <button class="ltab"        data-tab="glassmorphism" id="tab-glassmorphism" style="background:linear-gradient(90deg,rgba(255,255,255,0.1),rgba(200,200,255,0.1));border:1px solid rgba(255,255,255,0.3);">🧊<span class="ltab-lbl" id="lbl-tab-glassmorphism" style="color:#e2e8f0;">Glass UI</span></button>
         <button class="ltab"        data-tab="cyberneon" id="tab-cyberneon" style="background:linear-gradient(90deg,rgba(6,182,212,0.2),rgba(236,72,153,0.2));border:1px solid rgba(6,182,212,0.4);">🌌<span class="ltab-lbl" id="lbl-tab-cyberneon" style="color:#22d3ee;">Cyber Neon</span></button>
         <button class="ltab"        data-tab="gravity" id="tab-gravity" style="background:linear-gradient(90deg,rgba(245,158,11,0.2),rgba(239,68,68,0.2));border:1px solid rgba(245,158,11,0.4);">🍎<span class="ltab-lbl" id="lbl-tab-gravity" style="color:#fbbf24;">Gravity</span></button>
-        <button class="ltab"        data-tab="audioui" id="tab-audioui" style="background:linear-gradient(90deg,rgba(168,85,247,0.2),rgba(99,102,241,0.2));border:1px solid rgba(168,85,247,0.4);">🎵<span class="ltab-lbl" id="lbl-tab-audioui" style="color:#c084fc;">Audio UI</span></button>
         <button class="ltab"        data-tab="codesonar" id="tab-codesonar" style="background:linear-gradient(90deg,rgba(16,185,129,0.2),rgba(99,102,241,0.2));border:1px solid rgba(16,185,129,0.4);">🔊<span class="ltab-lbl" id="lbl-tab-codesonar" style="color:#34d399;">Code Sonar</span></button>
         <button class="ltab"        data-tab="projectassembler" id="tab-projectassembler" style="background:linear-gradient(90deg,rgba(168,85,247,0.2),rgba(59,130,246,0.2));border:1px solid rgba(168,85,247,0.4);">📂<span class="ltab-lbl" id="lbl-tab-projectassembler" style="color:#d8b4fe;">Multi-File</span></button>
         <button class="ltab"        data-tab="dbcrudapi" id="tab-dbcrudapi" style="background:linear-gradient(90deg,rgba(16,185,129,0.2),rgba(250,204,21,0.2));border:1px solid rgba(16,185,129,0.4);">💾<span class="ltab-lbl" id="lbl-tab-dbcrudapi" style="color:#34d399;">Visual CRUD</span></button>
@@ -277,7 +269,6 @@
         <button class="ltab"        data-tab="scrollfx" id="tab-scrollfx" style="background:linear-gradient(90deg,rgba(56,189,248,0.2),rgba(2,132,199,0.2));border:1px solid rgba(56,189,248,0.4);">🌊<span class="ltab-lbl" id="lbl-tab-scrollfx" style="color:#38bdf8;">Scroll FX</span></button>
         <button class="ltab"        data-tab="loaderscreen" id="tab-loaderscreen" style="background:linear-gradient(90deg,rgba(251,191,36,0.2),rgba(217,119,6,0.2));border:1px solid rgba(251,191,36,0.4);">⌛<span class="ltab-lbl" id="lbl-tab-loaderscreen" style="color:#fbbf24;">Loading Screen</span></button>
         <button class="ltab"        data-tab="webxr" id="tab-webxr" style="background:linear-gradient(90deg,rgba(14,165,233,0.2),rgba(2,132,199,0.2));border:1px solid rgba(14,165,233,0.4);">🕶️<span class="ltab-lbl" id="lbl-tab-webxr" style="color:#38bdf8;">WebXR / AR</span></button>
-        <button class="ltab"        data-tab="gradientforge" id="tab-gradientforge" style="background:linear-gradient(90deg,rgba(236,72,153,0.2),rgba(139,92,246,0.2));border:1px solid rgba(236,72,153,0.4);">🎨<span class="ltab-lbl" id="lbl-tab-gradientforge" style="color:#f472b6;">Gradient Forge</span></button>
         <button class="ltab"        data-tab="uishuffler" id="tab-uishuffler" style="background:linear-gradient(90deg,rgba(168,85,247,0.2),rgba(109,40,217,0.2));border:1px solid rgba(168,85,247,0.4);">🔀<span class="ltab-lbl" id="lbl-tab-uishuffler" style="color:#c084fc;">UI Shuffler</span></button>
         <button class="ltab"        data-tab="fontexplorer" id="tab-fontexplorer" style="background:linear-gradient(90deg,rgba(245,158,11,0.2),rgba(217,119,6,0.2));border:1px solid rgba(245,158,11,0.4);">🔤<span class="ltab-lbl" id="lbl-tab-fontexplorer" style="color:#fbbf24;">Font Explorer</span></button>
         <button class="ltab"        data-tab="breakpoints" id="tab-breakpoints" style="background:linear-gradient(90deg,rgba(56,189,248,0.2),rgba(2,132,199,0.2));border:1px solid rgba(56,189,248,0.4);">📏<span class="ltab-lbl" id="lbl-tab-breakpoints" style="color:#38bdf8;">Breakpoints</span></button>
@@ -300,12 +291,9 @@
         <button class="ltab"        data-tab="fintech" id="tab-fintech" style="background:linear-gradient(90deg,rgba(245,158,11,0.2),rgba(217,119,6,0.2));border:1px solid rgba(245,158,11,0.4);">💳<span class="ltab-lbl" id="lbl-tab-fintech" style="color:#fbbf24;">FinTech & Banking</span></button>
         <button class="ltab"        data-tab="appstore" id="tab-appstore" style="background:linear-gradient(90deg,rgba(168,85,247,0.2),rgba(124,58,237,0.2));border:1px solid rgba(168,85,247,0.4);">🏪<span class="ltab-lbl" id="lbl-tab-appstore" style="color:#a855f7;">App Store</span></button>
         <button class="ltab"        data-tab="games" id="tab-games" style="background:linear-gradient(90deg,rgba(244,63,94,0.2),rgba(225,29,72,0.2));border:1px solid rgba(244,63,94,0.4);">🎮<span class="ltab-lbl" id="lbl-tab-games" style="color:#f43f5e;">Games</span></button>
-        <button class="ltab"        data-tab="templates" id="tab-templates" style="background:linear-gradient(90deg,rgba(59,130,246,0.2),rgba(37,99,235,0.2));border:1px solid rgba(59,130,246,0.4);">🤖<span class="ltab-lbl" id="lbl-tab-templates" style="color:#3b82f6;">Templates</span></button>
         <button class="ltab"        data-tab="timeline" id="tab-timeline" style="background:linear-gradient(90deg,rgba(236,72,153,0.2),rgba(219,39,119,0.2));border:1px solid rgba(236,72,153,0.4);">🎞️<span class="ltab-lbl" id="lbl-tab-timeline" style="color:#f472b6;">Timeline FX</span></button>
         <button class="ltab"        data-tab="assetvault" id="tab-assetvault" style="background:linear-gradient(90deg,rgba(250,204,21,0.2),rgba(234,179,8,0.2));border:1px solid rgba(250,204,21,0.4);">🗜️<span class="ltab-lbl" id="lbl-tab-assetvault" style="color:#facc15;">Asset Vault</span></button>
-        <button class="ltab"        data-tab="regex" id="tab-regex" style="background:linear-gradient(90deg,rgba(20,184,166,0.2),rgba(13,148,136,0.2));border:1px solid rgba(20,184,166,0.4);">🧩<span class="ltab-lbl" id="lbl-tab-regex" style="color:#14b8a6;">RegEx Arch</span></button>
         <button class="ltab" data-tab="uiforge" id="tab-uiforge" style="background:linear-gradient(90deg,rgba(168,85,247,0.2),rgba(147,51,234,0.2));border:1px solid rgba(168,85,247,0.4);">🧊<span class="ltab-lbl" id="lbl-tab-uiforge" style="color:#a855f7;">UI Forge</span></button>
-        <button class="ltab" data-tab="sonic" id="tab-sonic" style="background:linear-gradient(90deg,rgba(239,68,68,0.2),rgba(220,38,38,0.2));border:1px solid rgba(239,68,68,0.4);">🎵<span class="ltab-lbl" id="lbl-tab-sonic" style="color:#ef4444;">Sonic Forge</span></button>
         <button class="ltab" data-tab="svgshaper" id="tab-svgshaper" style="background:linear-gradient(90deg,rgba(34,197,94,0.2),rgba(22,163,74,0.2));border:1px solid rgba(34,197,94,0.4);">🌊<span class="ltab-lbl" id="lbl-tab-svgshaper" style="color:#22c55e;">SVG Shaper</span></button>
         <button class="ltab" data-tab="gridbuilder" id="tab-gridbuilder" style="background:linear-gradient(90deg,rgba(251,146,60,0.2),rgba(234,88,12,0.2));border:1px solid rgba(251,146,60,0.4);">📐<span class="ltab-lbl" id="lbl-tab-gridbuilder" style="color:#fb923c;">Grid Builder</span></button>
         <button class="ltab" data-tab="fwconvert" id="tab-fwconvert" style="background:linear-gradient(90deg,rgba(139,92,246,0.25),rgba(99,102,241,0.2));border:1px solid rgba(139,92,246,0.5);">🔄<span class="ltab-lbl" id="lbl-tab-fwconvert" style="color:#a78bfa;font-weight:800;">Convert</span></button>
@@ -320,7 +308,6 @@
         <button class="ltab" data-tab="codepredict" id="tab-codepredict" style="background:linear-gradient(90deg,rgba(88,28,135,0.25),rgba(99,102,241,0.2));border:1px solid rgba(88,28,135,0.5);">🔮<span class="ltab-lbl" id="lbl-tab-codepredict" style="color:#c084fc;font-weight:800;">Predictor</span></button>
         <button class="ltab" data-tab="challenges" id="tab-challenges" style="background:linear-gradient(90deg,rgba(244,63,94,0.25),rgba(168,85,247,0.2));border:1px solid rgba(244,63,94,0.5);">🎮<span class="ltab-lbl" id="lbl-tab-challenges" style="color:#f43f5e;font-weight:800;">Challenges</span></button>
         <button class="ltab" data-tab="aimentor" id="tab-aimentor" style="background:linear-gradient(90deg,rgba(16,185,129,0.25),rgba(59,130,246,0.2));border:1px solid rgba(16,185,129,0.5);">🤝<span class="ltab-lbl" id="lbl-tab-aimentor" style="color:#34d399;font-weight:800;">AI Mentor</span></button>
-        <button class="ltab" data-tab="npmexplorer" id="tab-npmexplorer" style="background:linear-gradient(90deg,rgba(245,158,11,0.25),rgba(99,102,241,0.2));border:1px solid rgba(245,158,11,0.5);">📦<span class="ltab-lbl" id="lbl-tab-npmexplorer" style="color:#fbbf24;font-weight:800;">NPM</span></button>
         <button class="ltab" data-tab="githubsync" id="tab-githubsync" style="background:linear-gradient(90deg,rgba(30,30,30,0.5),rgba(99,102,241,0.2));border:1px solid rgba(255,255,255,0.15);">🔄<span class="ltab-lbl" id="lbl-tab-githubsync" style="color:#e2e8f0;font-weight:800;">GitHub</span></button>
         <button class="ltab" data-tab="codereview" id="tab-codereview" style="background:linear-gradient(90deg,rgba(99,102,241,0.25),rgba(168,85,247,0.2));border:1px solid rgba(99,102,241,0.5);">🤖<span class="ltab-lbl" id="lbl-tab-codereview" style="color:#818cf8;font-weight:800;">Code Review</span></button>
         <button class="ltab" data-tab="profiler" id="tab-profiler" style="background:linear-gradient(90deg,rgba(245,158,11,0.25),rgba(16,185,129,0.2));border:1px solid rgba(245,158,11,0.5);">⚡<span class="ltab-lbl" id="lbl-tab-profiler" style="color:#fbbf24;font-weight:800;">Profiler</span></button>
@@ -349,10 +336,8 @@
         <button class="ltab" data-tab="bizval" id="tab-bizval" style="background:linear-gradient(90deg,rgba(34,197,94,0.25),rgba(16,185,129,0.2));border:1px solid rgba(34,197,94,0.5);">🧠<span class="ltab-lbl" id="lbl-tab-bizval" style="color:#4ade80;font-weight:800;">Validate</span></button>
         <button class="ltab" data-tab="hooks" id="tab-hooks" style="background:linear-gradient(90deg,rgba(249,115,22,0.25),rgba(234,179,8,0.2));border:1px solid rgba(249,115,22,0.5);">🎯<span class="ltab-lbl" id="lbl-tab-hooks" style="color:#fb923c;font-weight:800;">Hooks</span></button>
         <button class="ltab" data-tab="commit" id="tab-commit" style="background:linear-gradient(90deg,rgba(99,102,241,0.25),rgba(139,92,246,0.2));border:1px solid rgba(99,102,241,0.5);">💬<span class="ltab-lbl" id="lbl-tab-commit" style="color:#818cf8;font-weight:800;">Commit</span></button>
-        <button class="ltab" data-tab="tailwind" id="tab-tailwind" style="background:linear-gradient(90deg,rgba(56,189,248,0.25),rgba(99,102,241,0.2));border:1px solid rgba(56,189,248,0.5);">🔲<span class="ltab-lbl" id="lbl-tab-tailwind" style="color:#38bdf8;font-weight:800;">Tailwind</span></button>
         <button class="ltab" data-tab="colorblind" id="tab-colorblind" style="background:linear-gradient(90deg,rgba(168,85,247,0.25),rgba(236,72,153,0.2));border:1px solid rgba(168,85,247,0.5);">🎭<span class="ltab-lbl" id="lbl-tab-colorblind" style="color:#c084fc;font-weight:800;">ColorBlind</span></button>
         <button class="ltab" data-tab="fluidtype" id="tab-fluidtype" style="background:linear-gradient(90deg,rgba(34,197,94,0.25),rgba(16,185,129,0.2));border:1px solid rgba(34,197,94,0.5);">📐<span class="ltab-lbl" id="lbl-tab-fluidtype" style="color:#4ade80;font-weight:800;">FluidType</span></button>
-        <button class="ltab" data-tab="heatmap" id="tab-heatmap" style="background:linear-gradient(90deg,rgba(239,68,68,0.25),rgba(251,146,60,0.2));border:1px solid rgba(239,68,68,0.5);">👁️<span class="ltab-lbl" id="lbl-tab-heatmap" style="color:#f87171;font-weight:800;">Heatmap</span></button>
         <button class="ltab" data-tab="devscore" id="tab-devscore" style="background:linear-gradient(90deg,rgba(251,191,36,0.25),rgba(245,158,11,0.2));border:1px solid rgba(251,191,36,0.5);">🏆<span class="ltab-lbl" id="lbl-tab-devscore" style="color:#fbbf24;font-weight:800;">DevScore</span></button>
         <button class="ltab" data-tab="pricing" id="tab-pricing" style="background:linear-gradient(90deg,rgba(34,197,94,0.25),rgba(16,185,129,0.2));border:1px solid rgba(34,197,94,0.5);">💰<span class="ltab-lbl" id="lbl-tab-pricing" style="color:#4ade80;font-weight:800;">Pricing</span></button>
         <button class="ltab" data-tab="invoice" id="tab-invoice" style="background:linear-gradient(90deg,rgba(59,130,246,0.25),rgba(99,102,241,0.2));border:1px solid rgba(59,130,246,0.5);">📋<span class="ltab-lbl" id="lbl-tab-invoice" style="color:#60a5fa;font-weight:800;">Invoice</span></button>
@@ -376,16 +361,13 @@
         <button class="ltab" data-tab="gamifiedad" id="tab-gamifiedad" style="background:linear-gradient(90deg,rgba(139,92,246,0.25),rgba(236,72,153,0.2));border:1px solid rgba(139,92,246,0.5);">🎮<span class="ltab-lbl" id="lbl-tab-gamifiedad" style="color:#a78bfa;font-weight:800;">Gamified Ad</span></button>
         <button class="ltab" data-tab="smartpopup" id="tab-smartpopup" style="background:linear-gradient(90deg,rgba(239,68,68,0.25),rgba(251,146,60,0.2));border:1px solid rgba(239,68,68,0.5);">💥<span class="ltab-lbl" id="lbl-tab-smartpopup" style="color:#f87171;font-weight:800;">Smart Popup</span></button>
         <button class="ltab" data-tab="flipcard" id="tab-flipcard" style="background:linear-gradient(90deg,rgba(99,102,241,0.25),rgba(139,92,246,0.2));border:1px solid rgba(99,102,241,0.5);">🃏<span class="ltab-lbl" id="lbl-tab-flipcard" style="color:#818cf8;font-weight:800;">3D Flip Card</span></button>
-        <button class="ltab" data-tab="meshgrad" id="tab-meshgrad" style="background:linear-gradient(90deg,rgba(168,85,247,0.25),rgba(236,72,153,0.2));border:1px solid rgba(168,85,247,0.5);">🌈<span class="ltab-lbl" id="lbl-tab-meshgrad" style="color:#c084fc;font-weight:800;">Mesh Gradient</span></button>
         <button class="ltab" data-tab="herobuilder" id="tab-herobuilder" style="background:linear-gradient(90deg,rgba(59,130,246,0.25),rgba(99,102,241,0.2));border:1px solid rgba(59,130,246,0.5);">🖼️<span class="ltab-lbl" id="lbl-tab-herobuilder" style="color:#60a5fa;font-weight:800;">Hero Builder</span></button>
         <button class="ltab" data-tab="textanim" id="tab-textanim" style="background:linear-gradient(90deg,rgba(251,191,36,0.25),rgba(245,158,11,0.2));border:1px solid rgba(251,191,36,0.5);">✨<span class="ltab-lbl" id="lbl-tab-textanim" style="color:#fbbf24;font-weight:800;">Text Anim</span></button>
         <button class="ltab" data-tab="pricingpage" id="tab-pricingpage" style="background:linear-gradient(90deg,rgba(139,92,246,0.25),rgba(168,85,247,0.2));border:1px solid rgba(139,92,246,0.5);">💎<span class="ltab-lbl" id="lbl-tab-pricingpage" style="color:#a78bfa;font-weight:800;">Pricing Page</span></button>
         <button class="ltab" data-tab="newsletter" id="tab-newsletter" style="background:linear-gradient(90deg,rgba(236,72,153,0.25),rgba(244,63,94,0.2));border:1px solid rgba(236,72,153,0.5);">📬<span class="ltab-lbl" id="lbl-tab-newsletter" style="color:#f472b6;font-weight:800;">Newsletter</span></button>
-        <button class="ltab" data-tab="aichat" id="tab-aichat" style="background:linear-gradient(90deg,rgba(59,130,246,0.25),rgba(147,197,253,0.2));border:1px solid rgba(59,130,246,0.5);">🤖<span class="ltab-lbl" id="lbl-tab-aichat" style="color:#60a5fa;font-weight:800;">AI Chat</span></button>
         <button class="ltab" data-tab="smartfaq" id="tab-smartfaq" style="background:linear-gradient(90deg,rgba(139,92,246,0.25),rgba(168,85,247,0.2));border:1px solid rgba(139,92,246,0.5);">🧠<span class="ltab-lbl" id="lbl-tab-smartfaq" style="color:#a78bfa;font-weight:800;">Smart FAQ</span></button>
         <button class="ltab" data-tab="autobio" id="tab-autobio" style="background:linear-gradient(90deg,rgba(236,72,153,0.25),rgba(139,92,246,0.2));border:1px solid rgba(236,72,153,0.5);">📝<span class="ltab-lbl" id="lbl-tab-autobio" style="color:#f472b6;font-weight:800;">Auto Bio</span></button>
         <button class="ltab" data-tab="predictor" id="tab-predictor" style="background:linear-gradient(90deg,rgba(16,185,129,0.25),rgba(52,211,153,0.2));border:1px solid rgba(16,185,129,0.5);">🔮<span class="ltab-lbl" id="lbl-tab-predictor" style="color:#34d399;font-weight:800;">Predictor</span></button>
-        <button class="ltab" data-tab="apimock" id="tab-apimock" style="background:linear-gradient(90deg,rgba(14,165,233,0.25),rgba(56,189,248,0.2));border:1px solid rgba(14,165,233,0.5);">🔧<span class="ltab-lbl" id="lbl-tab-apimock" style="color:#38bdf8;font-weight:800;">API Mock</span></button>
         <button class="ltab" data-tab="journey" id="tab-journey" style="background:linear-gradient(90deg,rgba(245,158,11,0.25),rgba(251,191,36,0.2));border:1px solid rgba(245,158,11,0.5);">🗺️<span class="ltab-lbl" id="lbl-tab-journey" style="color:#fbbf24;font-weight:800;">Journey Map</span></button>
         <button class="ltab" data-tab="speedbudget" id="tab-speedbudget" style="background:linear-gradient(90deg,rgba(250,204,21,0.25),rgba(253,224,71,0.2));border:1px solid rgba(250,204,21,0.5);">⚡<span class="ltab-lbl" id="lbl-tab-speedbudget" style="color:#facc15;font-weight:800;">Speed Budget</span></button>
         <button class="ltab" data-tab="oauthflow" id="tab-oauthflow" style="background:linear-gradient(90deg,rgba(59,130,246,0.25),rgba(147,197,253,0.2));border:1px solid rgba(59,130,246,0.5);">🔐<span class="ltab-lbl" id="lbl-tab-oauthflow" style="color:#60a5fa;font-weight:800;">OAuth Flow</span></button>
@@ -401,17 +383,11 @@
         <button class="ltab" data-tab="socialproof" id="tab-socialproof" style="background:linear-gradient(90deg,rgba(234,179,8,0.25),rgba(250,204,21,0.2));border:1px solid rgba(234,179,8,0.5);">⭐<span class="ltab-lbl" id="lbl-tab-socialproof" style="color:#facc15;font-weight:800;">Social Proof</span></button>
         <button class="ltab" data-tab="podcast" id="tab-podcast" style="background:linear-gradient(90deg,rgba(20,184,166,0.25),rgba(45,212,191,0.2));border:1px solid rgba(20,184,166,0.5);">🎙️<span class="ltab-lbl" id="lbl-tab-podcast" style="color:#2dd4bf;font-weight:800;">Podcast Art</span></button>
         <!-- 🔮 FUTURE TECH LAB -->
-        <button class="ltab" data-tab="web3studio" id="tab-web3studio" style="background:linear-gradient(90deg,rgba(14,165,233,0.25),rgba(56,189,248,0.2));border:1px solid rgba(14,165,233,0.5);">🌐<span class="ltab-lbl" id="lbl-tab-web3studio" style="color:#38bdf8;font-weight:800;">Web3 Studio</span></button>
-        <button class="ltab" data-tab="extgen" id="tab-extgen" style="background:linear-gradient(90deg,rgba(245,158,11,0.25),rgba(251,191,36,0.2));border:1px solid rgba(245,158,11,0.5);">🧩<span class="ltab-lbl" id="lbl-tab-extgen" style="color:#fbbf24;font-weight:800;">Ext Gen</span></button>
         <button class="ltab" data-tab="scraperbot" id="tab-scraperbot" style="background:linear-gradient(90deg,rgba(16,185,129,0.25),rgba(52,211,153,0.2));border:1px solid rgba(16,185,129,0.5);">🤖<span class="ltab-lbl" id="lbl-tab-scraperbot" style="color:#34d399;font-weight:800;">Scraper Bot</span></button>
-        <button class="ltab" data-tab="gameengine" id="tab-gameengine" style="background:linear-gradient(90deg,rgba(236,72,153,0.25),rgba(244,114,182,0.2));border:1px solid rgba(236,72,153,0.5);">🎮<span class="ltab-lbl" id="lbl-tab-gameengine" style="color:#f472b6;font-weight:800;">Canvas Game</span></button>
         <button class="ltab" data-tab="cloudarch" id="tab-cloudarch" style="background:linear-gradient(90deg,rgba(139,92,246,0.25),rgba(167,139,250,0.2));border:1px solid rgba(139,92,246,0.5);">☁️<span class="ltab-lbl" id="lbl-tab-cloudarch" style="color:#a78bfa;font-weight:800;">Cloud Arch</span></button>
-        <button class="ltab" data-tab="neuralnet" id="tab-neuralnet" style="background:linear-gradient(90deg,rgba(59,130,246,0.25),rgba(37,99,235,0.2));border:1px solid rgba(59,130,246,0.5);">🧠<span class="ltab-lbl" id="lbl-tab-neuralnet" style="color:#60a5fa;font-weight:800;">Neural Net</span></button>
         <button class="ltab" data-tab="quantum" id="tab-quantum" style="background:linear-gradient(90deg,rgba(168,85,247,0.25),rgba(126,34,206,0.2));border:1px solid rgba(168,85,247,0.5);">🌌<span class="ltab-lbl" id="lbl-tab-quantum" style="color:#c084fc;font-weight:800;">Quantum</span></button>
         <button class="ltab" data-tab="iot" id="tab-iot" style="background:linear-gradient(90deg,rgba(16,185,129,0.25),rgba(5,150,105,0.2));border:1px solid rgba(16,185,129,0.5);">🛸<span class="ltab-lbl" id="lbl-tab-iot" style="color:#34d399;font-weight:800;">IoT & Robot</span></button>
-        <button class="ltab" data-tab="webxr" id="tab-webxr" style="background:linear-gradient(90deg,rgba(236,72,153,0.25),rgba(219,39,119,0.2));border:1px solid rgba(236,72,153,0.5);">🕶️<span class="ltab-lbl" id="lbl-tab-webxr" style="color:#f472b6;font-weight:800;">Metaverse</span></button>
         <button class="ltab" data-tab="zk" id="tab-zk" style="background:linear-gradient(90deg,rgba(245,158,11,0.25),rgba(217,119,6,0.2));border:1px solid rgba(245,158,11,0.5);">🔐<span class="ltab-lbl" id="lbl-tab-zk" style="color:#fbbf24;font-weight:800;">ZK Crypto</span></button>
-        <button class="ltab" data-tab="webrtc" id="tab-webrtc" style="background:linear-gradient(90deg,rgba(14,165,233,0.25),rgba(2,132,199,0.2));border:1px solid rgba(14,165,233,0.5);">🌐<span class="ltab-lbl" id="lbl-tab-webrtc" style="color:#38bdf8;font-weight:800;">WebRTC P2P</span></button>
         <button class="ltab" data-tab="geomap" id="tab-geomap" style="background:linear-gradient(90deg,rgba(34,197,94,0.25),rgba(22,163,74,0.2));border:1px solid rgba(34,197,94,0.5);">🛰️<span class="ltab-lbl" id="lbl-tab-geomap" style="color:#4ade80;font-weight:800;">Geo-Mapping</span></button>
         <button class="ltab" data-tab="aiswarm" id="tab-aiswarm" style="background:linear-gradient(90deg,rgba(236,72,153,0.25),rgba(219,39,119,0.2));border:1px solid rgba(236,72,153,0.5);">🤖<span class="ltab-lbl" id="lbl-tab-aiswarm" style="color:#f472b6;font-weight:800;">AI Swarm</span></button>
         <button class="ltab" data-tab="biotech" id="tab-biotech" style="background:linear-gradient(90deg,rgba(168,85,247,0.25),rgba(147,51,234,0.2));border:1px solid rgba(168,85,247,0.5);">🧬<span class="ltab-lbl" id="lbl-tab-biotech" style="color:#c084fc;font-weight:800;">Biotech DNA</span></button>
@@ -429,13 +405,11 @@
         <button class="ltab" data-tab="loader" id="tab-loader" style="background:linear-gradient(90deg,rgba(236,72,153,0.25),rgba(219,39,119,0.2));border:1px solid rgba(236,72,153,0.5);">💫<span class="ltab-lbl" id="lbl-tab-loader" style="color:#f472b6;font-weight:800;">Loader</span></button>
         <button class="ltab" data-tab="cursor" id="tab-cursor" style="background:linear-gradient(90deg,rgba(99,102,241,0.25),rgba(79,70,229,0.2));border:1px solid rgba(99,102,241,0.5);">🖱️<span class="ltab-lbl" id="lbl-tab-cursor" style="color:#818cf8;font-weight:800;">Cursor</span></button>
         <button class="ltab" data-tab="eco" id="tab-eco" style="background:linear-gradient(90deg,rgba(34,197,94,0.25),rgba(20,184,166,0.2));border:1px solid rgba(34,197,94,0.5);">🌱<span class="ltab-lbl" id="lbl-tab-eco" style="color:#4ade80;font-weight:800;">Eco-Tracker</span></button>
-        <button class="ltab" data-tab="personaswarm" id="tab-personaswarm" style="background:linear-gradient(90deg,rgba(239,68,68,0.25),rgba(244,63,94,0.2));border:1px solid rgba(239,68,68,0.5);">🎭<span class="ltab-lbl" id="lbl-tab-personaswarm" style="color:#f87171;font-weight:800;">AI Personas</span></button>
         <button class="ltab" data-tab="haptic" id="tab-haptic" style="background:linear-gradient(90deg,rgba(245,158,11,0.25),rgba(251,191,36,0.2));border:1px solid rgba(245,158,11,0.5);">📳<span class="ltab-lbl" id="lbl-tab-haptic" style="color:#fbbf24;font-weight:800;">Haptic Forge</span></button>
         <button class="ltab" data-tab="cinematic" id="tab-cinematic" style="background:linear-gradient(90deg,rgba(168,85,247,0.25),rgba(139,92,246,0.2));border:1px solid rgba(168,85,247,0.5);">🎬<span class="ltab-lbl" id="lbl-tab-cinematic" style="color:#c084fc;font-weight:800;">Cinematic</span></button>
         <button class="ltab" data-tab="gamification" id="tab-gamification" style="background:linear-gradient(90deg,rgba(59,130,246,0.25),rgba(14,165,233,0.2));border:1px solid rgba(59,130,246,0.5);">🎮<span class="ltab-lbl" id="lbl-tab-gamification" style="color:#60a5fa;font-weight:800;">Gamify UI</span></button>
         <button class="ltab" data-tab="chaos" id="tab-chaos" style="background:linear-gradient(90deg,rgba(236,72,153,0.25),rgba(219,39,119,0.2));border:1px solid rgba(236,72,153,0.5);">🌪️<span class="ltab-lbl" id="lbl-tab-chaos" style="color:#f472b6;font-weight:800;">Chaos Sim</span></button>
         <button class="ltab" data-tab="neuro" id="tab-neuro" style="background:linear-gradient(90deg,rgba(99,102,241,0.25),rgba(79,70,229,0.2));border:1px solid rgba(99,102,241,0.5);">🧠<span class="ltab-lbl" id="lbl-tab-neuro" style="color:#818cf8;font-weight:800;">Neuro UX</span></button>
-        <button class="ltab" data-tab="regexforge" id="tab-regexforge" style="background:linear-gradient(90deg,rgba(16,185,129,0.25),rgba(6,182,212,0.2));border:1px solid rgba(16,185,129,0.5);">🧩<span class="ltab-lbl" id="lbl-tab-regexforge" style="color:#34d399;font-weight:800;">Regex Forge</span></button>
         <button class="ltab" data-tab="cronstudio" id="tab-cronstudio" style="background:linear-gradient(90deg,rgba(239,68,68,0.25),rgba(245,158,11,0.2));border:1px solid rgba(239,68,68,0.5);">⏳<span class="ltab-lbl" id="lbl-tab-cronstudio" style="color:#f87171;font-weight:800;">Cron Studio</span></button>
         <button class="ltab" data-tab="dataforge" id="tab-dataforge" style="background:linear-gradient(90deg,rgba(99,102,241,0.25),rgba(168,85,247,0.2));border:1px solid rgba(99,102,241,0.5);">📦<span class="ltab-lbl" id="lbl-tab-dataforge" style="color:#818cf8;font-weight:800;">Data Forge</span></button>
         <button class="ltab" data-tab="webhooklab" id="tab-webhooklab" style="background:linear-gradient(90deg,rgba(34,197,94,0.25),rgba(16,185,129,0.2));border:1px solid rgba(34,197,94,0.5);">🪝<span class="ltab-lbl" id="lbl-tab-webhooklab" style="color:#4ade80;font-weight:800;">Webhook Lab</span></button>
@@ -451,20 +425,6 @@
         <button class="ltab" data-tab="glassbreaker" id="tab-glassbreaker" style="background:linear-gradient(90deg,rgba(168,85,247,0.25),rgba(147,51,234,0.2));border:1px solid rgba(168,85,247,0.5);">🔨<span class="ltab-lbl" id="lbl-tab-glassbreaker" style="color:#c084fc;font-weight:800;">Smash UI</span></button>
         <button class="ltab" data-tab="vhsrewind" id="tab-vhsrewind" style="background:linear-gradient(90deg,rgba(244,63,94,0.25),rgba(225,29,72,0.2));border:1px solid rgba(244,63,94,0.5);">📼<span class="ltab-lbl" id="lbl-tab-vhsrewind" style="color:#fb7185;font-weight:800;">VHS Rewind</span></button>
         <!-- 🔮 FUTURE TECH LAB PRO -->
-        <button class="ltab" data-tab="bcireader" id="tab-bcireader" style="background:linear-gradient(90deg,rgba(236,72,153,0.25),rgba(219,39,119,0.2));border:1px solid rgba(236,72,153,0.5);">🧠<span class="ltab-lbl" id="lbl-tab-bcireader" style="color:#f472b6;font-weight:800;">BCI Reader</span></button>
-        <button class="ltab" data-tab="digitaltwin" id="tab-digitaltwin" style="background:linear-gradient(90deg,rgba(56,189,248,0.25),rgba(14,165,233,0.2));border:1px solid rgba(56,189,248,0.5);">🏭<span class="ltab-lbl" id="lbl-tab-digitaltwin" style="color:#38bdf8;font-weight:800;">Digital Twin</span></button>
-        <button class="ltab" data-tab="qkdcrypto" id="tab-qkdcrypto" style="background:linear-gradient(90deg,rgba(168,85,247,0.25),rgba(147,51,234,0.2));border:1px solid rgba(168,85,247,0.5);">🔐<span class="ltab-lbl" id="lbl-tab-qkdcrypto" style="color:#c084fc;font-weight:800;">QKD Crypto</span></button>
-        <button class="ltab" data-tab="noneuclidean" id="tab-noneuclidean" style="background:linear-gradient(90deg,rgba(139,92,246,0.25),rgba(124,58,237,0.2));border:1px solid rgba(139,92,246,0.5);">🌀<span class="ltab-lbl" id="lbl-tab-noneuclidean" style="color:#a78bfa;font-weight:800;">Non-Euclidean</span></button>
-        <button class="ltab" data-tab="dnastorage" id="tab-dnastorage" style="background:linear-gradient(90deg,rgba(16,185,129,0.25),rgba(5,150,105,0.2));border:1px solid rgba(16,185,129,0.5);">🧬<span class="ltab-lbl" id="lbl-tab-dnastorage" style="color:#34d399;font-weight:800;">DNA Storage</span></button>
-        <button class="ltab" data-tab="neuromorphic" id="tab-neuromorphic" style="background:linear-gradient(90deg,rgba(250,204,21,0.25),rgba(234,179,8,0.2));border:1px solid rgba(250,204,21,0.5);">⚡<span class="ltab-lbl" id="lbl-tab-neuromorphic" style="color:#facc15;font-weight:800;">Neuromorphic</span></button>
-        <button class="ltab" data-tab="satmesh" id="tab-satmesh" style="background:linear-gradient(90deg,rgba(56,189,248,0.25),rgba(14,165,233,0.2));border:1px solid rgba(56,189,248,0.5);">🛰️<span class="ltab-lbl" id="lbl-tab-satmesh" style="color:#38bdf8;font-weight:800;">Satellite</span></button>
-        <button class="ltab" data-tab="quantcircuit" id="tab-quantcircuit" style="background:linear-gradient(90deg,rgba(168,85,247,0.25),rgba(147,51,234,0.2));border:1px solid rgba(168,85,247,0.5);">⚛️<span class="ltab-lbl" id="lbl-tab-quantcircuit" style="color:#c084fc;font-weight:800;">Quantum Designer</span></button>
-        <button class="ltab" data-tab="fusionplasma" id="tab-fusionplasma" style="background:linear-gradient(90deg,rgba(236,72,153,0.25),rgba(219,39,119,0.2));border:1px solid rgba(236,72,153,0.5);">🧪<span class="ltab-lbl" id="lbl-tab-fusionplasma" style="color:#f472b6;font-weight:800;">Fusion Lab</span></button>
-        <button class="ltab" data-tab="crisprsplicer" id="tab-crisprsplicer" style="background:linear-gradient(90deg,rgba(16,185,129,0.25),rgba(5,150,105,0.2));border:1px solid rgba(16,185,129,0.5);">🧬<span class="ltab-lbl" id="lbl-tab-crisprsplicer" style="color:#34d399;font-weight:800;">CRISPR Splicer</span></button>
-        <button class="ltab" data-tab="dysonsphere" id="tab-dysonsphere" style="background:linear-gradient(90deg,rgba(250,204,21,0.25),rgba(234,179,8,0.2));border:1px solid rgba(250,204,21,0.5);">☀️<span class="ltab-lbl" id="lbl-tab-dysonsphere" style="color:#facc15;font-weight:800;">Dyson Architect</span></button>
-        <button class="ltab" data-tab="microbotswarm" id="tab-microbotswarm" style="background:linear-gradient(90deg,rgba(56,189,248,0.25),rgba(14,165,233,0.2));border:1px solid rgba(56,189,248,0.5);">🐜<span class="ltab-lbl" id="lbl-tab-microbotswarm" style="color:#38bdf8;font-weight:800;">Bot Swarm</span></button>
-        <button class="ltab" data-tab="antimattertrap" id="tab-antimattertrap" style="background:linear-gradient(90deg,rgba(168,85,247,0.25),rgba(147,51,234,0.2));border:1px solid rgba(168,85,247,0.5);">🧲<span class="ltab-lbl" id="lbl-tab-antimattertrap" style="color:#c084fc;font-weight:800;">Antimatter Trap</span></button>
-        <button class="ltab" data-tab="acousticcymatics" id="tab-acousticcymatics" style="background:linear-gradient(90deg,rgba(236,72,153,0.25),rgba(219,39,119,0.2));border:1px solid rgba(236,72,153,0.5);">🎶<span class="ltab-lbl" id="lbl-tab-acousticcymatics" style="color:#f472b6;font-weight:800;">Acoustic Cymatics</span></button>
         <button class="ltab" data-tab="tesseract" id="tab-tesseract" style="background:linear-gradient(90deg,rgba(99,102,241,0.25),rgba(79,70,229,0.2));border:1px solid rgba(99,102,241,0.5);">🧊<span class="ltab-lbl" id="lbl-tab-tesseract" style="color:#818cf8;font-weight:800;">Tesseract 4D</span></button>
         <!-- 🧬 CODE EVOLUTION LAB -->
         <button class="ltab" data-tab="codeevolution" id="tab-codeevolution" style="background:linear-gradient(90deg,rgba(34,197,94,0.25),rgba(16,185,129,0.2));border:1px solid rgba(34,197,94,0.5);">🧬<span class="ltab-lbl" id="lbl-tab-codeevolution" style="color:#4ade80;font-weight:800;">Code Evolution</span></button>
@@ -504,9 +464,7 @@
         <!-- 🎴 3D Voxel Extruder & Game Asset Forge -->
         <button class="ltab" data-tab="voxelextruder" id="tab-voxelextruder" style="background:linear-gradient(90deg,rgba(245,158,11,0.25),rgba(236,72,153,0.2));border:1px solid rgba(245,158,11,0.5);">🎴<span class="ltab-lbl" id="lbl-tab-voxelextruder" style="color:#fcd34d;font-weight:800;">Voxel Forge</span></button>
         <!-- 🐳 WEBCONTAINERS STUDIO -->
-        <button class="ltab ltab-pro" data-tab="webcontainers" id="tab-webcontainers" style="background:linear-gradient(90deg,rgba(16,185,129,0.35),rgba(6,182,212,0.35));border:1px solid rgba(16,185,129,0.7);">🐳<span class="ltab-lbl" id="lbl-tab-webcontainers" style="color:#34d399;text-shadow:0 0 8px rgba(16,185,129,0.5);font-weight:800;">WebContainers</span></button>
         <!-- 📱 NATIVE COMPILER STUDIO -->
-        <button class="ltab ltab-pro" data-tab="nativecompiler" id="tab-nativecompiler" style="background:linear-gradient(90deg,rgba(236,72,153,0.35),rgba(139,92,246,0.35));border:1px solid rgba(236,72,153,0.7);">📱<span class="ltab-lbl" id="lbl-tab-nativecompiler" style="color:#f472b6;text-shadow:0 0 8px rgba(236,72,153,0.5);font-weight:800;">Native Compiler</span></button>
         <!-- 🖼️ ASSET OPTIMIZER -->
         <button class="ltab ltab-pro" data-tab="assetoptimizer" id="tab-assetoptimizer" style="background:linear-gradient(90deg,rgba(245,158,11,0.35),rgba(251,146,60,0.35));border:1px solid rgba(245,158,11,0.7);">🖼️<span class="ltab-lbl" id="lbl-tab-assetoptimizer" style="color:#fbbf24;text-shadow:0 0 8px rgba(245,158,11,0.5);font-weight:800;">Asset Optimizer</span></button>
         <!-- 🛡️ CODE PROTECTOR -->
@@ -571,7 +529,6 @@
         <!-- 🎭 Brand Persona Swarm -->
         <button class="ltab ltab-pro" data-tab="personaswarm" id="tab-personaswarm" style="background:linear-gradient(90deg,rgba(244,114,182,0.35),rgba(251,146,60,0.35));border:1px solid rgba(244,114,182,0.7);">🎭<span class="ltab-lbl" id="lbl-tab-personaswarm" style="color:#f472b6;text-shadow:0 0 8px rgba(244,114,182,0.5);font-weight:800;">Persona Swarm</span></button>
         <!-- 🚀 Deep Space DevOps -->
-        <button class="ltab ltab-pro" data-tab="spacedevops" id="tab-spacedevops" style="background:linear-gradient(90deg,rgba(56,189,248,0.35),rgba(129,140,248,0.35));border:1px solid rgba(56,189,248,0.7);">🚀<span class="ltab-lbl" id="lbl-tab-spacedevops" style="color:#7dd3fc;text-shadow:0 0 8px rgba(56,189,248,0.5);font-weight:800;">Space DevOps</span></button>
       </div>
       <div class="left-body" id="left-body"></div>
     </aside>
@@ -696,7 +653,7 @@
           <div id="vr-fp-status" style="font-size:11px;color:#fbbf24;min-height:16px;text-align:center;"></div>
           <div style="display:flex;gap:8px;">
             <button style="flex:2;background:linear-gradient(135deg,#16a34a,#15803d);border:none;border-radius:8px;padding:10px;color:#fff;font-weight:900;font-size:11px;cursor:pointer;"
-              onclick="(function(){var synth=window.speechSynthesis;if(!synth){document.getElementById('vr-fp-status').textContent='Not supported.';return;}synth.cancel();var iframe=document.getElementById('preview-iframe')||document.querySelector('#right-panel iframe');if(!iframe)return;var doc=iframe.contentDocument||(iframe.contentWindow&&iframe.contentWindow.document);if(!doc||!doc.body)return;var walker=doc.createTreeWalker(doc.body,NodeFilter.SHOW_TEXT,{acceptNode:function(n){var p=n.parentElement;if(!p)return NodeFilter.FILTER_REJECT;var tag=p.tagName.toUpperCase();if(tag==='SCRIPT'||tag==='STYLE'||tag==='NOSCRIPT')return NodeFilter.FILTER_REJECT;var s=doc.defaultView.getComputedStyle(p);if(s.display==='none'||s.visibility==='hidden'||s.opacity==='0')return NodeFilter.FILTER_REJECT;var tx=n.textContent.trim();if(!tx)return NodeFilter.FILTER_SKIP;return NodeFilter.FILTER_ACCEPT;}});var texts=[];var nd;while((nd=walker.nextNode())){var tx=nd.textContent.trim();if(tx.length>1)texts.push(tx);}if(!texts.length){document.getElementById('vr-fp-status').textContent='No readable text found.';return;}var spd=parseFloat(document.getElementById('vr-fp-speed').value)||1;var statusEl=document.getElementById('vr-fp-status');statusEl.textContent='🔊 Reading\u2026';var idx=0;function next(){if(idx>=texts.length){statusEl.textContent='\u2705 Done reading!';return;}var u=new SpeechSynthesisUtterance(texts[idx]);u.rate=spd;u.onend=function(){idx++;next();};u.onerror=function(){idx++;next();};synth.speak(u);idx++;}next();})()">
+              onclick="(function(){var synth=window.speechSynthesis;if(!synth){document.getElementById('vr-fp-status').textContent='Not supported.';return;}synth.cancel();var iframe=document.getElementById('preview-iframe')||document.querySelector('#right-panel iframe');if(!iframe)return;var doc=iframe.contentDocument||(iframe.contentWindow&&iframe.contentWindow.document);if(!doc||!doc.body)return;var walker=doc.createTreeWalker(doc.body,NodeFilter.SHOW_TEXT,{acceptNode:function(n){var p=n.parentElement;if(!p)return NodeFilter.FILTER_REJECT;var tag=p.tagName.toUpperCase();if(tag==='SCRIPT'||tag==='STYLE'||tag==='NOSCRIPT')return NodeFilter.FILTER_REJECT;var s=doc.defaultView.getComputedStyle(p);if(s.display==='none'||s.visibility==='hidden'||s.opacity==='0')return NodeFilter.FILTER_REJECT;var tx=n.textContent.trim();if(!tx)return NodeFilter.FILTER_SKIP;return NodeFilter.FILTER_ACCEPT;}});var texts=[];var nd;while((nd=walker.nextNode())){var tx=nd.textContent.trim();if(tx.length>1)texts.push(tx);}if(!texts.length){document.getElementById('vr-fp-status').textContent='No readable text found.';return;}var spd=parseFloat(document.getElementById('vr-fp-speed').value)||1;var statusEl=document.getElementById('vr-fp-status');statusEl.textContent='🔊 Reading\u2026';var idx=0;function next(){if(idx>=texts.length){statusEl.textContent='\u2705 Done reading!';return;}var u=new SpeechSynthesisUtterance(texts[idx]);u.rate=spd;u.onend=function(){idx++;next();};u.onerror=function(){idx++;next();};synth.speak(u);}next();})()">
               ▶ Read Page
             </button>
             <button style="flex:1;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);border-radius:8px;padding:10px;color:#f87171;font-weight:900;font-size:11px;cursor:pointer;"
@@ -862,7 +819,6 @@
   <script src="js/app-genius.js"></script>
   <script src="js/ia-ultra-engine.js"></script>
   <script src="js/ia-ultra-v5.js?v=5010"></script>
-  <script src="js/vision-to-code.js"></script>
   <script src="js/draw-to-3d.js"></script>
   <script src="js/1min-apps-data.js"></script>
   <script src="js/inject-1min-apps.js"></script>
@@ -875,17 +831,14 @@
   <script src="js/ai-promo-launch.js"></script>
   <script src="js/voice-commander.js"></script>
   <script src="js/node-logic.js"></script>
-  <script src="js/code-audit.js"></script>
   <script src="js/db-architect.js"></script>
   <script src="js/auto-docs.js"></script>
   <script src="js/svg-studio.js"></script>
   <script src="js/accessibility-lab.js"></script>
   <script src="js/animation-studio.js"></script>
-  <script src="js/i18n-center.js"></script>
   <script src="js/component-forge.js"></script>
   <script src="js/screen-recorder.js"></script>
   <script src="js/stack-builder.js"></script>
-  <script src="js/pwa-generator.js"></script>
   <script src="js/backend-mock-studio.js"></script>
   <script src="js/code-collab-live.js"></script>
   <script src="js/project-manager.js"></script>
@@ -921,8 +874,6 @@
   <script src="js/micro-physics-architect.js"></script>
   <!-- 🦴 X-Ray Skeleton -->
   <script src="js/xray-skeleton.js"></script>
-  <!-- 🃏 Hologram 3D -->
-  <script src="js/holographic-card.js"></script>
   <!-- 🎭 Thanos Dematerializer -->
   <script src="js/css-dematerializer.js"></script>
   <!-- 🧊 Glassmorphism -->
@@ -931,8 +882,6 @@
   <script src="js/cyber-neon.js"></script>
   <!-- 🍎 Gravity Chaos -->
   <script src="js/gravity-chaos.js"></script>
-  <!-- 🎵 Audio UI Synthesizer -->
-  <script src="js/audio-ui-synth.js"></script>
   <!-- 🧠 Bionic Reader -->
   <script src="js/bionic-reader.js"></script>
   <!-- 📱 Social Viral Showcase -->
@@ -973,8 +922,6 @@
   <script src="js/scroll-fx.js"></script>
   <!-- ⌛ Loading Screen -->
   <script src="js/loader-screen.js"></script>
-  <!-- 🎨 Gradient Forge -->
-  <script src="js/gradient-forge.js"></script>
   <!-- 🔀 UI Shuffler -->
   <script src="js/ui-shuffler.js"></script>
   <!-- 🔤 Font Explorer -->
@@ -987,7 +934,6 @@
   <script src="js/liquid-gooey.js"></script>
   <script src="js/cursor-spotlight.js"></script>
   <script src="js/webgl-distortion.js"></script>
-  <script src="js/svg-morph.js"></script>
   <script src="js/scroll-reveal-pro.js"></script>
   <script src="js/kinetic-typo.js"></script>
   <script src="js/deep-tech-pro.js"></script>
@@ -1014,26 +960,8 @@
   <script src="js/app-store.js"></script>
   <!-- 🎮 Games -->
   <script src="js/game-generator.js"></script>
-  <!-- 🤖 Templates -->
-  <script src="js/smart-templates.js"></script>
   <!-- ✨ Premium Studios -->
   <script src="js/premium-studios.js"></script>
-  <!-- 🕶️ WebXR & AR Studio -->
-  <script src="js/webxr-studio.js?v=5"></script>
-  <!-- 🎞️ Timeline Studio -->
-  <script src="js/timeline-studio.js"></script>
-  <!-- 🗜️ Asset Vault -->
-  <script src="js/asset-vault.js"></script>
-  <!-- 🧩 RegEx Architect -->
-  <script src="js/regex-architect.js"></script>
-  <!-- 🧊 UI Forge -->
-  <script src="js/ui-forge.js"></script>
-  <!-- 🎵 Sonic Forge -->
-  <script src="js/sonic-forge.js"></script>
-  <!-- 🌊 SVG Shaper -->
-  <script src="js/svg-shaper.js"></script>
-  <!-- 📐 Grid Builder -->
-  <script src="js/grid-builder.js"></script>
   <!-- 🔄 Multi-Framework Converter -->
   <script src="js/framework-converter.js"></script>
   <!-- 🧪 Live API Tester -->
@@ -1058,8 +986,6 @@
   <script src="js/coding-challenges.js"></script>
   <!-- 🤝 AI Mentor Mode -->
   <script src="js/ai-mentor-mode.js"></script>
-  <!-- 📦 NPM Package Explorer -->
-  <script src="js/npm-explorer.js"></script>
   <!-- 🔄 GitHub Sync -->
   <script src="js/github-sync.js"></script>
   <!-- 🤖 AI Code Review -->
@@ -1120,12 +1046,8 @@
   <script src="js/viral-hooks.js"></script>
   <!-- 💬 Commit Generator -->
   <script src="js/commit-gen.js"></script>
-  <!-- 🔲 Tailwind Converter -->
-  <script src="js/tailwind-converter.js"></script>
   <!-- 🎭 Color Blind + 📐 Fluid Type -->
   <script src="js/colorblind-fluidtype.js"></script>
-  <!-- 👁️ UX Heatmap -->
-  <script src="js/ux-heatmap.js"></script>
   <!-- 🏆 DevScore + 💰 Pricing -->
   <script src="js/devscore-pricing.js"></script>
   <!-- 📋 Invoice + 💼 Rate Calc -->
@@ -1138,14 +1060,11 @@
   <script src="js/loader-cursor.js"></script>
   <!-- 🚀 The 7 New Masterpiece Compartments -->
   <script src="js/eco-architect.js"></script>
-  <script src="js/persona-swarm.js"></script>
   <script src="js/haptic-forge.js"></script>
   <script src="js/cinematic-studio.js"></script>
   <script src="js/gamification-engine.js"></script>
   <script src="js/chaos-simulator.js"></script>
   <script src="js/neuro-ux.js"></script>
-  <!-- 🧩 5 New Genius Compartments -->
-  <script src="js/regex-forge.js"></script>
   <script src="js/cron-studio.js"></script>
   <script src="js/data-forge.js"></script>
   <script src="js/webhook-lab.js"></script>
@@ -1177,18 +1096,12 @@
   <script src="js/stories-ad.js"></script>
   <script src="js/gamified-ad.js"></script>
   <script src="js/popup-flipcard.js"></script>
-  <!-- 🎨 Visual & Monetization — 5 Modules -->
-  <script src="js/mesh-gradient.js"></script>
   <script src="js/text-animation.js"></script>
   <script src="js/hero-builder.js"></script>
   <script src="js/pricing-page.js"></script>
   <script src="js/newsletter-builder.js"></script>
-  <!-- 🤖 AI & Automation Studio — 4 Modules -->
-  <script src="js/ai-persona-chat.js"></script>
   <script src="js/smart-faq.js"></script>
   <script src="js/auto-bio-price.js"></script>
-  <!-- 🔧 Developer Power Tools — 4 Modules -->
-  <script src="js/api-mockup.js"></script>
   <script src="js/journey-mapper.js"></script>
   <script src="js/speed-oauth.js"></script>
   <!-- 🏙️ Branding & Display Ads — 6 Modules (3 files) -->
@@ -1208,87 +1121,11 @@
   <!-- 📁 Sidebar Organizer -->
   <script src="js/sidebar-organizer.js?v=3"></script>
 <script src="js/future-tech.js"></script>
-<script src="js/future-tech-pro-v2.js"></script>
-<script src="js/game-dev-studio.js"></script>
-  <script src="js/game-dev-studio-pro.js"></script>
-  <script src="js/game-dev-studio-ultimate.js"></script>
-  <script src="js/game-dev-studio-ultra.js"></script>
-  <script src="js/cyber-studio.js"></script>
-  <script src="js/saas-pwa-studio.js"></script>
-  <script src="js/ai-llm-studio.js"></script>
-  <script src="js/web3-studio.js"></script>
-  <script src="js/devops-studio.js"></script>
-  <script src="js/web-architect-studio.js"></script>
-  <script src="js/api-design-studio.js"></script>
-  <script src="js/algo-visualizer.js"></script>
-  <script src="js/extension-forge.js"></script>
-  <script src="js/creative-code-studio.js"></script>
-  <script src="js/data-science-studio.js"></script>
-  <script src="js/mobile-ui-kit.js"></script>
-  <script src="js/tesseract-dataviz.js"></script>
-  <!-- 🧬 Code Evolution & Genetic Lab -->
-  <script src="js/code-evolution-lab.js"></script>
-  <!-- 🌌 Deep Space Simulator -->
-  <script src="js/deep-space-simulator.js"></script>
-  <!-- 🧠 AGI Sentience Sandbox -->
-  <script src="js/agi-sentience-sandbox.js"></script>
-  <!-- 🎨 UI Dreamer -->
-  <script src="js/ui-dreamer.js"></script>
-  <!-- 🕸️ Quantum State Debugger -->
-  <script src="js/quantum-debugger.js"></script>
-  <!-- 🩺 Dev Biometrics -->
-  <script src="js/dev-biometrics.js"></script>
-  <!-- 🌀 4D Hyper-Model Synth Lab -->
-  <script src="js/hyper4d-synth.js"></script>
-  <!-- 🧬 Aesthetic Genome Theme Breeder -->
-  <script src="js/theme-breeder.js"></script>
-  <!-- ⏳ Git Time-Wormhole -->
-  <script src="js/git-wormhole.js"></script>
-  <!-- 🛰️ DTN Interplanetary Network Bridge -->
-  <script src="js/space-net.js"></script>
-  <!-- 🐳 WebContainers OS -->
-  <script src="js/webcontainers-studio.js"></script>
-  <!-- 📱 Native Mobile Compiler -->
-  <script src="js/native-compiler-studio.js"></script>
-  <!-- 🖼️ Asset Optimizer Studio -->
-  <script src="js/asset-optimizer-studio.js"></script>
-  <!-- 🛡️ Code Protector Studio -->
-  <script src="js/code-protector-studio.js"></script>
-  <!-- 🗄️ IndexedDB Manager Studio -->
-  <script src="js/indexeddb-manager-studio.js"></script>
-  <!-- 📡 Hardware API Studio -->
-  <script src="js/hardware-api-studio.js"></script>
-  <!-- 📡 WebRTC Live P2P Streamer & Screen Recorder -->
-  <script src="js/webrtc-streamer-studio.js"></script>
-  <!-- 🤖 Local AI Smart Chatbot & Prompt Engineering Studio -->
-  <script src="js/ai-chatbot-studio.js"></script>
-  <!-- 🎨 SVG Morphing & CSS Keyframe Generator -->
-  <script src="js/svg-morphing-studio.js"></script>
-  <!-- 🌈 Dynamic CSS Mesh Gradient Forge -->
-  <script src="js/mesh-gradient-studio.js"></script>
-  <!-- 🎹 Web Audio Synthesizer & Neon Keypad -->
-  <script src="js/audio-synth-studio.js"></script>
-  <!-- 🧠 Neural Network Decision Boundary Sandbox -->
-  <script src="js/neural-net-sandbox.js"></script>
-  <!-- 🎴 Holographic 3D Card Engine -->
-  <script src="js/holographic-card-studio.js"></script>
   <!-- ⚗️ GENIUS LAB — 8 Revolutionary Modules -->
-  <!-- 🎵 Music → Website Generator -->
-  <script src="js/music-to-site-studio.js"></script>
   <!-- 🫀 Emotion-Adaptive UI Engine -->
   <script src="js/emotion-adaptive-studio.js"></script>
-  <!-- 🧬 App DNA Splicer -->
-  <script src="js/app-dna-splicer.js"></script>
-  <!-- 🔮 Predictive UX Heatmap Studio -->
-  <script src="js/ux-predictor-studio.js"></script>
-  <!-- 🌊 Physics → CSS Exporter -->
-  <script src="js/physics-css-studio.js"></script>
   <!-- 🕹️ Code Tutorial Game Engine -->
   <script src="js/code-tutorial-game.js"></script>
-  <!-- 🌍 Geo-Adaptive Component Studio -->
-  <script src="js/geo-adaptive-studio.js"></script>
-  <!-- 🧠 Dream UI Interpreter -->
-  <script src="js/dream-ui-studio.js"></script>
   <!-- 🚀 NEXUS FORGE — 7 Revolutionary Features (App Cloner AI, Live Collab, Multi-Framework, Brand Generator, No-Code Bridge, Microsite Publisher, Plugin SDK) -->
   <script src="js/nexus-forge.js"></script>
   <!-- ⚛️ QUANTUM LAB — 5 Unique Innovations (Voice Code, Time Machine, CSS Evolution, Instant Share, CSS Mixer) -->
@@ -1323,16 +1160,6 @@
   <script src="js/community-showroom.js"></script>
   <!-- 🥽 Spatial UI & Apple Vision Pro Simulator -->
   <script src="js/spatial-ui-simulator.js"></script>
-  <!-- 🎵 Sonic Code Synthesizer -->
-  <script src="js/sonic-code-synth.js"></script>
-  <!-- 🧠 Neuro-UX Debugger -->
-  <script src="js/neuro-ux-debugger.js"></script>
-  <!-- 🎭 Brand Persona Swarm -->
-  <script src="js/brand-persona-swarm.js"></script>
-  <!-- 🚀 Deep Space DevOps -->
-  <script src="js/space-devops.js"></script>
-  <!-- 🎴 Voxel 3D Asset Forge -->
-  <script src="js/voxel-extruder.js"></script>
   <!-- STYLE FOR SHARE TRIAGE MODALS -->
   <style>
     .share-triage-card {
@@ -1634,5 +1461,7 @@
     }
     window.switchIaaMobileTab = switchIaaMobileTab;
   </script>
+  <!-- ⚡ Central Tab Registry & On-Demand Lazy Loader -->
+  <script src="js/studio-tab-loader.js"></script>
 </body>
 </html>

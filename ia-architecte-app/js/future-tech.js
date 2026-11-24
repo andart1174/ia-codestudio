@@ -1267,7 +1267,7 @@ function renderHUD(){
 // Hook into the tab system
 document.addEventListener('DOMContentLoaded',function(){
   var oRT=window.renderTab;
-  var fTechTabs = ['web3studio','extgen','scraperbot','gameengine','cloudarch', 'neuralnet', 'quantum', 'iot', 'webxr', 'zk', 'webrtc', 'geomap', 'aiswarm', 'biotech', 'hud'];
+  var fTechTabs = ['scraperbot','cloudarch', 'quantum', 'iot', 'zk', 'geomap', 'aiswarm', 'biotech', 'hud'];
   
   window.renderTab = function(tab){
     if(fTechTabs.includes(tab)){
@@ -1275,17 +1275,11 @@ document.addEventListener('DOMContentLoaded',function(){
       document.querySelectorAll('.ltab').forEach(function(b){b.classList.remove('active');});
       var b1=document.getElementById('tab-'+tab);if(b1)b1.classList.add('active');
       
-      if(tab==='web3studio') renderWeb3();
-      else if(tab==='extgen') renderExtGen();
-      else if(tab==='scraperbot') renderScraper();
-      else if(tab==='gameengine') renderGame();
+      if(tab==='scraperbot') renderScraper();
       else if(tab==='cloudarch') renderCloud();
-      else if(tab==='neuralnet') renderNeuralNet();
       else if(tab==='quantum') renderQuantum();
       else if(tab==='iot') renderIoT();
-      else if(tab==='webxr') renderWebXR();
       else if(tab==='zk') renderZK();
-      else if(tab==='webrtc') renderWebRTC();
       else if(tab==='geomap') renderGeoMap();
       else if(tab==='aiswarm') renderAiSwarm();
       else if(tab==='biotech') renderBiotech();
@@ -1303,10 +1297,8 @@ document.addEventListener('DOMContentLoaded',function(){
     var e3=document.getElementById('lbl-tab-scraperbot');if(e3)e3.textContent=t('sc_tab');
     var e4=document.getElementById('lbl-tab-gameengine');if(e4)e4.textContent=t('gm_tab');
     var e5=document.getElementById('lbl-tab-cloudarch');if(e5)e5.textContent=t('cl_tab');
-    var e6=document.getElementById('lbl-tab-neuralnet');if(e6)e6.textContent=t('nn_tab');
     var e7=document.getElementById('lbl-tab-quantum');if(e7)e7.textContent=t('qu_tab');
     var e8=document.getElementById('lbl-tab-iot');if(e8)e8.textContent=t('io_tab');
-    var e9=document.getElementById('lbl-tab-webxr');if(e9)e9.textContent=t('xr_tab');
     var e10=document.getElementById('lbl-tab-zk');if(e10)e10.textContent=t('zk_tab');
     var e11=document.getElementById('lbl-tab-webrtc');if(e11)e11.textContent=t('webrtc_tab');
     var e12=document.getElementById('lbl-tab-geomap');if(e12)e12.textContent=t('geo_tab');

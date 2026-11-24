@@ -124,7 +124,7 @@ function renderTab(){
   var olRow=document.createElement('div');olRow.style='display:grid;grid-template-columns:1fr auto 1fr;gap:5px;align-items:end;';
   var obDiv=document.createElement('div');obDiv.style='display:flex;flex-direction:column;gap:2px;';obDiv.appendChild(mkLabel(t('orderBy')));
   var obInp=mkInp('column',state.orderBy,'width:100%;box-sizing:border-box;');obInp.onchange=function(){state.orderBy=this.value;};obDiv.appendChild(obInp);
-  var dirSel=mkSel(['ASC','DESC'],state.orderDir);dirSel.onchange=function(){state.orderDir=this.value;};dirSel.style+='height:31px;margin-top:15px;';
+  var dirSel=mkSel(['ASC','DESC'],state.orderDir);dirSel.onchange=function(){state.orderDir=this.value;};dirSel.style.cssText+='height:31px;margin-top:15px;';
   var limDiv=document.createElement('div');limDiv.style='display:flex;flex-direction:column;gap:2px;';limDiv.appendChild(mkLabel(t('limit')));
   var limInp=mkInp('100',state.limit,'width:100%;box-sizing:border-box;');limInp.type='number';limInp.onchange=function(){state.limit=this.value;};limDiv.appendChild(limInp);
   olRow.appendChild(obDiv);olRow.appendChild(dirSel);olRow.appendChild(limDiv);body.appendChild(olRow);

@@ -299,7 +299,7 @@ async function sendMessage() {
           : `[NO RELATED TEXTBOOK CONTEXT FOUND]\n\n`;
         const prompt = `${systemPrompt}\n\n${promptContext}User Query: ${text}`;
 
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -384,7 +384,7 @@ async function buildQuiz() {
       const prompt = `Based ONLY on this textbook context:\n${facts.slice(0,25).join('\n')}\n\n` +
         `Generate a 3-question multiple choice quiz. Output STRICTLY a JSON array where each object has fields: "question" (string), "options" (array of 4 strings), and "answerIdx" (integer 0-3). Output ONLY raw JSON, no markdown formatting.`;
 
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
@@ -1320,7 +1320,7 @@ function injectTutorToMonaco() {
           const prompt = "Generate a 3-question multiple choice quiz based ONLY on these facts:\\n" + facts.slice(0, 20).join('\\n') +
             "\\n\\nOutput STRICTLY a JSON array where each object has fields: 'question' (string), 'options' (array of 4 strings), and 'answerIdx' (integer 0-3). Output ONLY raw JSON, no markdown fences.";
           
-          const res = await fetch(\`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=\${apiKey}\`, {
+          const res = await fetch(\`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=\${apiKey}\`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
@@ -1447,7 +1447,7 @@ function injectTutorToMonaco() {
             const context = ragResult.context ? "[TEXTBOOK CONTEXT]: " + ragResult.context + "\\n\\n" : "";
             const prompt = systemPrompt + "\\n\\n" + context + "User Query: " + text;
             
-            const res = await fetch(\`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=\${apiKey}\`, {
+            const res = await fetch(\`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=\${apiKey}\`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })

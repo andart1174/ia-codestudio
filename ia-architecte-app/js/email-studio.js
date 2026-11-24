@@ -80,7 +80,7 @@ function renderTab(){
     if(type!=='textarea')inp.type=type||'text';
     inp.id=id;inp.placeholder=ph||'';inp.value=val||'';
     inp.style='background:#0f172a;color:#e2e8f0;border:1px solid rgba(236,72,153,0.2);padding:8px;border-radius:8px;font-size:10px;outline:none;width:100%;box-sizing:border-box;font-family:inherit;';
-    if(type==='textarea'){inp.rows=3;inp.style+='resize:vertical;line-height:1.4;';}
+    if(type==='textarea'){inp.rows=3;inp.style.cssText+='resize:vertical;line-height:1.4;';}
     d.appendChild(l);d.appendChild(inp);return d;
   }
   body.appendChild(mkF('appName','email-brand',t('appNamePh'),'MyBrand'));

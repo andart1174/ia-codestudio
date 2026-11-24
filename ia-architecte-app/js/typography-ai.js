@@ -113,7 +113,7 @@ function renderTab(){
   // Preview
   var pvLabel=document.createElement('div');pvLabel.style='font-size:10px;color:#64748b;font-weight:600;';pvLabel.textContent=t('preview');body.appendChild(pvLabel);
   var preview=document.createElement('div');
-  preview.style='border-radius:12px;padding:20px;overflow:hidden;'+mood.bg.replace('gradient','gradient(');
+  preview.style.cssText='border-radius:12px;padding:20px;overflow:hidden;';
   preview.style.background=mood.bg;
   preview.innerHTML=
     '<div style="font-family:\''+pair.h+'\',serif;font-size:20px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:10px;">'+t('heading')+'</div>'+

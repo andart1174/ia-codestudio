@@ -46,12 +46,12 @@
               ${slider('uif-border','Border Opacity','0.3','0','1','uifUpdate()',true)}
               ${slider('uif-radius','Border Radius (px)','16','0','50','uifUpdate()')}
               ${slider('uif-shadow','Shadow Depth','30','0','60','uifUpdate()')}
-              ${colorPicker('uif-bg-color','${isFr?"Couleur de fond":"Background Color"}','#667eea')}
+              ${colorPicker('uif-bg-color', isFr ? 'Couleur de fond' : 'Background Color', '#667eea')}
             </div>
             <div id="uif-controls-neu" style="display:none;">
               ${slider('uif-neu-radius','Border Radius (px)','20','0','50','uifUpdate()')}
               ${slider('uif-neu-depth','Shadow Depth','20','5','50','uifUpdate()')}
-              ${colorPicker('uif-neu-bg','${isFr?"Couleur Base":"Base Color"}','#1e293b')}
+              ${colorPicker('uif-neu-bg', isFr ? 'Couleur Base' : 'Base Color', '#1e293b')}
             </div>
           </div>
 

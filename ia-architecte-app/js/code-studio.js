@@ -1242,13 +1242,20 @@ function wirePanels(){
 function wireLangBtns(){
   document.querySelectorAll('.lang-btn').forEach(btn=>btn.addEventListener('click',()=>{
     lang=btn.dataset.lang;
+    window.lang = lang;
+    window.appLang = lang;
+    window.APP_LANG = lang;
     document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');applyLang();renderTab(activeTab);
+    btn.classList.add('active');
+    (window.applyLang || applyLang)();
+    (window.renderTab || renderTab)(window.activeTab || activeTab);
   }));
 }
 
 function applyLang(){
-  window.appLang = lang; // 🚀 Sync global language with all 50+ secondary studios
+  window.lang = lang;
+  window.appLang = lang;
+  window.APP_LANG = lang; // 🚀 Sync global language across all studios
   const s=(id,k)=>{const e=document.getElementById(id);if(e)e.textContent=t(k);};
   s('lbl-return-portal','returnPortal');s('lbl-editor-community','menu_community');s('lbl-subtitle','subtitle');s('lbl-tools','tools');s('lbl-preview','preview');
   s('lbl-tab-ai','tabAi');s('lbl-tab-snip','tabSnip');s('lbl-tab-tpl','tabTpl');s('lbl-tab-tools','tabTools');s('lbl-tab-tpro','tabTPro');s('lbl-tab-apro','tabAPro');s('lbl-tab-appsultra','tabAppsUltra');s('lbl-tab-apps','tabApps');s('lbl-tab-sites','tabSites');s('lbl-tab-elite','tabElite');s('lbl-tab-realworld','tabRealWorld');s('lbl-tab-models','tabModels');s('lbl-tab-audit','tabAudit');s('lbl-tab-assets','tabAssets');s('lbl-tab-media','tabMedia');s('lbl-tab-data','tabData');s('lbl-tab-games','tabGames');s('lbl-tab-gamespro','tabGamesPro');s('lbl-tab-set','tabSet');

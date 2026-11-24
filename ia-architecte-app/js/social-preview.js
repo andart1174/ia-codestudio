@@ -160,7 +160,7 @@ function renderSocialTab() {
       el = document.createElement('input');
     }
     el.value = meta[f.key];
-    el.style += 'width:100%;background:#0f172a;color:#e2e8f0;border:1px solid #334155;padding:6px;border-radius:4px;font-size:10px;box-sizing:border-box;';
+    el.style.cssText += 'width:100%;background:#0f172a;color:#e2e8f0;border:1px solid #334155;padding:6px;border-radius:4px;font-size:10px;box-sizing:border-box;';
     
     var updateCounter = function() {
         if(!f.max) return;

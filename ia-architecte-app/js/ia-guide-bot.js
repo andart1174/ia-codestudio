@@ -136,7 +136,7 @@ var FULL_KB = {
     desc_en:'Pick a base color → generate a harmonious palette (complementary, triadic, analogic).',
     how:'1. Choisir couleur → 2. Sélectionner harmonie → 3. Copier palette',
     how_en:'1. Pick color → 2. Select harmony → 3. Copy palette' },
-  gradientforge:{ icon:'🎨', name:'Gradient Forge', cat:'Design & UI', tab:'gradientforge',
+  gradientforge:{ icon:'🎨', name:'Gradient Forge', cat:'Design & UI', tab:'gradient',
     desc:'Créez des dégradés mesh, coniques, radiaux visuellement. Exportez en CSS ou SVG.',
     desc_en:'Build mesh, conic, radial gradients visually. Export as CSS or SVG.',
     how:'1. Choisir le type → 2. Glisser les couleurs → 3. Copier CSS',
@@ -310,7 +310,7 @@ var FULL_KB = {
     how_en:'1. Load site → 2. Select resolutions → 3. Compare' },
 
   // ── DEV TOOLS ─────────────────────────────────────────────────────────
-  regexforge:  { icon:'🧩', name:'Regex Forge', cat:'Dev Tools', tab:'regexforge',
+  regexforge:  { icon:'🧩', name:'Regex Forge', cat:'Dev Tools', tab:'regex',
     desc:'Constructeur visuel de regex. Tapez du texte et il génère le pattern regex correspondant.',
     desc_en:'Visual regex builder. Type text and it generates the corresponding regex pattern.',
     how:'1. Taper email/url/number → 2. Cliquer Build Regex → 3. Code injecté !',
@@ -370,7 +370,7 @@ var FULL_KB = {
     desc_en:'Configure application preferences: theme, language, shortcuts, behaviors.',
     how:'1. Ouvrir Settings → 2. Ajuster préférences → 3. Sauvegarder',
     how_en:'1. Open Settings → 2. Adjust preferences → 3. Save' },
-  apimock:     { icon:'🔌', name:'API Mock', cat:'Dev Tools', tab:'apimock',
+  apimock:     { icon:'🔌', name:'API Mock', cat:'Dev Tools', tab:'apiclientmock',
     desc:'Mocked API simplifiée pour tester les appels REST sans backend réel.',
     desc_en:'Simplified mocked API to test REST calls without a real backend.',
     how:'1. Configurer routes → 2. Définir réponses → 3. Tester',
@@ -405,7 +405,7 @@ var FULL_KB = {
     desc_en:'Test REST APIs: GET/POST/PUT/DELETE with customizable headers and body.',
     how:'1. Entrer URL → 2. Choisir méthode → 3. Envoyer et voir la réponse',
     how_en:'1. Enter URL → 2. Choose method → 3. Send and see response' },
-  npmexplorer: { icon:'📦', name:'NPM Explorer', cat:'Dev Tools', tab:'npmexplorer',
+  npmexplorer: { icon:'📦', name:'NPM Explorer', cat:'Dev Tools', tab:'npmcdnexplorer',
     desc:'Explorez et installez des packages npm directement depuis l\'application.',
     desc_en:'Explore and install npm packages directly from the application.',
     how:'1. Chercher package → 2. Voir détails → 3. Ajouter au projet',
@@ -603,7 +603,7 @@ var FULL_KB = {
     desc_en:'WebGL ripple distortion effect on your site. Spectacular and performant.',
     how:'1. Configurer l\'ondulation → 2. Appliquer → 3. Exporter',
     how_en:'1. Configure ripple → 2. Apply → 3. Export' },
-  svgmorph:    { icon:'🔀', name:'SVG Morph', cat:'Visual FX', tab:'svgmorph',
+  svgmorph:    { icon:'🔀', name:'SVG Morph', cat:'Visual FX', tab:'svgmorphing',
     desc:'Morphez entre deux formes SVG avec des animations fluides et personnalisables.',
     desc_en:'Morph between two SVG shapes with smooth and customizable animations.',
     how:'1. Définir formes → 2. Configurer transition → 3. Exporter CSS',
@@ -668,7 +668,7 @@ var FULL_KB = {
     desc_en:'Pulsing neon effects on elements: glow, bloom, luminescence animations.',
     how:'1. Choisir couleur néon → 2. Configurer pulse → 3. Exporter',
     how_en:'1. Choose neon color → 2. Configure pulse → 3. Export' },
-  holographic: { icon:'🃏', name:'Hologram 3D', cat:'Visual FX', tab:'holographic',
+  holographic: { icon:'🃏', name:'Hologram 3D', cat:'Visual FX', tab:'holographiccard',
     desc:'Créez des hologrammes 3D interactifs avec effets de parallaxe et de profondeur.',
     desc_en:'Create interactive 3D holograms with parallax and depth effects.',
     how:'1. Uploader contenu → 2. Configurer hologramme → 3. Exporter',
@@ -723,7 +723,7 @@ var FULL_KB = {
     desc_en:'Create skeleton loader loading states for your applications.',
     how:'1. Définir le layout → 2. Générer skeleton → 3. Exporter',
     how_en:'1. Define layout → 2. Generate skeleton → 3. Export' },
-  audioui:     { icon:'🎵', name:'Audio UI', cat:'Visual FX', tab:'audioui',
+  audioui:     { icon:'🎵', name:'Audio UI', cat:'Visual FX', tab:'soundfx',
     desc:'Ajoutez des sons interactifs à votre interface: sons de clic, hover, feedback.',
     desc_en:'Add interactive sounds to your interface: click sounds, hover, feedback.',
     how:'1. Choisir sons → 2. Assigner aux éléments → 3. Exporter',
@@ -765,7 +765,7 @@ var FULL_KB = {
     desc_en:'Voice-over reader for your application. Multi-language Text-to-Speech.',
     how:'1. Entrer texte → 2. Choisir voix → 3. Générer audio',
     how_en:'1. Enter text → 2. Choose voice → 3. Generate audio' },
-  sonic:       { icon:'🎵', name:'Sonic Forge', cat:'Media & Audio', tab:'sonic',
+  sonic:       { icon:'🎵', name:'Sonic Forge', cat:'Media & Audio', tab:'audiosynth',
     desc:'Créez des effets sonores pour jeux et applications web interactives.',
     desc_en:'Create sound effects for games and interactive web applications.',
     how:'1. Designer le son → 2. Prévisualiser → 3. Exporter',
@@ -837,7 +837,7 @@ var FULL_KB = {
     desc_en:'Analyze your code dependencies to estimate total size and loading speed.',
     how:'1. Lancer scan → 2. Voir poids KB et temps 3G',
     how_en:'1. Run scan → 2. See KB weight and 3G load time' },
-  codeaudit:   { icon:'💊', name:'Code Health', cat:'Test & Audit', tab:'codeaudit',
+  codeaudit:   { icon:'💊', name:'Code Health', cat:'Test & Audit', tab:'audit',
     desc:'Scannez la complexité, les doublons, les fonctions longues, les problèmes de nommage.',
     desc_en:'Scan for complexity, duplicates, long functions, naming issues.',
     how:'1. Coller code → 2. Analyser → 3. Voir score de santé',
@@ -1201,17 +1201,7 @@ var FULL_KB = {
     how_en:'1. Create slides → 2. Customize → 3. Export PDF' },
 
   // ── FUTURE TECH ───────────────────────────────────────────────────────
-  bcireader:   { icon:'🧠', name:'BCI Reader', cat:'Future Tech Lab', tab:'bcireader',
-    desc:'Interface Brain-Computer pour contrôler l\'application par la pensée.',
-    desc_en:'Brain-Computer Interface for controlling the application by thought.',
-    how:'1. Connecter BCI → 2. Calibrer → 3. Contrôler par pensée',
-    how_en:'1. Connect BCI → 2. Calibrate → 3. Control by thought' },
-  digitaltwin: { icon:'🏭', name:'Digital Twin', cat:'Future Tech Lab', tab:'digitaltwin',
-    desc:'Créez des jumeaux numériques de systèmes physiques pour simulation et monitoring.',
-    desc_en:'Create digital twins of physical systems for simulation and monitoring.',
-    how:'1. Modéliser système → 2. Connecter capteurs → 3. Simuler',
-    how_en:'1. Model system → 2. Connect sensors → 3. Simulate' },
-  quantcircuit:{ icon:'⚛️', name:'Quantum Circuit Designer', cat:'Future Tech Lab', tab:'quantcircuit',
+  quantcircuit:{ icon:'⚛️', name:'Quantum Circuit Designer', cat:'Future Tech Lab', tab:'quantumdebugger',
     desc:'Concevez des circuits quantiques avec des portes logiques quantiques.',
     desc_en:'Design quantum circuits with quantum logic gates.',
     how:'1. Ajouter qubits → 2. Appliquer portes → 3. Mesurer',
@@ -1278,7 +1268,7 @@ var TOUR_STEPS = {
       title: '🎨 Step 2: Design Tools',
       msg: 'Our **Design & UI** compartment has everything:\n\n🌈 **Gradient Forge** — Drag color stops\n🔤 **Typography AI** — Font pairs by mood\n🎨 **Color Harmony** — Harmonious palettes\n💎 **Glassmorphism** — Glass UI effects\n✒️ **SVG Studio** — Describe → get icons\n\nAll inject directly into your editor!',
       quick: ['🌈 Try Gradient Forge', '🎨 Browse Design Tools', '⏭️ Next Tour Step →'],
-      openTab: 'gradientforge'
+      openTab: 'gradient'
     },
     {
       title: '🤖 Step 3: AI Assistance',
@@ -1321,7 +1311,7 @@ var TOUR_STEPS = {
       title: '🎨 Étape 2 : Outils de Design',
       msg: 'Le compartiment **Design & UI** a tout :\n\n🌈 **Gradient Forge** — Glisser les couleurs\n🔤 **Typography AI** — Polices par ambiance\n🎨 **Color Harmony** — Palettes harmonieuses\n💎 **Glassmorphism** — Effets verre\n✒️ **Studio SVG** — Décrivez → obtenez icônes\n\nTout s\'injecte dans votre éditeur !',
       quick: ['🌈 Essayer Gradient Forge', '🎨 Design Tools', '⏭️ Étape suivante →'],
-      openTab: 'gradientforge'
+      openTab: 'gradient'
     },
     {
       title: '🤖 Étape 3 : Assistance IA',
@@ -1531,31 +1521,31 @@ function renderCategoriesBlock(chatBody) {
   var cats = {
     en: [
       { label: '🤖 AI Studio', color: '#8b5cf6', tabs: ['iaultra','voice','aichatbot','wizard','onemin','bugfixer'] },
-      { label: '🎨 Design & UI', color: '#ec4899', tabs: ['gradientforge','colorharmony','svgstudio','glassmorphism','themepicker'] },
+      { label: '🎨 Design & UI', color: '#ec4899', tabs: ['gradient','colorharmony','svgstudio','glassmorphism','themepicker'] },
       { label: '📐 Layout & Flow', color: '#06b6d4', tabs: ['gridbuilder','uiblocks','arch','appassembler','breakpoints'] },
       { label: '⚙️ Advanced Dev Studio', color: '#f59e0b', tabs: ['projectassembler','dbcrudapi','e2etestgen','webvitalsperf','tailwindtranspile'] },
       { label: '💫 Premium Studios', color: '#a855f7', tabs: ['neuralnet','holographiccard','meshgradient','audiosynth','assetoptimizer'] },
       { label: '✨ Visual FX', color: '#38bdf8', tabs: ['liquidgooey','cyberglitch','glassbreaker','pixelforge','neonpulse'] },
-      { label: '🛠️ Dev Tools', color: '#f97316', tabs: ['regexforge','cronstudio','dataforge','snippets','stack'] },
+      { label: '🛠️ Dev Tools', color: '#f97316', tabs: ['regex','cronstudio','dataforge','snippets','stack'] },
       { label: '🧪 Test & Audit', color: '#34d399', tabs: ['audit','launchcheck','a11y','eco','heatmap'] },
       { label: '🎮 Game Dev', color: '#f43f5e', tabs: ['gamedevstudio','particleemitter','proceduralmap','rigidbodyphysics'] },
       { label: '⚗️ Genius Lab', color: '#fbbf24', tabs: ['musictosite','emotionadaptive','physicscss','spatialui'] },
       { label: '📈 Marketing & Biz', color: '#fb923c', tabs: ['seo','invoice','promo','social','lpscore'] },
-      { label: '🔬 Next-Gen Labs', color: '#818cf8', tabs: ['agisentience','neuralnet','deepspace','quantcircuit'] }
+      { label: '🔬 Next-Gen Labs', color: '#818cf8', tabs: ['agisentience','neuralnet','deepspace','quantumdebugger'] }
     ],
     fr: [
       { label: '🤖 AI Studio', color: '#8b5cf6', tabs: ['iaultra','voice','aichatbot','wizard','onemin','bugfixer'] },
-      { label: '🎨 Design & UI', color: '#ec4899', tabs: ['gradientforge','colorharmony','svgstudio','glassmorphism','themepicker'] },
+      { label: '🎨 Design & UI', color: '#ec4899', tabs: ['gradient','colorharmony','svgstudio','glassmorphism','themepicker'] },
       { label: '📐 Layout & Flux', color: '#06b6d4', tabs: ['gridbuilder','uiblocks','arch','appassembler','breakpoints'] },
       { label: '⚙️ Advanced Dev Studio', color: '#f59e0b', tabs: ['projectassembler','dbcrudapi','e2etestgen','webvitalsperf','tailwindtranspile'] },
       { label: '💫 Premium Studios', color: '#a855f7', tabs: ['neuralnet','holographiccard','meshgradient','audiosynth','assetoptimizer'] },
       { label: '✨ Effets Visuels', color: '#38bdf8', tabs: ['liquidgooey','cyberglitch','glassbreaker','pixelforge','neonpulse'] },
-      { label: '🛠️ Outils Dev', color: '#f97316', tabs: ['regexforge','cronstudio','dataforge','snippets','stack'] },
+      { label: '🛠️ Outils Dev', color: '#f97316', tabs: ['regex','cronstudio','dataforge','snippets','stack'] },
       { label: '🧪 Tests & Audit', color: '#34d399', tabs: ['audit','launchcheck','a11y','eco','heatmap'] },
       { label: '🎮 Game Dev', color: '#f43f5e', tabs: ['gamedevstudio','particleemitter','proceduralmap','rigidbodyphysics'] },
       { label: '⚗️ Genius Lab', color: '#fbbf24', tabs: ['musictosite','emotionadaptive','physicscss','spatialui'] },
       { label: '📈 Marketing & Biz', color: '#fb923c', tabs: ['seo','invoice','promo','social','lpscore'] },
-      { label: '🔬 Labs Futur', color: '#818cf8', tabs: ['agisentience','neuralnet','deepspace','quantcircuit'] }
+      { label: '🔬 Labs Futur', color: '#818cf8', tabs: ['agisentience','neuralnet','deepspace','quantumdebugger'] }
     ]
   };
 

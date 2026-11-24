@@ -314,11 +314,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (typeof oRT === 'function') oRT(tab);
   };
 
-  // Decorate runPreview to inject the dispatcher receiver script
+  // Decorate runPreview to inject the dispatcher receiver script (only when tab is active)
   const originalRunPreview = window.runPreview;
   window.runPreview = function() {
     const ed = window.editor;
-    if (ed && typeof originalRunPreview === 'function') {
+    if (window.activeTab === 'stateflowtracker' && ed && typeof originalRunPreview === 'function') {
       const originalGetValue = ed.getValue;
       ed.getValue = function() {
         let val = originalGetValue.apply(ed);

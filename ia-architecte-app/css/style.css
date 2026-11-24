@@ -12,7 +12,7 @@
 body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex;flex-direction:column}
 
 /* ── Topbar ─────────────────────────────────────────── */
-.topbar{height:var(--topbar-h);flex-shrink:0;display:flex;align-items:center;gap:8px;padding:0 12px;background:rgba(13,19,31,.98);border-bottom:1px solid var(--border);backdrop-filter:blur(20px);z-index:100}
+.topbar{height:var(--topbar-h);flex-shrink:0;display:flex;align-items:center;gap:6px;padding:0 10px;background:rgba(13,19,31,.98);border-bottom:1px solid var(--border);backdrop-filter:blur(20px);z-index:100;overflow-x:auto;scrollbar-width:none}.topbar::-webkit-scrollbar{display:none}
 .topbar-brand{display:flex;align-items:center;gap:9px;flex-shrink:0}
 .brand-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 0 16px rgba(59,130,246,.3)}
 .brand-text{display:flex;flex-direction:column}
