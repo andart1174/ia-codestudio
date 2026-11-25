@@ -1,873 +1,1316 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="cyber">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <!-- Primary SEO Tags -->
-  <title>OmniConvert Pro - Ultimate Code Converter &amp; Dev Toolkit</title>
-  <meta name="description" content="OmniConvert Pro is the ultimate offline web developer toolkit by IA Code Studio. Features a live HTML/CSS/JS code playground, Base64 text/file converter, JSON/XML/YAML serializer, minifier, obfuscator, CSS gradient & shadow designer, regex tester, offline JWT decoder, and diff viewer.">
-  <meta name="keywords" content="OmniConvert Pro, developer tools, code sandbox, playground, json converter, base64 encoder, code minifier, css gradient builder, regex tester, jwt decoder, diff tool, offline developer tools, IA Code Studio">
+  <title>OmniConvert Pro 2.0 — Ultimate Offline Developer Workstation</title>
+  <meta name="description" content="100% offline developer workstation by IA Code Studio: Playground 2.0, OmniPipe chained pipelines, JSON/XML/YAML/CSV, JSON to TypeScript/Zod/SQL, ISO QR Studio 2.0, AES-256 Crypto Vault, JWT signer/verifier, WCAG Colors, Gradient/Mesh, Shadow/Glass, cURL translator, Cron builder, SVG optimizer, Regex & Myers Diff.">
+  <meta name="keywords" content="OmniConvert Pro, offline developer toolkit, json to typescript, zod generator, qr code generator svg, jwt verifier, aes-256 offline, curl to fetch, cron builder, svg optimizer, css gradient mesh, wcag contrast checker, myers diff, regex tester, IA Code Studio">
   <meta name="robots" content="index, follow">
-  
-  <!-- Canonical & Language Alternates -->
-  <link rel="canonical" href="https://ia-codestudio.com/free-tools/omni-convert/index.html" />
-  <link rel="alternate" hreflang="fr" href="https://ia-codestudio.com/free-tools/omni-convert/index.html?lang=fr" />
-  <link rel="alternate" hreflang="en" href="https://ia-codestudio.com/free-tools/omni-convert/index.html?lang=en" />
-  <link rel="alternate" hreflang="x-default" href="https://ia-codestudio.com/free-tools/omni-convert/index.html" />
 
-  <!-- Open Graph / Facebook -->
+  <link rel="canonical" href="https://ia-codestudio.com/free-tools/omni-convert/index.html">
+  <link rel="alternate" hreflang="fr" href="https://ia-codestudio.com/free-tools/omni-convert/index.html?lang=fr">
+  <link rel="alternate" hreflang="en" href="https://ia-codestudio.com/free-tools/omni-convert/index.html?lang=en">
+  <link rel="alternate" hreflang="x-default" href="https://ia-codestudio.com/free-tools/omni-convert/index.html">
+
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ia-codestudio.com/free-tools/omni-convert/index.html">
-  <meta property="og:title" content="OmniConvert Pro - Ultimate Code Converter &amp; Dev Toolkit">
-  <meta property="og:description" content="All-in-one offline developer toolkit: live HTML/CSS/JS sandbox, Base64 converter, JSON/XML/YAML serializer, minifier, obfuscator, hash generator, color tools, regex tester, JWT decoder and text diff.">
+  <meta property="og:title" content="OmniConvert Pro 2.0 — Ultimate Offline Dev Workstation">
+  <meta property="og:description" content="100% offline, zero-CDN developer workstation: OmniPipe pipelines, Playground 2.0, ISO QR Studio, JSON→TS/Zod/SQL, Crypto Vault, JWT Studio, cURL translator & CSS Lab.">
   <meta property="og:image" content="https://ia-codestudio.com/og-social-banner.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="icon-48.png">
 
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://ia-codestudio.com/free-tools/omni-convert/index.html">
-  <meta property="twitter:title" content="OmniConvert Pro - Ultimate Code Converter &amp; Dev Toolkit">
-  <meta property="twitter:description" content="All-in-one offline developer toolkit: live HTML/CSS/JS sandbox, Base64 converter, JSON/XML/YAML serializer, minifier, obfuscator, hash generator, color tools, regex tester, JWT decoder and text diff.">
-  <meta property="twitter:image" content="https://ia-codestudio.com/og-social-banner.png">
-
-  <!-- Structured Data JSON-LD (WebApplication Schema) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "OmniConvert Pro",
-    "alternateName": "OmniConvert Pro: Ultimate Developer Toolkit",
+    "name": "OmniConvert Pro 2.0",
     "url": "https://ia-codestudio.com/free-tools/omni-convert/index.html",
-    "image": "https://ia-codestudio.com/og-social-banner.png",
-    "description": "All-in-one offline developer toolkit: live HTML/CSS/JS sandbox, Base64 converter, JSON/XML/YAML serializer, minifier, obfuscator, hash generator, color tools, regex tester, JWT decoder and text diff.",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "All",
-    "browserRequirements": "Requires HTML5 and Javascript support.",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
     "featureList": [
-      "Live Sandbox Playground",
-      "Base64 Converter",
-      "JSON/XML/YAML Serializer",
-      "Code Minifier & Obfuscator",
-      "Unix Timestamp Converter",
-      "Number Base Converter",
-      "QR Code Generator",
-      "Hash Generator",
-      "Color Converter & Palette Builder",
-      "CSS Gradient Builder",
-      "CSS Shadow Builder",
-      "Regex Tester",
-      "JWT Decoder",
-      "Text Diff Viewer",
-      "Snippet Manager"
+      "Playground 2.0 with Line Numbers, Syntax Highlight, ZIP & Gzip Share",
+      "OmniPipe Visual Chained Pipelines",
+      "Magic Paste & Ctrl+K Command Palette",
+      "JSON/XML/YAML/CSV Converter with Tree & Table Explorer",
+      "JSON to TypeScript, Zod, JSON Schema, SQL, Pydantic & Go",
+      "ISO/IEC 18004 v1-v40 QR Code Studio with Templates, Logo, SVG & Scanner",
+      "Tokenizer JS/CSS/HTML/SQL Minifier & Safe JS Obfuscator",
+      "cURL Translator & Visual URL Query Inspector",
+      "AES-256-GCM Vault, File Checksum Verifier & X.509 PEM Inspector",
+      "Offline JWT Decoder, Verifier & Signer",
+      "OKLCH Colors, WCAG 2.1 Contrast Checker & Tailwind 50-950 Scale",
+      "CSS Gradient & Mesh Builder + Multi-Layer Shadow & Glass Lab",
+      "SVG Optimizer & React JSX Converter",
+      "Regex Lab with Capture Groups & Replace",
+      "Myers Diff Viewer (Unified & Side-by-Side)",
+      "Cron Expression Builder, BigInt Number Base & Snippet Vault 2.0"
     ]
   }
   </script>
 
   <link rel="stylesheet" href="style.css">
-  <!-- Fonts & Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <div class="header-logo">
-      <i class="fa-solid fa-wand-magic-sparkles logo-icon"></i>
-      <h1>OMNICONVERT PRO <span class="app-tag">Ultimate Dev Toolkit</span></h1>
+  <!-- 100% Offline Local SVG Icon Sprite (Zero CDN requests!) -->
+  <svg xmlns="http://www.w3.org/2000/svg" class="svg-sprite" aria-hidden="true">
+    <symbol id="ic-spark" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/><path d="M19 3l.7 1.8L21.5 5.5l-1.8.7L19 8l-.7-1.8L16.5 5.5l1.8-.7L19 3z"/></symbol>
+    <symbol id="ic-code" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></symbol>
+    <symbol id="ic-pipe" viewBox="0 0 24 24"><rect x="2" y="4" width="6" height="6" rx="1.5"/><rect x="16" y="4" width="6" height="6" rx="1.5"/><rect x="9" y="14" width="6" height="6" rx="1.5"/><path d="M8 7h8M5 10v3a4 4 0 0 0 4 4M19 10v3a4 4 0 0 1-4 4"/></symbol>
+    <symbol id="ic-data" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></symbol>
+    <symbol id="ic-codegen" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M10 13l-2 2 2 2M14 13l2 2-2 2"/></symbol>
+    <symbol id="ic-b64" viewBox="0 0 24 24"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="M3.3 7l8.7 5 8.7-5M12 22V12"/></symbol>
+    <symbol id="ic-min" viewBox="0 0 24 24"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></symbol>
+    <symbol id="ic-http" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+    <symbol id="ic-qr" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM14 20h2M20 14v2"/></symbol>
+    <symbol id="ic-hash" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></symbol>
+    <symbol id="ic-jwt" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="5.5"/><path d="M21 2l-9.6 9.6M15.5 7.5l3 3L22 7l-3-3"/></symbol>
+    <symbol id="ic-color" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r="1"/><circle cx="17.5" cy="10.5" r="1"/><circle cx="8.5" cy="7.5" r="1"/><circle cx="6.5" cy="12.5" r="1"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16c3.3 0 6-2.7 6-6 0-4.9-4.5-8.6-10-8.6z"/></symbol>
+    <symbol id="ic-grad" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 15l6-6 4 4 8-8"/></symbol>
+    <symbol id="ic-shadow" viewBox="0 0 24 24"><rect x="3" y="3" width="12" height="12" rx="2"/><path d="M9 15v4a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-4"/></symbol>
+    <symbol id="ic-svg" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></symbol>
+    <symbol id="ic-regex" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><path d="M11 8v6M8 11h6"/></symbol>
+    <symbol id="ic-diff" viewBox="0 0 24 24"><path d="M12 3v18M5 8h4M7 6v4M15 16h4"/><rect x="3" y="3" width="18" height="18" rx="2"/></symbol>
+    <symbol id="ic-util" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+    <symbol id="ic-snip" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></symbol>
+    <symbol id="ic-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+    <symbol id="ic-dl" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
+    <symbol id="ic-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></symbol>
+    <symbol id="ic-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+    <symbol id="ic-theme" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></symbol>
+    <symbol id="ic-history" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/><polyline points="12 7 12 12 16 14"/></symbol>
+    <symbol id="ic-trash" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></symbol>
+    <symbol id="ic-send" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></symbol>
+    <symbol id="ic-menu" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></symbol>
+    <symbol id="ic-back" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></symbol>
+    <symbol id="ic-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></symbol>
+    <symbol id="ic-plus" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+    <symbol id="ic-close" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+    <symbol id="ic-swap" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></symbol>
+    <symbol id="ic-pin" viewBox="0 0 24 24"><path d="M12 17v5M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></symbol>
+    <symbol id="ic-edit" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></symbol>
+    <symbol id="ic-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></symbol>
+  </svg>
+
+  <!-- TOP WORKSTATION BAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button id="btn-sidebar-toggle" class="icon-btn" aria-label="Toggle Sidebar" title="Toggle Sidebar">
+        <svg class="ic"><use href="#ic-menu"/></svg>
+      </button>
+      <a id="link-back-hub" href="../index.html" class="back-pill" data-i18n-title="backToSite">
+        <svg class="ic ic-sm"><use href="#ic-back"/></svg>
+        <span data-i18n="backToSite">Back to Hub</span>
+      </a>
+      <div class="brand">
+        <span class="brand-badge"><svg class="ic"><use href="#ic-spark"/></svg></span>
+        <h1>OMNICONVERT <span class="brand-pro">PRO</span> <span class="version-pill">2.0</span></h1>
+      </div>
     </div>
-    <div class="header-actions">
-      <span class="status-badge"><span class="dot online"></span><span id="lbl-status">Local Engine Active</span></span>
-      <button id="btn-lang" class="lang-btn">🇺🇸 EN | 🇫🇷 FR</button>
+
+    <div class="topbar-center">
+      <button id="btn-open-cmd" class="omnibox-trigger" aria-label="Open Command Palette and Magic Paste (Ctrl+K)">
+        <svg class="ic ic-sm"><use href="#ic-search"/></svg>
+        <span data-i18n="cmdPaletteHint">Search tools or Magic Paste...</span>
+        <kbd>Ctrl+K</kbd>
+      </button>
+    </div>
+
+    <div class="topbar-right">
+      <span class="status-pill"><span class="status-dot"></span><span data-i18n="statusActive">100% Offline Engine</span></span>
+      <button id="btn-history" class="icon-btn badge-host" data-i18n-title="historyTitle" title="History" aria-label="History">
+        <svg class="ic"><use href="#ic-history"/></svg>
+        <span id="history-count-badge" class="mini-badge hidden">0</span>
+      </button>
+      <button id="btn-theme" class="icon-btn" title="Switch Theme" aria-label="Switch Theme">
+        <svg class="ic"><use href="#ic-theme"/></svg>
+      </button>
+      <button id="btn-lang" class="lang-btn" aria-label="Switch Language">EN / FR</button>
+      <button id="btn-panic-wipe" class="icon-btn danger" data-i18n-title="panicWipe" title="Wipe Local Data" aria-label="Wipe Local Data">
+        <svg class="ic"><use href="#ic-trash"/></svg>
+      </button>
     </div>
   </header>
 
-  <main class="app-container">
-    <!-- LEFT PANEL: Inputs & Tool tabs -->
-    <section class="panel-left">
-      <nav class="tool-tabs">
-        <button class="tab-btn active" data-tab="playground"><i class="fa-solid fa-code"></i> <span id="tab-lbl-playground">Playground</span></button>
-        <button class="tab-btn" data-tab="base64"><i class="fa-solid fa-box-open"></i> <span id="tab-lbl-base64">Base64</span></button>
-        <button class="tab-btn" data-tab="serialize"><i class="fa-solid fa-arrows-spin"></i> <span id="tab-lbl-serialize">JSON/XML/YAML</span></button>
-        <button class="tab-btn" data-tab="minify"><i class="fa-solid fa-compress"></i> <span id="tab-lbl-minify">Minify &amp; Obfuscate</span></button>
-        <button class="tab-btn" data-tab="utilities"><i class="fa-solid fa-gears"></i> <span id="tab-lbl-utilities">Utilities</span></button>
-        <button class="tab-btn" data-tab="qrcode"><i class="fa-solid fa-qrcode"></i> <span id="tab-lbl-qrcode">QR Code</span></button>
-        <button class="tab-btn" data-tab="hash"><i class="fa-solid fa-fingerprint"></i> <span id="tab-lbl-hash">Hash</span></button>
-        <button class="tab-btn" data-tab="colors"><i class="fa-solid fa-palette"></i> <span id="tab-lbl-colors">Colors</span></button>
-        <button class="tab-btn" data-tab="gradient"><i class="fa-solid fa-fill-drip"></i> <span id="tab-lbl-gradient">Gradient Builder</span></button>
-        <button class="tab-btn" data-tab="shadow"><i class="fa-solid fa-circle-half-stroke"></i> <span id="tab-lbl-shadow">Shadow Builder</span></button>
-        <button class="tab-btn" data-tab="regex"><i class="fa-solid fa-magnifying-glass-chart"></i> <span id="tab-lbl-regex">Regex</span></button>
-        <button class="tab-btn" data-tab="jwt"><i class="fa-solid fa-key"></i> <span id="tab-lbl-jwt">JWT</span></button>
-        <button class="tab-btn" data-tab="diff"><i class="fa-solid fa-code-compare"></i> <span id="tab-lbl-diff">Diff</span></button>
-        <button class="tab-btn" data-tab="snippets"><i class="fa-solid fa-folder-open"></i> <span id="tab-lbl-snippets">Snippet Manager</span></button>
-      </nav>
+  <!-- WORKSPACE SHELL -->
+  <div class="workspace-shell" id="workspace-shell">
+    <!-- COLLAPSIBLE CATEGORIZED SIDEBAR -->
+    <aside class="sidebar" id="sidebar" aria-label="Developer Tools Navigation">
+      <div class="sidebar-scroll">
+        <div class="nav-group" id="nav-group-pinned">
+          <div class="nav-group-title" data-i18n="catPinned">Pinned</div>
+          <div id="pinned-nav-list" class="nav-list" role="tablist"></div>
+        </div>
 
-      <div class="panel-body">
+        <div class="nav-group">
+          <div class="nav-group-title" data-i18n="catCode">Code &amp; Live</div>
+          <div class="nav-list" role="tablist">
+            <button class="nav-item active" role="tab" aria-selected="true" data-tab="playground"><svg class="ic"><use href="#ic-code"/></svg><span data-i18n="tab_playground">Playground 2.0</span></button>
+            <button class="nav-item" role="tab" aria-selected="false" data-tab="omnipipe"><svg class="ic"><use href="#ic-pipe"/></svg><span data-i18n="tab_omnipipe">OmniPipe Chains</span><span class="pill-new">NEW</span></button>
+            <button class="nav-item" role="tab" aria-selected="false" data-tab="minify"><svg class="ic"><use href="#ic-min"/></svg><span data-i18n="tab_minify">Minify &amp; Obfuscate</span></button>
+            <button class="nav-item" role="tab" aria-selected="false" data-tab="diff"><svg class="ic"><use href="#ic-diff"/></svg><span data-i18n="tab_diff">Diff Studio</span></button>
+            <button class="nav-item" role="tab" aria-selected="false" data-tab="snippets"><svg class="ic"><use href="#ic-snip"/></svg><span data-i18n="tab_snippets">Snippet Manager</span></button>
+          </div>
+        </div>
 
-        <!-- TAB 1: PLAYGROUND -->
-        <div class="tab-content active" id="tab-playground">
-          <div class="editor-subtabs">
-            <button class="subtab-btn active" data-editor="html">HTML</button>
-            <button class="subtab-btn" data-editor="css">CSS</button>
-            <button class="subtab-btn" data-editor="js">JavaScript</button>
+        <div class="nav-group">
+          <div class="nav-group-title" data-i18n="catData">Data &amp; API</div>
+          <div class="nav-list" role="tablist">
+            <button class="nav-item" role="tab" aria-selected="false" data-tab="serialize"><svg class="ic"><use href="#ic-data"/></svg><span data-i18n="tab_serialize">JSON / XML / YAML / CSV</span></button>
+            <button class="nav-item" role="tab" aria-selected="false" data-tab="codegen"><svg class="ic"><use href="#ic-codegen"/></svg><span data-i18n="tab_codegen">JSON → Code &amp; Schema</span><span class="pill-new">NEW</span></button>
+            <button class="nav-item" role="tab" aria-selected="false" data-tab="base64"><svg class="ic"><use href="#ic-b64"/></svg><span data-i18n="tab_base64">Base64 Studio</span></button>
+            <button class="nav-item" role="tab" aria-selected="false" data-tab="http"><svg class="ic"><use href="#ic-http"/></svg><span data-i18n="tab_http">cURL &amp; URL Studio</span><span class="pill-new">NEW</span></button>
           </div>
-          <div class="editor-wrapper">
-            <textarea id="editor-html" class="code-textarea" spellcheck="false" placeholder="<!-- Write HTML here -->
-<div class='card'>
-  <h2>Hello World</h2>
-  <p>Modify code and watch live preview!</p>
-</div>"></textarea>
-            <textarea id="editor-css" class="code-textarea hidden" spellcheck="false" placeholder="/* Write CSS here */
-body {
-  font-family: sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: radial-gradient(circle, #1e293b, #0f172a);
-  color: white;
-}
-.card {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  padding: 30px;
-  border-radius: 12px;
-  text-align: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-}"></textarea>
-            <textarea id="editor-js" class="code-textarea hidden" spellcheck="false" placeholder="// Write JavaScript here
-console.log('Sandbox Playground Loaded!');
-document.querySelector('.card').addEventListener('click', () => {
-  console.log('Card Clicked!');
-});"></textarea>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-title" data-i18n="catSecurity">Security &amp; Crypto</div>
+          <div class="nav-list" role="tablist">
+            <button class="nav-item" role="tab" aria-selected="false" data-tab="hash"><svg class="ic"><use href="#ic-hash"/></svg><span data-i18n="tab_hash">Crypto &amp; Hash Vault</span></button>
+            <button class="nav-item" role="tab" aria-selected="false" data-tab="jwt"><svg class="ic"><use href="#ic-jwt"/></svg><span data-i18n="tab_jwt">JWT Studio</span></button>
           </div>
-          <div class="editor-actions" style="margin-top: 12px; display: flex; gap: 8px; justify-content: flex-end; align-items: center;">
-            <label class="watermark-toggle-label" style="font-size: 0.76rem; display: flex; align-items: center; gap: 6px; cursor: pointer; margin-right: auto; user-select: none;">
-              <input type="checkbox" id="chk-watermark" checked>
-              <span data-i18n="badge_label">Include "Powered by IA Code Studio" badge</span>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-title" data-i18n="catDesign">Visual &amp; CSS Lab</div>
+          <div class="nav-list" role="tablist">
+            <button class="nav-item" role="tab" aria-selected="false" data-tab="qrcode"><svg class="ic"><use href="#ic-qr"/></svg><span data-i18n="tab_qrcode">QR Studio 2.0</span></button>
+            <button class="nav-item" role="tab" aria-selected="false" data-tab="colors"><svg class="ic"><use href="#ic-color"/></svg><span data-i18n="tab_colors">Colors &amp; WCAG Lab</span></button>
+            <button class="nav-item" role="tab" aria-selected="false" data-tab="gradient"><svg class="ic"><use href="#ic-grad"/></svg><span data-i18n="tab_gradient">Gradient &amp; Mesh Lab</span></button>
+            <button class="nav-item" role="tab" aria-selected="false" data-tab="shadow"><svg class="ic"><use href="#ic-shadow"/></svg><span data-i18n="tab_shadow">Shadow &amp; Glass Lab</span></button>
+            <button class="nav-item" role="tab" aria-selected="false" data-tab="svg"><svg class="ic"><use href="#ic-svg"/></svg><span data-i18n="tab_svg">SVG Optimizer</span><span class="pill-new">NEW</span></button>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-title" data-i18n="catDev">Dev Utilities</div>
+          <div class="nav-list" role="tablist">
+            <button class="nav-item" role="tab" aria-selected="false" data-tab="regex"><svg class="ic"><use href="#ic-regex"/></svg><span data-i18n="tab_regex">Regex Lab</span></button>
+            <button class="nav-item" role="tab" aria-selected="false" data-tab="utilities"><svg class="ic"><use href="#ic-util"/></svg><span data-i18n="tab_utilities">Dev Utilities &amp; Cron</span></button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN SPLIT WORKBENCH -->
+    <main class="split-workbench" id="split-workbench">
+      <!-- LEFT INPUT PANEL -->
+      <section class="pane pane-left" id="pane-left">
+        <div class="pane-scroll">
+
+          <!-- 1. PLAYGROUND 2.0 -->
+          <div class="tab-panel active" id="tab-playground">
+            <div class="toolbar-row">
+              <div class="segmented" id="pg-editor-tabs">
+                <button class="seg-btn active" data-pg-editor="html">HTML</button>
+                <button class="seg-btn" data-pg-editor="css">CSS</button>
+                <button class="seg-btn" data-pg-editor="js">JavaScript</button>
+              </div>
+              <div class="toolbar-actions">
+                <select id="pg-template-select" class="field-select field-sm" aria-label="Starter Templates">
+                  <option value="">✨ Starter Templates...</option>
+                  <option value="glass-card">Glassmorphic Hero Card</option>
+                  <option value="bento-grid">Cyber Bento Dashboard</option>
+                  <option value="neon-counter">Interactive JS Counter</option>
+                  <option value="canvas-particles">HTML5 Canvas Particles</option>
+                  <option value="css-loader">Kinetic CSS Loader</option>
+                </select>
+                <button id="btn-pg-run" class="btn btn-primary btn-sm"><svg class="ic ic-sm"><use href="#ic-play"/></svg><span data-i18n="pgRun">Run (Ctrl+Enter)</span></button>
+              </div>
+            </div>
+
+            <div class="pg-editors-wrap">
+              <textarea id="editor-html" class="code-area" data-lang="html" aria-label="HTML Editor"></textarea>
+              <textarea id="editor-css" class="code-area hidden" data-lang="css" aria-label="CSS Editor"></textarea>
+              <textarea id="editor-js" class="code-area hidden" data-lang="js" aria-label="JavaScript Editor"></textarea>
+            </div>
+
+            <div class="pg-footer">
+              <label class="check-label" id="lbl-watermark-wrap">
+                <input type="checkbox" id="chk-watermark" checked>
+                <span data-i18n="pgWatermark">Include "Built with IA Code Studio" badge</span>
+                <span class="pro-tag" id="watermark-pro-tag">PRO</span>
+              </label>
+              <div class="btn-row">
+                <button id="btn-copy-playground" class="btn btn-ghost btn-sm"><svg class="ic ic-sm"><use href="#ic-copy"/></svg><span data-i18n="pgCopyHtml">Copy HTML</span></button>
+                <button id="btn-download-playground" class="btn btn-ghost btn-sm"><svg class="ic ic-sm"><use href="#ic-dl"/></svg><span data-i18n="pgDownloadHtml">Download HTML</span></button>
+                <button id="btn-zip-playground" class="btn btn-secondary btn-sm"><svg class="ic ic-sm"><use href="#ic-dl"/></svg><span data-i18n="pgDownloadZip">Export ZIP</span></button>
+                <button id="btn-share-playground" class="btn btn-primary btn-sm"><svg class="ic ic-sm"><use href="#ic-share"/></svg><span data-i18n="pgShareUrl">Share Link</span></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. OMNIPIPE — VISUAL CHAINED PIPELINES -->
+          <div class="tab-panel" id="tab-omnipipe">
+            <h2 class="panel-title" data-i18n="pipeTitle">OmniPipe — Visual Chained Pipelines</h2>
+            <p class="panel-desc" data-i18n="pipeDesc">Chain multiple transformations sequentially and run them in one click. Save or share custom recipes!</p>
+
+            <div class="preset-chips" id="pipe-preset-chips"></div>
+
+            <label class="field-label">Pipeline Input</label>
+            <textarea id="pipe-input" class="code-area h-130" data-lang="plain" placeholder="Paste initial text, JSON, Base64, URL, or JWT..."></textarea>
+
+            <div class="section-bar">
+              <span class="field-label">Transformation Steps</span>
+              <div class="btn-row">
+                <select id="pipe-step-picker" class="field-select field-sm" aria-label="Choose Transformation Step">
+                  <option value="trim">Trim Whitespace</option>
+                  <option value="b64_encode">Base64 Encode (UTF-8)</option>
+                  <option value="b64_decode">Base64 Decode (UTF-8)</option>
+                  <option value="b64url_decode">Base64URL Decode</option>
+                  <option value="url_encode">URL Encode</option>
+                  <option value="url_decode">URL Decode</option>
+                  <option value="html_escape">HTML Escape</option>
+                  <option value="html_unescape">HTML Unescape</option>
+                  <option value="json_pretty">JSON Pretty Format</option>
+                  <option value="json_minify">JSON Minify</option>
+                  <option value="json_to_yaml">JSON → YAML</option>
+                  <option value="yaml_to_json">YAML → JSON</option>
+                  <option value="json_to_xml">JSON → XML</option>
+                  <option value="xml_to_json">XML → JSON</option>
+                  <option value="json_to_ts">JSON → TypeScript</option>
+                  <option value="json_to_csv">JSON → CSV</option>
+                  <option value="csv_to_json">CSV → JSON</option>
+                  <option value="jwt_payload">Extract JWT Payload JSON</option>
+                  <option value="sha256">SHA-256 Hash</option>
+                  <option value="md5">MD5 Hash</option>
+                  <option value="upper">UPPERCASE</option>
+                  <option value="lower">lowercase</option>
+                  <option value="sort_lines">Sort Lines A→Z</option>
+                  <option value="dedupe_lines">Deduplicate Lines</option>
+                  <option value="minify_js">Minify JS</option>
+                  <option value="minify_css">Minify CSS</option>
+                </select>
+                <button id="btn-pipe-add-step" class="btn btn-secondary btn-sm"><svg class="ic ic-sm"><use href="#ic-plus"/></svg><span data-i18n="pipeAddStep">Add Step</span></button>
+              </div>
+            </div>
+
+            <div id="pipe-steps-list" class="pipe-steps-list"></div>
+
+            <div class="btn-row mt-12">
+              <button id="btn-pipe-run" class="btn btn-primary flex-1"><svg class="ic ic-sm"><use href="#ic-play"/></svg><span data-i18n="pipeRun">Run Pipeline</span></button>
+              <button id="btn-pipe-save" class="btn btn-secondary"><span data-i18n="pipeSave">Save Recipe</span></button>
+              <button id="btn-pipe-share" class="btn btn-ghost"><svg class="ic ic-sm"><use href="#ic-share"/></svg><span data-i18n="pipeShare">Share</span></button>
+            </div>
+
+            <div id="pipe-saved-wrap" class="mt-16">
+              <div class="field-label">Saved Recipes</div>
+              <div id="pipe-saved-list" class="saved-chips"></div>
+            </div>
+          </div>
+
+          <!-- 3. DATA CONVERTER (JSON / XML / YAML / CSV) -->
+          <div class="tab-panel" id="tab-serialize">
+            <h2 class="panel-title" data-i18n="serTitle">Data Converter &amp; Explorer (JSON / XML / YAML / CSV)</h2>
+            <textarea id="serialize-input" class="code-area h-240" data-lang="json" placeholder='{"project":"omniconvert-pro","version":2,"features":["JSON","XML","YAML","CSV"],"offline":true}'></textarea>
+
+            <div class="btn-grid-3 mt-12">
+              <button class="btn btn-secondary btn-sm" id="btn-json-xml">JSON → XML</button>
+              <button class="btn btn-secondary btn-sm" id="btn-xml-json">XML → JSON</button>
+              <button class="btn btn-secondary btn-sm" id="btn-json-yaml">JSON → YAML</button>
+              <button class="btn btn-secondary btn-sm" id="btn-yaml-json">YAML → JSON</button>
+              <button class="btn btn-secondary btn-sm" id="btn-xml-yaml">XML → YAML</button>
+              <button class="btn btn-secondary btn-sm" id="btn-yaml-xml">YAML → XML</button>
+              <button class="btn btn-secondary btn-sm" id="btn-json-csv">JSON → CSV</button>
+              <button class="btn btn-secondary btn-sm" id="btn-csv-json">CSV → JSON</button>
+              <button class="btn btn-secondary btn-sm" id="btn-json-mdtable">JSON → MD Table</button>
+            </div>
+
+            <div class="btn-row mt-12">
+              <button class="btn btn-primary flex-1" id="btn-serialize-format"><svg class="ic ic-sm"><use href="#ic-spark"/></svg><span data-i18n="serFormat">Format / Beautify</span></button>
+              <button class="btn btn-ghost" id="btn-serialize-minify"><span data-i18n="serMinify">Minify</span></button>
+              <button class="btn btn-ghost" id="btn-serialize-sample">Load Sample</button>
+            </div>
+          </div>
+
+          <!-- 4. JSON -> CODE & SCHEMA GENERATOR -->
+          <div class="tab-panel" id="tab-codegen">
+            <h2 class="panel-title" data-i18n="cgTitle">JSON → Types, Schemas &amp; SQL Generator</h2>
+            <p class="panel-desc" data-i18n="cgDesc">Paste any JSON payload to instantly generate TypeScript interfaces, Zod schemas, JSON Schema, SQL tables, Python Pydantic models, or Go structs.</p>
+
+            <div class="form-row-2">
+              <div>
+                <label class="field-label" data-i18n="cgRootName">Root Type Name</label>
+                <input type="text" id="cg-root-name" class="field-input" value="UserProfile" placeholder="UserProfile">
+              </div>
+              <div>
+                <label class="field-label">Target Output</label>
+                <select id="cg-target" class="field-select">
+                  <option value="typescript">TypeScript Interfaces</option>
+                  <option value="zod">Zod Validation Schema</option>
+                  <option value="jsonschema">JSON Schema (2020-12)</option>
+                  <option value="sql">PostgreSQL CREATE + INSERT</option>
+                  <option value="pydantic">Python Pydantic BaseModel</option>
+                  <option value="go">Go Struct with JSON tags</option>
+                </select>
+              </div>
+            </div>
+
+            <textarea id="cg-input" class="code-area h-240 mt-12" data-lang="json" placeholder='{"id":1,"name":"Elena Popescu","email":"elena@devmail.io","active":true,"roles":["admin","editor"],"meta":{"lastLogin":"2026-11-25T15:00:00Z"}}'></textarea>
+
+            <div class="btn-row mt-12">
+              <button id="btn-cg-generate" class="btn btn-primary flex-1"><svg class="ic ic-sm"><use href="#ic-codegen"/></svg><span data-i18n="cgGenerate">Generate Code</span></button>
+              <button id="btn-cg-sample" class="btn btn-ghost">Sample JSON</button>
+            </div>
+          </div>
+
+          <!-- 5. BASE64 STUDIO -->
+          <div class="tab-panel" id="tab-base64">
+            <h2 class="panel-title" data-i18n="b64TextTitle">Base64 Text &amp; Base64URL</h2>
+            <textarea id="b64-text-input" class="code-area h-150" data-lang="plain" placeholder="Enter UTF-8 text to encode, or Base64 / Base64URL / Data URI to decode..."></textarea>
+            <label class="check-label mt-8">
+              <input type="checkbox" id="b64-urlsafe">
+              <span data-i18n="b64UrlSafe">Base64URL (URL-safe, no padding)</span>
             </label>
-            <button class="btn btn-secondary" id="btn-copy-playground"><i class="fa-solid fa-copy"></i> <span data-i18n="copy_code">Copy HTML</span></button>
-            <button class="btn btn-secondary" id="btn-download-playground"><i class="fa-solid fa-download"></i> <span data-i18n="download_html">Download HTML</span></button>
-          </div>
-        </div>
-
-        <!-- TAB 2: BASE64 CONVERTER -->
-        <div class="tab-content" id="tab-base64">
-          <div class="tool-section">
-            <h3 id="lbl-b64-text-title">Base64 Text Mode</h3>
-            <textarea id="b64-text-input" class="code-textarea small-height" placeholder="Enter text to encode or Base64 to decode..."></textarea>
-            <div class="btn-group">
-              <button class="btn btn-primary" id="btn-b64-encode"><i class="fa-solid fa-lock"></i> <span id="lbl-b64-encode">Encode Text</span></button>
-              <button class="btn btn-secondary" id="btn-b64-decode"><i class="fa-solid fa-lock-open"></i> <span id="lbl-b64-decode">Decode Text</span></button>
+            <div class="btn-row mt-12">
+              <button class="btn btn-primary flex-1" id="btn-b64-encode" data-i18n="b64Encode">Encode</button>
+              <button class="btn btn-secondary flex-1" id="btn-b64-decode" data-i18n="b64Decode">Decode</button>
             </div>
-          </div>
-          <div class="tool-divider"></div>
-          <div class="tool-section">
-            <h3 id="lbl-b64-file-title">Base64 File Converter</h3>
-            <div class="drop-zone" id="b64-drop-zone">
-              <i class="fa-solid fa-cloud-arrow-up drop-icon"></i>
-              <p id="lbl-drop-text">Drag &amp; drop files (images, audio, video, PDF) or click to browse</p>
-              <input type="file" id="b64-file-input" style="display: none;">
-            </div>
-          </div>
-        </div>
 
-        <!-- TAB 3: JSON / XML / YAML -->
-        <div class="tab-content" id="tab-serialize">
-          <h3 id="lbl-serialize-title">Data Converter (JSON, XML, YAML)</h3>
-          <textarea id="serialize-input" class="code-textarea" spellcheck="false" placeholder='{
-  "project": "omniconvert-pro",
-  "converters": ["JSON", "XML", "YAML"],
-  "active": true
-}'></textarea>
-          <div class="btn-grid">
-            <button class="btn btn-secondary" id="btn-json-xml">JSON <i class="fa-solid fa-arrow-right"></i> XML</button>
-            <button class="btn btn-secondary" id="btn-xml-json">XML <i class="fa-solid fa-arrow-right"></i> JSON</button>
-            <button class="btn btn-secondary" id="btn-json-yaml">JSON <i class="fa-solid fa-arrow-right"></i> YAML</button>
-            <button class="btn btn-secondary" id="btn-yaml-json">YAML <i class="fa-solid fa-arrow-right"></i> JSON</button>
-          </div>
-          <div class="btn-group" style="margin-top: 12px;">
-            <button class="btn btn-primary" id="btn-serialize-format"><i class="fa-solid fa-wand-magic-sparkles"></i> <span id="lbl-serialize-format">Format / Beautify</span></button>
-            <button class="btn btn-secondary" id="btn-serialize-minify"><i class="fa-solid fa-compress"></i> <span id="lbl-serialize-minify">Minify</span></button>
-          </div>
-        </div>
-
-        <!-- TAB 4: MINIFY & OBFUSCATE -->
-        <div class="tab-content" id="tab-minify">
-          <h3 id="lbl-minify-title">Code Compressor &amp; Obfuscator</h3>
-          <textarea id="minify-input" class="code-textarea" spellcheck="false" placeholder="function calculateArea(width, height) {
-  // Multiply dimensions to find surface area
-  const result = width * height;
-  console.log('Calculating area:', result);
-  return result;
-}"></textarea>
-          <div class="btn-group">
-            <button class="btn btn-primary" id="btn-minify-js"><i class="fa-solid fa-compress"></i> <span id="lbl-minify-btn">Minify Code</span></button>
-            <button class="btn btn-accent" id="btn-obfuscate-js"><i class="fa-solid fa-shield-halved"></i> <span id="lbl-obfuscate-btn">Obfuscate JS</span></button>
-          </div>
-        </div>
-
-        <!-- TAB 5: DEV UTILITIES -->
-        <div class="tab-content" id="tab-utilities">
-          <div class="editor-subtabs" id="utilities-subtabs" style="margin-bottom: 16px;">
-            <button class="subtab-btn active" data-util-tab="text-tools" id="subtab-lbl-text-tools">Text Tools</button>
-            <button class="subtab-btn" data-util-tab="generators" id="subtab-lbl-generators">Generators</button>
-            <button class="subtab-btn" data-util-tab="css-glass" id="subtab-lbl-css-glass">CSS Glass</button>
-            <button class="subtab-btn" data-util-tab="timestamp" id="subtab-lbl-timestamp">Timestamp</button>
-            <button class="subtab-btn" data-util-tab="number-base" id="subtab-lbl-number-base">Number Base</button>
-          </div>
-
-          <!-- Subtab 1: Text Tools -->
-          <div class="util-subcontent" id="util-text-tools">
-            <h3 id="lbl-util-title">Web Developer Utilities</h3>
-            <textarea id="utilities-input" class="code-textarea small-height" placeholder="Type text or code here..."></textarea>
-            <div class="btn-grid">
-              <button class="btn btn-secondary" id="btn-url-encode"><span id="lbl-url-encode">URL Encode</span></button>
-              <button class="btn btn-secondary" id="btn-url-decode"><span id="lbl-url-decode">URL Decode</span></button>
-              <button class="btn btn-secondary" id="btn-html-encode"><span id="lbl-html-encode">HTML Escape</span></button>
-              <button class="btn btn-secondary" id="btn-html-decode"><span id="lbl-html-decode">HTML Unescape</span></button>
-              <button class="btn btn-primary" id="btn-markdown" style="grid-column: span 2;"><i class="fa-solid fa-file-code"></i> <span id="lbl-markdown">Render Markdown</span></button>
+            <div class="divider"></div>
+            <h3 class="sub-title" data-i18n="b64FileTitle">File / Media to Base64</h3>
+            <div class="drop-zone" id="b64-drop-zone" tabindex="0" role="button" aria-label="Upload file for Base64 conversion">
+              <svg class="ic ic-lg"><use href="#ic-upload"/></svg>
+              <p data-i18n="b64Drop">Drag &amp; drop any file (image, audio, video, PDF, binary) or click to browse</p>
+              <input type="file" id="b64-file-input" class="hidden">
             </div>
           </div>
 
-          <!-- Subtab 2: Generators -->
-          <div class="util-subcontent hidden" id="util-generators">
-            <h3 id="lbl-gen-title">Random Generators</h3>
-            
-            <!-- UUID Generator Section -->
-            <div class="util-section-box" style="margin-top: 10px;">
-              <h4 id="lbl-uuid-title" style="font-size: 0.8rem; font-weight:700; color: var(--text-muted); margin-bottom: 8px;">UUID v4 Generator</h4>
-              <div class="input-inline-group" style="display: flex; gap: 8px; margin-bottom: 8px;">
-                <input type="number" id="uuid-count" class="code-input-field" value="1" min="1" max="100" style="width: 80px;">
-                <button class="btn btn-primary" id="btn-uuid-gen" style="flex: 1;"><i class="fa-solid fa-arrows-rotate"></i> <span id="lbl-uuid-btn">Generate</span></button>
+          <!-- 6. MINIFY & OBFUSCATE -->
+          <div class="tab-panel" id="tab-minify">
+            <h2 class="panel-title" data-i18n="minTitle">Tokenizer Minifier &amp; JS Obfuscator</h2>
+            <div class="toolbar-row mb-8">
+              <div class="inline-field">
+                <label class="field-label inline" data-i18n="minLang">Language</label>
+                <select id="minify-lang" class="field-select field-sm">
+                  <option value="auto">Auto-Detect</option>
+                  <option value="js">JavaScript</option>
+                  <option value="css">CSS (calc-safe)</option>
+                  <option value="html">HTML</option>
+                  <option value="sql">SQL</option>
+                </select>
+              </div>
+              <span id="minify-stats" class="stat-pill hidden">0 B → 0 B (0%)</span>
+            </div>
+            <textarea id="minify-input" class="code-area h-280" data-lang="js" placeholder="function greet(name) {&#10;  // Preserves strings, URLs &amp; Unicode!&#10;  const url = 'https://ia-codestudio.com';&#10;  return `Hello ${name} 🚀 → ${url}`;&#10;}"></textarea>
+            <div class="btn-row mt-12">
+              <button class="btn btn-primary flex-1" id="btn-minify-run"><svg class="ic ic-sm"><use href="#ic-min"/></svg><span data-i18n="minBtn">Minify Code</span></button>
+              <button class="btn btn-accent flex-1" id="btn-obfuscate-run"><svg class="ic ic-sm"><use href="#ic-hash"/></svg><span data-i18n="minObfBtn">Obfuscate JS</span></button>
+            </div>
+          </div>
+
+          <!-- 7. HTTP & cURL STUDIO -->
+          <div class="tab-panel" id="tab-http">
+            <h2 class="panel-title" data-i18n="httpTitle">cURL Translator &amp; URL Query Builder</h2>
+            <div class="segmented mb-12" id="http-subtabs">
+              <button class="seg-btn active" data-http-sub="curl" data-i18n="httpCurlTab">cURL → Code</button>
+              <button class="seg-btn" data-http-sub="url" data-i18n="httpUrlTab">URL Inspector</button>
+            </div>
+
+            <div class="subpanel" id="http-sub-curl">
+              <div class="toolbar-row mb-8">
+                <label class="field-label inline">Target Client</label>
+                <select id="curl-target" class="field-select field-sm">
+                  <option value="fetch">JavaScript fetch()</option>
+                  <option value="axios">Axios (ESM)</option>
+                  <option value="python">Python requests</option>
+                  <option value="php">PHP cURL</option>
+                  <option value="go">Go net/http</option>
+                </select>
+              </div>
+              <textarea id="curl-input" class="code-area h-200" data-lang="plain" placeholder="curl -X POST 'https://api.example.com/v1/users' \&#10;  -H 'Authorization: Bearer token123' \&#10;  -H 'Content-Type: application/json' \&#10;  -d '{&quot;name&quot;:&quot;Ada&quot;,&quot;role&quot;:&quot;admin&quot;}'"></textarea>
+              <div class="btn-row mt-12">
+                <button id="btn-curl-convert" class="btn btn-primary flex-1" data-i18n="httpConvert">Translate cURL</button>
+                <button id="btn-curl-sample" class="btn btn-ghost">Sample</button>
               </div>
             </div>
-            
-            <div class="tool-divider" style="margin: 16px 0;"></div>
-            
-            <!-- Password Generator Section -->
-            <div class="util-section-box">
-              <h4 id="lbl-pass-title" style="font-size: 0.8rem; font-weight:700; color: var(--text-muted); margin-bottom: 8px;">Password / Token Generator</h4>
-              <div class="password-options" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; font-size: 0.76rem;">
-                <label style="display:flex; align-items:center; gap:6px; cursor:pointer;"><input type="checkbox" id="pass-upper" checked> <span id="lbl-pass-upper">Uppercase (A-Z)</span></label>
-                <label style="display:flex; align-items:center; gap:6px; cursor:pointer;"><input type="checkbox" id="pass-lower" checked> <span id="lbl-pass-lower">Lowercase (a-z)</span></label>
-                <label style="display:flex; align-items:center; gap:6px; cursor:pointer;"><input type="checkbox" id="pass-numbers" checked> <span id="lbl-pass-nums">Numbers (0-9)</span></label>
-                <label style="display:flex; align-items:center; gap:6px; cursor:pointer;"><input type="checkbox" id="pass-symbols" checked> <span id="lbl-pass-syms">Symbols (%$#@!...)</span></label>
+
+            <div class="subpanel hidden" id="http-sub-url">
+              <label class="field-label">Full URL</label>
+              <input type="text" id="url-inspector-input" class="field-input" placeholder="https://ia-codestudio.com/search?q=omniconvert&amp;lang=en&amp;page=2#results">
+              <div class="url-parts-grid mt-12" id="url-parts-grid"></div>
+              <div class="section-bar mt-12">
+                <span class="field-label">Query Parameters (Live Edit)</span>
+                <button id="btn-url-add-param" class="btn btn-secondary btn-sm"><svg class="ic ic-sm"><use href="#ic-plus"/></svg><span data-i18n="httpAddParam">Add Param</span></button>
               </div>
-              <div class="slider-group" style="margin-bottom: 12px;">
-                <div style="display: flex; justify-content: space-between; font-size: 0.76rem; margin-bottom: 4px;">
-                  <span id="lbl-pass-len">Length:</span>
-                  <span id="pass-len-val" class="detail-val" style="color:var(--accent-cyan); font-family:var(--font-mono);">16</span>
-                </div>
-                <input type="range" id="pass-length" min="4" max="64" value="16" style="width:100%; cursor:pointer;">
-              </div>
-              <button class="btn btn-primary" id="btn-pass-gen" style="width: 100%;"><i class="fa-solid fa-shield-halved"></i> <span id="lbl-pass-btn">Generate Password</span></button>
+              <div id="url-params-list" class="kv-list"></div>
             </div>
-            
-            <div class="tool-divider" style="margin: 16px 0;"></div>
-            
-            <!-- Lorem Ipsum & Fake Data Section -->
-            <div class="util-section-box">
-              <h4 id="lbl-fake-data-title" style="font-size: 0.8rem; font-weight:700; color: var(--text-muted); margin-bottom: 8px;">Lorem Ipsum &amp; Fake Data</h4>
-              <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.76rem;">
+          </div>
+
+          <!-- 8. QR CODE STUDIO 2.0 -->
+          <div class="tab-panel" id="tab-qrcode">
+            <h2 class="panel-title" data-i18n="qrTitle">QR Code Studio 2.0 (ISO/IEC 18004 v1–v40)</h2>
+            <p class="panel-desc" data-i18n="qrDesc">100% offline ISO-compliant QR generator with UTF-8, automatic version sizing, 4-module quiet zone, smart templates, logo overlay, SVG export &amp; offline scanner.</p>
+
+            <div class="segmented wrap mb-12" id="qr-mode-tabs">
+              <button class="seg-btn active" data-qr-mode="text" data-i18n="qrModeText">Text / URL</button>
+              <button class="seg-btn" data-qr-mode="wifi" data-i18n="qrModeWifi">Wi-Fi</button>
+              <button class="seg-btn" data-qr-mode="vcard" data-i18n="qrModeVcard">vCard</button>
+              <button class="seg-btn" data-qr-mode="email" data-i18n="qrModeEmail">Email</button>
+              <button class="seg-btn" data-qr-mode="event" data-i18n="qrModeEvent">Calendar</button>
+              <button class="seg-btn" data-qr-mode="scan" data-i18n="qrModeScan">Scan Image</button>
+            </div>
+
+            <div class="qr-mode-pane" id="qr-pane-text">
+              <textarea id="qrcode-input" class="code-area h-100" data-lang="plain" placeholder="https://ia-codestudio.com — supports UTF-8, diacritics &amp; emojis 🚀"></textarea>
+            </div>
+            <div class="qr-mode-pane hidden" id="qr-pane-wifi">
+              <div class="form-row-2">
+                <input type="text" id="qr-wifi-ssid" class="field-input" placeholder="Network SSID">
+                <select id="qr-wifi-auth" class="field-select"><option value="WPA">WPA/WPA2/WPA3</option><option value="WEP">WEP</option><option value="nopass">Open (No Password)</option></select>
+              </div>
+              <input type="text" id="qr-wifi-pass" class="field-input mt-8" placeholder="Wi-Fi Password">
+              <label class="check-label mt-8"><input type="checkbox" id="qr-wifi-hidden"><span>Hidden Network</span></label>
+            </div>
+            <div class="qr-mode-pane hidden" id="qr-pane-vcard">
+              <div class="form-row-2">
+                <input type="text" id="qr-vc-fn" class="field-input" placeholder="First Name">
+                <input type="text" id="qr-vc-ln" class="field-input" placeholder="Last Name">
+              </div>
+              <div class="form-row-2 mt-8">
+                <input type="text" id="qr-vc-org" class="field-input" placeholder="Organization">
+                <input type="text" id="qr-vc-phone" class="field-input" placeholder="Phone (+40...)">
+              </div>
+              <div class="form-row-2 mt-8">
+                <input type="email" id="qr-vc-email" class="field-input" placeholder="Email">
+                <input type="url" id="qr-vc-url" class="field-input" placeholder="Website URL">
+              </div>
+            </div>
+            <div class="qr-mode-pane hidden" id="qr-pane-email">
+              <input type="email" id="qr-em-to" class="field-input" placeholder="recipient@example.com">
+              <input type="text" id="qr-em-subj" class="field-input mt-8" placeholder="Subject">
+              <textarea id="qr-em-body" class="code-area h-80 mt-8" data-lang="plain" placeholder="Message body..."></textarea>
+            </div>
+            <div class="qr-mode-pane hidden" id="qr-pane-event">
+              <input type="text" id="qr-ev-title" class="field-input" placeholder="Event Title">
+              <input type="text" id="qr-ev-loc" class="field-input mt-8" placeholder="Location">
+              <div class="form-row-2 mt-8">
+                <input type="datetime-local" id="qr-ev-start" class="field-input">
+                <input type="datetime-local" id="qr-ev-end" class="field-input">
+              </div>
+            </div>
+            <div class="qr-mode-pane hidden" id="qr-pane-scan">
+              <div class="drop-zone" id="qr-scan-drop" tabindex="0" role="button">
+                <svg class="ic ic-lg"><use href="#ic-qr"/></svg>
+                <p>Drop a QR Code image (PNG/JPG/WebP) to decode offline using browser BarcodeDetector</p>
+                <input type="file" id="qr-scan-file" accept="image/*" class="hidden">
+              </div>
+              <div id="qr-scan-result" class="card-box mt-12 hidden"></div>
+            </div>
+
+            <div id="qr-style-controls" class="card-box mt-12">
+              <div class="form-row-3">
                 <div>
-                  <label id="lbl-fd-type" style="display: block; margin-bottom: 4px;">Type of Data</label>
-                  <select id="fake-data-type" class="code-input-field" style="width: 100%;">
-                    <option value="lorem-words">Lorem Ipsum (Words)</option>
-                    <option value="lorem-paragraphs">Lorem Ipsum (Paragraphs)</option>
-                    <option value="names">Fake Names</option>
-                    <option value="emails">Fake Emails</option>
-                    <option value="users-json">Fake Users (JSON Array)</option>
+                  <label class="field-label" data-i18n="qrSize">Size (px)</label>
+                  <input type="number" id="qrcode-size" class="field-input" value="320" min="120" max="1024">
+                </div>
+                <div>
+                  <label class="field-label" data-i18n="qrEcc">Error Correction</label>
+                  <select id="qrcode-ecc" class="field-select">
+                    <option value="L">Low (7%)</option>
+                    <option value="M" selected>Medium (15%)</option>
+                    <option value="Q">Quartile (25%)</option>
+                    <option value="H">High (30%)</option>
                   </select>
                 </div>
-                
                 <div>
-                  <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                    <span id="lbl-fd-count">Quantity:</span>
-                    <span id="fake-data-count-val" class="detail-val" style="color:var(--accent-cyan); font-family:var(--font-mono);">5</span>
+                  <label class="field-label" data-i18n="qrStyle">Module Style</label>
+                  <select id="qrcode-style" class="field-select">
+                    <option value="square">Classic Square</option>
+                    <option value="rounded">Rounded</option>
+                    <option value="dots">Liquid Dots</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row-3 mt-8">
+                <div>
+                  <label class="field-label" data-i18n="qrFg">Foreground</label>
+                  <div class="color-inline">
+                    <input type="color" id="qrcode-fg" value="#0f172a">
+                    <input type="text" id="qrcode-fg-hex" class="field-input" value="#0f172a">
                   </div>
-                  <input type="range" id="fake-data-count" min="1" max="50" value="5" style="width:100%; cursor:pointer;">
                 </div>
-                
-                <button class="btn btn-primary" id="btn-fake-data-gen" style="width: 100%;"><i class="fa-solid fa-list"></i> <span id="lbl-fake-data-btn">Generate Data</span></button>
+                <div>
+                  <label class="field-label" data-i18n="qrFg2">Gradient 2</label>
+                  <div class="color-inline">
+                    <input type="color" id="qrcode-fg2" value="#06b6d4">
+                    <label class="check-label compact"><input type="checkbox" id="qrcode-use-grad"><span>On</span></label>
+                  </div>
+                </div>
+                <div>
+                  <label class="field-label" data-i18n="qrBg">Background</label>
+                  <div class="color-inline">
+                    <input type="color" id="qrcode-bg" value="#ffffff">
+                    <input type="text" id="qrcode-bg-hex" class="field-input" value="#ffffff">
+                  </div>
+                </div>
               </div>
+              <div class="toolbar-row mt-12">
+                <label class="btn btn-ghost btn-sm" for="qrcode-logo-file"><svg class="ic ic-sm"><use href="#ic-upload"/></svg><span data-i18n="qrLogo">Center Logo (auto ECC H)</span></label>
+                <input type="file" id="qrcode-logo-file" accept="image/*" class="hidden">
+                <button id="btn-qrcode-clear-logo" class="btn btn-ghost btn-sm hidden">Remove Logo</button>
+              </div>
+              <button class="btn btn-primary w-full mt-12" id="btn-qrcode-gen"><svg class="ic ic-sm"><use href="#ic-qr"/></svg><span data-i18n="qrGenBtn">Generate QR Code</span></button>
             </div>
           </div>
 
-          <!-- Subtab 3: CSS Glassmorphism -->
-          <div class="util-subcontent hidden" id="util-css-glass">
-            <h3 id="lbl-glass-title">Glassmorphism CSS Generator</h3>
-            <div class="glass-controls" style="display: flex; flex-direction: column; gap: 12px; font-size: 0.76rem;">
-              <div class="slider-group">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                  <span id="lbl-blur">Blur:</span>
-                  <span id="blur-val" class="detail-val" style="color:var(--accent-cyan); font-family:var(--font-mono);">8px</span>
-                </div>
-                <input type="range" id="glass-blur" min="0" max="25" value="8" style="width:100%; cursor:pointer;">
-              </div>
-              
-              <div class="slider-group">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                  <span id="lbl-opacity">Transparency:</span>
-                  <span id="opacity-val" class="detail-val" style="color:var(--accent-cyan); font-family:var(--font-mono);">30%</span>
-                </div>
-                <input type="range" id="glass-opacity" min="0" max="100" value="30" style="width:100%; cursor:pointer;">
-              </div>
-
-              <div class="slider-group">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                  <span id="lbl-saturation">Saturation:</span>
-                  <span id="saturation-val" class="detail-val" style="color:var(--accent-cyan); font-family:var(--font-mono);">125%</span>
-                </div>
-                <input type="range" id="glass-saturation" min="50" max="200" value="125" style="width:100%; cursor:pointer;">
-              </div>
-
-              <div class="slider-group">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                  <span id="lbl-border-op">Border Transparency:</span>
-                  <span id="border-op-val" class="detail-val" style="color:var(--accent-cyan); font-family:var(--font-mono);">12%</span>
-                </div>
-                <input type="range" id="glass-border-op" min="0" max="100" value="12" style="width:100%; cursor:pointer;">
-              </div>
-              
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-                <span id="lbl-glass-color">Background Color:</span>
-                <input type="color" id="glass-color" value="#ffffff" style="width:48px; height:28px; border:none; border-radius:6px; cursor:pointer; background:none;">
-              </div>
+          <!-- 9. CRYPTO & HASH VAULT -->
+          <div class="tab-panel" id="tab-hash">
+            <div class="segmented mb-12" id="hash-subtabs">
+              <button class="seg-btn active" data-hash-sub="hashes" data-i18n="hashSubHash">Hashes &amp; Checksum</button>
+              <button class="seg-btn" data-hash-sub="aes" data-i18n="hashSubAes">AES-256-GCM Vault</button>
+              <button class="seg-btn" data-hash-sub="cert" data-i18n="hashSubCert">PEM Cert &amp; Keys</button>
             </div>
-            
-            <div class="glass-preview-wrapper" style="margin-top: 16px; border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; background: linear-gradient(135deg, #f43f5e, #8b5cf6, #06b6d4); display: flex; justify-content: center; align-items: center; min-height: 140px; overflow: hidden; position: relative;">
-              <div id="glass-preview-card" style="width: 140px; height: 90px; border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 0.72rem; font-weight: 700; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.6); transition: all 0.1s ease;">
-                Preview
-              </div>
-            </div>
-          </div>
 
-          <!-- Subtab 4: Timestamp Converter -->
-          <div class="util-subcontent hidden" id="util-timestamp">
-            <h3 id="lbl-timestamp-title">Timestamp &amp; Date Converter</h3>
-            
-            <div class="util-section-box" style="margin-top: 10px;">
-              <h4 id="lbl-ts-to-date-title" style="font-size: 0.8rem; font-weight:700; color: var(--text-muted); margin-bottom: 8px;">Unix Timestamp ↔ Date</h4>
-              <div style="display: flex; flex-direction: column; gap: 8px;">
-                <div style="display: flex; gap: 8px;">
-                  <input type="text" id="ts-input" class="code-input-field" placeholder="e.g. 1718919600" style="flex: 1;">
-                  <button class="btn btn-secondary" id="btn-ts-now">Now</button>
-                </div>
-                <button class="btn btn-primary" id="btn-ts-convert" style="width: 100%;"><span id="lbl-ts-convert-btn">Convert to Date</span></button>
+            <div class="subpanel" id="hash-sub-hashes">
+              <h2 class="panel-title" data-i18n="hashTitle">Cryptographic Hash &amp; File Checksum Verifier</h2>
+              <p class="panel-desc" data-i18n="hashDesc">Compute MD5, SHA-1, SHA-256, SHA-384, SHA-512 &amp; HMAC offline — works on text AND dropped files.</p>
+              <textarea id="hash-input" class="code-area h-110" data-lang="plain" placeholder="Type or paste any text to hash live..."></textarea>
+              <div class="form-row-2 mt-8">
+                <input type="text" id="hash-hmac-key" class="field-input" placeholder="HMAC Secret Key (optional)">
+                <input type="text" id="hash-expected" class="field-input" data-i18n="hashExpected" placeholder="Verify against expected hash...">
+              </div>
+              <div class="toolbar-row mt-8">
+                <label class="check-label"><input type="checkbox" id="hash-uppercase"><span>UPPERCASE</span></label>
+                <span id="hash-file-badge" class="stat-pill hidden"></span>
+              </div>
+              <div class="drop-zone compact mt-12" id="hash-file-drop" tabindex="0" role="button">
+                <svg class="ic"><use href="#ic-upload"/></svg>
+                <p data-i18n="hashDropFile">Drop any file here to compute its checksums locally</p>
+                <input type="file" id="hash-file-input" class="hidden">
               </div>
             </div>
 
-            <div class="util-section-box" style="margin-top: 12px;">
-              <h4 id="lbl-date-to-ts-title" style="font-size: 0.8rem; font-weight:700; color: var(--text-muted); margin-bottom: 8px;">Date ↔ Unix Timestamp</h4>
-              <div style="display: flex; flex-direction: column; gap: 8px;">
-                <input type="datetime-local" id="date-input" class="code-input-field" style="width: 100%;">
-                <button class="btn btn-primary" id="btn-date-convert" style="width: 100%;"><span id="lbl-date-convert-btn">Convert to Timestamp</span></button>
+            <div class="subpanel hidden" id="hash-sub-aes">
+              <h2 class="panel-title" data-i18n="aesTitle">Client-Side AES-256-GCM Encryption (PBKDF2)</h2>
+              <textarea id="aes-input" class="code-area h-150" data-lang="plain" placeholder="Plaintext secret to encrypt OR OCV2:... ciphertext to decrypt"></textarea>
+              <input type="password" id="aes-passphrase" class="field-input mt-8" placeholder="Strong Passphrase (never leaves your browser)">
+              <div class="btn-row mt-12">
+                <button id="btn-aes-encrypt" class="btn btn-primary flex-1" data-i18n="aesEncrypt">Encrypt</button>
+                <button id="btn-aes-decrypt" class="btn btn-secondary flex-1" data-i18n="aesDecrypt">Decrypt</button>
               </div>
             </div>
 
-            <div class="util-section-box" style="margin-top: 12px;">
-              <h4 id="lbl-ts-diff-title" style="font-size: 0.8rem; font-weight:700; color: var(--text-muted); margin-bottom: 8px;">Date Difference Calculator</h4>
-              <div style="display: flex; flex-direction: column; gap: 8px;">
-                <input type="datetime-local" id="diff-date1" class="code-input-field" style="width: 100%;">
-                <input type="datetime-local" id="diff-date2" class="code-input-field" style="width: 100%;">
-                <button class="btn btn-secondary" id="btn-ts-calc-diff" style="width: 100%;"><span id="lbl-diff-calc-btn">Calculate Difference</span></button>
+            <div class="subpanel hidden" id="hash-sub-cert">
+              <h2 class="panel-title" data-i18n="certTitle">X.509 PEM Certificate Inspector &amp; Keypair Generator</h2>
+              <textarea id="pem-input" class="code-area h-150" data-lang="plain" placeholder="-----BEGIN CERTIFICATE-----&#10;...&#10;-----END CERTIFICATE-----"></textarea>
+              <div class="btn-row mt-8">
+                <button id="btn-pem-parse" class="btn btn-primary flex-1" data-i18n="certParse">Inspect PEM Certificate</button>
               </div>
-            </div>
-
-            <div class="util-section-box" style="margin-top: 12px;">
-              <h4 id="lbl-ts-countdown-title" style="font-size: 0.8rem; font-weight:700; color: var(--text-muted); margin-bottom: 8px;">Live Countdown Timer</h4>
-              <div style="display: flex; flex-direction: column; gap: 8px;">
-                <input type="datetime-local" id="countdown-target" class="code-input-field" style="width: 100%;">
-                <div id="countdown-display" style="font-family: var(--font-mono); font-size: 0.9rem; text-align: center; color: var(--accent-cyan); padding: 8px; border: 1px dashed var(--border-color); border-radius: 6px; display: none;">
-                  00d 00h 00m 00s
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Subtab 5: Number Base Converter -->
-          <div class="util-subcontent hidden" id="util-number-base">
-            <h3 id="lbl-number-base-title">Number Base Converter</h3>
-            
-            <div class="util-section-box" style="margin-top: 10px;">
-              <div style="display: flex; flex-direction: column; gap: 10px; font-size: 0.76rem;">
-                <div>
-                  <label id="lbl-nb-dec" style="display: block; margin-bottom: 4px;">Decimal (Base 10)</label>
-                  <input type="text" id="nb-dec" class="code-input-field" placeholder="e.g. 255" style="width: 100%; font-family: var(--font-mono);">
-                </div>
-                <div>
-                  <label id="lbl-nb-hex" style="display: block; margin-bottom: 4px;">Hexadecimal (Base 16)</label>
-                  <input type="text" id="nb-hex" class="code-input-field" placeholder="e.g. ff" style="width: 100%; font-family: var(--font-mono);">
-                </div>
-                <div>
-                  <label id="lbl-nb-bin" style="display: block; margin-bottom: 4px;">Binary (Base 2)</label>
-                  <input type="text" id="nb-bin" class="code-input-field" placeholder="e.g. 11111111" style="width: 100%; font-family: var(--font-mono);">
-                </div>
-                <div>
-                  <label id="lbl-nb-oct" style="display: block; margin-bottom: 4px;">Octal (Base 8)</label>
-                  <input type="text" id="nb-oct" class="code-input-field" placeholder="e.g. 377" style="width: 100%; font-family: var(--font-mono);">
-                </div>
-              </div>
-            </div>
-
-            <div class="util-section-box" style="margin-top: 12px;">
-              <h4 id="lbl-nb-bitwise-title" style="font-size: 0.8rem; font-weight:700; color: var(--text-muted); margin-bottom: 8px;">Bitwise Operations</h4>
-              <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.76rem;">
-                <div style="display: flex; gap: 8px;">
-                  <input type="text" id="nb-bit-a" class="code-input-field" placeholder="Operand A" style="flex: 1; font-family: var(--font-mono);">
-                  <select id="nb-bit-op" class="code-input-field" style="width: 80px;">
-                    <option value="AND">&amp;</option>
-                    <option value="OR">|</option>
-                    <option value="XOR">^</option>
-                    <option value="SHL">&lt;&lt;</option>
-                    <option value="SHR">&gt;&gt;</option>
-                  </select>
-                  <input type="text" id="nb-bit-b" class="code-input-field" placeholder="Operand B" style="flex: 1; font-family: var(--font-mono);">
-                </div>
-                <button class="btn btn-primary" id="btn-nb-bitwise-calc" style="width: 100%;"><span id="lbl-nb-bitwise-btn">Calculate Bitwise</span></button>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- NEW TAB: QR CODE GENERATOR -->
-        <div class="tab-content" id="tab-qrcode">
-          <h3 id="lbl-qrcode-title">QR Code Generator</h3>
-          <p class="tool-desc" id="lbl-qrcode-desc">Generate QR Codes offline for URLs, text, or contact cards. Customize colors and size, then download as PNG.</p>
-          <div class="tool-section-box">
-            <textarea id="qrcode-input" class="code-textarea small-height" placeholder="Enter text or URL to generate QR code..."></textarea>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;">
-              <div>
-                <label id="lbl-qr-size" style="font-size: 0.76rem; display: block; margin-bottom: 4px;">Size (px)</label>
-                <input type="number" id="qrcode-size" class="code-input-field" value="256" min="100" max="500" style="width: 100%;">
-              </div>
-              <div>
-                <label id="lbl-qr-ecc" style="font-size: 0.76rem; display: block; margin-bottom: 4px;">Error Correction</label>
-                <select id="qrcode-ecc" class="code-input-field" style="width: 100%;">
-                  <option value="L">Low (7%)</option>
-                  <option value="M" selected>Medium (15%)</option>
-                  <option value="Q">Quarter (25%)</option>
-                  <option value="H">High (30%)</option>
+              <div class="divider"></div>
+              <div class="btn-row">
+                <select id="keygen-algo" class="field-select field-sm">
+                  <option value="ECDSA">ECDSA P-256 (Fast)</option>
+                  <option value="RSA">RSA-OAEP 2048-bit</option>
                 </select>
-              </div>
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;">
-              <div>
-                <label id="lbl-qr-fg" style="font-size: 0.76rem; display: block; margin-bottom: 4px;">Foreground Color</label>
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <input type="color" id="qrcode-fg" value="#000000" style="width: 32px; height: 32px; border: none; border-radius: 4px; cursor: pointer; background: none;">
-                  <input type="text" id="qrcode-fg-hex" class="code-input-field" value="#000000" style="flex: 1; font-size: 0.76rem;">
-                </div>
-              </div>
-              <div>
-                <label id="lbl-qr-bg" style="font-size: 0.76rem; display: block; margin-bottom: 4px;">Background Color</label>
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <input type="color" id="qrcode-bg" value="#ffffff" style="width: 32px; height: 32px; border: none; border-radius: 4px; cursor: pointer; background: none;">
-                  <input type="text" id="qrcode-bg-hex" class="code-input-field" value="#ffffff" style="flex: 1; font-size: 0.76rem;">
-                </div>
-              </div>
-            </div>
-            <button class="btn btn-primary" id="btn-qrcode-gen" style="width: 100%; margin-top: 16px;">
-              <i class="fa-solid fa-qrcode"></i> <span id="lbl-qrcode-btn">Generate QR Code</span>
-            </button>
-          </div>
-          
-          <div class="tool-divider" style="margin: 16px 0;"></div>
-          
-          <div class="qrcode-preview-wrapper" style="border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; background: #121824; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;">
-            <div id="qrcode-canvas-container" style="background: white; padding: 8px; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: none;">
-              <canvas id="qrcode-canvas"></canvas>
-            </div>
-            <div id="qrcode-placeholder" style="color: var(--text-muted); font-size: 0.76rem;">No QR code generated yet</div>
-            <button class="btn btn-secondary" id="btn-qrcode-download" style="width: 100%; display: none;">
-              <i class="fa-solid fa-download"></i> <span id="lbl-qrcode-download">Download PNG</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- TAB 6: HASH GENERATOR -->
-        <div class="tab-content" id="tab-hash">
-          <h3 id="lbl-hash-title">Cryptographic Hash Generator</h3>
-          <p class="tool-desc" id="lbl-hash-desc">Generate SHA-1, SHA-256, SHA-384, SHA-512 and MD5-like hashes from any text using the browser's native Web Crypto API.</p>
-          <textarea id="hash-input" class="code-textarea small-height" spellcheck="false" placeholder="Type any text to hash..."></textarea>
-          <div class="hash-results" id="hash-results">
-            <div class="hash-row">
-              <span class="hash-algo">MD5</span>
-              <span class="hash-val" id="hash-md5">—</span>
-              <button class="btn-copy-hash" data-target="hash-md5" title="Copy"><i class="fa-solid fa-copy"></i></button>
-            </div>
-            <div class="hash-row">
-              <span class="hash-algo">SHA-1</span>
-              <span class="hash-val" id="hash-sha1">—</span>
-              <button class="btn-copy-hash" data-target="hash-sha1" title="Copy"><i class="fa-solid fa-copy"></i></button>
-            </div>
-            <div class="hash-row">
-              <span class="hash-algo">SHA-256</span>
-              <span class="hash-val" id="hash-sha256">—</span>
-              <button class="btn-copy-hash" data-target="hash-sha256" title="Copy"><i class="fa-solid fa-copy"></i></button>
-            </div>
-            <div class="hash-row">
-              <span class="hash-algo">SHA-384</span>
-              <span class="hash-val" id="hash-sha384">—</span>
-              <button class="btn-copy-hash" data-target="hash-sha384" title="Copy"><i class="fa-solid fa-copy"></i></button>
-            </div>
-            <div class="hash-row">
-              <span class="hash-algo">SHA-512</span>
-              <span class="hash-val" id="hash-sha512">—</span>
-              <button class="btn-copy-hash" data-target="hash-sha512" title="Copy"><i class="fa-solid fa-copy"></i></button>
-            </div>
-          </div>
-          <button class="btn btn-primary" id="btn-hash-generate" style="width:100%; margin-top:12px;"><i class="fa-solid fa-fingerprint"></i> <span id="lbl-hash-btn">Generate All Hashes</span></button>
-        </div>
-
-        <!-- TAB 7: COLOR CONVERTER -->
-        <div class="tab-content" id="tab-colors">
-          <h3 id="lbl-color-title">Color Converter &amp; Palette</h3>
-          <p class="tool-desc" id="lbl-color-desc">Convert colors between HEX, RGB, and HSL formats. Pick a color or enter any value.</p>
-          <div class="color-picker-row">
-            <input type="color" id="color-picker" value="#06b6d4" class="color-swatch">
-            <input type="text" id="color-hex-input" class="code-input-field" placeholder="#06b6d4" value="#06b6d4">
-          </div>
-          <div class="color-preview-block" id="color-preview-block"></div>
-          <div class="color-fields">
-            <div class="color-field-group">
-              <label id="lbl-hex">HEX</label>
-              <div class="color-field-row">
-                <input type="text" id="out-hex" class="code-input-field" readonly>
-                <button class="btn-copy-hash" data-target-input="out-hex" title="Copy"><i class="fa-solid fa-copy"></i></button>
-              </div>
-            </div>
-            <div class="color-field-group">
-              <label id="lbl-rgb">RGB</label>
-              <div class="color-field-row">
-                <input type="text" id="out-rgb" class="code-input-field" readonly>
-                <button class="btn-copy-hash" data-target-input="out-rgb" title="Copy"><i class="fa-solid fa-copy"></i></button>
-              </div>
-            </div>
-            <div class="color-field-group">
-              <label id="lbl-hsl">HSL</label>
-              <div class="color-field-row">
-                <input type="text" id="out-hsl" class="code-input-field" readonly>
-                <button class="btn-copy-hash" data-target-input="out-hsl" title="Copy"><i class="fa-solid fa-copy"></i></button>
-              </div>
-            </div>
-            <div class="color-field-group">
-              <label id="lbl-css-var">CSS Var</label>
-              <div class="color-field-row">
-                <input type="text" id="out-cssvar" class="code-input-field" readonly>
-                <button class="btn-copy-hash" data-target-input="out-cssvar" title="Copy"><i class="fa-solid fa-copy"></i></button>
-              </div>
-            </div>
-          </div>
-          <div class="tool-divider"></div>
-          <h3 id="lbl-palette-title" style="margin-bottom:10px;">Generated Palette</h3>
-          <div class="palette-swatches" id="palette-swatches"></div>
-        </div>
-
-        <!-- NEW TAB: CSS GRADIENT GENERATOR -->
-        <div class="tab-content" id="tab-gradient">
-          <h3 id="lbl-gradient-title">CSS Gradient Generator</h3>
-          <div class="tool-section-box">
-            <div style="display: flex; gap: 12px; margin-bottom: 12px;">
-              <div style="flex: 1;">
-                <label id="lbl-gradient-type" style="font-size: 0.76rem; display: block; margin-bottom: 4px;">Type</label>
-                <select id="gradient-type" class="code-input-field" style="width: 100%;">
-                  <option value="linear">Linear</option>
-                  <option value="radial">Radial</option>
-                  <option value="conic">Conic</option>
-                </select>
-              </div>
-              <div id="gradient-angle-container" style="flex: 1;">
-                <label id="lbl-gradient-angle" style="font-size: 0.76rem; display: block; margin-bottom: 4px;">Angle (deg)</label>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                  <input type="range" id="gradient-angle" min="0" max="360" value="90" style="flex: 1; cursor: pointer;">
-                  <span id="gradient-angle-val" style="font-family: var(--font-mono); font-size: 0.76rem; min-width: 35px;">90°</span>
-                </div>
-              </div>
-            </div>
-
-            <label style="font-size: 0.76rem; display: block; margin-bottom: 8px;" id="lbl-gradient-stops">Color Stops</label>
-            <div id="gradient-stops-list" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;">
-              <!-- stops dynamically rendered here -->
-            </div>
-            <button class="btn btn-secondary" id="btn-gradient-add-stop" style="width: 100%; margin-bottom: 16px;">
-              <i class="fa-solid fa-plus"></i> <span id="lbl-gradient-add">Add Color Stop</span>
-            </button>
-          </div>
-
-          <div class="tool-divider" style="margin: 16px 0;"></div>
-
-          <h4 id="lbl-gradient-presets" style="font-size: 0.8rem; font-weight:700; color: var(--text-muted); margin-bottom: 8px;">Presets</h4>
-          <div id="gradient-presets" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px;">
-            <!-- presets dynamically rendered here -->
-          </div>
-
-          <div class="gradient-preview-wrapper" style="border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; background: #121824; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;">
-            <div id="gradient-preview-card" style="width: 100%; height: 120px; border-radius: 8px; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);"></div>
-          </div>
-        </div>
-
-        <!-- NEW TAB: CSS BOX & TEXT SHADOW BUILDER -->
-        <div class="tab-content" id="tab-shadow">
-          <h3 id="lbl-shadow-title">CSS Shadow Builder</h3>
-          
-          <div class="tool-section-box">
-            <div class="editor-subtabs" id="shadow-type-tabs" style="margin-bottom: 12px;">
-              <button class="subtab-btn active" data-shadow-type="box" id="subtab-lbl-box-shadow">Box Shadow</button>
-              <button class="subtab-btn" data-shadow-type="text" id="subtab-lbl-text-shadow">Text Shadow</button>
-            </div>
-            
-            <div class="shadow-controls" style="display: flex; flex-direction: column; gap: 10px; font-size: 0.76rem;">
-              <div class="slider-group">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                  <span id="lbl-sh-x">Offset X:</span>
-                  <span id="sh-x-val" class="detail-val" style="color:var(--accent-cyan); font-family:var(--font-mono);">10px</span>
-                </div>
-                <input type="range" id="sh-x" min="-50" max="50" value="10" style="width:100%; cursor:pointer;">
-              </div>
-              
-              <div class="slider-group">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                  <span id="lbl-sh-y">Offset Y:</span>
-                  <span id="sh-y-val" class="detail-val" style="color:var(--accent-cyan); font-family:var(--font-mono);">10px</span>
-                </div>
-                <input type="range" id="sh-y" min="-50" max="50" value="10" style="width:100%; cursor:pointer;">
-              </div>
-
-              <div class="slider-group">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                  <span id="lbl-sh-blur">Blur Radius:</span>
-                  <span id="sh-blur-val" class="detail-val" style="color:var(--accent-cyan); font-family:var(--font-mono);">15px</span>
-                </div>
-                <input type="range" id="sh-blur" min="0" max="100" value="15" style="width:100%; cursor:pointer;">
-              </div>
-
-              <div class="slider-group" id="sh-spread-container">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                  <span id="lbl-sh-spread">Spread Radius:</span>
-                  <span id="sh-spread-val" class="detail-val" style="color:var(--accent-cyan); font-family:var(--font-mono);">0px</span>
-                </div>
-                <input type="range" id="sh-spread" min="-50" max="50" value="0" style="width:100%; cursor:pointer;">
-              </div>
-
-              <div class="slider-group">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                  <span id="lbl-sh-opacity">Shadow Opacity:</span>
-                  <span id="sh-opacity-val" class="detail-val" style="color:var(--accent-cyan); font-family:var(--font-mono);">30%</span>
-                </div>
-                <input type="range" id="sh-opacity" min="0" max="100" value="30" style="width:100%; cursor:pointer;">
-              </div>
-
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-                <span id="lbl-sh-color">Shadow Color:</span>
-                <input type="color" id="sh-color" value="#000000" style="width:48px; height:28px; border:none; border-radius:6px; cursor:pointer; background:none;">
-              </div>
-
-              <div id="sh-inset-container" style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
-                <input type="checkbox" id="sh-inset" style="cursor: pointer;">
-                <label for="sh-inset" id="lbl-sh-inset" style="cursor: pointer;">Inset Shadow</label>
+                <button id="btn-keygen-run" class="btn btn-secondary flex-1" data-i18n="certGenKeys">Generate Keypair</button>
               </div>
             </div>
           </div>
 
-          <div class="tool-divider" style="margin: 16px 0;"></div>
+          <!-- 10. JWT STUDIO -->
+          <div class="tab-panel" id="tab-jwt">
+            <h2 class="panel-title" data-i18n="jwtTitle">Offline JWT Inspector, Verifier &amp; Signer</h2>
+            <p class="panel-desc" data-i18n="jwtDesc">Paste any JWT (with or without "Bearer ") for live decoding, expiration checks, HMAC signature verification, or sign test tokens.</p>
 
-          <div class="shadow-preview-wrapper" style="border: 1px solid var(--border-color); border-radius: 12px; padding: 32px; background: #1e293b; display: flex; justify-content: center; align-items: center; min-height: 180px; overflow: hidden; position: relative;">
-            <div id="shadow-preview-box" style="width: 120px; height: 120px; background: #0ea5e9; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 0.8rem; font-weight: 700; color: white; text-align: center; transition: all 0.1s ease; padding: 12px; box-sizing: border-box;">
-              <span id="shadow-preview-text">Box Shadow</span>
-            </div>
-          </div>
-        </div>
+            <label class="field-label">Encoded JWT Token</label>
+            <textarea id="jwt-input" class="code-area h-110" data-lang="plain" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik9tbmlDb252ZXJ0IFBybyIsImlhdCI6MTUxNjIzOTAyMn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"></textarea>
 
-        <!-- TAB 8: REGEX TESTER -->
-        <div class="tab-content" id="tab-regex">
-          <h3 id="lbl-regex-title">Live Regex Tester</h3>
-          <p class="tool-desc" id="lbl-regex-desc">Write a pattern and test it in real time. Matches are highlighted instantly.</p>
-          <div class="regex-pattern-row">
-            <span class="regex-delimiter">/</span>
-            <input type="text" id="regex-pattern" class="code-input-field" placeholder="([a-z]+)\d+" style="flex:1;">
-            <span class="regex-delimiter">/</span>
-            <input type="text" id="regex-flags" class="code-input-field regex-flags" placeholder="gi" value="gi">
-          </div>
-          <div class="regex-info-row">
-            <span id="regex-match-count" class="regex-badge">0 matches</span>
-            <span id="regex-error-msg" class="regex-error"></span>
-          </div>
-          <textarea id="regex-test-input" class="code-textarea" spellcheck="false" placeholder="Enter test text here...
-The quick brown fox123 jumped over the lazy dog456 and ran past cat789."></textarea>
-          <div id="regex-highlighted" class="regex-highlighted-box"></div>
-        </div>
+            <div class="card-box mt-12">
+              <label class="field-label">Verify HMAC Signature (HS256 / HS384 / HS512)</label>
+              <div class="btn-row">
+                <input type="text" id="jwt-secret" class="field-input flex-1" placeholder="Enter HMAC secret key...">
+                <button id="btn-jwt-verify" class="btn btn-secondary" data-i18n="jwtVerifyBtn">Verify</button>
+              </div>
+            </div>
 
-        <!-- TAB 9: JWT DECODER -->
-        <div class="tab-content" id="tab-jwt">
-          <h3 id="lbl-jwt-title">JWT Token Decoder</h3>
-          <p class="tool-desc" id="lbl-jwt-desc">Decode any JSON Web Token offline. Paste a full JWT to inspect its header, payload, and verify the signature structure.</p>
-          <textarea id="jwt-input" class="code-textarea small-height" spellcheck="false" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlN0dWRpb3MtUHJvIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"></textarea>
-          <button class="btn btn-primary" id="btn-jwt-decode" style="width:100%; margin-top:10px;"><i class="fa-solid fa-key"></i> <span id="lbl-jwt-btn">Decode JWT</span></button>
-          <div class="jwt-segments" id="jwt-segments" style="display:none; margin-top:16px;">
-            <div class="jwt-part jwt-header">
-              <div class="jwt-part-label"><i class="fa-solid fa-circle" style="color:#f59e0b;"></i> <span id="lbl-jwt-header">Header</span></div>
-              <pre class="jwt-pre" id="jwt-header-out"></pre>
-            </div>
-            <div class="jwt-part jwt-payload">
-              <div class="jwt-part-label"><i class="fa-solid fa-circle" style="color:#06b6d4;"></i> <span id="lbl-jwt-payload">Payload</span></div>
-              <pre class="jwt-pre" id="jwt-payload-out"></pre>
-            </div>
-            <div class="jwt-part jwt-sig">
-              <div class="jwt-part-label"><i class="fa-solid fa-circle" style="color:#8b5cf6;"></i> <span id="lbl-jwt-sig">Signature</span></div>
-              <pre class="jwt-pre" id="jwt-sig-out"></pre>
-            </div>
-          </div>
-        </div>
-
-        <!-- TAB 10: TEXT DIFF -->
-        <div class="tab-content" id="tab-diff">
-          <h3 id="lbl-diff-title">Text Diff Viewer</h3>
-          <p class="tool-desc" id="lbl-diff-desc">Compare two blocks of text line by line. Additions are green, removals are red.</p>
-          <div class="diff-inputs">
-            <div class="diff-col">
-              <label class="diff-label" id="lbl-diff-original">Original</label>
-              <textarea id="diff-original" class="code-textarea" spellcheck="false" placeholder="Paste original text here..."></textarea>
-            </div>
-            <div class="diff-col">
-              <label class="diff-label" id="lbl-diff-modified">Modified</label>
-              <textarea id="diff-modified" class="code-textarea" spellcheck="false" placeholder="Paste modified text here..."></textarea>
-            </div>
-          </div>
-          <button class="btn btn-primary" id="btn-diff-compare" style="width:100%; margin-top:10px;"><i class="fa-solid fa-code-compare"></i> <span id="lbl-diff-btn">Compare Texts</span></button>
-        </div>
-
-        <!-- NEW TAB: CODE SNIPPET MANAGER -->
-        <div class="tab-content" id="tab-snippets">
-          <h3 id="lbl-snippets-title">Code Snippet Manager</h3>
-          
-          <div class="tool-section-box">
-            <!-- Save New Snippet Form -->
-            <h4 id="lbl-snip-save-title" style="font-size: 0.8rem; font-weight:700; color: var(--text-muted); margin-bottom: 8px;">Save Snippet</h4>
-            <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.76rem; margin-bottom: 12px;">
-              <input type="text" id="snippet-title" class="code-input-field" placeholder="Snippet Title" style="width: 100%;">
-              <select id="snippet-category" class="code-input-field" style="width: 100%;">
-                <option value="General">General</option>
-                <option value="HTML">HTML</option>
-                <option value="CSS">CSS</option>
-                <option value="JavaScript">JavaScript</option>
-                <option value="SQL">SQL</option>
-                <option value="JSON">JSON</option>
+            <div class="divider"></div>
+            <h3 class="sub-title">Sign / Mint Test JWT Offline</h3>
+            <div class="form-row-2">
+              <select id="jwt-sign-alg" class="field-select">
+                <option value="HS256">HS256</option>
+                <option value="HS384">HS384</option>
+                <option value="HS512">HS512</option>
               </select>
-              <textarea id="snippet-code-input" class="code-textarea small-height" placeholder="Paste code to save..." style="height: 80px;"></textarea>
-              <button class="btn btn-primary" id="btn-snippet-save"><i class="fa-solid fa-save"></i> <span id="lbl-snippet-save-btn">Save Snippet</span></button>
+              <input type="text" id="jwt-sign-secret" class="field-input" value="my-super-secret-key" placeholder="Signing Secret">
+            </div>
+            <textarea id="jwt-sign-payload" class="code-area h-110 mt-8" data-lang="json"></textarea>
+            <button id="btn-jwt-sign" class="btn btn-primary w-full mt-8" data-i18n="jwtSignBtn">Sign New JWT</button>
+          </div>
+
+          <!-- 11. COLORS & WCAG LAB -->
+          <div class="tab-panel" id="tab-colors">
+            <h2 class="panel-title" data-i18n="colTitle">Color Studio, OKLCH &amp; WCAG Contrast Lab</h2>
+            <p class="panel-desc" data-i18n="colDesc">Enter HEX (with/without #), RGB, or HSL. Inspect OKLCH, Tailwind 50–950 shades, WCAG 2.1 contrast ratios, and colorblind simulations.</p>
+
+            <div class="color-hero-row">
+              <input type="color" id="color-picker" value="#06b6d4" class="color-well" aria-label="Primary Color Picker">
+              <input type="text" id="color-any-input" class="field-input flex-1" value="#06b6d4" placeholder="#06b6d4, 06b6d4, rgb(6,182,212), hsl(189,94%,43%)">
+            </div>
+
+            <div class="color-outputs-grid mt-12">
+              <div class="copy-field"><label>HEX</label><div class="input-copy"><input id="out-hex" readonly><button class="icon-btn-sm" data-copy-input="out-hex" aria-label="Copy HEX"><svg class="ic ic-sm"><use href="#ic-copy"/></svg></button></div></div>
+              <div class="copy-field"><label>RGB</label><div class="input-copy"><input id="out-rgb" readonly><button class="icon-btn-sm" data-copy-input="out-rgb" aria-label="Copy RGB"><svg class="ic ic-sm"><use href="#ic-copy"/></svg></button></div></div>
+              <div class="copy-field"><label>HSL</label><div class="input-copy"><input id="out-hsl" readonly><button class="icon-btn-sm" data-copy-input="out-hsl" aria-label="Copy HSL"><svg class="ic ic-sm"><use href="#ic-copy"/></svg></button></div></div>
+              <div class="copy-field"><label>OKLCH</label><div class="input-copy"><input id="out-oklch" readonly><button class="icon-btn-sm" data-copy-input="out-oklch" aria-label="Copy OKLCH"><svg class="ic ic-sm"><use href="#ic-copy"/></svg></button></div></div>
+              <div class="copy-field"><label>CMYK</label><div class="input-copy"><input id="out-cmyk" readonly><button class="icon-btn-sm" data-copy-input="out-cmyk" aria-label="Copy CMYK"><svg class="ic ic-sm"><use href="#ic-copy"/></svg></button></div></div>
+              <div class="copy-field"><label>CSS Var</label><div class="input-copy"><input id="out-cssvar" readonly><button class="icon-btn-sm" data-copy-input="out-cssvar" aria-label="Copy CSS Variable"><svg class="ic ic-sm"><use href="#ic-copy"/></svg></button></div></div>
+            </div>
+
+            <div class="card-box mt-16">
+              <div class="section-bar">
+                <span class="field-label" data-i18n="colContrastTitle">WCAG 2.1 Contrast Checker</span>
+                <button id="btn-wcag-autofix" class="btn btn-secondary btn-sm" data-i18n="colAutoFix">Auto-Fix Contrast (AA)</button>
+              </div>
+              <div class="form-row-2 mt-8">
+                <div>
+                  <label class="field-label">Foreground Text</label>
+                  <div class="color-inline">
+                    <input type="color" id="wcag-fg" value="#06b6d4">
+                    <input type="text" id="wcag-fg-hex" class="field-input" value="#06b6d4">
+                  </div>
+                </div>
+                <div>
+                  <label class="field-label">Background Surface</label>
+                  <div class="color-inline">
+                    <input type="color" id="wcag-bg" value="#0f172a">
+                    <input type="text" id="wcag-bg-hex" class="field-input" value="#0f172a">
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="tool-divider" style="margin: 16px 0;"></div>
+          <!-- 12. GRADIENT & MESH LAB -->
+          <div class="tab-panel" id="tab-gradient">
+            <h2 class="panel-title" data-i18n="gradTitle">CSS Gradient &amp; Mesh Studio</h2>
+            <div class="card-box">
+              <div class="form-row-2">
+                <div>
+                  <label class="field-label" data-i18n="gradType">Type</label>
+                  <select id="gradient-type" class="field-select">
+                    <option value="linear">Linear Gradient</option>
+                    <option value="radial">Radial Gradient</option>
+                    <option value="conic">Conic Gradient</option>
+                    <option value="mesh">Organic Mesh Gradient ✨</option>
+                  </select>
+                </div>
+                <div id="gradient-angle-container">
+                  <label class="field-label"><span data-i18n="gradAngle">Angle</span>: <strong id="gradient-angle-val">135°</strong></label>
+                  <input type="range" id="gradient-angle" min="0" max="360" value="135" class="slider">
+                </div>
+              </div>
 
-          <div class="tool-section-box">
-            <!-- Snippet List and Search -->
-            <h4 id="lbl-snip-list-title" style="font-size: 0.8rem; font-weight:700; color: var(--text-muted); margin-bottom: 8px;">Saved Snippets</h4>
-            <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.76rem; margin-bottom: 12px;">
-              <div style="display: flex; gap: 8px;">
-                <input type="text" id="snippet-search" class="code-input-field" placeholder="Search snippets..." style="flex: 1;">
-                <select id="snippet-filter-cat" class="code-input-field" style="width: 90px;">
-                  <option value="All">All</option>
+              <div class="section-bar mt-12">
+                <span class="field-label" data-i18n="gradStops">Color Stops</span>
+                <div class="btn-row">
+                  <button id="btn-gradient-reverse" class="btn btn-ghost btn-sm" data-i18n="gradReverse">Reverse</button>
+                  <button id="btn-gradient-random" class="btn btn-ghost btn-sm" data-i18n="gradRandom">Randomize</button>
+                </div>
+              </div>
+              <div id="gradient-stops-list" class="stops-list mt-8"></div>
+              <button class="btn btn-secondary w-full mt-8" id="btn-gradient-add-stop"><svg class="ic ic-sm"><use href="#ic-plus"/></svg><span data-i18n="gradAddStop">Add Stop</span></button>
+            </div>
+
+            <div class="field-label mt-16" data-i18n="gradPresets">Presets</div>
+            <div id="gradient-presets" class="presets-grid mt-8"></div>
+          </div>
+
+          <!-- 13. SHADOW & GLASS LAB -->
+          <div class="tab-panel" id="tab-shadow">
+            <h2 class="panel-title" data-i18n="shTitle">Multi-Layer Shadow &amp; Glassmorphism Lab</h2>
+            <div class="segmented mb-12" id="shadow-mode-tabs">
+              <button class="seg-btn active" data-shadow-mode="box" data-i18n="shBox">Box Shadow</button>
+              <button class="seg-btn" data-shadow-mode="text" data-i18n="shText">Text Shadow</button>
+              <button class="seg-btn" data-shadow-mode="drop" data-i18n="shDrop">Drop Shadow</button>
+              <button class="seg-btn" data-shadow-mode="glass" data-i18n="shGlass">Glassmorphism</button>
+            </div>
+
+            <div id="shadow-layers-pane">
+              <div class="section-bar">
+                <span class="field-label">Shadow Layers</span>
+                <button id="btn-shadow-add-layer" class="btn btn-secondary btn-sm"><svg class="ic ic-sm"><use href="#ic-plus"/></svg><span data-i18n="shAddLayer">Add Layer</span></button>
+              </div>
+              <div id="shadow-layers-list" class="layers-list mt-8"></div>
+
+              <div class="field-label mt-12" data-i18n="shPresets">Design Presets</div>
+              <div id="shadow-presets" class="preset-chips mt-8"></div>
+            </div>
+
+            <div id="glass-controls-pane" class="card-box hidden">
+              <div class="slider-row"><label>Blur <strong id="blur-val">12px</strong></label><input type="range" id="glass-blur" min="0" max="32" value="12" class="slider"></div>
+              <div class="slider-row"><label>Background Opacity <strong id="opacity-val">22%</strong></label><input type="range" id="glass-opacity" min="0" max="100" value="22" class="slider"></div>
+              <div class="slider-row"><label>Saturation <strong id="saturation-val">150%</strong></label><input type="range" id="glass-saturation" min="50" max="220" value="150" class="slider"></div>
+              <div class="slider-row"><label>Border Opacity <strong id="border-op-val">20%</strong></label><input type="range" id="glass-border-op" min="0" max="100" value="20" class="slider"></div>
+              <div class="slider-row"><label>Border Radius <strong id="radius-val">16px</strong></label><input type="range" id="glass-radius" min="0" max="40" value="16" class="slider"></div>
+              <div class="toolbar-row mt-8">
+                <label class="field-label inline">Tint Color</label>
+                <input type="color" id="glass-color" value="#ffffff">
+              </div>
+            </div>
+          </div>
+
+          <!-- 14. SVG OPTIMIZER -->
+          <div class="tab-panel" id="tab-svg">
+            <h2 class="panel-title" data-i18n="svgTitle">SVG Optimizer &amp; React JSX / CSS Converter</h2>
+            <p class="panel-desc" data-i18n="svgDesc">Clean comments, editor metadata, and redundant decimals offline. Export optimized SVG, React JSX component, or CSS Data URI.</p>
+            <div class="drop-zone compact" id="svg-drop-zone" tabindex="0" role="button">
+              <svg class="ic"><use href="#ic-upload"/></svg>
+              <p data-i18n="svgDrop">Drop an .svg file here or paste SVG markup below</p>
+              <input type="file" id="svg-file-input" accept=".svg,image/svg+xml" class="hidden">
+            </div>
+            <textarea id="svg-input" class="code-area h-180 mt-12" data-lang="xml" placeholder='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">&#10;  <!-- Comment -->&#10;  <circle cx="32.0000" cy="32.0000" r="24.5000" fill="#06b6d4"/>&#10;</svg>'></textarea>
+            <div class="checks-grid mt-8">
+              <label class="check-label"><input type="checkbox" id="svg-opt-comments" checked><span>Strip Comments</span></label>
+              <label class="check-label"><input type="checkbox" id="svg-opt-meta" checked><span>Strip Metadata</span></label>
+              <label class="check-label"><input type="checkbox" id="svg-opt-dims"><span>Remove width/height</span></label>
+              <label class="check-label"><input type="checkbox" id="svg-opt-minify" checked><span>Minify Whitespace</span></label>
+            </div>
+            <div class="btn-row mt-12">
+              <button id="btn-svg-optimize" class="btn btn-primary flex-1" data-i18n="svgOptimize">Optimize SVG</button>
+              <button id="btn-svg-sample" class="btn btn-ghost">Sample SVG</button>
+            </div>
+          </div>
+
+          <!-- 15. REGEX LAB -->
+          <div class="tab-panel" id="tab-regex">
+            <h2 class="panel-title" data-i18n="rgxTitle">Live Regex Lab, Capture Groups &amp; Replace</h2>
+            <p class="panel-desc" data-i18n="rgxDesc">Test patterns in real time with exact flag control, capture group extraction, find &amp; replace preview, and ReDoS timeout protection.</p>
+
+            <div class="regex-bar">
+              <span class="regex-slash">/</span>
+              <input type="text" id="regex-pattern" class="regex-pattern-input" placeholder="(?<word>[a-z]+)(?<num>\d+)" value="(?<word>[a-z]+)(?<num>\d+)">
+              <span class="regex-slash">/</span>
+              <input type="text" id="regex-flags" class="regex-flags-input" value="gi" aria-label="Regex Flags">
+            </div>
+
+            <div class="toolbar-row mt-8">
+              <div class="flag-pills" id="regex-flag-pills">
+                <button class="flag-pill active" data-flag="g" title="Global">g</button>
+                <button class="flag-pill active" data-flag="i" title="Case-insensitive">i</button>
+                <button class="flag-pill" data-flag="m" title="Multiline">m</button>
+                <button class="flag-pill" data-flag="s" title="DotAll">s</button>
+                <button class="flag-pill" data-flag="u" title="Unicode">u</button>
+              </div>
+              <span id="regex-match-count" class="stat-pill">0 matches</span>
+            </div>
+            <div id="regex-error-msg" class="error-inline"></div>
+
+            <div class="preset-chips mt-8" id="regex-presets"></div>
+
+            <label class="field-label mt-8">Test Text</label>
+            <textarea id="regex-test-input" class="code-area h-150" data-lang="plain">Order #alpha42 shipped to fox123 and dog456 — contact dev@omniconvert.io.</textarea>
+
+            <label class="field-label mt-8" data-i18n="rgxReplaceLabel">Replace Template (supports $1, $&amp;, $&lt;name&gt;)</label>
+            <input type="text" id="regex-replace-input" class="field-input" placeholder="[$<word> → $<num>]">
+          </div>
+
+          <!-- 16. MYERS DIFF STUDIO -->
+          <div class="tab-panel" id="tab-diff">
+            <h2 class="panel-title" data-i18n="difTitle">Myers Text Diff Studio</h2>
+            <p class="panel-desc" data-i18n="difDesc">Compare two text/code blocks with CRLF normalization, line numbers, inline word-level highlights, and Unified or Side-by-Side view.</p>
+
+            <div class="diff-editors-grid">
+              <div>
+                <label class="field-label" data-i18n="difOriginal">Original</label>
+                <textarea id="diff-original" class="code-area h-220" data-lang="plain" placeholder="Paste original text..."></textarea>
+              </div>
+              <div>
+                <label class="field-label" data-i18n="difModified">Modified</label>
+                <textarea id="diff-modified" class="code-area h-220" data-lang="plain" placeholder="Paste modified text..."></textarea>
+              </div>
+            </div>
+
+            <div class="toolbar-row mt-12">
+              <div class="btn-row">
+                <label class="check-label"><input type="checkbox" id="diff-ignore-ws"><span data-i18n="difIgnoreWs">Ignore Whitespace</span></label>
+                <label class="check-label"><input type="checkbox" id="diff-ignore-case"><span>Ignore Case</span></label>
+                <label class="check-label"><input type="checkbox" id="diff-side-by-side"><span data-i18n="difSideBySide">Side-by-Side</span></label>
+              </div>
+              <div class="btn-row">
+                <button id="btn-diff-swap" class="btn btn-ghost btn-sm"><svg class="ic ic-sm"><use href="#ic-swap"/></svg><span data-i18n="difSwap">Swap</span></button>
+                <button id="btn-diff-compare" class="btn btn-primary btn-sm" data-i18n="difCompare">Compare</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 17. DEV UTILITIES & CRON HUB -->
+          <div class="tab-panel" id="tab-utilities">
+            <div class="segmented wrap mb-12" id="utilities-subtabs">
+              <button class="seg-btn active" data-util-tab="text-tools" data-i18n="utilText">Text &amp; Markdown</button>
+              <button class="seg-btn" data-util-tab="generators" data-i18n="utilGen">Generators</button>
+              <button class="seg-btn" data-util-tab="timestamp" data-i18n="utilTime">Timestamp</button>
+              <button class="seg-btn" data-util-tab="cron" data-i18n="utilCron">Cron Builder</button>
+              <button class="seg-btn" data-util-tab="number-base" data-i18n="utilBase">Base &amp; Bitwise</button>
+            </div>
+
+            <!-- Sub 1: Text & Markdown -->
+            <div class="util-subpanel" id="util-text-tools">
+              <textarea id="utilities-input" class="code-area h-160" data-lang="plain" placeholder="Type text, URL, HTML, or GFM Markdown (# Heading, **bold**, tables, code blocks)..."></textarea>
+              <div class="btn-grid-2 mt-12">
+                <button class="btn btn-secondary btn-sm" id="btn-url-encode" data-i18n="utilUrlEnc">URL Encode</button>
+                <button class="btn btn-secondary btn-sm" id="btn-url-decode" data-i18n="utilUrlDec">URL Decode</button>
+                <button class="btn btn-secondary btn-sm" id="btn-html-encode" data-i18n="utilHtmlEsc">HTML Escape</button>
+                <button class="btn btn-secondary btn-sm" id="btn-html-decode" data-i18n="utilHtmlUnesc">HTML Unescape</button>
+              </div>
+              <button class="btn btn-primary w-full mt-8" id="btn-markdown" data-i18n="utilMarkdown">Render GFM Markdown</button>
+              <div class="field-label mt-12" data-i18n="utilCaseTitle">Case Converters</div>
+              <div class="preset-chips mt-8" id="case-converter-btns">
+                <button class="chip-btn" data-case="camel">camelCase</button>
+                <button class="chip-btn" data-case="pascal">PascalCase</button>
+                <button class="chip-btn" data-case="snake">snake_case</button>
+                <button class="chip-btn" data-case="kebab">kebab-case</button>
+                <button class="chip-btn" data-case="const">CONSTANT_CASE</button>
+                <button class="chip-btn" data-case="title">Title Case</button>
+              </div>
+            </div>
+
+            <!-- Sub 2: Generators (UUID v4/v7/ULID/NanoID, Unbiased Password, Accurate Fake Data) -->
+            <div class="util-subpanel hidden" id="util-generators">
+              <div class="card-box">
+                <div class="field-label">ID Generators (UUID v4 / v7 / ULID / NanoID)</div>
+                <div class="btn-row mt-8">
+                  <select id="id-gen-type" class="field-select flex-1">
+                    <option value="uuid4">UUID v4 (Random)</option>
+                    <option value="uuid7">UUID v7 (Time-Ordered)</option>
+                    <option value="ulid">ULID (Lexicographic)</option>
+                    <option value="nanoid">NanoID (21 chars)</option>
+                  </select>
+                  <input type="number" id="uuid-count" class="field-input w-72" value="5" min="1" max="100">
+                  <button class="btn btn-primary btn-sm" id="btn-uuid-gen">Generate</button>
+                </div>
+              </div>
+
+              <div class="card-box mt-12">
+                <div class="section-bar">
+                  <span class="field-label">Unbiased Cryptographic Password</span>
+                  <span id="pass-entropy-badge" class="stat-pill">— bits</span>
+                </div>
+                <div class="checks-grid mt-8">
+                  <label class="check-label"><input type="checkbox" id="pass-upper" checked><span>A–Z</span></label>
+                  <label class="check-label"><input type="checkbox" id="pass-lower" checked><span>a–z</span></label>
+                  <label class="check-label"><input type="checkbox" id="pass-numbers" checked><span>0–9</span></label>
+                  <label class="check-label"><input type="checkbox" id="pass-symbols" checked><span>Symbols</span></label>
+                  <label class="check-label"><input type="checkbox" id="pass-no-ambig"><span>Exclude 0O1lI</span></label>
+                </div>
+                <div class="slider-row mt-8">
+                  <label>Length: <strong id="pass-len-val">20</strong></label>
+                  <input type="range" id="pass-length" min="8" max="64" value="20" class="slider">
+                </div>
+                <div class="btn-row mt-8">
+                  <input type="number" id="pass-bulk-count" class="field-input w-72" value="1" min="1" max="50" title="Quantity">
+                  <button class="btn btn-primary flex-1" id="btn-pass-gen">Generate Secure Password</button>
+                </div>
+              </div>
+
+              <div class="card-box mt-12">
+                <div class="field-label">Lorem Ipsum &amp; Mock Data (Exact Count)</div>
+                <div class="form-row-2 mt-8">
+                  <select id="fake-data-type" class="field-select">
+                    <option value="lorem-words">Lorem Ipsum (Exact Words)</option>
+                    <option value="lorem-paragraphs">Lorem Ipsum (Paragraphs)</option>
+                    <option value="names">Mock Names</option>
+                    <option value="emails">Mock Emails</option>
+                    <option value="users-json">Mock Users (JSON)</option>
+                    <option value="users-csv">Mock Users (CSV)</option>
+                    <option value="users-sql">Mock Users (SQL INSERT)</option>
+                  </select>
+                  <div class="inline-field">
+                    <label class="field-label inline">Count: <strong id="fake-data-count-val">5</strong></label>
+                    <input type="range" id="fake-data-count" min="1" max="50" value="5" class="slider">
+                  </div>
+                </div>
+                <button class="btn btn-secondary w-full mt-8" id="btn-fake-data-gen">Generate Mock Data</button>
+              </div>
+            </div>
+
+            <!-- Sub 3: Timestamp -->
+            <div class="util-subpanel hidden" id="util-timestamp">
+              <div class="card-box">
+                <div class="field-label">Unix Timestamp → Date (s / ms / µs / ns, negative &amp; float safe)</div>
+                <div class="btn-row mt-8">
+                  <input type="text" id="ts-input" class="field-input flex-1" placeholder="e.g. 1718919600 or -1000000000">
+                  <button class="btn btn-ghost btn-sm" id="btn-ts-now">Now</button>
+                  <button class="btn btn-primary btn-sm" id="btn-ts-convert">Convert</button>
+                </div>
+              </div>
+              <div class="card-box mt-12">
+                <div class="field-label">Date → Unix Timestamp</div>
+                <div class="btn-row mt-8">
+                  <input type="datetime-local" id="date-input" class="field-input flex-1">
+                  <button class="btn btn-primary btn-sm" id="btn-date-convert">Convert</button>
+                </div>
+              </div>
+              <div class="card-box mt-12">
+                <div class="field-label">Date Difference &amp; Live Countdown</div>
+                <div class="form-row-2 mt-8">
+                  <input type="datetime-local" id="diff-date1" class="field-input">
+                  <input type="datetime-local" id="diff-date2" class="field-input">
+                </div>
+                <button class="btn btn-secondary w-full mt-8" id="btn-ts-calc-diff">Calculate Difference</button>
+                <div class="divider"></div>
+                <div class="btn-row">
+                  <input type="datetime-local" id="countdown-target" class="field-input flex-1">
+                  <div id="countdown-display" class="countdown-pill">00d 00h 00m 00s</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sub 4: Cron Builder -->
+            <div class="util-subpanel hidden" id="util-cron">
+              <div class="card-box">
+                <label class="field-label">5-Field Cron Expression (min hour dom month dow)</label>
+                <input type="text" id="cron-input" class="field-input mono-lg mt-8" value="*/15 9-17 * * 1-5" placeholder="*/15 9-17 * * 1-5">
+                <div class="preset-chips mt-12" id="cron-presets">
+                  <button class="chip-btn" data-cron="* * * * *">Every min</button>
+                  <button class="chip-btn" data-cron="*/5 * * * *">Every 5m</button>
+                  <button class="chip-btn" data-cron="0 * * * *">Hourly</button>
+                  <button class="chip-btn" data-cron="0 9 * * 1-5">Weekdays 09:00</button>
+                  <button class="chip-btn" data-cron="0 0 * * 0">Weekly Sun</button>
+                  <button class="chip-btn" data-cron="0 0 1 * *">Monthly 1st</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sub 5: BigInt Number Base & Bitwise -->
+            <div class="util-subpanel hidden" id="util-number-base">
+              <div class="card-box">
+                <div class="field-label">Arbitrary-Precision BigInt Base Converter (64-bit / 256-bit Safe!)</div>
+                <div class="form-stack mt-8">
+                  <div><label class="field-label">Decimal (Base 10)</label><input type="text" id="nb-dec" class="field-input" value="255" placeholder="e.g. 255 or -42"></div>
+                  <div><label class="field-label">Hexadecimal (Base 16)</label><input type="text" id="nb-hex" class="field-input" value="FF" placeholder="e.g. FFFFFFFFFFFFFFFF"></div>
+                  <div><label class="field-label">Binary (Base 2)</label><input type="text" id="nb-bin" class="field-input" value="11111111"></div>
+                  <div><label class="field-label">Octal (Base 8)</label><input type="text" id="nb-oct" class="field-input" value="377"></div>
+                  <div><label class="field-label">Base 36</label><input type="text" id="nb-b36" class="field-input" value="73"></div>
+                </div>
+                <div class="field-label mt-12">Interactive 32-Bit Toggle Grid (Click bits)</div>
+                <div id="nb-bit-grid" class="bit-grid mt-8"></div>
+              </div>
+
+              <div class="card-box mt-12">
+                <div class="field-label">Bitwise Calculator (Decimal default, use 0x / 0b / 0o prefixes)</div>
+                <div class="btn-row mt-8">
+                  <input type="text" id="nb-bit-a" class="field-input flex-1" value="0xFF" placeholder="Operand A (e.g. 100000 or 0xFF)">
+                  <select id="nb-bit-op" class="field-select w-84">
+                    <option value="AND">&amp; AND</option>
+                    <option value="OR">| OR</option>
+                    <option value="XOR">^ XOR</option>
+                    <option value="NOT">~ NOT</option>
+                    <option value="SHL">&lt;&lt; SHL</option>
+                    <option value="SHR">&gt;&gt; SHR</option>
+                    <option value="USHR">&gt;&gt;&gt; USHR</option>
+                  </select>
+                  <input type="text" id="nb-bit-b" class="field-input flex-1" value="0x0F" placeholder="Operand B">
+                </div>
+                <button class="btn btn-primary w-full mt-8" id="btn-nb-bitwise-calc">Calculate Bitwise</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 18. SNIPPET VAULT 2.0 -->
+          <div class="tab-panel" id="tab-snippets">
+            <h2 class="panel-title" data-i18n="snipTitle">Code Snippet Vault 2.0</h2>
+            <div class="card-box">
+              <input type="hidden" id="snippet-edit-id" value="">
+              <div class="form-row-2">
+                <input type="text" id="snippet-title" class="field-input" placeholder="Snippet Title">
+                <select id="snippet-category" class="field-select">
                   <option value="General">General</option>
                   <option value="HTML">HTML</option>
                   <option value="CSS">CSS</option>
                   <option value="JavaScript">JavaScript</option>
+                  <option value="TypeScript">TypeScript</option>
                   <option value="SQL">SQL</option>
                   <option value="JSON">JSON</option>
                 </select>
               </div>
-              <div id="snippets-list-container" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; padding: 4px; border: 1px solid var(--border-color); border-radius: 6px; background: #121824;">
-                <!-- Snippets dynamically rendered here -->
-              </div>
-              
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
-                <button class="btn btn-secondary" id="btn-snippets-export"><i class="fa-solid fa-file-export"></i> <span id="lbl-snip-export">Export</span></button>
-                <button class="btn btn-secondary" id="btn-snippets-import-trigger"><i class="fa-solid fa-file-import"></i> <span id="lbl-snip-import">Import</span></button>
-                <input type="file" id="snippets-import-file" style="display: none;" accept=".json">
+              <textarea id="snippet-code-input" class="code-area h-110 mt-8" data-lang="js" placeholder="Paste code to save..."></textarea>
+              <div class="btn-row mt-8">
+                <button class="btn btn-primary flex-1" id="btn-snippet-save" data-i18n="snipSave">Save Snippet</button>
+                <button class="btn btn-ghost hidden" id="btn-snippet-cancel-edit" data-i18n="snipCancelEdit">Cancel</button>
               </div>
             </div>
-          </div>
-        </div>
 
-      </div>
-    </section>
-
-    <!-- RIGHT PANEL: Live Output & Previews -->
-    <section class="panel-right">
-      <div class="panel-header">
-        <h2 id="output-title"><i class="fa-solid fa-laptop-code"></i> Live Preview / Output</h2>
-        <button class="btn btn-icon" id="btn-copy-output" title="Copy Output"><i class="fa-solid fa-copy"></i></button>
-      </div>
-
-      <div class="panel-output-body">
-        <!-- Preview Screen (For Dev Playground) -->
-        <div class="output-container active" id="container-playground">
-          <iframe id="preview-frame" sandbox="allow-scripts"></iframe>
-          <div class="virtual-console">
-            <div class="console-header">
-              <span><i class="fa-solid fa-terminal"></i> Console Logs</span>
-              <button id="btn-clear-console" class="btn-clear-logs">Clear</button>
+            <div class="section-bar mt-16">
+              <span class="field-label" data-i18n="snipSavedList">Saved Snippets</span>
+              <div class="btn-row">
+                <button class="btn btn-ghost btn-sm" id="btn-snippets-export" data-i18n="snipExport">Export JSON</button>
+                <button class="btn btn-ghost btn-sm" id="btn-snippets-import-trigger" data-i18n="snipImport">Import JSON</button>
+                <input type="file" id="snippets-import-file" accept=".json" class="hidden">
+              </div>
             </div>
-            <div class="console-logs" id="console-logs"></div>
-          </div>
-        </div>
 
-        <!-- Base64 Media Preview & Code Embed Panel -->
-        <div class="output-container" id="container-base64">
-          <div class="base64-file-details" id="b64-file-details" style="display: none;">
-            <div class="detail-row"><span class="detail-label">File Name:</span> <span id="b64-name" class="detail-val">-</span></div>
-            <div class="detail-row"><span class="detail-label">File Type:</span> <span id="b64-type" class="detail-val">-</span></div>
-            <div class="detail-row"><span class="detail-label">Size:</span> <span id="b64-size" class="detail-val">-</span></div>
-          </div>
-          <button class="btn btn-secondary" id="btn-b64-download" style="width: 100%; margin-bottom: 16px; display: none;">
-            <i class="fa-solid fa-download"></i> <span id="lbl-b64-download">Download Decoded File</span>
-          </button>
-          
-          <h3 id="lbl-media-preview">Media Preview</h3>
-          <div class="media-preview-box" id="b64-media-preview">
-            <div class="preview-placeholder" id="b64-placeholder">No media decoded yet</div>
-          </div>
-
-          <h3 id="lbl-embed-title" style="margin-top: 16px;">Embed &amp; Share Code</h3>
-          <div class="embed-box">
-            <div class="embed-header">
-              <span id="lbl-data-uri">Data URI Code</span>
-              <button class="btn btn-icon btn-copy-embed" data-target="embed-datauri"><i class="fa-solid fa-copy"></i></button>
+            <div class="btn-row mt-8">
+              <input type="text" id="snippet-search" class="field-input flex-1" placeholder="Search snippets...">
+              <select id="snippet-filter-cat" class="field-select w-120">
+                <option value="All">All</option>
+                <option value="General">General</option>
+                <option value="HTML">HTML</option>
+                <option value="CSS">CSS</option>
+                <option value="JavaScript">JavaScript</option>
+                <option value="TypeScript">TypeScript</option>
+                <option value="SQL">SQL</option>
+                <option value="JSON">JSON</option>
+              </select>
             </div>
-            <textarea id="embed-datauri" class="code-textarea small-height" readonly></textarea>
+            <div id="snippets-list-container" class="snippets-list mt-8"></div>
           </div>
-          
-          <div class="embed-box" style="margin-top: 10px;">
-            <div class="embed-header">
-              <span id="lbl-html-tag">HTML Tag Embed</span>
-              <button class="btn btn-icon btn-copy-embed" data-target="embed-htmltag"><i class="fa-solid fa-copy"></i></button>
+
+        </div>
+      </section>
+
+      <!-- INTERACTIVE RESIZER HANDLE -->
+      <div class="split-resizer" id="split-resizer" role="separator" aria-orientation="vertical" aria-label="Resize Panels" tabindex="0"></div>
+
+      <!-- RIGHT CONTEXTUAL OUTPUT PANEL -->
+      <section class="pane pane-right" id="pane-right">
+        <div class="output-topbar">
+          <h2 id="output-title" class="output-heading">Live Preview / Output</h2>
+          <div class="output-actions">
+            <div class="dropdown-wrap">
+              <button id="btn-send-to" class="btn btn-ghost btn-sm" title="Send current output to another tool">
+                <svg class="ic ic-sm"><use href="#ic-send"/></svg>
+                <span data-i18n="sendTo">Send to...</span>
+              </button>
+              <div id="send-to-menu" class="dropdown-menu hidden"></div>
             </div>
-            <textarea id="embed-htmltag" class="code-textarea small-height" readonly></textarea>
+            <button id="btn-copy-output" class="btn btn-secondary btn-sm" data-i18n-title="copyOutput">
+              <svg class="ic ic-sm"><use href="#ic-copy"/></svg>
+              <span data-i18n="copyOutput">Copy</span>
+            </button>
           </div>
         </div>
 
-        <!-- Raw Code / Text Output (For Serialize, Minify, Utilities, Hash) -->
-        <div class="output-container" id="container-code">
-          <textarea id="code-output" class="code-textarea full-height" readonly placeholder="Output code will appear here..."></textarea>
-        </div>
+        <div class="output-body">
+          <!-- OUT 1: PLAYGROUND -->
+          <div class="out-pane active" id="out-playground">
+            <div class="device-bar" id="pg-device-bar">
+              <button class="seg-btn active" data-device="100%">Desktop</button>
+              <button class="seg-btn" data-device="768px">Tablet (768px)</button>
+              <button class="seg-btn" data-device="375px">Mobile (375px)</button>
+            </div>
+            <div class="preview-stage">
+              <iframe id="preview-frame" title="Live Sandbox Preview" sandbox="allow-scripts allow-modals"></iframe>
+            </div>
+            <div class="virtual-console">
+              <div class="console-bar">
+                <span data-i18n="pgConsole">Console Output</span>
+                <button id="btn-clear-console" class="link-btn danger" data-i18n="pgClear">Clear</button>
+              </div>
+              <div id="console-logs" class="console-logs"></div>
+            </div>
+          </div>
 
-        <!-- Diff Output Panel -->
-        <div class="output-container" id="container-diff">
-          <div id="diff-output" class="diff-output-box"></div>
-        </div>
+          <!-- OUT 2: BASE64 MEDIA -->
+          <div class="out-pane" id="out-base64">
+            <div id="b64-file-details" class="meta-strip hidden">
+              <div><span class="meta-k" data-i18n="b64FileName">File</span> <strong id="b64-name">-</strong></div>
+              <div><span class="meta-k" data-i18n="b64FileType">MIME</span> <strong id="b64-type">-</strong></div>
+              <div><span class="meta-k" data-i18n="b64FileSize">Size</span> <strong id="b64-size">-</strong></div>
+            </div>
+            <button id="btn-b64-download" class="btn btn-primary w-full mb-12 hidden"><svg class="ic ic-sm"><use href="#ic-dl"/></svg><span data-i18n="b64Download">Download Decoded File</span></button>
+            <div class="field-label" data-i18n="b64MediaPreview">Media Preview</div>
+            <div id="b64-media-preview" class="media-preview-box mt-8">
+              <span class="muted" id="b64-placeholder" data-i18n="b64NoMedia">No media decoded yet</span>
+            </div>
+            <div class="field-label mt-12">Data URI</div>
+            <textarea id="embed-datauri" class="code-area h-100 mt-4" data-lang="plain" readonly></textarea>
+            <div class="field-label mt-8">HTML Embed Tag</div>
+            <textarea id="embed-htmltag" class="code-area h-80 mt-4" data-lang="html" readonly></textarea>
+          </div>
 
+          <!-- OUT 3: SERIALIZE (RAW / TREE / TABLE) -->
+          <div class="out-pane" id="out-serialize">
+            <div class="segmented mb-8" id="ser-view-tabs">
+              <button class="seg-btn active" data-ser-view="raw" data-i18n="serViewRaw">Raw Output</button>
+              <button class="seg-btn" data-ser-view="tree" data-i18n="serViewTree">JSON Tree</button>
+              <button class="seg-btn" data-ser-view="table" data-i18n="serViewTable">Table View</button>
+            </div>
+            <div id="ser-view-raw" class="flex-fill">
+              <textarea id="ser-code-output" class="code-area full-h" data-lang="json" readonly placeholder="Converted output will appear here..."></textarea>
+            </div>
+            <div id="ser-view-tree" class="tree-box hidden"></div>
+            <div id="ser-view-table" class="table-box hidden"></div>
+          </div>
+
+          <!-- OUT 4: QR STUDIO 2.0 -->
+          <div class="out-pane" id="out-qr">
+            <div class="qr-stage">
+              <div id="qrcode-canvas-container" class="qr-frame hidden">
+                <canvas id="qrcode-canvas"></canvas>
+              </div>
+              <div id="qrcode-placeholder" class="muted" data-i18n="qrNoQr">Generate a QR code to preview here</div>
+              <div id="qr-meta-badges" class="meta-pills hidden"></div>
+              <div id="qr-export-bar" class="btn-row mt-12 hidden">
+                <button id="btn-qrcode-download" class="btn btn-primary btn-sm"><svg class="ic ic-sm"><use href="#ic-dl"/></svg><span data-i18n="qrDlPng">PNG</span></button>
+                <button id="btn-qrcode-svg" class="btn btn-secondary btn-sm"><svg class="ic ic-sm"><use href="#ic-dl"/></svg><span data-i18n="qrDlSvg">SVG</span></button>
+                <button id="btn-qrcode-copy-img" class="btn btn-ghost btn-sm"><svg class="ic ic-sm"><use href="#ic-copy"/></svg><span data-i18n="qrCopyImg">Copy PNG</span></button>
+              </div>
+            </div>
+            <div class="field-label mt-12">Encoded Payload / SVG Markup</div>
+            <textarea id="qr-code-output" class="code-area h-130 mt-4" data-lang="xml" readonly></textarea>
+          </div>
+
+          <!-- OUT 5: HASH & CRYPTO VAULT -->
+          <div class="out-pane" id="out-hash">
+            <div id="hash-verify-banner" class="verify-banner hidden"></div>
+            <div id="hash-results-list" class="hash-list">
+              <div class="hash-card"><span class="hash-algo">MD5</span><code class="hash-val" id="hash-md5">—</code><button class="icon-btn-sm" data-copy-el="hash-md5" aria-label="Copy MD5"><svg class="ic ic-sm"><use href="#ic-copy"/></svg></button></div>
+              <div class="hash-card"><span class="hash-algo">SHA-1</span><code class="hash-val" id="hash-sha1">—</code><button class="icon-btn-sm" data-copy-el="hash-sha1" aria-label="Copy SHA-1"><svg class="ic ic-sm"><use href="#ic-copy"/></svg></button></div>
+              <div class="hash-card"><span class="hash-algo">SHA-256</span><code class="hash-val" id="hash-sha256">—</code><button class="icon-btn-sm" data-copy-el="hash-sha256" aria-label="Copy SHA-256"><svg class="ic ic-sm"><use href="#ic-copy"/></svg></button></div>
+              <div class="hash-card"><span class="hash-algo">SHA-384</span><code class="hash-val" id="hash-sha384">—</code><button class="icon-btn-sm" data-copy-el="hash-sha384" aria-label="Copy SHA-384"><svg class="ic ic-sm"><use href="#ic-copy"/></svg></button></div>
+              <div class="hash-card"><span class="hash-algo">SHA-512</span><code class="hash-val" id="hash-sha512">—</code><button class="icon-btn-sm" data-copy-el="hash-sha512" aria-label="Copy SHA-512"><svg class="ic ic-sm"><use href="#ic-copy"/></svg></button></div>
+              <div class="hash-card hidden" id="hash-hmac-row"><span class="hash-algo">HMAC-256</span><code class="hash-val" id="hash-hmac">—</code><button class="icon-btn-sm" data-copy-el="hash-hmac" aria-label="Copy HMAC"><svg class="ic ic-sm"><use href="#ic-copy"/></svg></button></div>
+            </div>
+            <div id="crypto-extra-wrap" class="mt-12 hidden">
+              <div class="field-label" id="crypto-extra-label">Vault Output</div>
+              <textarea id="crypto-extra-output" class="code-area h-240 mt-4" data-lang="json" readonly></textarea>
+            </div>
+          </div>
+
+          <!-- OUT 6: JWT STUDIO -->
+          <div class="out-pane" id="out-jwt">
+            <div id="jwt-status-banner" class="verify-banner hidden"></div>
+            <div id="jwt-warnings" class="warnings-list"></div>
+            <div id="jwt-timeline" class="meta-strip hidden"></div>
+            <div class="jwt-cards">
+              <div class="jwt-card jwt-h"><div class="jwt-card-head" data-i18n="jwtHeader">Header</div><pre id="jwt-header-out" class="jwt-pre">—</pre></div>
+              <div class="jwt-card jwt-p"><div class="jwt-card-head" data-i18n="jwtPayload">Payload &amp; Claims</div><pre id="jwt-payload-out" class="jwt-pre">—</pre></div>
+              <div class="jwt-card jwt-s"><div class="jwt-card-head" data-i18n="jwtSignature">Signature &amp; Verification</div><pre id="jwt-sig-out" class="jwt-pre">—</pre></div>
+            </div>
+          </div>
+
+          <!-- OUT 7: COLORS & WCAG LAB -->
+          <div class="out-pane" id="out-colors">
+            <div id="wcag-preview-card" class="wcag-card">
+              <div class="wcag-sample-lg">Aa — Large Heading Sample (24px)</div>
+              <div class="wcag-sample-sm">Body paragraph text sample for WCAG 2.1 accessibility verification.</div>
+              <div class="wcag-badges" id="wcag-badges"></div>
+            </div>
+            <div class="field-label mt-16" data-i18n="colShadesTitle">Tailwind 50–950 Shade Scale (Click to Copy)</div>
+            <div id="tailwind-shades" class="shades-row mt-8"></div>
+            <div class="field-label mt-16" data-i18n="colBlindTitle">Colorblind Simulation</div>
+            <div id="colorblind-grid" class="cvd-grid mt-8"></div>
+          </div>
+
+          <!-- OUT 8: VISUAL CSS / SVG LAB -->
+          <div class="out-pane" id="out-visual">
+            <div id="visual-preview-stage" class="visual-stage">
+              <div id="visual-preview-target"></div>
+            </div>
+            <div class="toolbar-row mt-12">
+              <div class="segmented" id="visual-code-tabs">
+                <button class="seg-btn active" data-vcode="css">Vanilla CSS / SVG</button>
+                <button class="seg-btn" data-vcode="tailwind">Tailwind / JSX</button>
+                <button class="seg-btn" data-vcode="extra">CSS Data URI</button>
+              </div>
+              <div class="btn-row">
+                <span id="visual-stat-pill" class="stat-pill hidden"></span>
+                <button id="btn-visual-export-png" class="btn btn-secondary btn-sm hidden" data-i18n="gradDlPng">Export PNG</button>
+              </div>
+            </div>
+            <textarea id="visual-code-output" class="code-area h-180 mt-8" data-lang="css" readonly></textarea>
+          </div>
+
+          <!-- OUT 9: REGEX LAB -->
+          <div class="out-pane" id="out-regex">
+            <div class="field-label">Highlighted Matches</div>
+            <div id="regex-highlighted" class="regex-highlight-box mt-4"></div>
+            <div class="field-label mt-12">Capture Groups &amp; Matches</div>
+            <div id="regex-groups-table" class="table-box mt-4"></div>
+            <div id="regex-replace-wrap" class="mt-12 hidden">
+              <div class="field-label">Replace Preview</div>
+              <pre id="regex-replace-out" class="code-pre mt-4"></pre>
+            </div>
+          </div>
+
+          <!-- OUT 10: DIFF STUDIO -->
+          <div class="out-pane" id="out-diff">
+            <div id="diff-output" class="diff-output-box"></div>
+          </div>
+
+          <!-- OUT 11: MARKDOWN LIVE PREVIEW -->
+          <div class="out-pane" id="out-markdown">
+            <div class="segmented mb-8" id="md-out-tabs">
+              <button class="seg-btn active" data-md-view="preview">Rendered Preview</button>
+              <button class="seg-btn" data-md-view="html">Clean HTML5 Code</button>
+            </div>
+            <iframe id="md-preview-frame" class="md-frame" title="Rendered Markdown Preview" sandbox=""></iframe>
+            <textarea id="md-html-output" class="code-area full-h hidden" data-lang="html" readonly></textarea>
+          </div>
+
+          <!-- OUT 12: CRON EXPLAINER -->
+          <div class="out-pane" id="out-cron">
+            <div id="cron-human-card" class="cron-hero">Every 15 minutes...</div>
+            <div class="field-label mt-16">Next 10 Scheduled Executions</div>
+            <div id="cron-runs-list" class="cron-runs mt-8"></div>
+          </div>
+
+          <!-- OUT 13: OMNIPIPE TRACE & OUTPUT -->
+          <div class="out-pane" id="out-omnipipe">
+            <div class="field-label">Step-by-Step Execution Trace</div>
+            <div id="pipe-trace-list" class="pipe-trace mt-8"></div>
+            <div class="field-label mt-12">Final Pipeline Result</div>
+            <textarea id="pipe-final-output" class="code-area h-240 mt-4" data-lang="plain" readonly></textarea>
+          </div>
+
+          <!-- OUT 14: UNIVERSAL CODE OUTPUT -->
+          <div class="out-pane" id="out-code">
+            <textarea id="code-output" class="code-area full-h" data-lang="plain" readonly placeholder="Output will appear here..."></textarea>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- COMMAND PALETTE + MAGIC PASTE MODAL (Ctrl+K) -->
+  <div id="cmd-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Command Palette and Magic Paste">
+    <div class="modal-card modal-lg">
+      <div class="cmd-head">
+        <svg class="ic"><use href="#ic-search"/></svg>
+        <input type="text" id="cmd-input" class="cmd-input" placeholder="Type tool name OR paste JSON, JWT, cURL, Timestamp, Color, Base64, Cron, SVG...">
+        <button id="btn-cmd-close" class="icon-btn" aria-label="Close"><svg class="ic"><use href="#ic-close"/></svg></button>
       </div>
-    </section>
-  </main>
+      <div id="magic-detect-banner" class="magic-banner hidden"></div>
+      <div id="cmd-results" class="cmd-results"></div>
+    </div>
+  </div>
 
-  <script src="js/i18n.js"></script>
-  <script src="js/main.js"></script>
-  <script src="app.js"></script>
+  <!-- HISTORY SLIDE-OVER DRAWER -->
+  <div id="history-drawer" class="drawer" role="dialog" aria-label="Conversion History">
+    <div class="drawer-head">
+      <h3 data-i18n="historyTitle">History</h3>
+      <button id="btn-history-close" class="icon-btn" aria-label="Close History"><svg class="ic"><use href="#ic-close"/></svg></button>
+    </div>
+    <div id="history-list" class="drawer-body"></div>
+  </div>
+
+  <!-- CLEAN PREMIUM MODAL -->
+  <div id="pro-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="OmniConvert PRO">
+    <div class="modal-card modal-sm text-center">
+      <div class="pro-icon">💎</div>
+      <h3 data-i18n="proModalTitle">Unlock OmniConvert PRO</h3>
+      <p class="muted mt-8" data-i18n="proModalDesc">Upgrade to IA Code Studio Premium for white-label Playground exports, 4K/SVG branded QR codes, and priority updates.</p>
+      <div class="form-stack mt-16">
+        <a href="https://buy.stripe.com/bJecN61Fk3staax7mGbfO03" target="_blank" rel="noopener noreferrer" class="btn btn-primary w-full" data-i18n="proModalCta">Go Premium ⚡</a>
+        <button id="btn-pro-modal-close" class="btn btn-ghost w-full" data-i18n="proModalCancel">Continue Free</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIVE TOAST NOTIFICATION (Previously missing from DOM!) -->
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Modular Offline Scripts (Works on HTTPS, localhost, file://, AND Chrome Extension MV3!) -->
+  <script defer src="modules/core.js"></script>
+  <script defer src="modules/code-editor.js"></script>
+  <script defer src="modules/engines-data.js"></script>
+  <script defer src="modules/engines-crypto-qr.js"></script>
+  <script defer src="modules/engines-misc.js"></script>
+  <script defer src="modules/ui-tools.js"></script>
+  <script defer src="modules/ui-omnipipe.js"></script>
+  <script defer src="app.js"></script>
 </body>
 </html>

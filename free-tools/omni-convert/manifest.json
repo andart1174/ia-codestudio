@@ -1,18 +1,23 @@
 {
   "manifest_version": 3,
-  "name": "OmniConvert Pro - Ultimate Dev Toolkit",
-  "version": "1.0.0",
-  "description": "An offline developer toolkit for coding, formatting data, converting files, and designing styles directly in your browser.",
+  "name": "OmniConvert Pro 2.0 - Ultimate Offline Dev Workstation",
+  "version": "2.0.0",
+  "description": "100% offline, zero-CDN developer workstation: Playground 2.0, OmniPipe pipelines, JSON/XML/YAML/CSV, JSON to TS/Zod/SQL, ISO QR Studio, AES-256 Vault, JWT Studio, cURL translator & CSS Lab.",
   "background": {
     "service_worker": "background.js"
   },
   "action": {
-    "default_icon": "icon.png"
+    "default_title": "Launch OmniConvert Pro 2.0",
+    "default_icon": {
+      "16": "icon-16.png",
+      "48": "icon-48.png",
+      "128": "icon-128.png"
+    }
   },
   "icons": {
-    "16": "icon.png",
-    "48": "icon.png",
-    "128": "icon.png"
+    "16": "icon-16.png",
+    "48": "icon-48.png",
+    "128": "icon-128.png"
   },
   "permissions": []
 }
