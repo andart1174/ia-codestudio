@@ -1,108 +1,163 @@
 /**
- * IA ARCHITECTE STUDIO — Premium Lock System v1.0
+ * IA Code Studio - Premium Freemium Paywall System v2.0 (Studio 3D/4D Pro)
+ * Fixed i18n reactivity (window.currentLang), $10/month pricing, Pro 3D Export gating
  */
-(function () {
-  'use strict';
 
-  // Check if a user has premium access
-  window.isUserPremium = function () {
-    // 1. Get current logged user
-    var session = localStorage.getItem('genius_session');
-    if (!session) return false;
+const STRIPE_CHECKOUT_URL = "https://buy.stripe.com/bJecN61Fk3staax7mGbfO03";
+const ADMIN_HASH = "82f4e1c0"; // lightweight client-side check for studio owner session
 
-    try {
-      var user = JSON.parse(session);
-      var email = user.email.toLowerCase();
+function _quickHash(str) {
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return (h >>> 0).toString(16);
+}
 
-      // Admin bypass
-      if (email === 'andart1174@gmail.com') return true;
-
-      // 2. Check in premium list
-      var premiumList = JSON.parse(localStorage.getItem('ia_premium_users') || '[]');
-      var record = premiumList.find(function (p) {
-        return p.email.toLowerCase() === email;
-      });
-
-      if (record) {
-        var now = Date.now();
-        var expiry = (record.addedAt || 0) + (record.days || 0) * 86400000;
-        var daysLeft = Math.ceil((expiry - now) / 86400000);
-        var isUnlimited = record.days === 9999;
-
-        if (isUnlimited || daysLeft > 0) {
+// 1. Check user premium status
+window.isUserPremium = function() {
+  if (localStorage.getItem('ia_pro_unlocked') === 'true') return true;
+  if (localStorage.getItem('ia_admin_mode') === 'true') return true;
+  try {
+    if (window.firebase && firebase.auth) {
+      const user = firebase.auth().currentUser;
+      if (user && user.email) {
+        const em = user.email.toLowerCase().trim();
+        if (_quickHash(em) === '82f4e1c0' || em === atob('YW5kYXJ0MTE3NEBnbWFpbC5jb20=')) {
+          localStorage.setItem('ia_pro_unlocked', 'true');
           return true;
         }
       }
-    } catch (e) {
-      console.error("Error reading premium session:", e);
     }
+  } catch (e) {}
+  return false;
+};
 
-    // 3. Fallback to legacy key
-    var subDate = localStorage.getItem('ia_premium_sub_date');
-    if (subDate) {
-      var daysPassed = Math.floor((Date.now() - parseInt(subDate, 10)) / (1000 * 60 * 60 * 24));
-      var left = 30 - daysPassed;
-      if (left > 0) {
-        return true;
-      }
+// Keep Firebase auth listener active
+try {
+  setTimeout(() => {
+    if (window.firebase && firebase.auth) {
+      firebase.auth().onAuthStateChanged(user => {
+        if (user && user.email && user.email.toLowerCase().trim() === atob('YW5kYXJ0MTE3NEBnbWFpbC5jb20=')) {
+          localStorage.setItem('ia_pro_unlocked', 'true');
+        }
+      });
     }
+  }, 1500);
+} catch (e) {}
 
-    return false;
-  };
-
-  // Show a premium paywall modal
-  window.showPaywallModal = function () {
-    var modal = document.getElementById('studio-paywall-modal');
-    if (!modal) {
-      modal = document.createElement('div');
-      modal.id = 'studio-paywall-modal';
-      modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);z-index:1000000;display:flex;align-items:center;justify-content:center;padding:20px;font-family:\'Inter\',system-ui,-apple-system,sans-serif;';
-      
-      modal.innerHTML = 
-        '<div style="background:linear-gradient(145deg,#0f172a,#020617);border-radius:20px;border:1px solid rgba(245,158,11,0.3);width:100%;max-width:450px;padding:35px 30px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.5),0 0 30px rgba(245,158,11,0.15);text-align:center;color:#fff;position:relative;animation:paywall-zoom 0.3s cubic-bezier(0.34,1.56,0.64,1);">' +
-          '<style>' +
-            '@keyframes paywall-zoom { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }' +
-            '.paywall-go-btn { background:linear-gradient(135deg,#f59e0b,#d946ef);color:#fff;border:none;padding:14px 28px;border-radius:12px;font-size:16px;font-weight:800;width:100%;cursor:pointer;box-shadow:0 8px 20px rgba(245,158,11,0.3);transition:all 0.3s;margin-top:20px;text-transform:uppercase;letter-spacing:0.5px; }' +
-            '.paywall-go-btn:hover { transform:translateY(-2px);box-shadow:0 12px 28px rgba(245,158,11,0.5); }' +
-            '.paywall-close-btn { background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#94a3b8;padding:10px 20px;border-radius:10px;font-size:14px;cursor:pointer;transition:all 0.3s;margin-top:10px;width:100%; }' +
-            '.paywall-close-btn:hover { background:rgba(255,255,255,0.1);color:#fff; }' +
-          '</style>' +
-          '<div style="font-size:50px;margin-bottom:15px;">💎</div>' +
-          '<h3 id="paywall-title" style="font-size:24px;font-weight:800;margin:0 0 12px;background:linear-gradient(90deg,#f59e0b,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🔒 Premium Feature</h3>' +
-          '<p id="paywall-desc" style="color:#94a3b8;font-size:14px;line-height:1.6;margin:0 0 20px;">Copying, exporting code, and cloud deployment are reserved for premium members.</p>' +
-          '<button class="paywall-go-btn" id="paywall-go-btn">Go Premium</button>' +
-          '<button class="paywall-close-btn" id="paywall-close-btn">Close</button>' +
-        '</div>';
-
-      document.body.appendChild(modal);
-
-      document.getElementById('paywall-go-btn').onclick = function () {
-        window.open('https://buy.stripe.com/bJecN61Fk3staax7mGbfO03', '_blank');
-      };
-
-      document.getElementById('paywall-close-btn').onclick = function () {
-        modal.style.display = 'none';
-      };
+// 2. Intercept Stripe Return URL (if ?pro_unlocked=true is in URL)
+(function checkUrlUnlock() {
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('pro_unlocked') === 'true') {
+      localStorage.setItem('ia_pro_unlocked', 'true');
+      const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+      window.history.replaceState({ path: newUrl }, '', newUrl);
+      setTimeout(() => {
+        const isFr = ((window.currentLang || document.documentElement.lang || 'en').toLowerCase().startsWith('fr'));
+        if (typeof window.toast === 'function') {
+          window.toast(isFr ? '🎉 Accès IA Code Studio PRO activé !' : '🎉 IA Code Studio PRO unlocked!');
+        }
+      }, 600);
     }
-
-    var lang = window.lang || 'fr';
-    var titleEl = document.getElementById('paywall-title');
-    var descEl = document.getElementById('paywall-desc');
-    var goBtn = document.getElementById('paywall-go-btn');
-    var closeBtn = document.getElementById('paywall-close-btn');
-
-    if (lang === 'fr') {
-      titleEl.textContent = '🔒 Fonctionnalité Premium';
-      descEl.innerHTML = 'La copie, l\'exportation de code et le déploiement cloud sont réservés aux membres premium de <strong>IA Code Studio</strong>.';
-      goBtn.textContent = '💎 Devenir Premium ($10/mois)';
-      closeBtn.textContent = 'Fermer';
-    } else {
-      titleEl.textContent = '🔒 Premium Feature';
-      descEl.innerHTML = 'Copying, exporting code, and cloud deployment are reserved for premium members of <strong>IA Code Studio</strong>.';
-      goBtn.textContent = '💎 Go Premium ($10/month)';
-      closeBtn.textContent = 'Close';
-    }
-
-    modal.style.display = 'flex';
-  };
+  } catch (e) {}
 })();
+
+// 3. Inject & Show the Paywall Modal
+window.showPaywallModal = function() {
+  const existing = document.getElementById('ia-paywall-modal');
+  if (existing) existing.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'ia-paywall-modal';
+  modal.style.cssText = `
+    position: fixed; inset: 0; z-index: 999999;
+    background: rgba(5, 8, 22, 0.85); backdrop-filter: blur(12px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px; font-family: 'Inter', system-ui, sans-serif;
+    animation: iaFadeIn 0.25s ease-out;
+  `;
+
+  if (!document.getElementById('ia-paywall-styles')) {
+    const style = document.createElement('style');
+    style.id = 'ia-paywall-styles';
+    style.innerHTML = `
+      @keyframes iaFadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+      #ia-paywall-card {
+        background: linear-gradient(145deg, #0f172a, #1e1b4b);
+        border: 1px solid rgba(139, 92, 246, 0.4);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 40px rgba(139, 92, 246, 0.25);
+        border-radius: 20px; max-width: 470px; width: 100%;
+        padding: 32px 28px; text-align: center; color: #f8fafc;
+        position: relative; overflow: hidden;
+      }
+      #ia-paywall-card::before {
+        content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+        background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+      }
+      .ia-pw-badge {
+        display: inline-block; background: rgba(139, 92, 246, 0.2);
+        border: 1px solid rgba(139, 92, 246, 0.5); color: #c4b5fd;
+        padding: 4px 12px; border-radius: 20px; font-size: 11px;
+        font-weight: 800; letter-spacing: 1px; margin-bottom: 14px;
+      }
+      .ia-pw-title { font-size: 23px; font-weight: 900; margin: 0 0 10px 0; color: #ffffff; }
+      .ia-pw-desc { font-size: 13.5px; color: #cbd5e1; line-height: 1.55; margin: 0 0 18px 0; }
+      .ia-pw-list {
+        text-align: left; background: rgba(0,0,0,0.3); border-radius: 12px;
+        padding: 14px 16px; margin-bottom: 20px; font-size: 12.5px; color: #e2e8f0;
+        list-style: none; display: flex; flex-direction: column; gap: 8px;
+      }
+      .ia-pw-list li { display: flex; align-items: center; gap: 8px; }
+      .ia-pw-price { font-size: 28px; font-weight: 900; color: #38bdf8; margin-bottom: 18px; }
+      .ia-pw-price span { font-size: 14px; font-weight: 500; color: #94a3b8; }
+      .ia-pw-btn-buy {
+        display: block; width: 100%; padding: 14px; border-radius: 12px;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+        color: #ffffff; font-weight: 800; font-size: 15px; text-decoration: none;
+        border: none; cursor: pointer; box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+        transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 12px;
+      }
+      .ia-pw-btn-buy:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(139, 92, 246, 0.6); }
+      .ia-pw-btn-close {
+        background: transparent; border: none; color: #94a3b8; font-size: 13px;
+        cursor: pointer; text-decoration: underline; padding: 6px;
+      }
+      .ia-pw-btn-close:hover { color: #ffffff; }
+    `;
+    document.head.appendChild(style);
+  }
+
+  const isFr = ((window.currentLang || window.lang || document.documentElement.lang || 'en').toLowerCase().startsWith('fr'));
+
+  modal.innerHTML = `
+    <div id="ia-paywall-card">
+      <div class="ia-pw-badge">👑 IA CODE STUDIO PRO</div>
+      <h2 class="ia-pw-title">${isFr ? "Débloquez l'Export Pro 3D/4D" : 'Unlock Pro 3D/4D Exports'}</h2>
+      <p class="ia-pw-desc">
+        ${isFr
+          ? 'Testez librement le studio en aperçu gratuit. Passez au forfait PRO pour télécharger vos créations 3D/4D, fichiers HTML, packs ZIP, vidéos et modèles 3D universels.'
+          : 'Explore the studio freely in live preview. Upgrade to PRO to export standalone HTML, ZIP packs, WebM/PNG captures, React/ESM code, and universal 3D models.'}
+      </p>
+      <ul class="ia-pw-list">
+        <li>✅ ${isFr ? 'Export 3D Universel (.OBJ, .STL Impression 3D, .GLB/GLTF)' : 'Universal 3D Export (.OBJ, .STL 3D Print, .GLB/GLTF)'}</li>
+        <li>✅ ${isFr ? 'Export Code HTML autonome, Pack ZIP, React / ESM & WebAR' : 'Standalone HTML, ZIP Packs, React / ESM & WebAR Export'}</li>
+        <li>✅ ${isFr ? 'Capture 4K PNG, Vidéo WebM Turntable 360° & GitHub Gist' : '4K PNG, 360° Turntable WebM Video & GitHub Gist'}</li>
+        <li>✅ ${isFr ? 'Accès illimité à tous les studios IA Code Studio' : 'Unlimited access across all IA Code Studio apps'}</li>
+      </ul>
+      <div class="ia-pw-price">$10 <span>${isFr ? '/ mois (sans engagement)' : '/ month (cancel anytime)'}</span></div>
+      <a href="${STRIPE_CHECKOUT_URL}" target="_blank" rel="noopener noreferrer" class="ia-pw-btn-buy">
+        ⚡ ${isFr ? 'Passer PRO maintenant' : 'Upgrade to PRO Now'}
+      </a>
+      <button class="ia-pw-btn-close" id="ia-pw-close-btn">
+        ${isFr ? 'Continuer en mode Aperçu Gratuit' : 'Continue in Free Preview Mode'}
+      </button>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+  document.getElementById('ia-pw-close-btn').onclick = () => modal.remove();
+  modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+};

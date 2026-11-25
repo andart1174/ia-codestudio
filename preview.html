@@ -260,6 +260,9 @@
     <button class="hud-btn" onclick="toggleFullscreen()" title="Fullscreen Mode">
       ⛶ <span style="display:none;" class="lbl-desktop">Fullscreen</span>
     </button>
+    <a href="#" id="btn-remix-3d" class="hud-btn" title="Remix in Studio 3D/4D Pro" style="border-color:rgba(16,185,129,0.45);color:#6ee7b7;background:rgba(16,185,129,0.12);">
+      🔀 <span class="lbl-remix">Remix 3D</span>
+    </a>
     <a href="#" id="btn-studio-edit" class="hud-btn hud-btn-primary">
       ⚡ <span class="lbl-studio">Studio</span>
     </a>
@@ -330,10 +333,14 @@
         return;
       }
 
-      // Set link to open in studio
+      // Set link to open in studio & 1-click Remix in Studio 3D/4D Pro
       const studioLink = document.getElementById('btn-studio-edit');
       if (studioLink) {
         studioLink.href = `ia-architecte-app/index.html?fork=${encodeURIComponent(postId)}`;
+      }
+      const remix3dLink = document.getElementById('btn-remix-3d');
+      if (remix3dLink) {
+        remix3dLink.href = `studio-3d-4d-pro/index.html?remix=${encodeURIComponent(postId)}`;
       }
 
       try {

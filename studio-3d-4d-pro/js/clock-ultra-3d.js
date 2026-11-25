@@ -115,7 +115,7 @@ window.ClockUltra3D = (() => {
             descX: 50,
             descY: 42,
             ctaText: 'Explore Collection',
-            ctaUrl: 'https://example.com',
+            ctaUrl: 'https://ia-codestudio.com',
             ctaColor: '#0ea5e9',
             bgType: 'gradient',
             bgColor1: '#090d1a',
@@ -262,18 +262,18 @@ window.ClockUltra3D = (() => {
 
     let socialContactEnabled = false;
     let socialContactHours = [
-        { hour: 12, type: 'website', label: 'Official Website / Site Officiel', value: 'www.example.com', url: 'https://www.example.com' },
-        { hour: 1, type: 'phone', label: 'Call Us / Appelez-nous', value: '+373 69 000 000', url: 'tel:+37369000000' },
-        { hour: 2, type: 'telegram', label: 'Telegram Chat / Chat Telegram', value: '@yourusername', url: 'https://t.me/yourusername' },
-        { hour: 3, type: 'facebook', label: 'Facebook Page / Page Facebook', value: 'yourpage', url: 'https://facebook.com/yourpage' },
-        { hour: 4, type: 'youtube', label: 'YouTube Channel / Chaîne YouTube', value: 'yourchannel', url: 'https://youtube.com/c/yourchannel' },
-        { hour: 5, type: 'whatsapp', label: 'WhatsApp Chat / Chat WhatsApp', value: 'Chat Now / Parler', url: 'https://wa.me/37369000000' },
+        { hour: 12, type: 'website', label: 'Official Website / Site Officiel', value: 'ia-codestudio.com', url: 'https://ia-codestudio.com' },
+        { hour: 1, type: 'phone', label: 'Call Us / Appelez-nous', value: '+1 (555) 010-3D4D', url: 'tel:+15550103343' },
+        { hour: 2, type: 'telegram', label: 'Telegram Chat / Chat Telegram', value: '@iacodestudio', url: 'https://ia-codestudio.com' },
+        { hour: 3, type: 'facebook', label: 'Facebook Page / Page Facebook', value: 'IA Code Studio', url: 'https://ia-codestudio.com' },
+        { hour: 4, type: 'youtube', label: 'YouTube Channel / Chaîne YouTube', value: 'IA Code Studio', url: 'https://ia-codestudio.com' },
+        { hour: 5, type: 'whatsapp', label: 'WhatsApp Chat / Chat WhatsApp', value: 'Chat Now / Parler', url: 'https://ia-codestudio.com' },
         { hour: 6, type: 'instagram', label: 'Instagram Profile / Profil Instagram', value: '@yourinsta', url: 'https://instagram.com/yourinsta' },
         { hour: 7, type: 'linkedin', label: 'LinkedIn Profile / Profil LinkedIn', value: 'yourcompany', url: 'https://linkedin.com/company/yourcompany' },
         { hour: 8, type: 'x', label: 'Twitter / X', value: '@yourhandle', url: 'https://x.com/yourhandle' },
         { hour: 9, type: 'tiktok', label: 'TikTok Account / Compte TikTok', value: '@yourtiktok', url: 'https://tiktok.com/@yourtiktok' },
         { hour: 10, type: 'pinterest', label: 'Pinterest Boards / Tableaux Pinterest', value: '@yourpinterest', url: 'https://pinterest.com/yourpinterest' },
-        { hour: 11, type: 'email', label: 'Send Email / Envoyer un Email', value: 'contact@example.com', url: 'mailto:contact@example.com' }
+        { hour: 11, type: 'email', label: 'Send Email / Envoyer un Email', value: 'contact@ia-codestudio.com', url: 'mailto:contact@ia-codestudio.com' }
     ];
 
     let celestialTrackerEnabled = false;
@@ -4804,7 +4804,7 @@ window.ClockUltra3D = (() => {
                     descX: 50,
                     descY: 42,
                     ctaText: 'Learn More',
-                    ctaUrl: 'https://example.com',
+                    ctaUrl: 'https://ia-codestudio.com',
                     ctaColor: '#0ea5e9',
                     bgType: 'gradient',
                     bgColor1: '#090d1a',

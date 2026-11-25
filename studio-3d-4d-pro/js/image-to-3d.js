@@ -6,18 +6,24 @@ window.ImageTo3D = (() => {
 
   function buildUI() {
     const isEN = (window.currentLang || 'en') !== 'fr';
-    _panel = document.createElement('div');
-    _panel.id = 'i3d-panel';
-    _panel.style.cssText = 'display:none;position:absolute;inset:0;background:#0d1225;z-index:30;padding:15px;font-family:Inter,sans-serif;color:#f1f5f9;';
+    if (!_panel) {
+      _panel = document.createElement('div');
+      _panel.id = 'i3d-panel';
+      _panel.style.cssText = 'display:none;position:absolute;inset:0;background:#0d1225;z-index:45;padding:15px;font-family:Inter,sans-serif;color:#f1f5f9;overflow-y:auto;';
+      _container.appendChild(_panel);
+    }
     _panel.innerHTML = `
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:15px;border-bottom:1px solid #1e293b;padding-bottom:10px;">
-        <div style="width:36px;height:36px;background:linear-gradient(135deg,#6366f1,#818cf8);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;">🖼️</div>
-        <div>
-          <div style="font-size:14px;font-weight:700;">${isEN ? 'Image to 3D Heightmap' : 'Image en Carte de Hauteur 3D'}</div>
-          <div style="font-size:10px;color:#64748b;">${isEN ? 'Convert photos to landscape models' : 'Convertir des photos en modèles 3D'}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:15px;border-bottom:1px solid #1e293b;padding-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:36px;height:36px;background:linear-gradient(135deg,#6366f1,#818cf8);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;">🖼️</div>
+          <div>
+            <div style="font-size:14px;font-weight:700;">${isEN ? 'Image to 3D Heightmap' : 'Image en Carte de Hauteur 3D'}</div>
+            <div style="font-size:10px;color:#64748b;">${isEN ? 'Convert photos to landscape models' : 'Convertir des photos en modèles 3D'}</div>
+          </div>
         </div>
+        <button id="i3d-close" style="background:rgba(255,255,255,0.06);border:1px solid #334155;border-radius:6px;color:#94a3b8;padding:4px 9px;cursor:pointer;font-size:12px;">✕</button>
       </div>
-      <div id="i3d-drop" style="flex:1;border:2px dashed rgba(99,102,241,0.4);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:0.2s;margin-bottom:15px;background:rgba(99,102,241,0.03);">
+      <div id="i3d-drop" style="min-height:110px;border:2px dashed rgba(99,102,241,0.4);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:0.2s;margin-bottom:15px;background:rgba(99,102,241,0.03);padding:12px;">
         <span style="font-size:24px;">📁</span>
         <span style="font-size:11px;color:#94a3b8;">${isEN ? 'Drop image or click to browse' : 'Déposez une image ou cliquez'}</span>
         <input type="file" id="i3d-file" accept="image/*" style="display:none;">
@@ -36,11 +42,11 @@ window.ImageTo3D = (() => {
       </div>
       <button id="i3d-gen-btn" style="width:100%;padding:12px;background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.4);border-radius:10px;color:#a5b4fc;font-size:12px;font-weight:700;cursor:pointer;transition:0.3s;">${isEN ? '⚡ GENERATE 3D HEIGHTMAP' : '⚡ GÉNÉRER LA CARTE 3D'}</button>
     `;
-    _container.appendChild(_panel);
     _bindUI();
   }
 
   function _bindUI() {
+    _panel.querySelector('#i3d-close').onclick = () => { _panel.style.display = 'none'; };
     _panel.querySelector('#i3d-drop').onclick = () => _panel.querySelector('#i3d-file').click();
     _panel.querySelector('#i3d-file').addEventListener('change', e => e.target.files[0] && _loadImg(e.target.files[0]));
     const drop = _panel.querySelector('#i3d-drop');

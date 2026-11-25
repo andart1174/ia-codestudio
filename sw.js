@@ -1,10 +1,11 @@
 // Service Worker for IA Code Studio (ia-codestudio.com)
 // PWA Offline Support & Asset Cache - Network-First Strategy
 
-const CACHE_NAME = 'iacodestudio-v2.0';
+const CACHE_NAME = 'iacodestudio-v2.1';
 const CORE_ASSETS = [
   '/',
   '/index.html',
+  '/preview.html',
   '/manifest.json',
   '/logo-ia-codestudio.png',
   '/genius-ia-coin.png',
@@ -18,7 +19,10 @@ const CORE_ASSETS = [
   '/free-tools/omni-convert/modules/engines-crypto-qr.js',
   '/free-tools/omni-convert/modules/engines-misc.js',
   '/free-tools/omni-convert/modules/ui-tools.js',
-  '/free-tools/omni-convert/modules/ui-omnipipe.js'
+  '/free-tools/omni-convert/modules/ui-omnipipe.js',
+  '/studio-3d-4d-pro/index.html',
+  '/studio-3d-4d-pro/js/studio-module-loader.js',
+  '/studio-3d-4d-pro/js/studio-shell-ui.js'
 ];
 
 // Install: Pre-cache core shell assets

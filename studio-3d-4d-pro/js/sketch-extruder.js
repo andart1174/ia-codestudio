@@ -21,9 +21,98 @@ const SketchExtruder = (() => {
   let scene, camera, renderer, controls, transformControl, globalGroup, bgGroup = null;
   let mainPane;
   let loadedFont = null;
-  let currentLang = 'fr';
+  let currentLang = window.currentLang || 'en';
   let currentBgEffect = 'none';
-  let mainAmbientLight, mainHemiLight, mainDirLight;
+  let mainAmbientLight, mainHemiLight, mainDirLight, studioEnvRT = null, customLightingGroup = null;
+  const externalAnimHooks = new Map();
+
+  function disposeObject3D(root, skipSet) {
+      if (!root) return;
+      root.traverse(child => {
+          if (skipSet && skipSet.has(child)) return;
+          if (child.geometry && typeof child.geometry.dispose === 'function') {
+              try { child.geometry.dispose(); } catch (e) {}
+          }
+          if (child.material) {
+              const mats = Array.isArray(child.material) ? child.material : [child.material];
+              mats.forEach(mat => {
+                  if (!mat) return;
+                  for (const key in mat) {
+                      const val = mat[key];
+                      if (val && val.isTexture && typeof val.dispose === 'function') {
+                          try { val.dispose(); } catch (e) {}
+                      }
+                  }
+                  if (typeof mat.dispose === 'function') {
+                      try { mat.dispose(); } catch (e) {}
+                  }
+              });
+          }
+      });
+  }
+
+  function notifySceneChange() {
+      try {
+          window.dispatchEvent(new CustomEvent('studio:scenechange', {
+              detail: { count: models.length, activeModelId }
+          }));
+      } catch (e) {}
+  }
+
+  function createStudioEnvironment(rend) {
+      if (!rend || !THREE.PMREMGenerator) return null;
+      try {
+          const pmrem = new THREE.PMREMGenerator(rend);
+          pmrem.compileEquirectangularShader();
+          const envScene = new THREE.Scene();
+          envScene.background = new THREE.Color(0x0b1120);
+          const panelGeo = new THREE.PlaneGeometry(12, 12);
+          const p1 = new THREE.Mesh(panelGeo, new THREE.MeshBasicMaterial({ color: 0xe0f2fe, side: THREE.DoubleSide }));
+          p1.position.set(10, 8, 10); p1.lookAt(0, 0, 0); envScene.add(p1);
+          const p2 = new THREE.Mesh(panelGeo, new THREE.MeshBasicMaterial({ color: 0x818cf8, side: THREE.DoubleSide }));
+          p2.position.set(-12, 6, -6); p2.lookAt(0, 0, 0); envScene.add(p2);
+          const p3 = new THREE.Mesh(panelGeo, new THREE.MeshBasicMaterial({ color: 0x38bdf8, side: THREE.DoubleSide }));
+          p3.position.set(0, 14, -10); p3.lookAt(0, 0, 0); envScene.add(p3);
+          const p4 = new THREE.Mesh(panelGeo, new THREE.MeshBasicMaterial({ color: 0xf472b6, side: THREE.DoubleSide }));
+          p4.position.set(0, -10, 8); p4.lookAt(0, 0, 0); envScene.add(p4);
+          const rt = pmrem.fromScene(envScene, 0.04);
+          pmrem.dispose();
+          disposeObject3D(envScene);
+          return rt;
+      } catch (e) {
+          console.warn('PMREM studio env fallback:', e);
+          return null;
+      }
+  }
+
+  function setLightingPreset(presetName) {
+      if (!scene) return;
+      if (customLightingGroup) { scene.remove(customLightingGroup); customLightingGroup = null; }
+      const presetsMap = {
+          studio:    { bg: 0x050815, amb: [0xffffff, 0.55], hemi: [0xe0f2fe, 0x1e293b, 0.8], dir: [0xffffff, 1.35, 100, 200, 200], extras: [[0x38bdf8, 0.7, -120, 80, -120]] },
+          cyberpunk: { bg: 0x050214, amb: [0x2e1065, 0.5],  hemi: [0x22d3ee, 0xec4899, 0.9], dir: [0x38bdf8, 1.5, 120, 180, 120], extras: [[0xec4899, 2.0, -140, 120, -100], [0x22d3ee, 1.6, 120, -40, 140]] },
+          sunset:    { bg: 0x1a0b12, amb: [0xfde68a, 0.45], hemi: [0xfb923c, 0x312e81, 0.95], dir: [0xf59e0b, 1.8, -160, 110, 140], extras: [[0xf43f5e, 1.2, 140, 60, -140]] },
+          softbox:   { bg: 0x111827, amb: [0xffffff, 0.75], hemi: [0xffffff, 0x64748b, 1.0], dir: [0xffffff, 1.4, 80, 220, 160], extras: [[0xe2e8f0, 0.9, -150, 140, 80], [0x94a3b8, 0.7, 0, 80, -180]] },
+          rim:       { bg: 0x020617, amb: [0x1e293b, 0.3],  hemi: [0x6366f1, 0x0f172a, 0.5], dir: [0xffffff, 0.8, 40, 120, 180], extras: [[0x818cf8, 2.4, -140, 120, -180], [0x06b6d4, 2.0, 140, 80, -160]] },
+          emerald:   { bg: 0x031412, amb: [0x064e3b, 0.5],  hemi: [0x34d399, 0x0f172a, 0.85], dir: [0x6ee7b7, 1.4, 100, 200, 150], extras: [[0x10b981, 1.8, -120, 60, -120], [0x2dd4bf, 1.1, 100, -40, 120]] },
+          noir:      { bg: 0x030306, amb: [0x475569, 0.25], hemi: [0x94a3b8, 0x020617, 0.4], dir: [0xf8fafc, 2.2, 160, 240, 100], extras: [] },
+          daylight:  { bg: 0x1e3a5f, amb: [0xf0f9ff, 0.7],  hemi: [0xbae6fd, 0x475569, 1.1], dir: [0xfffbeb, 1.7, 140, 260, 180], extras: [[0x93c5fd, 0.8, -140, 120, -120]] }
+      };
+      const p = presetsMap[presetName] || presetsMap.studio;
+      if (renderer) renderer.setClearColor(p.bg, 1);
+      if (mainAmbientLight) { mainAmbientLight.color.setHex(p.amb[0]); mainAmbientLight.intensity = p.amb[1]; }
+      if (mainHemiLight) { mainHemiLight.color.setHex(p.hemi[0]); mainHemiLight.groundColor.setHex(p.hemi[1]); mainHemiLight.intensity = p.hemi[2]; }
+      if (mainDirLight) { mainDirLight.color.setHex(p.dir[0]); mainDirLight.intensity = p.dir[1]; mainDirLight.position.set(p.dir[2], p.dir[3], p.dir[4]); }
+      if (p.extras && p.extras.length) {
+          customLightingGroup = new THREE.Group();
+          p.extras.forEach(([col, int, x, y, z]) => {
+              const dl = new THREE.DirectionalLight(col, int);
+              dl.position.set(x, y, z);
+              customLightingGroup.add(dl);
+          });
+          scene.add(customLightingGroup);
+      }
+  }
   let cuParallaxX = 0, cuParallaxY = 0;
   let targetCuParallaxX = 0, targetCuParallaxY = 0;
   window._cuGlowIntensity = 1.0;
@@ -486,7 +575,7 @@ const SketchExtruder = (() => {
              <button class="se-btn" id="btn-img3d-scene" style="background:rgba(99,102,241,0.2);color:#a5b4fc;border:1px solid #6366f1;margin-top:0;">🖼️ Image→3D</button>
              <button class="se-btn" id="btn-audio-scene" style="background:rgba(16,185,129,0.15);color:#34d399;border:1px solid #10b981;margin-top:0;">🎵 Audio 3D</button>
           </div>
-          <button class="se-btn" id="btn-video-scene" style="background:rgba(139,92,246,0.2);color:#c4b5fd;border:1px solid #8b5cf6;margin-top:0;">🎥 Video→3D (Effet)</button>
+          <button class="se-btn" id="btn-video-scene" style="background:rgba(139,92,246,0.2);color:#c4b5fd;border:1px solid #8b5cf6;margin-top:0;">🎥 ${isEN ? 'Video→3D (Effect)' : 'Video→3D (Effet)'}</button>
           <input type="file" id="se-img-file" accept="image/*" style="display:none;"/>
           <input type="file" id="se-audio-file" accept="audio/*" style="display:none;"/>
           <input type="file" id="se-video-file" accept="video/*" style="display:none;"/>
@@ -941,163 +1030,97 @@ const SketchExtruder = (() => {
 
     wrapElement.appendChild(container);
 
-    const scriptsToLoad = [
-        "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/TransformControls.js",
-        "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js",
-        "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js",
-        "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"
-    ];
+    const initRegisteredModules = () => {
+        const sidebar = document.getElementById('se-tools-sidebar');
+        const pairs = [
+            ['MathSurface3D', 'btn-math-scene'], ['DataChart3D', 'btn-chart-scene'],
+            ['WebcamAvatar3D', 'btn-webcam-scene'], ['ShaderEditor3D', 'btn-shader-scene'],
+            ['Starmap3D', 'btn-star-scene'], ['KeyframeAnimator3D', 'btn-kf-scene'],
+            ['VoiceSculpture3D', 'btn-voice-scene'], ['QRLabyrinth3D', 'btn-qr-labyrinth-scene'],
+            ['LocationTerrain3D', 'btn-terrain-scene'], ['DocGallery3D', 'btn-gallery-scene'],
+            ['PdfGallery3D', 'btn-pdf-scene'], ['LogicTree3D', 'btn-tree-scene'],
+            ['NeonHandwriting3D', 'btn-neon-scene'], ['CsvChart3D', 'btn-csv-scene'],
+            ['WebNetwork3D', 'btn-webnet-scene'], ['PixelArtVoxel3D', 'btn-pixel-scene'],
+            ['JsonDashboard3D', 'btn-jsonlive-scene'], ['DnaHelix3D', 'btn-dna-scene'],
+            ['GeoGlobe3D', 'btn-geo-scene'], ['PaletteWorld3D', 'btn-palette-scene'],
+            ['SentimentLandscape3D', 'btn-sentiment-scene'], ['FractalGenerator3D', 'btn-fractal-scene'],
+            ['MidiArch3D', 'btn-midi-scene'], ['NeuralNet3D', 'btn-neural-scene'],
+            ['TimelineRiver3D', 'btn-timeline-scene'], ['ChessBoard3D', 'btn-chess-scene'],
+            ['BiometricAvatar3D', 'btn-bio-scene'], ['MoodboardWorld3D', 'btn-mood-scene'],
+            ['Molecule3D', 'btn-molecule-scene'], ['WebSocketLive3D', 'btn-wslive-scene'],
+            ['Story3D', 'btn-story-scene'], ['CrystalGen3D', 'btn-crystal-scene'],
+            ['BotanyLSystem3D', 'btn-botany-scene'], ['CellularAutomata3D', 'btn-automata-scene'],
+            ['KineticTypography3D', 'btn-kintypo-scene'], ['GalaxyBuilder3D', 'btn-galaxy-scene'],
+            ['SciFiSpaceship3D', 'btn-spaceship-scene'], ['RpgDungeon3D', 'btn-dungeon-scene'],
+            ['WeatherEvent3D', 'btn-weather-scene'], ['ImpossibleGeometry3D', 'btn-impossible-scene'],
+            ['PapercraftWorld3D', 'btn-papercraft-scene'], ['ForceShield3D', 'btn-shield-scene'],
+            ['CyberCity3D', 'btn-cybercity-scene'], ['QuantumFluids3D', 'btn-fluid-scene'],
+            ['TimeLapse4D', 'btn-timelapse-scene'], ['ProductShowcase3D', 'btn-product-scene'],
+            ['SocialMediaRoom3D', 'btn-social-scene'], ['GitRepoCity3D', 'btn-gitrepo-scene'],
+            ['WebARPortal3D', 'btn-webar-scene'], ['TextToScene3D', 'btn-text2scene-scene'],
+            ['IceTerrain3D', 'btn-iceterrain-scene'], ['LavaWorld3D', 'btn-lavaworld-scene'],
+            ['OceanWave3D', 'btn-oceanwave-scene'], ['MechRobot3D', 'btn-mechrobot-scene'],
+            ['AncientArch3D', 'btn-ancientarch-scene'], ['LegoCity3D', 'btn-legocity-scene'],
+            ['DataGlobe3D', 'btn-dataglobe-scene'], ['HoloHUD3D', 'btn-holohud-scene'],
+            ['MaskSculptor3D', 'btn-masksculptor-scene'], ['Instrument3D', 'btn-instrument-scene'],
+            ['ChemReaction3D', 'btn-chemreaction-scene'], ['Anatomy3D', 'btn-anatomy-scene'],
+            ['HeroForge3D', 'btn-heroforge-scene'], ['SteampunkChrono3D', 'btn-steampunk-scene'],
+            ['SteampunkChronoPro3D', 'btn-steampunk-pro-scene'], ['ClockUltra3D', 'btn-clockultra-scene']
+        ];
+        pairs.forEach(([globalName, btnId]) => {
+            if (window[globalName] && typeof window[globalName].init === 'function') {
+                const btnEl = document.getElementById(btnId);
+                if (btnEl && !btnEl.dataset.modInited) {
+                    btnEl.dataset.modInited = '1';
+                    window[globalName].init(sidebar, btnEl);
+                }
+            }
+        });
+        if (window.StudioModuleLoader && typeof window.StudioModuleLoader.attach === 'function') {
+            window.StudioModuleLoader.attach(sidebar);
+        }
+        window.dispatchEvent(new CustomEvent('studio:composerready'));
+    };
+
+    const scriptsToLoad = [];
+    if (!window.THREE || !window.THREE.TransformControls) {
+        scriptsToLoad.push("https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/TransformControls.js");
+    }
+    if (!window.THREE || !window.THREE.GLTFLoader) {
+        scriptsToLoad.push("https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js");
+    }
+    if (!window.THREE || !window.THREE.OBJLoader) {
+        scriptsToLoad.push("https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js");
+    }
+    if (!window.THREE || !window.THREE.STLLoader) {
+        scriptsToLoad.push("https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js");
+    }
     let loadedScripts = 0;
+    const startComposer = () => {
+        init3D();
+        setupEvents();
+        initRegisteredModules();
+        // Load a clean starter 3D demo centerpiece if no remix/collab/restored models exist
+        setTimeout(() => {
+            const urlP = new URLSearchParams(window.location.search);
+            if (models.length === 0 && !urlP.get('remix') && !urlP.get('fork')) {
+                loadStarterDemoScene();
+            }
+        }, 120);
+    };
     const checkStart = () => {
         loadedScripts++;
-        if(loadedScripts === scriptsToLoad.length) { 
-            init3D(); setupEvents(); 
-            // Initialize extra modules
-            const sidebar = document.getElementById('se-tools-sidebar');
-            if(window.MathSurface3D) MathSurface3D.init(sidebar, document.getElementById('btn-math-scene'));
-            if(window.DataChart3D) DataChart3D.init(sidebar, document.getElementById('btn-chart-scene'));
-            if(window.WebcamAvatar3D) WebcamAvatar3D.init(sidebar, document.getElementById('btn-webcam-scene'));
-            if(window.ShaderEditor3D) ShaderEditor3D.init(sidebar, document.getElementById('btn-shader-scene'));
-            if(window.Starmap3D) Starmap3D.init(sidebar, document.getElementById('btn-star-scene'));
-            if(window.KeyframeAnimator3D) KeyframeAnimator3D.init(sidebar, document.getElementById('btn-kf-scene'));
-            if(window.VoiceSculpture3D) VoiceSculpture3D.init(sidebar, document.getElementById('btn-voice-scene'));
-            if(window.QRLabyrinth3D) QRLabyrinth3D.init(sidebar, document.getElementById('btn-qr-labyrinth-scene'));
-            if(window.LocationTerrain3D) LocationTerrain3D.init(sidebar, document.getElementById('btn-terrain-scene'));
-            if(window.DocGallery3D) DocGallery3D.init(sidebar, document.getElementById('btn-gallery-scene'));
-            if(window.PdfGallery3D) PdfGallery3D.init(sidebar, document.getElementById('btn-pdf-scene'));
-            if(window.LogicTree3D) LogicTree3D.init(sidebar, document.getElementById('btn-tree-scene'));
-            if(window.NeonHandwriting3D) NeonHandwriting3D.init(sidebar, document.getElementById('btn-neon-scene'));
-            if(window.CsvChart3D) CsvChart3D.init(sidebar, document.getElementById('btn-csv-scene'));
-            if(window.WebNetwork3D) WebNetwork3D.init(sidebar, document.getElementById('btn-webnet-scene'));
-            if(window.PixelArtVoxel3D) PixelArtVoxel3D.init(sidebar, document.getElementById('btn-pixel-scene'));
-            if(window.JsonDashboard3D) JsonDashboard3D.init(sidebar, document.getElementById('btn-jsonlive-scene'));
-            if(window.DnaHelix3D) DnaHelix3D.init(sidebar, document.getElementById('btn-dna-scene'));
-            if(window.GeoGlobe3D) GeoGlobe3D.init(sidebar, document.getElementById('btn-geo-scene'));
-            if(window.PaletteWorld3D) PaletteWorld3D.init(sidebar, document.getElementById('btn-palette-scene'));
-            if(window.SentimentLandscape3D) SentimentLandscape3D.init(sidebar, document.getElementById('btn-sentiment-scene'));
-            if(window.FractalGenerator3D) FractalGenerator3D.init(sidebar, document.getElementById('btn-fractal-scene'));
-            if(window.MidiArch3D) MidiArch3D.init(sidebar, document.getElementById('btn-midi-scene'));
-            if(window.NeuralNet3D) NeuralNet3D.init(sidebar, document.getElementById('btn-neural-scene'));
-            if(window.TimelineRiver3D) TimelineRiver3D.init(sidebar, document.getElementById('btn-timeline-scene'));
-            if(window.ChessBoard3D) ChessBoard3D.init(sidebar, document.getElementById('btn-chess-scene'));
-            if(window.BiometricAvatar3D) BiometricAvatar3D.init(sidebar, document.getElementById('btn-bio-scene'));
-            if(window.MoodboardWorld3D) MoodboardWorld3D.init(sidebar, document.getElementById('btn-mood-scene'));
-            if(window.Molecule3D) Molecule3D.init(sidebar, document.getElementById('btn-molecule-scene'));
-            if(window.WebSocketLive3D) WebSocketLive3D.init(sidebar, document.getElementById('btn-wslive-scene'));
-            if(window.Story3D) Story3D.init(sidebar, document.getElementById('btn-story-scene'));
-            if(window.CrystalGen3D) CrystalGen3D.init(sidebar, document.getElementById('btn-crystal-scene'));
-            if(window.BotanyLSystem3D) BotanyLSystem3D.init(sidebar, document.getElementById('btn-botany-scene'));
-            if(window.CellularAutomata3D) CellularAutomata3D.init(sidebar, document.getElementById('btn-automata-scene'));
-            if(window.KineticTypography3D) KineticTypography3D.init(sidebar, document.getElementById('btn-kintypo-scene'));
-            if(window.GalaxyBuilder3D) GalaxyBuilder3D.init(sidebar, document.getElementById('btn-galaxy-scene'));
-            if(window.SciFiSpaceship3D) SciFiSpaceship3D.init(sidebar, document.getElementById('btn-spaceship-scene'));
-            if(window.RpgDungeon3D) RpgDungeon3D.init(sidebar, document.getElementById('btn-dungeon-scene'));
-            if(window.WeatherEvent3D) WeatherEvent3D.init(sidebar, document.getElementById('btn-weather-scene'));
-            if(window.ImpossibleGeometry3D) ImpossibleGeometry3D.init(sidebar, document.getElementById('btn-impossible-scene'));
-            if(window.PapercraftWorld3D) PapercraftWorld3D.init(sidebar, document.getElementById('btn-papercraft-scene'));
-            if(window.ForceShield3D) ForceShield3D.init(sidebar, document.getElementById('btn-shield-scene'));
-            if(window.CyberCity3D) CyberCity3D.init(sidebar, document.getElementById('btn-cybercity-scene'));
-            if(window.QuantumFluids3D) QuantumFluids3D.init(sidebar, document.getElementById('btn-fluid-scene'));
-            if(window.TimeLapse4D) TimeLapse4D.init(sidebar, document.getElementById('btn-timelapse-scene'));
-            if(window.ProductShowcase3D) ProductShowcase3D.init(sidebar, document.getElementById('btn-product-scene'));
-            if(window.SocialMediaRoom3D) SocialMediaRoom3D.init(sidebar, document.getElementById('btn-social-scene'));
-            if(window.GitRepoCity3D) GitRepoCity3D.init(sidebar, document.getElementById('btn-gitrepo-scene'));
-            if(window.WebARPortal3D) WebARPortal3D.init(sidebar, document.getElementById('btn-webar-scene'));
-            if(window.TextToScene3D) TextToScene3D.init(sidebar, document.getElementById('btn-text2scene-scene'));
-            
-            // Ultra Modules
-            if(window.IceTerrain3D) IceTerrain3D.init(sidebar, document.getElementById('btn-iceterrain-scene'));
-            if(window.LavaWorld3D) LavaWorld3D.init(sidebar, document.getElementById('btn-lavaworld-scene'));
-            if(window.OceanWave3D) OceanWave3D.init(sidebar, document.getElementById('btn-oceanwave-scene'));
-            if(window.MechRobot3D) MechRobot3D.init(sidebar, document.getElementById('btn-mechrobot-scene'));
-            if(window.AncientArch3D) AncientArch3D.init(sidebar, document.getElementById('btn-ancientarch-scene'));
-            if(window.LegoCity3D) LegoCity3D.init(sidebar, document.getElementById('btn-legocity-scene'));
-            if(window.DataGlobe3D) DataGlobe3D.init(sidebar, document.getElementById('btn-dataglobe-scene'));
-            if(window.HoloHUD3D) HoloHUD3D.init(sidebar, document.getElementById('btn-holohud-scene'));
-            if(window.MaskSculptor3D) MaskSculptor3D.init(sidebar, document.getElementById('btn-masksculptor-scene'));
-            if(window.Instrument3D) Instrument3D.init(sidebar, document.getElementById('btn-instrument-scene'));
-            if(window.ChemReaction3D) ChemReaction3D.init(sidebar, document.getElementById('btn-chemreaction-scene'));
-            if(window.Anatomy3D) Anatomy3D.init(sidebar, document.getElementById('btn-anatomy-scene'));
-            if(window.HeroForge3D) HeroForge3D.init(sidebar, document.getElementById('btn-heroforge-scene'));
-            if(window.SteampunkChrono3D) SteampunkChrono3D.init(sidebar, document.getElementById('btn-steampunk-scene'));
-            if(window.SteampunkChronoPro3D) SteampunkChronoPro3D.init(sidebar, document.getElementById('btn-steampunk-pro-scene'));
-            if(window.ClockUltra3D) ClockUltra3D.init(sidebar, document.getElementById('btn-clockultra-scene'));
-        }
+        if (loadedScripts === scriptsToLoad.length) startComposer();
     };
-    if(!window.THREE || !window.THREE.TransformControls || !window.THREE.GLTFLoader) {
-        const loadScript = (url, cb) => { const s = document.createElement('script'); s.src = url; s.onload = cb; document.head.appendChild(s); };
+    if (scriptsToLoad.length > 0) {
+        const loadScript = (url, cb) => {
+            const s = document.createElement('script');
+            s.src = url; s.onload = cb; s.onerror = cb;
+            document.head.appendChild(s);
+        };
         scriptsToLoad.forEach(src => loadScript(src, checkStart));
     } else {
-        init3D(); setupEvents();
-        const sidebar = document.getElementById('se-tools-sidebar');
-        if(window.MathSurface3D) MathSurface3D.init(sidebar, document.getElementById('btn-math-scene'));
-        if(window.DataChart3D) DataChart3D.init(sidebar, document.getElementById('btn-chart-scene'));
-        if(window.WebcamAvatar3D) WebcamAvatar3D.init(sidebar, document.getElementById('btn-webcam-scene'));
-        if(window.ShaderEditor3D) ShaderEditor3D.init(sidebar, document.getElementById('btn-shader-scene'));
-        if(window.Starmap3D) Starmap3D.init(sidebar, document.getElementById('btn-star-scene'));
-        if(window.KeyframeAnimator3D) KeyframeAnimator3D.init(sidebar, document.getElementById('btn-kf-scene'));
-        if(window.VoiceSculpture3D) VoiceSculpture3D.init(sidebar, document.getElementById('btn-voice-scene'));
-        if(window.QRLabyrinth3D) QRLabyrinth3D.init(sidebar, document.getElementById('btn-qr-labyrinth-scene'));
-        if(window.LocationTerrain3D) LocationTerrain3D.init(sidebar, document.getElementById('btn-terrain-scene'));
-        if(window.DocGallery3D) DocGallery3D.init(sidebar, document.getElementById('btn-gallery-scene'));
-        if(window.PdfGallery3D) PdfGallery3D.init(sidebar, document.getElementById('btn-pdf-scene'));
-        if(window.LogicTree3D) LogicTree3D.init(sidebar, document.getElementById('btn-tree-scene'));
-        if(window.NeonHandwriting3D) NeonHandwriting3D.init(sidebar, document.getElementById('btn-neon-scene'));
-        if(window.CsvChart3D) CsvChart3D.init(sidebar, document.getElementById('btn-csv-scene'));
-        if(window.WebNetwork3D) WebNetwork3D.init(sidebar, document.getElementById('btn-webnet-scene'));
-        if(window.PixelArtVoxel3D) PixelArtVoxel3D.init(sidebar, document.getElementById('btn-pixel-scene'));
-        if(window.JsonDashboard3D) JsonDashboard3D.init(sidebar, document.getElementById('btn-jsonlive-scene'));
-        if(window.DnaHelix3D) DnaHelix3D.init(sidebar, document.getElementById('btn-dna-scene'));
-        if(window.GeoGlobe3D) GeoGlobe3D.init(sidebar, document.getElementById('btn-geo-scene'));
-        if(window.PaletteWorld3D) PaletteWorld3D.init(sidebar, document.getElementById('btn-palette-scene'));
-        if(window.SentimentLandscape3D) SentimentLandscape3D.init(sidebar, document.getElementById('btn-sentiment-scene'));
-        if(window.FractalGenerator3D) FractalGenerator3D.init(sidebar, document.getElementById('btn-fractal-scene'));
-        if(window.MidiArch3D) MidiArch3D.init(sidebar, document.getElementById('btn-midi-scene'));
-        if(window.NeuralNet3D) NeuralNet3D.init(sidebar, document.getElementById('btn-neural-scene'));
-        if(window.TimelineRiver3D) TimelineRiver3D.init(sidebar, document.getElementById('btn-timeline-scene'));
-        if(window.ChessBoard3D) ChessBoard3D.init(sidebar, document.getElementById('btn-chess-scene'));
-        if(window.BiometricAvatar3D) BiometricAvatar3D.init(sidebar, document.getElementById('btn-bio-scene'));
-        if(window.MoodboardWorld3D) MoodboardWorld3D.init(sidebar, document.getElementById('btn-mood-scene'));
-        if(window.Molecule3D) Molecule3D.init(sidebar, document.getElementById('btn-molecule-scene'));
-        if(window.WebSocketLive3D) WebSocketLive3D.init(sidebar, document.getElementById('btn-wslive-scene'));
-        if(window.Story3D) Story3D.init(sidebar, document.getElementById('btn-story-scene'));
-        if(window.CrystalGen3D) CrystalGen3D.init(sidebar, document.getElementById('btn-crystal-scene'));
-        if(window.BotanyLSystem3D) BotanyLSystem3D.init(sidebar, document.getElementById('btn-botany-scene'));
-        if(window.CellularAutomata3D) CellularAutomata3D.init(sidebar, document.getElementById('btn-automata-scene'));
-        if(window.KineticTypography3D) KineticTypography3D.init(sidebar, document.getElementById('btn-kintypo-scene'));
-        if(window.GalaxyBuilder3D) GalaxyBuilder3D.init(sidebar, document.getElementById('btn-galaxy-scene'));
-        if(window.SciFiSpaceship3D) SciFiSpaceship3D.init(sidebar, document.getElementById('btn-spaceship-scene'));
-        if(window.RpgDungeon3D) RpgDungeon3D.init(sidebar, document.getElementById('btn-dungeon-scene'));
-        if(window.WeatherEvent3D) WeatherEvent3D.init(sidebar, document.getElementById('btn-weather-scene'));
-        if(window.ImpossibleGeometry3D) ImpossibleGeometry3D.init(sidebar, document.getElementById('btn-impossible-scene'));
-        if(window.PapercraftWorld3D) PapercraftWorld3D.init(sidebar, document.getElementById('btn-papercraft-scene'));
-        if(window.ForceShield3D) ForceShield3D.init(sidebar, document.getElementById('btn-shield-scene'));
-        if(window.CyberCity3D) CyberCity3D.init(sidebar, document.getElementById('btn-cybercity-scene'));
-        if(window.QuantumFluids3D) QuantumFluids3D.init(sidebar, document.getElementById('btn-fluid-scene'));
-        if(window.TimeLapse4D) TimeLapse4D.init(sidebar, document.getElementById('btn-timelapse-scene'));
-        if(window.ProductShowcase3D) ProductShowcase3D.init(sidebar, document.getElementById('btn-product-scene'));
-        if(window.SocialMediaRoom3D) SocialMediaRoom3D.init(sidebar, document.getElementById('btn-social-scene'));
-        if(window.GitRepoCity3D) GitRepoCity3D.init(sidebar, document.getElementById('btn-gitrepo-scene'));
-        if(window.WebARPortal3D) WebARPortal3D.init(sidebar, document.getElementById('btn-webar-scene'));
-        if(window.TextToScene3D) TextToScene3D.init(sidebar, document.getElementById('btn-text2scene-scene'));
-        
-        // Ultra Modules
-        if(window.IceTerrain3D) IceTerrain3D.init(sidebar, document.getElementById('btn-iceterrain-scene'));
-        if(window.LavaWorld3D) LavaWorld3D.init(sidebar, document.getElementById('btn-lavaworld-scene'));
-        if(window.OceanWave3D) OceanWave3D.init(sidebar, document.getElementById('btn-oceanwave-scene'));
-        if(window.MechRobot3D) MechRobot3D.init(sidebar, document.getElementById('btn-mechrobot-scene'));
-        if(window.AncientArch3D) AncientArch3D.init(sidebar, document.getElementById('btn-ancientarch-scene'));
-        if(window.LegoCity3D) LegoCity3D.init(sidebar, document.getElementById('btn-legocity-scene'));
-        if(window.DataGlobe3D) DataGlobe3D.init(sidebar, document.getElementById('btn-dataglobe-scene'));
-        if(window.HoloHUD3D) HoloHUD3D.init(sidebar, document.getElementById('btn-holohud-scene'));
-        if(window.MaskSculptor3D) MaskSculptor3D.init(sidebar, document.getElementById('btn-masksculptor-scene'));
-        if(window.Instrument3D) Instrument3D.init(sidebar, document.getElementById('btn-instrument-scene'));
-        if(window.ChemReaction3D) ChemReaction3D.init(sidebar, document.getElementById('btn-chemreaction-scene'));
-        if(window.Anatomy3D) Anatomy3D.init(sidebar, document.getElementById('btn-anatomy-scene'));
-        if(window.HeroForge3D) HeroForge3D.init(sidebar, document.getElementById('btn-heroforge-scene'));
-        if(window.SteampunkChrono3D) SteampunkChrono3D.init(sidebar, document.getElementById('btn-steampunk-scene'));
-        if(window.SteampunkChronoPro3D) SteampunkChronoPro3D.init(sidebar, document.getElementById('btn-steampunk-pro-scene'));
-        if(window.ClockUltra3D) ClockUltra3D.init(sidebar, document.getElementById('btn-clockultra-scene'));
+        startComposer();
     }
 
     const resize = () => {
@@ -1826,10 +1849,16 @@ const SketchExtruder = (() => {
       camera = new THREE.PerspectiveCamera(50, mainPane.clientWidth/mainPane.clientHeight || 1, 0.1, 5000);
       camera.position.set(0, 50, 200);
       renderer = new THREE.WebGLRenderer({antialias:true, alpha: false, preserveDrawingBuffer: true});
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
       renderer.setSize(mainPane.clientWidth || 500, mainPane.clientHeight || 500);
       renderer.setClearColor(0x050815, 1);
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.12;
+      renderer.outputEncoding = THREE.sRGBEncoding;
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      studioEnvRT = createStudioEnvironment(renderer);
+      if (studioEnvRT) scene.environment = studioEnvRT.texture;
       renderer.domElement.style.position = 'absolute';
       renderer.domElement.style.top = '0';
       renderer.domElement.style.left = '0';
@@ -2204,6 +2233,10 @@ const SketchExtruder = (() => {
           }
           
           if(scene.animCbs) scene.animCbs.forEach(cb => { try { cb(w); } catch(e) { console.warn('[animCb error]', e); } });
+          if (externalAnimHooks.size > 0) {
+              const nowSec = performance.now() * 0.001;
+              externalAnimHooks.forEach(fn => { try { fn(nowSec, w); } catch (e) {} });
+          }
 
           renderer.render(scene, camera);
       }
@@ -3111,10 +3144,16 @@ const SketchExtruder = (() => {
       
       document.getElementById('btn-clone-obj').addEventListener('click', () => {
           const act = getActiveModel(); if(!act) return;
-          const clone = JSON.parse(JSON.stringify(act));
-          clone.id = Date.now(); clone.name = clone.name + ' (Copy)';
-          clone.meshGroup = null; clone.position.x += 20;
-          if(act.importedMesh) clone.importedMesh = act.importedMesh.clone(true);
+          if (window.pushUndo) window.pushUndo();
+          const clone = Object.assign({}, act);
+          clone.id = Date.now() + Math.floor(Math.random() * 1000);
+          clone.name = act.name + ' (Copy)';
+          clone.meshGroup = null;
+          clone.position = new THREE.Vector3(act.position.x + 25, act.position.y, act.position.z);
+          clone.rotation = new THREE.Euler(act.rotation.x, act.rotation.y, act.rotation.z);
+          clone.groupScale = new THREE.Vector3(act.groupScale.x, act.groupScale.y, act.groupScale.z);
+          if (act.points) clone.points = JSON.parse(JSON.stringify(act.points));
+          if (act.importedMesh) clone.importedMesh = act.importedMesh.clone(true);
           models.push(clone); activeModelId = clone.id; buildModels(); syncUI();
           if(window.toast) window.toast('🔵 Object cloned!');
       });
@@ -3898,11 +3937,30 @@ const SketchExtruder = (() => {
           const R = m.surfaceRange || 8, N = m.surfaceRes || 40;
           const geo = new THREE.PlaneGeometry(R*2, R*2, N, N); geo.rotateX(-Math.PI/2);
           const pos = geo.attributes.position;
-          const ef = (f,x,y,t) => { try{ return new Function('x','y','t','sin','cos','tan','sqrt','abs','pow','exp','log','PI','atan2','floor','ceil','return ('+f+')')(x,y,t,Math.sin,Math.cos,Math.tan,Math.sqrt,Math.abs,Math.pow,Math.exp,Math.log,Math.PI,Math.atan2,Math.floor,Math.ceil)||0; } catch(e){return 0;} };
+          const safeCompile = (expr) => {
+            if (typeof window !== 'undefined' && typeof window.compileSafeMath === 'function') return window.compileSafeMath(expr);
+            const F = { sin:Math.sin, cos:Math.cos, tan:Math.tan, sqrt:Math.sqrt, abs:Math.abs, pow:Math.pow, exp:Math.exp, log:Math.log, atan2:Math.atan2, floor:Math.floor, ceil:Math.ceil, min:Math.min, max:Math.max };
+            const s = String(expr || 'sin(x)*cos(y)*3'), toks = []; let p = 0;
+            while (p < s.length) {
+              const c = s[p];
+              if (/\s/.test(c)) { p++; continue; }
+              if (/[0-9.]/.test(c)) { let n=''; while (p<s.length && /[0-9.]/.test(s[p])) n+=s[p++]; toks.push({t:'n',v:parseFloat(n)||0}); continue; }
+              if (/[a-zA-Z_]/.test(c)) { let id=''; while (p<s.length && /[a-zA-Z0-9_]/.test(s[p])) id+=s[p++]; toks.push({t:'i',v:id}); continue; }
+              if ('+-*/^(),'.includes(c)) { toks.push({t:'o',v:c}); p++; continue; }
+              p++;
+            }
+            let k = 0; const pk = () => toks[k], ea = () => toks[k++];
+            const pE = () => { let l=pT(); while (pk()&&pk().t==='o'&&(pk().v==='+'||pk().v==='-')){ const op=ea().v,r=pT(),ll=l; l=op==='+'?(x,y,t)=>ll(x,y,t)+r(x,y,t):(x,y,t)=>ll(x,y,t)-r(x,y,t);} return l; };
+            const pT = () => { let l=pU(); while (pk()&&pk().t==='o'&&(pk().v==='*'||pk().v==='/')){ const op=ea().v,r=pU(),ll=l; l=op==='*'?(x,y,t)=>ll(x,y,t)*r(x,y,t):(x,y,t)=>ll(x,y,t)/(r(x,y,t)||1e-9);} return l; };
+            const pU = () => { if (pk()&&pk().t==='o'&&pk().v==='-'){ ea(); const a=pU(); return (x,y,t)=>-a(x,y,t);} return pP(); };
+            const pP = () => { const tk=pk(); if(!tk) return ()=>0; if(tk.t==='n'){ea(); const v=tk.v; return ()=>v;} if(tk.t==='o'&&tk.v==='('){ea(); const r=pE(); if(pk()&&pk().v===')')ea(); return r;} if(tk.t==='i'){ea(); if(pk()&&pk().v==='('){ea(); const as=[]; if(!(pk()&&pk().v===')')){as.push(pE()); while(pk()&&pk().v===','){ea();as.push(pE());}} if(pk()&&pk().v===')')ea(); const fn=F[tk.v]; return fn?(x,y,t)=>fn(...as.map(a=>a(x,y,t))):()=>0;} if(tk.v==='x')return x=>x; if(tk.v==='y')return (x,y)=>y; if(tk.v==='t')return (x,y,t)=>t; if(tk.v==='PI')return ()=>Math.PI; return ()=>0;} ea(); return ()=>0; };
+            try { const fn = pE(); return (x,y,t) => { const v=fn(x,y,t); return isFinite(v)?Math.max(-50,Math.min(50,v)):0; }; } catch(e){ return ()=>0; }
+          };
+          const evalFn = safeCompile(m.formula);
           let mn=1e9, mx=-1e9; const hs=new Float32Array(pos.count);
           for(let i=0;i<pos.count;i++){ 
-            const v=ef(m.formula, pos.getX(i), pos.getZ(i), 0); hs[i]=isFinite(v)?v:0;
-            if(hs[i]<mn)mn=hs[i]; if(hs[i]>mx)mx=hs[i];
+            const v=evalFn(pos.getX(i), pos.getZ(i), 0); hs[i]=v;
+            if(v<mn)mn=v; if(v>mx)mx=v;
           }
           const range = mx-mn||1; const cols=[];
           const gc = n => { 
@@ -3920,7 +3978,7 @@ const SketchExtruder = (() => {
             scene.animCbs.push((w) => {
               const t = Date.now()*0.001;
               for(let i=0;i<pos.count;i++){ 
-                const v=ef(m.formula, pos.getX(i), pos.getZ(i), t); pos.setY(i, isFinite(v)?v:0);
+                pos.setY(i, evalFn(pos.getX(i), pos.getZ(i), t));
               }
               pos.needsUpdate = true; geo.computeVertexNormals();
             });
@@ -6092,16 +6150,17 @@ const SketchExtruder = (() => {
              });
           }
       } else if(m.format === 'instrument-3d' || m.format === 'instrument') {
+          const instType = m.instrumentType || (m.type && m.type !== '3d-model' ? m.type : 'guitar');
           const bMat = new THREE.MeshStandardMaterial({color: m.col || '#8b1a1a', roughness: 0.3, metalness: 0.2});
           const sMat = new THREE.MeshStandardMaterial({color: 0xaaaaaa, roughness: 0.1, metalness: 0.9});
           const wMat = new THREE.MeshStandardMaterial({color: 0x3d1c02, roughness: 0.8});
-          if(m.type === 'guitar' || !m.type) {
+          if(instType === 'guitar' || !instType) {
               const body = new THREE.Mesh(new THREE.CylinderGeometry(22,22,8,32), bMat); body.rotation.x = Math.PI/2; meshGroup.add(body);
               const waist = new THREE.Mesh(new THREE.CylinderGeometry(14,14,8,32), bMat); waist.position.y = 30; waist.rotation.x = Math.PI/2; meshGroup.add(waist);
               const neck = new THREE.Mesh(new THREE.BoxGeometry(6,70,5), wMat); neck.position.y = 65; meshGroup.add(neck);
               const head = new THREE.Mesh(new THREE.BoxGeometry(10,15,4), wMat); head.position.y = 105; meshGroup.add(head);
               for(let i=-2; i<=2; i++) { const str = new THREE.Mesh(new THREE.CylinderGeometry(0.2,0.2,90,4), sMat); str.position.set(i*1.2, 55, 3); meshGroup.add(str); }
-          } else if(m.type === 'piano') {
+          } else if(instType === 'piano') {
               const body = new THREE.Mesh(new THREE.BoxGeometry(80,15,60), bMat); meshGroup.add(body);
               const keys = new THREE.Group(); keys.position.set(0, 8, 30);
               for(let i=0; i<30; i++) {
@@ -6113,17 +6172,17 @@ const SketchExtruder = (() => {
                   const leg = new THREE.Mesh(new THREE.CylinderGeometry(2,2,30,8), wMat);
                   leg.position.set(p[0], p[1], p[2]); meshGroup.add(leg);
               });
-          } else if(m.type === 'drums') {
+          } else if(instType === 'drums') {
               const kick = new THREE.Mesh(new THREE.CylinderGeometry(20,20,15,32), bMat); kick.rotation.x = Math.PI/2; meshGroup.add(kick);
               const snare = new THREE.Mesh(new THREE.CylinderGeometry(10,10,6,32), bMat); snare.position.set(-25, 10, 10); meshGroup.add(snare);
               const hat = new THREE.Mesh(new THREE.CylinderGeometry(10,10,0.5,32), sMat); hat.position.set(-35, 25, 10); meshGroup.add(hat);
               const tom = new THREE.Mesh(new THREE.CylinderGeometry(8,8,8,32), bMat); tom.position.set(0, 25, -10); meshGroup.add(tom);
               const cymbal = new THREE.Mesh(new THREE.CylinderGeometry(14,14,0.5,32), sMat); cymbal.position.set(25, 30, -5); meshGroup.add(cymbal);
-          } else if(m.type === 'violin') {
+          } else if(instType === 'violin') {
               const body = new THREE.Mesh(new THREE.CylinderGeometry(12,12,5,32), bMat); body.rotation.x = Math.PI/2; meshGroup.add(body);
               const neck = new THREE.Mesh(new THREE.BoxGeometry(3,40,3), wMat); neck.position.y = 25; meshGroup.add(neck);
               const bow = new THREE.Mesh(new THREE.CylinderGeometry(0.5,0.5,60,8), wMat); bow.position.set(10, 10, 5); bow.rotation.z = Math.PI/4; meshGroup.add(bow);
-          } else if(m.type === 'trumpet') {
+          } else if(instType === 'trumpet') {
               const bell = new THREE.Mesh(new THREE.CylinderGeometry(12, 3, 30, 32, 1, true), sMat); bell.rotation.z = Math.PI/2; meshGroup.add(bell);
               const pipe = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 40, 16), sMat); pipe.position.x = -35; pipe.rotation.z = Math.PI/2; meshGroup.add(pipe);
               [-5, 0, 5].forEach(x=>{ const v = new THREE.Mesh(new THREE.CylinderGeometry(2,2,10,16), sMat); v.position.set(x-20, 5, 0); meshGroup.add(v); });
@@ -6391,7 +6450,11 @@ const SketchExtruder = (() => {
               m.meshGroup.rotation.copy(m.rotation);
               m.meshGroup.scale.copy(m.groupScale);
           }
-          while(m.meshGroup.children.length > 0){ m.meshGroup.remove(m.meshGroup.children[0]); }
+          while(m.meshGroup.children.length > 0){
+              const oldChild = m.meshGroup.children[0];
+              m.meshGroup.remove(oldChild);
+              if (oldChild !== m.importedMesh) disposeObject3D(oldChild);
+          }
           // Audio-viz / imported-mesh / hero-forge (live): add directly
           if((m.format === 'audio-viz' || m.format === 'imported-mesh' || m.format === 'hero-forge' || m.format === 'steampunk-chrono' || m.format === 'steampunk-chrono-pro' || m.format === 'clock-ultra') && m.importedMesh) {
               m.meshGroup.add(m.importedMesh);
@@ -6446,13 +6509,16 @@ const SketchExtruder = (() => {
               m.meshGroup.add(geoGroup);
           }
           
-          if (m.type === 'draw' && hasSteampunkActive) {
+          if (m.hidden) {
+              m.meshGroup.visible = false;
+          } else if (m.type === 'draw' && hasSteampunkActive) {
               m.meshGroup.visible = false;
           } else {
               m.meshGroup.visible = true;
           }
       });
       syncUI();
+      notifySceneChange();
   }
 
   // ── Hero Forge geometry builder (used by createGeometryFromModel) ─────────
@@ -12934,13 +13000,105 @@ const SketchExtruder = (() => {
       scene.animCbs.push(m._scUltraAnimCb);
   }
 
-  function exportScene() {
-      if(models.length === 0) { alert("Please create or load at least one model."); return; }
-      const btn = document.getElementById('btn-export'); btn.innerHTML = '✅ Exporting...';
-      
+  function exportScene(options) {
+      const opts = options || {};
+      if(models.length === 0) { if (!opts.silent) { if (window.toast) window.toast('⚠️ Create or load at least one 3D model first.'); else alert("Please create or load at least one model."); } return; }
+      const btn = document.getElementById('btn-export');
+      if (btn && !opts.silent) btn.innerHTML = '✅ Exporting...';
+
       const hasClockUltraModel = models.find(m => m.format === 'clock-ultra');
+      const hasSteampunkProModel = models.find(m => m.format === 'steampunk-chrono-pro');
+      const hasSteampunkModel = models.find(m => m.format === 'steampunk-chrono');
+      const hasHeroForgeModel = models.find(m => m.format === 'hero-forge');
+      const needsFont = models.some(m => m.type === 'text' || m.format === 'kinetic-typo');
+      const needsSvg = models.some(m => m.type === 'svg');
+      const needsDxf = models.some(m => m.type === 'dxf');
+      const needsQr = models.some(m => m.type === 'qrcode' || m.format === 'qr-labyrinth');
+      const needsGltf = models.some(m => m.format === 'glb' || m.format === 'gltf');
+      const needsObj = models.some(m => m.format === 'obj');
+      const needsStl = models.some(m => m.format === 'stl');
+      const needsDrawMath = models.some(m => m.type === 'draw' || m.type === 'svg' || m.type === 'dxf');
+      const allDirectMeshes = models.every(m => m.format === 'imported-mesh');
       const sp = (hasClockUltraModel && hasClockUltraModel.clockParts && hasClockUltraModel.clockParts[0]) || {};
-      
+
+      // Fast Tree-Shaked Path for pure mesh scenes (Starter Demo, CSG, 4D Polytopes, PBR Primitives -> ~12-30 KB!)
+      if (allDirectMeshes && !hasClockUltraModel && !hasSteampunkProModel) {
+          const directItems = models.filter(m => !m.hidden && m.importedMesh).map(m => ({
+              name: m.name, spin: !!m.spin, levitate: !!m.levitate,
+              pos: m.meshGroup ? { x: m.meshGroup.position.x, y: m.meshGroup.position.y, z: m.meshGroup.position.z } : { x: m.position.x, y: m.position.y, z: m.position.z },
+              rot: m.meshGroup ? { x: m.meshGroup.rotation.x, y: m.meshGroup.rotation.y, z: m.meshGroup.rotation.z } : { x: m.rotation.x, y: m.rotation.y, z: m.rotation.z },
+              scl: m.meshGroup ? { x: m.meshGroup.scale.x, y: m.meshGroup.scale.y, z: m.meshGroup.scale.z } : { x: m.groupScale.x, y: m.groupScale.y, z: m.groupScale.z },
+              meshJSON: m.importedMesh.toJSON()
+          }));
+          const leanCode = `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"/><title>Studio 3D/4D Pro Scene</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></${'script'}>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></${'script'}>
+<style>body{margin:0;overflow:hidden;background:#050815;}</style>
+</head><body><script>
+(function(){
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x050815);
+  const camera = new THREE.PerspectiveCamera(50, innerWidth/innerHeight, 0.1, 5000);
+  camera.position.set(0, 50, 190);
+  const renderer = new THREE.WebGLRenderer({antialias:true, preserveDrawingBuffer:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.15;
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.shadowMap.enabled = true;
+  document.body.appendChild(renderer.domElement);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true; controls.autoRotate = true; controls.autoRotateSpeed = 0.7;
+  scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+  scene.add(new THREE.HemisphereLight(0xe0f2fe, 0x1e293b, 0.85));
+  const dl = new THREE.DirectionalLight(0xffffff, 1.35); dl.position.set(100,200,200); scene.add(dl);
+  const rim = new THREE.DirectionalLight(0x38bdf8, 0.9); rim.position.set(-120,80,-120); scene.add(rim);
+  const grid = new THREE.GridHelper(320, 32, 0x3b82f6, 0x0f172a); grid.position.y = -48; scene.add(grid);
+  const loader = new THREE.ObjectLoader();
+  const items = ${JSON.stringify(directItems)};
+  const runtime = [];
+  items.forEach(it => {
+    try {
+      const obj = loader.parse(it.meshJSON);
+      const grp = new THREE.Group();
+      grp.position.set(it.pos.x, it.pos.y, it.pos.z);
+      grp.rotation.set(it.rot.x, it.rot.y, it.rot.z);
+      grp.scale.set(it.scl.x, it.scl.y, it.scl.z);
+      grp.add(obj); scene.add(grp);
+      runtime.push({ grp, obj, spin: it.spin, levitate: it.levitate, baseY: it.pos.y });
+    } catch(e) { console.error(e); }
+  });
+  window.addEventListener('resize', () => { camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+  function anim(){
+    requestAnimationFrame(anim); controls.update();
+    const t = performance.now() * 0.001;
+    runtime.forEach(r => {
+      if (r.spin) r.obj.rotation.y += 0.009;
+      if (r.levitate) r.grp.position.y = r.baseY + Math.sin(t * 2.0) * 8;
+    });
+    renderer.render(scene, camera);
+  }
+  anim();
+})();
+</${'script'}></body></html>`;
+          const editor = document.getElementById('code-editor');
+          if (editor) {
+              if (!opts.silent && window.pushUndo) window.pushUndo();
+              editor.value = leanCode.trim();
+              if (opts.silent && typeof window.runPreview === 'function') {
+                  window.runPreview();
+              } else {
+                  editor.dispatchEvent(new Event('input', { bubbles: true }));
+                  if (container) container.dispatchEvent(new Event('hide'));
+                  if (btn) setTimeout(() => { btn.innerHTML = '⚡ Generate 3D Scene'; }, 800);
+                  if (window.toast) window.toast('🌟 Optimized 3D Scene Generated (' + (leanCode.length / 1024).toFixed(1) + ' KB)!');
+              }
+          }
+          return leanCode;
+      }
+
       const exportedData = models.map(m => {
           let rText = m.rawText;
           if (m.type === 'svg' || m.type === 'dxf') rText = btoa(unescape(encodeURIComponent(m.rawText)));
@@ -12954,13 +13112,15 @@ const SketchExtruder = (() => {
           }
           
           return {
-              id: m.id,
-              type: m.type, format: m.format, points: m.points, canvasW: m.canvasW, canvasH: m.canvasH,
+              id: m.id, name: m.name, hidden: !!m.hidden,
+              type: m.type, format: m.format, instrumentType: m.instrumentType,
+              points: m.points, canvasW: m.canvasW, canvasH: m.canvasH,
               rawText: rText, twistVal: m.twistVal, bendVal: m.bendVal, taperVal: m.taperVal,
               depth: m.depth, scale: m.scale, bevelVal: m.bevelVal, mirror: m.mirror, spin: m.spin, preset: m.preset,
               metalness: m.metalness, roughness: m.roughness, colorHex: m.colorHex, emissiveHex: m.emissiveHex,
               opacity: m.opacity, renderStyle: m.renderStyle || (m.wireframe ? 'wireframe' : 'solid'),
               levitate: m.levitate, isVoxel: m.isVoxel, hasFrame: m.hasFrame,
+              meshJSON: (m.format === 'imported-mesh' && m.importedMesh) ? m.importedMesh.toJSON() : undefined,
               pos: m.meshGroup ? {x: m.meshGroup.position.x, y: m.meshGroup.position.y, z: m.meshGroup.position.z} : {x: m.position.x, y: m.position.y, z: m.position.z},
               rot: m.meshGroup ? {x: m.meshGroup.rotation.x, y: m.meshGroup.rotation.y, z: m.meshGroup.rotation.z} : {x: m.rotation.x, y: m.rotation.y, z: m.rotation.z},
               scl: m.meshGroup ? {x: m.meshGroup.scale.x, y: m.meshGroup.scale.y, z: m.meshGroup.scale.z} : {x: m.groupScale.x, y: m.groupScale.y, z: m.groupScale.z},
@@ -12997,7 +13157,7 @@ const SketchExtruder = (() => {
               fractalColorMode: m.fractalColorMode, fractalRenderMode: m.fractalRenderMode, fractalAnimate: m.fractalAnimate,
               // 8 New Modules
               tracks: m.tracks, buildStyle: m.buildStyle,
-              layers: m.layers, neuronStyle: m.neuronStyle, neuronSize: m.neuronSize, netLayout: m.netLayout, detail: m.detail,
+              layers: m.layers, neuronStyle: m.neuronStyle, neuronSize: m.neuronSize, detail: m.detail,
               events: m.events, riverStyle: m.riverStyle,
               mode: m.mode, fen: m.fen, sudoku: m.sudoku, boardMat: m.boardMat, pieceStyle: m.pieceStyle,
               vitals: m.vitals, avatarForm: m.avatarForm, auraColor: m.auraColor,
@@ -13005,18 +13165,27 @@ const SketchExtruder = (() => {
               atoms: m.atoms, bonds: m.bonds, atomScale: m.atomScale, bondThick: m.bondThick,
               wsUrl: m.wsUrl, dataField: m.dataField, vizType: m.vizType, historyBuffer: m.historyBuffer,
               scenes: m.scenes, sceneStyle: m.sceneStyle, charStyle: m.charStyle, animCamera: m.animCamera,
-              keyword: m.keyword, crystalType: m.crystalType, crystalColor: m.crystalColor, spikes: m.spikes, metalness: m.metalness, transparency: m.transparency, doGlow: m.doGlow,
+              keyword: m.keyword, crystalType: m.crystalType, crystalColor: m.crystalColor, spikes: m.spikes, transparency: m.transparency, doGlow: m.doGlow,
               // 10 Ultra-Premium Modules
               axiom: m.axiom, rules: m.rules, iter: m.iter, angle: m.angle, cTrunk: m.cTrunk, cLeaf: m.cLeaf,
-              gridSize: m.gridSize, generations: m.generations, density: m.density, voxelStyle: m.voxelStyle, colorMap: m.colorMap,
+              gridSize: m.gridSize, generations: m.generations, density: m.density, voxelStyle: m.voxelStyle, colorMap: m.colorMap, isWire: m.isWire,
               text: m.text, shape: m.shape, animStyle: m.animStyle, tSize: m.tSize, radius: m.radius,
               seed: m.seed, starType: m.starType, sysType: m.sysType, numPlanets: m.numPlanets, numBelts: m.numBelts, showOrbits: m.showOrbits,
-              shipClass: m.shipClass, colorPalette: m.colorPalette, detail: m.detail, glowEngines: m.glowEngines,
+              shipClass: m.shipClass, colorPalette: m.colorPalette, glowEngines: m.glowEngines,
               gridW: m.gridW, gridH: m.gridH, theme: m.theme, wallHeight: m.wallHeight, hasTorches: m.hasTorches,
               evType: m.evType, speed: m.speed, scaleSize: m.scaleSize, turbulence: m.turbulence,
               illusionType: m.illusionType, matStyle: m.matStyle, baseColor: m.baseColor,
               spread: m.spread,
               shieldShape: m.shieldShape, energyColor: m.energyColor, shieldSize: m.shieldSize, pulseSpeed: m.pulseSpeed, simImpact: m.simImpact,
+              // 8 Premium Studios (Previously missing on export!)
+              ccDens: m.ccDens, ccHeight: m.ccHeight, ccStyle: m.ccStyle, ccWire: m.ccWire, ccAnim: m.ccAnim,
+              qfCount: m.qfCount, qfSpeed: m.qfSpeed, qfColor: m.qfColor, qfWire: m.qfWire,
+              tlComp: m.tlComp, tlSpeed: m.tlSpeed, tlStyle: m.tlStyle,
+              psHotspots: m.psHotspots, psAnim: m.psAnim,
+              smUser: m.smUser, smText: m.smText, smLikes: m.smLikes, smAnim: m.smAnim,
+              grJson: m.grJson, grTheme: m.grTheme,
+              arColor: m.arColor, arParticles: m.arParticles,
+              tsPrompt: m.tsPrompt,
               // QR Code Advanced Fields
               qrShape: m.qrShape, qrBgCol: m.qrBgCol, qrLogoB64: m.qrLogoB64, qrNeon: m.qrNeon, qrAnim: m.qrAnim, 
               qrMat: m.qrMat, qrBase: m.qrBase, qrParticles: m.qrParticles, qrCityscape: m.qrCityscape,
@@ -13029,8 +13198,7 @@ const SketchExtruder = (() => {
               dens: m.dens, height: m.height, aurora: m.aurora, snow: m.snow,
               scan: m.scan, data: m.data,
               mol: m.mol, anim: m.anim,
-              scale: m.scale, mat: m.mat,
-              type: m.type, col: m.col, stage: m.stage, spot: m.spot,
+              mat: m.mat, col: m.col, stage: m.stage, spot: m.spot,
               sys: m.sys, view: m.view, pulse: m.pulse,
               ultraConfig: m.ultraConfig,
               // Hero Forge
@@ -13041,53 +13209,67 @@ const SketchExtruder = (() => {
           };
       });
 
-      const configJSON = JSON.stringify(exportedData, null, 2);
-      
-      const code = `<!DOCTYPE html>
+      const configJSON = JSON.stringify(exportedData);
+      const cdnTags = [
+          '<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></' + 'script>',
+          '<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></' + 'script>',
+          needsFont ? '<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FontLoader.js"></' + 'script>' : '',
+          needsFont ? '<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/TextGeometry.js"></' + 'script>' : '',
+          needsSvg ? '<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/SVGLoader.js"></' + 'script>' : '',
+          needsDxf ? '<script src="https://cdn.jsdelivr.net/npm/dxf-parser@1.1.2/dist/dxf-parser.js"></' + 'script>' : '',
+          needsGltf ? '<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></' + 'script>' : '',
+          needsObj ? '<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></' + 'script>' : '',
+          needsStl ? '<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></' + 'script>' : '',
+          needsQr ? '<script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></' + 'script>' : ''
+      ].filter(Boolean).join('\n');
+
+      const buildersBlock = [
+          needsDrawMath ? pointInPoly.toString() : '',
+          needsDrawMath ? getConvexHull.toString() : '',
+          needsDrawMath ? crossProduct.toString() : '',
+          needsDrawMath ? getSilhouetteContour.toString() : '',
+          needsDrawMath ? getDxfSilhouette.toString() : '',
+          needsDrawMath ? getRayHullIntersection.toString() : '',
+          buildEnv.toString(),
+          hasHeroForgeModel ? buildHeroForgeGeo.toString() : '',
+          hasHeroForgeModel ? addHeroAnimCb.toString() : '',
+          hasSteampunkModel ? buildSteampunkChronoGeo.toString() : '',
+          hasSteampunkModel ? addSteampunkAnimCb.toString() : '',
+          hasSteampunkProModel ? buildSteampunkChronoProGeo.toString() : '',
+          hasSteampunkProModel ? addSteampunkProAnimCb.toString() : '',
+          hasClockUltraModel ? createProceduralDialTexture.toString() : '',
+          hasClockUltraModel ? buildClockUltraGeo.toString() : '',
+          hasClockUltraModel ? addClockUltraAnimCb.toString() : '',
+          createGeometryFromModel.toString()
+      ].filter(Boolean).join('\n');
+
+      const codePart1 = `<!DOCTYPE html>
 <html><head><meta charset="UTF-8"/><title>3D Composer Scene</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></${'script'}>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></${'script'}>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FontLoader.js"></${'script'}>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/TextGeometry.js"></${'script'}>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/SVGLoader.js"></${'script'}>
-<script src="https://cdn.jsdelivr.net/npm/dxf-parser@1.1.2/dist/dxf-parser.js"></${'script'}>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></${'script'}>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></${'script'}>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></${'script'}>
-<script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></${'script'}>
+${cdnTags}
 <style>body{margin:0;overflow:hidden;background:#050815;}</style>
 </head><body><script>
   let w = window.__SPEED__ || 1;
   window._clockBatteryLevel = 1.0;
-  if (navigator.getBattery) {
-      try {
-          navigator.getBattery().then(battery => {
-              window._clockBatteryLevel = battery.level;
-              battery.addEventListener('levelchange', () => {
-                  window._clockBatteryLevel = battery.level;
-              });
-          }).catch(err => {
-              console.warn("Battery status API promise rejected in export:", err);
-          });
-      } catch (err) {
-          console.warn("Battery status API access error in export:", err);
-      }
-  }
+  ${hasClockUltraModel ? `if (navigator.getBattery) { try { navigator.getBattery().then(b => { window._clockBatteryLevel = b.level; b.addEventListener('levelchange', () => { window._clockBatteryLevel = b.level; }); }).catch(()=>{}); } catch (e) {} }` : ''}
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(50, innerWidth/innerHeight, 0.1, 5000);
   camera.position.set(0, 50, 200);
   const renderer = new THREE.WebGLRenderer({antialias:true, alpha:false, preserveDrawingBuffer:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.setSize(innerWidth, innerHeight);
   renderer.setClearColor(0x050815, 1);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.12;
+  renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   document.body.appendChild(renderer.domElement);
   
   const controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.autoRotate = false;
   
-  scene.add(new THREE.AmbientLight(0xffffff, 0.4));
-  const hLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.6); scene.add(hLight);
-  const l1 = new THREE.DirectionalLight(0xffffff, 1.0);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+  const hLight = new THREE.HemisphereLight(0xe0f2fe, 0x1e293b, 0.75); scene.add(hLight);
+  const l1 = new THREE.DirectionalLight(0xffffff, 1.25);
   l1.position.set(100,200,200); l1.castShadow = true;
   l1.shadow.mapSize.width = 2048; l1.shadow.mapSize.height = 2048; scene.add(l1);
 
@@ -13117,23 +13299,7 @@ const SketchExtruder = (() => {
   window.isEN = isEN;
   let loadedFont = null;
   let bgGroup = null;
-  ${pointInPoly.toString()}
-  ${getConvexHull.toString()}
-  ${crossProduct.toString()}
-  ${getSilhouetteContour.toString()}
-  ${getDxfSilhouette.toString()}
-  ${getRayHullIntersection.toString()}
-  ${buildEnv.toString()}
-  ${buildHeroForgeGeo.toString()}
-  ${addHeroAnimCb.toString()}
-  ${buildSteampunkChronoGeo.toString()}
-  ${addSteampunkAnimCb.toString()}
-  ${buildSteampunkChronoProGeo.toString()}
-  ${addSteampunkProAnimCb.toString()}
-  ${createProceduralDialTexture.toString()}
-  ${buildClockUltraGeo.toString()}
-  ${addClockUltraAnimCb.toString()}
-  ${createGeometryFromModel.toString()}
+  ${buildersBlock}
 
   buildEnv(envType, scene);
   
@@ -13343,6 +13509,15 @@ const SketchExtruder = (() => {
                       const mesh = new THREE.Mesh(geo);
                       const group = new THREE.Group(); group.add(mesh);
                       m.importedMesh = group; proceedWithBuild();
+                  } else if (m.format === 'imported-mesh' && m.meshJSON) {
+                      m.importedMesh = new THREE.ObjectLoader().parse(m.meshJSON);
+                      const grp = new THREE.Group();
+                      grp.position.set(m.pos.x, m.pos.y, m.pos.z);
+                      grp.rotation.set(m.rot.x, m.rot.y, m.rot.z);
+                      grp.scale.set(m.scl.x, m.scl.y, m.scl.z);
+                      grp.add(m.importedMesh);
+                      m.runtimeGroup = grp;
+                      globalGroup.add(grp);
                   } else proceedWithBuild();
                   }
               } else {
@@ -13371,6 +13546,8 @@ const SketchExtruder = (() => {
       });
   } else { initModels(); }
 
+`;
+  const codeSteampunkPro = hasSteampunkProModel ? `
   const hasSteampunkPro = config.find(x => x.format === 'steampunk-chrono-pro');
   if (hasSteampunkPro) {
       const sp = hasSteampunkPro.clockParts[0];
@@ -13610,8 +13787,8 @@ const SketchExtruder = (() => {
 
       applyStLanguage(lang);
   }
-
-
+` : '';
+  const codeClockUltra = hasClockUltraModel ? `
   if (hasClockUltra) {
       
       const translations = {
@@ -18523,7 +18700,8 @@ const SketchExtruder = (() => {
           setTimeout(() => { tuneRadio(); }, 100);
       }
   }
-
+` : '';
+  const codePartTail = `
   let cuParallaxX = 0, cuParallaxY = 0;
   let targetCuParallaxX = 0, targetCuParallaxY = 0;
   
@@ -18598,14 +18776,21 @@ const SketchExtruder = (() => {
   });
 </${'script'}></body></html>`;
 
+      const code = codePart1 + codeSteampunkPro + codeClockUltra + codePartTail;
       const editor = document.getElementById('code-editor');
       if (editor) {
-          if(window.pushUndo) window.pushUndo();
-          editor.value = code.trim(); editor.dispatchEvent(new Event('input', { bubbles: true }));
-          if (container) container.dispatchEvent(new Event('hide'));
-          setTimeout(() => { btn.innerHTML = '⚡ Generate 3D Scene'; }, 1000);
-          if(window.toast) window.toast('ðŸŒŸ Ultimate 3D Scene Generated!');
+          if (!opts.silent && window.pushUndo) window.pushUndo();
+          editor.value = code.trim();
+          if (opts.silent && typeof window.runPreview === 'function') {
+              window.runPreview();
+          } else {
+              editor.dispatchEvent(new Event('input', { bubbles: true }));
+              if (container) container.dispatchEvent(new Event('hide'));
+              if (btn) setTimeout(() => { btn.innerHTML = '⚡ Generate 3D Scene'; }, 800);
+              if (window.toast) window.toast('🌟 3D Scene Generated (' + (code.length / 1024).toFixed(0) + ' KB)!');
+          }
       }
+      return code;
   }
 
   function addExtraModule(type, config) {
@@ -18748,7 +18933,7 @@ const SketchExtruder = (() => {
       } else if(type === 'mask-sculptor') {
         newModel.style = config.style; newModel.col1 = config.col1; newModel.col2 = config.col2; newModel.glow = config.glow; newModel.wire = config.wire;
       } else if(type === 'instrument-3d') {
-        newModel.type = config.type; newModel.col = config.col; newModel.stage = config.stage; newModel.spot = config.spot; newModel.anim = config.anim;
+        newModel.instrumentType = config.type || 'guitar'; newModel.col = config.col; newModel.stage = config.stage; newModel.spot = config.spot; newModel.anim = config.anim;
       } else if(type === 'chem-reaction') {
         newModel.mol = config.mol; newModel.style = config.style; newModel.glow = config.glow; newModel.anim = config.anim;
       } else if(type === 'anatomy-3d') {
@@ -18783,17 +18968,130 @@ const SketchExtruder = (() => {
       return newModel.id;
   }
 
-  function addMeshToScene(threeObject) {
-      if (!scene || !threeObject) return;
+  function addMeshToScene(threeObject, customName, opts) {
+      if (!scene || !threeObject) return null;
+      if (window.pushUndo) window.pushUndo();
       modelCount++;
+      const o = opts || {};
       const newModel = {
-        id: Date.now(), name: 'HeroForge ' + modelCount, type: '3d-model', format: 'imported-mesh',
+        id: Date.now() + Math.floor(Math.random() * 1000),
+        name: customName || ('Object ' + modelCount),
+        type: '3d-model', format: 'imported-mesh',
         rawText: '', depth:10, scale:1.0, bevelVal:0, colorHex:'#6366f1', emissiveHex:'#000000',
-        metalness:0.1, roughness:0.5, opacity:1.0, wireframe:false, preset:'custom', spin:false, mirror:false,
-        position: new THREE.Vector3(0,0,0), rotation: new THREE.Euler(0,0,0), groupScale: new THREE.Vector3(1,1,1),
+        metalness:0.35, roughness:0.25, opacity:1.0, wireframe:false, preset:'custom',
+        spin: !!o.spin, levitate: !!o.levitate, mirror:false, hidden:false, locked:false,
+        position: o.position ? o.position.clone() : new THREE.Vector3(0,0,0),
+        rotation: o.rotation ? o.rotation.clone() : new THREE.Euler(0,0,0),
+        groupScale: o.scale ? o.scale.clone() : new THREE.Vector3(1,1,1),
         meshGroup: null, importedMesh: threeObject
       };
       models.push(newModel); activeModelId = newModel.id; buildModels();
+      return newModel.id;
+  }
+
+  function loadStarterDemoScene() {
+      if (!scene) return;
+      const group = new THREE.Group();
+      group.name = 'Studio_HoloPrism';
+      const coreMat = new THREE.MeshStandardMaterial({
+          color: 0x6366f1, emissive: 0x312e81, emissiveIntensity: 0.45,
+          metalness: 0.85, roughness: 0.15
+      });
+      const core = new THREE.Mesh(new THREE.IcosahedronGeometry(26, 0), coreMat);
+      core.castShadow = true; core.receiveShadow = true;
+      group.add(core);
+
+      const wireMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true, transparent: true, opacity: 0.45 });
+      const cage = new THREE.Mesh(new THREE.IcosahedronGeometry(34, 1), wireMat);
+      group.add(cage);
+
+      const ringMat1 = new THREE.MeshStandardMaterial({ color: 0x22d3ee, emissive: 0x06b6d4, emissiveIntensity: 0.5, metalness: 0.9, roughness: 0.12 });
+      const ring1 = new THREE.Mesh(new THREE.TorusGeometry(46, 1.8, 16, 80), ringMat1);
+      ring1.rotation.x = Math.PI / 3;
+      group.add(ring1);
+
+      const ringMat2 = new THREE.MeshStandardMaterial({ color: 0xc084fc, emissive: 0x9333ea, emissiveIntensity: 0.5, metalness: 0.9, roughness: 0.12 });
+      const ring2 = new THREE.Mesh(new THREE.TorusGeometry(56, 1.4, 16, 80), ringMat2);
+      ring2.rotation.y = Math.PI / 3; ring2.rotation.x = -Math.PI / 4;
+      group.add(ring2);
+
+      // Orbiting satellite nodes
+      const satMat = new THREE.MeshStandardMaterial({ color: 0xf472b6, emissive: 0xec4899, emissiveIntensity: 0.7, metalness: 0.6, roughness: 0.2 });
+      for (let i = 0; i < 6; i++) {
+          const a = (i / 6) * Math.PI * 2;
+          const sat = new THREE.Mesh(new THREE.OctahedronGeometry(4.2, 0), satMat);
+          sat.position.set(Math.cos(a) * 46, Math.sin(a) * 18, Math.sin(a) * 46);
+          group.add(sat);
+      }
+
+      addMeshToScene(group, 'Studio 4D Holo-Prism', { spin: true, levitate: true });
+      // Silently populate Live Preview so the right pane is alive immediately on startup!
+      try { exportScene({ silent: true }); } catch (e) {}
+  }
+
+  function removeModelById(modelId) {
+      const idx = models.findIndex(x => x.id === modelId);
+      if (idx === -1) return false;
+      if (window.pushUndo) window.pushUndo();
+      const m = models[idx];
+      if (m.meshGroup) {
+          if (transformControl && transformControl.object === m.meshGroup) transformControl.detach();
+          if (globalGroup) globalGroup.remove(m.meshGroup);
+          disposeObject3D(m.meshGroup);
+      }
+      models.splice(idx, 1);
+      if (activeModelId === m.id) activeModelId = models.length ? models[models.length - 1].id : null;
+      syncUI();
+      notifySceneChange();
+      return true;
+  }
+
+  function clearSceneAll() {
+      if (window.pushUndo) window.pushUndo();
+      if (transformControl) transformControl.detach();
+      models.forEach(m => {
+          if (m.meshGroup) {
+              if (globalGroup) globalGroup.remove(m.meshGroup);
+              disposeObject3D(m.meshGroup);
+          }
+      });
+      models = [];
+      activeModelId = null;
+      syncUI();
+      notifySceneChange();
+  }
+
+  function setActiveModelById(modelId) {
+      const m = models.find(x => x.id === modelId);
+      if (!m) return;
+      activeModelId = m.id;
+      if (transformControl && m.meshGroup && !m.locked && !m.hidden) {
+          transformControl.attach(m.meshGroup);
+      }
+      syncUI();
+      notifySceneChange();
+  }
+
+  function duplicateModelById(modelId) {
+      const act = models.find(x => x.id === modelId) || getActiveModel();
+      if (!act) return null;
+      if (window.pushUndo) window.pushUndo();
+      const clone = Object.assign({}, act);
+      clone.id = Date.now() + Math.floor(Math.random() * 1000);
+      clone.name = act.name + ' (Copy)';
+      clone.meshGroup = null;
+      const srcPos = act.meshGroup ? act.meshGroup.position : act.position;
+      const srcRot = act.meshGroup ? act.meshGroup.rotation : act.rotation;
+      const srcScl = act.meshGroup ? act.meshGroup.scale : act.groupScale;
+      clone.position = new THREE.Vector3(srcPos.x + 25, srcPos.y, srcPos.z);
+      clone.rotation = new THREE.Euler(srcRot.x, srcRot.y, srcRot.z);
+      clone.groupScale = new THREE.Vector3(srcScl.x, srcScl.y, srcScl.z);
+      if (act.points) clone.points = JSON.parse(JSON.stringify(act.points));
+      if (act.importedMesh) clone.importedMesh = act.importedMesh.clone(true);
+      models.push(clone);
+      activeModelId = clone.id;
+      buildModels();
+      return clone.id;
   }
 
   function updateHeroForgeModel(modelId, heroparts, herostyle, importedMesh, heroAnim, vfxAuraType, vfxColor, steamAuraType, steamColor) {
@@ -18840,7 +19138,20 @@ const SketchExtruder = (() => {
   }
   window._nn3UpdateModel = updateNeuralNetModel;
 
-  return { init, addExtraModule, getScene: () => scene, getGroup: () => globalGroup, addMeshToScene, getActiveModel: () => getActiveModel(), getModels: () => models, buildSteampunkChronoProGeo, buildClockUltraGeo, exportScene };
+  return {
+    init, addExtraModule, addMeshToScene, loadStarterDemoScene,
+    getScene: () => scene, getGroup: () => globalGroup, getCamera: () => camera,
+    getRenderer: () => renderer, getControls: () => controls,
+    getTransformControl: () => transformControl, getMainPane: () => mainPane,
+    getActiveModel: () => getActiveModel(), setActiveModel: setActiveModelById,
+    getModels: () => models, removeModel: removeModelById, duplicateModel: duplicateModelById,
+    clearScene: clearSceneAll, rebuild: buildModels, syncUI, disposeObject3D,
+    setEnv: (env) => { currentEnv = env; buildEnv(env, scene); },
+    setLightingPreset, setToneExposure: (v) => { if (renderer) renderer.toneMappingExposure = v; },
+    registerAnimHook: (key, fn) => externalAnimHooks.set(key, fn),
+    unregisterAnimHook: (key) => externalAnimHooks.delete(key),
+    notifySceneChange, buildSteampunkChronoProGeo, buildClockUltraGeo, exportScene
+  };
 })();
 
 window.SketchExtruder = SketchExtruder;

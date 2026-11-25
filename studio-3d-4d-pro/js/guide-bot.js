@@ -668,20 +668,20 @@ const IAGuideBot = (() => {
     styleEl.innerHTML = `
       #ia-guide-trigger {
         position: fixed;
-        bottom: 20px;
-        right: 20px;
-        width: 56px;
-        height: 56px;
+        bottom: 44px;
+        right: 16px;
+        width: 46px;
+        height: 46px;
         border-radius: 50%;
         background: linear-gradient(135deg, #7c3aed, #6366f1);
-        box-shadow: 0 8px 32px rgba(124, 58, 237, 0.4);
+        box-shadow: 0 6px 24px rgba(124, 58, 237, 0.45);
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        z-index: 10000;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 9500;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         animation: ia-pulse 2s infinite;
       }
       @keyframes ia-pulse {
@@ -690,21 +690,21 @@ const IAGuideBot = (() => {
         100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0); }
       }
       #ia-guide-trigger:hover {
-        transform: scale(1.1);
+        transform: scale(1.08);
         background: linear-gradient(135deg, #8b5cf6, #4f46e5);
       }
       #ia-guide-panel {
         position: fixed;
-        bottom: 90px;
-        right: 20px;
-        width: 380px;
-        height: 550px;
+        bottom: 98px;
+        right: 16px;
+        width: min(370px, calc(100vw - 32px));
+        height: min(520px, calc(100vh - 140px));
         border-radius: 16px;
-        background: rgba(13, 18, 37, 0.95);
+        background: rgba(13, 18, 37, 0.96);
         backdrop-filter: blur(16px);
-        border: 1px solid rgba(99, 102, 241, 0.3);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
-        z-index: 10000;
+        border: 1px solid rgba(99, 102, 241, 0.35);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.65);
+        z-index: 9600;
         display: flex;
         flex-direction: column;
         overflow: hidden;

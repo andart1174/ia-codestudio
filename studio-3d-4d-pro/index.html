@@ -8,23 +8,23 @@
   <meta name="description" content="Studio complet de création et modélisation 3D/4D avec extrudeur de tracés, effets volumétriques et export autonome HTML/ZIP." />
   <meta name="keywords" content="Studio 3D Pro, Studio 4D, convertisseur vectoriel 3D, DXF to 3D, SVG to 3D, STL to HTML, OBJ WebGL viewer, custom 3D models, code editor, Three.js editor, interactive 3D composer, modelare 3D, extrudeur vectoriel, modeles 3D gratuit" />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://ia-codestudio.com/STUDIO%203D%204D%20PRO/index.html" />
-  <link rel="alternate" hreflang="fr" href="https://ia-codestudio.com/STUDIO%203D%204D%20PRO/index.html?lang=fr" />
-  <link rel="alternate" hreflang="en" href="https://ia-codestudio.com/STUDIO%203D%204D%20PRO/index.html?lang=en" />
-  <link rel="alternate" hreflang="x-default" href="https://ia-codestudio.com/STUDIO%203D%204D%20PRO/index.html" />
+  <link rel="canonical" href="https://ia-codestudio.com/studio-3d-4d-pro/" />
+  <link rel="alternate" hreflang="fr" href="https://ia-codestudio.com/studio-3d-4d-pro/?lang=fr" />
+  <link rel="alternate" hreflang="en" href="https://ia-codestudio.com/studio-3d-4d-pro/?lang=en" />
+  <link rel="alternate" hreflang="x-default" href="https://ia-codestudio.com/studio-3d-4d-pro/" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://ia-codestudio.com/STUDIO%203D%204D%20PRO/index.html">
-  <meta property="og:title" content="Studio 3D/4D Pro — Convertisseur Vectoriel & Modélisation 3D">
-  <meta property="og:description" content="Studio complet de création et modélisation 3D/4D avec extrudeur de tracés, effets volumétriques et export autonome HTML/ZIP.">
+  <meta property="og:url" content="https://ia-codestudio.com/studio-3d-4d-pro/">
+  <meta property="og:title" content="Studio 3D/4D Pro — Convertisseur Vectoriel & Modélisation 3D/4D">
+  <meta property="og:description" content="Studio complet de création et modélisation 3D/4D avec PBR Studio, Hyper-Polytopes 4D, AI Director, WebAR, Impression 3D STL et export autonome HTML/ZIP/React.">
   <meta property="og:image" content="https://ia-codestudio.com/logo-ia-codestudio.webp">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://ia-codestudio.com/STUDIO%203D%204D%20PRO/index.html">
-  <meta property="twitter:title" content="Studio 3D/4D Pro — Modélisation Vectorielle 3D">
-  <meta property="twitter:description" content="Convertissez vos dessins, DXF et SVG en modèles 3D interactifs en quelques secondes.">
+  <meta property="twitter:url" content="https://ia-codestudio.com/studio-3d-4d-pro/">
+  <meta property="twitter:title" content="Studio 3D/4D Pro — Modélisation 3D/4D Interactive">
+  <meta property="twitter:description" content="Convertissez vos dessins, DXF et SVG en modèles 3D/4D interactifs avec PBR, WebAR et export React/GLB/STL.">
   <meta property="twitter:image" content="https://ia-codestudio.com/logo-ia-codestudio.webp">
 
   <!-- Structured Data (JSON-LD) -->
@@ -37,10 +37,10 @@
     "applicationCategory": "MultimediaApplication",
     "offers": {
       "@type": "Offer",
-      "price": "30.00",
+      "price": "10.00",
       "priceCurrency": "USD"
     },
-    "description": "Studio complet de création et modélisation 3D/4D avec extrudeur de tracés, filtres volumétriques et export autonome HTML/ZIP."
+    "description": "Studio complet de création et modélisation 3D/4D avec PBR Studio, Hyper-Polytopes 4D, AI Director, WebAR, STL 3D Print et export HTML/ZIP/React."
   }
   </script>
   
@@ -128,8 +128,7 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/GLTFExporter.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dxf-parser@1.1.2/dist/dxf-parser.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-  <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';</script>
+  <!-- pdf.js is now lazy-loaded on demand by studio-module-loader.js -->
   <!-- DevSocial Database (with bundled Firebase SDK) -->
   <script src="../js/community-db.js?v=601"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
@@ -571,6 +570,27 @@
         border: 1px solid rgba(99, 102, 241, 0.4) !important;
       }
     }
+    /* Studio 2.0 Decluttered Topbar & Dropdowns */
+    .topbar { gap: 6px !important; flex-wrap: nowrap !important; }
+    .brand { flex-shrink: 0 !important; white-space: nowrap !important; gap: 8px !important; }
+    .brand-name { white-space: nowrap !important; font-size: 13.5px !important; letter-spacing: -0.2px; }
+    .tb-dd-wrap { position: relative; display: inline-flex; flex-shrink: 0; }
+    .tb-dd-menu {
+      position: absolute; top: calc(100% + 6px); right: 0; min-width: 215px;
+      background: #0d1225; border: 1px solid rgba(99,102,241,0.4); border-radius: 12px;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.75); padding: 6px; z-index: 9900;
+      display: none; flex-direction: column; gap: 4px;
+    }
+    .tb-dd-wrap.open .tb-dd-menu { display: flex; }
+    .tb-dd-menu .tbtn {
+      width: 100%; justify-content: flex-start; text-align: left;
+      padding: 8px 10px; font-size: 11.5px; border-radius: 8px;
+    }
+    .tb-dd-sep { height: 1px; background: rgba(255,255,255,0.08); margin: 3px 4px; }
+    @media (max-width: 960px) {
+      #lbl-return-portal { display: none; }
+      .brand-name { font-size: 12px !important; }
+    }
   </style>
 </head>
 <body>
@@ -581,35 +601,49 @@
   </div>
 
   <header class="topbar">
-    <a href="../index.html" class="tbtn" id="btn-return-portal" style="text-decoration: none; border-color: rgba(239, 68, 68, 0.4); color: #f87171; background: rgba(239, 68, 68, 0.05); display: inline-flex; align-items: center; gap: 6px; margin-right: 10px; flex-shrink: 0;">
+    <a href="../index.html" class="tbtn" id="btn-return-portal" style="text-decoration: none; border-color: rgba(239, 68, 68, 0.4); color: #f87171; background: rgba(239, 68, 68, 0.05); display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;">
       <i class="fa-solid fa-arrow-left"></i>
-      <span id="lbl-return-portal">Return to Portal</span>
+      <span id="lbl-return-portal">Portal</span>
     </a>
     <a class="brand" href="#">
       <div class="brand-icon"></div>
-      <div class="brand-name" id="lbl-title">Studio 3D/4D — 2D TO 3D</div>
+      <div class="brand-name" id="lbl-title">Studio 3D/4D Pro</div>
     </a>
     <div style="flex:1"></div>
-    
-    <button class="tbtn green" id="btn-design-mode"> <span id="lbl-design">3D Design</span></button>
-    <button class="tbtn purple" id="btn-video-mode"> 🎥 <span id="lbl-video">Video to 3D</span></button>
-    <button class="tbtn" id="btn-image-mode" style="border-color:rgba(99,102,241,0.4);color:#a5b4fc;"> 🖼️ <span id="lbl-image">Image→3D</span></button>
-    <button class="tbtn" id="btn-audio-mode" style="border-color:rgba(16,185,129,0.4);color:#34d399;"> 🎵 <span id="lbl-audio">Audio 3D</span></button>
-    <button class="tbtn" id="btn-neural-mode" style="border-color:rgba(6,182,212,0.4);color:#22d3ee;background:linear-gradient(135deg, rgba(6,182,212,0.1), rgba(139,92,246,0.1));"> 🧠 <span id="lbl-neural-mode">Neural Brain</span></button>
-    <button class="tbtn" id="btn-collab-mode" style="border-color:rgba(59,130,246,0.4);color:#60a5fa;"> 🧑‍💻 <span id="lbl-collab">Collab Live</span></button>
-    <div style="width:1px; height:20px; background:var(--border); margin:0 8px;"></div>
-    
-    <button class="tbtn" id="btn-screenshot" style="border-color:rgba(245,158,11,0.4);color:#fbbf24;"> 📸 PNG</button>
-    <button class="tbtn" id="btn-export-video" style="border-color:rgba(239,68,68,0.4);color:#f87171;"> 🎥 <span id="lbl-video-btn">Video</span></button>
-    <button class="tbtn" id="btn-copy-code"> <span id="lbl-copy">Copy</span></button>
-    <button class="tbtn green" id="btn-dl-html"> <span id="lbl-dl">HTML</span></button>
-    <button class="tbtn purple" id="btn-export-zip"> <span id="lbl-zip">ZIP Pack</span></button>
-    <button class="tbtn" id="btn-export-3d-modal" style="border-color:rgba(6,182,212,0.5);color:#22d3ee;background:rgba(6,182,212,0.1);display:inline-flex;align-items:center;gap:6px;"> 📦 <span id="lbl-export-3d">Export 3D (OBJ)</span></button>
-    <button class="tbtn" id="btn-export-gist" style="border-color:rgba(244,63,94,0.4);color:#fb7185;">
-      <i class="fa-brands fa-github"></i> <span id="lbl-gist">GitHub Gist</span>
-    </button>
-    <button class="tbtn purple" id="btn-publish-feed"> <i class="fa-solid fa-share-nodes"></i> <span id="lbl-publish">Share Scene</span></button>
-    
+
+    <button class="tbtn green" id="btn-design-mode">🎨 <span id="lbl-design">3D Design</span></button>
+    <button class="tbtn" id="btn-cmd-palette" title="Command Palette (Ctrl+K)" style="border-color:rgba(168,85,247,0.45);color:#c4b5fd;background:rgba(168,85,247,0.1);">🔍 <span>⌘K</span></button>
+
+    <!-- Grouped Media Studios Dropdown -->
+    <div class="tb-dd-wrap" id="dd-media-wrap">
+      <button class="tbtn" type="button" id="btn-dd-media" style="border-color:rgba(99,102,241,0.45);color:#a5b4fc;">🎬 <span id="lbl-dd-media">Media & AI</span> ▾</button>
+      <div class="tb-dd-menu">
+        <button class="tbtn purple" id="btn-video-mode">🎥 <span id="lbl-video">Video to 3D</span></button>
+        <button class="tbtn" id="btn-image-mode" style="border-color:rgba(99,102,241,0.4);color:#a5b4fc;">🖼️ <span id="lbl-image">Image→3D</span></button>
+        <button class="tbtn" id="btn-audio-mode" style="border-color:rgba(16,185,129,0.4);color:#34d399;">🎵 <span id="lbl-audio">Audio 3D</span></button>
+        <button class="tbtn" id="btn-neural-mode" style="border-color:rgba(6,182,212,0.4);color:#22d3ee;">🧠 <span id="lbl-neural-mode">Neural Brain</span></button>
+      </div>
+    </div>
+
+    <button class="tbtn" id="btn-collab-mode" style="border-color:rgba(59,130,246,0.4);color:#60a5fa;">🧑‍💻 <span id="lbl-collab">Collab</span></button>
+
+    <!-- Grouped Pro Export Dropdown -->
+    <div class="tb-dd-wrap" id="dd-export-wrap">
+      <button class="tbtn green" type="button" id="btn-dd-export">📦 <span id="lbl-dd-export">Export</span> ▾</button>
+      <div class="tb-dd-menu">
+        <button class="tbtn" id="btn-export-3d-modal" style="border-color:rgba(6,182,212,0.5);color:#22d3ee;background:rgba(6,182,212,0.1);">📦 <span id="lbl-export-3d">Export 3D (OBJ/STL/GLB) 👑</span></button>
+        <button class="tbtn green" id="btn-dl-html">📄 <span id="lbl-dl">Download HTML 👑</span></button>
+        <button class="tbtn purple" id="btn-export-zip">🗜️ <span id="lbl-zip">ZIP Pack Pro 👑</span></button>
+        <button class="tbtn" id="btn-copy-code">📋 <span id="lbl-copy">Copy Code 👑</span></button>
+        <div class="tb-dd-sep"></div>
+        <button class="tbtn" id="btn-screenshot" style="border-color:rgba(245,158,11,0.4);color:#fbbf24;">📸 PNG Capture 👑</button>
+        <button class="tbtn" id="btn-export-video" style="border-color:rgba(239,68,68,0.4);color:#f87171;">🎥 <span id="lbl-video-btn">Video WebM 👑</span></button>
+        <button class="tbtn" id="btn-export-gist" style="border-color:rgba(244,63,94,0.4);color:#fb7185;"><i class="fa-brands fa-github"></i> <span id="lbl-gist">GitHub Gist 👑</span></button>
+      </div>
+    </div>
+
+    <button class="tbtn purple" id="btn-publish-feed"><i class="fa-solid fa-share-nodes"></i> <span id="lbl-publish">Share</span></button>
+
     <div class="lang-toggle">
       <button class="lang-btn active" data-lang="en">EN</button>
       <button class="lang-btn" data-lang="fr">FR</button>
@@ -659,8 +693,8 @@
            <span>Engine: Three.js r128</span>
            <span>Format: Standalone HTML</span>
         </div>
-        <p style="font-size:9px; color:var(--text-3); margin-top:5px; line-height:1.3;">
-           Le code généré est prêt à l'emploi. Vous pouvez le modifier ici et voir les changements en direct.
+        <p id="lbl-statusbar-ready" style="font-size:9.5px; color:var(--text-3); margin-top:5px; line-height:1.3;">
+           Generated code is ready to use. Edit code or compose 3D/4D objects to see live updates.
         </p>
       </div>
     </aside>
@@ -810,132 +844,70 @@
     </div>
   </div>
 
-  <!-- ===== MODAL EXPORT 3D MULTI-FORMAT ===== -->
+  <!-- ===== MODAL EXPORT 3D MULTI-FORMAT (PRO) ===== -->
   <div class="modal-overlay" id="modal-export-3d">
-    <div class="modal-card" style="max-width: 540px; background: #0f172a; border: 1px solid rgba(6, 182, 212, 0.3); border-radius: 20px; padding: 24px;">
+    <div class="modal-card" style="max-width: 540px; background: #0f172a; border: 1px solid rgba(6, 182, 212, 0.35); border-radius: 20px; padding: 24px;">
       <div class="modal-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
-        <h3 style="margin:0; font-size:18px; color:#e2e8f0; display:flex; align-items:center; gap:8px;">
-          📦 <span class="pro-lang-fr">Exporter le Modèle 3D Multi-Format</span><span class="pro-lang-en" style="display:none;">Export Multi-Format 3D Model</span>
-        </h3>
-        <button class="modal-close modal-close-pro" style="background:none; border:none; color:#94a3b8; font-size:18px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+        <h3 id="lbl-3d-export-title" style="margin:0; font-size:18px; color:#e2e8f0;">📦 Universal 3D Export (Pro)</h3>
+        <button id="btn-close-3d-modal" class="modal-close modal-close-pro" style="background:none; border:none; color:#94a3b8; font-size:18px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="modal-body" style="display:flex; flex-direction:column; gap:12px;">
-        <p style="color:#94a3b8; font-size:13px; margin:0 0 10px;">
-          <span class="pro-lang-fr">Choisissez le format d'exportation souhaité pour votre création 3D :</span>
-          <span class="pro-lang-en" style="display:none;">Choose your preferred export format for your 3D creation:</span>
+        <p id="lbl-3d-export-desc" style="color:#94a3b8; font-size:13px; margin:0 0 10px;">
+          Export your 3D scene directly for Blender, Unity, Unreal Engine, Cinema 4D, or 3D Printers.
         </p>
 
-        <button id="btn-do-export-obj" style="display:flex; align-items:center; gap:12px; padding:14px 18px; background:rgba(6,182,212,0.1); border:1px solid rgba(6,182,212,0.3); border-radius:14px; color:#22d3ee; cursor:pointer; font-size:14px; font-weight:600; text-align:left; transition:all 0.2s;" onmouseover="this.style.background='rgba(6,182,212,0.2)'" onmouseout="this.style.background='rgba(6,182,212,0.1)'">
+        <button id="btn-do-export-obj" style="display:flex; align-items:center; gap:12px; padding:14px 18px; background:rgba(6,182,212,0.1); border:1px solid rgba(6,182,212,0.3); border-radius:14px; color:#22d3ee; cursor:pointer; font-size:14px; font-weight:600; text-align:left; transition:all 0.2s;">
           <span style="font-size:22px;">🔷</span>
           <div>
-            <div>Export OBJ (Standard Mesh)</div>
-            <div style="font-size:11px; color:#94a3b8; font-weight:normal;">Compatible avec Blender, Maya, Unity, Unreal Engine</div>
+            <div>Export .OBJ (Standard Mesh)</div>
+            <div id="lbl-obj-desc" style="font-size:11px; color:#94a3b8; font-weight:normal;">Standard mesh format for Blender, Maya, 3ds Max & Cinema 4D</div>
           </div>
         </button>
 
-        <button id="btn-do-export-stl" style="display:flex; align-items:center; gap:12px; padding:14px 18px; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:14px; color:#34d399; cursor:pointer; font-size:14px; font-weight:600; text-align:left; transition:all 0.2s;" onmouseover="this.style.background='rgba(16,185,129,0.2)'" onmouseout="this.style.background='rgba(16,185,129,0.1)'">
+        <button id="btn-do-export-stl" style="display:flex; align-items:center; gap:12px; padding:14px 18px; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:14px; color:#34d399; cursor:pointer; font-size:14px; font-weight:600; text-align:left; transition:all 0.2s;">
           <span style="font-size:22px;">🖨️</span>
           <div>
-            <div>Export STL (Impression 3D / 3D Printing)</div>
-            <div style="font-size:11px; color:#94a3b8; font-weight:normal;">Fichier STL prêt pour trancheurs et imprimantes 3D</div>
+            <div>Export .STL (3D Printing)</div>
+            <div id="lbl-stl-desc" style="font-size:11px; color:#94a3b8; font-weight:normal;">Ready for 3D Printing (Bambu Lab, Prusa, Ultimaker, Creality)</div>
           </div>
         </button>
 
-        <button id="btn-do-export-gltf" style="display:flex; align-items:center; gap:12px; padding:14px 18px; background:rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.3); border-radius:14px; color:#c084fc; cursor:pointer; font-size:14px; font-weight:600; text-align:left; transition:all 0.2s;" onmouseover="this.style.background='rgba(139,92,246,0.2)'" onmouseout="this.style.background='rgba(139,92,246,0.1)'">
+        <button id="btn-do-export-gltf" style="display:flex; align-items:center; gap:12px; padding:14px 18px; background:rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.3); border-radius:14px; color:#c084fc; cursor:pointer; font-size:14px; font-weight:600; text-align:left; transition:all 0.2s;">
           <span style="font-size:22px;">🟩</span>
           <div>
-            <div>Export GLTF / GLB (Web 3D Standard)</div>
-            <div style="font-size:11px; color:#94a3b8; font-weight:normal;">Format moderne optimisé pour le web et applications mobile</div>
+            <div>Export .GLB / .GLTF (Binary PBR)</div>
+            <div id="lbl-gltf-desc" style="font-size:11px; color:#94a3b8; font-weight:normal;">Modern binary PBR format for Web, Unity, Unreal Engine & WebAR</div>
           </div>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Copied Modules -->
-  <script src="js/dxf-to-3d.js"></script>
-  <script src="js/svg-extruder.js"></script>
-  <script src="js/video-to-3d.js"></script>
-  <script src="js/image-to-3d.js"></script>
-  <script src="js/audio-visualizer-3d.js"></script>
-  <script src="js/export-zip-pro.js"></script>
-  <script src="js/pro-features-pro.js"></script>
-  <script src="js/math-surface-3d.js"></script>
-  <script src="js/data-chart-3d.js"></script>
-  <script src="js/webcam-avatar-3d.js"></script>
-  <script src="js/shader-editor-3d.js"></script>
-  <script src="js/starmap-3d.js"></script>
-  <script src="js/keyframe-animator-3d.js"></script>
-  <script src="js/voice-sculpture-3d.js"></script>
-  <script src="js/qr-labyrinth-3d.js"></script>
-  <script src="js/location-terrain-3d.js"></script>
-  <script src="js/doc-gallery-3d.js"></script>
-  <script src="js/logic-tree-3d.js"></script>
-  <script src="js/neon-handwriting-3d.js"></script>
-  <script src="js/pdf-gallery-3d.js"></script>
-  <script src="js/csv-chart-3d.js"></script>
-  <script src="js/web-network-3d.js"></script>
-  <script src="js/pixelart-voxel-3d.js"></script>
-  <script src="js/json-dashboard-3d.js"></script>
-  <script src="js/dna-helix-3d.js"></script>
-  <script src="js/geo-globe-3d.js"></script>
-  <script src="js/palette-world-3d.js"></script>
-  <script src="js/sentiment-landscape-3d.js"></script>
-  <script src="js/fractal-generator-3d.js"></script>
-  <script src="js/midi-arch-3d.js"></script>
-  <script src="js/neural-net-3d.js"></script>
-  <script src="js/timeline-river-3d.js"></script>
-  <script src="js/chess-board-3d.js"></script>
-  <script src="js/biometric-avatar-3d.js"></script>
-  <script src="js/moodboard-world-3d.js"></script>
-  <script src="js/molecule-3d.js"></script>
-  <script src="js/websocket-live-3d.js"></script>
-  <script src="js/story-3d.js"></script>
-  <script src="js/crystal-gen-3d.js"></script>
-  <script src="js/botany-lsystem-3d.js"></script>
-  <script src="js/cellular-automata-3d.js"></script>
-  <script src="js/kinetic-typography-3d.js"></script>
-  <script src="js/galaxy-builder-3d.js"></script>
-  <script src="js/sci-fi-spaceship-3d.js"></script>
-  <script src="js/rpg-dungeon-3d.js"></script>
-  <script src="js/weather-event-3d.js"></script>
-  <script src="js/impossible-geometry-3d.js"></script>
-  <script src="js/papercraft-world-3d.js"></script>
-  <script src="js/force-shield-3d.js"></script>
-  <script src="js/code-collab-live.js"></script>
-  
-  <!-- Mega Modules Pro -->
-  <script src="js/cyber-city-3d.js"></script>
-  <script src="js/quantum-fluids-3d.js"></script>
-  <script src="js/time-lapse-4d.js"></script>
-  <script src="js/product-showcase-3d.js"></script>
-  <script src="js/social-media-room-3d.js"></script>
-  <script src="js/git-repo-city-3d.js"></script>
-  <script src="js/web-ar-portal-3d.js"></script>
-  <script src="js/text-to-scene-3d.js"></script>
+  <!-- Studio 3D/4D Pro v2.0 Core Engine (66 Extra/Ultra Modules are Lazy-Loaded On-Demand!) -->
+  <script src="js/video-to-3d.js?v=200"></script>
+  <script src="js/image-to-3d.js?v=200"></script>
+  <script src="js/audio-visualizer-3d.js?v=200"></script>
+  <script src="js/code-collab-live.js?v=200"></script>
+  <script src="js/export-zip-pro.js?v=200"></script>
+  <script src="js/pro-features-pro.js?v=200"></script>
+  <script src="js/premium-lock.js?v=200"></script>
+  <script src="js/studio-module-loader.js?v=200"></script>
+  <script src="js/studio-shell-ui.js?v=200"></script>
+  <script src="js/sketch-extruder.js?v=200"></script>
 
-  <!-- Ultra Modules — New Series -->
-  <script src="js/ice-terrain-3d.js"></script>
-  <script src="js/lava-world-3d.js"></script>
-  <script src="js/ocean-wave-3d.js"></script>
-  <script src="js/mech-robot-3d.js"></script>
-  <script src="js/ancient-arch-3d.js"></script>
-  <script src="js/lego-city-3d.js"></script>
-  <script src="js/data-globe-3d.js"></script>
-  <script src="js/holo-hud-3d.js"></script>
-  <script src="js/mask-sculptor-3d.js"></script>
-  <script src="js/instrument-3d.js"></script>
-  <script src="js/chem-reaction-3d.js"></script>
-  <script src="js/anatomy-3d.js"></script>
-  <script src="js/hero-forge-3d.js"></script>
-  <script src="js/steampunk-chrono-3d.js"></script>
-  <script src="js/steampunk-chrono-pro-3d.js"></script>
-  <script src="js/clock-ultra-3d.js?v=4"></script>
-
-  <script src="js/premium-lock.js"></script>
-  <!-- sketch-extruder loaded LAST so all module globals are ready -->
-  <script src="js/sketch-extruder.js?v=4"></script>
-  <script src="js/guide-bot.js"></script>
+  <!-- Studio 2.0 Flagship Pro Tools (All 12 New Innovations) -->
+  <script src="js/studio-outliner.js?v=200"></script>
+  <script src="js/studio-pbr-lab.js?v=200"></script>
+  <script src="js/studio-4d-modifiers.js?v=200"></script>
+  <script src="js/studio-ai-director.js?v=200"></script>
+  <script src="js/studio-csg-modifiers.js?v=200"></script>
+  <script src="js/studio-physics.js?v=200"></script>
+  <script src="js/studio-timeline.js?v=200"></script>
+  <script src="js/studio-webar-print.js?v=200"></script>
+  <script src="js/studio-configurator.js?v=200"></script>
+  <script src="js/studio-dev-export.js?v=200"></script>
+  <script src="js/studio-presets.js?v=200"></script>
+  <script src="js/guide-bot.js?v=200"></script>
   <script>
     // i18n
     const i18n = {
@@ -1149,9 +1121,21 @@
       const lblTriageOpt3Title = document.getElementById('lbl-triage-opt3-title'); if (lblTriageOpt3Title) lblTriageOpt3Title.textContent = t.triageOpt3Title;
       const lblTriageOpt3Desc = document.getElementById('lbl-triage-opt3-desc'); if (lblTriageOpt3Desc) lblTriageOpt3Desc.textContent = t.triageOpt3Desc;
       
+      const lblReady = document.getElementById('lbl-statusbar-ready');
+      if (lblReady) {
+        lblReady.textContent = lang === 'fr'
+          ? "Le code généré est prêt à l'emploi. Modifiez le code ou la scène 3D/4D pour voir le rendu en direct."
+          : 'Generated code is ready to use. Edit code or compose 3D/4D objects to see live updates.';
+      }
+      const lblDdMedia = document.getElementById('lbl-dd-media');
+      if (lblDdMedia) lblDdMedia.textContent = lang === 'fr' ? 'Média & IA' : 'Media & AI';
+      const lblDdExport = document.getElementById('lbl-dd-export');
+      if (lblDdExport) lblDdExport.textContent = lang === 'fr' ? 'Exporter' : 'Export';
       if (window.CodeCollabLive) window.CodeCollabLive.refreshLang();
       if (window.IAGuideBot) window.IAGuideBot.refreshLang();
+      if (window.ProExport3D) window.ProExport3D.refreshLang();
       if (window.DevSocialApp) window.DevSocialApp.switchLanguage(lang);
+      window.dispatchEvent(new CustomEvent('studio:langchange', { detail: lang }));
     }
 
     function toggleMode(mode) {
@@ -1170,11 +1154,14 @@
       }
     }
 
+    let _toastTimer = null;
     function toast(msg) {
       const t = document.getElementById('toast');
+      if (!t) return;
       t.textContent = msg;
       t.style.display = 'block';
-      setTimeout(() => t.style.display = 'none', 3000);
+      clearTimeout(_toastTimer);
+      _toastTimer = setTimeout(() => { t.style.display = 'none'; }, 3200);
     }
     window.toast = toast;
 
@@ -1258,6 +1245,51 @@
       }
 
       updateUI(startLang);
+
+      // Topbar Dropdown toggles (Media & Export)
+      [['dd-media-wrap', 'btn-dd-media'], ['dd-export-wrap', 'btn-dd-export']].forEach(([wId, bId]) => {
+        const wrap = document.getElementById(wId);
+        const btn = document.getElementById(bId);
+        if (wrap && btn) {
+          btn.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            const isOpen = wrap.classList.contains('open');
+            document.querySelectorAll('.tb-dd-wrap.open').forEach(w => w.classList.remove('open'));
+            if (!isOpen) wrap.classList.add('open');
+          });
+          wrap.querySelectorAll('.tb-dd-menu .tbtn').forEach(item => {
+            item.addEventListener('click', () => wrap.classList.remove('open'));
+          });
+        }
+      });
+      document.addEventListener('click', () => {
+        document.querySelectorAll('.tb-dd-wrap.open').forEach(w => w.classList.remove('open'));
+      });
+      const cmdBtn = document.getElementById('btn-cmd-palette');
+      if (cmdBtn) cmdBtn.addEventListener('click', () => window.StudioShellUI && window.StudioShellUI.openCmdPalette());
+
+      // Community 1-Click Remix Loader (?remix=<postId>)
+      const remixId = urlParams.get('remix');
+      if (remixId && window.CommunityDB && window.CommunityDB.getPostById) {
+        window.CommunityDB.getPostById(remixId).then(post => {
+          if (post && post.code) {
+            const ed = document.getElementById('code-editor');
+            if (ed) { ed.value = post.code; runPreview(); toggleMode('code'); }
+            toast((currentLang === 'fr' ? '🔀 Remix chargé depuis : ' : '🔀 Remixed from: ') + (post.author || 'Community'));
+          }
+        }).catch(err => console.warn('Remix load failed:', err));
+      } else if (remixId && window.firebase && firebase.firestore) {
+        firebase.firestore().collection('devsocial_posts').doc(remixId).get().then(doc => {
+          if (doc.exists) {
+            const d = doc.data();
+            if (d && d.code) {
+              const ed = document.getElementById('code-editor');
+              if (ed) { ed.value = d.code; runPreview(); toggleMode('code'); }
+              toast((currentLang === 'fr' ? '🔀 Remix chargé : ' : '🔀 Remixed scene: ') + (d.title || d.author || 'Community'));
+            }
+          }
+        }).catch(err => console.warn('Firestore remix load failed:', err));
+      }
     });
 
     // Design Mode Buttons
@@ -1342,14 +1374,16 @@
 
     document.getElementById('btn-run-code').addEventListener('click', runPreview);
 
-    // Code Stats
+    // Code Stats + 350ms Debounced Live Preview (prevents WebGL context crashes)
+    let _previewDebounce = null;
     document.getElementById('code-editor').addEventListener('input', () => {
       const editor = document.getElementById('code-editor');
       const val = editor.value;
       const sizeKB = (val.length / 1024);
       const lines = val.split('\n').length;
       document.getElementById('code-stats').textContent = `${lines} lines | ${sizeKB.toFixed(1)} KB`;
-      runPreview();
+      clearTimeout(_previewDebounce);
+      _previewDebounce = setTimeout(runPreview, 350);
     });
 
     let isRecordingVideo = false;
@@ -1729,6 +1763,10 @@
           : `Cool 3D animation coded using AI on IA Code Studio`;
 
         document.getElementById('share-twitter-btn').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}`;
+        const waBtn = document.getElementById('share-whatsapp-btn');
+        if (waBtn) waBtn.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(tweetText + ' ' + shareUrl)}`;
+        const liBtn = document.getElementById('share-linkedin-btn');
+        if (liBtn) liBtn.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
         document.getElementById('share-reddit-btn').href = `https://www.reddit.com/submit?title=${encodeURIComponent(redditTitle)}&url=${encodeURIComponent(shareUrl)}`;
         document.getElementById('share-facebook-btn').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
         
@@ -1852,9 +1890,9 @@
     // Hook for SketchExtruder 'Generate' completion
     // The module dispatches 'input' on the editor.
 
-    // 🔐 ANTI-THEFT PROTECTION: Intercept copying, cut and export actions for non-premium users
+    // 🔐 PRO PAYWALL GATE: Protect exports (including 3D OBJ/STL/GLB, WebAR, Dev Code) without blocking normal chat/Collab inputs
     document.addEventListener('click', function(e) {
-      const target = e.target.closest('#btn-export, #btn-export-gist, #btn-publish-feed, #btn-screenshot, #btn-export-video, #btn-copy-code, #btn-dl-html, #btn-export-zip, #exp-zip, #btn-export-all-formats, #v3d-btn-download, #sc3-fuse, #sc3-copy-btn, #sc3-dl-btn, #hf3-fuse, #hf3-copy-btn, #hf3-dl-btn');
+      const target = e.target.closest('#btn-export, #btn-export-3d-modal, #btn-do-export-obj, #btn-do-export-stl, #btn-do-export-gltf, #btn-export-gist, #btn-publish-feed, #btn-screenshot, #btn-export-video, #btn-copy-code, #btn-dl-html, #btn-export-zip, #exp-zip, #btn-export-all-formats, #v3d-btn-download, #sc3-fuse, #sc3-copy-btn, #sc3-dl-btn, #hf3-fuse, #hf3-copy-btn, #hf3-dl-btn, #btn-dev-copy, #btn-dev-dl, #tl-record-webm, #pr-stl, #webar-dl-html');
       if (target) {
         if (typeof window.isUserPremium === 'function' && !window.isUserPremium()) {
           e.preventDefault();
@@ -1864,11 +1902,13 @@
           }
         }
       }
-    }, true); // capturing phase
+    }, true);
 
+    // Scope copy/cut protection strictly to #code-editor (allow copying Collab IDs, chat, share URLs!)
     ['copy', 'cut'].forEach(evt => {
       document.addEventListener(evt, function(e) {
-        if (typeof window.isUserPremium === 'function' && !window.isUserPremium()) {
+        const inCodeEditor = e.target && (e.target.id === 'code-editor' || (e.target.closest && e.target.closest('#code-editor, #dev-code-pre')));
+        if (inCodeEditor && typeof window.isUserPremium === 'function' && !window.isUserPremium()) {
           e.preventDefault();
           e.stopPropagation();
           if (typeof window.showPaywallModal === 'function') {
