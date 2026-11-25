@@ -3277,3 +3277,482 @@ body.game-mode-active #webgl-canvas {
         padding: 0 12px 12px 12px;
     }
 }
+
+
+/* ==========================================================================
+   HyperStudio 3D/4D v2.0 — Portal Navigation, Export Dropdown, Combat HUD,
+   Hangar Customizer, Real Audio FFT Dock & Smart Code Autocomplete
+   ========================================================================== */
+
+.btn-return-portal {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 11px;
+    border-radius: var(--radius-sm);
+    background: rgba(0, 242, 254, 0.1);
+    border: 1px solid rgba(0, 242, 254, 0.35);
+    color: var(--accent-cyan);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.btn-return-portal:hover {
+    background: rgba(0, 242, 254, 0.22);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 0 14px rgba(0, 242, 254, 0.35);
+}
+
+/* Header Export Dropdown */
+.header-export-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.header-export-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 245px;
+    background: rgba(10, 15, 30, 0.98);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(0, 242, 254, 0.35);
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.75), 0 0 24px rgba(0, 242, 254, 0.15);
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 950;
+}
+
+.header-export-dropdown.open {
+    display: flex;
+}
+
+.export-dd-group {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    padding: 6px 8px 3px;
+}
+
+.export-dd-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: #e2e8f0;
+    font-family: var(--font-ui);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.export-dd-item:hover {
+    background: rgba(0, 242, 254, 0.14);
+    border-color: rgba(0, 242, 254, 0.35);
+    color: #fff;
+}
+
+.pro-mini-tag {
+    margin-left: auto;
+    font-size: 0.62rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #ff8a00, #ff007f);
+    color: #fff;
+    letter-spacing: 0.5px;
+}
+
+/* Flight Combat V2 HUD Overlays */
+.hud-gamepad-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 9px;
+    border-radius: 999px;
+    background: rgba(0, 255, 204, 0.18);
+    border: 1px solid #00ffcc;
+    color: #00ffcc;
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+
+.hud-boss-bar {
+    position: absolute;
+    top: 122px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(440px, 86vw);
+    background: rgba(15, 8, 28, 0.88);
+    border: 1px solid rgba(255, 0, 127, 0.6);
+    border-radius: 12px;
+    padding: 8px 14px;
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    z-index: 42;
+    box-shadow: 0 0 28px rgba(255, 0, 127, 0.35);
+    pointer-events: none;
+}
+
+.boss-bar-hdr {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.76rem;
+    font-weight: 800;
+    color: #ff7ac6;
+    letter-spacing: 0.6px;
+}
+
+.boss-hp-track {
+    width: 100%;
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+}
+
+.boss-hp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff0055, #ff007f, #ffb703);
+    transition: width 0.2s ease;
+}
+
+.hud-combo-badge {
+    position: absolute;
+    top: 86px;
+    right: 22px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(255, 183, 3, 0.25), rgba(255, 0, 127, 0.35));
+    border: 1px solid #ffb703;
+    color: #fff;
+    font-size: 0.88rem;
+    font-weight: 800;
+    gap: 6px;
+    align-items: center;
+    box-shadow: 0 0 22px rgba(255, 183, 3, 0.45);
+    z-index: 45;
+    pointer-events: none;
+}
+
+.hud-damage-vignette {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 39;
+    box-shadow: inset 0 0 0 rgba(255, 0, 60, 0);
+    transition: box-shadow 0.25s ease;
+}
+
+.hud-damage-vignette.hit {
+    box-shadow: inset 0 0 95px rgba(255, 0, 60, 0.78);
+}
+
+.hud-docking-banner {
+    position: absolute;
+    bottom: 118px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 16px;
+    border-radius: 12px;
+    background: rgba(6, 24, 34, 0.92);
+    border: 1px solid #00ffcc;
+    color: #e2f8f5;
+    font-size: 0.84rem;
+    display: none;
+    align-items: center;
+    gap: 12px;
+    z-index: 46;
+    box-shadow: 0 0 25px rgba(0, 255, 204, 0.35);
+}
+
+.hud-ach-toast {
+    position: absolute;
+    top: 84px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(16, 24, 48, 0.95), rgba(38, 22, 68, 0.95));
+    border: 1px solid #ffb703;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.65), 0 0 20px rgba(255, 183, 3, 0.35);
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+    z-index: 55;
+}
+
+.hud-ach-toast.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.hud-ach-toast .ach-ico { font-size: 1.5rem; }
+.hud-ach-toast .ach-lbl { font-size: 0.65rem; font-weight: 800; color: #ffb703; letter-spacing: 0.8px; }
+.hud-ach-toast .ach-name { font-size: 0.86rem; font-weight: 700; color: #fff; }
+
+.touch-btn.missile {
+    border-color: rgba(255, 183, 3, 0.65);
+    background: rgba(255, 183, 3, 0.2);
+    color: #ffb703;
+}
+
+/* Hangar Customizer & Pilot Profile V2 */
+.hangar-v2-section {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(0, 242, 254, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.hangar-v2-block {
+    background: rgba(8, 14, 30, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 12px 14px;
+}
+
+.hangar-v2-heading {
+    font-size: 0.86rem;
+    font-weight: 800;
+    color: var(--accent-cyan);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.hangar-swatch-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    align-items: center;
+}
+
+.hangar-mini-lbl {
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-right: 4px;
+}
+
+.hangar-swatch-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.04);
+    color: #e2e8f0;
+    font-size: 0.76rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.16s ease;
+}
+
+.hangar-swatch-btn:hover,
+.hangar-swatch-btn.active {
+    border-color: var(--accent-cyan);
+    background: rgba(0, 242, 254, 0.18);
+    color: #fff;
+}
+
+.swatch-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.hangar-v2-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 12px;
+}
+
+@media (max-width: 720px) {
+    .hangar-v2-grid { grid-template-columns: 1fr; }
+}
+
+.hangar-ach-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 6px;
+}
+
+.ach-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #64748b;
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+.ach-pill.done {
+    background: rgba(0, 255, 204, 0.12);
+    border-color: rgba(0, 255, 204, 0.45);
+    color: #00ffcc;
+}
+
+.hangar-hof-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    max-height: 170px;
+    overflow-y: auto;
+}
+
+.hof-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 8px;
+    border-radius: 7px;
+    background: rgba(255, 255, 255, 0.04);
+    font-size: 0.76rem;
+    color: #e2e8f0;
+}
+
+.hof-row strong { color: #ffb703; }
+.hof-row .hof-date { color: #64748b; font-size: 0.68rem; }
+
+/* Real Web Audio FFT Dock */
+.hyper-audio-fft-dock {
+    position: absolute;
+    bottom: 58px;
+    left: 16px;
+    width: 238px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: rgba(10, 14, 28, 0.92);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(0, 242, 254, 0.4);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65);
+    z-index: 35;
+}
+
+.hyper-audio-fft-dock.hidden { display: none; }
+
+.fft-hdr {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #00f2fe;
+    margin-bottom: 8px;
+}
+
+.fft-sources {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    margin-bottom: 8px;
+}
+
+.fft-src-btn {
+    padding: 5px 4px;
+    border-radius: 7px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.05);
+    color: #cbd5e1;
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.fft-src-btn.active {
+    border-color: #00f2fe;
+    background: rgba(0, 242, 254, 0.22);
+    color: #fff;
+}
+
+#fft-spectrum-canvas {
+    width: 100%;
+    height: 44px;
+    display: block;
+    background: rgba(0, 0, 0, 0.45);
+    border-radius: 6px;
+    margin-bottom: 6px;
+}
+
+.fft-bands {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.68rem;
+    color: #94a3b8;
+    font-family: var(--font-code);
+}
+
+.fft-bands b { color: #00ffcc; }
+
+/* Smart HTML-3D Autocomplete Popup */
+.hyper-ac-popup {
+    position: absolute;
+    left: 52px;
+    bottom: 12px;
+    width: min(360px, calc(100% - 64px));
+    max-height: 220px;
+    overflow-y: auto;
+    background: rgba(8, 12, 26, 0.97);
+    border: 1px solid rgba(0, 242, 254, 0.45);
+    border-radius: 10px;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.8);
+    padding: 5px;
+    z-index: 60;
+}
+
+.hyper-ac-popup.hidden { display: none; }
+
+.hyper-ac-item {
+    display: flex;
+    flex-direction: column;
+    padding: 6px 9px;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.hyper-ac-item:hover,
+.hyper-ac-item.selected {
+    background: rgba(0, 242, 254, 0.18);
+}
+
+.hyper-ac-item .ac-tag {
+    font-family: var(--font-code);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #00f2fe;
+}
+
+.hyper-ac-item .ac-desc {
+    font-size: 0.7rem;
+    color: #94a3b8;
+}

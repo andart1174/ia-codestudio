@@ -314,7 +314,8 @@
     let currentLang = 'en';
 
     function setLanguage(lang) {
-        currentLang = lang;
+        currentLang = (lang === 'fr') ? 'fr' : 'en';
+        try { localStorage.setItem('hub_lang', currentLang); } catch(e) {}
         const flagEl = document.getElementById('lang-flag');
         const textEl = document.getElementById('lang-text');
         if (flagEl) flagEl.textContent = lang === 'en' ? '🇬🇧' : '🇫🇷';
@@ -343,13 +344,39 @@
     // Web Audio API Synthesized Sci-Fi SFX Engine
     // ----------------------------------------------------------------------
     let audioCtx = null;
+    let masterAudioGain = null;
+    let masterAnalyser = null;
+    let masterMediaDest = null;
     let isSFXEnabled = true;
 
     function initAudioContext() {
         if (!audioCtx) {
             const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-            if (AudioContextClass) audioCtx = new AudioContextClass();
+            if (AudioContextClass) {
+                audioCtx = new AudioContextClass();
+                try {
+                    masterAudioGain = audioCtx.createGain();
+                    masterAudioGain.gain.setValueAtTime(1.0, audioCtx.currentTime);
+                    masterAnalyser = audioCtx.createAnalyser();
+                    masterAnalyser.fftSize = 256;
+                    masterAnalyser.smoothingTimeConstant = 0.8;
+                    masterAudioGain.connect(masterAnalyser);
+                    masterAnalyser.connect(audioCtx.destination);
+                    if (typeof audioCtx.createMediaStreamDestination === 'function') {
+                        masterMediaDest = audioCtx.createMediaStreamDestination();
+                        masterAudioGain.connect(masterMediaDest);
+                    }
+                } catch(e) {}
+            }
         }
+        if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume().catch(() => {});
+        }
+    }
+
+    function getAudioOutNode() {
+        initAudioContext();
+        return masterAudioGain || (audioCtx ? audioCtx.destination : null);
     }
 
     function playClickSFX() {
@@ -368,7 +395,7 @@
             gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
 
             osc.connect(gain);
-            gain.connect(audioCtx.destination);
+            gain.connect(getAudioOutNode() || audioCtx.destination);
 
             osc.start();
             osc.stop(audioCtx.currentTime + 0.08);
@@ -389,7 +416,7 @@
             gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
 
             osc.connect(gain);
-            gain.connect(audioCtx.destination);
+            gain.connect(getAudioOutNode() || audioCtx.destination);
 
             osc.start();
             osc.stop(audioCtx.currentTime + 0.04);
@@ -412,7 +439,7 @@
             gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.18);
 
             osc.connect(gain);
-            gain.connect(audioCtx.destination);
+            gain.connect(getAudioOutNode() || audioCtx.destination);
 
             osc.start();
             osc.stop(audioCtx.currentTime + 0.18);
@@ -438,7 +465,7 @@
             gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
 
             osc1.connect(gain); osc2.connect(gain);
-            gain.connect(audioCtx.destination);
+            gain.connect(getAudioOutNode() || audioCtx.destination);
 
             osc1.start(); osc2.start();
             osc1.stop(audioCtx.currentTime + 0.35);
@@ -462,7 +489,7 @@
             gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
 
             osc.connect(gain);
-            gain.connect(audioCtx.destination);
+            gain.connect(getAudioOutNode() || audioCtx.destination);
 
             osc.start();
             osc.stop(audioCtx.currentTime + 0.35);
@@ -485,7 +512,7 @@
             gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
 
             osc.connect(gain);
-            gain.connect(audioCtx.destination);
+            gain.connect(getAudioOutNode() || audioCtx.destination);
 
             osc.start();
             osc.stop(audioCtx.currentTime + 0.12);
@@ -508,7 +535,7 @@
             gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.45);
 
             osc.connect(gain);
-            gain.connect(audioCtx.destination);
+            gain.connect(getAudioOutNode() || audioCtx.destination);
 
             osc.start();
             osc.stop(audioCtx.currentTime + 0.45);
@@ -532,7 +559,7 @@
                 gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.1 + 0.35);
 
                 osc.connect(gain);
-                gain.connect(audioCtx.destination);
+                gain.connect(getAudioOutNode() || audioCtx.destination);
 
                 osc.start(audioCtx.currentTime + idx * 0.1);
                 osc.stop(audioCtx.currentTime + idx * 0.1 + 0.35);
@@ -556,7 +583,7 @@
             gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
 
             osc.connect(gain);
-            gain.connect(audioCtx.destination);
+            gain.connect(getAudioOutNode() || audioCtx.destination);
 
             osc.start();
             osc.stop(audioCtx.currentTime + 0.15);
@@ -569,14 +596,14 @@
     const presetTemplates = {
         cyber_drone: `<!-- 🛸 CYBER RECON DRONE 3D -->
 <model-3d preset="cyber_drone" x="0" y="0.5" z="0" scale="1.3" color="#00f2fe" material="matrix" animate="spin-y" scroll-rotate="true"></model-3d>
-<cta-button text="DISCOVER DRONE 🚀" url="https://example.com" x="0" y="-1.8" z="0" color="#00ffcc"></cta-button>
+<cta-button text="DISCOVER DRONE 🚀" url="https://ia-codestudio.com" x="0" y="-1.8" z="0" color="#00ffcc"></cta-button>
 <particles count="2500" color="#00ffcc" speed="0.01"></particles>
 <light-point x="0" y="3" z="3" color="#00f2fe" intensity="2.5"></light-point>`,
 
         space_station: `<!-- 🛰️ ORBITAL SPACE STATION 4D -->
 <model-3d preset="space_station" x="0" y="0" z="0" scale="1.5" color="#00ffcc" material="wire-glow" animate="spin"></model-3d>
 <hyper-cube shape="24cell" size="2.6" color="#7928ca" rot-xw="0.02" material="neon"></hyper-cube>
-<cta-button text="EXPLORE STATION 🛰️" url="https://example.com" x="0" y="-2.0" z="0" color="#00f2fe"></cta-button>
+<cta-button text="EXPLORE STATION 🛰️" url="https://ia-codestudio.com" x="0" y="-2.0" z="0" color="#00f2fe"></cta-button>
 <particles count="3500" color="#00f2fe" speed="0.015"></particles>`,
 
         cyber_robot: `<!-- 🤖 CYBER MECH ROBOT 3D -->
@@ -680,7 +707,7 @@
     });
     if (btnRunEditor) btnRunEditor.addEventListener('click', () => {
         playRunSFX();
-        parseAndRender();
+        runCode();
         if (window.innerWidth <= 850 && typeof switchHyperMobileView === 'function') {
             switchHyperMobileView('scene');
         }
@@ -831,12 +858,90 @@
         return { vertices, edges };
     }
 
+    function buildCliffordTorus4D() {
+        const uSteps = 8, vSteps = 4;
+        const vertices = [];
+        const edges = [];
+        const r = 1.0 / Math.SQRT2;
+        for (let u = 0; u < uSteps; u++) {
+            const theta = (u / uSteps) * Math.PI * 2;
+            for (let v = 0; v < vSteps; v++) {
+                const phi = (v / vSteps) * Math.PI * 2;
+                vertices.push([
+                    Math.cos(theta) * r * 1.45,
+                    Math.sin(theta) * r * 1.45,
+                    Math.cos(phi) * r * 1.45,
+                    Math.sin(phi) * r * 1.45
+                ]);
+            }
+        }
+        for (let u = 0; u < uSteps; u++) {
+            for (let v = 0; v < vSteps; v++) {
+                const idx = u * vSteps + v;
+                const nextU = ((u + 1) % uSteps) * vSteps + v;
+                const nextV = u * vSteps + ((v + 1) % vSteps);
+                edges.push([idx, nextU], [idx, nextV]);
+            }
+        }
+        return { vertices, edges };
+    }
+
     const polytopeLibrary = {
         tesseract: buildTesseract4D(),
         '5cell': build5Cell4D(),
         '16cell': build16Cell4D(),
-        '24cell': build24Cell4D()
+        '24cell': build24Cell4D(),
+        clifford: buildCliffordTorus4D()
     };
+
+    // ── GPU Memory Hygiene Helper (prevents WebGL VRAM leaks) ──────────────
+    function disposeObject3D(root) {
+        if (!root) return;
+        const disposedGeos = new Set();
+        const disposedMats = new Set();
+        const disposedTexs = new Set();
+        const texProps = ['map', 'normalMap', 'roughnessMap', 'metalnessMap', 'emissiveMap', 'alphaMap', 'aoMap', 'bumpMap', 'specularMap'];
+
+        const disposeMat = (m) => {
+            if (!m || disposedMats.has(m)) return;
+            disposedMats.add(m);
+            texProps.forEach(p => {
+                if (m[p] && typeof m[p].dispose === 'function' && !disposedTexs.has(m[p])) {
+                    disposedTexs.add(m[p]);
+                    try { m[p].dispose(); } catch(e) {}
+                }
+            });
+            if (typeof m.dispose === 'function') {
+                try { m.dispose(); } catch(e) {}
+            }
+        };
+
+        if (typeof root.traverse === 'function') {
+            root.traverse((obj) => {
+                if (obj.geometry && typeof obj.geometry.dispose === 'function' && !obj.userData?.sharedGeometry && !disposedGeos.has(obj.geometry)) {
+                    disposedGeos.add(obj.geometry);
+                    try { obj.geometry.dispose(); } catch(e) {}
+                }
+                if (obj.material && !obj.userData?.sharedMaterial) {
+                    if (Array.isArray(obj.material)) obj.material.forEach(disposeMat);
+                    else disposeMat(obj.material);
+                }
+            });
+        }
+    }
+
+    function safeDownloadBlob(blob, filename) {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        setTimeout(() => {
+            try { document.body.removeChild(link); } catch(e) {}
+            try { URL.revokeObjectURL(url); } catch(e) {}
+        }, 4000);
+    }
 
     // ----------------------------------------------------------------------
     // 5. Three.js Engine & Advanced FX Modes
@@ -890,6 +995,16 @@
         renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
         renderer.setSize(container.clientWidth, container.clientHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        if (THREE.ACESFilmicToneMapping !== undefined) {
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.15;
+        }
+        if (THREE.sRGBEncoding !== undefined) {
+            renderer.outputEncoding = THREE.sRGBEncoding;
+        }
+        if (typeof window.applyHyperPBRStudioEnv === 'function') {
+            window.applyHyperPBRStudioEnv(scene, renderer);
+        }
 
         controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
@@ -915,11 +1030,16 @@
             const intersects = raycaster.intersectObjects(scene.children, true);
 
             let isHoveringClickable = false;
+            const hoveredExploded = new Set();
             if (intersects.length > 0) {
                 for (let i = 0; i < intersects.length; i++) {
                     let hitObj = intersects[i].object;
                     while (hitObj) {
-                        if (hitObj.userData && (hitObj.userData.url || hitObj.userData.preset || hitObj.userData.isExplodable || hitObj.userData.isImage)) {
+                        if (hitObj.userData && hitObj.userData.isExplodedMesh && typeof hitObj.userData.triggerHover === 'function') {
+                            hoveredExploded.add(hitObj);
+                            isHoveringClickable = true;
+                        }
+                        if (hitObj.userData && (hitObj.userData.url || hitObj.userData.preset || hitObj.userData.isExplodable || hitObj.userData.isImage || hitObj.userData.isExplodedMesh)) {
                             isHoveringClickable = true;
                             break;
                         }
@@ -929,6 +1049,11 @@
                     if (isHoveringClickable) break;
                 }
             }
+            customObjects.forEach(o => {
+                if (o && o.userData && o.userData.isExplodedMesh && typeof o.userData.triggerHover === 'function') {
+                    o.userData.triggerHover(hoveredExploded.has(o));
+                }
+            });
             canvas.style.cursor = isHoveringClickable ? 'pointer' : 'default';
         });
 
@@ -987,7 +1112,7 @@
                 let targetData = null;
 
                 while (hitObj) {
-                    if (hitObj.userData && (hitObj.userData.url || hitObj.userData.preset || hitObj.userData.isExplodable || hitObj.userData.isImage || hitObj.userData.isHotspot || hitObj.userData.triggerDisintegrate)) {
+                    if (hitObj.userData && (hitObj.userData.url || hitObj.userData.preset || hitObj.userData.isExplodable || hitObj.userData.isExplodedMesh || hitObj.userData.isImage || hitObj.userData.isHotspot || hitObj.userData.triggerDisintegrate)) {
                         targetData = hitObj.userData;
                         break;
                     }
@@ -1004,6 +1129,9 @@
                         targetData.triggerDisperse();
                     } else if (targetData.isHotspot && targetData.triggerHotspot) {
                         targetData.triggerHotspot();
+                    } else if (targetData.isExplodedMesh && targetData.triggerClick) {
+                        playRunSFX();
+                        targetData.triggerClick();
                     } else if (targetData.isExplodable && targetData.triggerExplode) {
                         playRunSFX();
                         targetData.triggerExplode();
@@ -1048,7 +1176,11 @@
     }
 
     function createPolytopeMesh(shapeKey, colorHex) {
-        if (polytopeMeshGroup) scene.remove(polytopeMeshGroup);
+        if (polytopeMeshGroup) {
+            scene.remove(polytopeMeshGroup);
+            disposeObject3D(polytopeMeshGroup);
+            polytopeMeshGroup = null;
+        }
 
         currentPolytypeKey = polytopeLibrary[shapeKey] ? shapeKey : 'tesseract';
         const polyData = polytopeLibrary[currentPolytypeKey];
@@ -1599,12 +1731,16 @@
             const obj = scene.children[i];
             if (obj.name !== 'grid-floor' && obj.name !== 'default-light' && obj.name !== 'warp-particles') {
                 scene.remove(obj);
+                disposeObject3D(obj);
             }
         }
         customObjects = [];
         animationCallbacks = [];
         physicsObjects = [];
         polytopeMeshGroup = null;
+        if (window.__HyperStudioHooks && window.__HyperStudioHooks.onClearScene) {
+            window.__HyperStudioHooks.onClearScene();
+        }
     }
 
     function updateInspectorModelDropdown() {
@@ -1824,7 +1960,7 @@
             const getAttr = (name, def) => node.getAttribute(name) || def;
 
             if (tagName === 'image-3d') {
-                const src = getAttr('src', 'https://picsum.photos/400/300');
+                const src = getAttr('src', 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22512%22%20height%3D%22360%22%20viewBox%3D%220%200%20512%20360%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23041024%22%2F%3E%3Cstop%20offset%3D%2250%25%22%20stop-color%3D%22%230f1f4b%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%231f0836%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22512%22%20height%3D%22360%22%20fill%3D%22url(%23g)%22%2F%3E%3Cg%20stroke%3D%22%2300f2fe%22%20stroke-opacity%3D%220.25%22%20stroke-width%3D%221%22%3E%3Cline%20x1%3D%220%22%20y1%3D%2260%22%20x2%3D%22512%22%20y2%3D%2260%22%2F%3E%3Cline%20x1%3D%220%22%20y1%3D%22120%22%20x2%3D%22512%22%20y2%3D%22120%22%2F%3E%3Cline%20x1%3D%220%22%20y1%3D%22180%22%20x2%3D%22512%22%20y2%3D%22180%22%2F%3E%3Cline%20x1%3D%220%22%20y1%3D%22240%22%20x2%3D%22512%22%20y2%3D%22240%22%2F%3E%3Cline%20x1%3D%220%22%20y1%3D%22300%22%20x2%3D%22512%22%20y2%3D%22300%22%2F%3E%3C%2Fg%3E%3Cpolygon%20points%3D%22256%2C42%20366%2C106%20366%2C234%20256%2C298%20146%2C234%20146%2C106%22%20fill%3D%22none%22%20stroke%3D%22%2300f2fe%22%20stroke-width%3D%224%22%2F%3E%3Cpolygon%20points%3D%22256%2C74%20338%2C122%20338%2C218%20256%2C266%20174%2C218%20174%2C122%22%20fill%3D%22rgba(0%2C242%2C254%2C0.12)%22%20stroke%3D%22%23ff007f%22%20stroke-width%3D%222.5%22%2F%3E%3Ctext%20x%3D%22256%22%20y%3D%22176%22%20text-anchor%3D%22middle%22%20fill%3D%22%2300ffcc%22%20font-family%3D%22monospace%22%20font-size%3D%2224%22%20font-weight%3D%22bold%22%3EHYPERSTUDIO%204D%3C%2Ftext%3E%3Ctext%20x%3D%22256%22%20y%3D%22204%22%20text-anchor%3D%22middle%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22sans-serif%22%20font-size%3D%2213%22%3EHOLOGRAM%20PROJECTION%3C%2Ftext%3E%3C%2Fsvg%3E');
                 const imgId = getAttr('id', `image_${imageTagCounter++}`);
                 const x = parseFloat(getAttr('x', '0'));
                 const y = parseFloat(getAttr('y', '1'));
@@ -2247,7 +2383,7 @@
 
             else if (tagName === 'cta-button') {
                 const ctaText = getAttr('text', 'CLICK HERE');
-                const ctaUrl = getAttr('url', 'https://example.com');
+                const ctaUrl = getAttr('url', 'https://ia-codestudio.com');
                 const x = parseFloat(getAttr('x', '0'));
                 const y = parseFloat(getAttr('y', '-1.8'));
                 const z = parseFloat(getAttr('z', '0'));
@@ -2524,7 +2660,7 @@
                 customObjects.push(waveMesh);
             } else if (tagName === 'cta-button') {
                 const textStr = getAttr('text', 'GET STARTED 🚀');
-                const urlStr = getAttr('url', 'https://example.com');
+                const urlStr = getAttr('url', 'https://ia-codestudio.com');
                 const colorHex = getAttr('color', '#00ffcc');
                 const x = parseFloat(getAttr('x', '0'));
                 const y = parseFloat(getAttr('y', '-1.8'));
@@ -2627,10 +2763,13 @@
 
                 let currentFactor = trigger === 'always' ? factor : 0.0;
                 let isHoverExploded = false;
+                let isClickExploded = false;
 
                 baseModel.userData = {
                     isExplodedMesh: true,
+                    preset: preset,
                     factor: factor,
+                    trigger: trigger,
                     setExplodeFactor: (f) => {
                         baseModel.children.forEach((child, i) => {
                             const orig = originalPositions[i];
@@ -2641,6 +2780,9 @@
                     },
                     triggerHover: (hovered) => {
                         if (trigger === 'hover') isHoverExploded = hovered;
+                    },
+                    triggerClick: () => {
+                        if (trigger === 'click') isClickExploded = !isClickExploded;
                     }
                 };
 
@@ -2648,9 +2790,10 @@
 
                 animationCallbacks.push(() => {
                     baseModel.rotation.y += 0.01 * timeSpeedMultiplier;
-                    if (trigger === 'hover') {
-                        const targetF = isHoverExploded ? factor : 0.0;
-                        currentFactor += (targetF - currentFactor) * 0.1;
+                    if (trigger === 'hover' || trigger === 'click') {
+                        const isActive = trigger === 'hover' ? isHoverExploded : isClickExploded;
+                        const targetF = isActive ? factor : 0.0;
+                        currentFactor += (targetF - currentFactor) * 0.12;
                         baseModel.userData.setExplodeFactor(currentFactor);
                     }
                 });
@@ -2867,11 +3010,31 @@
 
         const scriptMatch = codeText.match(/<script>([\s\S]*?)<\/script>/i);
         if (scriptMatch && scriptMatch[1]) {
-            try {
-                const sandboxFunc = new Function('scene', 'THREE', 'onFrame', scriptMatch[1]);
-                sandboxFunc(scene, THREE, (fn) => animationCallbacks.push(fn));
-            } catch (err) {
-                console.error("Script execution error:", err);
+            const rawScript = scriptMatch[1];
+            const blockedPattern = /\b(localStorage|sessionStorage|document\.cookie|indexedDB|XMLHttpRequest|fetch|WebSocket|eval|Function|importScripts)\b/i;
+            if (blockedPattern.test(rawScript)) {
+                console.warn('[HyperStudio Security] Blocked unsafe API inside inline <script> tag.');
+                const st = document.getElementById('editor-status');
+                if (st) st.innerHTML = '<span class="status-dot" style="background:#ffb703;"></span> <span>Unsafe API blocked in &lt;script&gt;</span>';
+            } else {
+                try {
+                    const sandboxFunc = new Function(
+                        'scene', 'THREE', 'camera', 'onFrame',
+                        'window', 'document', 'localStorage', 'sessionStorage', 'fetch', 'XMLHttpRequest',
+                        '"use strict";\n' + rawScript
+                    );
+                    const safeWindow = {
+                        addEventListener: (ev, fn) => { if (ev === 'scroll') window.addEventListener('scroll', fn); },
+                        innerHeight: window.innerHeight,
+                        scrollY: window.scrollY
+                    };
+                    const safeDoc = { body: { scrollHeight: document.body.scrollHeight } };
+                    sandboxFunc(scene, THREE, camera, (fn) => animationCallbacks.push(fn), safeWindow, safeDoc, undefined, undefined, undefined, undefined);
+                } catch (err) {
+                    console.error("Script execution error:", err);
+                    const st = document.getElementById('editor-status');
+                    if (st) st.innerHTML = '<span class="status-dot" style="background:#ff0055;"></span> <span>Script Error: ' + String(err.message || err).slice(0, 60) + '</span>';
+                }
             }
         }
 
@@ -2893,6 +3056,7 @@
 
     let lastTime = performance.now();
     let frameCount = 0;
+    let prevRenderTime = performance.now();
 
     function renderLoop(time) {
         requestAnimationFrame(renderLoop);
@@ -2900,6 +3064,9 @@
         if (isEcoMode && time - lastFrameTime < 33) {
             return;
         }
+        const rawDt = Math.min(0.05, Math.max(0.001, (time - prevRenderTime) / 1000));
+        prevRenderTime = time;
+        const dtScale = rawDt * 60; // 1.0 at 60 FPS, 0.416 at 144 FPS, 2.0 at 30 FPS
         lastFrameTime = time;
 
         if (!isAnimationPaused) {
@@ -2907,23 +3074,21 @@
                 const pos = warpParticles.geometry.attributes.position.array;
                 const vels = warpParticles.userData.velocities;
                 for (let i = 0; i < vels.length; i++) {
-                    pos[i * 3 + 2] += vels[i] * 2.0;
+                    pos[i * 3 + 2] += vels[i] * 2.0 * dtScale;
                     if (pos[i * 3 + 2] > 20) pos[i * 3 + 2] = -20;
                 }
                 warpParticles.geometry.attributes.position.needsUpdate = true;
             }
 
             if (is4DMorphing) {
-                morphTimer += 0.015;
-                polytope4DParams.rotXW = 0.03 + Math.sin(morphTimer * 0.5) * 0.03;
-                polytope4DParams.rotYW = 0.02 + Math.cos(morphTimer * 0.7) * 0.03;
-                polytope4DParams.rotZW = Math.sin(morphTimer * 0.3) * 0.02;
-                polytope4DParams.dist4D = 2.5 + Math.sin(morphTimer * 0.4) * 0.8;
-
-                const shapes = ['tesseract', '5cell', '16cell', '24cell'];
-                const shapeIndex = Math.floor((time * 0.00025) % shapes.length);
-                if (shapes[shapeIndex] !== currentPolytypeKey) {
-                    createPolytopeMesh(shapes[shapeIndex], '#00f2fe');
+                if (window.__HyperStudioHooks && window.__HyperStudioHooks.on4DMorphTick) {
+                    window.__HyperStudioHooks.on4DMorphTick(time, dtScale);
+                } else {
+                    morphTimer += 0.015 * dtScale;
+                    polytope4DParams.rotXW = 0.03 + Math.sin(morphTimer * 0.5) * 0.03;
+                    polytope4DParams.rotYW = 0.02 + Math.cos(morphTimer * 0.7) * 0.03;
+                    polytope4DParams.rotZW = Math.sin(morphTimer * 0.3) * 0.02;
+                    polytope4DParams.dist4D = 2.5 + Math.sin(morphTimer * 0.4) * 0.8;
                 }
             }
 
@@ -2936,23 +3101,21 @@
             }
 
             if (isMouseParallaxEnabled) {
-                scene.rotation.y = THREE.MathUtils.lerp(scene.rotation.y, mousePos.x * 0.4, 0.05);
-                scene.rotation.x = THREE.MathUtils.lerp(scene.rotation.x, -mousePos.y * 0.3, 0.05);
+                const lerpF = Math.min(1, 0.05 * dtScale);
+                scene.rotation.y = THREE.MathUtils.lerp(scene.rotation.y, mousePos.x * 0.4, lerpF);
+                scene.rotation.x = THREE.MathUtils.lerp(scene.rotation.x, -mousePos.y * 0.3, lerpF);
             }
 
             if (isAudioReactive) {
-                const audioBeatScale = 1 + Math.sin(time * 0.015) * 0.18;
-                customObjects.forEach(obj => {
-                    if (obj.isMesh && obj.geometry.type !== 'PlaneGeometry') {
-                        obj.scale.set(audioBeatScale, audioBeatScale, audioBeatScale);
-                    }
-                });
+                if (window.__HyperStudioHooks && window.__HyperStudioHooks.onAudioReactiveTick) {
+                    window.__HyperStudioHooks.onAudioReactiveTick(time, dtScale);
+                }
             }
 
             if (isPhysicsEnabled || physicsObjects.length > 0) {
                 physicsObjects.forEach(item => {
-                    item.vy -= 0.015;
-                    item.mesh.position.y += item.vy;
+                    item.vy -= 0.015 * dtScale;
+                    item.mesh.position.y += item.vy * dtScale;
                     if (item.mesh.position.y <= item.radius) {
                         item.mesh.position.y = item.radius;
                         item.vy = -item.vy * item.bounce;
@@ -2961,11 +3124,17 @@
             }
 
             if (polytopeMeshGroup) {
-                try { updatePolytope4D(); } catch (err) { console.error("4D render error:", err); }
+                try {
+                    if (window.__HyperStudioHooks && window.__HyperStudioHooks.onUpdatePolytope4D) {
+                        window.__HyperStudioHooks.onUpdatePolytope4D(dtScale);
+                    } else {
+                        updatePolytope4D();
+                    }
+                } catch (err) { console.error("4D render error:", err); }
             }
             
             animationCallbacks.forEach(fn => {
-                try { fn(); } catch (err) { console.error("Animation callback error:", err); }
+                try { fn(dtScale); } catch (err) { console.error("Animation callback error:", err); }
             });
 
             if (isAutoOrbiting && !isCinematicCamEnabled && !isPilotGameActive) {
@@ -2976,9 +3145,13 @@
         }
 
         if (isPilotGameActive && camera) {
-            updatePilotVehicleSimulation();
+            updatePilotVehicleSimulation(dtScale);
         } else if (controls) {
             controls.update();
+        }
+
+        if (window.__HyperStudioHooks && window.__HyperStudioHooks.onRenderPost) {
+            window.__HyperStudioHooks.onRenderPost(time, dtScale);
         }
 
         renderer.render(scene, camera);
@@ -3021,7 +3194,7 @@
         dnaCode += `<model-3d preset="${p1}" x="0" y="0.5" z="0" scale="${randFloat(1.0, 1.6)}" color="${c1}" material="${m1}" animate="spin-y" scroll-rotate="true"></model-3d>\n\n`;
         dnaCode += `<hyper-cube shape="${shape}" size="${randFloat(1.8, 2.8)}" color="${c2}" rot-xw="${randFloat(0.01, 0.04)}" rot-yw="${randFloat(0.01, 0.03)}" material="${m2}"></hyper-cube>\n\n`;
         dnaCode += `<mesh-torus radius="${randFloat(2.0, 3.2)}" tube="${randFloat(0.05, 0.12)}" color="${c3}" material="neon" animate="spin-x" p="${Math.floor(Math.random()*4+1)}" q="${Math.floor(Math.random()*4+2)}"></mesh-torus>\n\n`;
-        dnaCode += `<cta-button text="GET STARTED 🚀" url="https://example.com" x="0" y="-2.2" z="0" color="${c1}"></cta-button>\n\n`;
+        dnaCode += `<cta-button text="GET STARTED 🚀" url="https://ia-codestudio.com" x="0" y="-2.2" z="0" color="${c1}"></cta-button>\n\n`;
         dnaCode += `<particles count="${Math.floor(Math.random() * 2500 + 1500)}" color="${c1}" speed="${randFloat(0.008, 0.02)}"></particles>\n\n`;
         dnaCode += `<light-point x="4" y="4" z="4" color="${c1}" intensity="2.2"></light-point>`;
 
@@ -3108,9 +3281,18 @@
     }
 
     if (btnApplyDismantle && modalDismantle) {
+        const sliderDismantleEl = document.getElementById('slider-dismantle-factor');
+        if (sliderDismantleEl) {
+            sliderDismantleEl.addEventListener('input', (e) => {
+                const lbl = document.getElementById('val-dismantle-factor');
+                if (lbl) lbl.textContent = parseFloat(e.target.value).toFixed(2) + 'x';
+            });
+        }
+
         btnApplyDismantle.addEventListener('click', () => {
             playClickSFX();
             const factor = document.getElementById('slider-dismantle-factor').value || '0.8';
+            const triggerMode = (document.getElementById('dismantle-trigger-select') && document.getElementById('dismantle-trigger-select').value) || 'hover';
             
             const inspectorSlider = document.getElementById('slider-inspector-dismantle');
             if (inspectorSlider) {
@@ -3120,12 +3302,20 @@
             }
 
             let editorText = codeEditor.value;
-            if (editorText.includes('dismantle=')) {
+            if (editorText.includes('<exploded-mesh')) {
+                editorText = editorText.replace(/<exploded-mesh\b[^>]*>/gi, (m) => {
+                    let u = m.includes('factor=') ? m.replace(/\bfactor="[^"]*"/gi, `factor="${factor}"`) : m.replace('<exploded-mesh', `<exploded-mesh factor="${factor}"`);
+                    u = u.includes('trigger=') ? u.replace(/\btrigger="[^"]*"/gi, `trigger="${triggerMode}"`) : u.replace('<exploded-mesh', `<exploded-mesh trigger="${triggerMode}"`);
+                    return u;
+                });
+            } else if (triggerMode !== 'always') {
+                editorText += (editorText.trim() ? '\n\n' : '') + `<exploded-mesh preset="${activePresetKey || 'cyber_drone'}" factor="${factor}" trigger="${triggerMode}" color="#00f2fe"></exploded-mesh>`;
+            } else if (editorText.includes('dismantle=')) {
                 editorText = editorText.replace(/\bdismantle="[^"]*"/gi, `dismantle="${factor}"`);
             } else if (editorText.includes('<model-3d')) {
                 editorText = editorText.replace('<model-3d', `<model-3d dismantle="${factor}"`);
             } else {
-                editorText += (editorText.trim() ? '\n\n' : '') + `<exploded-mesh preset="${activePresetKey || 'cyber_drone'}" factor="${factor}" trigger="hover" color="#00f2fe"></exploded-mesh>`;
+                editorText += (editorText.trim() ? '\n\n' : '') + `<exploded-mesh preset="${activePresetKey || 'cyber_drone'}" factor="${factor}" trigger="${triggerMode}" color="#00f2fe"></exploded-mesh>`;
             }
 
             codeEditor.value = editorText;
@@ -3335,7 +3525,7 @@
 
         synthRadioGain = audioCtx.createGain();
         synthRadioGain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-        synthRadioGain.connect(audioCtx.destination);
+        synthRadioGain.connect(getAudioOutNode() || audioCtx.destination);
 
         startRadioChords();
     }
@@ -3398,6 +3588,7 @@
     function buildInfiniteStarfield() {
         if (infiniteStarfield) {
             scene.remove(infiniteStarfield);
+            disposeObject3D(infiniteStarfield);
             infiniteStarfield = null;
         }
 
@@ -3446,7 +3637,7 @@
 
     // ── Spawn Floating Dark Matter Crystals ───────────────────────────────
     function spawnMissionCrystals(count = 3) {
-        plasmaCrystals.forEach(c => { if (c.mesh) scene.remove(c.mesh); });
+        plasmaCrystals.forEach(c => { if (c.mesh) { scene.remove(c.mesh); disposeObject3D(c.mesh); } });
         plasmaCrystals = [];
 
         const crysGeo = new THREE.OctahedronGeometry(1.6, 0);
@@ -3473,6 +3664,7 @@
     function spawnOrbitalStation() {
         if (orbitalStation) {
             scene.remove(orbitalStation);
+            disposeObject3D(orbitalStation);
             orbitalStation = null;
         }
 
@@ -3524,6 +3716,7 @@
         });
         if (cosmosGroup) {
             scene.remove(cosmosGroup);
+            disposeObject3D(cosmosGroup);
             cosmosGroup = null;
         }
         spaceRings = [];
@@ -3696,6 +3889,9 @@
         }
 
         scene.add(cosmosGroup);
+        if (window.__HyperStudioHooks && window.__HyperStudioHooks.onWorldBuilt) {
+            window.__HyperStudioHooks.onWorldBuilt(activeCosmosWorld, cosmosGroup);
+        }
     }
 
     // ── Primary Vehicle Finder ────────────────────────────────────────────
@@ -3726,9 +3922,9 @@
             c.classList.toggle('active', c.dataset.val === activeMission);
         });
 
-        // Clean up previous mission objects from scene
-        if (orbitalStation) { scene.remove(orbitalStation); orbitalStation = null; }
-        plasmaCrystals.forEach(c => { if (c.mesh) scene.remove(c.mesh); });
+        // Clean up previous mission objects from scene (with GPU dispose!)
+        if (orbitalStation) { scene.remove(orbitalStation); disposeObject3D(orbitalStation); orbitalStation = null; }
+        plasmaCrystals.forEach(c => { if (c.mesh) { scene.remove(c.mesh); disposeObject3D(c.mesh); } });
         plasmaCrystals = [];
         activeLasers.forEach(l => { if (l.mesh) scene.remove(l.mesh); });
         activeLasers = [];
@@ -3782,19 +3978,47 @@
             buildCosmosWorld('asteroids');
 
         } else if (activeMission === 'blackhole') {
-            missionTargetCount = 1;
+            missionTargetCount = 185;
             if (titleEl) titleEl.textContent = isFR ? '🕳️ MISSION 4: Évasion du Trou Noir' : '🕳️ MISSION 4: Event Horizon Escape';
-            if (descEl) descEl.textContent = isFR ? 'Utilisez le Nitro Warp pour échapper à l\'attraction gravitationnelle !' : 'Engage Nitro Warp to escape the singularity gravitational pull!';
-            if (progEl) progEl.textContent = isFR ? 'ÉVASION 🕳️' : 'ESCAPE 🕳️';
+            if (descEl) descEl.textContent = isFR ? 'Activez le Nitro Warp [ESPACE] pour dépasser 185m loin du Trou Noir !' : 'Engage Nitro Warp [SPACE] to escape past 185m from the Black Hole!';
+            if (progEl) progEl.textContent = '62 / 185m 🕳️';
             if (timerEl) timerEl.style.display = 'none';
             buildCosmosWorld('blackhole');
+            // Spawn inside gravity well facing AWAY from the Black Hole (0,25,180)
+            if (pilotPhysics.targetObj) {
+                pilotPhysics.targetObj.position.set(0, 25, 118);
+                pilotPhysics.yaw = Math.PI; // Facing -Z (away from black hole!)
+                pilotPhysics.pitch = 0;
+                pilotPhysics.speed = 0.25;
+                pilotPhysics.nitro = 1.0;
+            }
+
+        } else if (activeMission === 'boss') {
+            missionTargetCount = 3;
+            if (titleEl) titleEl.textContent = isFR ? '👾 MISSION 5: Assaut Vaisseau-Mère Boss' : '👾 MISSION 5: Mothership Boss Assault';
+            if (descEl) descEl.textContent = isFR ? 'Détruisez les 3 générateurs du Boss et son escadrille [F / M Missiles] !' : 'Destroy the Mothership\'s 3 shield cores & AI drones [F Laser / M Missiles]!';
+            if (progEl) progEl.textContent = '0 / 3 👾';
+            if (timerEl) timerEl.style.display = 'none';
+            buildCosmosWorld('deepspace');
+            spawnOrbitalStation();
+            if (pilotPhysics.targetObj) {
+                pilotPhysics.targetObj.position.set(0, 12, -25);
+                pilotPhysics.yaw = 0;
+                pilotPhysics.pitch = 0;
+                pilotPhysics.speed = 0.15;
+            }
 
         } else if (activeMission === 'freeroam') {
-            if (titleEl) titleEl.textContent = isFR ? '🌌 VOL LIBRE DANS LE COSMOS' : '🌌 FREE COSMIC FLIGHT ROAM';
-            if (descEl) descEl.textContent = isFR ? 'Explorez librement les galaxies, planètes et anneaux solaires' : 'Freely explore deep space, planets, and collect cosmic star treasures';
+            if (titleEl) titleEl.textContent = isFR ? '🌌 VOL LIBRE & PORTES WARP' : '🌌 FREE COSMIC ROAM & WARP GATES';
+            if (descEl) descEl.textContent = isFR ? 'Explorez galaxies, station orbitale et sautez par les Portes Warp !' : 'Explore planets, dock at Orbital Station, or fly through glowing Warp Gates!';
             if (progEl) progEl.textContent = isFR ? 'LIBRE ✨' : 'FREE ✨';
             if (timerEl) timerEl.style.display = 'none';
             buildCosmosWorld('galaxies');
+            spawnOrbitalStation();
+        }
+
+        if (window.__HyperStudioHooks && window.__HyperStudioHooks.onMissionStart) {
+            window.__HyperStudioHooks.onMissionStart(activeMission);
         }
     }
 
@@ -3850,13 +4074,24 @@
         const forwardVec = new THREE.Vector3(sinYaw * cosPitch, sinPitch, cosYaw * cosPitch);
         const rightVec = new THREE.Vector3(cosYaw, 0, -sinYaw);
 
-        const laserColor = unlockedUpgrades.lasers ? 0x00ffcc : 0xff0055;
-        const laserMat = new THREE.MeshBasicMaterial({ color: laserColor, transparent: true, opacity: 0.9 });
+        const customLaserHex = window.__HyperFlightV2 && window.__HyperFlightV2.getLaserColorHex
+            ? window.__HyperFlightV2.getLaserColorHex()
+            : (unlockedUpgrades.lasers ? 0x00ffcc : 0xff0055);
+        if (!window.__hyperSharedLaserGeo) {
+            window.__hyperSharedLaserGeo = new THREE.CylinderGeometry(0.08, 0.08, 2.2, 8);
+            window.__hyperSharedLaserGeo.rotateX(Math.PI / 2);
+        }
+        if (!window.__hyperLaserMatCache) window.__hyperLaserMatCache = {};
+        if (!window.__hyperLaserMatCache[customLaserHex]) {
+            window.__hyperLaserMatCache[customLaserHex] = new THREE.MeshBasicMaterial({ color: customLaserHex, transparent: true, opacity: 0.92 });
+        }
+        const laserMat = window.__hyperLaserMatCache[customLaserHex];
+
+        if (navigator.vibrate) { try { navigator.vibrate(14); } catch(e) {} }
 
         [-1.1, 1.1].forEach(offset => {
-            const geo = new THREE.CylinderGeometry(0.08, 0.08, 2.2, 8);
-            geo.rotateX(Math.PI / 2);
-            const laserMesh = new THREE.Mesh(geo, laserMat);
+            const laserMesh = new THREE.Mesh(window.__hyperSharedLaserGeo, laserMat);
+            laserMesh.userData = { sharedGeometry: true, sharedMaterial: true };
 
             const spawnPos = obj.position.clone()
                 .add(rightVec.clone().multiplyScalar(offset))
@@ -3939,6 +4174,9 @@
         spaceRings.forEach(r => { if (r.active) drawBlip(r.mesh.position, '#00f2fe', 3); });
         plasmaCrystals.forEach(c => { if (c.active) drawBlip(c.mesh.position, '#ffb703', 3.5); });
         destroyableAsteroids.forEach(a => { if (a.active) drawBlip(a.mesh.position, '#ff0055', 2.5); });
+        if (window.__HyperStudioHooks && window.__HyperStudioHooks.onRadarDraw) {
+            window.__HyperStudioHooks.onRadarDraw(ctx, cx, cy, radius, drawBlip);
+        }
 
         // Player dot in center
         ctx.fillStyle = '#ffffff';
@@ -4001,6 +4239,9 @@
             if (btn) btn.classList.add('active');
             if (btnText) btnText.textContent = '🕹️ In Game (ESC to Exit)';
 
+            if (window.__HyperStudioHooks && window.__HyperStudioHooks.onTogglePilot) {
+                window.__HyperStudioHooks.onTogglePilot(true);
+            }
             if (typeof window.onViewportResize === 'function') {
                 setTimeout(window.onViewportResize, 50);
             }
@@ -4018,14 +4259,18 @@
             if (btn) btn.classList.remove('active');
             if (btnText) btnText.textContent = '🕹️ Pilot & Drive Mode';
 
-            // Cleanup cosmos objects on exit
-            if (cosmosGroup) { scene.remove(cosmosGroup); cosmosGroup = null; }
-            if (infiniteStarfield) { scene.remove(infiniteStarfield); infiniteStarfield = null; }
-            if (orbitalStation) { scene.remove(orbitalStation); orbitalStation = null; }
-            plasmaCrystals.forEach(c => { if (c.mesh) scene.remove(c.mesh); });
+            // Cleanup cosmos objects on exit (with full GPU disposal)
+            if (cosmosGroup) { scene.remove(cosmosGroup); disposeObject3D(cosmosGroup); cosmosGroup = null; }
+            if (infiniteStarfield) { scene.remove(infiniteStarfield); disposeObject3D(infiniteStarfield); infiniteStarfield = null; }
+            if (orbitalStation) { scene.remove(orbitalStation); disposeObject3D(orbitalStation); orbitalStation = null; }
+            plasmaCrystals.forEach(c => { if (c.mesh) { scene.remove(c.mesh); disposeObject3D(c.mesh); } });
             plasmaCrystals = [];
             activeLasers.forEach(l => { if (l.mesh) scene.remove(l.mesh); });
             activeLasers = [];
+
+            if (window.__HyperStudioHooks && window.__HyperStudioHooks.onTogglePilot) {
+                window.__HyperStudioHooks.onTogglePilot(false);
+            }
 
             if (camera) { camera.fov = 45; camera.updateProjectionMatrix(); }
             if (typeof window.onViewportResize === 'function') {
@@ -4034,20 +4279,51 @@
         }
     }
 
-    // ── Main Flight & Vehicle Simulation Loop ─────────────────────────────
-    function updatePilotVehicleSimulation() {
+    let lastShieldHitTime = 0;
+    function applyShipShieldDamage(amount, reasonText) {
+        const now = performance.now();
+        if (now - lastShieldHitTime < 650) return;
+        lastShieldHitTime = now;
+        shieldHP = Math.max(0, shieldHP - amount);
+        playShieldHitSFX();
+        if (navigator.vibrate) { try { navigator.vibrate([45, 30, 65]); } catch(e) {} }
+        if (window.__HyperFlightV2 && window.__HyperFlightV2.onShieldHit) {
+            window.__HyperFlightV2.onShieldHit(amount, reasonText);
+        } else if (reasonText) {
+            showHUDNotification(reasonText, '#ff0055');
+        }
+        if (shieldHP <= 0) {
+            const isFR = currentLang === 'fr';
+            showHUDNotification(isFR ? '🚨 BOUCLIER HS ! Warp d\'urgence activé' : '🚨 SHIELDS DEPLETED! Emergency Warp Respawn', '#ff0055');
+            if (pilotPhysics.targetObj) {
+                pilotPhysics.targetObj.position.set(0, isSpaceFlightMode ? 6 : 0.4, 0);
+                pilotPhysics.speed = 0;
+                pilotPhysics.pitch = 0;
+            }
+            shieldHP = maxShieldHP;
+            pilotPhysics.nitro = 1.0;
+        }
+    }
+
+    // ── Main Flight & Vehicle Simulation Loop (FPS-Independent DeltaTime) ─
+    function updatePilotVehicleSimulation(dtScale = 1.0) {
         const obj = pilotPhysics.targetObj;
         if (!obj || !camera) return;
 
-        const forwardPressed = gameKeys.w || gameKeys.ArrowUp;
-        const backPressed = gameKeys.s || gameKeys.ArrowDown;
+        // Read optional Gamepad & Gyro analog inputs from Flight V2 module
+        const extInput = (window.__HyperFlightV2 && window.__HyperFlightV2.pollExternalControls)
+            ? window.__HyperFlightV2.pollExternalControls()
+            : null;
+
+        const forwardPressed = gameKeys.w || gameKeys.ArrowUp || (extInput && extInput.thrust > 0.15);
+        const backPressed = gameKeys.s || gameKeys.ArrowDown || (extInput && extInput.brake > 0.15);
         const leftPressed = gameKeys.a || gameKeys.ArrowLeft;
         const rightPressed = gameKeys.d || gameKeys.ArrowRight;
-        const boostPressed = gameKeys[' '] && pilotPhysics.nitro > 0.04;
+        const boostPressed = (gameKeys[' '] || (extInput && extInput.boost)) && pilotPhysics.nitro > 0.04;
         const pitchUpPressed = gameKeys.q || gameKeys.Shift;
         const pitchDownPressed = gameKeys.e || gameKeys.Control;
         const resetPressed = gameKeys.r;
-        const firePressed = gameKeys.f;
+        const firePressed = gameKeys.f || (extInput && extInput.fire);
 
         if (firePressed) fireLaserBlaster();
 
@@ -4062,41 +4338,53 @@
             camera.position.set(0, (isSpaceFlightMode ? 2.5 : 0.4) + 2.2, -6.5);
         }
 
-        // Nitro Warp Boost
-        const nitroConsumption = unlockedUpgrades.nitro ? 0.005 : 0.009;
+        // Slow passive shield recharge after 4.5s without taking damage
+        if (shieldHP < maxShieldHP && performance.now() - lastShieldHitTime > 4500) {
+            shieldHP = Math.min(maxShieldHP, shieldHP + 0.06 * dtScale);
+        }
+
+        // Nitro Warp Boost (FPS-independent)
+        const nitroConsumption = (unlockedUpgrades.nitro ? 0.005 : 0.009) * dtScale;
         if (boostPressed) {
-            if (!pilotPhysics.isBoosting) playBoostSFX();
+            if (!pilotPhysics.isBoosting) {
+                playBoostSFX();
+                if (navigator.vibrate) { try { navigator.vibrate(30); } catch(e) {} }
+            }
             pilotPhysics.isBoosting = true;
             pilotPhysics.nitro = Math.max(0, pilotPhysics.nitro - nitroConsumption);
-            camera.fov = THREE.MathUtils.lerp(camera.fov, 58, 0.12);
+            camera.fov = THREE.MathUtils.lerp(camera.fov, 60, Math.min(1, 0.12 * dtScale));
             camera.updateProjectionMatrix();
         } else {
             pilotPhysics.isBoosting = false;
-            pilotPhysics.nitro = Math.min(1.0, pilotPhysics.nitro + 0.0035);
-            camera.fov = THREE.MathUtils.lerp(camera.fov, 45, 0.08);
+            pilotPhysics.nitro = Math.min(1.0, pilotPhysics.nitro + 0.0035 * dtScale);
+            camera.fov = THREE.MathUtils.lerp(camera.fov, 45, Math.min(1, 0.08 * dtScale));
             camera.updateProjectionMatrix();
         }
 
         const currentMaxSpeed = pilotPhysics.isBoosting ? (pilotPhysics.maxSpeed * 2.2) : pilotPhysics.maxSpeed;
 
-        // Thrust Acceleration & Braking
+        // Thrust Acceleration & Braking (FPS-independent)
         if (forwardPressed) {
-            pilotPhysics.speed = Math.min(currentMaxSpeed, pilotPhysics.speed + pilotPhysics.accel * (pilotPhysics.isBoosting ? 2.0 : 1.0));
+            const thrustMul = (extInput && extInput.thrust > 0.15) ? extInput.thrust : 1.0;
+            pilotPhysics.speed = Math.min(currentMaxSpeed, pilotPhysics.speed + pilotPhysics.accel * thrustMul * (pilotPhysics.isBoosting ? 2.0 : 1.0) * dtScale);
         } else if (backPressed) {
-            pilotPhysics.speed = Math.max(-currentMaxSpeed * 0.4, pilotPhysics.speed - pilotPhysics.brake);
+            pilotPhysics.speed = Math.max(-currentMaxSpeed * 0.4, pilotPhysics.speed - pilotPhysics.brake * dtScale);
         } else {
-            pilotPhysics.speed *= pilotPhysics.friction;
+            pilotPhysics.speed *= Math.pow(pilotPhysics.friction, dtScale);
             if (Math.abs(pilotPhysics.speed) < 0.001) pilotPhysics.speed = 0;
         }
 
-        // Steering / Yaw
+        // Steering / Yaw (Keyboard + Analog Gamepad/Gyro)
         let steerDir = 0;
         if (leftPressed) steerDir += 1;
         if (rightPressed) steerDir -= 1;
+        if (extInput && Math.abs(extInput.steer) > 0.05) {
+            steerDir = Math.max(-1, Math.min(1, steerDir + extInput.steer));
+        }
 
         if (steerDir !== 0) {
             const steerEffectiveness = Math.abs(pilotPhysics.speed) > 0.01 ? 1.0 : (isSpaceFlightMode ? 0.8 : 0.35);
-            pilotPhysics.yaw += steerDir * pilotPhysics.turnSpeed * steerEffectiveness;
+            pilotPhysics.yaw += steerDir * pilotPhysics.turnSpeed * steerEffectiveness * dtScale;
         }
 
         // Pitch (Climb / Dive)
@@ -4104,18 +4392,21 @@
             let pitchDir = 0;
             if (pitchUpPressed) pitchDir += 1;
             if (pitchDownPressed) pitchDir -= 1;
+            if (extInput && Math.abs(extInput.pitch) > 0.05) {
+                pitchDir = Math.max(-1, Math.min(1, pitchDir + extInput.pitch));
+            }
 
             if (pitchDir !== 0) {
-                pilotPhysics.pitch = Math.max(-Math.PI / 4, Math.min(Math.PI / 4, pilotPhysics.pitch + pitchDir * pilotPhysics.pitchSpeed));
+                pilotPhysics.pitch = Math.max(-Math.PI / 4, Math.min(Math.PI / 4, pilotPhysics.pitch + pitchDir * pilotPhysics.pitchSpeed * dtScale));
             } else {
-                pilotPhysics.pitch = THREE.MathUtils.lerp(pilotPhysics.pitch, 0, 0.05);
+                pilotPhysics.pitch = THREE.MathUtils.lerp(pilotPhysics.pitch, 0, Math.min(1, 0.05 * dtScale));
             }
 
             // Aerodynamic banking roll
-            pilotPhysics.roll = THREE.MathUtils.lerp(pilotPhysics.roll, -steerDir * 0.55, 0.14);
+            pilotPhysics.roll = THREE.MathUtils.lerp(pilotPhysics.roll, -steerDir * 0.55, Math.min(1, 0.14 * dtScale));
         } else {
             pilotPhysics.pitch = 0;
-            pilotPhysics.roll = THREE.MathUtils.lerp(pilotPhysics.roll, -steerDir * 0.1, 0.15);
+            pilotPhysics.roll = THREE.MathUtils.lerp(pilotPhysics.roll, -steerDir * 0.1, Math.min(1, 0.15 * dtScale));
         }
 
         // Clean 3D Forward Motion Vector
@@ -4129,32 +4420,37 @@
         const forwardZ = cosYaw * cosPitch;
 
         if (isSpaceFlightMode) {
-            obj.position.x += forwardX * pilotPhysics.speed;
-            obj.position.y += forwardY * pilotPhysics.speed;
-            obj.position.z += forwardZ * pilotPhysics.speed;
+            obj.position.x += forwardX * pilotPhysics.speed * dtScale;
+            obj.position.y += forwardY * pilotPhysics.speed * dtScale;
+            obj.position.z += forwardZ * pilotPhysics.speed * dtScale;
 
-            // Black Hole Gravitational Pull
+            // Black Hole Gravitational Pull & Real Escape Logic (Mission 4 Fixed!)
             if (activeCosmosWorld === 'blackhole') {
                 const bhPos = new THREE.Vector3(0, 25, 180);
                 const distToBH = obj.position.distanceTo(bhPos);
-                if (distToBH < 120) {
-                    const pullForce = Math.min(0.22, 500 / (distToBH * distToBH + 50));
+                const progEl = document.getElementById('hud-mission-progress');
+                if (activeMission === 'blackhole' && progEl && !isMissionComplete) {
+                    progEl.textContent = `${Math.round(distToBH)} / 185m 🕳️`;
+                }
+
+                if (distToBH < 165) {
+                    const pullForce = Math.min(0.24, 520 / (distToBH * distToBH + 45)) * dtScale;
                     const toBH = bhPos.clone().sub(obj.position).normalize();
                     obj.position.addScaledVector(toBH, pullForce);
 
-                    // Wormhole Teleportation & Singularity Event
+                    // Event Horizon collision damages shield & ejects back into danger!
                     if (distToBH < 22) {
                         const isFR = currentLang === 'fr';
-                        showHUDNotification(isFR ? '🌀 SINGULARITÉ QUANTIQUE ! +1000 PTS' : '🌀 QUANTUM SINGULARITY TRAVERSED! +1000 PTS', '#ff00ff');
-                        obj.position.set(0, 20, -40);
+                        applyShipShieldDamage(35, isFR ? '⚠️ HORIZON DES ÉVÉNEMENTS ! -35 BOUCLIER' : '⚠️ EVENT HORIZON IMPACT! -35 SHIELD');
+                        obj.position.set(0, 25, 112);
+                        pilotPhysics.yaw = Math.PI;
                         pilotPhysics.pitch = 0;
-                        pilotPhysics.speed = 0.35;
-                        spaceScore += 1000;
-                        saveCosmicProgress();
-                        if (activeMission === 'blackhole') {
-                            checkMissionVictory();
-                        }
+                        pilotPhysics.speed = 0.2;
                     }
+                } else if (activeMission === 'blackhole' && distToBH >= 185 && !isMissionComplete) {
+                    const isFR = currentLang === 'fr';
+                    showHUDNotification(isFR ? '🚀 ÉVASION DU TROU NOIR RÉUSSIE !' : '🚀 EVENT HORIZON ESCAPED!', '#00ffcc');
+                    checkMissionVictory();
                 }
             }
 
@@ -4164,9 +4460,26 @@
                 if (pilotPhysics.pitch < 0) pilotPhysics.pitch = 0;
             }
         } else {
-            obj.position.x += sinYaw * pilotPhysics.speed;
-            obj.position.z += cosYaw * pilotPhysics.speed;
+            obj.position.x += sinYaw * pilotPhysics.speed * dtScale;
+            obj.position.z += cosYaw * pilotPhysics.speed * dtScale;
             obj.position.y = 0.4;
+        }
+
+        // Asteroid-to-Ship Collision Detection (Real Shield Damage!)
+        if (destroyableAsteroids.length > 0) {
+            for (let aIdx = 0; aIdx < destroyableAsteroids.length; aIdx++) {
+                const ast = destroyableAsteroids[aIdx];
+                if (!ast.active || !ast.mesh) continue;
+                ast.mesh.rotation.x += (ast.mesh.userData.rotX || 0.01) * dtScale;
+                ast.mesh.rotation.y += (ast.mesh.userData.rotY || 0.015) * dtScale;
+                const dAst = obj.position.distanceTo(ast.mesh.position);
+                if (dAst < ast.radius + 1.6) {
+                    const pushDir = obj.position.clone().sub(ast.mesh.position).normalize();
+                    obj.position.addScaledVector(pushDir, 3.5);
+                    pilotPhysics.speed = -0.15;
+                    applyShipShieldDamage(25, currentLang === 'fr' ? '💥 IMPACT ASTÉROÏDE ! -25 BOUCLIER' : '💥 ASTEROID IMPACT! -25 SHIELD');
+                }
+            }
         }
 
         // Apply 3D Rotation to Vehicle
@@ -4220,8 +4533,8 @@
         // Laser Projectiles Simulation & Asteroid Hit Collisions
         for (let i = activeLasers.length - 1; i >= 0; i--) {
             const laser = activeLasers[i];
-            laser.mesh.position.add(laser.velocity);
-            laser.life--;
+            laser.mesh.position.addScaledVector(laser.velocity, dtScale);
+            laser.life -= dtScale;
 
             // Collision check against asteroids
             destroyableAsteroids.forEach(ast => {
@@ -4236,10 +4549,15 @@
 
                     if (ast.hp <= 0) {
                         ast.active = false;
+                        const blastPos = ast.mesh.position.clone();
                         scene.remove(ast.mesh);
-                        spaceScore += 400;
+                        disposeObject3D(ast.mesh);
+                        const mult = (window.__HyperFlightV2 && window.__HyperFlightV2.registerComboHit)
+                            ? window.__HyperFlightV2.registerComboHit('asteroid', blastPos)
+                            : 1;
+                        spaceScore += 400 * mult;
                         spaceCrystals += 80;
-                        showHUDNotification('💥 ASTEROID DESTROYED! +400 PTS', '#ffb703');
+                        showHUDNotification(`💥 ASTEROID DESTROYED! +${400 * mult} PTS${mult > 1 ? ' (×' + mult + ' COMBO!)' : ''}`, '#ffb703');
 
                         if (activeMission === 'asteroids') {
                             missionProgress++;
@@ -4266,12 +4584,15 @@
                 const dist = obj.position.distanceTo(ringData.mesh.position);
                 if (dist < ringData.radius + 1.2 && ringData.active) {
                     ringData.active = false;
-                    spaceScore += 500;
+                    const rMult = (window.__HyperFlightV2 && window.__HyperFlightV2.registerComboHit)
+                        ? window.__HyperFlightV2.registerComboHit('ring', ringData.mesh.position.clone())
+                        : 1;
+                    spaceScore += 500 * rMult;
                     spaceCrystals += 50;
                     pilotPhysics.nitro = Math.min(1.0, pilotPhysics.nitro + 0.6);
                     pilotPhysics.speed = Math.min(currentMaxSpeed * 1.5, pilotPhysics.speed + 0.25);
                     playRingChimeSFX();
-                    showHUDNotification('⚡ RING PASS! +500 PTS • +50 💎', '#00f2fe');
+                    showHUDNotification(`⚡ RING PASS! +${500 * rMult} PTS${rMult > 1 ? ' (×' + rMult + '!)' : ''} • +50 💎`, '#00f2fe');
 
                     if (activeMission === 'wormhole') {
                         missionProgress++;
@@ -4359,6 +4680,11 @@
         const shieldPct = Math.round((shieldHP / maxShieldHP) * 100);
         if (shieldFillEl) shieldFillEl.style.width = shieldPct + '%';
         if (shieldValEl) shieldValEl.textContent = shieldPct + '%';
+
+        // Run Flight Combat V2 tick (Boss, AI Drones, Missiles, Thrusters, Warp Lines, Docking, Warp Gates, Screen Shake)
+        if (window.__HyperStudioHooks && window.__HyperStudioHooks.onPilotTick) {
+            window.__HyperStudioHooks.onPilotTick(dtScale, { forwardX, forwardY, forwardZ, sinYaw, cosYaw });
+        }
 
         // Draw Mini Holographic Radar
         drawCosmicRadar();
@@ -5242,7 +5568,7 @@
     if (photoBtnOpenStudio) photoBtnOpenStudio.addEventListener('click', () => {
         playClickSFX();
         const modal = document.getElementById('modal-photo-frame');
-        if (modal) modal.classList.add('visible');
+        if (modal) modal.classList.add('active');
         photoPanel.classList.add('hidden');
     });
 
@@ -5300,7 +5626,7 @@
 <dna-helix radius="1.2" height="4.5" color1="#00f2fe" color2="#ff007f" speed="0.02" x="-3" y="1" z="0"></dna-helix>
 <spatial-audio radius="2.0" color="#ffb703" speed="0.04" x="3" y="1" z="0"></spatial-audio>
 <text-3d text="UNIQUE 3D ENGINE" x="0" y="2.8" z="0" scale="0.9" color="#00f2fe" material="neon" animate="float"></text-3d>
-<cta-button text="DISCOVER 🚀" url="https://example.com" x="0" y="-1.8" z="0" color="#00ffcc"></cta-button>
+<cta-button text="DISCOVER 🚀" url="https://ia-codestudio.com" x="0" y="-1.8" z="0" color="#00ffcc"></cta-button>
 <particles count="3000" color="#00ffcc" speed="0.01"></particles>
 <light-point x="5" y="5" z="5" color="#00f2fe" intensity="2.0"></light-point>`;
             codeEditor.value = uniqueDemoCode;
@@ -5403,7 +5729,7 @@
     function openPhotoFrameStudioModal() {
         playClickSFX();
         if (!codeEditor.value.includes('<image-3d')) {
-            const defaultImageTag = `<image-3d id="image_${Date.now()}" src="https://picsum.photos/400/300" x="0" y="1" z="0" width="3.5" height="2.5" rot-x="0" rot-y="0" rot-z="0" frame="neon" color="#00f2fe" depth="0.4" scanner="true" back="hologram" animate="float"></image-3d>`;
+            const defaultImageTag = `<image-3d id="image_${Date.now()}" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22512%22%20height%3D%22360%22%20viewBox%3D%220%200%20512%20360%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23041024%22%2F%3E%3Cstop%20offset%3D%2250%25%22%20stop-color%3D%22%230f1f4b%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%231f0836%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22512%22%20height%3D%22360%22%20fill%3D%22url(%23g)%22%2F%3E%3Cg%20stroke%3D%22%2300f2fe%22%20stroke-opacity%3D%220.25%22%20stroke-width%3D%221%22%3E%3Cline%20x1%3D%220%22%20y1%3D%2260%22%20x2%3D%22512%22%20y2%3D%2260%22%2F%3E%3Cline%20x1%3D%220%22%20y1%3D%22120%22%20x2%3D%22512%22%20y2%3D%22120%22%2F%3E%3Cline%20x1%3D%220%22%20y1%3D%22180%22%20x2%3D%22512%22%20y2%3D%22180%22%2F%3E%3Cline%20x1%3D%220%22%20y1%3D%22240%22%20x2%3D%22512%22%20y2%3D%22240%22%2F%3E%3Cline%20x1%3D%220%22%20y1%3D%22300%22%20x2%3D%22512%22%20y2%3D%22300%22%2F%3E%3C%2Fg%3E%3Cpolygon%20points%3D%22256%2C42%20366%2C106%20366%2C234%20256%2C298%20146%2C234%20146%2C106%22%20fill%3D%22none%22%20stroke%3D%22%2300f2fe%22%20stroke-width%3D%224%22%2F%3E%3Cpolygon%20points%3D%22256%2C74%20338%2C122%20338%2C218%20256%2C266%20174%2C218%20174%2C122%22%20fill%3D%22rgba(0%2C242%2C254%2C0.12)%22%20stroke%3D%22%23ff007f%22%20stroke-width%3D%222.5%22%2F%3E%3Ctext%20x%3D%22256%22%20y%3D%22176%22%20text-anchor%3D%22middle%22%20fill%3D%22%2300ffcc%22%20font-family%3D%22monospace%22%20font-size%3D%2224%22%20font-weight%3D%22bold%22%3EHYPERSTUDIO%204D%3C%2Ftext%3E%3Ctext%20x%3D%22256%22%20y%3D%22204%22%20text-anchor%3D%22middle%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22sans-serif%22%20font-size%3D%2213%22%3EHOLOGRAM%20PROJECTION%3C%2Ftext%3E%3C%2Fsvg%3E" x="0" y="1" z="0" width="3.5" height="2.5" rot-x="0" rot-y="0" rot-z="0" frame="neon" color="#00f2fe" depth="0.4" scanner="true" back="hologram" animate="float"></image-3d>`;
             codeEditor.value += (codeEditor.value.trim() ? '\n\n' : '') + defaultImageTag;
             updateLineNumbers();
             runCode();
@@ -5756,10 +6082,11 @@
         return `🚀 ${modelTitle}\n\n${mainDescription}${hashtagStr}`;
     }
 
-    // 🎬 Social Media Publisher Hook
-    const btnSocialRecTrigger = document.getElementById('btn-social-record-clip');
+    // 🎬 Social Media Publisher Hook (fixed duplicate ID -> #btn-record-video-studio)
+    const btnSocialRecTrigger = document.getElementById('btn-record-video-studio');
     if (btnSocialRecTrigger) {
         btnSocialRecTrigger.addEventListener('click', () => {
+            if (modalSocialPublisher) modalSocialPublisher.classList.remove('active');
             if (typeof toggleVideoRecording === 'function') toggleVideoRecording();
         });
     }
@@ -5913,7 +6240,7 @@
             generatedTags.push(`<hyper-cube shape="tesseract" size="2.2" color="${primaryColor}" rot-xw="0.025" material="glass"></hyper-cube>`);
         }
 
-        generatedTags.push(`<cta-button text="DISCOVER 🚀" url="https://example.com" x="0" y="-1.8" z="0" color="${accentColor}"></cta-button>`);
+        generatedTags.push(`<cta-button text="DISCOVER 🚀" url="https://ia-codestudio.com" x="0" y="-1.8" z="0" color="${accentColor}"></cta-button>`);
         generatedTags.push(`<particles count="3000" color="${accentColor}" speed="0.01"></particles>`);
         generatedTags.push(`<light-point x="5" y="5" z="5" color="${primaryColor}" intensity="2.0"></light-point>`);
 
@@ -6040,7 +6367,7 @@
             const trust = document.getElementById('ad-trust-input').value.trim();
             const aspect = document.getElementById('ad-aspect-select').value;
             const ctaText = document.getElementById('ad-cta-text-input').value.trim() || 'BUY NOW 🛒';
-            const ctaUrl = document.getElementById('ad-cta-url-input').value.trim() || 'https://example.com';
+            const ctaUrl = document.getElementById('ad-cta-url-input').value.trim() || 'https://ia-codestudio.com';
             const color = document.getElementById('ad-color-picker').value;
 
             const viewportSelect = document.getElementById('viewport-mode-select');
@@ -6173,7 +6500,7 @@
         } else if (particleType === 'laser_dust') {
             logoCode += `<particles count="2000" color="${ringColor}" speed="0.02"></particles>\n\n`;
         } else if (particleType === 'pulsar') {
-            logoCode += `<particles count="#ff007f" speed="0.015"></particles>\n\n`;
+            logoCode += `<particles count="2500" color="#ff007f" speed="0.015"></particles>\n\n`;
         }
 
         logoCode += `<light-point x="0" y="4" z="5" color="${mainColor}" intensity="2.5"></light-point>`;
@@ -6283,7 +6610,14 @@
 
     function updateSceneEnvironmentBackground(mode) {
         const stage = document.getElementById('viewport-canvas-stage');
-        const canvas = document.getElementById('webgl-canvas');
+        if (warpParticles) {
+            scene.remove(warpParticles);
+            disposeObject3D(warpParticles);
+            warpParticles = null;
+        }
+        if (mode === 'warp') {
+            createHyperspaceWormholeParticles();
+        }
 
         if (mode === 'cyber') {
             scene.background = new THREE.Color(0x0a0c14);
@@ -6486,7 +6820,7 @@
         playClickSFX();
         isAnimationPaused = !isAnimationPaused;
         const icon = e.currentTarget.querySelector('i');
-        icon.className = isAnimationPaused ? 'fa-solid fa-pause' : 'fa-solid fa-pause';
+        icon.className = isAnimationPaused ? 'fa-solid fa-play' : 'fa-solid fa-pause';
     });
 
     document.querySelectorAll('.speed-btn').forEach(btn => {
@@ -6670,27 +7004,16 @@
     setup4DSlider('slider-rot-zw', 'rotZW', 'val-rot-zw');
     setup4DSlider('slider-dist-4d', 'dist4D', 'val-dist-4d');
 
-    document.getElementById('env-bg-select').addEventListener('change', (e) => {
-        playClickSFX();
-        const mode = e.target.value;
-        if (warpParticles) { scene.remove(warpParticles); warpParticles = null; }
-
-        if (mode === 'cyber') scene.background = new THREE.Color(0x0a0c14);
-        else if (mode === 'warp') {
-            scene.background = new THREE.Color(0x020308);
-            createHyperspaceWormholeParticles();
-        }
-        else if (mode === 'space') scene.background = new THREE.Color(0x020307);
-        else if (mode === 'studio') scene.background = new THREE.Color(0x2a2f3a);
-        else if (mode === 'transparent') scene.background = null;
-    });
+    // (Unified env-bg-select listener is attached above via updateSceneEnvironmentBackground)
 
     let currentFrameworkTab = 'webcomponent';
 
     function generateFrameworkCode(tab) {
         const userCode = codeEditor.value;
-        const ga4Id = document.getElementById('ga4-tracking-id') ? document.getElementById('ga4-tracking-id').value.trim() : '';
-        const agencyWatermark = document.getElementById('agency-watermark-id') ? document.getElementById('agency-watermark-id').value.trim() : '';
+        const rawGa4 = document.getElementById('ga4-tracking-id') ? document.getElementById('ga4-tracking-id').value.trim() : '';
+        const ga4Id = /^G-[A-Z0-9]{4,16}$/i.test(rawGa4) ? rawGa4 : '';
+        const rawWm = document.getElementById('agency-watermark-id') ? document.getElementById('agency-watermark-id').value.trim() : '';
+        const agencyWatermark = rawWm.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
         // Extract primary preset and color from user code if present
         const presetMatch = userCode.match(/preset=["']([^"']+)["']/);
@@ -7017,14 +7340,16 @@ onUnmounted(() => {
     });
 
     function downloadLandingPage(templateType) {
+        if (!isUserPremium()) { showPaywallModal(); return; }
         playClickSFX();
+        if (window.__HyperTemplatesV2 && typeof window.__HyperTemplatesV2.download === 'function') {
+            window.__HyperTemplatesV2.download(templateType);
+            return;
+        }
         const userCode = codeEditor.value;
         const embedScript = generateStandaloneHTML(userCode, true);
         const blob = new Blob([embedScript], { type: 'text/html' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `landing-page-${templateType}.html`;
-        link.click();
+        safeDownloadBlob(blob, `landing-page-${templateType}.html`);
     }
 
     document.getElementById('card-template-saas').addEventListener('click', () => downloadLandingPage('saas-tech'));
@@ -7035,8 +7360,10 @@ onUnmounted(() => {
         const rawUserCode = JSON.stringify(userCode);
         const rawOBJStore = JSON.stringify(importedOBJDataStore);
         
-        const ga4Id = document.getElementById('ga4-tracking-id') ? document.getElementById('ga4-tracking-id').value.trim() : '';
-        const agencyWatermark = document.getElementById('agency-watermark-id') ? document.getElementById('agency-watermark-id').value.trim() : '';
+        const rawGa4 = document.getElementById('ga4-tracking-id') ? document.getElementById('ga4-tracking-id').value.trim() : '';
+        const ga4Id = /^G-[A-Z0-9]{4,16}$/i.test(rawGa4) ? rawGa4 : '';
+        const rawWm = document.getElementById('agency-watermark-id') ? document.getElementById('agency-watermark-id').value.trim() : '';
+        const agencyWatermark = rawWm.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
         const activeEnvBg = document.getElementById('env-bg-select') ? document.getElementById('env-bg-select').value : 'cyber';
 
         const activeViewportMode = document.getElementById('viewport-mode-select') 
@@ -7841,7 +8168,7 @@ onUnmounted(() => {
             scene.add(waveMesh); customObjects.push(waveMesh);
         } else if (tagName === 'cta-button') {
             const btnText = getAttr('text', 'DISCOVER DRONE 🚀');
-            const btnUrl = getAttr('url', 'https://example.com');
+            const btnUrl = getAttr('url', 'https://ia-codestudio.com');
             const btnColor = getAttr('color', '#00ffcc');
             const scale = parseFloat(getAttr('scale', '1.0'));
             const mesh = new THREE.Mesh(new THREE.PlaneGeometry(3.8 * scale, 0.9 * scale), new THREE.MeshBasicMaterial({ map: create3DTextTexture(btnText, btnColor), transparent: true, side: THREE.DoubleSide }));
@@ -8146,16 +8473,36 @@ onUnmounted(() => {
     // ══════════════════════════════════════════════════════════════════════
     // 💎 IA CODE STUDIO PREMIUM AUTH & PAYWALL PROTECTION ENGINE
     // ══════════════════════════════════════════════════════════════════════
+    // Auto-unlock Stripe return (?pro_unlocked=true) across the whole IA Code Studio site
+    (function checkStripeProReturn() {
+        try {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('pro_unlocked') === 'true') {
+                localStorage.setItem('ia_pro_unlocked', 'true');
+                localStorage.setItem('ia_pro_active', 'true');
+                if (window.history && window.history.replaceState) {
+                    params.delete('pro_unlocked');
+                    const cleanQs = params.toString();
+                    const cleanUrl = window.location.pathname + (cleanQs ? '?' + cleanQs : '') + window.location.hash;
+                    window.history.replaceState(null, '', cleanUrl);
+                }
+            }
+        } catch (e) {}
+    })();
+
     function isUserPremium() {
         try {
+            if (localStorage.getItem('ia_pro_unlocked') === 'true' || localStorage.getItem('ia_pro_active') === 'true') {
+                return true;
+            }
             const session = localStorage.getItem('genius_session');
             if (session) {
                 const user = JSON.parse(session);
-                const email = (user && user.email) ? user.email.toLowerCase() : '';
-                if (email === 'andart1174@gmail.com') return true;
+                if (user && (user.isAdmin === true || user.role === 'admin' || user.isPro === true)) return true;
+                const email = (user && user.email) ? user.email.toLowerCase().trim() : '';
 
                 const premiumList = JSON.parse(localStorage.getItem('ia_premium_users') || '[]');
-                const record = premiumList.find(p => p.email && p.email.toLowerCase() === email);
+                const record = premiumList.find(p => p.email && p.email.toLowerCase().trim() === email);
                 if (record) {
                     const now = Date.now();
                     const expiry = (record.addedAt || 0) + (record.days || 0) * 86400000;
@@ -8232,9 +8579,9 @@ onUnmounted(() => {
     window.isUserPremium = isUserPremium;
     window.showPaywallModal = showPaywallModal;
 
-    // Global Capturing Phase Interceptor for Premium Export & Copy Features
+    // Global Capturing Phase Interceptor for Premium Export & Copy Features ($10/month Pro)
     document.addEventListener('click', function(e) {
-        const target = e.target.closest('#btn-export-html, #btn-export-obj, #btn-framework-export, #btn-copy-framework, #btn-export-embed, #btn-copy-embed, #btn-screenshot, #btn-web-templates, #card-template-saas, #card-template-crypto, #card-template-agency, #btn-copy-code');
+        const target = e.target.closest('#btn-export-html, #btn-export-obj, #btn-export-glb, #btn-export-stl, #btn-download-webar, #btn-framework-export, #btn-copy-framework, #btn-export-embed, #btn-copy-embed, #btn-screenshot, #btn-web-templates, #card-template-saas, #card-template-crypto, #card-template-agency, #btn-copy-code, #btn-download-video-file');
         if (target) {
             if (!isUserPremium()) {
                 e.preventDefault();
@@ -8245,11 +8592,12 @@ onUnmounted(() => {
         }
     }, true);
 
-    // Intercept copy/cut on code editor for non-premium
+    // Scoped copy/cut protection: ONLY protect raw code export textareas, allow copying Share Links, AI Prompts & Social Captions!
+    const PROTECTED_CODE_IDS = new Set(['code-editor', 'framework-code-area', 'embed-code-area']);
     ['copy', 'cut'].forEach(evt => {
         document.addEventListener(evt, function(e) {
-            const activeTag = document.activeElement ? document.activeElement.tagName : '';
-            if (activeTag === 'TEXTAREA' || activeTag === 'INPUT' || (window.getSelection && window.getSelection().toString().length > 5)) {
+            const activeEl = document.activeElement;
+            if (activeEl && PROTECTED_CODE_IDS.has(activeEl.id)) {
                 if (!isUserPremium()) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -8274,10 +8622,7 @@ onUnmounted(() => {
         const userCode = codeEditor.value;
         const htmlContent = generateStandaloneHTML(userCode, true);
         const blob = new Blob([htmlContent], { type: 'text/html' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'hyperstudio-3d-model.html';
-        link.click();
+        safeDownloadBlob(blob, 'hyperstudio-3d-model.html');
     });
 
     document.getElementById('btn-close-embed').addEventListener('click', () => {
@@ -8305,6 +8650,17 @@ onUnmounted(() => {
         link.click();
     });
 
+    function buildCleanUserExportGroup() {
+        const exportGroup = new THREE.Group();
+        exportGroup.name = 'HyperStudioExport';
+        const skipNames = new Set(['grid-floor', 'default-light', 'warp-particles', 'cosmos-world-group', 'infinite-starfield']);
+        scene.children.forEach(child => {
+            if (!child || skipNames.has(child.name) || child.isLight || child.isGridHelper || child.userData?.isFlightFX) return;
+            try { exportGroup.add(child.clone(true)); } catch(e) {}
+        });
+        return exportGroup;
+    }
+
     document.getElementById('btn-export-obj').addEventListener('click', () => {
         if (!isUserPremium()) { showPaywallModal(); return; }
         playClickSFX();
@@ -8312,13 +8668,12 @@ onUnmounted(() => {
             alert('OBJ Exporter loading...');
             return;
         }
+        const exportGroup = buildCleanUserExportGroup();
         const exporter = new THREE.OBJExporter();
-        const result = exporter.parse(scene);
+        const result = exporter.parse(exportGroup);
+        disposeObject3D(exportGroup);
         const blob = new Blob([result], { type: 'text/plain' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'hyperstudio-model.obj';
-        link.click();
+        safeDownloadBlob(blob, 'hyperstudio-model.obj');
     });
 
     // ══════════════════════════════════════════════════════════════════════
@@ -8328,6 +8683,7 @@ onUnmounted(() => {
     let tiktokRecordedChunks = [];
     let isRecordingTiktokVideo = false;
     let tiktokRecordingTimer = null;
+    let lastRecordedVideoUrl = null;
 
     const modalVideoRecorder = document.getElementById('modal-video-recorder');
     const hudRecordingOverlay = document.getElementById('hud-recording-overlay');
@@ -8340,6 +8696,10 @@ onUnmounted(() => {
     const btnCloseVideoModalFooter = document.getElementById('btn-close-video-modal-footer');
 
     function toggleVideoRecording() {
+        if (window.__HyperVideoStudioV2 && typeof window.__HyperVideoStudioV2.toggle === 'function') {
+            window.__HyperVideoStudioV2.toggle();
+            return;
+        }
         if (isRecordingTiktokVideo) {
             stopVideoRecording();
         } else {
@@ -8397,7 +8757,9 @@ onUnmounted(() => {
             if (btnHudRecord) btnHudRecord.innerHTML = '<i class="fa-solid fa-video"></i> <span>Rec Clip 🎥</span>';
 
             const blob = new Blob(tiktokRecordedChunks, { type: chosenMime || 'video/webm' });
+            if (lastRecordedVideoUrl) { try { URL.revokeObjectURL(lastRecordedVideoUrl); } catch(e) {} }
             const videoUrl = URL.createObjectURL(blob);
+            lastRecordedVideoUrl = videoUrl;
 
             if (recordedVideoPlayer) {
                 recordedVideoPlayer.src = videoUrl;
@@ -8719,10 +9081,10 @@ onUnmounted(() => {
             color: "#38bdf8"
         },
         {
-            q_en: "Is HyperStudio 3D/4D free for commercial use?",
-            a_en: "Yes, all procedural 3D models and HTML/WebGL code generated in HyperStudio 3D/4D can be freely used in commercial client websites, ecommerce stores, video intros, games, and web apps without royalties.",
-            q_fr: "HyperStudio 3D/4D est-il gratuit pour un usage commercial ?",
-            a_fr: "Oui, tous les modèles 3D procéduraux et le code HTML/WebGL générés dans HyperStudio 3D/4D peuvent être utilisés librement dans des sites web clients commerciaux, boutiques ecommerce, intros vidéo, jeux et applications sans aucune redevance.",
+            q_en: "Is HyperStudio 3D/4D free to use, and what does the Pro plan ($10/month) include?",
+            a_en: "The 3D/4D live code preview, AI prompt generator, 4D Morphing Lab, Audio-Reactive FFT mode, and the complete Space Flight Simulator (with Boss Assault, Hangar & Gamepad support) are 100% free! Exporting standalone HTML, 3D models (.GLB/.STL/.OBJ), React/Vue/Webflow components, Landing Page templates, WebAR packages, and HD 9:16 video clips is unlocked with the IA Code Studio Pro plan ($10/month) with full commercial rights.",
+            q_fr: "HyperStudio 3D/4D est-il gratuit et que comprend le plan Pro (10 $/mois) ?",
+            a_fr: "L'aperçu 3D/4D en direct, le générateur IA, le Labo 4D, le mode Audio FFT et tout le Simulateur de Vol Spatial (avec Boss, Hangar et manette) sont 100 % gratuits ! L'exportation HTML autonome, les modèles 3D (.GLB/.STL/.OBJ), les composants React/Vue/Webflow, les Landing Pages, WebAR et clips vidéo 9:16 HD sont débloqués avec l'abonnement IA Code Studio Pro (10 $/mois) avec droits commerciaux complets.",
             icon: "fa-scale-balanced",
             color: "#4ade80"
         }
@@ -8834,9 +9196,88 @@ onUnmounted(() => {
 
     if (btnShareClipWhatsapp) btnShareClipWhatsapp.addEventListener('click', () => shareRecordedClip('whatsapp'));
 
+    // ══════════════════════════════════════════════════════════════════════
+    // 🔌 HYPERSTUDIO v2.0 MODULAR BRIDGE (clean API for modules/*.js)
+    // ══════════════════════════════════════════════════════════════════════
+    window.__HyperStudioHooks = window.__HyperStudioHooks || {};
+    window.__HyperStudioCore = {
+        getScene: () => scene,
+        getCamera: () => camera,
+        getRenderer: () => renderer,
+        getControls: () => controls,
+        getCodeEditor: () => codeEditor,
+        getCustomObjects: () => customObjects,
+        getPolytopeMeshGroup: () => polytopeMeshGroup,
+        getPolytopeLibrary: () => polytopeLibrary,
+        getPolytope4DParams: () => polytope4DParams,
+        getCurrentPolytypeKey: () => currentPolytypeKey,
+        setCurrentPolytypeKey: (k) => { currentPolytypeKey = k; },
+        getAudioContext: () => { initAudioContext(); return audioCtx; },
+        getMasterAudioGain: () => { initAudioContext(); return masterAudioGain; },
+        getMasterAnalyser: () => { initAudioContext(); return masterAnalyser; },
+        getMasterMediaDest: () => { initAudioContext(); return masterMediaDest; },
+        isAudioReactive: () => isAudioReactive,
+        setAudioReactive: (v) => { isAudioReactive = !!v; },
+        is4DMorphing: () => is4DMorphing,
+        isPilotActive: () => isPilotGameActive,
+        isSpaceFlight: () => isSpaceFlightMode,
+        getPilotPhysics: () => pilotPhysics,
+        getActiveMission: () => activeMission,
+        getActiveCosmosWorld: () => activeCosmosWorld,
+        getOrbitalStation: () => orbitalStation,
+        getActiveLasers: () => activeLasers,
+        getAsteroids: () => destroyableAsteroids,
+        getCrystals: () => plasmaCrystals,
+        getUnlockedUpgrades: () => unlockedUpgrades,
+        getLang: () => currentLang,
+        getScore: () => spaceScore,
+        addScore: (pts) => { spaceScore += pts; saveCosmicProgress(); },
+        getCrystalsCount: () => spaceCrystals,
+        addCrystals: (cnt) => { spaceCrystals += cnt; saveCosmicProgress(); },
+        getShield: () => ({ hp: shieldHP, max: maxShieldHP }),
+        setShieldHP: (val) => { shieldHP = Math.max(0, Math.min(maxShieldHP, val)); },
+        applyShipShieldDamage,
+        checkMissionVictory,
+        startMission,
+        buildCosmosWorld,
+        openHangarModal,
+        showHUDNotification,
+        saveCosmicProgress,
+        createProceduralModelGroup,
+        createPolytopeMesh,
+        rotate4DPoint,
+        project4Dto3D,
+        disposeObject3D,
+        safeDownloadBlob,
+        buildCleanUserExportGroup,
+        generateStandaloneHTML,
+        runCode,
+        updateLineNumbers,
+        setActiveModelPreset,
+        isUserPremium,
+        showPaywallModal,
+        getPresetTemplates: () => presetTemplates,
+        getActivePresetKey: () => (document.getElementById('preset-select')?.value || activePresetKey || 'cyber_drone'),
+        playClickSFX,
+        playRunSFX,
+        playLaserSFX,
+        playExplosionSFX,
+        playShieldHitSFX,
+        playRingChimeSFX,
+        playBoostSFX,
+        playMissionCompleteSFX,
+        getTimeSpeedMultiplier: () => timeSpeedMultiplier,
+        toggleVideoRecording
+    };
+
     window.addEventListener('DOMContentLoaded', () => {
         init3DEngine();
-        setLanguage('en');
+        let initialLang = 'en';
+        try {
+            const savedLang = localStorage.getItem('hub_lang');
+            if (savedLang === 'fr' || savedLang === 'en') initialLang = savedLang;
+        } catch(e) {}
+        setLanguage(initialLang);
 
         const btnScrollLeft = document.getElementById('btn-scroll-left');
         const btnScrollRight = document.getElementById('btn-scroll-right');
@@ -8856,25 +9297,7 @@ onUnmounted(() => {
             });
         }
 
-        const btnHdrScrollLeft = document.getElementById('btn-hdr-scroll-left');
-        const btnHdrScrollRight = document.getElementById('btn-hdr-scroll-right');
-        const headerControls = document.getElementById('header-controls');
-
-        if (btnHdrScrollLeft && headerControls) {
-            btnHdrScrollLeft.addEventListener('click', () => {
-                playClickSFX();
-                headerControls.scrollBy({ left: -220, behavior: 'smooth' });
-            });
-        }
-
-        if (btnHdrScrollRight && headerControls) {
-            btnHdrScrollRight.addEventListener('click', () => {
-                playClickSFX();
-                headerControls.scrollBy({ left: 220, behavior: 'smooth' });
-            });
-        }
-
-        ['.viewport-controls', '.header-controls', '.editor-quick-tools', '.ai-quick-chips', '.header-actions'].forEach(selector => {
+        ['.viewport-controls', '.editor-quick-tools', '.ai-quick-chips', '.header-actions'].forEach(selector => {
             const el = document.querySelector(selector);
             if (el) {
                 el.addEventListener('wheel', (e) => {

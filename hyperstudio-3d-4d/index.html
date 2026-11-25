@@ -6,7 +6,7 @@
     <title>HyperStudio 3D/4D | Free Three.js AI Generator &amp; Cosmic Flight Simulator</title>
     
     <!-- Strategic SEO Meta Tags -->
-    <meta name="description" content="Generate 3D WebGL HTML code with AI, fly in 3D space with mobile touch gamepad in 5 cosmic quests, and export standalone Three.js code in 5s. 100% Free &amp; 60 FPS.">
+    <meta name="description" content="Generate 3D/4D WebGL HTML code with AI, fly in a 3D Space Flight Simulator with Mothership Boss battles, Gamepad &amp; touch controls (Free), and unlock Pro GLB/STL/OBJ/HTML/WebAR exports ($10/month).">
     <meta name="keywords" content="HyperStudio 3D 4D, WebGL Space Flight Simulator in browser, Free Three.js AI Generator, Prompt to 3D WebGL, HTML 3D Code Engine online, Convert SVG to 3D Three.js, Best AI tool for web designers 2026, AI Code Studio 3D">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <link rel="canonical" href="https://ia-codestudio.com/hyperstudio-3d-4d/">
@@ -64,11 +64,22 @@
           "applicationCategory": "DeveloperApplication, MultimediaApplication",
           "operatingSystem": "Web Browser, Android, iOS, Windows, macOS",
           "description": "Real-time HTML 3D/4D code generator, dimension morphing, procedural DNA randomizer, and standalone WebGL exporter.",
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD"
-          }
+          "offers": [
+            {
+              "@type": "Offer",
+              "name": "Free Live 3D/4D Preview & Flight Simulator",
+              "price": "0",
+              "priceCurrency": "USD",
+              "availability": "https://schema.org/InStock"
+            },
+            {
+              "@type": "Offer",
+              "name": "IA Code Studio Pro (GLB/STL/OBJ/HTML/React/WebAR/Video Exports)",
+              "price": "10.00",
+              "priceCurrency": "USD",
+              "availability": "https://schema.org/InStock"
+            }
+          ]
         },
         {
           "@type": "FAQPage",
@@ -124,10 +135,10 @@
             },
             {
               "@type": "Question",
-              "name": "Is HyperStudio 3D/4D free for commercial use? / HyperStudio est-il gratuit pour un usage commercial ?",
+              "name": "Is HyperStudio 3D/4D free to use, and what does the Pro plan ($10/month) include?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Yes, all procedural 3D models and HTML/WebGL code generated in HyperStudio 3D/4D can be freely used in commercial client websites, ecommerce stores, video intros, games, and web apps without royalties."
+                "text": "Live 3D/4D preview, AI prompt generation, 4D Morphing Lab, Real Audio FFT, and the full Space Flight Simulator (with Mothership Boss, Hangar & Gamepad support) are 100% free. Exporting standalone HTML, .GLB/.STL/.OBJ 3D files, React/Vue/Webflow components, Landing Page templates, WebAR packages, and HD 9:16 video clips is unlocked with IA Code Studio Pro ($10/month) with full commercial rights."
               }
             }
           ]
@@ -147,6 +158,9 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/OBJExporter.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/GLTFExporter.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/STLExporter.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#00f2fe">
     <meta name="mobile-web-app-capable" content="yes">
@@ -162,6 +176,9 @@
             <!-- Main header row: Brand + Toolbar Tabs + Always-visible Actions -->
             <div class="header-main-row">
                 <div class="brand">
+                    <a href="../index.html" class="btn-return-portal" title="Return to IA Code Studio Portal">
+                        <i class="fa-solid fa-arrow-left"></i> <span>Portal</span>
+                    </a>
                     <div class="logo-icon">
                         <i class="fa-solid fa-cube glow-icon"></i>
                         <span class="badge-4d">4D</span>
@@ -213,21 +230,22 @@
                     <button id="btn-reset" class="btn btn-secondary" title="Reset Camera & Scene">
                         <i class="fa-solid fa-rotate-left"></i> <span data-i18n="btn_reset">Reset</span>
                     </button>
-                    <button id="btn-framework-export" class="btn btn-accent" title="Export React, Vue, WordPress & HTML Code">
-                        <i class="fa-solid fa-cubes-stacked"></i> <span data-i18n="btn_framework">Framework Export</span>
-                    </button>
-                    <button id="btn-export-embed" class="btn btn-secondary" title="Get Standalone Embed Code for your Website">
-                        <i class="fa-solid fa-code"></i> <span data-i18n="btn_embed">Embed Code</span>
-                    </button>
-                    <button id="btn-export-html" class="btn btn-primary" title="Download standalone HTML file">
-                        <i class="fa-solid fa-file-code"></i> <span data-i18n="btn_export_html">Export .HTML</span>
-                    </button>
-                    <button id="btn-export-obj" class="btn btn-outline" title="Export as 3D OBJ file">
-                        <i class="fa-solid fa-download"></i> <span data-i18n="btn_export_obj">Export .OBJ</span>
-                    </button>
-                    <button id="btn-screenshot" class="btn btn-icon" title="Take HD Screenshot">
-                        <i class="fa-solid fa-camera"></i>
-                    </button>
+                    <div class="header-export-wrap">
+                        <button type="button" id="btn-export-menu-toggle" class="btn btn-accent" title="Export 3D Models (.GLB/.STL/.OBJ), Standalone HTML, React/Vue &amp; PNG">
+                            <i class="fa-solid fa-download"></i> <span>Export</span> <i class="fa-solid fa-chevron-down" style="font-size:0.7rem;"></i>
+                        </button>
+                        <div class="header-export-dropdown" id="header-export-dropdown">
+                            <div class="export-dd-group">3D &amp; AR Assets</div>
+                            <button type="button" id="btn-export-glb" class="export-dd-item"><i class="fa-solid fa-cube" style="color:#00f2fe;"></i> <span>Export .GLB (PBR 3D)</span> <span class="pro-mini-tag">PRO</span></button>
+                            <button type="button" id="btn-export-stl" class="export-dd-item"><i class="fa-solid fa-cubes" style="color:#00ffcc;"></i> <span>Export .STL (3D Print)</span> <span class="pro-mini-tag">PRO</span></button>
+                            <button type="button" id="btn-export-obj" class="export-dd-item"><i class="fa-solid fa-shapes" style="color:#ffb703;"></i> <span data-i18n="btn_export_obj">Export .OBJ</span> <span class="pro-mini-tag">PRO</span></button>
+                            <div class="export-dd-group">Web &amp; Media</div>
+                            <button type="button" id="btn-export-html" class="export-dd-item"><i class="fa-solid fa-file-code" style="color:#4facfe;"></i> <span data-i18n="btn_export_html">Export .HTML</span> <span class="pro-mini-tag">PRO</span></button>
+                            <button type="button" id="btn-framework-export" class="export-dd-item"><i class="fa-solid fa-cubes-stacked" style="color:#a855f7;"></i> <span data-i18n="btn_framework">Framework Export</span> <span class="pro-mini-tag">PRO</span></button>
+                            <button type="button" id="btn-export-embed" class="export-dd-item"><i class="fa-solid fa-code" style="color:#38bdf8;"></i> <span data-i18n="btn_embed">Embed Code</span> <span class="pro-mini-tag">PRO</span></button>
+                            <button type="button" id="btn-screenshot" class="export-dd-item"><i class="fa-solid fa-camera" style="color:#ff007f;"></i> <span>HD Screenshot (.PNG)</span> <span class="pro-mini-tag">PRO</span></button>
+                        </div>
+                    </div>
                     <button id="btn-record-video" class="btn btn-primary btn-glow-accent" style="background:linear-gradient(135deg, #ff007f 0%, #7928ca 100%); border-color:#ff007f; color:#fff;" title="Record 10s TikTok / Shorts Video Clip">
                         <i class="fa-solid fa-video"></i> <span>TikTok / 3D Clip 🎥</span>
                     </button>
@@ -396,7 +414,7 @@
                         <button class="snippet-tag" data-snippet='<hotspot-pin x="1.5" y="1.5" z="0" title="4K AI Optics" price="$299" text="Quantum 4K camera sensor with 120fps streaming" color="#00f2fe"></hotspot-pin>' title="Insert 3D Interactive Hotspot Pin Tag">
                             📍 &lt;hotspot-pin&gt;
                         </button>
-                        <button class="snippet-tag" data-snippet='<image-3d src="https://picsum.photos/400/300" x="0" y="1" z="0" width="3.5" height="2.5" rot-x="0" rot-y="0" rot-z="0" frame="neon" color="#00f2fe" depth="0.4" scanner="true" back="hologram" animate="float"></image-3d>' title="Insert 3D Photo/Image Tag">
+                        <button class="snippet-tag" data-snippet='<image-3d src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%23081226'/%3E%3Cpolygon points='200,30 300,90 300,210 200,270 100,210 100,90' fill='none' stroke='%2300f2fe' stroke-width='4'/%3E%3Ctext x='200' y='158' text-anchor='middle' fill='%2300ffcc' font-family='monospace' font-size='22'%3EHYPER 4D%3C/text%3E%3C/svg%3E" x="0" y="1" z="0" width="3.5" height="2.5" rot-x="0" rot-y="0" rot-z="0" frame="neon" color="#00f2fe" depth="0.4" scanner="true" back="hologram" animate="float"></image-3d>' title="Insert 3D Photo/Image Tag">
                             🖼️ &lt;image-3d&gt;
                         </button>
                         <button class="snippet-tag" data-snippet="<particle-constellation count='120' max-dist='2.2' color='#00f2fe'></particle-constellation>" title="Insert 3D Particle Constellation Network Grid">
@@ -408,7 +426,7 @@
                         <button class="snippet-tag" data-snippet="<mesh-explode trigger='click' count='3000' color='#00ffcc'></mesh-explode>" title="Insert 3D Mesh Particle Explosion Tag">
                             💥 &lt;mesh-explode&gt;
                         </button>
-                        <button class="snippet-tag" data-snippet="<cta-button text='BUY NOW 🚀' url='https://example.com' x='0' y='-1.8' z='0' color='#00ffcc'></cta-button>" title="Insert Interactive 3D CTA Button">
+                        <button class="snippet-tag" data-snippet="<cta-button text='BUY NOW 🚀' url='https://ia-codestudio.com' x='0' y='-1.8' z='0' color='#00ffcc'></cta-button>" title="Insert Interactive 3D CTA Button">
                             🎯 &lt;cta-button&gt;
                         </button>
                         <button class="snippet-tag" data-snippet="<model-3d preset='cyber_drone' x='0' y='1' z='0' scale='1.2' color='#00f2fe' material='matrix' scroll-rotate='true'></model-3d>" title="Insert 3D Model tag">
@@ -653,9 +671,16 @@
                                     </div>
                                 </div>
 
-                                <!-- Right: Game Settings / Missions & Hangar Buttons -->
+                                <!-- Right: Game Settings / Missions, Gyro, Touch, Gamepad & Hangar Buttons -->
                                 <div class="hud-right-controls">
-                                    <button id="btn-hud-record" class="hud-mode-pill record-glow" style="border-color:#ff007f; color:#ff007f; background:rgba(255,0,127,0.15);" title="Record 10s TikTok / Shorts 3D Video">
+                                    <span id="hud-gamepad-badge" class="hud-gamepad-badge" style="display:none;" title="Physical Gamepad Connected">🎮 PAD</span>
+                                    <button id="btn-hud-gyro-toggle" class="hud-mode-pill" title="Toggle Mobile Gyroscope Tilt-to-Steer">
+                                        <i class="fa-solid fa-compass"></i> <span>Gyro</span>
+                                    </button>
+                                    <button id="btn-hud-touch-toggle" class="hud-mode-pill" title="Show / Hide On-Screen Touch Gamepad">
+                                        <i class="fa-solid fa-gamepad"></i> <span>Touch</span>
+                                    </button>
+                                    <button id="btn-hud-record" class="hud-mode-pill record-glow" style="border-color:#ff007f; color:#ff007f; background:rgba(255,0,127,0.15);" title="Record 9:16 / 16:9 HD 3D Video with Audio">
                                         <i class="fa-solid fa-video"></i> <span>Rec Clip 🎥</span>
                                     </button>
                                     <button id="btn-open-game-settings" class="hud-mode-pill settings-glow" title="Open Game Settings & Missions">
@@ -665,7 +690,7 @@
                                         <i class="fa-solid fa-wrench"></i> <span>Hangar</span>
                                     </button>
                                     <button id="btn-hud-fullscreen" class="hud-mode-pill" title="Toggle Fullscreen Mode">
-                                        <i class="fa-solid fa-expand"></i>
+                                        <i class="fa-solid fa-expand"></i> <span id="hud-fs-text">Full</span>
                                     </button>
                                 </div>
                             </div>
@@ -724,6 +749,7 @@
                                 <div class="hud-keys-group secondary">
                                     <div class="hud-key wide" id="k-space">SPACE <span class="k-sub">⚡ WARP NITRO BOOST</span></div>
                                     <div class="hud-key-row">
+                                        <div class="hud-key" id="k-m" style="border-color:rgba(255,183,3,0.5);color:#ffb703;">M <span class="k-sub">🎯 MISSILE</span></div>
                                         <div class="hud-key" id="k-r">R <span class="k-sub">↺ RESET</span></div>
                                         <div class="hud-key" id="k-h">H <span class="k-sub">🛠️ HANGAR</span></div>
                                     </div>
@@ -755,6 +781,7 @@
                                     </div>
                                     <div class="touch-actions">
                                         <button class="touch-btn fire" id="tbtn-fire" title="Fire Plasma Lasers"><i class="fa-solid fa-crosshairs"></i> FIRE</button>
+                                        <button class="touch-btn missile" id="tbtn-missile" title="Launch Homing Missile"><i class="fa-solid fa-rocket"></i> MISSILE</button>
                                         <button class="touch-btn nitro" id="tbtn-boost" title="Warp Nitro Boost"><i class="fa-solid fa-bolt"></i> NITRO</button>
                                         <button class="touch-btn brake" id="tbtn-brake" title="Brake"><i class="fa-solid fa-hand"></i> BRAKE</button>
                                     </div>
@@ -1019,6 +1046,7 @@
                                     <option value="5cell" data-i18n="poly_5cell">🔺 5-Cell (Pentachoron - 5v)</option>
                                     <option value="16cell" data-i18n="poly_16cell">💎 16-Cell (Hexadecachoron - 8v)</option>
                                     <option value="24cell" data-i18n="poly_24cell_opt">🌟 Majestic 24-Cell 4D</option>
+                                    <option value="clifford">🌀 Clifford Torus 4D (32v)</option>
                                 </select>
                             </div>
 
@@ -1037,6 +1065,14 @@
                             <div class="control-row">
                                 <label><span data-i18n="hyper_dist">4D Perspective Distance (W):</span> <span id="val-dist-4d">2.5</span></label>
                                 <input type="range" id="slider-dist-4d" min="1.2" max="5.0" step="0.1" value="2.5">
+                            </div>
+                            <div class="control-row">
+                                <label><span>4D W-Axis Cross-Section Slice:</span> <span id="val-w-slice">FULL</span></label>
+                                <input type="range" id="slider-w-slice" min="-1.4" max="1.4" step="0.05" value="0">
+                            </div>
+                            <div class="control-row" style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;">
+                                <label for="chk-4d-depth-color" style="margin:0;cursor:pointer;"><span>🌈 4D W-Depth Color (Cyan→Magenta)</span></label>
+                                <input type="checkbox" id="chk-4d-depth-color" checked style="accent-color:#00f2fe;width:16px;height:16px;cursor:pointer;">
                             </div>
                         </div>
 
@@ -1198,7 +1234,7 @@
                         <strong style="color:#fff; font-size:1.0rem;"><i class="fa-solid fa-video" style="color:var(--accent-cyan);"></i> Record 10-Second HD Video for TikTok & Reels</strong>
                         <div id="record-status-text" style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Captures 60FPS canvas animation ready to post on TikTok & Instagram!</div>
                     </div>
-                    <button id="btn-record-video" class="btn btn-primary btn-glow-accent">
+                    <button id="btn-record-video-studio" class="btn btn-primary btn-glow-accent">
                         <i class="fa-solid fa-circle-dot" style="color:#ff007f;"></i> <span>Record HD Video 🎥</span>
                     </button>
                 </div>
@@ -1281,11 +1317,17 @@
                 <button class="btn-close-modal" id="btn-close-ar-view"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="modal-body" style="text-align:center;">
-                <p>Scan this AR QR Code with your smartphone camera to project this exact 3D/4D model in Real World AR inside your room:</p>
-                <div style="margin:20px auto; padding:16px; background:#fff; display:inline-block; border-radius:16px; box-shadow:0 0 25px rgba(0,242,254,0.5);">
-                    <img id="ar-qr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://hyperstudio3d.app/ar" alt="AR QR Code" style="width:180px; height:180px; display:block;">
+                <p>Scan this locally generated QR Code on your phone to open this exact live 3D/4D scene, or export a standalone <strong>True WebAR</strong> package (<code>&lt;model-viewer&gt;</code> for iOS QuickLook &amp; Android AR):</p>
+                <div style="margin:18px auto 12px; padding:14px; background:#fff; display:inline-block; border-radius:16px; box-shadow:0 0 25px rgba(0,242,254,0.45);">
+                    <canvas id="ar-qr-canvas" width="196" height="196" style="display:block; width:196px; height:196px;"></canvas>
                 </div>
-                <p style="font-size:0.8rem; color:var(--accent-cyan);">Works instantly on iOS Camera (USDZ QuickLook) & Android Chrome (WebAR Model-Viewer)!</p>
+                <div id="ar-live-url-label" style="font-family:var(--font-code); font-size:0.74rem; color:#00ffcc; word-break:break-all; margin-bottom:14px;">https://ia-codestudio.com/hyperstudio-3d-4d/#preset=cyber_drone</div>
+                <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+                    <button type="button" id="btn-download-webar" class="btn btn-primary btn-glow-accent">
+                        <i class="fa-solid fa-vr-cardboard"></i> <span>Download True WebAR Package (.HTML)</span> <span class="pro-mini-tag">PRO</span>
+                    </button>
+                </div>
+                <p style="font-size:0.78rem; color:var(--text-muted); margin-top:10px;">100% client-side QR (zero third-party trackers) • Supports iOS QuickLook &amp; Android WebXR!</p>
             </div>
         </div>
     </div>
@@ -1351,7 +1393,7 @@
 
                 <div class="control-row">
                     <label>CTA Destination URL:</label>
-                    <input type="text" id="ad-cta-url-input" value="https://example.com" class="styled-select full-width">
+                    <input type="text" id="ad-cta-url-input" value="https://ia-codestudio.com" class="styled-select full-width">
                 </div>
 
                 <div class="control-row">
@@ -1542,14 +1584,16 @@
                         <button type="button" class="cockpit-chip-btn mission-chip" data-val="wormhole"><span>⚡ 2. Quantum Slalom</span></button>
                         <button type="button" class="cockpit-chip-btn mission-chip" data-val="asteroids"><span>☄️ 3. Asteroid Hunt &amp; Lasers</span></button>
                         <button type="button" class="cockpit-chip-btn mission-chip" data-val="blackhole"><span>🕳️ 4. Black Hole Escape</span></button>
-                        <button type="button" class="cockpit-chip-btn mission-chip" data-val="freeroam"><span>🌌 5. Free Cosmic Roam</span></button>
+                        <button type="button" class="cockpit-chip-btn mission-chip" data-val="boss" style="border-color:rgba(255,0,127,0.55);color:#ff7ac6;"><span>👾 5. Mothership Boss Battle</span></button>
+                        <button type="button" class="cockpit-chip-btn mission-chip" data-val="freeroam"><span>🌌 6. Free Roam &amp; Warp Gates</span></button>
                     </div>
                     <select id="hud-mission-select" class="styled-select full-width" style="display:none; font-size:0.92rem; background:#0f172a; border:1px solid rgba(0,242,254,0.4); color:#fff; padding:10px 12px; border-radius:10px; margin-top:6px;">
                         <option value="station" selected>🛰️ 1. Save Orbital Station (Collect 3 Crystals)</option>
                         <option value="wormhole">⚡ 2. Quantum Gate Slalom (Speed Rings)</option>
                         <option value="asteroids">☄️ 3. Asteroid Hunt &amp; Mining (Laser Combat)</option>
                         <option value="blackhole">🕳️ 4. Black Hole Escape (Survival Flight)</option>
-                        <option value="freeroam">🌌 5. Free Cosmic Roam (Explore Space)</option>
+                        <option value="boss">👾 5. Mothership Boss Battle (AI Combat)</option>
+                        <option value="freeroam">🌌 6. Free Cosmic Roam &amp; Warp Gates</option>
                     </select>
                 </div>
 
@@ -1980,14 +2024,32 @@
                 <button class="btn-close-modal" id="btn-close-video-modal"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="modal-body" style="display:flex; flex-direction:column; gap:14px; padding:18px 20px; align-items:center; text-align:center;">
-                <div style="width:100%; max-width:320px; aspect-ratio:9/16; max-height:340px; background:#000; border-radius:14px; overflow:hidden; border:2px solid rgba(0,242,254,0.5); box-shadow:0 0 25px rgba(0,242,254,0.3); display:flex; align-items:center; justify-content:center;">
-                    <video id="recorded-video-player" controls autoplay loop muted playsinline style="width:100%; height:100%; object-fit:contain;"></video>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; width:100%; text-align:left;">
+                    <div>
+                        <label style="font-size:0.74rem; color:#94a3b8;">Aspect Format:</label>
+                        <select id="video-format-select" class="v-select full-width">
+                            <option value="9:16" selected>📱 9:16 Vertical (TikTok / Reels / Shorts)</option>
+                            <option value="16:9">💻 16:9 Landscape (YouTube HD)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size:0.74rem; color:#94a3b8;">Clip Duration:</label>
+                        <select id="video-duration-select" class="v-select full-width">
+                            <option value="5">⏱️ 5 Seconds</option>
+                            <option value="10" selected>⏱️ 10 Seconds</option>
+                            <option value="15">⏱️ 15 Seconds</option>
+                        </select>
+                    </div>
                 </div>
-                <div style="color:#00ffcc; font-size:0.88rem; font-weight:800;">
-                    🎉 +30 GENIUS IA Coins awarded for recording! 🪙
+                <div style="display:flex; gap:8px; width:100%;">
+                    <input type="text" id="video-title-overlay" value="HyperStudio 3D/4D" placeholder="Optional neon overlay title..." class="styled-select" style="flex:1; font-size:0.82rem;">
+                    <button type="button" id="btn-video-rerecord" class="btn btn-secondary" style="white-space:nowrap;"><i class="fa-solid fa-circle-dot" style="color:#ff007f;"></i> Re-Record</button>
                 </div>
-                <p style="font-size:0.82rem; color:#94a3b8; margin:0;">
-                    Your 60 FPS HD clip is ready with glowing 3D graphics &amp; watermark. Download or share directly:
+                <div style="width:100%; max-width:320px; aspect-ratio:9/16; max-height:300px; background:#000; border-radius:14px; overflow:hidden; border:2px solid rgba(0,242,254,0.5); box-shadow:0 0 25px rgba(0,242,254,0.3); display:flex; align-items:center; justify-content:center;">
+                    <video id="recorded-video-player" controls autoplay loop playsinline style="width:100%; height:100%; object-fit:contain;"></video>
+                </div>
+                <p style="font-size:0.8rem; color:#94a3b8; margin:0;">
+                    Real cropped HD clip with mixed Web Audio (Synth Radio + SFX) &amp; custom title. Download requires Pro ($10/mo):
                 </p>
                 <div style="display:flex; gap:10px; width:100%; justify-content:center;">
                     <a id="btn-download-video-file" class="btn btn-primary btn-glow-accent" download="ia-codestudio-3d.webm" style="flex:1; justify-content:center; text-decoration:none; padding:12px; font-weight:800; background:linear-gradient(135deg, #00f2fe 0%, #7928ca 100%);">
@@ -2183,11 +2245,11 @@
 
                     <div class="faq-accordion-item">
                         <button type="button" class="faq-accordion-header">
-                            <span><i class="fa-solid fa-scale-balanced" style="color:#4ade80; margin-right:8px;"></i> Is HyperStudio 3D/4D free for commercial use?</span>
+                            <span><i class="fa-solid fa-scale-balanced" style="color:#4ade80; margin-right:8px;"></i> Is HyperStudio 3D/4D free to use, and what does the Pro plan ($10/month) include?</span>
                             <i class="fa-solid fa-chevron-down"></i>
                         </button>
                         <div class="faq-accordion-content">
-                            Yes, all procedural 3D models and HTML/WebGL code generated in HyperStudio 3D/4D can be freely used in commercial client websites, ecommerce stores, video intros, games, and web apps without royalties.
+                            Live 3D/4D preview, AI prompt generation, 4D Morphing Lab, Real Audio FFT, and the complete Space Flight Simulator (with Mothership Boss, Hangar &amp; Gamepad support) are 100% free! Exporting standalone HTML, .GLB/.STL/.OBJ 3D models, React/Vue/Webflow components, Landing Page templates, WebAR packages, and HD 9:16 video clips is unlocked with IA Code Studio Pro ($10/month) with full commercial rights.
                         </div>
                     </div>
                 </div>
@@ -2203,7 +2265,12 @@
         </div>
     </div>
 
-<!-- Application JavaScript Entry Point -->
+<!-- HyperStudio 3D/4D v2.0 Modular Architecture -->
+    <script src="modules/pbr-studio-env.js"></script>
     <script src="app.js"></script>
+    <script src="modules/flight-combat-v2.js"></script>
+    <script src="modules/audio-video-4d-v2.js"></script>
+    <script src="modules/export-webar-templates-v2.js"></script>
+    <script src="modules/smart-editor-v2.js"></script>
 </body>
 </html>
