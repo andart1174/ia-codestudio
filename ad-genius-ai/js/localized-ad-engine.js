@@ -49,10 +49,17 @@
             return;
         }
         
-        S.active = false;
-        if (anim.animId) cancelAnimationFrame(anim.animId);
+        cleanupLocalized();
         if (_prevRenderTab) _prevRenderTab(tab);
     };
+
+    function cleanupLocalized() {
+        S.active = false;
+        if (anim.animId) { cancelAnimationFrame(anim.animId); anim.animId = null; }
+    }
+    if (window.GeniusUtils && window.GeniusUtils.registerCleanup) {
+        window.GeniusUtils.registerCleanup('localized-ad', cleanupLocalized);
+    }
 
     function buildUI() {
         var r = document.getElementById('la-right');
@@ -63,7 +70,7 @@
             '<p style="margin:0 0 20px;font-size:11px;color:#94a3b8;">Weather & Time Adaptive Ad Campaigns</p>' +
             
             // 1. Weather simulator selector
-            '<label style="font-size:11px;color:#a5f3fc;font-weight:bold;display:block;margin-bottom:6px;">1. Simulate Weather (Simulează Vremea):</label>' +
+            '<label style="font-size:11px;color:#a5f3fc;font-weight:bold;display:block;margin-bottom:6px;">1. Simulate Weather:</label>' +
             '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:15px;">' +
                 '<button class="w-btn '+(S.simWeather==='sunny'?'active':'')+'" data-w="sunny" style="flex:1;padding:8px;font-size:11px;font-weight:bold;border:1px solid #334155;border-radius:4px;cursor:pointer;background:'+(S.simWeather==='sunny'?'#38bdf8':'#1e293b')+';color:'+(S.simWeather==='sunny'?'#000':'#fff')+';transition:0.2s;">☀️ Sun</button>' +
                 '<button class="w-btn '+(S.simWeather==='rainy'?'active':'')+'" data-w="rainy" style="flex:1;padding:8px;font-size:11px;font-weight:bold;border:1px solid #334155;border-radius:4px;cursor:pointer;background:'+(S.simWeather==='rainy'?'#38bdf8':'#1e293b')+';color:'+(S.simWeather==='rainy'?'#000':'#fff')+';transition:0.2s;">🌧️ Rain</button>' +
@@ -72,7 +79,7 @@
             '</div>' +
             
             // 2. Time simulator selector
-            '<label style="font-size:11px;color:#a5f3fc;font-weight:bold;display:block;margin-bottom:6px;">2. Simulate Time (Simulează Ora):</label>' +
+            '<label style="font-size:11px;color:#a5f3fc;font-weight:bold;display:block;margin-bottom:6px;">2. Simulate Time:</label>' +
             '<div style="display:flex;gap:5px;margin-bottom:15px;">' +
                 '<button class="t-btn '+(S.simTime==='morning'?'active':'')+'" data-t="morning" style="flex:1;padding:8px;font-size:11px;font-weight:bold;border:1px solid #334155;border-radius:4px;cursor:pointer;background:'+(S.simTime==='morning'?'#eab308':'#1e293b')+';color:'+(S.simTime==='morning'?'#000':'#fff')+';transition:0.2s;">🌅 Morning</button>' +
                 '<button class="t-btn '+(S.simTime==='afternoon'?'active':'')+'" data-t="afternoon" style="flex:1;padding:8px;font-size:11px;font-weight:bold;border:1px solid #334155;border-radius:4px;cursor:pointer;background:'+(S.simTime==='afternoon'?'#eab308':'#1e293b')+';color:'+(S.simTime==='afternoon'?'#000':'#fff')+';transition:0.2s;">☀️ Day</button>' +
@@ -574,7 +581,7 @@
                     <span id="coupon-lbl" style="font-size:8px;display:block;font-weight:bold;">COUPON CODE:</span>
                     <span id="coupon-code" style="font-size:15px;font-family:monospace;font-weight:900;">WELCOME</span>
                 </div>
-                <button class="btn-cta" onclick="alert('Offer claimed!')">CLAIM DEALS →</button>
+                <button class="btn-cta" onclick="this.textContent='✅ OFFER CLAIMED!';this.style.background='#10b981';">CLAIM DEALS →</button>
             </div>
         </div>
         ${logoData ? `<img src="${logoData}" style="position:absolute;top:15px;right:15px;width:35px;height:35px;object-fit:contain;opacity:0.8;">` : ''}
@@ -750,30 +757,19 @@
         }
 
         function fetchIPGeolocation() {
-            fetch('https://ipapi.co/json/')
-            .then(function(res) { return res.json(); })
-            .then(function(data) {
-                var lat = data.latitude;
-                var lon = data.longitude;
-                if(lat && lon) {
-                    fetch('https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current_weather=true')
-                    .then(function(res) { return res.json(); })
-                    .then(function(wData) {
-                        var code = wData.current_weather.weathercode;
-                        var wState = 'sunny';
-                        if (code >= 51 && code <= 67 || code >= 80 && code <= 82 || code >= 95) wState = 'rainy';
-                        else if (code >= 71 && code <= 77 || code >= 85 && code <= 86) wState = 'snowy';
-                        else if (code >= 1 && code <= 3 || code === 45 || code === 48) wState = 'windy';
-                        updateStyle(wState, calculatedTime);
-                    })
-                    .catch(function() { updateStyle(calculatedWeather, calculatedTime); });
-                } else {
-                    updateStyle(calculatedWeather, calculatedTime);
+            // Resilient zero-rate-limit timezone + seasonal fallback (no fragile IP geolocation 429/CORS errors)
+            try {
+                var tz = (Intl && Intl.DateTimeFormat) ? (Intl.DateTimeFormat().resolvedOptions().timeZone || '') : '';
+                var southern = /Australia|Auckland|Buenos_Aires|Santiago|Johannesburg|Sao_Paulo/i.test(tz);
+                var w = calculatedWeather;
+                if (southern) {
+                    if (w === 'snowy') w = 'sunny';
+                    else if (w === 'sunny') w = 'rainy';
                 }
-            })
-            .catch(function() {
+                updateStyle(w, calculatedTime);
+            } catch (e) {
                 updateStyle(calculatedWeather, calculatedTime);
-            });
+            }
         }
 
         // Initialize

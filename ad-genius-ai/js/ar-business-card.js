@@ -109,8 +109,14 @@
         
         document.getElementById('abc-gen-qr').onclick = function() {
             var url = document.getElementById('abc-url').value.trim();
-            if(!url) { alert(fr ? 'Veuillez saisir l\'URL où vous hébergez le fichier HTML.' : 'Please enter the URL where you hosted the exported HTML file.'); return; }
-            var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodeURIComponent(url);
+            if(!url) {
+                var msg = fr ? 'Veuillez saisir l\'URL où vous hébergez le fichier HTML.' : 'Please enter the URL where you hosted the exported HTML file.';
+                if (window.GeniusUtils && window.GeniusUtils.showToast) window.GeniusUtils.showToast(msg, 'warn');
+                return;
+            }
+            var qrUrl = (window.GeniusUtils && window.GeniusUtils.generateQRDataURL)
+                ? window.GeniusUtils.generateQRDataURL(url, 300)
+                : '';
             document.getElementById('abc-qr-img').src = qrUrl;
             document.getElementById('abc-qr-box').style.display = 'block';
         };
@@ -167,24 +173,31 @@
             
             var imgHtml = S.logoImg ? '<img src="'+S.logoImg+'" class="logo">' : '<div class="logo" style="width:100px;height:100px;border-radius:50px;background:#334155;border:4px solid '+S.accentColor+';margin-bottom:20px;transform:translateZ(40px);box-shadow:0 10px 20px rgba(0,0,0,0.5);"></div>';
             
+            var esc = (window.GeniusUtils && window.GeniusUtils.escapeHtml) ? window.GeniusUtils.escapeHtml : function(v){ return String(v || ''); };
             var urlVal = document.getElementById('abc-url') ? document.getElementById('abc-url').value.trim() : '';
             var qrVal = urlVal || S.contact;
-            var qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(qrVal);
+            var qrCodeUrl = (window.GeniusUtils && window.GeniusUtils.generateQRDataURL)
+                ? window.GeniusUtils.generateQRDataURL(qrVal, 180)
+                : '';
             
             var html = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>AR Business Card</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet"><style>'+css+'</style></head><body>';
             html += '<div class="scene"><div class="card" id="card">';
             html += imgHtml;
-            html += '<h1 class="name">'+S.name+'</h1>';
-            html += '<div class="title">'+S.title+'</div>';
-            html += '<div class="contact">'+S.contact+'</div>';
-            html += '<div class="qr-container"><img src="' + qrCodeUrl + '" class="qr-img"></div>';
+            html += '<h1 class="name">'+esc(S.name)+'</h1>';
+            html += '<div class="title">'+esc(S.title)+'</div>';
+            html += '<div class="contact">'+esc(S.contact)+'</div>';
+            html += '<div class="qr-container"><img src="' + qrCodeUrl + '" class="qr-img" alt="QR Code"></div>';
             html += '</div></div>';
             html += '<scr'+'ipt>'+js+'<'+'/script></body></html>';
             
             var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-            var url = URL.createObjectURL(blob);
-            var a = document.createElement('a'); a.href = url; a.download = 'ar_business_card.html'; a.click();
-            setTimeout(function() { URL.revokeObjectURL(url); }, 2000);
+            if (window.GeniusUtils && window.GeniusUtils.safeDownloadBlob) {
+                window.GeniusUtils.safeDownloadBlob(blob, 'ar_business_card.html');
+            } else {
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement('a'); a.href = url; a.download = 'ar_business_card.html'; a.click();
+                setTimeout(function() { URL.revokeObjectURL(url); }, 4000);
+            }
         };
     }
 
@@ -207,18 +220,21 @@
         
         var imgHtml = S.logoImg ? '<img src="'+S.logoImg+'" style="width:90px;height:90px;border-radius:45px;object-fit:cover;border:4px solid '+S.accentColor+';margin-bottom:15px;transform:translateZ(40px);box-shadow:0 10px 20px rgba(0,0,0,0.5);">' : '<div style="width:90px;height:90px;border-radius:45px;background:#334155;border:4px solid '+S.accentColor+';margin-bottom:15px;transform:translateZ(40px);box-shadow:0 10px 20px rgba(0,0,0,0.5);"></div>';
         
+        var esc = (window.GeniusUtils && window.GeniusUtils.escapeHtml) ? window.GeniusUtils.escapeHtml : function(v){ return String(v || ''); };
         var urlVal = document.getElementById('abc-url') ? document.getElementById('abc-url').value.trim() : '';
         var qrVal = urlVal || S.contact;
-        var qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(qrVal);
+        var qrCodeUrl = (window.GeniusUtils && window.GeniusUtils.generateQRDataURL)
+            ? window.GeniusUtils.generateQRDataURL(qrVal, 150)
+            : '';
         
         var cardHtml = '<div id="abc-card-preview" style="width:280px;height:440px;background:'+S.bgColor+';border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:25px 20px;box-sizing:border-box;transform-style:preserve-3d;transition:transform 0.1s;box-shadow:0 20px 40px rgba(0,0,0,0.8), 0 0 0 2px '+S.accentColor+'44;position:relative;z-index:1;">';
         
         cardHtml += '<div style="position:absolute;top:0;left:0;right:0;bottom:0;border-radius:20px;background:linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%);pointer-events:none;transform:translateZ(1px);"></div>';
         cardHtml += imgHtml;
-        cardHtml += '<h1 style="color:'+S.textColor+';font-size:22px;font-weight:900;margin:0 0 8px;text-align:center;transform:translateZ(30px);text-shadow:0 4px 10px rgba(0,0,0,0.5);">'+S.name+'</h1>';
-        cardHtml += '<div style="color:'+S.accentColor+';font-size:12px;font-weight:bold;margin:0 0 18px;text-align:center;transform:translateZ(25px);text-transform:uppercase;letter-spacing:1px;">'+S.title+'</div>';
-        cardHtml += '<div style="color:'+S.textColor+';font-size:11px;opacity:0.8;text-align:center;transform:translateZ(20px);background:rgba(0,0,0,0.3);padding:6px 12px;border-radius:15px;margin-bottom:15px;word-break:break-all;max-width:100%;">'+S.contact+'</div>';
-        cardHtml += '<div style="display:flex;align-items:center;justify-content:center;padding:5px;background:#fff;border-radius:6px;box-shadow:0 6px 12px rgba(0,0,0,0.4);transform:translateZ(35px);"><img src="' + qrCodeUrl + '" style="width:70px;height:70px;display:block;"></div>';
+        cardHtml += '<h1 style="color:'+S.textColor+';font-size:22px;font-weight:900;margin:0 0 8px;text-align:center;transform:translateZ(30px);text-shadow:0 4px 10px rgba(0,0,0,0.5);">'+esc(S.name)+'</h1>';
+        cardHtml += '<div style="color:'+S.accentColor+';font-size:12px;font-weight:bold;margin:0 0 18px;text-align:center;transform:translateZ(25px);text-transform:uppercase;letter-spacing:1px;">'+esc(S.title)+'</div>';
+        cardHtml += '<div style="color:'+S.textColor+';font-size:11px;opacity:0.8;text-align:center;transform:translateZ(20px);background:rgba(0,0,0,0.3);padding:6px 12px;border-radius:15px;margin-bottom:15px;word-break:break-all;max-width:100%;">'+esc(S.contact)+'</div>';
+        cardHtml += '<div style="display:flex;align-items:center;justify-content:center;padding:5px;background:#fff;border-radius:6px;box-shadow:0 6px 12px rgba(0,0,0,0.4);transform:translateZ(35px);"><img src="' + qrCodeUrl + '" alt="QR Code" style="width:70px;height:70px;display:block;"></div>';
         cardHtml += '</div>';
         
         // Append card wrapper

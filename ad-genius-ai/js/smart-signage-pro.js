@@ -82,7 +82,7 @@
                 <div id="ssp-el-details" class="drag-el" style="position:absolute; cursor:move; white-space:nowrap; text-shadow:0 2px 4px rgba(0,0,0,0.5); z-index:10;"></div>
                 <div id="ssp-el-contact" class="drag-el" style="position:absolute; cursor:move; white-space:nowrap; font-weight:bold; text-shadow:0 2px 4px rgba(0,0,0,0.5); z-index:10;"></div>
                 <div id="ssp-el-qr" class="drag-el" style="position:absolute; cursor:move; z-index:11; background:#fff; padding:5px; border-radius:5px; box-shadow:0 2px 5px rgba(0,0,0,0.5);">
-                    <img id="ssp-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent(state.qrLink)}" width="80" height="80" style="display:block; pointer-events:none;">
+                    <img id="ssp-qr-img" src="${(window.GeniusUtils && window.GeniusUtils.generateQRDataURL) ? window.GeniusUtils.generateQRDataURL(state.qrLink, 120) : ''}" width="80" height="80" alt="QR Code" style="display:block; pointer-events:none;">
                 </div>
                 <div id="ssp-el-stamp" class="drag-el" style="position:absolute; cursor:move; z-index:12; font-weight:900; font-size:28px; text-transform:uppercase; border:4px solid; padding:5px 15px; border-radius:10px; transform:rotate(-15deg); box-shadow:0 4px 10px rgba(0,0,0,0.3); background:rgba(255,255,255,0.1); backdrop-filter:blur(5px);"></div>
                 <div id="ssp-shine" style="position:absolute; top:0; left:-100%; width:50%; height:100%; background:linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%); transform:skewX(-25deg); pointer-events:none; animation:shine 4s infinite; z-index:15;"></div>
@@ -377,7 +377,9 @@
             qrEl.style.display = state.showQR ? 'block' : 'none';
             var img = document.getElementById('ssp-qr-img');
             if(img && state.qrLink) {
-                img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=' + encodeURIComponent(state.qrLink);
+                img.src = (window.GeniusUtils && window.GeniusUtils.generateQRDataURL)
+                    ? window.GeniusUtils.generateQRDataURL(state.qrLink, 120)
+                    : '';
             }
         }
 
@@ -498,14 +500,14 @@
     <div class="placard style-${state.bgType}" id="widget" style="${getShapeCSS(1)} background-image:url('${state.bgImage || ''}');">
         <div class="overlay"></div>
         ${state.showShine ? '<div class="shine"></div>' : ''}
-        <div class="el" style="left:${state.titlePos.x}px; top:${state.titlePos.y}px; font-size:${state.titleSize}px; color:${state.titleColor};">${state.title}</div>
-        <div class="el anim-${state.priceAnim}" style="left:${state.pricePos.x}px; top:${state.pricePos.y}px; font-size:${state.priceSize}px; color:${state.priceColor};">${state.price}</div>
-        <div class="el" style="left:${state.detailsPos.x}px; top:${state.detailsPos.y}px; font-size:${state.detailsSize}px; color:${state.detailsColor}; font-weight:normal;">${state.details}</div>
-        <div class="el anim-${state.contactAnim}" style="left:${state.contactPos.x}px; top:${state.contactPos.y}px; font-size:${state.contactSize}px; color:${state.contactColor};">${state.contact}</div>
+        <div class="el" style="left:${state.titlePos.x}px; top:${state.titlePos.y}px; font-size:${state.titleSize}px; color:${state.titleColor};">${(window.GeniusUtils && window.GeniusUtils.escapeHtml) ? window.GeniusUtils.escapeHtml(state.title) : state.title}</div>
+        <div class="el anim-${state.priceAnim}" style="left:${state.pricePos.x}px; top:${state.pricePos.y}px; font-size:${state.priceSize}px; color:${state.priceColor};">${(window.GeniusUtils && window.GeniusUtils.escapeHtml) ? window.GeniusUtils.escapeHtml(state.price) : state.price}</div>
+        <div class="el" style="left:${state.detailsPos.x}px; top:${state.detailsPos.y}px; font-size:${state.detailsSize}px; color:${state.detailsColor}; font-weight:normal;">${(window.GeniusUtils && window.GeniusUtils.escapeHtml) ? window.GeniusUtils.escapeHtml(state.details) : state.details}</div>
+        <div class="el anim-${state.contactAnim}" style="left:${state.contactPos.x}px; top:${state.contactPos.y}px; font-size:${state.contactSize}px; color:${state.contactColor};">${(window.GeniusUtils && window.GeniusUtils.escapeHtml) ? window.GeniusUtils.escapeHtml(state.contact) : state.contact}</div>
         
-        ${state.showQR ? `<div class="qr-code" style="left:${state.qrPos.x}px; top:${state.qrPos.y}px;"><img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent(state.qrLink)}" width="80" height="80" style="display:block; pointer-events:none;"></div>` : ''}
+        ${state.showQR ? `<div class="qr-code" style="left:${state.qrPos.x}px; top:${state.qrPos.y}px;"><img src="${(window.GeniusUtils && window.GeniusUtils.generateQRDataURL) ? window.GeniusUtils.generateQRDataURL(state.qrLink, 140) : ''}" width="80" height="80" alt="QR Code" style="display:block; pointer-events:none;"></div>` : ''}
         
-        ${state.stamp ? `<div class="stamp" style="left:${state.stampPos.x}px; top:${state.stampPos.y}px; color:${state.stampColor}; border-color:${state.stampColor}; font-size:28px;">${state.stamp}</div>` : ''}
+        ${state.stamp ? `<div class="stamp" style="left:${state.stampPos.x}px; top:${state.stampPos.y}px; color:${state.stampColor}; border-color:${state.stampColor}; font-size:28px;">${(window.GeniusUtils && window.GeniusUtils.escapeHtml) ? window.GeniusUtils.escapeHtml(state.stamp) : state.stamp}</div>` : ''}
     </div>
     
     <script>
@@ -538,14 +540,27 @@
     </script>
 </body>
 </html>`;
-        var blob = new Blob([html], {type: 'text/html'});
-        var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'smart-signage.html'; a.click();
+        var blob = new Blob([html], {type: 'text/html;charset=utf-8'});
+        if (window.GeniusUtils && window.GeniusUtils.safeDownloadBlob) {
+            window.GeniusUtils.safeDownloadBlob(blob, 'smart-signage.html');
+        } else {
+            var u = URL.createObjectURL(blob);
+            var a = document.createElement('a'); a.href = u; a.download = 'smart-signage.html'; a.click();
+            setTimeout(function() { URL.revokeObjectURL(u); }, 4000);
+        }
     }
 
     /* ══════════════════════════════════════════════════
        URBAN MOCKUP SIMULATOR
        ══════════════════════════════════════════════════ */
     var urbanAnim = null;
+    if (window.GeniusUtils && window.GeniusUtils.registerCleanup) {
+        window.GeniusUtils.registerCleanup('smart-signage', function() {
+            if (urbanAnim) { cancelAnimationFrame(urbanAnim); urbanAnim = null; }
+            var ov = document.getElementById('ssp-urban-overlay');
+            if (ov) ov.remove();
+        });
+    }
 
     function showUrbanMockup(envType) {
         // Build fullscreen overlay
@@ -901,22 +916,26 @@
                 .style-grunge { border-radius: 0 !important; }
                 .style-grunge .overlay { background: rgba(0,0,0,0.6); border: 8px dashed #fff; outline: 30px solid #000; outline-offset: -30px; }
             </style>
-            <div class="placard style-${state.bgType}" style="background-image:url('${bgUrl}');">
+            <div class="placard style-${state.bgType}" style="${bgUrl ? `background-image:url('${bgUrl}');` : ''}">
                 <div class="overlay"></div>
-                <div class="el" style="left:${state.titlePos.x * 2}px; top:${state.titlePos.y * 2}px; font-size:${state.titleSize * 2}px; color:${state.titleColor};">${state.title}</div>
-                <div class="el" style="left:${state.pricePos.x * 2}px; top:${state.pricePos.y * 2}px; font-size:${state.priceSize * 2}px; color:${state.priceColor};">${state.price}</div>
-                <div class="el" style="left:${state.detailsPos.x * 2}px; top:${state.detailsPos.y * 2}px; font-size:${state.detailsSize * 2}px; color:${state.detailsColor}; font-weight:normal;">${state.details}</div>
-                <div class="el" style="left:${state.contactPos.x * 2}px; top:${state.contactPos.y * 2}px; font-size:${state.contactSize * 2}px; color:${state.contactColor};">${state.contact}</div>
+                <div class="el" style="left:${state.titlePos.x * 2}px; top:${state.titlePos.y * 2}px; font-size:${state.titleSize * 2}px; color:${state.titleColor};">${(window.GeniusUtils && window.GeniusUtils.escapeHtml) ? window.GeniusUtils.escapeHtml(state.title) : state.title}</div>
+                <div class="el" style="left:${state.pricePos.x * 2}px; top:${state.pricePos.y * 2}px; font-size:${state.priceSize * 2}px; color:${state.priceColor};">${(window.GeniusUtils && window.GeniusUtils.escapeHtml) ? window.GeniusUtils.escapeHtml(state.price) : state.price}</div>
+                <div class="el" style="left:${state.detailsPos.x * 2}px; top:${state.detailsPos.y * 2}px; font-size:${state.detailsSize * 2}px; color:${state.detailsColor}; font-weight:normal;">${(window.GeniusUtils && window.GeniusUtils.escapeHtml) ? window.GeniusUtils.escapeHtml(state.details) : state.details}</div>
+                <div class="el" style="left:${state.contactPos.x * 2}px; top:${state.contactPos.y * 2}px; font-size:${state.contactSize * 2}px; color:${state.contactColor};">${(window.GeniusUtils && window.GeniusUtils.escapeHtml) ? window.GeniusUtils.escapeHtml(state.contact) : state.contact}</div>
                 
-                ${state.showQR ? `<div class="qr-code" style="left:${state.qrPos.x * 2}px; top:${state.qrPos.y * 2}px;"><img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(state.qrLink)}" width="160" height="160" style="display:block; pointer-events:none;"></div>` : ''}
+                ${state.showQR ? `<div class="qr-code" style="left:${state.qrPos.x * 2}px; top:${state.qrPos.y * 2}px;"><img src="${(window.GeniusUtils && window.GeniusUtils.generateQRDataURL) ? window.GeniusUtils.generateQRDataURL(state.qrLink, 220) : ''}" width="160" height="160" alt="QR Code" style="display:block; pointer-events:none;"></div>` : ''}
                 
-                ${state.stamp ? `<div class="stamp" style="left:${state.stampPos.x * 2}px; top:${state.stampPos.y * 2}px; color:${state.stampColor}; border-color:${state.stampColor}; font-size:56px;">${state.stamp}</div>` : ''}
+                ${state.stamp ? `<div class="stamp" style="left:${state.stampPos.x * 2}px; top:${state.stampPos.y * 2}px; color:${state.stampColor}; border-color:${state.stampColor}; font-size:56px;">${(window.GeniusUtils && window.GeniusUtils.escapeHtml) ? window.GeniusUtils.escapeHtml(state.stamp) : state.stamp}</div>` : ''}
             </div>
         `;
         document.body.appendChild(tempDiv);
 
+        var fr = window.lang === 'fr';
         if (typeof html2canvas === 'undefined') {
-            alert("Vă rugăm să așteptați o secundă. Motorul foto se încarcă...");
+            if (window.GeniusUtils && window.GeniusUtils.showToast) {
+                window.GeniusUtils.showToast(fr ? "Veuillez patienter, le moteur d'export photo charge..." : "Please wait a second, photo engine is loading...", 'warn');
+            }
+            document.body.removeChild(tempDiv);
             return;
         }
 
@@ -929,7 +948,9 @@
                 a.click();
                 document.body.removeChild(tempDiv);
             }).catch(function(err) {
-                alert("Eroare la exportul foto. Încercați o imagine mai mică de fundal.");
+                if (window.GeniusUtils && window.GeniusUtils.showToast) {
+                    window.GeniusUtils.showToast(fr ? "Erreur lors de l'export photo. Essayez une image de fond plus légère." : "Photo export error. Try a smaller background image.", 'error');
+                }
                 document.body.removeChild(tempDiv);
             });
         }, 500);

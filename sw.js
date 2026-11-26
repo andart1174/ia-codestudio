@@ -1,7 +1,7 @@
 // Service Worker for IA Code Studio (ia-codestudio.com)
 // PWA Offline Support & Asset Cache - Network-First Strategy
 
-const CACHE_NAME = 'iacodestudio-v2.4';
+const CACHE_NAME = 'iacodestudio-v2.5';
 const CORE_ASSETS = [
   '/',
   '/index.html',
@@ -47,7 +47,34 @@ const CORE_ASSETS = [
   '/3d-creative-studio/modules/creative-stage-tools.js',
   '/3d-creative-studio/modules/creative-gallery-ai.js',
   '/3d-creative-studio/modules/creative-exporters.js',
-  '/3d-creative-studio/modules/creative-vault-share.js'
+  '/3d-creative-studio/modules/creative-vault-share.js',
+  '/ad-genius-ai/index.html',
+  '/ad-genius-ai/style.css',
+  '/ad-genius-ai/app.js',
+  '/ad-genius-ai/js/genius-core-utils.js',
+  '/ad-genius-ai/js/genius-pro-suite.js',
+  '/ad-genius-ai/js/3d-showroom.js',
+  '/ad-genius-ai/js/ar-business-card.js',
+  '/ad-genius-ai/js/biolink-hub-pro.js',
+  '/ad-genius-ai/js/brand-ad-studio.js',
+  '/ad-genius-ai/js/certificate-studio-pro.js',
+  '/ad-genius-ai/js/digital-book-studio.js',
+  '/ad-genius-ai/js/digital-menu-pro.js',
+  '/ad-genius-ai/js/gravity-sandbox.js',
+  '/ad-genius-ai/js/gravity-sandbox-pro.js',
+  '/ad-genius-ai/js/greeting-card-pro.js',
+  '/ad-genius-ai/js/infinite-zoom.js',
+  '/ad-genius-ai/js/kinetic-typography.js',
+  '/ad-genius-ai/js/localized-ad-engine.js',
+  '/ad-genius-ai/js/magazine-cover-pro.js',
+  '/ad-genius-ai/js/mockup-box-studio.js',
+  '/ad-genius-ai/js/mockup-master-pro.js',
+  '/ad-genius-ai/js/playable-ad-builder.js',
+  '/ad-genius-ai/js/pricing-table-studio.js',
+  '/ad-genius-ai/js/scratch-card-studio.js',
+  '/ad-genius-ai/js/smart-signage-pro.js',
+  '/ad-genius-ai/js/smart-vcard-pro.js',
+  '/ad-genius-ai/js/spin-wheel-ads.js'
 ];
 
 // Install: Pre-cache core shell assets

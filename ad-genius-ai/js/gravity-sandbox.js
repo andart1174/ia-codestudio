@@ -41,10 +41,17 @@
             initEngine();
             return;
         }
-        S.active = false;
-        if (S.animId) cancelAnimationFrame(S.animId);
+        cleanupGravity();
         if (_prevRenderTab) _prevRenderTab(tab);
     };
+
+    function cleanupGravity() {
+        S.active = false;
+        if (S.animId) { cancelAnimationFrame(S.animId); S.animId = null; }
+    }
+    if (window.GeniusUtils && window.GeniusUtils.registerCleanup) {
+        window.GeniusUtils.registerCleanup('gravity-sandbox', cleanupGravity);
+    }
 
     /* ── UI Panel ────────────────────────────────────── */
     function buildUI() {
@@ -739,11 +746,17 @@ loop();
 </body>
 </html>`;
 
-        var blob = new Blob([html], { type: 'text/html' });
-        var a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'gravity_sandbox_ad.html';
-        a.click();
+        var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        if (window.GeniusUtils && window.GeniusUtils.safeDownloadBlob) {
+            window.GeniusUtils.safeDownloadBlob(blob, 'gravity_sandbox_ad.html');
+        } else {
+            var u = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = u;
+            a.download = 'gravity_sandbox_ad.html';
+            a.click();
+            setTimeout(function () { URL.revokeObjectURL(u); }, 4000);
+        }
         var st = document.getElementById('gs-st');
         if (st) {
             st.textContent = '✅ Exported!';

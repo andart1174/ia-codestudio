@@ -21,8 +21,24 @@
             buildUI();
             return;
         }
+        cleanupShowroom();
         if (_prevRenderTab) _prevRenderTab(tab);
     };
+
+    function cleanupShowroom() {
+        S.active = false;
+        if (S.animId) { cancelAnimationFrame(S.animId); S.animId = null; }
+        if (S.resizeObserver) { try { S.resizeObserver.disconnect(); } catch (e) {} S.resizeObserver = null; }
+        if (window.GeniusUtils && window.GeniusUtils.safeThreeDispose) {
+            window.GeniusUtils.safeThreeDispose(S.renderer, S.scene);
+        } else if (S.renderer) {
+            try { S.renderer.dispose(); } catch (e) {}
+        }
+        S.renderer = null; S.scene = null; S.mesh = null;
+    }
+    if (window.GeniusUtils && window.GeniusUtils.registerCleanup) {
+        window.GeniusUtils.registerCleanup('showroom-3d', cleanupShowroom);
+    }
 
     var S = {
         shape: 'can',
@@ -55,13 +71,14 @@
 
         var fr = window.lang === 'fr';
         
+        var esc = (window.GeniusUtils && window.GeniusUtils.escapeHtml) ? window.GeniusUtils.escapeHtml : (s => String(s || ''));
         // Setup center panel canvas layout
         c.innerHTML = `
             <div id="sr-canvas-container" style="width:100%; height:100%; position:relative; display:flex; align-items:center; justify-content:center;">
                 <canvas id="sr-three-canvas" style="width:100%; height:100%; display:block;"></canvas>
-                <div id="sr-text-overlay" style="position:absolute; top:15%; left:0; width:100%; text-align:center; pointer-events:none; font-family:'Outfit',sans-serif; text-shadow:0 4px 12px rgba(0,0,0,0.6); transform:translateY(${S.textY}px);">
-                    <h1 id="sr-over-head" style="margin:0 0 5px; font-weight:900; font-size:${3.5 * S.textSize}vw; color:${S.textColor}; text-transform:uppercase; letter-spacing:1.5px;">${S.headline}</h1>
-                    <p id="sr-over-sub" style="margin:0; font-weight:300; font-size:${1.6 * S.textSize}vw; color:${S.accentColor};">${S.subhead}</p>
+                <div id="sr-text-overlay" style="position:absolute; top:12%; left:0; width:100%; padding:0 16px; box-sizing:border-box; text-align:center; pointer-events:none; font-family:'Outfit',sans-serif; text-shadow:0 4px 12px rgba(0,0,0,0.6); transform:translateY(${S.textY}px);">
+                    <h1 id="sr-over-head" style="margin:0 0 6px; font-weight:900; font-size:clamp(22px, ${3.5 * S.textSize}vw, 56px); color:${S.textColor}; text-transform:uppercase; letter-spacing:1.5px;">${esc(S.headline)}</h1>
+                    <p id="sr-over-sub" style="margin:0; font-weight:400; font-size:clamp(13px, ${1.6 * S.textSize}vw, 24px); color:${S.accentColor};">${esc(S.subhead)}</p>
                 </div>
             </div>
         `;
@@ -247,12 +264,13 @@
     }
 
     function initWebGL() {
+        cleanupShowroom();
         S.canvas = document.getElementById('sr-three-canvas');
         if(!S.canvas) return;
 
         var container = document.getElementById('sr-canvas-container');
-        var w = container.clientWidth;
-        var h = container.clientHeight;
+        var w = Math.max(1, container.clientWidth || 640);
+        var h = Math.max(1, container.clientHeight || 480);
 
         S.scene = new THREE.Scene();
         S.scene.background = new THREE.Color(S.bgColor);
@@ -262,7 +280,7 @@
 
         S.renderer = new THREE.WebGLRenderer({ canvas: S.canvas, antialias: true, preserveDrawingBuffer: true });
         S.renderer.setSize(w, h);
-        S.renderer.setPixelRatio(window.devicePixelRatio || 1);
+        S.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
         updateLights();
         rebuildModel();
@@ -271,15 +289,16 @@
         animate();
 
         // Handle resize
-        var resizeObserver = new ResizeObserver(() => {
-            if(!S.active || !S.renderer) return;
-            var w = container.clientWidth;
-            var h = container.clientHeight;
-            S.camera.aspect = w / h;
+        S.resizeObserver = new ResizeObserver(() => {
+            if(!S.active || !S.renderer || !container) return;
+            var cw = container.clientWidth;
+            var ch = container.clientHeight;
+            if (cw < 2 || ch < 2) return;
+            S.camera.aspect = cw / ch;
             S.camera.updateProjectionMatrix();
-            S.renderer.setSize(w, h);
+            S.renderer.setSize(cw, ch);
         });
-        resizeObserver.observe(container);
+        S.resizeObserver.observe(container);
     }
 
     function updateBg() {
@@ -352,7 +371,7 @@
     var clock = new THREE.Clock();
     function animate() {
         if(!S.active) return;
-        requestAnimationFrame(animate);
+        S.animId = requestAnimationFrame(animate);
 
         var delta = clock.getDelta();
         var time = clock.getElapsedTime();

@@ -65,7 +65,7 @@
                 <div id="mcs-el-subtext" class="mcs-drag" style="position:absolute;font-family:-apple-system, sans-serif;font-size:18px;font-weight:500;line-height:1.4;text-shadow:0 2px 5px rgba(0,0,0,0.8);z-index:12;user-select:none;max-width:300px;"></div>
                 
                 <div id="mcs-barcode" style="position:absolute;bottom:25px;right:25px;background:#fff;padding:5px;z-index:15;">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/UPC-A-036000291452.svg/1200px-UPC-A-036000291452.svg.png" style="height:40px;width:auto;display:block;">
+                    <img src="${(window.GeniusUtils && window.GeniusUtils.barcodeSVGDataURI) ? window.GeniusUtils.barcodeSVGDataURI('0 36000 29145 2') : ''}" alt="Barcode" style="height:40px;width:auto;display:block;">
                 </div>
             </div>
         `;
@@ -352,7 +352,7 @@
         <div class="mag-headline">${state.headline.replace(/\n/g, '<br>')}</div>
         <div class="mag-subtext">${state.subtext.replace(/\n/g, '<br>')}</div>
         <div class="mag-barcode">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/UPC-A-036000291452.svg/1200px-UPC-A-036000291452.svg.png" style="height:40px;width:auto;display:block;">
+            <img src="${(window.GeniusUtils && window.GeniusUtils.barcodeSVGDataURI) ? window.GeniusUtils.barcodeSVGDataURI('0 36000 29145 2') : ''}" alt="Barcode" style="height:40px;width:auto;display:block;">
         </div>
         <div class="gloss-effect" id="gloss"></div>
     </div>
@@ -383,7 +383,13 @@
 </body>
 </html>`;
 
-        var blob = new Blob([htmlContent], {type: 'text/html'});
-        var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'magazine-interactive-3d.html'; a.click();
+        var blob = new Blob([htmlContent], {type: 'text/html;charset=utf-8'});
+        if (window.GeniusUtils && window.GeniusUtils.safeDownloadBlob) {
+            window.GeniusUtils.safeDownloadBlob(blob, 'magazine-interactive-3d.html');
+        } else {
+            var u = URL.createObjectURL(blob);
+            var a = document.createElement('a'); a.href = u; a.download = 'magazine-interactive-3d.html'; a.click();
+            setTimeout(function() { URL.revokeObjectURL(u); }, 4000);
+        }
     }
 })();

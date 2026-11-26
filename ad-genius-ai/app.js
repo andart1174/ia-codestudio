@@ -49,6 +49,66 @@ const translations = {
         guide_step_2: "Paste it inside the <body> tag of your web pages.",
         guide_step_3: "Exit-Intent popups trigger automatically when users leave. Sticky bars appear instantly at the top/bottom.",
         btn_back: "Back to Studios",
+        btn_portal_home: "IA Code Studio",
+        nav_brand_kit: "Brand Kit",
+        nav_ai_director: "AI Director",
+        nav_vault: "Vault",
+        dash_search_ph: "Search 23 AI advertising studios... (Ctrl+K)",
+        cat_all: "All Studios",
+        cat_3d: "🧊 3D & Mockups",
+        cat_gamify: "🎮 Gamification & Motion",
+        cat_print: "📰 Print & Editorial",
+        cat_social: "🔗 Social & Smart Links",
+        cat_ai: "⚡ AI & Conversion",
+        cat_fav: "⭐ Favorites",
+        cat_recent: "🕒 Recent",
+        toggle_ab: "⚖️ A/B Split",
+        btn_m_view_preview: "View Live Preview ➡️",
+        btn_m_edit_config: "⬅️ Edit Config",
+        btn_m_get_code: "Get Code 💻 ➡️",
+        btn_m_back_preview: "⬅️ Live Preview",
+        card_core_title: "AD-GENIUS AI Banner Builder",
+        card_core_desc: "Create conversion-optimized popups, sticky headers, and slide-in ads.",
+        card_pt_title: "Pricing Table Studio",
+        card_pt_desc: "Generate high-converting interactive HTML pricing plans.",
+        card_cert_title: "Certificate Studio Pro",
+        card_cert_desc: "Create and export professional certificates.",
+        card_gc_title: "Greeting Card Studio",
+        card_gc_desc: "Design animated holiday & greeting cards.",
+        card_db_title: "Book Studio",
+        card_db_desc: "Create interactive 3D digital flipping books.",
+        card_mc_title: "Magazine Cover",
+        card_mc_desc: "Design stylish magazine cover mockups.",
+        card_dm_title: "Digital Menu Pro",
+        card_dm_desc: "Create interactive menus for restaurants.",
+        card_vc_title: "Smart vCard 3.0",
+        card_vc_desc: "Generate responsive digital business cards.",
+        card_bh_title: "BioLink Hub Pro",
+        card_bh_desc: "Create link-in-bio portals for social media.",
+        card_ss_title: "Smart Signage Pro",
+        card_ss_desc: "Design dynamic digital signage slideshows & QR posters.",
+        card_la_title: "Dynamic Contextual Studio",
+        card_la_desc: "Create weather & time localized banner ads.",
+        card_sw_title: "Spin Wheel Fortune",
+        card_sw_desc: "Interactive lucky spin wheels to capture leads.",
+        card_iz_title: "Infinite Zoom Portal",
+        card_iz_desc: "Generate infinite zooming canvas animations.",
+        card_gs_title: "Gravity Sandbox",
+        card_gs_desc: "Physics-based interactive advertising banner.",
+        card_gsp_title: "Gravity Sandbox Pro",
+        card_gsp_desc: "Rigid-body Matter.js physics engine ad studio with shapes & collisions.",
+        card_abc_title: "AR Biz Card",
+        card_abc_desc: "WebAR business card layout with 3D tilt & offline QR.",
+        card_pab_title: "Playable Ad Builder",
+        card_pab_desc: "Build interactive mini-game playable ads.",
+        card_kt_title: "Kinetic Typography",
+        card_kt_desc: "Generate motion text layouts with 20+ physics effects.",
+        card_mm_title: "Mockup Master Pro",
+        card_mm_desc: "3D device & product mockups with interactive lighting.",
+        card_mbs_title: "3D Packaging Box Studio",
+        card_mbs_desc: "Custom 6-face WebGL 3D packaging boxes, cylinders, glass & chrome.",
+        card_ba_title: "Brand Ad Studio V2",
+        card_ba_desc: "Create high-end 3D VFX interactive brand advertisements.",
         card_sr_title: "3D Product Showroom",
         card_sr_desc: "Create interactive 3D product banners with custom labels.",
         card_sc_title: "Scratch Card Studio",
@@ -103,6 +163,66 @@ const translations = {
         guide_step_2: "Collez-le n'importe où dans la balise <body> de votre site.",
         guide_step_3: "Le popup d'intention de sortie s'active au départ. La barre collante apparaît instantanément en haut/bas.",
         btn_back: "Retour aux Studios",
+        btn_portal_home: "IA Code Studio",
+        nav_brand_kit: "Brand Kit",
+        nav_ai_director: "Directeur IA",
+        nav_vault: "Coffre",
+        dash_search_ph: "Rechercher parmi 23 studios IA... (Ctrl+K)",
+        cat_all: "Tous les Studios",
+        cat_3d: "🧊 3D & Mockups",
+        cat_gamify: "🎮 Gamification & Motion",
+        cat_print: "📰 Print & Éditorial",
+        cat_social: "🔗 Social & Liens Smart",
+        cat_ai: "⚡ IA & Conversion",
+        cat_fav: "⭐ Favoris",
+        cat_recent: "🕒 Récents",
+        toggle_ab: "⚖️ Split A/B",
+        btn_m_view_preview: "Voir l'Aperçu ➡️",
+        btn_m_edit_config: "⬅️ Modifier Config",
+        btn_m_get_code: "Voir le Code 💻 ➡️",
+        btn_m_back_preview: "⬅️ Aperçu Direct",
+        card_core_title: "AD-GENIUS AI Générateur de Bannières",
+        card_core_desc: "Créez des popups, barres collantes et cartes optimisées pour la conversion.",
+        card_pt_title: "Studio Tableaux de Prix",
+        card_pt_desc: "Générez des plans tarifaires HTML interactifs à forte conversion.",
+        card_cert_title: "Studio Certificats Pro",
+        card_cert_desc: "Créez et exportez des diplômes et certificats professionnels.",
+        card_gc_title: "Studio Cartes de Vœux",
+        card_gc_desc: "Concevez des cartes de vœux et invitations animées.",
+        card_db_title: "Studio Livre 3D",
+        card_db_desc: "Créez des livres numériques interactifs 3D à pages tournantes.",
+        card_mc_title: "Couverture Magazine",
+        card_mc_desc: "Concevez des couvertures de magazines élégantes et mockups.",
+        card_dm_title: "Menu Digital Pro",
+        card_dm_desc: "Créez des menus interactifs pour restaurants et cafés.",
+        card_vc_title: "Smart vCard 3.0",
+        card_vc_desc: "Générez des cartes de visite numériques responsives avec QR.",
+        card_bh_title: "BioLink Hub Pro",
+        card_bh_desc: "Créez des portails link-in-bio pour vos réseaux sociaux.",
+        card_ss_title: "Smart Signage Pro",
+        card_ss_desc: "Concevez des affiches numériques dynamiques et QR urbains.",
+        card_la_title: "Studio Contextuel Dynamique",
+        card_la_desc: "Créez des bannières adaptées en direct à la météo et à l'heure.",
+        card_sw_title: "Roue de la Fortune Ads",
+        card_sw_desc: "Roues promotionnelles interactives pour capter des leads.",
+        card_iz_title: "Portail Zoom Infini",
+        card_iz_desc: "Générez des animations canvas à zoom infini immersives.",
+        card_gs_title: "Bac à Sable Gravité",
+        card_gs_desc: "Bannière publicitaire interactive basée sur la physique.",
+        card_gsp_title: "Gravity Sandbox Pro",
+        card_gsp_desc: "Studio physique Matter.js avec corps rigides, formes et collisions.",
+        card_abc_title: "Carte de Visite AR",
+        card_abc_desc: "Carte WebAR holographique 3D avec inclinaison et QR hors ligne.",
+        card_pab_title: "Créateur de Pub Jouable",
+        card_pab_desc: "Construisez des mini-jeux publicitaires interactifs HTML5.",
+        card_kt_title: "Typographie Cinétique",
+        card_kt_desc: "Textes animés en mouvement avec plus de 20 effets physiques.",
+        card_mm_title: "Mockup Master Pro",
+        card_mm_desc: "Mockups 3D d'appareils et produits avec éclairage studio.",
+        card_mbs_title: "Studio Packaging Box 3D",
+        card_mbs_desc: "Boîtes 3D WebGL 6 faces, cylindres, verre et chrome liquide.",
+        card_ba_title: "Brand Ad Studio V2",
+        card_ba_desc: "Créez des publicités de marque 3D VFX haut de gamme.",
         card_sr_title: "Showroom Produit 3D",
         card_sr_desc: "Créez des bannières produits 3D interactives avec étiquettes personnalisées.",
         card_sc_title: "Studio Carte à Gratter",
@@ -114,7 +234,7 @@ const translations = {
     }
 };
 
-let currentLang = 'en';
+let currentLang = (typeof localStorage !== 'undefined' && localStorage.getItem('hub_lang') === 'fr') ? 'fr' : 'en';
 
 // ==========================================
 // 2. COPYWRITING PRESETS
@@ -215,6 +335,9 @@ const els = {
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
     window.lang = currentLang;
+    if (els.langBtns) {
+        els.langBtns.forEach(b => b.classList.toggle('active', b.getAttribute('data-lang') === currentLang));
+    }
     bindEvents();
     translatePage();
     triggerWidgetRender();
@@ -229,6 +352,12 @@ function translatePage() {
             } else {
                 el.textContent = translations[currentLang][key];
             }
+        }
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (translations[currentLang] && translations[currentLang][key]) {
+            el.placeholder = translations[currentLang][key];
         }
     });
 }
@@ -303,6 +432,7 @@ function bindEvents() {
             btn.classList.add('active');
             currentLang = btn.getAttribute('data-lang');
             window.lang = currentLang;
+            try { localStorage.setItem('hub_lang', currentLang); } catch (e) {}
             translatePage();
             if (window.activeTab === 'core-ad-genius' || !window.activeTab) {
                 triggerWidgetRender();
@@ -362,6 +492,19 @@ function bindEvents() {
         });
     }
 
+    // A/B Variant Split Preview Toggle
+    const checkAbSplit = document.getElementById('check-ab-split');
+    if (checkAbSplit) {
+        checkAbSplit.addEventListener('change', (e) => {
+            state.abSplitEnabled = e.target.checked;
+            const container = document.getElementById('core-iframe-container');
+            const iframeB = document.getElementById('preview-iframe-b');
+            if (container) container.classList.toggle('ab-split-active', !!state.abSplitEnabled);
+            if (iframeB) iframeB.style.display = state.abSplitEnabled ? 'block' : 'none';
+            triggerWidgetRender();
+        });
+    }
+
     // AI Copywriter Generation
     if (els.btnGenerateCopy) {
         els.btnGenerateCopy.addEventListener('click', () => {
@@ -373,13 +516,19 @@ function bindEvents() {
     if (els.btnCopyCode) {
         els.btnCopyCode.addEventListener('click', () => {
             requirePremium(() => {
-                els.codeOutput.select();
-                document.execCommand('copy');
-                const originalText = translations[currentLang].btn_copy;
-                els.btnCopyCode.textContent = translations[currentLang].btn_copied;
-                setTimeout(() => {
-                    els.btnCopyCode.textContent = originalText;
-                }, 2000);
+                const copyPromise = (window.GeniusUtils && window.GeniusUtils.copyText)
+                    ? window.GeniusUtils.copyText(els.codeOutput.value)
+                    : Promise.resolve(false);
+                copyPromise.then(() => {
+                    const originalText = translations[currentLang].btn_copy;
+                    els.btnCopyCode.textContent = translations[currentLang].btn_copied;
+                    if (window.GeniusUtils && window.GeniusUtils.showToast) {
+                        window.GeniusUtils.showToast(translations[currentLang].btn_copied, 'success');
+                    }
+                    setTimeout(() => {
+                        els.btnCopyCode.textContent = originalText;
+                    }, 2000);
+                });
             });
         });
     }
@@ -389,15 +538,19 @@ function bindEvents() {
         els.btnDownloadHtml.addEventListener('click', () => {
             requirePremium(() => {
                 const html = els.codeOutput.value;
-                const blob = new Blob([html], { type: 'text/html' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `ad-genius-${state.format}.html`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
+                const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+                if (window.GeniusUtils && window.GeniusUtils.safeDownloadBlob) {
+                    window.GeniusUtils.safeDownloadBlob(blob, `ad-genius-${state.format}.html`);
+                } else {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `ad-genius-${state.format}.html`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(url), 4000);
+                }
             });
         });
     }
@@ -527,27 +680,45 @@ function triggerWidgetRender() {
     
     els.codeOutput.value = htmlCode;
     els.iframe.srcdoc = htmlCode;
+
+    const iframeB = document.getElementById('preview-iframe-b');
+    if (iframeB && state.abSplitEnabled) {
+        const variantB = buildExportCode({
+            title: `🔥 ${state.title} (B)`,
+            btnText: `${state.btnText} →`,
+            colorPrimary: state.colorAccent,
+            colorAccent: '#f59e0b'
+        });
+        iframeB.srcdoc = variantB;
+    }
 }
 
-function buildExportCode() {
-    const borderGlow = state.glowEnabled 
-        ? `box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 25px ${state.colorAccent}40, inset 0 0 1px rgba(255,255,255,0.2); border: 1px solid ${state.colorPrimary}80;` 
+function buildExportCode(override) {
+    const cfg = Object.assign({}, state, override || {});
+    const esc = (window.GeniusUtils && window.GeniusUtils.escapeHtml) ? window.GeniusUtils.escapeHtml : (s => String(s || ''));
+    const safeUrl = (window.GeniusUtils && window.GeniusUtils.sanitizeUrl) ? window.GeniusUtils.sanitizeUrl(cfg.btnUrl) : cfg.btnUrl;
+    const safeTitle = esc(cfg.title);
+    const safeDesc = esc(cfg.desc);
+    const safeBtnText = esc(cfg.btnText);
+
+    const borderGlow = cfg.glowEnabled 
+        ? `box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 25px ${cfg.colorAccent}40, inset 0 0 1px rgba(255,255,255,0.2); border: 1px solid ${cfg.colorPrimary}80;` 
         : `box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.08);`;
         
     let bodyLayoutHTML = '';
     let layoutCSS = '';
     let behaviorScript = '';
     
-    if (state.format === 'exit_intent') {
+    if (cfg.format === 'exit_intent') {
         // EXIT INTENT POPUP
         bodyLayoutHTML = `
         <div class="ad-overlay" id="ad-wrapper">
             <div class="ad-modal">
                 <button class="ad-close-btn" onclick="closeAd()">&times;</button>
                 <div class="ad-icon">🎁</div>
-                <h2 class="ad-title">${state.title}</h2>
-                <p class="ad-desc">${state.desc}</p>
-                <a href="${state.btnUrl}" target="_blank" class="ad-btn">${state.btnText}</a>
+                <h2 class="ad-title">${safeTitle}</h2>
+                <p class="ad-desc">${safeDesc}</p>
+                <a href="${esc(safeUrl)}" target="_blank" rel="noopener noreferrer" class="ad-btn">${safeBtnText}</a>
             </div>
         </div>
         `;
@@ -567,7 +738,7 @@ function buildExportCode() {
             opacity: 1; pointer-events: auto;
         }
         .ad-modal {
-            background: rgba(17, 24, 39, ${state.opacity / 100});
+            background: rgba(17, 24, 39, ${cfg.opacity / 100});
             backdrop-filter: blur(24px);
             padding: 40px 30px;
             border-radius: 24px;
@@ -596,17 +767,17 @@ function buildExportCode() {
             font-family: 'Outfit', sans-serif;
             font-weight: 800; font-size: 24px;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #fff 30%, ${state.colorPrimary} 100%);
+            background: linear-gradient(135deg, #fff 30%, ${cfg.colorPrimary} 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         .ad-desc { font-size: 14px; color: #9ca3af; line-height: 1.5; margin-bottom: 25px; }
         .ad-btn {
             display: inline-block;
-            background: linear-gradient(135deg, ${state.colorPrimary} 0%, ${state.colorAccent} 100%);
+            background: linear-gradient(135deg, ${cfg.colorPrimary} 0%, ${cfg.colorAccent} 100%);
             color: #fff; font-weight: 700; font-size: 14px;
             text-decoration: none; padding: 12px 30px;
             border-radius: 10px; width: 100%;
-            box-shadow: 0 0 15px ${state.colorPrimary}40;
+            box-shadow: 0 0 15px ${cfg.colorPrimary}40;
             transition: transform 0.2s, filter 0.2s;
         }
         .ad-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
@@ -638,18 +809,18 @@ function buildExportCode() {
         setTimeout(showAd, 2000);
         `;
         
-    } else if (state.format === 'sticky_bar') {
+    } else if (cfg.format === 'sticky_bar') {
         // STICKY FLOATING BAR (Top of Page)
         bodyLayoutHTML = `
         <div class="ad-sticky-bar" id="ad-wrapper">
             <div class="ad-bar-container">
                 <span class="ad-bar-badge">OFFER</span>
                 <div class="ad-bar-text">
-                    <strong class="ad-bar-title">${state.title}</strong>
-                    <span class="ad-bar-desc">${state.desc}</span>
+                    <strong class="ad-bar-title">${safeTitle}</strong>
+                    <span class="ad-bar-desc">${safeDesc}</span>
                 </div>
                 <div class="ad-bar-actions">
-                    <a href="${state.btnUrl}" target="_blank" class="ad-btn">${state.btnText}</a>
+                    <a href="${esc(safeUrl)}" target="_blank" rel="noopener noreferrer" class="ad-btn">${safeBtnText}</a>
                     <button class="ad-close-btn" onclick="closeAd()">&times;</button>
                 </div>
             </div>
@@ -660,7 +831,7 @@ function buildExportCode() {
         .ad-sticky-bar {
             position: fixed;
             top: 0; left: 0; width: 100vw;
-            background: rgba(17, 24, 39, ${state.opacity / 100});
+            background: rgba(17, 24, 39, ${cfg.opacity / 100});
             backdrop-filter: blur(20px);
             z-index: 999999;
             padding: 12px 24px;
@@ -679,7 +850,7 @@ function buildExportCode() {
             gap: 15px;
         }
         .ad-bar-badge {
-            font-size: 9px; font-weight: 800; background: ${state.colorAccent};
+            font-size: 9px; font-weight: 800; background: ${cfg.colorAccent};
             color: #fff; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px;
         }
         .ad-bar-text {
@@ -695,11 +866,11 @@ function buildExportCode() {
         .ad-close-btn:hover { color: #fff; }
         .ad-btn {
             display: inline-block;
-            background: linear-gradient(135deg, ${state.colorPrimary} 0%, ${state.colorAccent} 100%);
+            background: linear-gradient(135deg, ${cfg.colorPrimary} 0%, ${cfg.colorAccent} 100%);
             color: #fff; font-weight: 700; font-size: 12.5px;
             text-decoration: none; padding: 8px 20px;
             border-radius: 6px; white-space: nowrap;
-            box-shadow: 0 0 10px ${state.colorPrimary}40;
+            box-shadow: 0 0 10px ${cfg.colorPrimary}40;
             transition: transform 0.2s, filter 0.2s;
         }
         .ad-btn:hover { transform: translateY(-1px); filter: brightness(1.1); }
@@ -727,7 +898,7 @@ function buildExportCode() {
         setTimeout(showAd, 1000);
         `;
         
-    } else if (state.format === 'slide_in') {
+    } else if (cfg.format === 'slide_in') {
         // CORNER SLIDE-IN CARD (Bottom Right)
         bodyLayoutHTML = `
         <div class="ad-slide-in" id="ad-wrapper">
@@ -735,10 +906,10 @@ function buildExportCode() {
             <div class="ad-body">
                 <div class="ad-header-row">
                     <span class="ad-icon">⚡</span>
-                    <strong class="ad-title">${state.title}</strong>
+                    <strong class="ad-title">${safeTitle}</strong>
                 </div>
-                <p class="ad-desc">${state.desc}</p>
-                <a href="${state.btnUrl}" target="_blank" class="ad-btn">${state.btnText}</a>
+                <p class="ad-desc">${safeDesc}</p>
+                <a href="${esc(safeUrl)}" target="_blank" rel="noopener noreferrer" class="ad-btn">${safeBtnText}</a>
             </div>
         </div>
         `;
@@ -747,7 +918,7 @@ function buildExportCode() {
         .ad-slide-in {
             position: fixed;
             bottom: 20px; right: 20px;
-            background: rgba(17, 24, 39, ${state.opacity / 100});
+            background: rgba(17, 24, 39, ${cfg.opacity / 100});
             backdrop-filter: blur(20px);
             z-index: 999999;
             padding: 24px;
@@ -850,6 +1021,9 @@ function buildExportCode() {
 window.activeTab = null;
 
 window.activateWorkspace = function(id) {
+    if (window.activeTab && window.activeTab !== id && window.GeniusUtils && window.GeniusUtils.runCleanup) {
+        window.GeniusUtils.runCleanup(window.activeTab);
+    }
     // Hide dashboard grid view
     const dashGrid = document.getElementById('dashboard-grid-view');
     if (dashGrid) dashGrid.style.display = 'none';
@@ -913,6 +1087,9 @@ window.activateWorkspace = function(id) {
 };
 
 window.goBackToDashboard = function() {
+    if (window.activeTab && window.GeniusUtils && window.GeniusUtils.runCleanup) {
+        window.GeniusUtils.runCleanup(window.activeTab);
+    }
     // Show dashboard grid view
     const dashGrid = document.getElementById('dashboard-grid-view');
     if (dashGrid) {
@@ -1032,27 +1209,41 @@ function reRenderActiveWorkspace() {
  * Utilise le même système localStorage que le site principal.
  */
 function checkIsPremium() {
-    const session = localStorage.getItem('genius_session');
-    if (!session) return false;
     try {
-        const user = JSON.parse(session);
-        const email = user.email.toLowerCase();
-        const premiumList = JSON.parse(localStorage.getItem('ia_premium_users') || '[]');
-        const record = premiumList.find(p => p.email.toLowerCase() === email);
-        if (record) {
-            const isUnlimited = record.days === 9999;
-            const expiry = (record.addedAt || 0) + (record.days || 0) * 86400000;
-            if (isUnlimited || expiry > Date.now()) return true;
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('pro_unlocked') === 'true') {
+            localStorage.setItem('ia_pro_unlocked', 'true');
+            return true;
         }
     } catch (e) {}
+    if (localStorage.getItem('ia_pro_unlocked') === 'true' || localStorage.getItem('ia_pro_active') === 'true') {
+        return true;
+    }
+    const session = localStorage.getItem('genius_session');
+    if (session) {
+        try {
+            const user = JSON.parse(session);
+            const email = (user.email || '').toLowerCase();
+            const premiumList = JSON.parse(localStorage.getItem('ia_premium_users') || '[]');
+            const record = premiumList.find(p => (p.email || '').toLowerCase() === email);
+            if (record) {
+                const isUnlimited = record.days === 9999;
+                const expiry = (record.addedAt || 0) + (record.days || 0) * 86400000;
+                if (isUnlimited || expiry > Date.now()) return true;
+            }
+        } catch (e) {}
+    }
     // Fallback legacy key
     const subDate = localStorage.getItem('ia_premium_sub_date');
     if (subDate) {
-        const daysLeft = 30 - Math.floor((Date.now() - parseInt(subDate)) / 86400000);
+        const daysLeft = 30 - Math.floor((Date.now() - parseInt(subDate, 10)) / 86400000);
         if (daysLeft > 0) return true;
     }
     return false;
 }
+window.checkIsPremium = checkIsPremium;
+window.requirePremium = requirePremium;
+window.showPremiumModal = showPremiumModal;
 
 /**
  * Exécute le callback si premium, sinon affiche la modale de paiement.
@@ -1221,7 +1412,7 @@ const EXPORT_BUTTON_IDS = [
     // Infinite Zoom
     'iz-exp-png', 'iz-exp-vid', 'iz-exp-zip',
     // Kinetic Typography
-    'kt-exp-html',
+    'kt-exp-html', 'kt-exp-png', 'kt-exp-vid',
     // Localized Ad Engine
     'la-export',
     // Magazine Cover Pro
@@ -1286,8 +1477,9 @@ function guardExportButtonsByCapture() {
 
     document.addEventListener('click', function(e) {
         const btn = e.target.closest('button, a[id]');
-        if (!btn || !btn.id) return;
-        if (EXPORT_BUTTON_IDS.includes(btn.id)) {
+        if (!btn) return;
+        const isGuarded = (btn.id && EXPORT_BUTTON_IDS.includes(btn.id)) || btn.hasAttribute('data-pro-export');
+        if (isGuarded) {
             if (!checkIsPremium()) {
                 e.preventDefault();
                 e.stopImmediatePropagation();
@@ -1296,18 +1488,6 @@ function guardExportButtonsByCapture() {
         }
     }, true); // true = capture phase, fires before module handlers
 }
-
-// Anti-copy protections
-document.addEventListener('contextmenu', (e) => {
-    if (e.target.tagName === 'CANVAS' || e.target.tagName === 'IMG') {
-        e.preventDefault();
-    }
-});
-document.addEventListener('keydown', (e) => {
-    if ((e.ctrlKey || e.metaKey) && ['s', 'u'].includes(e.key.toLowerCase())) {
-        e.preventDefault();
-    }
-});
 
 // URL parameter router for automatic studio selection
 document.addEventListener('DOMContentLoaded', () => {

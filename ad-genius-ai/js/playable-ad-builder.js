@@ -61,10 +61,17 @@
             return;
         }
         
-        S.active = false;
-        if (S.animId) cancelAnimationFrame(S.animId);
+        cleanupPlayable();
         if (_prevRenderTab) _prevRenderTab(tab);
     };
+
+    function cleanupPlayable() {
+        S.active = false;
+        if (S.animId) { cancelAnimationFrame(S.animId); S.animId = null; }
+    }
+    if (window.GeniusUtils && window.GeniusUtils.registerCleanup) {
+        window.GeniusUtils.registerCleanup('playable-ad-builder', cleanupPlayable);
+    }
 
     function buildUI() {
         var r = document.getElementById('pab-right');

@@ -369,11 +369,16 @@
 </body>
 </html>`;
 
-        var blob = new Blob([htmlContent], { type: 'text/html' });
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement('a');
-        a.href = url;
-        a.download = 'Pricing_Table.html';
-        a.click();
+        var blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        if (window.GeniusUtils && window.GeniusUtils.safeDownloadBlob) {
+            window.GeniusUtils.safeDownloadBlob(blob, 'Pricing_Table.html');
+        } else {
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'Pricing_Table.html';
+            a.click();
+            setTimeout(function() { URL.revokeObjectURL(url); }, 4000);
+        }
     }
 })();

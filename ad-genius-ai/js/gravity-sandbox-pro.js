@@ -34,13 +34,19 @@
             return;
         }
         
-        S.active = false;
-        if (S.animId) cancelAnimationFrame(S.animId);
-        if (mod.runner) { Matter.Runner.stop(mod.runner); mod.runner=null; }
-        if (mod.engine) { Matter.Engine.clear(mod.engine); mod.engine=null; }
-        
+        cleanupGravityPro();
         if (_prevRenderTab) _prevRenderTab(tab);
     };
+
+    function cleanupGravityPro() {
+        S.active = false;
+        if (S.animId) { cancelAnimationFrame(S.animId); S.animId = null; }
+        if (mod.runner && window.Matter) { try { Matter.Runner.stop(mod.runner); } catch (e) {} mod.runner = null; }
+        if (mod.engine && window.Matter) { try { Matter.Engine.clear(mod.engine); } catch (e) {} mod.engine = null; }
+    }
+    if (window.GeniusUtils && window.GeniusUtils.registerCleanup) {
+        window.GeniusUtils.registerCleanup('gravity-sandbox-pro', cleanupGravityPro);
+    }
 
     function buildUI() {
         var r = document.getElementById('gsp-right');

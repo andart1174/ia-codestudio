@@ -99,12 +99,17 @@
             return;
         }
 
-        if (S.active) {
-            S.active = false;
-            if (S.animId) cancelAnimationFrame(S.animId);
-        }
+        cleanupInfiniteZoom();
         if (_prevRenderTab) _prevRenderTab(tab);
     };
+
+    function cleanupInfiniteZoom() {
+        S.active = false;
+        if (S.animId) { cancelAnimationFrame(S.animId); S.animId = null; }
+    }
+    if (window.GeniusUtils && window.GeniusUtils.registerCleanup) {
+        window.GeniusUtils.registerCleanup('infinite-zoom', cleanupInfiniteZoom);
+    }
 
     /* ── UI ── */
     function buildUI() {
@@ -759,9 +764,15 @@
         var chunks = [];
         rec.ondataavailable = function (e) { if (e.data.size > 0) chunks.push(e.data); };
         rec.onstop = function () {
-            var url = URL.createObjectURL(new Blob(chunks, { type: 'video/webm' }));
-            var a = document.createElement('a');
-            a.href = url; a.download = 'infinite-zoom-loop.webm'; a.click();
+            var blob = new Blob(chunks, { type: 'video/webm' });
+            if (window.GeniusUtils && window.GeniusUtils.safeDownloadBlob) {
+                window.GeniusUtils.safeDownloadBlob(blob, 'infinite-zoom-loop.webm');
+            } else {
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url; a.download = 'infinite-zoom-loop.webm'; a.click();
+                setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+            }
             if (st) {
                 st.textContent = '✅ Video exported!';
                 setTimeout(function () { st.textContent = '● Portal Active'; }, 2000);
@@ -797,7 +808,7 @@
 </head>
 <body>
 <canvas id="c" width="900" height="900"></canvas>
-<button id="cta" onclick="alert('Welcome to the Portal!\\nPromo Code: ZOOM50')">ENTER THE PORTAL</button>
+<button id="cta" onclick="this.textContent='✅ CODE: ZOOM50 COPIED!';try{navigator.clipboard&&navigator.clipboard.writeText('ZOOM50');}catch(e){}">ENTER THE PORTAL</button>
 <script>
 (function() {
     var canvas = document.getElementById('c');
@@ -918,11 +929,16 @@
         var zip = new window.JSZip();
         zip.file('index.html', adHTML);
         zip.generateAsync({ type: 'blob' }).then(function (content) {
-            var a = document.createElement('a');
-            a.download = 'infinite-zoom-portal-ad.zip';
-            a.href = URL.createObjectURL(content);
-            a.click();
-            URL.revokeObjectURL(a.href);
+            if (window.GeniusUtils && window.GeniusUtils.safeDownloadBlob) {
+                window.GeniusUtils.safeDownloadBlob(content, 'infinite-zoom-portal-ad.zip');
+            } else {
+                var u = URL.createObjectURL(content);
+                var a = document.createElement('a');
+                a.download = 'infinite-zoom-portal-ad.zip';
+                a.href = u;
+                a.click();
+                setTimeout(function () { URL.revokeObjectURL(u); }, 4000);
+            }
 
             if (st) {
                 st.textContent = '✅ ZIP exported!';

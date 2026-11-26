@@ -43,10 +43,25 @@
             return;
         }
         
-        S.active = false;
-        if (S.animId) cancelAnimationFrame(S.animId);
+        cleanupMockupMaster();
         if (_prevRenderTab) _prevRenderTab(tab);
     };
+
+    var _mmResizeHandler = null;
+    function cleanupMockupMaster() {
+        S.active = false;
+        if (S.animId) { cancelAnimationFrame(S.animId); S.animId = null; }
+        if (_mmResizeHandler) { window.removeEventListener('resize', _mmResizeHandler); _mmResizeHandler = null; }
+        if (window.GeniusUtils && window.GeniusUtils.safeThreeDispose) {
+            window.GeniusUtils.safeThreeDispose(S.renderer, S.scene);
+        } else if (S.renderer) {
+            try { S.renderer.dispose(); } catch (e) {}
+        }
+        S.renderer = null; S.scene = null; S.wrapperGroup = null; S.deviceGroup = null; S.screenMesh = null;
+    }
+    if (window.GeniusUtils && window.GeniusUtils.registerCleanup) {
+        window.GeniusUtils.registerCleanup('mockup-master', cleanupMockupMaster);
+    }
 
     function buildUI() {
         var r = document.getElementById('mm-right');
@@ -250,13 +265,16 @@
         }
         animate();
 
-        window.addEventListener('resize', function() {
+        if (_mmResizeHandler) window.removeEventListener('resize', _mmResizeHandler);
+        _mmResizeHandler = function() {
             if (!S.active || !S.camera || !S.renderer) return;
             var ct = document.getElementById('mm-center');
+            if (!ct || ct.clientWidth < 2 || ct.clientHeight < 2) return;
             S.camera.aspect = ct.clientWidth / ct.clientHeight;
             S.camera.updateProjectionMatrix();
             S.renderer.setSize(ct.clientWidth, ct.clientHeight);
-        });
+        };
+        window.addEventListener('resize', _mmResizeHandler);
     }
 
     function updateScreen() {

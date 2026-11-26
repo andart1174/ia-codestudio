@@ -770,7 +770,13 @@
 </body>
 </html>`;
 
-        var blob = new Blob([htmlContent], {type: 'text/html'});
-        var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Magical_Card_${state.theme}.html`; a.click();
+        var blob = new Blob([htmlContent], {type: 'text/html;charset=utf-8'});
+        if (window.GeniusUtils && window.GeniusUtils.safeDownloadBlob) {
+            window.GeniusUtils.safeDownloadBlob(blob, `Magical_Card_${state.theme}.html`);
+        } else {
+            var u = URL.createObjectURL(blob);
+            var a = document.createElement('a'); a.href = u; a.download = `Magical_Card_${state.theme}.html`; a.click();
+            setTimeout(function() { URL.revokeObjectURL(u); }, 4000);
+        }
     }
 })();

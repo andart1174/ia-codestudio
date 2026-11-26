@@ -589,12 +589,17 @@
 </body>
 </html>`;
 
-        var blob = new Blob([htmlContent], { type: 'text/html' });
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement('a');
-        a.href = url;
-        a.download = 'Premium_Certificate.html';
-        a.click();
+        var blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        if (window.GeniusUtils && window.GeniusUtils.safeDownloadBlob) {
+            window.GeniusUtils.safeDownloadBlob(blob, 'Premium_Certificate.html');
+        } else {
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'Premium_Certificate.html';
+            a.click();
+            setTimeout(function() { URL.revokeObjectURL(url); }, 4000);
+        }
         
         state.selectedItemId = originalSelected;
         renderPreview();

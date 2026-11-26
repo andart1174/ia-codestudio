@@ -40,12 +40,21 @@
       "operatingSystem": "All",
       "url": "https://ia-codestudio.com/ad-genius-ai/index.html",
       "description": "22 professional AI-powered advertising studios: 3D Product Showroom, Scratch Card Studio, Spin Wheel Fortune, AR Business Card, Playable Ad Builder, Kinetic Typography, Brand Ad Studio, Smart Signage Pro, Digital Book Studio, Certificate Studio Pro, and more.",
-      "offers": {
-        "@type": "Offer",
-        "price": "10.00",
-        "priceCurrency": "USD",
-        "priceValidUntil": "2027-01-01"
-      },
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Free Interactive Preview & AI Builder",
+          "price": "0.00",
+          "priceCurrency": "USD"
+        },
+        {
+          "@type": "Offer",
+          "name": "IA Code Studio Pro Export Pass",
+          "price": "10.00",
+          "priceCurrency": "USD",
+          "priceValidUntil": "2027-01-01"
+        }
+      ],
       "featureList": [
         "3D Product Showroom",
         "Scratch Card Studio",
@@ -83,6 +92,7 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+</head>
 <body>
 
     <!-- Glowing Background Orbs -->
@@ -94,7 +104,10 @@
 
     <!-- Header Navbar -->
     <header class="navbar">
-        <div style="display:flex; align-items:center; gap:20px;">
+        <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+            <a href="../index.html" id="btn-portal-home" class="btn-portal-home" title="IA Code Studio">
+                ⬅️ <span data-i18n="btn_portal_home">IA Code Studio</span>
+            </a>
             <div class="logo">
                 <span class="logo-icon">⚡</span>
                 <span class="logo-text">AD-GENIUS <span class="badge-pro">AI PRO</span></span>
@@ -103,7 +116,16 @@
                 ⬅️ <span data-i18n="btn_back">Back to Studios</span>
             </button>
         </div>
-        <div class="nav-controls">
+        <div class="nav-controls" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <button type="button" id="btn-open-brand-kit" class="nav-suite-btn" title="Global Brand Kit">
+                🎨 <span data-i18n="nav_brand_kit">Brand Kit</span>
+            </button>
+            <button type="button" id="btn-open-ai-director" class="nav-suite-btn nav-suite-ai" title="AI Campaign Director">
+                🧠 <span data-i18n="nav_ai_director">AI Director</span>
+            </button>
+            <button type="button" id="btn-open-vault" class="nav-suite-btn" title="Campaign Vault">
+                💾 <span data-i18n="nav_vault">Vault</span>
+            </button>
             <div class="lang-toggle">
                 <button class="lang-btn active" data-lang="en">EN</button>
                 <button class="lang-btn" data-lang="fr">FR</button>
@@ -112,153 +134,207 @@
     </header>
 
     <!-- App Container -->
-    
-    <!-- App Container -->
     <div class="app-container">
         
-        <!-- Welcome Grid -->
+        <!-- Dashboard Search & Category Filter Bar -->
+        <div id="dashboard-toolbar" class="dashboard-toolbar">
+            <div class="dash-search-wrap">
+                <span class="dash-search-icon">🔍</span>
+                <input type="search" id="dash-search-input" class="dash-search-input" placeholder="Search 23 AI advertising studios... (Ctrl+K)" data-i18n-placeholder="dash_search_ph">
+                <span class="dash-count-badge" id="dash-count-badge">23 / 23</span>
+            </div>
+            <div class="dash-cat-pills" id="dash-cat-pills">
+                <button type="button" class="dash-cat-pill active" data-cat="all" data-i18n="cat_all">All Studios</button>
+                <button type="button" class="dash-cat-pill" data-cat="3d" data-i18n="cat_3d">🧊 3D &amp; Mockups</button>
+                <button type="button" class="dash-cat-pill" data-cat="gamify" data-i18n="cat_gamify">🎮 Gamification &amp; Motion</button>
+                <button type="button" class="dash-cat-pill" data-cat="print" data-i18n="cat_print">📰 Print &amp; Editorial</button>
+                <button type="button" class="dash-cat-pill" data-cat="social" data-i18n="cat_social">🔗 Social &amp; Smart Links</button>
+                <button type="button" class="dash-cat-pill" data-cat="ai" data-i18n="cat_ai">⚡ AI &amp; Conversion</button>
+                <button type="button" class="dash-cat-pill" data-cat="favorites" data-i18n="cat_fav">⭐ Favorites</button>
+                <button type="button" class="dash-cat-pill" data-cat="recent" data-i18n="cat_recent">🕒 Recent</button>
+            </div>
+        </div>
+
+        <!-- Welcome Grid (All 23 Studios: Core + 22 Modules) -->
         <div id="dashboard-grid-view" class="dashboard-grid-view">
-            <div class="dash-card-item" onclick="activateWorkspace('core-ad-genius')" style="--card-color: #3b82f6; border: 1px solid #3b82f625; background: linear-gradient(135deg, #3b82f615 0%, rgba(3, 7, 18, 0.8) 100%);">
+            <div class="dash-card-item" data-studio="core-ad-genius" data-cat="ai" onclick="activateWorkspace('core-ad-genius')" style="--card-color: #3b82f6; border: 1px solid #3b82f625; background: linear-gradient(135deg, #3b82f615 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="core-ad-genius" title="Favorite" aria-label="Toggle favorite">☆</button>
                 <div class="card-item-icon">⚡</div>
                 <div class="card-item-content">
-                    <h4>AD-GENIUS AI Banner Builder</h4>
-                    <p>Create conversion-optimized popups, sticky headers, and slide-in ads.</p>
+                    <h4 data-i18n="card_core_title">AD-GENIUS AI Banner Builder</h4>
+                    <p data-i18n="card_core_desc">Create conversion-optimized popups, sticky headers, and slide-in ads.</p>
                 </div>
             </div>
-            <div class="dash-card-item" onclick="activateWorkspace('pricing-table')" style="--card-color: #10b981; border: 1px solid #10b98125; background: linear-gradient(135deg, #10b98115 0%, rgba(3, 7, 18, 0.8) 100%);">
+            <div class="dash-card-item" data-studio="pricing-table" data-cat="ai" onclick="activateWorkspace('pricing-table')" style="--card-color: #10b981; border: 1px solid #10b98125; background: linear-gradient(135deg, #10b98115 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="pricing-table" title="Favorite" aria-label="Toggle favorite">☆</button>
                 <div class="card-item-icon">💰</div>
                 <div class="card-item-content">
-                    <h4>Pricing Table Studio</h4>
-                    <p>Generate high-converting interactive HTML pricing plans.</p>
+                    <h4 data-i18n="card_pt_title">Pricing Table Studio</h4>
+                    <p data-i18n="card_pt_desc">Generate high-converting interactive HTML pricing plans.</p>
                 </div>
             </div>
-            <div class="dash-card-item" onclick="activateWorkspace('certificate-studio')" style="--card-color: #ffd700; border: 1px solid #ffd70025; background: linear-gradient(135deg, #ffd70015 0%, rgba(3, 7, 18, 0.8) 100%);">
+            <div class="dash-card-item" data-studio="certificate-studio" data-cat="print" onclick="activateWorkspace('certificate-studio')" style="--card-color: #ffd700; border: 1px solid #ffd70025; background: linear-gradient(135deg, #ffd70015 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="certificate-studio" title="Favorite" aria-label="Toggle favorite">☆</button>
                 <div class="card-item-icon">📜</div>
                 <div class="card-item-content">
-                    <h4>Certificate Studio Pro</h4>
-                    <p>Create and export professional certificates.</p>
+                    <h4 data-i18n="card_cert_title">Certificate Studio Pro</h4>
+                    <p data-i18n="card_cert_desc">Create and export professional certificates.</p>
                 </div>
             </div>
-            <div class="dash-card-item" onclick="activateWorkspace('greeting-card')" style="--card-color: #ff69b4; border: 1px solid #ff69b425; background: linear-gradient(135deg, #ff69b415 0%, rgba(3, 7, 18, 0.8) 100%);">
+            <div class="dash-card-item" data-studio="greeting-card" data-cat="print" onclick="activateWorkspace('greeting-card')" style="--card-color: #ff69b4; border: 1px solid #ff69b425; background: linear-gradient(135deg, #ff69b415 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="greeting-card" title="Favorite" aria-label="Toggle favorite">☆</button>
                 <div class="card-item-icon">✉️</div>
                 <div class="card-item-content">
-                    <h4>Greeting Card Studio</h4>
-                    <p>Design animated holiday & greeting cards.</p>
+                    <h4 data-i18n="card_gc_title">Greeting Card Studio</h4>
+                    <p data-i18n="card_gc_desc">Design animated holiday &amp; greeting cards.</p>
                 </div>
             </div>
-            <div class="dash-card-item" onclick="activateWorkspace('digital-book')" style="--card-color: #8b5cf6; border: 1px solid #8b5cf625; background: linear-gradient(135deg, #8b5cf615 0%, rgba(3, 7, 18, 0.8) 100%);">
+            <div class="dash-card-item" data-studio="digital-book" data-cat="print" onclick="activateWorkspace('digital-book')" style="--card-color: #8b5cf6; border: 1px solid #8b5cf625; background: linear-gradient(135deg, #8b5cf615 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="digital-book" title="Favorite" aria-label="Toggle favorite">☆</button>
                 <div class="card-item-icon">📖</div>
                 <div class="card-item-content">
-                    <h4>Book Studio</h4>
-                    <p>Create interactive 3D digital flipping books.</p>
+                    <h4 data-i18n="card_db_title">Book Studio</h4>
+                    <p data-i18n="card_db_desc">Create interactive 3D digital flipping books.</p>
                 </div>
             </div>
-            <div class="dash-card-item" onclick="activateWorkspace('magazine-cover')" style="--card-color: #ef4444; border: 1px solid #ef444425; background: linear-gradient(135deg, #ef444415 0%, rgba(3, 7, 18, 0.8) 100%);">
+            <div class="dash-card-item" data-studio="magazine-cover" data-cat="print" onclick="activateWorkspace('magazine-cover')" style="--card-color: #ef4444; border: 1px solid #ef444425; background: linear-gradient(135deg, #ef444415 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="magazine-cover" title="Favorite" aria-label="Toggle favorite">☆</button>
                 <div class="card-item-icon">📰</div>
                 <div class="card-item-content">
-                    <h4>Magazine Cover</h4>
-                    <p>Design stylish magazine cover mockups.</p>
+                    <h4 data-i18n="card_mc_title">Magazine Cover</h4>
+                    <p data-i18n="card_mc_desc">Design stylish magazine cover mockups.</p>
                 </div>
             </div>
-            <div class="dash-card-item" onclick="activateWorkspace('digital-menu')" style="--card-color: #f97316; border: 1px solid #f9731625; background: linear-gradient(135deg, #f9731615 0%, rgba(3, 7, 18, 0.8) 100%);">
+            <div class="dash-card-item" data-studio="digital-menu" data-cat="social" onclick="activateWorkspace('digital-menu')" style="--card-color: #f97316; border: 1px solid #f9731625; background: linear-gradient(135deg, #f9731615 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="digital-menu" title="Favorite" aria-label="Toggle favorite">☆</button>
                 <div class="card-item-icon">🍽️</div>
                 <div class="card-item-content">
-                    <h4>Digital Menu Pro</h4>
-                    <p>Create interactive menus for restaurants.</p>
+                    <h4 data-i18n="card_dm_title">Digital Menu Pro</h4>
+                    <p data-i18n="card_dm_desc">Create interactive menus for restaurants.</p>
                 </div>
             </div>
-            <div class="dash-card-item" onclick="activateWorkspace('smart-vcard')" style="--card-color: #06b6d4; border: 1px solid #06b6d425; background: linear-gradient(135deg, #06b6d415 0%, rgba(3, 7, 18, 0.8) 100%);">
+            <div class="dash-card-item" data-studio="smart-vcard" data-cat="social" onclick="activateWorkspace('smart-vcard')" style="--card-color: #06b6d4; border: 1px solid #06b6d425; background: linear-gradient(135deg, #06b6d415 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="smart-vcard" title="Favorite" aria-label="Toggle favorite">☆</button>
                 <div class="card-item-icon">📇</div>
                 <div class="card-item-content">
-                    <h4>Smart vCard 3.0</h4>
-                    <p>Generate responsive digital business cards.</p>
+                    <h4 data-i18n="card_vc_title">Smart vCard 3.0</h4>
+                    <p data-i18n="card_vc_desc">Generate responsive digital business cards.</p>
                 </div>
             </div>
-            <div class="dash-card-item" onclick="activateWorkspace('biolink-hub')" style="--card-color: #84cc16; border: 1px solid #84cc1625; background: linear-gradient(135deg, #84cc1615 0%, rgba(3, 7, 18, 0.8) 100%);">
+            <div class="dash-card-item" data-studio="biolink-hub" data-cat="social" onclick="activateWorkspace('biolink-hub')" style="--card-color: #84cc16; border: 1px solid #84cc1625; background: linear-gradient(135deg, #84cc1615 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="biolink-hub" title="Favorite" aria-label="Toggle favorite">☆</button>
                 <div class="card-item-icon">🔗</div>
                 <div class="card-item-content">
-                    <h4>BioLink Hub Pro</h4>
-                    <p>Create link-in-bio portals for social media.</p>
+                    <h4 data-i18n="card_bh_title">BioLink Hub Pro</h4>
+                    <p data-i18n="card_bh_desc">Create link-in-bio portals for social media.</p>
                 </div>
             </div>
-            <div class="dash-card-item" onclick="activateWorkspace('smart-signage')" style="--card-color: #0ea5e9; border: 1px solid #0ea5e925; background: linear-gradient(135deg, #0ea5e915 0%, rgba(3, 7, 18, 0.8) 100%);">
+            <div class="dash-card-item" data-studio="smart-signage" data-cat="print" onclick="activateWorkspace('smart-signage')" style="--card-color: #0ea5e9; border: 1px solid #0ea5e925; background: linear-gradient(135deg, #0ea5e915 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="smart-signage" title="Favorite" aria-label="Toggle favorite">☆</button>
                 <div class="card-item-icon">📺</div>
                 <div class="card-item-content">
-                    <h4>Smart Signage Pro</h4>
-                    <p>Design dynamic digital signage slideshows.</p>
+                    <h4 data-i18n="card_ss_title">Smart Signage Pro</h4>
+                    <p data-i18n="card_ss_desc">Design dynamic digital signage slideshows &amp; QR posters.</p>
                 </div>
             </div>
-            <div class="dash-card-item" onclick="activateWorkspace('localized-ad')" style="--card-color: #a855f7; border: 1px solid #a855f725; background: linear-gradient(135deg, #a855f715 0%, rgba(3, 7, 18, 0.8) 100%);">
+            <div class="dash-card-item" data-studio="localized-ad" data-cat="ai" onclick="activateWorkspace('localized-ad')" style="--card-color: #a855f7; border: 1px solid #a855f725; background: linear-gradient(135deg, #a855f715 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="localized-ad" title="Favorite" aria-label="Toggle favorite">☆</button>
                 <div class="card-item-icon">🎯</div>
                 <div class="card-item-content">
-                    <h4>Dynamic Contextual Studio</h4>
-                    <p>Create localized and contextual banner ads.</p>
+                    <h4 data-i18n="card_la_title">Dynamic Contextual Studio</h4>
+                    <p data-i18n="card_la_desc">Create weather &amp; time localized banner ads.</p>
                 </div>
             </div>
-            <div class="dash-card-item" onclick="activateWorkspace('spin-wheel')" style="--card-color: #f59e0b; border: 1px solid #f59e0b25; background: linear-gradient(135deg, #f59e0b15 0%, rgba(3, 7, 18, 0.8) 100%);">
+            <div class="dash-card-item" data-studio="spin-wheel" data-cat="gamify" onclick="activateWorkspace('spin-wheel')" style="--card-color: #f59e0b; border: 1px solid #f59e0b25; background: linear-gradient(135deg, #f59e0b15 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="spin-wheel" title="Favorite" aria-label="Toggle favorite">☆</button>
                 <div class="card-item-icon">🎡</div>
                 <div class="card-item-content">
-                    <h4>Spin Wheel Fortune</h4>
-                    <p>Interactive lucky spin wheels to capture leads.</p>
+                    <h4 data-i18n="card_sw_title">Spin Wheel Fortune</h4>
+                    <p data-i18n="card_sw_desc">Interactive lucky spin wheels to capture leads.</p>
                 </div>
             </div>
-            <div class="dash-card-item" onclick="activateWorkspace('infinite-zoom')" style="--card-color: #6366f1; border: 1px solid #6366f125; background: linear-gradient(135deg, #6366f115 0%, rgba(3, 7, 18, 0.8) 100%);">
+            <div class="dash-card-item" data-studio="infinite-zoom" data-cat="gamify" onclick="activateWorkspace('infinite-zoom')" style="--card-color: #6366f1; border: 1px solid #6366f125; background: linear-gradient(135deg, #6366f115 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="infinite-zoom" title="Favorite" aria-label="Toggle favorite">☆</button>
                 <div class="card-item-icon">🌀</div>
                 <div class="card-item-content">
-                    <h4>Infinite Zoom Portal</h4>
-                    <p>Generate infinite zooming canvas animations.</p>
+                    <h4 data-i18n="card_iz_title">Infinite Zoom Portal</h4>
+                    <p data-i18n="card_iz_desc">Generate infinite zooming canvas animations.</p>
                 </div>
             </div>
-            <div class="dash-card-item" onclick="activateWorkspace('gravity-sandbox')" style="--card-color: #ec4899; border: 1px solid #ec489925; background: linear-gradient(135deg, #ec489915 0%, rgba(3, 7, 18, 0.8) 100%);">
+            <div class="dash-card-item" data-studio="gravity-sandbox" data-cat="gamify" onclick="activateWorkspace('gravity-sandbox')" style="--card-color: #ec4899; border: 1px solid #ec489925; background: linear-gradient(135deg, #ec489915 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="gravity-sandbox" title="Favorite" aria-label="Toggle favorite">☆</button>
                 <div class="card-item-icon">⚛️</div>
                 <div class="card-item-content">
-                    <h4>Gravity Sandbox</h4>
-                    <p>Physics-based interactive advertising banner.</p>
+                    <h4 data-i18n="card_gs_title">Gravity Sandbox</h4>
+                    <p data-i18n="card_gs_desc">Physics-based interactive advertising banner.</p>
                 </div>
             </div>
-            <div class="dash-card-item" onclick="activateWorkspace('ar-business-card')" style="--card-color: #10b981; border: 1px solid #10b98125; background: linear-gradient(135deg, #10b98115 0%, rgba(3, 7, 18, 0.8) 100%);">
+            <div class="dash-card-item" data-studio="gravity-sandbox-pro" data-cat="gamify" onclick="activateWorkspace('gravity-sandbox-pro')" style="--card-color: #f43f5e; border: 1px solid #f43f5e25; background: linear-gradient(135deg, #f43f5e15 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="gravity-sandbox-pro" title="Favorite" aria-label="Toggle favorite">☆</button>
+                <div class="card-item-icon">🪐</div>
+                <div class="card-item-content">
+                    <h4 data-i18n="card_gsp_title">Gravity Sandbox Pro <span class="badge-new-card">MATTER.JS</span></h4>
+                    <p data-i18n="card_gsp_desc">Rigid-body Matter.js physics engine ad studio with shapes &amp; collisions.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" data-studio="ar-business-card" data-cat="social" onclick="activateWorkspace('ar-business-card')" style="--card-color: #10b981; border: 1px solid #10b98125; background: linear-gradient(135deg, #10b98115 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="ar-business-card" title="Favorite" aria-label="Toggle favorite">☆</button>
                 <div class="card-item-icon">🕶️</div>
                 <div class="card-item-content">
-                    <h4>AR Biz Card</h4>
-                    <p>WebAR business card layout with 3D elements.</p>
+                    <h4 data-i18n="card_abc_title">AR Biz Card</h4>
+                    <p data-i18n="card_abc_desc">WebAR business card layout with 3D tilt &amp; offline QR.</p>
                 </div>
             </div>
-            <div class="dash-card-item" onclick="activateWorkspace('playable-ad-builder')" style="--card-color: #d946ef; border: 1px solid #d946ef25; background: linear-gradient(135deg, #d946ef15 0%, rgba(3, 7, 18, 0.8) 100%);">
+            <div class="dash-card-item" data-studio="playable-ad-builder" data-cat="gamify" onclick="activateWorkspace('playable-ad-builder')" style="--card-color: #d946ef; border: 1px solid #d946ef25; background: linear-gradient(135deg, #d946ef15 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="playable-ad-builder" title="Favorite" aria-label="Toggle favorite">☆</button>
                 <div class="card-item-icon">🎮</div>
                 <div class="card-item-content">
-                    <h4>Playable Ad Builder</h4>
-                    <p>Build interactive mini-game playable ads.</p>
+                    <h4 data-i18n="card_pab_title">Playable Ad Builder</h4>
+                    <p data-i18n="card_pab_desc">Build interactive mini-game playable ads.</p>
                 </div>
             </div>
-            <div class="dash-card-item" onclick="activateWorkspace('kinetic-typography')" style="--card-color: #f59e0b; border: 1px solid #f59e0b25; background: linear-gradient(135deg, #f59e0b15 0%, rgba(3, 7, 18, 0.8) 100%);">
+            <div class="dash-card-item" data-studio="kinetic-typography" data-cat="gamify" onclick="activateWorkspace('kinetic-typography')" style="--card-color: #f59e0b; border: 1px solid #f59e0b25; background: linear-gradient(135deg, #f59e0b15 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="kinetic-typography" title="Favorite" aria-label="Toggle favorite">☆</button>
                 <div class="card-item-icon">✍️</div>
                 <div class="card-item-content">
-                    <h4>Kinetic Typography</h4>
-                    <p>Generate text layouts that react to motion.</p>
+                    <h4 data-i18n="card_kt_title">Kinetic Typography</h4>
+                    <p data-i18n="card_kt_desc">Generate motion text layouts with 20+ physics effects.</p>
                 </div>
             </div>
-            <div class="dash-card-item" onclick="activateWorkspace('mockup-master')" style="--card-color: #8b5cf6; border: 1px solid #8b5cf625; background: linear-gradient(135deg, #8b5cf615 0%, rgba(3, 7, 18, 0.8) 100%);">
+            <div class="dash-card-item" data-studio="mockup-master" data-cat="3d" onclick="activateWorkspace('mockup-master')" style="--card-color: #8b5cf6; border: 1px solid #8b5cf625; background: linear-gradient(135deg, #8b5cf615 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="mockup-master" title="Favorite" aria-label="Toggle favorite">☆</button>
+                <div class="card-item-icon">📱</div>
+                <div class="card-item-content">
+                    <h4 data-i18n="card_mm_title">Mockup Master Pro</h4>
+                    <p data-i18n="card_mm_desc">3D device &amp; product mockups with interactive lighting.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" data-studio="mockup-box" data-cat="3d" onclick="activateWorkspace('mockup-box')" style="--card-color: #00ff96; border: 1px solid #00ff9625; background: linear-gradient(135deg, #00ff9615 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="mockup-box" title="Favorite" aria-label="Toggle favorite">☆</button>
                 <div class="card-item-icon">📦</div>
                 <div class="card-item-content">
-                    <h4>Mockup Master Pro</h4>
-                    <p>3D product mockups with interactive settings.</p>
+                    <h4 data-i18n="card_mbs_title">3D Packaging Box Studio <span class="badge-new-card">WEBGL</span></h4>
+                    <p data-i18n="card_mbs_desc">Custom 6-face WebGL 3D packaging boxes, cylinders, glass &amp; chrome.</p>
                 </div>
             </div>
-            <div class="dash-card-item" onclick="activateWorkspace('brand-ad')" style="--card-color: #ef4444; border: 1px solid #ef444425; background: linear-gradient(135deg, #ef444415 0%, rgba(3, 7, 18, 0.8) 100%);">
+            <div class="dash-card-item" data-studio="brand-ad" data-cat="3d" onclick="activateWorkspace('brand-ad')" style="--card-color: #ef4444; border: 1px solid #ef444425; background: linear-gradient(135deg, #ef444415 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="brand-ad" title="Favorite" aria-label="Toggle favorite">☆</button>
                 <div class="card-item-icon">🏷️</div>
                 <div class="card-item-content">
-                    <h4>Brand Ad Studio V2</h4>
-                    <p>Create high-end interactive brand advertisements.</p>
+                    <h4 data-i18n="card_ba_title">Brand Ad Studio V2</h4>
+                    <p data-i18n="card_ba_desc">Create high-end 3D VFX interactive brand advertisements.</p>
                 </div>
             </div>
-            <div class="dash-card-item" onclick="activateWorkspace('showroom-3d')" style="--card-color: #a855f7; border: 1px solid #a855f725; background: linear-gradient(135deg, #a855f715 0%, rgba(3, 7, 18, 0.8) 100%);">
+            <div class="dash-card-item" data-studio="showroom-3d" data-cat="3d" onclick="activateWorkspace('showroom-3d')" style="--card-color: #a855f7; border: 1px solid #a855f725; background: linear-gradient(135deg, #a855f715 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="showroom-3d" title="Favorite" aria-label="Toggle favorite">☆</button>
                 <div class="card-item-icon">🔮</div>
                 <div class="card-item-content">
                     <h4 data-i18n="card_sr_title">3D Product Showroom</h4>
                     <p data-i18n="card_sr_desc">Create interactive 3D product banners with custom labels.</p>
                 </div>
             </div>
-            <div class="dash-card-item" onclick="activateWorkspace('scratch-card')" style="--card-color: #ffd700; border: 1px solid #ffd70025; background: linear-gradient(135deg, #ffd70015 0%, rgba(3, 7, 18, 0.8) 100%);">
+            <div class="dash-card-item" data-studio="scratch-card" data-cat="gamify" onclick="activateWorkspace('scratch-card')" style="--card-color: #ffd700; border: 1px solid #ffd70025; background: linear-gradient(135deg, #ffd70015 0%, rgba(3, 7, 18, 0.8) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="scratch-card" title="Favorite" aria-label="Toggle favorite">☆</button>
                 <div class="card-item-icon">🎟️</div>
                 <div class="card-item-content">
                     <h4 data-i18n="card_sc_title">Scratch Card Studio</h4>
@@ -374,7 +450,7 @@
 
                 <!-- Mobile Quick Jump to Preview Button -->
                 <button type="button" id="btn-m-jump-preview" class="btn-primary mobile-jump-btn" style="margin-top:14px; width:100%;">
-                    <span class="icon">👁️</span> <span>View Live Preview ➡️</span>
+                    <span class="icon">👁️</span> <span data-i18n="btn_m_view_preview">View Live Preview ➡️</span>
                 </button>
             </div>
         </aside>
@@ -386,7 +462,11 @@
                     <h2 data-i18n="panel_preview_title">Interactive Live Preview</h2>
                     <p data-i18n="panel_preview_subtitle">Test behaviors, transitions, and hover triggers</p>
                 </div>
-                <div class="heatmap-toggle-container">
+                <div class="heatmap-toggle-container" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="check-ab-split">
+                        <span data-i18n="toggle_ab">⚖️ A/B Split</span>
+                    </label>
                     <label class="checkbox-label">
                         <input type="checkbox" id="check-heatmap">
                         <span data-i18n="toggle_heatmap">🔥 Show Click Heatmap</span>
@@ -395,8 +475,9 @@
             </div>
 
             <div class="preview-area">
-                <div class="iframe-container">
-                    <iframe id="preview-iframe" title="AD-GENIUS AI Live Widget Preview"></iframe>
+                <div class="iframe-container" id="core-iframe-container">
+                    <iframe id="preview-iframe" sandbox="allow-scripts allow-same-origin" title="AD-GENIUS AI Live Widget Preview"></iframe>
+                    <iframe id="preview-iframe-b" sandbox="allow-scripts allow-same-origin" title="AD-GENIUS AI Variant B Preview" style="display:none;"></iframe>
                     
                     <!-- Heatmap Canvas Overlay -->
                     <div id="heatmap-overlay" class="heatmap-overlay">
@@ -429,10 +510,10 @@
             <!-- Mobile Quick Actions Row -->
             <div class="mobile-preview-actions" style="padding: 12px 18px; display: flex; gap: 10px; background: rgba(255,255,255,0.02); border-top: 1px solid var(--glass-border);">
                 <button type="button" id="btn-m-jump-config" class="btn-secondary" style="flex:1; justify-content:center;">
-                    <span>⬅️ Edit Config</span>
+                    <span data-i18n="btn_m_edit_config">⬅️ Edit Config</span>
                 </button>
                 <button type="button" id="btn-m-jump-code" class="btn-primary" style="flex:1; justify-content:center;">
-                    <span>Get Code 💻 ➡️</span>
+                    <span data-i18n="btn_m_get_code">Get Code 💻 ➡️</span>
                 </button>
             </div>
         </main>
@@ -456,7 +537,7 @@
                         </button>
                     </div>
                     <button type="button" id="btn-m-jump-back-preview" class="btn-secondary mobile-jump-btn" style="margin-top:10px; width:100%; justify-content:center;">
-                        <span>⬅️ Live Preview</span>
+                        <span data-i18n="btn_m_back_preview">⬅️ Live Preview</span>
                     </button>
                 </div>
 
@@ -541,7 +622,7 @@
         </div>
         <div id="kinetic-typography-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
             <div id="ktp-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#020617;overflow:hidden;"></div>
-            <div id="ktp-right" class="right-panel" style="width:300px;background:#0f172a;display:y:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
+            <div id="ktp-right" class="right-panel" style="width:300px;background:#0f172a;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
         </div>
         <div id="mockup-master-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
             <div id="mm-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;">
@@ -576,12 +657,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
-    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+
+    <!-- Core Utilities & QR/Lifecycle/WCAG/i18n Engine -->
+    <script src="js/genius-core-utils.js"></script>
 
     <!-- App Router -->
     <script src="app.js"></script>
 
-    <!-- Copied Modules -->
+    <!-- Studio Modules -->
     <script src="js/pricing-table-studio.js"></script>
     <script src="js/certificate-studio-pro.js"></script>
     <script src="js/greeting-card-pro.js"></script>
@@ -604,5 +687,8 @@
     <script src="js/brand-ad-studio.js"></script>
     <script src="js/3d-showroom.js"></script>
     <script src="js/scratch-card-studio.js"></script>
+
+    <!-- Pro Suite: Search/Filters, Brand Kit, AI Director, Safe-Zones, WebM Recorder, Bundle ZIP, Vault, WCAG -->
+    <script src="js/genius-pro-suite.js"></script>
 </body>
 </html>

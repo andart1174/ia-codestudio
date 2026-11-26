@@ -54,10 +54,20 @@
             return;
         }
         
-        S.active = false;
-        if (S.animId) cancelAnimationFrame(S.animId);
+        cleanupSpinWheel();
         if (_prevRenderTab) _prevRenderTab(tab);
     };
+
+    function cleanupSpinWheel() {
+        S.active = false;
+        if (S.animId) { cancelAnimationFrame(S.animId); S.animId = null; }
+        if (typeof audioCtx !== 'undefined' && audioCtx && audioCtx.state === 'running') {
+            try { audioCtx.suspend(); } catch (e) {}
+        }
+    }
+    if (window.GeniusUtils && window.GeniusUtils.registerCleanup) {
+        window.GeniusUtils.registerCleanup('spin-wheel', cleanupSpinWheel);
+    }
 
     function buildUI() {
         var r = document.getElementById('sw-right');
@@ -67,10 +77,10 @@
             '<h2 style="margin:0 0 5px;color:#f97316;font-size:18px;">🎡 Spin Wheel Fortune</h2>' +
             '<p style="margin:0 0 20px;font-size:11px;color:#94a3b8;">Interactive Fortune Wheel Ad Studio</p>' +
             
-            '<label style="font-size:11px;color:#ffedd5;font-weight:bold;">1. Campaign Title (Titlu Reclamă):</label>' +
+            '<label style="font-size:11px;color:#ffedd5;font-weight:bold;">1. Campaign Title:</label>' +
             '<input type="text" id="sw-title" value="'+S.titleText+'" style="width:100%;margin-bottom:12px;background:#1e293b;color:#fff;border:1px solid #334155;padding:8px;border-radius:4px;font-size:12px;">' +
             
-            '<label style="font-size:11px;color:#ffedd5;font-weight:bold;margin-bottom:6px;display:block;">2. Edit Wheel Segments (Premii):</label>' +
+            '<label style="font-size:11px;color:#ffedd5;font-weight:bold;margin-bottom:6px;display:block;">2. Edit Wheel Segments:</label>' +
             '<div style="max-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;margin-bottom:15px;padding-right:5px;">';
             
         for(var i=0; i<6; i++) {

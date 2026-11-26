@@ -69,7 +69,7 @@
                 <!-- Phone Notch -->
                 <div style="position:absolute; top:0; left:50%; transform:translateX(-50%); width:150px; height:30px; background:#000; border-bottom-left-radius:20px; border-bottom-right-radius:20px; z-index:100;"></div>
                 
-                <iframe id="svc-iframe" style="width:100%; height:100%; border:none;"></iframe>
+                <iframe id="svc-iframe" sandbox="allow-scripts allow-same-origin" style="width:100%; height:100%; border:none;"></iframe>
             </div>
         `;
 
@@ -246,22 +246,28 @@ END:VCARD`;
             .fab-share:hover { transform:scale(1.1) rotate(5deg); }
         `;
 
-        var qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(state.website);
+        var esc = (window.GeniusUtils && window.GeniusUtils.escapeHtml) ? window.GeniusUtils.escapeHtml : function(v){ return String(v || ''); };
+        var qrUrl = (window.GeniusUtils && window.GeniusUtils.generateQRDataURL)
+            ? window.GeniusUtils.generateQRDataURL('https://' + String(state.website || '').replace(/^https?:\/\//i, ''), 180)
+            : '';
+        var avatarFallback = (window.GeniusUtils && window.GeniusUtils.placeholderImageSVG)
+            ? window.GeniusUtils.placeholderImageSVG(state.name, '#0ea5e9', '#6366f1')
+            : '';
 
         return `<!DOCTYPE html>
 <html lang="${state.language}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>${state.name} | Digital vCard</title>
+    <title>${esc(state.name)} | Digital vCard</title>
     <style>${css}</style>
 </head>
 <body class="theme-${state.theme}">
     <div class="card-container animate-item">
-        <img src="${state.avatar}" class="avatar" alt="Profile">
-        <h1 class="name">${state.name}</h1>
-        <div class="title">${state.title}</div>
-        <div class="company">${state.company}</div>
+        <img src="${esc(state.avatar)}" onerror="this.onerror=null;this.src='${avatarFallback}'" class="avatar" alt="Profile">
+        <h1 class="name">${esc(state.name)}</h1>
+        <div class="title">${esc(state.title)}</div>
+        <div class="company">${esc(state.company)}</div>
         
         <a href="${vcardLink}" ${forExport ? 'download="contact.vcf"' : ''} class="btn-save animate-item delay-1">
             ${t.save}
@@ -334,7 +340,11 @@ END:VCARD`;
                     url: window.location.href
                 }).catch(console.error);
             } else {
-                alert('Web Share API not supported in this browser. You can copy the URL instead.');
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(window.location.href).catch(function(){});
+                }
+                var btn = document.querySelector('.fab-share');
+                if (btn) { var old = btn.textContent; btn.textContent = '✓'; setTimeout(function(){ btn.textContent = old; }, 1800); }
             }
         }
     </script>
@@ -349,7 +359,13 @@ END:VCARD`;
     }
 
     function exportHTML() {
-        var blob = new Blob([generateSiteHTML(true)], {type: 'text/html'});
-        var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'vcard.html'; a.click();
+        var blob = new Blob([generateSiteHTML(true)], {type: 'text/html;charset=utf-8'});
+        if (window.GeniusUtils && window.GeniusUtils.safeDownloadBlob) {
+            window.GeniusUtils.safeDownloadBlob(blob, 'vcard.html');
+        } else {
+            var u = URL.createObjectURL(blob);
+            var a = document.createElement('a'); a.href = u; a.download = 'vcard.html'; a.click();
+            setTimeout(function() { URL.revokeObjectURL(u); }, 4000);
+        }
     }
 })();

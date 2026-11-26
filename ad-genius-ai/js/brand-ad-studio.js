@@ -68,12 +68,26 @@
             return;
         }
         
-        S.active = false;
-        if (S.animId) cancelAnimationFrame(S.animId);
+        cleanupBrandAd();
         var ws = document.getElementById('brand-ad-workspace');
         if (ws) ws.style.display = 'none';
         if (_prevRenderTab) _prevRenderTab(tab);
     };
+
+    function cleanupBrandAd() {
+        S.active = false;
+        if (S.animId) { cancelAnimationFrame(S.animId); S.animId = null; }
+        if (window.GeniusUtils && window.GeniusUtils.safeThreeDispose) {
+            window.GeniusUtils.safeThreeDispose(S.renderer, S.scene);
+            window.GeniusUtils.safeThreeDispose(null, S.orthoScene);
+        } else if (S.renderer) {
+            try { S.renderer.dispose(); } catch (e) {}
+        }
+        S.renderer = null; S.scene = null; S.orthoScene = null; S.mesh = null;
+    }
+    if (window.GeniusUtils && window.GeniusUtils.registerCleanup) {
+        window.GeniusUtils.registerCleanup('brand-ad', cleanupBrandAd);
+    }
 
     function buildUI() {
         var fr = window.lang === 'fr';
@@ -222,17 +236,20 @@
     function initThree() {
         if (!window.THREE) { console.error('Three.js not loaded!'); return; }
         if (S.active) return;
+        cleanupBrandAd();
         S.active = true;
 
         var ct = document.getElementById('ba-center');
         if (!ct) return;
         ct.innerHTML = '';
         ct.style.position = 'relative';
+        var cw = Math.max(1, ct.clientWidth || 640);
+        var ch = Math.max(1, ct.clientHeight || 480);
         
         S.mouseX = 0; S.mouseY = 0;
         ct.onmousemove = function(e) {
-            S.mouseX = (e.clientX - ct.clientWidth/2) * 0.005;
-            S.mouseY = (e.clientY - ct.clientHeight/2) * 0.005;
+            S.mouseX = (e.clientX - Math.max(1, ct.clientWidth)/2) * 0.005;
+            S.mouseY = (e.clientY - Math.max(1, ct.clientHeight)/2) * 0.005;
         };
 
         // Main Scene
@@ -240,21 +257,21 @@
         S.scene.background = new THREE.Color(S.bgColor);
         S.scene.fog = new THREE.Fog(S.bgColor, 10, 30);
 
-        S.camera = new THREE.PerspectiveCamera(45, ct.clientWidth / ct.clientHeight, 0.1, 100);
+        S.camera = new THREE.PerspectiveCamera(45, cw / ch, 0.1, 100);
         S.camera.position.z = 15;
 
         // Ortho Scene (Text)
         S.orthoScene = new THREE.Scene();
-        S.orthoCamera = new THREE.OrthographicCamera(ct.clientWidth / -2, ct.clientWidth / 2, ct.clientHeight / 2, ct.clientHeight / -2, 1, 10);
+        S.orthoCamera = new THREE.OrthographicCamera(cw / -2, cw / 2, ch / 2, ch / -2, 1, 10);
         S.orthoCamera.position.z = 5;
 
         S.textCanvas = document.createElement('canvas');
-        S.textCanvas.width = ct.clientWidth;
-        S.textCanvas.height = ct.clientHeight;
+        S.textCanvas.width = cw;
+        S.textCanvas.height = ch;
         S.textTex = new THREE.CanvasTexture(S.textCanvas);
         S.textTex.minFilter = THREE.LinearFilter;
         
-        var planeGeo = new THREE.PlaneGeometry(ct.clientWidth, ct.clientHeight);
+        var planeGeo = new THREE.PlaneGeometry(cw, ch);
         var planeMat = new THREE.MeshBasicMaterial({ map: S.textTex, transparent: true });
         S.textMesh = new THREE.Mesh(planeGeo, planeMat);
         S.textMesh.position.set(0, 0, 0);
@@ -262,7 +279,7 @@
 
         // Renderer
         S.renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, alpha: false });
-        S.renderer.setSize(ct.clientWidth, ct.clientHeight);
+        S.renderer.setSize(cw, ch);
         S.renderer.autoClear = false;
         S.renderer.shadowMap.enabled = true;
         S.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -578,7 +595,7 @@
         else if (S.shape === 'pyramid') geo = new THREE.ConeGeometry(2.5, 4, 4);
         else if (S.shape === 'diamond') geo = new THREE.OctahedronGeometry(2);
         else if (S.shape === 'infinity') geo = new THREE.TorusKnotGeometry(1.5, 0.5, 100, 16);
-        else if (S.shape === 'capsule') geo = new THREE.CapsuleGeometry(1.2, 2.5, 4, 16);
+        else if (S.shape === 'capsule') geo = typeof THREE.CapsuleGeometry === 'function' ? new THREE.CapsuleGeometry(1.2, 2.5, 4, 16) : new THREE.CylinderGeometry(1.2, 1.2, 4.2, 24);
         else geo = new THREE.PlaneGeometry(5, 8);
 
         var matOpts = {};
@@ -688,10 +705,15 @@
         var ch = [];
         rec.ondataavailable = function(e) { if(e.data.size > 0) ch.push(e.data); };
         rec.onstop = function() {
-            var url = URL.createObjectURL(new Blob(ch, { type: 'video/webm' }));
-            var a = document.createElement('a');
-            a.href = url; a.download = 'brand-ad-v2.webm'; a.click();
-            URL.revokeObjectURL(url);
+            var blob = new Blob(ch, { type: 'video/webm' });
+            if (window.GeniusUtils && window.GeniusUtils.safeDownloadBlob) {
+                window.GeniusUtils.safeDownloadBlob(blob, 'brand-ad-v2.webm');
+            } else {
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url; a.download = 'brand-ad-v2.webm'; a.click();
+                setTimeout(function() { URL.revokeObjectURL(url); }, 4000);
+            }
             setSt(fr ? '✓ Vidéo exportée!' : '✓ Video exported!', '#4ade80');
         };
         rec.start();
@@ -724,7 +746,7 @@
         else if(S.shape==='pyramid') geoCode='new THREE.ConeGeometry(2.5,4,4)';
         else if(S.shape==='diamond') geoCode='new THREE.OctahedronGeometry(2)';
         else if(S.shape==='infinity') geoCode='new THREE.TorusKnotGeometry(1.5,0.5,100,16)';
-        else if(S.shape==='capsule') geoCode='new THREE.CapsuleGeometry(1.2,2.5,4,16)';
+        else if(S.shape==='capsule') geoCode='(typeof THREE.CapsuleGeometry==="function"?new THREE.CapsuleGeometry(1.2,2.5,4,16):new THREE.CylinderGeometry(1.2,1.2,4.2,24))';
         else                        geoCode='new THREE.PlaneGeometry(5,8)';
         
         matClass='THREE.MeshStandardMaterial';

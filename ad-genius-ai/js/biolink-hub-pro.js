@@ -43,7 +43,7 @@
 
         c.innerHTML = `
             <div id="bhp-preview-wrapper" style="width:100%; height:100%; display:flex; justify-content:center; align-items:center; background:#0f172a; overflow-y:auto; padding:20px;">
-                <iframe id="bhp-iframe" style="width:100%; height:100%; border:none; transition:all 0.4s cubic-bezier(0.16, 1, 0.3, 1);"></iframe>
+                <iframe id="bhp-iframe" sandbox="allow-scripts allow-same-origin" style="width:100%; height:100%; border:none; transition:all 0.4s cubic-bezier(0.16, 1, 0.3, 1);"></iframe>
             </div>
         `;
 
@@ -297,7 +297,13 @@
     }
 
     function exportHTML() {
-        var blob = new Blob([generateSiteHTML()], {type: 'text/html'});
-        var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'biolink.html'; a.click();
+        var blob = new Blob([generateSiteHTML()], {type: 'text/html;charset=utf-8'});
+        if (window.GeniusUtils && window.GeniusUtils.safeDownloadBlob) {
+            window.GeniusUtils.safeDownloadBlob(blob, 'biolink.html');
+        } else {
+            var u = URL.createObjectURL(blob);
+            var a = document.createElement('a'); a.href = u; a.download = 'biolink.html'; a.click();
+            setTimeout(function() { URL.revokeObjectURL(u); }, 4000);
+        }
     }
 })();

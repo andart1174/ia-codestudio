@@ -33,12 +33,37 @@
                     window.mbsInitialized = true;
                 }
             } else {
-                if(window.mbsRenderer) window.mbsRenderer.setSize(document.getElementById('mbs-center').clientWidth, document.getElementById('mbs-center').clientHeight);
+                if (window.mbsRenderer) {
+                    var mc = document.getElementById('mbs-center');
+                    if (mc && mc.clientWidth > 1 && mc.clientHeight > 1) {
+                        window.mbsRenderer.setSize(mc.clientWidth, mc.clientHeight);
+                    }
+                }
+                if (!currentAnimId && renderer && scene && camera) {
+                    startAnimLoop();
+                }
             }
             return;
         }
+        cleanupMockupBox();
         if (_prevRenderTab) _prevRenderTab(tab);
     };
+
+    var _mbsResizeHandler = null;
+    function cleanupMockupBox() {
+        if (currentAnimId) { cancelAnimationFrame(currentAnimId); currentAnimId = null; }
+        if (_mbsResizeHandler) { window.removeEventListener('resize', _mbsResizeHandler); _mbsResizeHandler = null; }
+        if (window.GeniusUtils && window.GeniusUtils.safeThreeDispose) {
+            window.GeniusUtils.safeThreeDispose(renderer, scene);
+        } else if (renderer) {
+            try { renderer.dispose(); } catch (e) {}
+        }
+        renderer = null; scene = null; mesh = null; window.mbsRenderer = null;
+        window.mbsInitialized = false;
+    }
+    if (window.GeniusUtils && window.GeniusUtils.registerCleanup) {
+        window.GeniusUtils.registerCleanup('mockup-box', cleanupMockupBox);
+    }
 
     var state = {
         shape: 'box', // box, cylinder, sphere, pyramid, diamond, donut
@@ -180,36 +205,10 @@
         updateBackground();
     }
 
-    function initWebGL() {
-        var container = document.getElementById('mbs-webgl-container');
-        
-        scene = new THREE.Scene();
-        
-        camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
-        camera.position.z = 12;
-
-        // alpha: true allows transparent PNG export
-        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.domElement.style.position = 'absolute';
-        renderer.domElement.style.zIndex = '10';
-        container.appendChild(renderer.domElement);
-        window.mbsRenderer = renderer;
-
-        // Lights
-        var ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-        scene.add(ambientLight);
-        var dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
-        dirLight.position.set(5, 10, 7);
-        scene.add(dirLight);
-        var fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
-        fillLight.position.set(-5, 0, -5);
-        scene.add(fillLight);
-
-        buildMesh();
-
+    function startAnimLoop() {
+        if (currentAnimId) cancelAnimationFrame(currentAnimId);
         function animate() {
+            if (!renderer || !scene || !camera) { currentAnimId = null; return; }
             currentAnimId = requestAnimationFrame(animate);
             if(mesh) {
                 // Smooth rotation interpolation
@@ -231,6 +230,43 @@
             renderer.render(scene, camera);
         }
         animate();
+    }
+
+    function initWebGL() {
+        var container = document.getElementById('mbs-webgl-container');
+        if (!container) return;
+        if (renderer && window.GeniusUtils && window.GeniusUtils.safeThreeDispose) {
+            window.GeniusUtils.safeThreeDispose(renderer, scene);
+        }
+        var cw = Math.max(1, container.clientWidth || 640);
+        var ch = Math.max(1, container.clientHeight || 480);
+        
+        scene = new THREE.Scene();
+        
+        camera = new THREE.PerspectiveCamera(45, cw / ch, 0.1, 100);
+        camera.position.z = 12;
+
+        // alpha: true allows transparent PNG export
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+        renderer.setSize(cw, ch);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        renderer.domElement.style.position = 'absolute';
+        renderer.domElement.style.zIndex = '10';
+        container.appendChild(renderer.domElement);
+        window.mbsRenderer = renderer;
+
+        // Lights
+        var ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+        var dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+        dirLight.position.set(5, 10, 7);
+        scene.add(dirLight);
+        var fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
+        fillLight.position.set(-5, 0, -5);
+        scene.add(fillLight);
+
+        buildMesh();
+        startAnimLoop();
 
         // Mouse Dragging for WebGL
         var isDown = false;
@@ -254,16 +290,29 @@
             container.style.cursor = 'grab';
         });
         
-        window.addEventListener('resize', () => {
-            if(window.activeTab !== 'mockup-box') return;
-            camera.aspect = container.clientWidth / container.clientHeight;
+        if (_mbsResizeHandler) window.removeEventListener('resize', _mbsResizeHandler);
+        _mbsResizeHandler = function() {
+            if(window.activeTab !== 'mockup-box' || !renderer || !camera || !container) return;
+            var rw = container.clientWidth, rh = container.clientHeight;
+            if (rw < 2 || rh < 2) return;
+            camera.aspect = rw / rh;
             camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
-        });
+            renderer.setSize(rw, rh);
+        };
+        window.addEventListener('resize', _mbsResizeHandler);
     }
 
     function buildMesh() {
-        if(mesh) scene.remove(mesh);
+        if(mesh) {
+            scene.remove(mesh);
+            if (mesh.geometry) mesh.geometry.dispose();
+            if (Array.isArray(mesh.material)) {
+                mesh.material.forEach(function(m){ if(m.map) m.map.dispose(); m.dispose(); });
+            } else if (mesh.material) {
+                if (mesh.material.map) mesh.material.map.dispose();
+                mesh.material.dispose();
+            }
+        }
 
         var geometry;
         if(state.shape === 'box') {
@@ -296,7 +345,7 @@
         // Helper to create material
         function getMat(texDataUrl) {
             var tex = texDataUrl ? loader.load(texDataUrl) : null;
-            if(tex) tex.colorSpace = THREE.SRGBColorSpace; // or encoding = sRGBEncoding in older ThreeJS
+            if(tex) { if(THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace; else if(THREE.sRGBEncoding) tex.encoding = THREE.sRGBEncoding; }
             
             var c = tex ? 0xffffff : state.color;
             if(state.material === 'glass') {
@@ -485,7 +534,7 @@
         var colorHex = "${state.color}";
         function getMat(base64) {
             var tex = base64 ? loader.load(base64) : null;
-            if(tex) tex.colorSpace = THREE.SRGBColorSpace;
+            if(tex) { if(THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace; else if(THREE.sRGBEncoding) tex.encoding = THREE.sRGBEncoding; }
             var c = tex ? 0xffffff : colorHex;
             
             if(matType === 'glass') return new THREE.MeshPhysicalMaterial({ map: tex, transmission: 0.9, opacity: 1, metalness: 0, roughness: 0, ior: 1.5, thickness: 0.5, color: c });
@@ -582,11 +631,16 @@
 </body>
 </html>`;
 
-        var blob = new Blob([htmlContent], { type: 'text/html' });
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement('a');
-        a.href = url;
-        a.download = 'Magic_3D_Environment.html';
-        a.click();
+        var blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        if (window.GeniusUtils && window.GeniusUtils.safeDownloadBlob) {
+            window.GeniusUtils.safeDownloadBlob(blob, 'Magic_3D_Environment.html');
+        } else {
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'Magic_3D_Environment.html';
+            a.click();
+            setTimeout(function() { URL.revokeObjectURL(url); }, 4000);
+        }
     }
 })();

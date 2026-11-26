@@ -227,7 +227,7 @@
             renderPreview();
         });
         document.getElementById('dbs-del-page').addEventListener('click', () => {
-            if(state.pages.length <= 1) return alert("You must have at least one page.");
+            if(state.pages.length <= 1) { if (window.GeniusUtils && window.GeniusUtils.showToast) window.GeniusUtils.showToast(window.lang === 'fr' ? "Vous devez conserver au moins une page." : "You must have at least one page.", 'warn'); return; }
             state.pages.splice(state.currentPageIndex, 1);
             if(state.currentPageIndex >= state.pages.length) state.currentPageIndex = state.pages.length - 1;
             state.selectedItemId = null;
@@ -343,8 +343,12 @@
         document.getElementById('dbs-btn-zip').addEventListener('click', exportZIP);
 
         document.getElementById('dbs-btn-magic').addEventListener('click', () => {
+            var fr = window.lang === 'fr';
             var fullText = document.getElementById('dbs-magic-text').value.trim();
-            if(!fullText) return alert('Please paste some text first!');
+            if(!fullText) {
+                if (window.GeniusUtils && window.GeniusUtils.showToast) window.GeniusUtils.showToast(fr ? 'Veuillez d\'abord coller du texte !' : 'Please paste some text first!', 'warn');
+                return;
+            }
             
             // Characters per page (approx 1200 chars for a 450x650 page with size 16)
             var charsPerPage = 1200;
@@ -362,7 +366,7 @@
             }
             if(currentPageText.trim().length > 0) pagesNeeded.push(currentPageText);
 
-            if(confirm(`This will generate ${pagesNeeded.length} new pages automatically. Continue?`)) {
+            var doGenerate = () => {
                 pagesNeeded.forEach((textChunk, idx) => {
                     var newPage = {
                         id: generateId(),
@@ -377,7 +381,15 @@
                 state.currentPageIndex = state.pages.length - pagesNeeded.length; // Jump to first generated page
                 document.getElementById('dbs-magic-text').value = '';
                 renderPreview();
-                alert(`Success! Generated ${pagesNeeded.length} pages.`);
+                if (window.GeniusUtils && window.GeniusUtils.showToast) {
+                    window.GeniusUtils.showToast(fr ? `Succès ! ${pagesNeeded.length} pages générées.` : `Success! Generated ${pagesNeeded.length} pages.`, 'success');
+                }
+            };
+            var confirmMsg = fr ? `Cela va générer automatiquement ${pagesNeeded.length} nouvelles pages. Continuer ?` : `This will generate ${pagesNeeded.length} new pages automatically. Continue?`;
+            if (window.GeniusUtils && window.GeniusUtils.showConfirm) {
+                window.GeniusUtils.showConfirm(confirmMsg, doGenerate);
+            } else {
+                doGenerate();
             }
         });
     }
@@ -518,7 +530,8 @@
             if(state.coverSettings.barcode) {
                 let d = document.createElement('div');
                 d.style.cssText = "position:absolute;right:20px;bottom:20px;background:#fff;padding:5px;z-index:92;pointer-events:none;";
-                d.innerHTML = `<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/UPC-A-036000291452.svg/1200px-UPC-A-036000291452.svg.png" style="height:35px;width:auto;display:block;">`;
+                let bcUri = (window.GeniusUtils && window.GeniusUtils.barcodeSVGDataURI) ? window.GeniusUtils.barcodeSVGDataURI('0 36000 29145 2') : '';
+                d.innerHTML = `<img src="${bcUri}" alt="Barcode" style="height:35px;width:auto;display:block;">`;
                 canvas.appendChild(d);
             }
         }
@@ -588,7 +601,8 @@
                     itemsHTML += `<div style="position:absolute;left:20px;top:20px;right:20px;bottom:20px;border:4px double #d4af37;pointer-events:none;z-index:91;"></div>`;
                 }
                 if(state.coverSettings.barcode) {
-                    itemsHTML += `<div style="position:absolute;right:20px;bottom:20px;background:#fff;padding:5px;z-index:92;pointer-events:none;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/UPC-A-036000291452.svg/1200px-UPC-A-036000291452.svg.png" style="height:35px;width:auto;display:block;"></div>`;
+                    let bcUri2 = (window.GeniusUtils && window.GeniusUtils.barcodeSVGDataURI) ? window.GeniusUtils.barcodeSVGDataURI('0 36000 29145 2') : '';
+                    itemsHTML += `<div style="position:absolute;right:20px;bottom:20px;background:#fff;padding:5px;z-index:92;pointer-events:none;"><img src="${bcUri2}" alt="Barcode" style="height:35px;width:auto;display:block;"></div>`;
                 }
             }
 
@@ -756,8 +770,14 @@
 </body>
 </html>`;
 
-        var blob = new Blob([htmlContent], {type: 'text/html'});
-        var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'digital-book-3d.html'; a.click();
+        var blob = new Blob([htmlContent], {type: 'text/html;charset=utf-8'});
+        if (window.GeniusUtils && window.GeniusUtils.safeDownloadBlob) {
+            window.GeniusUtils.safeDownloadBlob(blob, 'digital-book-3d.html');
+        } else {
+            var u = URL.createObjectURL(blob);
+            var a = document.createElement('a'); a.href = u; a.download = 'digital-book-3d.html'; a.click();
+            setTimeout(function() { URL.revokeObjectURL(u); }, 4000);
+        }
     }
 
     async function exportZIP() {
@@ -792,10 +812,16 @@
         renderPreview();
 
         zip.generateAsync({type:"blob"}).then(function(content) {
-            var a = document.createElement('a');
-            a.href = URL.createObjectURL(content);
-            a.download = 'digital-book-pages.zip';
-            a.click();
+            if (window.GeniusUtils && window.GeniusUtils.safeDownloadBlob) {
+                window.GeniusUtils.safeDownloadBlob(content, 'digital-book-pages.zip');
+            } else {
+                var u = URL.createObjectURL(content);
+                var a = document.createElement('a');
+                a.href = u;
+                a.download = 'digital-book-pages.zip';
+                a.click();
+                setTimeout(function() { URL.revokeObjectURL(u); }, 4000);
+            }
             btn.innerText = oldText;
             btn.disabled = false;
         });

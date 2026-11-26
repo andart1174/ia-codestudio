@@ -71,10 +71,17 @@
             if (!S.active) initCanvas();
             return;
         }
-        S.active = false;
-        if (S.animId) cancelAnimationFrame(S.animId);
+        cleanupKinetic();
         if (_prevRenderTab) _prevRenderTab(tab);
     };
+
+    function cleanupKinetic() {
+        S.active = false;
+        if (S.animId) { cancelAnimationFrame(S.animId); S.animId = null; }
+    }
+    if (window.GeniusUtils && window.GeniusUtils.registerCleanup) {
+        window.GeniusUtils.registerCleanup('kinetic-typography', cleanupKinetic);
+    }
 
     /* ── Google Fonts ── */
     function loadGoogleFonts() {
@@ -82,7 +89,7 @@
         var link = document.createElement('link');
         link.id = 'kt-gfonts';
         link.rel = 'stylesheet';
-        link.href = 'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@900&family=Oswald:wght@700&family=Rajdhani:wght@700&family=Anton&family=Righteous&family=Bungee&family=Russo+One&family=Press+Start+2P&family=Orbitron:wght@900&family=Exo+2:wght@900&family=Poppins:wght@900&family=Inter:wght@900&display=swap';
+        link.href = 'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Black+Han+Sans&family=Montserrat:wght@900&family=Oswald:wght@700&family=Rajdhani:wght@700&family=Anton&family=Righteous&family=Bungee&family=Russo+One&family=Press+Start+2P&family=Orbitron:wght@900&family=Exo+2:wght@900&family=Poppins:wght@900&family=Inter:wght@900&display=swap';
         document.head.appendChild(link);
     }
 
@@ -183,20 +190,39 @@
 
         document.getElementById('kt-exp-vid').onclick = function () {
             var st = document.getElementById('kt-st');
-            st.textContent = '⏺ Recording 5s...';
+            if (st) st.textContent = '⏺ Recording 5s...';
+            buildLetters();
+            if (window.GeniusUtils && window.GeniusUtils.recordCanvasWebM) {
+                window.GeniusUtils.recordCanvasWebM(S.canvas, 5000, 'kinetic-typography.webm', function (sec) {
+                    if (st) st.textContent = '⏺ ' + sec + 's...';
+                }).then(function () {
+                    if (st) {
+                        st.textContent = '✅ Video exported!';
+                        setTimeout(function () { st.textContent = '● Ready'; }, 2500);
+                    }
+                }).catch(function () {
+                    if (st) st.textContent = '● Ready';
+                });
+                return;
+            }
             var stream = S.canvas.captureStream(30);
-            var rec = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
+            var mime = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'].find(function (m) { return MediaRecorder.isTypeSupported(m); }) || '';
+            var rec = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
             var chunks = [];
             rec.ondataavailable = function (e) { if (e.data.size > 0) chunks.push(e.data); };
             rec.onstop = function () {
+                var blob = new Blob(chunks, { type: mime || 'video/webm' });
+                var url = URL.createObjectURL(blob);
                 var a = document.createElement('a');
-                a.href = URL.createObjectURL(new Blob(chunks, { type: 'video/webm' }));
+                a.href = url;
                 a.download = 'kinetic-typography.webm';
                 a.click();
-                st.textContent = '✅ Video exported!';
-                setTimeout(function () { st.textContent = '● Ready'; }, 2500);
+                setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+                if (st) {
+                    st.textContent = '✅ Video exported!';
+                    setTimeout(function () { st.textContent = '● Ready'; }, 2500);
+                }
             };
-            buildLetters();
             rec.start();
             setTimeout(function () { rec.stop(); }, 5000);
         };
@@ -677,37 +703,39 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Kinetic Typography Ad</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@900&family=Oswald:wght@700&family=Anton&family=Righteous&family=Bungee&family=Russo+One&family=Orbitron:wght@900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Black+Han+Sans&family=Montserrat:wght@900&family=Oswald:wght@700&family=Anton&family=Righteous&family=Bungee&family=Russo+One&family=Orbitron:wght@900&display=swap">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:${S.bgColor};overflow:hidden;display:flex;align-items:center;justify-content:center;height:100vh;}
-canvas{max-width:100vmin;max-height:100vmin;}
+body{background:${S.bgColor};overflow:hidden;display:flex;align-items:center;justify-content:center;width:100vw;height:100vh;}
+canvas{width:100vw;height:100vh;display:block;}
 </style>
 </head>
 <body>
 <script>
 (function(){
-var W=Math.min(window.innerWidth,window.innerHeight);
+var W=Math.max(300,window.innerWidth), H=Math.max(200,window.innerHeight);
 var cvs=document.createElement('canvas');
-cvs.width=W;cvs.height=W;
+cvs.width=W;cvs.height=H;
 document.body.appendChild(cvs);
 var ctx=cvs.getContext('2d');
 var TEXT=${JSON.stringify(S.text)};
 var FONT=${JSON.stringify(S.font)};
-var FS=${S.fontSize};
+var FS=Math.max(20,Math.round(${S.fontSize}*(Math.min(W,H)/720)));
 var TC=${JSON.stringify(S.textColor)};
 var BC=${JSON.stringify(S.bgColor)};
 var AC=${JSON.stringify(S.accentColor)};
 var EFF=${JSON.stringify(S.effect)};
-var t=0, mx=W/2, my=W/2;
+var t=0, mx=W/2, my=H/2;
 window.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
+window.addEventListener('resize',function(){W=Math.max(300,window.innerWidth);H=Math.max(200,window.innerHeight);cvs.width=W;cvs.height=H;FS=Math.max(20,Math.round(${S.fontSize}*(Math.min(W,H)/720)));letters=buildLetters();});
 
 function buildLetters(){
     ctx.font='bold '+FS+'px "'+FONT+'", Impact, sans-serif';
     var chars=TEXT.split('');
     var widths=chars.map(function(c){return ctx.measureText(c).width;});
     var tw=widths.reduce(function(a,b){return a+b;},0);
-    var sx=(W-tw)/2, by=W/2+FS*0.35;
+    if(tw>W*0.9){FS=Math.max(16,Math.floor(FS*(W*0.9/tw)));ctx.font='bold '+FS+'px "'+FONT+'", Impact, sans-serif';widths=chars.map(function(c){return ctx.measureText(c).width;});tw=widths.reduce(function(a,b){return a+b;},0);}
+    var sx=(W-tw)/2, by=H/2+FS*0.35;
     return chars.map(function(ch,i){
         var tx=sx; for(var j=0;j<i;j++) tx+=widths[j]; tx+=widths[i]/2;
         return {ch:ch,targetX:tx,targetY:by,x:EFF==='cascade'?tx:EFF==='zoom'?W/2:tx,
@@ -763,11 +791,17 @@ frame();
 </body>
 </html>`;
 
-        var blob = new Blob([html], { type: 'text/html' });
-        var a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'kinetic-typography-ad.html';
-        a.click();
+        var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        if (window.GeniusUtils && window.GeniusUtils.safeDownloadBlob) {
+            window.GeniusUtils.safeDownloadBlob(blob, 'kinetic-typography-ad.html');
+        } else {
+            var u = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = u;
+            a.download = 'kinetic-typography-ad.html';
+            a.click();
+            setTimeout(function () { URL.revokeObjectURL(u); }, 4000);
+        }
         if (st) {
             st.textContent = '✅ Exported!';
             setTimeout(function () { st.textContent = '● Ready'; }, 2500);
