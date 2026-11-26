@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IA CODEPLAY — Text to Glassmorphic Card</title>
+  <title>Glassmorphic Card Studio Pro — 3D Tilt &amp; WCAG Contrast Generator</title>
+  <meta name="description" content="Générez des cartes UI Glassmorphism avec 5 presets, effet 3D Hover Tilt, lien CTA sécurisé, contrôle du flou et audit de contraste WCAG 2.1.">
+  <link rel="canonical" href="https://ia-codestudio.com/free-tools/converters/text-to-html/index.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
-  
   <link rel="stylesheet" href="../../style.css">
   <link rel="stylesheet" href="../converters-style.css">
   <link rel="stylesheet" href="text-to-html.css">
@@ -15,8 +16,8 @@
 <body class="cyber-bg converter-body">
   <header class="cyber-header">
     <div class="header-logo">
-      <span class="logo-icon">🔮</span>
-      <h1 class="logo-text">TEXT TO <span class="accent-text">GLASS</span></h1>
+      <span class="logo-icon">✨</span>
+      <h1 class="logo-text">GLASS <span class="accent-text">CARD STUDIO</span></h1>
     </div>
     <div class="header-controls">
       <div class="lang-switcher">
@@ -24,29 +25,43 @@
         <button id="btn-lang-en" class="lang-btn">EN</button>
       </div>
       <a href="../../index.html" class="back-link">
-        <span class="back-icon">←</span> <span data-i18n="back_dashboard">Tableau de bord</span>
+        <span class="back-icon">←</span> <span data-i18n="back_dashboard">Free Tools Hub</span>
       </a>
     </div>
   </header>
 
   <div class="converter-layout">
-    <!-- Left: Inputs -->
+    <!-- Input Panel -->
     <div class="input-panel">
-      <h2 data-i18n="t2g_title" class="panel-title">Convertisseur Text vers Card Glassmorphism</h2>
-      
+      <h2 data-i18n="t2g_title" class="panel-title">Studio Carte Glassmorphism Pro</h2>
+
+      <div class="preset-pill-bar" id="t2g-presets">
+        <button type="button" class="preset-chip active" data-preset="cyber">⚡ Cyber Cyan</button>
+        <button type="button" class="preset-chip" data-preset="apple">🍏 Frosted Apple</button>
+        <button type="button" class="preset-chip" data-preset="sunset">🌅 Sunset Neon</button>
+        <button type="button" class="preset-chip" data-preset="emerald">🌿 Emerald Aurora</button>
+        <button type="button" class="preset-chip" data-preset="gold">🏆 Midnight Gold</button>
+      </div>
+
       <div class="form-group">
         <label for="inp-title" data-i18n="t2g_label_title">Titre de la carte</label>
-        <input type="text" id="inp-title" class="form-input" data-i18n="t2g_preview_card_title" value="Mon Beau Projet 3D">
+        <input type="text" id="inp-title" class="form-input" value="Mon Beau Projet 3D">
       </div>
 
       <div class="form-group">
         <label for="inp-desc" data-i18n="t2g_label_desc">Description</label>
-        <textarea id="inp-desc" class="form-input form-textarea" data-i18n="t2g_preview_card_desc">Créez de superbes interfaces en verre dépoli avec des reflets lumineux colorés.</textarea>
+        <textarea id="inp-desc" class="form-input" rows="3">Créez de superbes interfaces en verre dépoli avec des reflets lumineux colorés.</textarea>
       </div>
 
-      <div class="form-group">
-        <label for="inp-btn" data-i18n="t2g_label_btn">Texte du bouton</label>
-        <input type="text" id="inp-btn" class="form-input" data-i18n="t2g_preview_card_btn" value="Découvrir →">
+      <div class="form-row">
+        <div class="form-group half-width">
+          <label for="inp-btn" data-i18n="t2g_label_btn">Texte du bouton</label>
+          <input type="text" id="inp-btn" class="form-input" value="Découvrir →">
+        </div>
+        <div class="form-group half-width">
+          <label for="inp-url" data-i18n="t2g_label_url">Lien du bouton (URL)</label>
+          <input type="url" id="inp-url" class="form-input" value="https://ia-codestudio.com" placeholder="https://...">
+        </div>
       </div>
 
       <div class="form-row">
@@ -57,38 +72,57 @@
         <div class="form-group half-width">
           <label for="inp-blur" data-i18n="t2g_label_blur">Niveau de flou (Blur)</label>
           <div class="slider-container">
-            <input type="range" id="inp-blur" min="4" max="30" value="12">
-            <span id="blur-val">12px</span>
+            <input type="range" id="inp-blur" min="0" max="32" value="16">
+            <span id="val-blur">16px</span>
           </div>
+        </div>
+      </div>
+
+      <div class="form-row" style="align-items:center;">
+        <div class="form-group half-width">
+          <label for="inp-radius" data-i18n="t2g_label_radius">Rayon de bordure</label>
+          <div class="slider-container">
+            <input type="range" id="inp-radius" min="0" max="40" value="24">
+            <span id="val-radius">24px</span>
+          </div>
+        </div>
+        <div class="form-group half-width" style="padding-top:16px;">
+          <label class="checkbox-item">
+            <input type="checkbox" id="chk-tilt" checked>
+            <span data-i18n="t2g_label_tilt">Activer l'effet 3D Tilt au survol</span>
+          </label>
         </div>
       </div>
     </div>
 
-    <!-- Right: Outputs -->
+    <!-- Output Panel -->
     <div class="output-panel">
-      <h2 data-i18n="preview_panel" class="panel-title">Prévisualisation en direct</h2>
-      
-      <div class="visual-preview-box text-to-html-box">
-        <div id="preview-container-box">
-          <!-- Glassmorphic card rendered here dynamically -->
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <h2 data-i18n="preview_panel" class="panel-title" style="border:none;padding:0;margin:0;">Prévisualisation en direct</h2>
+        <div class="stats-pill-row">
+          <span class="stat-pill good" id="t2g-wcag-badge">♿ 13.8:1 ✅ AAA</span>
         </div>
       </div>
 
+      <div class="visual-preview-box text-to-html-box" style="height: 310px;">
+        <div id="preview-container-box"></div>
+      </div>
+
       <div class="watermark-container">
-        <label class="watermark-toggle-label">
+        <label class="checkbox-item">
           <input type="checkbox" id="chk-watermark" checked>
           <span data-i18n="badge_label">Inclure le badge "Powered by IA Code Studio"</span>
         </label>
       </div>
 
       <h2 data-i18n="export_title" class="panel-title">Code à intégrer</h2>
-      <div class="code-output-area">
+      <div class="code-output-area" style="height: 190px;">
         <textarea id="output-code" readonly></textarea>
         <div class="code-actions-row">
-          <button id="btn-copy-code" class="action-btn cyan-btn">
+          <button type="button" id="btn-copy-code" class="action-btn cyan-btn">
             <span>📋</span> <span data-i18n="copy_code">Copier le code</span>
           </button>
-          <button id="btn-download-html" class="action-btn">
+          <button type="button" id="btn-download-html" class="action-btn">
             <span>📥</span> <span data-i18n="download_html">Télécharger HTML</span>
           </button>
         </div>
@@ -96,8 +130,29 @@
     </div>
   </div>
 
+  <!-- Bilingual EN/FR SEO FAQ -->
+  <div class="seo-faq-section">
+    <h3 class="faq-section-title" data-fr="FAQ — Studio Carte Glassmorphism" data-en="FAQ — Glassmorphism Card Studio">FAQ — Studio Carte Glassmorphism</h3>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <div class="faq-question" data-fr="Comment fonctionne l'audit de contraste WCAG 2.1 ?" data-en="How does the WCAG 2.1 contrast audit work?">Comment fonctionne l'audit de contraste WCAG 2.1 ?</div>
+        <div class="faq-answer" data-fr="Le studio choisit automatiquement la couleur de texte optimale (noir profond ou blanc pur) sur le bouton CTA en fonction de la couleur Glow choisie et calcule le ratio de contraste exact (AA / AAA)." data-en="The studio automatically picks the highest-contrast text color (deep black or pure white) for your CTA button based on the selected glow accent and computes the exact WCAG 2.1 ratio (AA / AAA).">Le studio choisit automatiquement le texte le plus lisible sur le bouton CTA et affiche le ratio WCAG 2.1 exact.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" data-fr="Le code HTML généré fonctionne-t-il sans librairie externe ?" data-en="Does the generated HTML work with zero external dependencies?">Le code HTML généré fonctionne-t-il sans librairie externe ?</div>
+        <div class="faq-answer" data-fr="Oui ! Tout le CSS (backdrop-filter, bordures, ombres) et l'effet optionnel 3D Tilt sont autonomes, sécurisés anti-XSS et prêts à être collés dans n'importe quel site web." data-en="Yes! All CSS (backdrop-filter, borders, shadows) and the optional 3D Hover Tilt script are standalone, XSS-safe, and ready to drop into any webpage.">Oui ! Tout le CSS et le script 3D Tilt optionnel sont autonomes et prêts à coller dans n'importe quelle page web.</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/hub-utils.js"></script>
   <script src="../../js/i18n.js"></script>
   <script src="../../js/main.js"></script>
   <script src="text-to-html.js"></script>
+  <script>
+    document.querySelectorAll('.faq-question').forEach(item => {
+      item.addEventListener('click', () => item.parentElement.classList.toggle('active'));
+    });
+  </script>
 </body>
 </html>

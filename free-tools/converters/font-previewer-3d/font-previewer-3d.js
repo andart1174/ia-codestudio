@@ -1,323 +1,433 @@
-// 3D Google Fonts Previewer Script
+// 3D WebGL PBR Text Maker Pro (v2.0) — VRAM-safe, JSON-safe export & Transparent PNG
 
-const watermarkCode = `
-  <!-- IA Code Studio Embed Watermark (Remove by upgrading to Premium) -->
-  <div id="ia-code-watermark" style="position:fixed;bottom:15px;right:15px;z-index:999999;background:rgba(15,17,26,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(0,240,255,0.25);border-radius:30px;padding:8px 16px;box-shadow:0 4px 15px rgba(0,240,255,0.15);font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;cursor:pointer;transition:all 0.3s ease;user-select:none;" onclick="window.open('https://ia-codestudio.com','_blank')">
-    <span style="color:#00f0ff;animation:pulse-glow 1.5s infinite alternate;">⚡</span>
-    <span style="color:#fff;letter-spacing:0.5px;">3D Widget by <span style="background:linear-gradient(135deg,#00f0ff,#ff007f);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">IA Code Studio</span></span>
-  </div>
-  <style>
-    @keyframes pulse-glow {
-      0% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(0,240,255,0.4)); }
-      100% { transform: scale(1.1); filter: drop-shadow(0 0 8px rgba(0,240,255,0.8)); }
-    }
-    #ia-code-watermark:hover {
-      transform: translateY(-2px);
-      border-color: #00f0ff;
-      box-shadow: 0 6px 20px rgba(0,240,255,0.3);
-    }
-  </style>
-`;
-
-// Font URL map (using jsdelivr CDN for perfect CORS access)
-const fontUrls = {
-  helvetiker: 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/fonts/helvetiker_regular.typeface.json',
-  gentilis: 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/fonts/gentilis_regular.typeface.json',
-  optimer: 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/fonts/optimer_regular.typeface.json'
+const FONT_URLS = {
+  helvetiker_bold: 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/fonts/helvetiker_bold.typeface.json',
+  optimer_bold: 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/fonts/optimer_bold.typeface.json',
+  gentilis_bold: 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/fonts/gentilis_bold.typeface.json',
+  droid_sans_bold: 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/fonts/droid/droid_sans_bold.typeface.json',
+  droid_serif_bold: 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/fonts/droid/droid_serif_bold.typeface.json'
 };
 
-const fontCache = {};
-let scene, camera, renderer, controls, textMesh;
-let activeFontName = 'helvetiker';
-const container = document.getElementById('preview-container-box');
+function build3DExportHtml(opts) {
+  const safeText = JSON.stringify(String(opts.text || 'IA CODE 3D')).replace(/</g, '\\u003c');
+  const fontUrl = FONT_URLS[opts.fontKey] || FONT_URLS.helvetiker_bold;
+  const depth = Number(opts.depth) || 8;
+  const bevel = Number(opts.bevel) || 0;
+  const color = /^#[0-9a-f]{6}$/i.test(opts.color || '') ? opts.color : '#00f0ff';
+  const glow = /^#[0-9a-f]{6}$/i.test(opts.glow || '') ? opts.glow : '#8a2be2';
+  const materialMode = opts.material || 'neon';
+  const animMode = opts.anim || 'float';
+  const watermark = opts.includeWatermark && typeof window !== 'undefined' && window.HubUtils
+    ? '\n' + window.HubUtils.getWatermarkCode()
+    : '';
 
-// Setup Three.js Scene
-function initScene() {
-  const width = container.clientWidth || 400;
-  const height = container.clientHeight || 280;
-
-  scene = new THREE.Scene();
-
-  camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-  camera.position.set(0, 0, 10);
-
-  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  renderer.setSize(width, height);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  container.appendChild(renderer.domElement);
-
-  controls = new THREE.OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.05;
-  controls.maxDistance = 25;
-  controls.minDistance = 3;
-
-  // Lights
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-  scene.add(ambientLight);
-
-  const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-  dirLight.position.set(5, 5, 10);
-  scene.add(dirLight);
-
-  const pointLight = new THREE.PointLight(0x00f0ff, 1, 30);
-  pointLight.position.set(0, 0, 2);
-  scene.add(pointLight);
-
-  // Resize handler
-  window.addEventListener('resize', () => {
-    const w = container.clientWidth || 400;
-    const h = container.clientHeight || 280;
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-    renderer.setSize(w, h);
-  });
-
-  animate();
-}
-
-function animate() {
-  requestAnimationFrame(animate);
-  
-  if (textMesh) {
-    // Slow drift rotation
-    textMesh.rotation.y = Math.sin(Date.now() * 0.0005) * 0.25;
-  }
-
-  controls.update();
-  renderer.render(scene, camera);
-}
-
-// Load selected Font and build 3D mesh
-function update3DText() {
-  const textStr = document.getElementById('inp-text-3d').value || 'IA';
-  const fontName = document.getElementById('inp-font-style').value;
-  const depth = parseFloat(document.getElementById('inp-depth').value) / 10;
-  const color = document.getElementById('inp-color-3d').value;
-  const bevelEnabled = document.getElementById('chk-bevel').checked;
-  const glowEnabled = document.getElementById('chk-glow').checked;
-
-  document.getElementById('depth-val').textContent = depth.toFixed(1);
-
-  // If font is cached, parse immediately
-  if (fontCache[fontName]) {
-    buildMesh(fontCache[fontName], textStr, depth, color, bevelEnabled, glowEnabled);
+  let matJs = '';
+  if (materialMode === 'chrome') {
+    matJs = `const mat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, emissive: '${glow}', emissiveIntensity: 0.14, roughness: 0.08, metalness: 0.98 });`;
+  } else if (materialMode === 'gold') {
+    matJs = `const mat = new THREE.MeshStandardMaterial({ color: 0xffd700, emissive: 0x5c3d00, emissiveIntensity: 0.25, roughness: 0.16, metalness: 0.94 });`;
+  } else if (materialMode === 'wireframe') {
+    matJs = `const mat = new THREE.MeshStandardMaterial({ color: '${color}', emissive: '${color}', emissiveIntensity: 0.9, wireframe: true });`;
   } else {
-    // Fetch typeface JSON
-    fetch(fontUrls[fontName])
-      .then(res => res.json())
-      .then(data => {
-        const loader = new THREE.FontLoader();
-        const font = loader.parse(data);
-        fontCache[fontName] = font;
-        buildMesh(font, textStr, depth, color, bevelEnabled, glowEnabled);
-      })
-      .catch(err => console.error("Failed to load typeface json: ", err));
+    matJs = `const mat = [
+      new THREE.MeshStandardMaterial({ color: '${color}', emissive: '${glow}', emissiveIntensity: 0.45, roughness: 0.25, metalness: 0.78 }),
+      new THREE.MeshStandardMaterial({ color: '${glow}', emissive: '${glow}', emissiveIntensity: 0.75, roughness: 0.15, metalness: 0.85 })
+    ];`;
   }
 
-  activeFontName = fontName;
-}
+  let animJs = 'mesh.position.y = Math.sin(t * 2) * 2.5; mesh.rotation.y = Math.sin(t) * 0.22;';
+  if (animMode === 'spin') animJs = 'mesh.rotation.y = t * 0.85;';
+  else if (animMode === 'pulse') animJs = 'const s = 1 + Math.sin(t * 3) * 0.06; mesh.scale.set(s, s, s); mesh.rotation.y = Math.sin(t * 1.2) * 0.14;';
+  else if (animMode === 'tilt') animJs = 'mesh.rotation.x = Math.sin(t * 1.3) * 0.25; mesh.rotation.y = Math.cos(t * 1.1) * 0.35;';
+  else if (animMode === 'static') animJs = '// Static frame';
 
-function buildMesh(font, text, depth, color, bevel, glow) {
-  if (textMesh) {
-    scene.remove(textMesh);
-  }
-
-  const geometry = new THREE.TextGeometry(text, {
-    font: font,
-    size: 1.2,
-    height: depth,
-    curveSegments: 8,
-    bevelEnabled: bevel,
-    bevelThickness: 0.05,
-    bevelSize: 0.03,
-    bevelOffset: 0,
-    bevelSegments: 4
-  });
-
-  // Center geometry
-  geometry.computeBoundingBox();
-  const centerOffset = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
-  const centerOffsetY = -0.5 * (geometry.boundingBox.max.y - geometry.boundingBox.min.y);
-  geometry.translate(centerOffset, centerOffsetY, 0);
-
-  // Materials
-  const frontMat = new THREE.MeshStandardMaterial({
-    color: color,
-    roughness: 0.2,
-    metalness: 0.8
-  });
-
-  const sideMat = new THREE.MeshStandardMaterial({
-    color: color,
-    roughness: 0.5,
-    metalness: 0.2
-  });
-
-  // Volumetric material parameters mapping
-  if (glow) {
-    frontMat.emissive = new THREE.Color(color);
-    frontMat.emissiveIntensity = 0.55;
-  }
-
-  textMesh = new THREE.Mesh(geometry, [frontMat, sideMat]);
-  scene.add(textMesh);
-
-  // Update output textarea code block
-  generateOutputCode(text, depth, color, bevel, glow);
-}
-
-function generateOutputCode(text, depth, color, bevel, glow) {
-  const includeWatermark = document.getElementById('chk-watermark').checked || !checkIsPremium();
-  const fontUrl = fontUrls[activeFontName];
-
-  const html = `<!-- 3D Volumetric Text Widget -->
-<div id="canvas-container-3d"></div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FontLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/TextGeometry.js"></script>`;
-
-  const css = `<style>
-  * { margin: 0; padding: 0; }
-  body { background-color: #050508; overflow: hidden; height: 100vh; }
-  #canvas-container-3d { width: 100vw; height: 100vh; }
-</style>`;
-
-  const js = `<script>
-  const container = document.getElementById('canvas-container-3d');
-  const scene = new THREE.Scene();
-  
-  const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-  camera.position.set(0, 0, 8);
-  
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  container.appendChild(renderer.domElement);
-  
-  const controls = new THREE.OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.05;
-  
-  // Lights
-  scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-  const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-  dirLight.position.set(5, 5, 10);
-  scene.add(dirLight);
-  
-  let textMesh;
-  
-  // Fetch and parse typeface JSON
-  fetch('${fontUrl}')
-    .then(res => res.json())
-    .then(data => {
-      const loader = new THREE.FontLoader();
-      const font = loader.parse(data);
-      
-      const geometry = new THREE.TextGeometry('${text}', {
-        font: font,
-        size: 1.2,
-        height: ${depth},
-        curveSegments: 8,
-        bevelEnabled: ${bevel},
-        bevelThickness: 0.05,
-        bevelSize: 0.03,
-        bevelOffset: 0,
-        bevelSegments: 4
-      });
-      
-      geometry.computeBoundingBox();
-      const offset = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
-      const offsetY = -0.5 * (geometry.boundingBox.max.y - geometry.boundingBox.min.y);
-      geometry.translate(offset, offsetY, 0);
-      
-      const frontMat = new THREE.MeshStandardMaterial({
-        color: '${color}',
-        roughness: 0.2,
-        metalness: 0.8
-        ${glow ? `, emissive: '${color}', emissiveIntensity: 0.55` : ''}
-      });
-      
-      const sideMat = new THREE.MeshStandardMaterial({
-        color: '${color}',
-        roughness: 0.5,
-        metalness: 0.2
-      });
-      
-      textMesh = new THREE.Mesh(geometry, [frontMat, sideMat]);
-      scene.add(textMesh);
-    });
-    
-  function animate() {
-    requestAnimationFrame(animate);
-    if (textMesh) {
-      textMesh.rotation.y = Math.sin(Date.now() * 0.0005) * 0.25;
-    }
-    controls.update();
-    renderer.render(scene, camera);
-  }
-  animate();
-  
-  window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D WebGL Typography — IA Code Studio</title>
+  <style>
+    body { margin: 0; overflow: hidden; background: radial-gradient(circle at 50% 45%, #11162c, #050508 80%); }
+    canvas { display: block; }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"><\/script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FontLoader.js"><\/script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/TextGeometry.js"><\/script>
+</head>
+<body>
+  <div id="scene-3d" style="width:100vw;height:100vh;"></div>
+  <script>
+    const container = document.getElementById('scene-3d');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 8, 125);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-  });
-</script>`;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    container.appendChild(renderer.domElement);
 
-  const codeOutput = `${html}
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
 
-${css}
+    scene.add(new THREE.AmbientLight(0xffffff, 0.65));
+    const keyLight = new THREE.PointLight(0xffffff, 1.8, 500); keyLight.position.set(40, 60, 120); scene.add(keyLight);
+    const rimCyan = new THREE.PointLight(0x00f0ff, 2.2, 400); rimCyan.position.set(-70, 20, 60); scene.add(rimCyan);
+    const rimPurple = new THREE.PointLight(0x8a2be2, 2.0, 400); rimPurple.position.set(70, -30, 50); scene.add(rimPurple);
 
-${js}${includeWatermark ? '\n' + watermarkCode.trim() : ''}`;
+    let mesh = null;
+    new THREE.FontLoader().load('${fontUrl}', (font) => {
+      const geo = new THREE.TextGeometry(${safeText}, {
+        font: font, size: 15, height: ${depth}, curveSegments: 12,
+        bevelEnabled: ${bevel > 0}, bevelThickness: ${bevel}, bevelSize: ${(bevel * 0.5).toFixed(2)}, bevelSegments: 4
+      });
+      geo.center();
+      ${matJs}
+      mesh = new THREE.Mesh(geo, mat);
+      scene.add(mesh);
+    });
 
-  document.getElementById('output-code').value = codeOutput;
+    const clock = new THREE.Clock();
+    function animate() {
+      requestAnimationFrame(animate);
+      const t = clock.getElapsedTime();
+      if (mesh) { ${animJs} }
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  <\/script>${watermark}
+</body>
+</html>`;
+}
+
+if (typeof window !== 'undefined') {
+  window._build3DExportHtml = build3DExportHtml;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  initScene();
-  update3DText();
+  const inpText = document.getElementById('inp-text');
+  const selFont = document.getElementById('sel-font');
+  const selMaterial = document.getElementById('sel-material');
+  const selAnim = document.getElementById('sel-anim');
+  const inpDepth = document.getElementById('inp-depth');
+  const valDepth = document.getElementById('val-depth');
+  const inpBevel = document.getElementById('inp-bevel');
+  const valBevel = document.getElementById('val-bevel');
+  const inpColor = document.getElementById('inp-color');
+  const inpGlow = document.getElementById('inp-glow');
+  const chkWatermark = document.getElementById('chk-watermark');
+  const outputCode = document.getElementById('output-code');
+  const previewContainer = document.getElementById('preview-container-box');
+  const statusPill = document.getElementById('f3d-status-pill');
 
-  // Bind change/inputs
-  const inputs = ['inp-text-3d', 'inp-font-style', 'inp-depth', 'inp-color-3d', 'chk-bevel', 'chk-glow', 'chk-watermark'];
-  inputs.forEach(id => {
-    document.getElementById(id).addEventListener('input', update3DText);
-    document.getElementById(id).addEventListener('change', update3DText);
-  });
+  const btnCopyCode = document.getElementById('btn-copy-code');
+  const btnExportPng = document.getElementById('btn-export-png');
+  const btnDownloadHtml = document.getElementById('btn-download-html');
 
-  // Watch for language switches
-  window.addEventListener('langChanged', () => {
-    update3DText();
-  });
+  const fontCache = {};
+  let loadedFont = null;
+  let scene, camera, renderer, controls, textMesh, clock;
+  let animFrameId = null;
 
-  // Copy code action
-  document.getElementById('btn-copy-code').addEventListener('click', () => {
-    const code = document.getElementById('output-code').value;
-    navigator.clipboard.writeText(code).then(() => {
-      const activeLang = localStorage.getItem('hub_lang') || 'fr';
-      const msg = translations[activeLang].success_copy || 'Code copié avec succès !';
-      alert(msg);
-    }).catch(err => {
-      console.error('Failed to copy code: ', err);
+  function setStatus(text, isGood) {
+    if (!statusPill) return;
+    statusPill.textContent = text;
+    statusPill.classList.toggle('good', !!isGood);
+  }
+
+  function disposeTextMesh() {
+    if (!textMesh) return;
+    if (scene) scene.remove(textMesh);
+    if (textMesh.geometry && typeof textMesh.geometry.dispose === 'function') {
+      textMesh.geometry.dispose();
+    }
+    if (Array.isArray(textMesh.material)) {
+      textMesh.material.forEach(m => { if (m && typeof m.dispose === 'function') m.dispose(); });
+    } else if (textMesh.material && typeof textMesh.material.dispose === 'function') {
+      textMesh.material.dispose();
+    }
+    textMesh = null;
+  }
+
+  function createMaterial(mode, colorHex, glowHex) {
+    if (mode === 'chrome') {
+      return new THREE.MeshStandardMaterial({
+        color: 0xe2e8f0,
+        emissive: new THREE.Color(glowHex),
+        emissiveIntensity: 0.14,
+        roughness: 0.08,
+        metalness: 0.98
+      });
+    }
+    if (mode === 'gold') {
+      return new THREE.MeshStandardMaterial({
+        color: 0xffd700,
+        emissive: 0x5c3d00,
+        emissiveIntensity: 0.25,
+        roughness: 0.16,
+        metalness: 0.94
+      });
+    }
+    if (mode === 'wireframe') {
+      return new THREE.MeshStandardMaterial({
+        color: new THREE.Color(colorHex),
+        emissive: new THREE.Color(colorHex),
+        emissiveIntensity: 0.9,
+        wireframe: true
+      });
+    }
+    return [
+      new THREE.MeshStandardMaterial({
+        color: new THREE.Color(colorHex),
+        emissive: new THREE.Color(glowHex),
+        emissiveIntensity: 0.45,
+        roughness: 0.25,
+        metalness: 0.78
+      }),
+      new THREE.MeshStandardMaterial({
+        color: new THREE.Color(glowHex),
+        emissive: new THREE.Color(glowHex),
+        emissiveIntensity: 0.75,
+        roughness: 0.15,
+        metalness: 0.85
+      })
+    ];
+  }
+
+  function refreshExportCode() {
+    outputCode.value = build3DExportHtml({
+      text: inpText.value || 'IA CODE 3D',
+      fontKey: selFont.value,
+      material: selMaterial.value,
+      anim: selAnim.value,
+      depth: parseFloat(inpDepth.value),
+      bevel: parseFloat(inpBevel.value),
+      color: inpColor.value,
+      glow: inpGlow.value,
+      includeWatermark: chkWatermark ? chkWatermark.checked : true
     });
+  }
+
+  function buildMesh() {
+    refreshExportCode();
+    if (!loadedFont || !scene || typeof THREE === 'undefined') return;
+
+    disposeTextMesh();
+
+    const text = (inpText.value || 'IA CODE 3D').trim() || ' ';
+    const depth = parseFloat(inpDepth.value) || 8;
+    const bevel = parseFloat(inpBevel.value) || 0;
+
+    try {
+      const geo = new THREE.TextGeometry(text, {
+        font: loadedFont,
+        size: 15,
+        height: depth,
+        curveSegments: 12,
+        bevelEnabled: bevel > 0,
+        bevelThickness: bevel,
+        bevelSize: bevel * 0.5,
+        bevelOffset: 0,
+        bevelSegments: 4
+      });
+      geo.center();
+
+      const mat = createMaterial(selMaterial.value, inpColor.value, inpGlow.value);
+      textMesh = new THREE.Mesh(geo, mat);
+      scene.add(textMesh);
+
+      // Fit camera gracefully based on text width
+      geo.computeBoundingBox();
+      const width = geo.boundingBox ? (geo.boundingBox.max.x - geo.boundingBox.min.x) : 80;
+      const targetZ = Math.max(95, Math.min(260, width * 1.18 + 30));
+      if (camera) camera.position.z = targetZ;
+
+      setStatus(`WebGL • ${text.length} chars`, true);
+    } catch (err) {
+      setStatus('Geometry Error', false);
+    }
+  }
+
+  function loadFont(fontKey) {
+    if (typeof THREE === 'undefined' || !THREE.FontLoader) {
+      setStatus('Three.js CDN Offline', false);
+      refreshExportCode();
+      return;
+    }
+    if (fontCache[fontKey]) {
+      loadedFont = fontCache[fontKey];
+      buildMesh();
+      return;
+    }
+    setStatus('Loading font...', false);
+    const url = FONT_URLS[fontKey] || FONT_URLS.helvetiker_bold;
+    const loader = new THREE.FontLoader();
+    loader.load(
+      url,
+      (font) => {
+        fontCache[fontKey] = font;
+        loadedFont = font;
+        buildMesh();
+      },
+      undefined,
+      () => {
+        setStatus('Font CDN unreachable', false);
+        if (window.HubUtils) {
+          window.HubUtils.showToast(currentLang === 'en' ? 'Could not load 3D font from CDN (check connection).' : 'Impossible de charger la police 3D depuis le CDN.', 'error');
+        }
+        refreshExportCode();
+      }
+    );
+  }
+
+  function initThree() {
+    if (typeof THREE === 'undefined') {
+      setStatus('WebGL / Three.js Offline', false);
+      previewContainer.innerHTML = '<div style="color:#94a3b8;font-size:0.9rem;text-align:center;padding:1.5rem;">Three.js CDN unreachable in offline mode — HTML export still works.</div>';
+      refreshExportCode();
+      return;
+    }
+
+    try {
+      const w = previewContainer.clientWidth || 500;
+      const h = previewContainer.clientHeight || 330;
+
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
+      camera.position.set(0, 8, 125);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+      renderer.setClearColor(0x000000, 0);
+      renderer.setSize(w, h);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      previewContainer.innerHTML = '';
+      previewContainer.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.65));
+      const keyLight = new THREE.PointLight(0xffffff, 1.8, 600);
+      keyLight.position.set(40, 60, 120);
+      scene.add(keyLight);
+
+      const rimCyan = new THREE.PointLight(0x00f0ff, 2.2, 500);
+      rimCyan.position.set(-70, 20, 60);
+      scene.add(rimCyan);
+
+      const rimPurple = new THREE.PointLight(0x8a2be2, 2.0, 500);
+      rimPurple.position.set(70, -30, 50);
+      scene.add(rimPurple);
+
+      clock = new THREE.Clock();
+
+      const animate = () => {
+        animFrameId = requestAnimationFrame(animate);
+        const t = clock.getElapsedTime();
+        if (textMesh) {
+          const mode = selAnim.value;
+          if (mode === 'float') {
+            textMesh.position.y = Math.sin(t * 2) * 2.5;
+            textMesh.rotation.y = Math.sin(t) * 0.22;
+            textMesh.rotation.x = 0;
+            textMesh.scale.set(1, 1, 1);
+          } else if (mode === 'spin') {
+            textMesh.position.y = 0;
+            textMesh.rotation.x = 0;
+            textMesh.rotation.y = t * 0.85;
+            textMesh.scale.set(1, 1, 1);
+          } else if (mode === 'pulse') {
+            const s = 1 + Math.sin(t * 3) * 0.06;
+            textMesh.scale.set(s, s, s);
+            textMesh.position.y = 0;
+            textMesh.rotation.x = 0;
+            textMesh.rotation.y = Math.sin(t * 1.2) * 0.14;
+          } else if (mode === 'tilt') {
+            textMesh.position.y = 0;
+            textMesh.scale.set(1, 1, 1);
+            textMesh.rotation.x = Math.sin(t * 1.3) * 0.25;
+            textMesh.rotation.y = Math.cos(t * 1.1) * 0.35;
+          } else {
+            textMesh.position.y = 0;
+            textMesh.scale.set(1, 1, 1);
+          }
+        }
+        controls.update();
+        renderer.render(scene, camera);
+      };
+      animate();
+
+      const handleResize = () => {
+        if (!previewContainer || !camera || !renderer) return;
+        const nw = previewContainer.clientWidth || 500;
+        const nh = previewContainer.clientHeight || 330;
+        camera.aspect = nw / nh;
+        camera.updateProjectionMatrix();
+        renderer.setSize(nw, nh);
+      };
+      window.addEventListener('resize', handleResize);
+      if (typeof ResizeObserver !== 'undefined') {
+        new ResizeObserver(handleResize).observe(previewContainer);
+      }
+
+      loadFont(selFont.value);
+    } catch (err) {
+      setStatus('WebGL unavailable', false);
+      previewContainer.innerHTML = '<div style="color:#f87171;font-size:0.9rem;text-align:center;padding:1.5rem;">WebGL context could not be initialized on this device.</div>';
+      refreshExportCode();
+    }
+  }
+
+  // Event bindings
+  inpText.addEventListener('input', buildMesh);
+  selFont.addEventListener('change', () => loadFont(selFont.value));
+  selMaterial.addEventListener('change', buildMesh);
+  selAnim.addEventListener('change', refreshExportCode);
+  inpDepth.addEventListener('input', () => { valDepth.textContent = inpDepth.value; buildMesh(); });
+  inpBevel.addEventListener('input', () => { valBevel.textContent = parseFloat(inpBevel.value).toFixed(1); buildMesh(); });
+  inpColor.addEventListener('input', buildMesh);
+  inpGlow.addEventListener('input', buildMesh);
+  if (chkWatermark) chkWatermark.addEventListener('change', refreshExportCode);
+
+  btnCopyCode.addEventListener('click', () => {
+    const msg = (translations[currentLang] && translations[currentLang].success_copy) || 'Copied!';
+    window.HubUtils.copyText(outputCode.value, msg);
   });
 
-  // Download standalone HTML action
-  document.getElementById('btn-download-html').addEventListener('click', () => {
-    const code = document.getElementById('output-code').value;
-    const blob = new Blob([code], { type: 'text/html;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', 'text-3d-widget.html');
-    link.style.display = 'none';
-    
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+  btnExportPng.addEventListener('click', () => {
+    if (!renderer || !scene || !camera) {
+      window.HubUtils.showToast(currentLang === 'en' ? 'WebGL renderer not ready.' : 'Moteur WebGL non prêt.', 'error');
+      return;
+    }
+    renderer.setClearColor(0x000000, 0);
+    renderer.render(scene, camera);
+    renderer.domElement.toBlob((blob) => {
+      if (!blob) return;
+      const slug = (inpText.value || '3d-text').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || '3d-text';
+      window.HubUtils.safeDownloadBlob(blob, `${slug}-3d.png`);
+      window.HubUtils.showToast(currentLang === 'en' ? '🖼️ Transparent PNG downloaded!' : '🖼️ PNG transparent téléchargé !', 'success');
+    }, 'image/png');
   });
+
+  btnDownloadHtml.addEventListener('click', () => {
+    window.HubUtils.safeDownloadText(outputCode.value, '3d-text-ia-studio.html', 'text/html;charset=utf-8');
+    window.HubUtils.showToast(currentLang === 'en' ? '📥 HTML downloaded!' : '📥 HTML téléchargé !', 'success');
+  });
+
+  window.addEventListener('beforeunload', () => {
+    if (animFrameId) cancelAnimationFrame(animFrameId);
+    disposeTextMesh();
+    if (renderer) renderer.dispose();
+  });
+
+  initThree();
 });

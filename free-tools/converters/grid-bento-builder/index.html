@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Grid &amp; Bento Layout Builder — Visual Responsive Bento Box Generator</title>
+  <meta name="description" content="Construisez visuellement des grilles CSS Grid et Bento Box responsives façon Apple/SaaS par clic avec fusion de cellules (col-span/row-span) et export HTML/CSS.">
+  <link rel="canonical" href="https://ia-codestudio.com/free-tools/converters/grid-bento-builder/index.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="../converters-style.css">
+  <style>
+    .bento-controls-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+    .bento-canvas-wrap {
+      background: #060913;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 1rem;
+      min-height: 300px;
+      overflow: auto;
+    }
+    .bento-live-grid {
+      display: grid;
+      width: 100%;
+      min-height: 265px;
+    }
+    .bento-tile {
+      position: relative;
+      padding: 0.85rem;
+      border: 1px solid rgba(255,255,255,0.12);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      min-height: 76px;
+      user-select: none;
+    }
+    .bento-tile:hover { border-color: var(--accent-cyan); }
+    .bento-tile.selected {
+      border-color: #00f0ff;
+      box-shadow: 0 0 0 2px rgba(0,240,255,0.35);
+    }
+    .bento-tile-title { font-family: var(--font-mono); font-weight: 700; font-size: 0.88rem; color: #fff; }
+    .bento-tile-meta { font-family: var(--font-mono); font-size: 0.72rem; color: #94a3b8; }
+    .bento-tile-actions {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .bento-mini-btn {
+      padding: 2px 7px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(5,8,18,0.65);
+      color: #e2e8f0;
+      font-size: 0.7rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .bento-mini-btn:hover { border-color: var(--accent-cyan); color: #00f0ff; }
+    .bento-mini-btn.del:hover { border-color: #ef4444; color: #f87171; }
+    .tile-inspector {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      background: rgba(0,240,255,0.05);
+      border: 1px solid rgba(0,240,255,0.22);
+    }
+    @media (max-width: 600px) { .bento-controls-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body class="cyber-bg converter-body">
+  <header class="cyber-header">
+    <div class="header-logo">
+      <span class="logo-icon">🍱</span>
+      <h1 class="logo-text">BENTO GRID <span class="accent-text">BUILDER</span></h1>
+    </div>
+    <div class="header-controls">
+      <div class="lang-switcher">
+        <button id="btn-lang-fr" class="lang-btn">FR</button>
+        <button id="btn-lang-en" class="lang-btn">EN</button>
+      </div>
+      <a href="../../index.html" class="back-link">
+        <span class="back-icon">←</span> <span data-i18n="back_dashboard">Free Tools Hub</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="converter-layout">
+    <!-- Left Panel: Controls + Interactive Canvas -->
+    <div class="input-panel" style="width: 55%;">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <h2 data-i18n="grid_lab_title" class="panel-title" style="border:none;padding:0;margin:0;">Constructeur CSS Grid &amp; Bento Box</h2>
+        <button type="button" id="btn-add-tile" class="action-btn cyan-btn" data-i18n="grid_add_card">+ Ajouter une tuile</button>
+      </div>
+
+      <div class="preset-pill-bar" id="bento-presets">
+        <button type="button" class="preset-chip active" data-preset="saas">🚀 SaaS Hero</button>
+        <button type="button" class="preset-chip" data-preset="portfolio">💼 Portfolio</button>
+        <button type="button" class="preset-chip" data-preset="analytics">📊 Analytics</button>
+        <button type="button" class="preset-chip" data-preset="commerce">🛍️ Showcase</button>
+      </div>
+
+      <div class="bento-controls-grid">
+        <div class="form-group">
+          <label for="inp-cols"><span data-i18n="grid_cols">Colonnes</span> (<span id="val-cols">4</span>)</label>
+          <input type="range" id="inp-cols" min="2" max="6" value="4">
+        </div>
+        <div class="form-group">
+          <label for="inp-rows"><span data-i18n="grid_rows">Lignes</span> (<span id="val-rows">3</span>)</label>
+          <input type="range" id="inp-rows" min="2" max="5" value="3">
+        </div>
+        <div class="form-group">
+          <label for="inp-gap"><span data-i18n="grid_gap">Espacement (Gap)</span> (<span id="val-gap">14</span>px)</label>
+          <input type="range" id="inp-gap" min="6" max="32" value="14">
+        </div>
+      </div>
+
+      <!-- Selected Tile Inspector -->
+      <div class="tile-inspector">
+        <span style="font-size:0.78rem;color:#7dd3fc;font-family:var(--font-mono);font-weight:700;" id="inspector-label">Tile #1</span>
+        <input type="text" id="tile-title-inp" class="form-input" style="flex:1;min-width:140px;padding:0.45rem 0.75rem;font-size:0.85rem;" placeholder="Tile label...">
+        <input type="color" id="tile-color-inp" class="color-picker" style="width:46px !important;height:34px !important;" value="#00f0ff">
+      </div>
+
+      <!-- Interactive Live Grid Canvas -->
+      <div class="bento-canvas-wrap">
+        <div id="bento-live-grid" class="bento-live-grid"></div>
+      </div>
+    </div>
+
+    <!-- Right Panel: Export -->
+    <div class="output-panel" style="width: 45%;">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <h2 data-i18n="export_title" class="panel-title" style="border:none;padding:0;margin:0;">Code à intégrer</h2>
+        <div class="stats-pill-row">
+          <span class="stat-pill good" id="bento-stats-pill">5 tiles • 4×3</span>
+        </div>
+      </div>
+
+      <div class="watermark-container">
+        <label class="checkbox-item">
+          <input type="checkbox" id="chk-watermark" checked>
+          <span data-i18n="badge_label">Inclure le badge "Powered by IA Code Studio"</span>
+        </label>
+      </div>
+
+      <div class="code-output-area" style="flex: 1; min-height: 360px;">
+        <textarea id="output-code" readonly></textarea>
+        <div class="code-actions-row">
+          <button type="button" id="btn-copy-code" class="action-btn cyan-btn">
+            <span>📋</span> <span data-i18n="copy_code">Copier le code</span>
+          </button>
+          <button type="button" id="btn-download-html" class="action-btn">
+            <span>📥</span> <span data-i18n="download_html">Télécharger HTML</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bilingual EN/FR SEO FAQ -->
+  <div class="seo-faq-section">
+    <h3 class="faq-section-title" data-fr="FAQ — Constructeur CSS Grid &amp; Bento" data-en="FAQ — CSS Grid &amp; Bento Builder">FAQ — Constructeur CSS Grid &amp; Bento</h3>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <div class="faq-question" data-fr="Comment fusionner des cellules (col-span / row-span) ?" data-en="How do I span cells across multiple columns or rows?">Comment fusionner des cellules (col-span / row-span) ?</div>
+        <div class="faq-answer" data-fr="Cliquez sur les boutons ↔ (largeur) et ↕ (hauteur) directement sur n'importe quelle tuile pour ajuster son grid-column et grid-row en temps réel." data-en="Click the ↔ (column span) and ↕ (row span) buttons right on any tile to expand or contract its grid-column and grid-row live.">Cliquez sur ↔ et ↕ directement sur une tuile pour ajuster son grid-column et grid-row en direct.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" data-fr="La grille Bento exportée est-elle responsive sur mobile ?" data-en="Is the exported Bento Grid mobile responsive?">La grille Bento exportée est-elle responsive sur mobile ?</div>
+        <div class="faq-answer" data-fr="Oui ! Une media query @media (max-width: 768px) est incluse automatiquement pour empiler élégamment toutes les cartes en 1 colonne sur smartphone." data-en="Yes! An automatic @media (max-width: 768px) rule cleanly stacks all tiles into a single mobile-friendly column on small screens.">Oui ! Une media query @media (max-width: 768px) empile automatiquement toutes les tuiles en 1 colonne sur mobile.</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/hub-utils.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/main.js"></script>
+  <script src="grid-bento-builder.js"></script>
+  <script>
+    document.querySelectorAll('.faq-question').forEach(item => {
+      item.addEventListener('click', () => item.parentElement.classList.toggle('active'));
+    });
+  </script>
+</body>
+</html>

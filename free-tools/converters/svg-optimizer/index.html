@@ -3,62 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SVG Optimizer Online Free - Compressez et Rendez vos SVG Responsives</title>
-  <meta name="description" content="Outil gratuit en ligne pour optimiser, minifier et nettoyer vos fichiers vectoriels SVG. Supprimez les métadonnées inutiles, ajustez les dimensions et coloriez vos tracés facilement.">
+  <title>SVG Optimizer &amp; JSX Extractor Pro — Sanitize, Minify &amp; Convert</title>
+  <meta name="description" content="Optimisez, nettoyez (Illustrator/Inkscape metadata), sécurisez anti-XSS vos fichiers SVG et exportez en .svg, React JSX ou CSS Data URI.">
+  <link rel="canonical" href="https://ia-codestudio.com/free-tools/converters/svg-optimizer/index.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
-  
   <link rel="stylesheet" href="../../style.css">
   <link rel="stylesheet" href="../converters-style.css">
-
-  <!-- JSON-LD FAQ Schema Markup -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Comment optimiser et réduire la taille d'un fichier SVG ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Déposez simplement votre fichier SVG dans la zone prévue à cet effet. Notre outil supprime les métadonnées d'édition superflues (générées par Illustrator ou Inkscape), nettoie les balises imbriquées inutiles et minifie le code XML pour réduire drastiquement la taille du fichier sans perte de qualité visuelle."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Pourquoi rendre un SVG responsive en retirant sa largeur et sa hauteur ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "En cochant l'option 'Rendre responsive', l'outil supprime les attributs absolus width et height tout en conservant la viewBox. Cela permet au SVG de s'adapter dynamiquement à la taille de son conteneur parent en HTML/CSS, ce qui est indispensable pour les conceptions web modernes."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Comment puis-je changer la couleur d'un fichier SVG en ligne ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Activez l'option de suralimentation de couleur, sélectionnez la couleur de votre choix dans le sélecteur de couleurs haut de gamme, et l'outil appliquera dynamiquement cette couleur sur les attributs fill et stroke de votre code vectoriel SVG."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Quelle est la différence entre un SVG minifié et un SVG optimisé ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "La minification supprime uniquement les espaces, les sauts de ligne et les commentaires du code XML. L'optimisation va plus loin en nettoyant la structure du document vectoriel : regroupement des styles, simplification des tracés (paths) et suppression des balises invisibles créées par les éditeurs graphiques."
-        }
-      }
-    ]
-  }
-  </script>
 </head>
 <body class="cyber-bg converter-body">
   <header class="cyber-header">
     <div class="header-logo">
       <span class="logo-icon">📐</span>
-      <h1 class="logo-text">SVG <span class="accent-text">OPTIMIZER</span></h1>
+      <h1 class="logo-text">SVG <span class="accent-text">OPTIMIZER PRO</span></h1>
     </div>
     <div class="header-controls">
       <div class="lang-switcher">
@@ -66,34 +24,40 @@
         <button id="btn-lang-en" class="lang-btn">EN</button>
       </div>
       <a href="../../index.html" class="back-link">
-        <span class="back-icon">←</span> <span data-i18n="back_dashboard">Tableau de bord</span>
+        <span class="back-icon">←</span> <span data-i18n="back_dashboard">Free Tools Hub</span>
       </a>
     </div>
   </header>
 
   <div class="converter-layout">
-    <!-- Left: Inputs -->
     <div class="input-panel">
-      <h2 data-i18n="svg_opt_title" class="panel-title">Optimiseur & Générateur de Code SVG</h2>
-      
-      <!-- Drop Zone -->
-      <div id="drop-zone" class="drop-zone">
-        <span class="drop-zone-icon">📥</span>
-        <span id="drop-zone-text" data-i18n="svg_drop_zone" class="drop-zone-text">Glissez votre fichier .svg ici ou cliquez pour en sélectionner un</span>
+      <h2 data-i18n="svg_opt_title" class="panel-title">Optimiseur &amp; Extracteur SVG Pro</h2>
+
+      <div id="drop-zone" class="drop-zone" style="padding: 1.6rem 1rem;">
+        <span class="drop-zone-icon" style="font-size: 2rem;">📥</span>
+        <span id="drop-zone-text" data-i18n="svg_drop_zone" class="drop-zone-text">Glissez un fichier .svg ici ou cliquez pour parcourir</span>
         <input type="file" id="file-input" accept=".svg" style="display: none;">
       </div>
 
-      <!-- Settings -->
+      <div class="form-group">
+        <label for="inp-svg-raw" data-i18n="svg_paste_label">Ou collez directement votre code SVG</label>
+        <textarea id="inp-svg-raw" class="form-input form-textarea" style="min-height: 120px;"></textarea>
+      </div>
+
       <div class="form-group">
         <label data-i18n="svg_opt_settings">Paramètres d'optimisation</label>
         <div class="checkbox-list">
           <label class="checkbox-item">
             <input type="checkbox" id="chk-responsive" checked>
-            <span data-i18n="svg_remove_dimensions">Retirer largeur/hauteur fixes (pour rendu responsive)</span>
+            <span data-i18n="svg_remove_dimensions">Rendre responsive (garder viewBox)</span>
           </label>
           <label class="checkbox-item">
             <input type="checkbox" id="chk-minify" checked>
-            <span data-i18n="svg_minify">Minifier le code XML</span>
+            <span data-i18n="svg_minify">Minifier XML &amp; supprimer métadonnées éditeurs</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" id="chk-round" checked>
+            <span data-i18n="svg_round_paths">Arrondir les coordonnées (précision 2 décimales)</span>
           </label>
         </div>
       </div>
@@ -107,70 +71,62 @@
       </div>
     </div>
 
-    <!-- Right: Outputs -->
     <div class="output-panel">
-      <h2 data-i18n="preview_panel" class="panel-title">Prévisualisation en direct</h2>
-      
-      <div class="visual-preview-box svg-preview-box">
-        <div id="preview-container-box" style="padding: 2rem;">
-          <!-- SVG rendered inline here -->
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <h2 data-i18n="preview_panel" class="panel-title" style="border:none;padding:0;margin:0;">Prévisualisation en direct</h2>
+        <div class="stats-pill-row">
+          <span class="stat-pill" id="svg-size-before">0 B</span>
+          <span class="stat-pill good" id="svg-size-after">0 B (-0%)</span>
         </div>
       </div>
 
-      <div class="watermark-container">
-        <label class="watermark-toggle-label">
-          <input type="checkbox" id="chk-watermark" checked>
-          <span data-i18n="badge_label">Inclure le badge "Powered by IA Code Studio"</span>
-        </label>
+      <div class="visual-preview-box svg-preview-box">
+        <div id="preview-container-box" style="padding: 1.5rem; max-width: 240px; max-height: 240px;"></div>
       </div>
 
       <h2 data-i18n="export_title" class="panel-title">Code à intégrer</h2>
       <div class="code-output-area" style="flex: 1; min-height: 220px;">
         <textarea id="output-code" readonly></textarea>
         <div class="code-actions-row">
-          <button id="btn-copy-code" class="action-btn cyan-btn">
+          <button type="button" id="btn-copy-code" class="action-btn cyan-btn">
             <span>📋</span> <span data-i18n="copy_code">Copier le code</span>
           </button>
-          <button id="btn-download-html" class="action-btn">
-            <span>📥</span> <span data-i18n="download_html">Télécharger HTML</span>
+          <button type="button" id="btn-copy-jsx" class="action-btn">
+            <span>⚛️</span> <span data-i18n="svg_copy_jsx">Copier JSX</span>
+          </button>
+          <button type="button" id="btn-copy-datauri" class="action-btn">
+            <span>🎨</span> <span data-i18n="svg_copy_datauri">CSS Data URI</span>
+          </button>
+          <button type="button" id="btn-download-svg" class="action-btn">
+            <span>📥</span> <span data-i18n="svg_download_svg">Télécharger .SVG</span>
           </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- FAQ Section for SEO -->
+  <!-- Bilingual EN/FR SEO FAQ -->
   <div class="seo-faq-section">
-    <h3 class="faq-section-title">Foire Aux Questions (FAQ) — Optimiseur SVG</h3>
+    <h3 class="faq-section-title" data-fr="FAQ — Optimiseur SVG &amp; JSX" data-en="FAQ — SVG Optimizer &amp; JSX Extractor">FAQ — Optimiseur SVG &amp; JSX</h3>
     <div class="faq-grid">
       <div class="faq-item">
-        <div class="faq-question">Comment optimiser et réduire la taille d'un fichier SVG ?</div>
-        <div class="faq-answer">Déposez simplement votre fichier SVG dans la zone prévue à cet effet. Notre outil supprime les métadonnées d'édition superflues (générées par Illustrator ou Inkscape), nettoie les balises imbriquées inutiles et minifie le code XML pour réduire drastiquement la taille du fichier sans perte de qualité visuelle.</div>
+        <div class="faq-question" data-fr="Que supprime réellement l'optimiseur SVG ?" data-en="What does the SVG optimizer actually strip?">Que supprime réellement l'optimiseur SVG ?</div>
+        <div class="faq-answer" data-fr="Il élimine les balises <metadata>, <title>, <desc>, commentaires XML, attributs Inkscape/Illustrator, scripts/handlers XSS (onload, <script>) et arrondit les nombres décimaux des tracés." data-en="It strips <metadata>, <title>, <desc>, XML comments, Inkscape/Illustrator editor attributes, XSS scripts/handlers (onload, <script>), and rounds long path decimals.">Il élimine les métadonnées éditeurs, commentaires XML et vecteurs XSS tout en arrondissant les tracés.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-question">Pourquoi rendre un SVG responsive en retirant sa largeur et sa hauteur ?</div>
-        <div class="faq-answer">En cochant l'option 'Rendre responsive', l'outil supprime les attributs absolus width et height tout en conservant la viewBox. Cela permet au SVG de s'adapter dynamiquement à la taille de son conteneur parent en HTML/CSS, ce qui est indispensable pour les conceptions web modernes.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-question">Comment puis-je changer la couleur d'un fichier SVG en ligne ?</div>
-        <div class="faq-answer">Activez l'option de suralimentation de couleur, sélectionnez la couleur de votre choix dans le sélecteur de couleurs haut de gamme, et l'outil appliquera dynamiquement cette couleur sur les attributs fill et stroke de votre code vectoriel SVG.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-question">Quelle est la différence entre un SVG minifié et un SVG optimisé ?</div>
-        <div class="faq-answer">La minification supprime uniquement les espaces, les sauts de ligne et les commentaires du code XML. L'optimisation va plus loin en nettoyant la structure du document vectoriel : regroupement des styles, simplification des tracés (paths) et suppression des balises invisibles créées par les éditeurs graphiques.</div>
+        <div class="faq-question" data-fr="Puis-je exporter mon SVG directement pour React ?" data-en="Can I export my SVG directly as a React JSX component?">Puis-je exporter mon SVG directement pour React ?</div>
+        <div class="faq-answer" data-fr="Oui ! Le bouton 'Copier JSX' convertit automatiquement les attributs SVG (stroke-width → strokeWidth, class → className, fill-rule → fillRule) en composant React prêt à l'emploi." data-en="Yes! 'Copy JSX' automatically converts SVG kebab-case attributes (stroke-width → strokeWidth, class → className, fill-rule → fillRule) into a ready-to-paste React component.">Oui ! 'Copier JSX' convertit automatiquement les attributs SVG en composant React prêt à l'emploi.</div>
       </div>
     </div>
   </div>
 
+  <script src="../../js/hub-utils.js"></script>
   <script src="../../js/i18n.js"></script>
   <script src="../../js/main.js"></script>
   <script src="svg-optimizer.js"></script>
   <script>
     document.querySelectorAll('.faq-question').forEach(item => {
-      item.addEventListener('click', () => {
-        const parent = item.parentElement;
-        parent.classList.toggle('active');
-      });
+      item.addEventListener('click', () => item.parentElement.classList.toggle('active'));
     });
   </script>
 </body>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dev Swiss Kit — Live Regex Tester, Offline JWT Decoder &amp; Crypto UUID/Keys</title>
+  <meta name="description" content="Boîte à outils développeur 100% hors-ligne : Testeur RegExp en direct avec surlignage, Décodeur JWT local et Générateur cryptographique UUID v4 / NanoID / API Keys.">
+  <link rel="canonical" href="https://ia-codestudio.com/free-tools/converters/dev-swiss-kit/index.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="../converters-style.css">
+  <style>
+    .swiss-tabs-bar {
+      max-width: 1400px;
+      width: 100%;
+      margin: 1.5rem auto 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: center;
+    }
+    .swiss-panel { width: 100%; display: none; }
+    .swiss-panel.active { display: flex; gap: 2rem; width: 100%; }
+    .rx-highlight-box {
+      background: #080b14;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: #e2e8f0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      min-height: 150px;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+    .rx-highlight-box mark {
+      background: rgba(0, 240, 255, 0.25);
+      color: #7dd3fc;
+      border: 1px solid rgba(0, 240, 255, 0.55);
+      border-radius: 4px;
+      padding: 0 2px;
+    }
+    .rx-groups-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .rx-group-item {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.5rem 0.8rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: #cbd5e1;
+    }
+    .jwt-box {
+      background: #080b14;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      line-height: 1.55;
+      color: #a5f3fc;
+      white-space: pre-wrap;
+      overflow: auto;
+      max-height: 220px;
+    }
+    .id-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 360px;
+      overflow-y: auto;
+    }
+    .id-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.6rem 0.9rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: #7dd3fc;
+      word-break: break-all;
+    }
+    .flag-btn {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: rgba(255,255,255,0.04);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .flag-btn.active {
+      border-color: var(--accent-cyan);
+      background: rgba(0,240,255,0.16);
+      color: #00f0ff;
+    }
+    @media (max-width: 900px) {
+      .swiss-panel.active { flex-direction: column; }
+    }
+  </style>
+</head>
+<body class="cyber-bg converter-body">
+  <header class="cyber-header">
+    <div class="header-logo">
+      <span class="logo-icon">🧪</span>
+      <h1 class="logo-text">DEV SWISS <span class="accent-text">KIT PRO</span></h1>
+    </div>
+    <div class="header-controls">
+      <div class="lang-switcher">
+        <button id="btn-lang-fr" class="lang-btn">FR</button>
+        <button id="btn-lang-en" class="lang-btn">EN</button>
+      </div>
+      <a href="../../index.html" class="back-link">
+        <span class="back-icon">←</span> <span data-i18n="back_dashboard">Free Tools Hub</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- 3-Tab Switcher -->
+  <div class="swiss-tabs-bar">
+    <div class="segmented-toggle" id="swiss-tabs">
+      <button type="button" class="active" data-tab="regex" data-i18n="swiss_tab_regex">🔎 Regex Tester</button>
+      <button type="button" data-tab="jwt" data-i18n="swiss_tab_jwt">🔑 JWT Decoder</button>
+      <button type="button" data-tab="ids" data-i18n="swiss_tab_ids">🔐 UUID &amp; Keys</button>
+    </div>
+  </div>
+
+  <div class="converter-layout" style="padding-top: 1.2rem;">
+    <!-- TAB 1: LIVE REGEXP TESTER -->
+    <div id="tab-regex" class="swiss-panel active">
+      <div class="input-panel">
+        <h2 data-i18n="swiss_lab_title" class="panel-title">Regex Live Tester, JWT &amp; Crypto IDs</h2>
+
+        <div class="preset-pill-bar" id="rx-presets">
+          <button type="button" class="preset-chip active" data-rx="email">📧 Email</button>
+          <button type="button" class="preset-chip" data-rx="url">🌐 URL</button>
+          <button type="button" class="preset-chip" data-rx="hex">🎨 Hex Color</button>
+          <button type="button" class="preset-chip" data-rx="ipv4">🖥️ IPv4</button>
+          <button type="button" class="preset-chip" data-rx="date">📅 ISO Date</button>
+        </div>
+
+        <div class="form-group">
+          <label for="rx-pattern" data-fr="Expression régulière (Pattern)" data-en="Regular Expression (Pattern)">Expression régulière (Pattern)</label>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <input type="text" id="rx-pattern" class="form-input" style="flex:1;font-family:var(--font-mono);" value="([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})">
+            <div style="display:flex;gap:4px;" id="rx-flags">
+              <button type="button" class="flag-btn active" data-flag="g" title="Global">g</button>
+              <button type="button" class="flag-btn active" data-flag="i" title="Case-insensitive">i</button>
+              <button type="button" class="flag-btn" data-flag="m" title="Multiline">m</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" style="flex:1;">
+          <label for="rx-text" data-fr="Texte de test" data-en="Test String">Texte de test</label>
+          <textarea id="rx-text" class="form-input form-textarea" style="min-height: 200px;">Contactez dev@ia-codestudio.com ou support@example.org pour tester vos expressions régulières !
+Visitez https://ia-codestudio.com — Couleurs #00f0ff et #8a2be2 — IP 192.168.1.42 — Date 2026-11-25.</textarea>
+        </div>
+      </div>
+
+      <div class="output-panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+          <h2 class="panel-title" style="border:none;padding:0;margin:0;" data-fr="Correspondances en direct" data-en="Live Matches">Correspondances en direct</h2>
+          <div class="stats-pill-row">
+            <span class="stat-pill good" id="rx-count-pill">2 matches</span>
+            <button type="button" id="btn-copy-rx" class="action-btn cyan-btn" style="padding:4px 10px;">📋 Copy JS</button>
+          </div>
+        </div>
+
+        <div id="rx-highlight" class="rx-highlight-box"></div>
+
+        <h3 style="margin:0;font-size:0.9rem;color:#94a3b8;font-family:var(--font-mono);" data-fr="Groupes capturés" data-en="Captured Matches &amp; Groups">Groupes capturés</h3>
+        <div id="rx-groups" class="rx-groups-list"></div>
+      </div>
+    </div>
+
+    <!-- TAB 2: OFFLINE JWT DECODER -->
+    <div id="tab-jwt" class="swiss-panel">
+      <div class="input-panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+          <h2 class="panel-title" style="border:none;padding:0;margin:0;" data-fr="Décodeur JWT 100% Hors-Ligne" data-en="100% Offline JWT Decoder">Décodeur JWT 100% Hors-Ligne</h2>
+          <button type="button" id="btn-jwt-demo" class="action-btn cyan-btn" data-fr="⚡ Charger Démo JWT" data-en="⚡ Load Demo JWT">⚡ Charger Démo JWT</button>
+        </div>
+
+        <div class="form-group" style="flex:1;">
+          <label for="jwt-input" data-fr="Collez un JSON Web Token (eyJ...)" data-en="Paste JSON Web Token (eyJ...)">Collez un JSON Web Token (eyJ...)</label>
+          <textarea id="jwt-input" class="form-input form-textarea" style="min-height: 240px; word-break: break-all;" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."></textarea>
+        </div>
+
+        <div style="font-size:0.82rem;color:#94a3b8;line-height:1.5;" data-fr="🔒 Zéro requête réseau : vos tokens restent exclusivement dans la mémoire locale de votre navigateur." data-en="🔒 Zero network requests: your tokens are decoded purely in local browser memory.">🔒 Zéro requête réseau : vos tokens restent exclusivement dans la mémoire locale de votre navigateur.</div>
+      </div>
+
+      <div class="output-panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+          <h2 class="panel-title" style="border:none;padding:0;margin:0;" data-fr="Payload &amp; En-tête" data-en="Decoded Header &amp; Payload">Payload &amp; En-tête</h2>
+          <div class="stats-pill-row">
+            <span class="stat-pill" id="jwt-exp-pill">Idle</span>
+            <button type="button" id="btn-copy-jwt" class="action-btn cyan-btn" style="padding:4px 10px;">📋 Copy JSON</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>HEADER (Algorithm &amp; Type)</label>
+          <pre id="jwt-header-out" class="jwt-box">{}</pre>
+        </div>
+
+        <div class="form-group" style="flex:1;">
+          <label>PAYLOAD (Claims &amp; Data)</label>
+          <pre id="jwt-payload-out" class="jwt-box" style="color:#c4b5fd;">{}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: CRYPTO UUID, NANOID & API KEYS -->
+    <div id="tab-ids" class="swiss-panel">
+      <div class="input-panel">
+        <h2 class="panel-title" data-fr="Générateur Cryptographique (Web Crypto API)" data-en="Cryptographic Generator (Web Crypto API)">Générateur Cryptographique (Web Crypto API)</h2>
+
+        <div class="form-group">
+          <label for="id-type" data-fr="Format d'identifiant / secret" data-en="Identifier / Secret Format">Format d'identifiant / secret</label>
+          <select id="id-type" class="form-input">
+            <option value="uuid">UUID v4 (RFC 4122)</option>
+            <option value="nanoid">NanoID (URL-Safe)</option>
+            <option value="apikey">API Key (sk_live_...)</option>
+            <option value="hex256">Hex 256-bit Secret (64 chars)</option>
+            <option value="password">Strong Crypto Password</option>
+          </select>
+        </div>
+
+        <div style="display:flex;gap:1rem;">
+          <div class="form-group" style="flex:1;">
+            <label for="id-count"><span data-fr="Quantité" data-en="Count">Quantité</span> (<span id="val-id-count">5</span>)</label>
+            <input type="range" id="id-count" min="1" max="20" value="5">
+          </div>
+          <div class="form-group" style="flex:1;">
+            <label for="id-len"><span data-fr="Longueur (NanoID/Pass)" data-en="Length (NanoID/Pass)">Longueur (NanoID/Pass)</span> (<span id="val-id-len">21</span>)</label>
+            <input type="range" id="id-len" min="12" max="48" value="21">
+          </div>
+        </div>
+
+        <button type="button" id="btn-gen-ids" class="btn-primary" data-fr="⚡ Générer Maintenant" data-en="⚡ Generate Now">⚡ Générer Maintenant</button>
+      </div>
+
+      <div class="output-panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+          <h2 class="panel-title" style="border:none;padding:0;margin:0;" data-fr="Résultats Générés" data-en="Generated Output">Résultats Générés</h2>
+          <div class="stats-pill-row">
+            <button type="button" id="btn-copy-all-ids" class="action-btn cyan-btn" style="padding:5px 12px;">📋 Copy All</button>
+            <button type="button" id="btn-dl-ids" class="action-btn" style="padding:5px 12px;">📥 .TXT</button>
+          </div>
+        </div>
+
+        <div id="id-results-list" class="id-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bilingual EN/FR SEO FAQ -->
+  <div class="seo-faq-section">
+    <h3 class="faq-section-title" data-fr="FAQ — Dev Swiss Kit (Regex, JWT, UUID)" data-en="FAQ — Dev Swiss Kit (Regex, JWT, UUID)">FAQ — Dev Swiss Kit (Regex, JWT, UUID)</h3>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <div class="faq-question" data-fr="Est-il sûr de coller un JWT dans ce décodeur ?" data-en="Is it safe to paste a JWT into this decoder?">Est-il sûr de coller un JWT dans ce décodeur ?</div>
+        <div class="faq-answer" data-fr="Oui, l'outil fonctionne à 100% en local côté client (offline) : aucune donnée n'est envoyée sur un serveur externe ni journalisée." data-en="Yes, the decoder runs 100% client-side offline in your browser with zero external requests or logging.">Oui, tout le décodage s'exécute 100% en local dans votre navigateur sans aucune requête réseau.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" data-fr="Les UUID v4 et clés API sont-ils cryptographiquement sécurisés ?" data-en="Are generated UUID v4 and API keys cryptographically secure?">Les UUID v4 et clés API sont-ils cryptographiquement sécurisés ?</div>
+        <div class="faq-answer" data-fr="Oui, chaque octet aléatoire provient directement de crypto.getRandomValues() (CSPRNG natif du navigateur) et jamais de Math.random()." data-en="Yes, every random byte is generated via the browser's native CSPRNG (crypto.getRandomValues), never Math.random().">Oui, tous les octets aléatoires proviennent de crypto.getRandomValues() (CSPRNG), jamais de Math.random().</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/hub-utils.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/main.js"></script>
+  <script src="dev-swiss-kit.js"></script>
+  <script>
+    document.querySelectorAll('.faq-question').forEach(item => {
+      item.addEventListener('click', () => item.parentElement.classList.toggle('active'));
+    });
+  </script>
+</body>
+</html>

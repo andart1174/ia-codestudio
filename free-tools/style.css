@@ -363,3 +363,163 @@ body.cyber-bg {
     font-size: 2rem;
   }
 }
+
+/* ============================================================
+   FREE TOOLS HUB v2.0 — SEARCH, CATEGORIES, FAVORITES & BADGES
+   ============================================================ */
+.hero-pill {
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: rgba(0, 240, 255, 0.12);
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  color: var(--accent-cyan);
+  margin-bottom: 1rem;
+}
+
+.hub-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.hub-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(15, 17, 26, 0.85);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 0.65rem 1rem;
+  backdrop-filter: blur(12px);
+}
+.hub-search-wrap:focus-within {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.12);
+}
+.hub-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  outline: none;
+}
+.hub-search-input::placeholder { color: var(--text-muted); }
+.hub-count-badge {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(0, 240, 255, 0.12);
+  color: var(--accent-cyan);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+}
+
+.hub-cat-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.hub-cat-pill {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-family: var(--font-main);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.45rem 0.95rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.hub-cat-pill:hover {
+  color: #fff;
+  border-color: rgba(0, 240, 255, 0.45);
+}
+.hub-cat-pill.active {
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+  color: #020617;
+  border-color: transparent;
+  font-weight: 700;
+}
+
+.hub-fav-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(11, 12, 16, 0.72);
+  color: var(--text-muted);
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.hub-fav-btn:hover, .hub-fav-btn.is-fav {
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.55);
+  background: rgba(251, 191, 36, 0.14);
+}
+
+.card-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 0.65rem;
+}
+.mini-badge {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 5px;
+  text-transform: uppercase;
+}
+.badge-cyan { background: rgba(0, 240, 255, 0.14); color: var(--accent-cyan); border: 1px solid rgba(0, 240, 255, 0.35); }
+.badge-pink { background: rgba(255, 0, 127, 0.14); color: #ff66b2; border: 1px solid rgba(255, 0, 127, 0.35); }
+.badge-emerald { background: rgba(16, 185, 129, 0.16); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+
+.hub-portal-strip {
+  margin-top: 2.5rem;
+  padding: 1.15rem 1.5rem;
+  border-radius: 14px;
+  background: rgba(15, 17, 26, 0.72);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+.hub-portal-btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  color: var(--accent-cyan);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+.hub-portal-btn:hover {
+  background: var(--accent-cyan);
+  color: #020617;
+}

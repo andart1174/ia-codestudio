@@ -1,230 +1,305 @@
-// Base64 Converter script
+// Base64 Toolkit Pro v2.0 — UTF-8, URL-Safe, CSS url(), Zero XSS, Reverse Base64 -> Image
 
-const watermarkCode = `
-  <!-- IA Code Studio Embed Watermark (Remove by upgrading to Premium) -->
-  <div id="ia-code-watermark" style="position:fixed;bottom:15px;right:15px;z-index:999999;background:rgba(15,17,26,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(0,240,255,0.25);border-radius:30px;padding:8px 16px;box-shadow:0 4px 15px rgba(0,240,255,0.15);font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;cursor:pointer;transition:all 0.3s ease;user-select:none;" onclick="window.open('https://ia-codestudio.com','_blank')">
-    <span style="color:#00f0ff;animation:pulse-glow 1.5s infinite alternate;">⚡</span>
-    <span style="color:#fff;letter-spacing:0.5px;">3D Widget by <span style="background:linear-gradient(135deg,#00f0ff,#ff007f);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">IA Code Studio</span></span>
-  </div>
-  <style>
-    @keyframes pulse-glow {
-      0% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(0,240,255,0.4)); }
-      100% { transform: scale(1.1); filter: drop-shadow(0 0 8px rgba(0,240,255,0.8)); }
-    }
-    #ia-code-watermark:hover {
-      transform: translateY(-2px);
-      border-color: #00f0ff;
-      box-shadow: 0 6px 20px rgba(0,240,255,0.3);
-    }
-  </style>
-`;
-
-let currentMode = 'text'; // 'text' or 'file'
-let fileBase64 = '';
-let fileName = '';
-let fileType = '';
-
-// Safe UTF-8 Base64 Encoding
-function safeBtoa(str) {
-  try {
-    return btoa(unescape(encodeURIComponent(str)));
-  } catch (err) {
-    return btoa(str);
+function encodeUtf8Base64(str, urlSafe) {
+  const bytes = new TextEncoder().encode(String(str || ''));
+  let bin = '';
+  const chunk = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunk) {
+    bin += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
   }
-}
-
-// Safe UTF-8 Base64 Decoding
-function safeAtob(str) {
-  // Strip spaces/newlines
-  const cleanStr = str.replace(/\s+/g, '');
-  try {
-    return decodeURIComponent(escape(atob(cleanStr)));
-  } catch (err) {
-    return atob(cleanStr);
+  let b64 = btoa(bin);
+  if (urlSafe) {
+    b64 = b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
   }
+  return b64;
 }
 
-function handleTextEncode() {
-  currentMode = 'text';
-  const input = document.getElementById('inp-text').value;
-  if (!input) return;
-
-  const encoded = safeBtoa(input);
-  
-  // Update preview (text view)
-  const previewBox = document.getElementById('preview-container-box');
-  previewBox.innerHTML = `<div style="color:#88ff88; font-family:monospace; font-size:0.9rem; text-align:left; width:100%; white-space:pre-wrap; overflow-y:auto; max-height:100%; padding:0.5rem;">${encoded}</div>`;
-
-  updateOutputCode(encoded);
+function normalizeBase64(input) {
+  let clean = String(input || '').trim().replace(/\s+/g, '');
+  clean = clean.replace(/-/g, '+').replace(/_/g, '/');
+  while (clean.length % 4 !== 0) clean += '=';
+  return clean;
 }
 
-function handleTextDecode() {
-  currentMode = 'text';
-  const input = document.getElementById('inp-text').value;
-  if (!input) return;
-
-  try {
-    const decoded = safeAtob(input);
-    const previewBox = document.getElementById('preview-container-box');
-    previewBox.innerHTML = `<div style="color:#ffffff; font-family:sans-serif; font-size:0.95rem; text-align:left; width:100%; white-space:pre-wrap; overflow-y:auto; max-height:100%; padding:0.5rem;">${decoded}</div>`;
-    
-    updateOutputCode(decoded);
-  } catch (err) {
-    alert("Error: String is not a valid Base64 encoded string.");
-  }
+function decodeUtf8Base64(input) {
+  const clean = normalizeBase64(input);
+  const bin = atob(clean);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder('utf-8', { fatal: false }).decode(bytes);
 }
 
-function handleFileConversion(file) {
-  if (!file) return;
-  currentMode = 'file';
-  fileName = file.name;
-  fileType = file.type;
-
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    fileBase64 = e.target.result; // Full Data URL
-    
-    // Update dropzone label
-    document.getElementById('drop-zone-text').textContent = fileName;
-    
-    // Update preview container
-    const previewBox = document.getElementById('preview-container-box');
-    if (fileType.startsWith('image/')) {
-      previewBox.innerHTML = `<img src="${fileBase64}" alt="${fileName}">`;
-    } else {
-      previewBox.innerHTML = `<div style="text-align:center;">
-        <span style="font-size:3.5rem;">📄</span>
-        <div style="color:#fff; font-weight:600; margin-top:0.5rem;">${fileName}</div>
-        <div style="color:var(--text-muted); font-size:0.8rem; margin-top:0.2rem;">${fileType || 'Unknown format'} (${(file.size / 1024).toFixed(1)} KB)</div>
-      </div>`;
-    }
-
-    updateOutputCode(fileBase64);
-  };
-  reader.readAsDataURL(file);
+function base64ToUint8Array(rawB64) {
+  const clean = normalizeBase64(rawB64);
+  const bin = atob(clean);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes;
 }
 
-function updateOutputCode(payload) {
-  const includeWatermark = document.getElementById('chk-watermark').checked || !checkIsPremium();
-  let finalCode = payload;
-
-  if (currentMode === 'text') {
-    finalCode = payload;
-  } else {
-    // If it's a file (like an image), we generate a copy-paste HTML Tag preset
-    if (fileType.startsWith('image/')) {
-      finalCode = `<!-- Embedded Base64 Image Widget -->
-<img src="${payload}" alt="${fileName}" style="max-width:100%; height:auto; border-radius:8px;">`;
-    } else {
-      finalCode = `<!-- Data URI Base64 Output -->
-${payload}`;
-    }
+function detectBase64Image(input) {
+  const trimmed = String(input || '').trim();
+  const dataUriMatch = trimmed.match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,([A-Za-z0-9+/=_\-\s]+)$/i);
+  if (dataUriMatch) {
+    const mime = dataUriMatch[1].toLowerCase();
+    const raw = dataUriMatch[2].replace(/\s+/g, '');
+    return { mime, raw, dataUri: `data:${mime};base64,${normalizeBase64(raw)}` };
   }
 
-  const finalOutput = `${finalCode}${includeWatermark ? '\n' + watermarkCode.trim() : ''}`;
-  document.getElementById('output-code').value = finalOutput;
+  const compact = trimmed.replace(/\s+/g, '');
+  if (!/^[A-Za-z0-9+/=_-]{16,}$/.test(compact)) return null;
+
+  const sigs = [
+    { prefix: 'iVBORw0KGgo', mime: 'image/png' },
+    { prefix: '/9j/', mime: 'image/jpeg' },
+    { prefix: 'R0lGOD', mime: 'image/gif' },
+    { prefix: 'UklGR', mime: 'image/webp' },
+    { prefix: 'PHN2Zy', mime: 'image/svg+xml' },
+    { prefix: 'PD94bW', mime: 'image/svg+xml' }
+  ];
+  for (const s of sigs) {
+    if (compact.startsWith(s.prefix)) {
+      const norm = normalizeBase64(compact);
+      return { mime: s.mime, raw: norm, dataUri: `data:${s.mime};base64,${norm}` };
+    }
+  }
+  return null;
+}
+
+function formatBytes(bytes) {
+  if (!bytes || bytes < 1024) return `${bytes || 0} B`;
+  if (bytes < 1048576) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / 1048576).toFixed(2)} MB`;
+}
+
+if (typeof window !== 'undefined') {
+  window._b64Toolkit = { encodeUtf8Base64, decodeUtf8Base64, normalizeBase64, detectBase64Image };
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Bind buttons
-  document.getElementById('btn-encode').addEventListener('click', handleTextEncode);
-  document.getElementById('btn-decode').addEventListener('click', handleTextDecode);
-  document.getElementById('chk-watermark').addEventListener('change', () => {
-    const code = document.getElementById('output-code').value;
-    if (code) {
-      // Re-trigger update based on current state
-      if (currentMode === 'text') {
-        const input = document.getElementById('inp-text').value;
-        if (input) {
-          // Check if encoded or decoded was last
-          const isEncoded = document.getElementById('preview-container-box').textContent === safeBtoa(input);
-          updateOutputCode(isEncoded ? safeBtoa(input) : safeAtob(input));
-        }
-      } else {
-        updateOutputCode(fileBase64);
-      }
-    }
-  });
-
-  // Drag and drop zone file handling
+  const inpText = document.getElementById('inp-text');
+  const chkUrlSafe = document.getElementById('chk-urlsafe');
+  const btnEncode = document.getElementById('btn-encode');
+  const btnDecode = document.getElementById('btn-decode');
   const dropZone = document.getElementById('drop-zone');
   const fileInput = document.getElementById('file-input');
+  const previewContainer = document.getElementById('preview-container-box');
+  const outputCode = document.getElementById('output-code');
 
+  const statIn = document.getElementById('b64-stat-in');
+  const statOut = document.getElementById('b64-stat-out');
+  const statMime = document.getElementById('b64-stat-mime');
+
+  const btnCopyRaw = document.getElementById('btn-copy-raw');
+  const btnCopyCss = document.getElementById('btn-copy-css');
+  const btnDownloadMedia = document.getElementById('btn-download-media');
+  const btnDownloadTxt = document.getElementById('btn-download-txt');
+
+  let activeMedia = null; // { mime, raw, dataUri, filename }
+
+  function updateStats(inBytes, outBytes, mime) {
+    if (statIn) statIn.textContent = `In: ${formatBytes(inBytes)}`;
+    if (statOut) statOut.textContent = `Out: ${formatBytes(outBytes)}`;
+    if (statMime) {
+      if (mime) {
+        statMime.textContent = mime;
+        statMime.style.display = '';
+      } else {
+        statMime.style.display = 'none';
+      }
+    }
+  }
+
+  function renderTextPreview(label, text) {
+    previewContainer.innerHTML = '';
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = 'width:100%;height:100%;display:flex;flex-direction:column;gap:8px;justify-content:center;';
+    const badge = document.createElement('div');
+    badge.style.cssText = 'font-size:0.75rem;color:#38bdf8;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.6px;';
+    badge.textContent = label;
+    const pre = document.createElement('pre');
+    pre.style.cssText = 'margin:0;color:#e2e8f0;font-family:var(--font-mono);font-size:0.84rem;white-space:pre-wrap;word-break:break-all;max-height:150px;overflow:auto;background:rgba(255,255,255,0.03);padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.07);';
+    pre.textContent = text.length > 600 ? text.slice(0, 600) + '…' : text;
+    wrapper.appendChild(badge);
+    wrapper.appendChild(pre);
+    previewContainer.appendChild(wrapper);
+  }
+
+  function renderImagePreview(media) {
+    previewContainer.innerHTML = '';
+    activeMedia = media;
+    if (btnDownloadMedia) btnDownloadMedia.style.display = '';
+
+    let safeSrc = media.dataUri;
+    if (media.mime === 'image/svg+xml') {
+      try {
+        const rawSvg = decodeUtf8Base64(media.raw);
+        const sanitized = window.HubUtils.sanitizeSvg(rawSvg);
+        if (!sanitized) throw new Error('Invalid SVG');
+        safeSrc = `data:image/svg+xml;base64,${encodeUtf8Base64(sanitized, false)}`;
+        activeMedia.dataUri = safeSrc;
+      } catch (e) {
+        renderTextPreview('⚠️ SVG', 'Invalid or unsafe SVG payload.');
+        return;
+      }
+    }
+
+    const img = document.createElement('img');
+    img.src = safeSrc;
+    img.alt = 'Base64 Decoded Preview';
+    img.onerror = () => {
+      renderTextPreview('⚠️ Media', currentLang === 'en' ? 'Base64 image could not be rendered.' : 'Image Base64 impossible à afficher.');
+    };
+    previewContainer.appendChild(img);
+  }
+
+  function renderFileInfo(name, mime, size) {
+    previewContainer.innerHTML = '';
+    const box = document.createElement('div');
+    box.style.cssText = 'text-align:center;color:#94a3b8;font-size:0.9rem;display:flex;flex-direction:column;align-items:center;gap:6px;';
+    const icon = document.createElement('span');
+    icon.style.fontSize = '2.2rem';
+    icon.textContent = '📄';
+    const title = document.createElement('strong');
+    title.style.color = '#fff';
+    title.textContent = name || 'File';
+    const meta = document.createElement('span');
+    meta.style.cssText = 'font-family:var(--font-mono);font-size:0.8rem;';
+    meta.textContent = `${mime || 'application/octet-stream'} • ${formatBytes(size)}`;
+    box.appendChild(icon);
+    box.appendChild(title);
+    box.appendChild(meta);
+    previewContainer.appendChild(box);
+  }
+
+  // Encode text -> pure Base64
+  function handleEncode() {
+    const val = inpText.value;
+    if (!val) {
+      window.HubUtils.showToast(currentLang === 'en' ? 'Enter text to encode first.' : 'Saisissez du texte à encoder.', 'warn');
+      return;
+    }
+    try {
+      const encoded = encodeUtf8Base64(val, chkUrlSafe.checked);
+      activeMedia = null;
+      if (btnDownloadMedia) btnDownloadMedia.style.display = 'none';
+      outputCode.value = encoded;
+      updateStats(new TextEncoder().encode(val).length, encoded.length, chkUrlSafe.checked ? 'text/base64url' : 'text/base64');
+      renderTextPreview(chkUrlSafe.checked ? 'URL-Safe Base64' : 'UTF-8 Base64', encoded);
+    } catch (e) {
+      window.HubUtils.showToast(currentLang === 'en' ? 'Encoding failed.' : 'Erreur d\'encodage.', 'error');
+    }
+  }
+
+  // Decode Base64 -> UTF-8 text OR Reverse Image Preview
+  function handleDecode() {
+    const val = (inpText.value || '').trim();
+    if (!val) {
+      window.HubUtils.showToast(currentLang === 'en' ? 'Paste Base64 or Data URI first.' : 'Collez un Base64 ou Data URI.', 'warn');
+      return;
+    }
+
+    const detectedImg = detectBase64Image(val);
+    if (detectedImg) {
+      const ext = detectedImg.mime.split('/')[1].replace('+xml', '');
+      detectedImg.filename = `decoded-image.${ext}`;
+      outputCode.value = detectedImg.dataUri;
+      let rawBytes = 0;
+      try { rawBytes = base64ToUint8Array(detectedImg.raw).length; } catch (e) {}
+      updateStats(val.length, rawBytes, detectedImg.mime);
+      renderImagePreview(detectedImg);
+      window.HubUtils.showToast(currentLang === 'en' ? `🖼️ Detected ${detectedImg.mime}!` : `🖼️ Image détectée (${detectedImg.mime}) !`, 'success');
+      return;
+    }
+
+    try {
+      const decoded = decodeUtf8Base64(val);
+      activeMedia = null;
+      if (btnDownloadMedia) btnDownloadMedia.style.display = 'none';
+      outputCode.value = decoded;
+      updateStats(val.length, new TextEncoder().encode(decoded).length, 'text/plain');
+      renderTextPreview(currentLang === 'en' ? 'Decoded UTF-8 Text' : 'Texte UTF-8 Décodé', decoded);
+    } catch (e) {
+      window.HubUtils.showToast(currentLang === 'en' ? 'Invalid Base64 string.' : 'Chaîne Base64 invalide.', 'error');
+    }
+  }
+
+  function handleFile(file) {
+    if (!file) return;
+    if (file.size > 8 * 1024 * 1024) {
+      window.HubUtils.showToast(currentLang === 'en' ? 'File exceeds 8 MB client-side limit.' : 'Le fichier dépasse la limite de 8 Mo.', 'error');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const dataUrl = String(ev.target.result || '');
+      const commaIdx = dataUrl.indexOf(',');
+      const raw = commaIdx >= 0 ? dataUrl.slice(commaIdx + 1) : dataUrl;
+      outputCode.value = dataUrl;
+      updateStats(file.size, dataUrl.length, file.type || 'application/octet-stream');
+
+      if ((file.type || '').startsWith('image/')) {
+        renderImagePreview({ mime: file.type, raw, dataUri: dataUrl, filename: file.name });
+      } else {
+        activeMedia = { mime: file.type || 'application/octet-stream', raw, dataUri: dataUrl, filename: file.name };
+        if (btnDownloadMedia) btnDownloadMedia.style.display = '';
+        renderFileInfo(file.name, file.type, file.size);
+      }
+      window.HubUtils.showToast(currentLang === 'en' ? `✅ Converted ${file.name}` : `✅ ${file.name} converti`, 'success');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  btnEncode.addEventListener('click', handleEncode);
+  btnDecode.addEventListener('click', handleDecode);
+  chkUrlSafe.addEventListener('change', () => {
+    if (inpText.value && !activeMedia && outputCode.value) handleEncode();
+  });
+
+  // Drop zone
   dropZone.addEventListener('click', () => fileInput.click());
-  fileInput.addEventListener('change', (e) => {
-    handleFileConversion(e.target.files[0]);
-  });
-
-  dropZone.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    dropZone.classList.add('dragover');
-  });
-
-  dropZone.addEventListener('dragleave', () => {
-    dropZone.classList.remove('dragover');
-  });
-
+  dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
   dropZone.addEventListener('drop', (e) => {
     e.preventDefault();
     dropZone.classList.remove('dragover');
-    handleFileConversion(e.dataTransfer.files[0]);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', (e) => {
+    if (e.target.files && e.target.files[0]) handleFile(e.target.files[0]);
   });
 
-  // Copy code action
-  document.getElementById('btn-copy-code').addEventListener('click', () => {
-    const code = document.getElementById('output-code').value;
-    if (!code) return;
-    navigator.clipboard.writeText(code).then(() => {
-      const activeLang = localStorage.getItem('hub_lang') || 'fr';
-      const msg = translations[activeLang].success_copy || 'Code copié avec succès !';
-      alert(msg);
-    }).catch(err => {
-      console.error('Failed to copy code: ', err);
+  btnCopyRaw.addEventListener('click', () => {
+    if (!outputCode.value) return;
+    const msg = (translations[currentLang] && translations[currentLang].success_copy) || 'Copied!';
+    window.HubUtils.copyText(outputCode.value, msg);
+  });
+
+  btnCopyCss.addEventListener('click', () => {
+    const val = (outputCode.value || '').trim();
+    if (!val) return;
+    const uri = val.startsWith('data:') ? val : `data:application/octet-stream;base64,${val}`;
+    const css = `background-image: url("${uri}");`;
+    window.HubUtils.copyText(css, currentLang === 'en' ? '🎨 CSS url() copied!' : '🎨 CSS url() copié !');
+  });
+
+  if (btnDownloadMedia) {
+    btnDownloadMedia.addEventListener('click', () => {
+      if (!activeMedia) return;
+      try {
+        const bytes = base64ToUint8Array(activeMedia.raw);
+        const blob = new Blob([bytes], { type: activeMedia.mime });
+        window.HubUtils.safeDownloadBlob(blob, activeMedia.filename || 'media-decoded.bin');
+        window.HubUtils.showToast(currentLang === 'en' ? '🖼️ Media downloaded!' : '🖼️ Média téléchargé !', 'success');
+      } catch (e) {
+        window.HubUtils.showToast(currentLang === 'en' ? 'Could not reconstruct file.' : 'Impossible de reconstruire le fichier.', 'error');
+      }
     });
-  });
+  }
 
-  // Download standalone HTML action
-  document.getElementById('btn-download-html').addEventListener('click', () => {
-    const code = document.getElementById('output-code').value;
-    if (!code) return;
-    
-    let compiled = '';
-    if (currentMode === 'text') {
-      compiled = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Base64 Output — IA Code Studio</title>
-</head>
-<body style="background:#0b0c10; color:#fff; font-family:sans-serif; padding:40px; word-break:break-all;">
-  <h2>Base64 Payload:</h2>
-  <pre style="white-space:pre-wrap; background:#111218; padding:20px; border-radius:8px; border:1px solid #222; color:#00f0ff;">${code}</pre>
-</body>
-</html>`;
-    } else {
-      compiled = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Embedded Base64 File — IA Code Studio</title>
-</head>
-<body style="background:#0b0c10; display:flex; justify-content:center; align-items:center; height:100vh; margin:0;">
-  ${code}
-</body>
-</html>`;
-    }
-
-    const blob = new Blob([compiled], { type: 'text/html;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', 'base64-widget.html');
-    link.style.display = 'none';
-    
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+  btnDownloadTxt.addEventListener('click', () => {
+    if (!outputCode.value) return;
+    window.HubUtils.safeDownloadText(outputCode.value, 'base64-output.txt', 'text/plain;charset=utf-8');
+    window.HubUtils.showToast(currentLang === 'en' ? '📥 .TXT downloaded!' : '📥 .TXT téléchargé !', 'success');
   });
 });

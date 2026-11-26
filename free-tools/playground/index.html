@@ -3,15 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IA CODEPLAY — Sandbox Live</title>
+  <title>IA CODEPLAY — Live HTML/CSS/JS Sandbox v2.0</title>
+  <meta name="description" content="Éditeur de code HTML/CSS/JS en direct avec prévisualisation scindée, console live, 8 presets Three.js/CSS, injecteur CDN et lien de partage #code=.">
+  <link rel="canonical" href="https://ia-codestudio.com/free-tools/playground/index.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="IA CODEPLAY — Live HTML/CSS/JS Sandbox v2.0">
+  <meta property="og:description" content="Real-time split-screen HTML/CSS/JS playground with Live Console, 8 presets, CDN injector & share links.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
-  
+
   <!-- CodeMirror CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/material-ocean.min.css">
-  
+
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="playground-style.css">
 </head>
@@ -19,7 +24,7 @@
   <header class="cyber-header">
     <div class="header-logo">
       <span class="logo-icon">⚡</span>
-      <h1 class="logo-text">IA CODE <span class="accent-text">PLAYGROUND</span></h1>
+      <h1 class="logo-text">IA CODE <span class="accent-text">PLAYGROUND v2</span></h1>
     </div>
     <div class="header-controls">
       <div class="lang-switcher">
@@ -27,30 +32,41 @@
         <button id="btn-lang-en" class="lang-btn">EN</button>
       </div>
       <a href="../index.html" class="back-link">
-        <span class="back-icon">←</span> <span data-i18n="back_dashboard">Tableau de bord</span>
+        <span class="back-icon">←</span> <span data-i18n="back_dashboard">Free Tools Hub</span>
       </a>
     </div>
   </header>
 
-  <div class="playground-layout">
+  <div class="playground-layout" id="playground-layout">
     <!-- Left Panel: Code Editors & Controls -->
-    <div class="editor-container">
+    <div class="editor-container" id="editor-pane">
       <div class="editor-header-tabs">
-        <button class="tab-btn active" data-tab="html">HTML</button>
-        <button class="tab-btn" data-tab="css">CSS</button>
-        <button class="tab-btn" data-tab="js">JavaScript</button>
+        <div class="tab-group">
+          <button class="tab-btn active" data-tab="html">HTML</button>
+          <button class="tab-btn" data-tab="css">CSS</button>
+          <button class="tab-btn" data-tab="js">JavaScript</button>
+        </div>
+        <div class="editor-tools-right">
+          <select id="cdn-injector" class="mini-select" title="Inject CDN">
+            <option value="">+ CDN</option>
+            <option value="three">+ Three.js r128</option>
+            <option value="gsap">+ GSAP 3.12</option>
+            <option value="chart">+ Chart.js 4</option>
+            <option value="tailwind">+ Tailwind Play CDN</option>
+          </select>
+          <button type="button" id="btn-format-code" class="mini-tool-btn" data-i18n="play_format">Formater</button>
+          <button type="button" id="btn-share-code" class="mini-tool-btn cyan" data-i18n="play_share">Partager #code=</button>
+          <button type="button" id="btn-reset-code" class="mini-tool-btn" data-i18n="play_reset">Réinitialiser</button>
+        </div>
       </div>
 
       <div class="editors-wrapper">
-        <!-- HTML Editor -->
         <div id="wrapper-html" class="editor-tab-content active">
           <textarea id="editor-html"></textarea>
         </div>
-        <!-- CSS Editor -->
         <div id="wrapper-css" class="editor-tab-content">
           <textarea id="editor-css"></textarea>
         </div>
-        <!-- JS Editor -->
         <div id="wrapper-js" class="editor-tab-content">
           <textarea id="editor-js"></textarea>
         </div>
@@ -59,12 +75,16 @@
       <!-- Presets & Exports Bar -->
       <div class="editor-footer-controls">
         <div class="presets-section">
-          <span data-i18n="play_presets" class="control-label">Presets WebGL & CSS</span>
+          <span data-i18n="play_presets" class="control-label">Presets WebGL, Shaders &amp; UI</span>
           <div class="preset-buttons">
-            <button class="preset-btn" data-preset="cube" data-i18n="play_preset_cube">Cube 3D Rotatif</button>
-            <button class="preset-btn" data-preset="matrix" data-i18n="play_preset_matrix">Pluie Matrix 3D</button>
-            <button class="preset-btn" data-preset="neon" data-i18n="play_preset_neon">Texte Néon Pulsé</button>
-            <button class="preset-btn" data-preset="glass" data-i18n="play_preset_glass">Formulaire Glassmorphic</button>
+            <button type="button" class="preset-btn" data-preset="cube" data-i18n="play_preset_cube">Cube 3D</button>
+            <button type="button" class="preset-btn" data-preset="shader" data-i18n="play_preset_shader">Vague Plasma</button>
+            <button type="button" class="preset-btn" data-preset="particles" data-i18n="play_preset_particles">Particules</button>
+            <button type="button" class="preset-btn" data-preset="bento" data-i18n="play_preset_bento">Bento SaaS</button>
+            <button type="button" class="preset-btn" data-preset="matrix" data-i18n="play_preset_matrix">Matrix Rain</button>
+            <button type="button" class="preset-btn" data-preset="neon" data-i18n="play_preset_neon">Texte Néon</button>
+            <button type="button" class="preset-btn" data-preset="glass" data-i18n="play_preset_glass">Form Glass</button>
+            <button type="button" class="preset-btn" data-preset="pricing" data-i18n="play_preset_pricing">Carte Prix</button>
           </div>
         </div>
 
@@ -73,12 +93,12 @@
             <input type="checkbox" id="chk-watermark" checked>
             <span data-i18n="badge_label">Inclure le badge "Powered by IA Code Studio"</span>
           </label>
-          
+
           <div class="export-actions">
-            <button id="btn-copy-code" class="action-btn cyan-btn">
+            <button type="button" id="btn-copy-code" class="action-btn cyan-btn">
               <span>📋</span> <span data-i18n="copy_code">Copier le code</span>
             </button>
-            <button id="btn-download-html" class="action-btn">
+            <button type="button" id="btn-download-html" class="action-btn">
               <span>📥</span> <span data-i18n="download_html">Télécharger HTML</span>
             </button>
           </div>
@@ -86,15 +106,35 @@
       </div>
     </div>
 
-    <!-- Right Panel: Preview Iframe -->
-    <div class="preview-container">
+    <!-- Draggable Split Resizer -->
+    <div class="split-resizer" id="split-resizer" title="Drag to resize"></div>
+
+    <!-- Right Panel: Preview Iframe + Live Console -->
+    <div class="preview-container" id="preview-pane">
       <div class="preview-header">
-        <span class="preview-dot dot-red"></span>
-        <span class="preview-dot dot-yellow"></span>
-        <span class="preview-dot dot-green"></span>
-        <span class="preview-title" data-i18n="preview_panel">Prévisualisation en direct</span>
+        <div class="preview-dots-wrap">
+          <span class="preview-dot dot-red"></span>
+          <span class="preview-dot dot-yellow"></span>
+          <span class="preview-dot dot-green"></span>
+          <span class="preview-title" data-i18n="preview_panel">Prévisualisation en direct</span>
+        </div>
+        <div class="viewport-controls">
+          <button type="button" class="vp-btn active" data-vp="100%" title="Desktop">🖥️</button>
+          <button type="button" class="vp-btn" data-vp="768px" title="Tablet 768px">📱</button>
+          <button type="button" class="vp-btn" data-vp="375px" title="Mobile 375px">📲</button>
+          <button type="button" id="btn-toggle-console" class="vp-btn" title="Live Console">🖥️ <span id="console-count">0</span></button>
+        </div>
       </div>
-      <iframe id="preview-iframe" sandbox="allow-scripts allow-popups allow-forms allow-modals"></iframe>
+      <div class="iframe-stage" id="iframe-stage">
+        <iframe id="preview-iframe" sandbox="allow-scripts allow-popups allow-forms allow-modals"></iframe>
+      </div>
+      <div class="live-console-drawer" id="live-console-drawer">
+        <div class="console-head">
+          <span>📟 <span data-i18n="play_console">Console Live</span></span>
+          <button type="button" id="btn-clear-console" class="mini-tool-btn" data-i18n="play_clear">Effacer</button>
+        </div>
+        <div class="console-logs" id="console-logs"></div>
+      </div>
     </div>
   </div>
 
@@ -104,6 +144,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/css/css.min.js"></script>
 
+  <script src="../js/hub-utils.js"></script>
   <script src="../js/i18n.js"></script>
   <script src="../js/main.js"></script>
   <script src="templates.js"></script>

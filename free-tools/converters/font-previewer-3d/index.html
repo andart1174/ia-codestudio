@@ -3,20 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IA CODEPLAY — 3D Google Fonts Previewer</title>
+  <title>3D Text Maker (WebGL PBR) — Free Extruded 3D Typography Studio</title>
+  <meta name="description" content="Créez des textes 3D WebGL extrudés avec matériaux PBR (Néon, Chrome, Or, Wireframe), animations fluides, export PNG transparent et HTML Three.js.">
+  <link rel="canonical" href="https://ia-codestudio.com/free-tools/converters/font-previewer-3d/index.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
-  
   <link rel="stylesheet" href="../../style.css">
   <link rel="stylesheet" href="../converters-style.css">
   <link rel="stylesheet" href="font-previewer-3d.css">
+
+  <!-- Three.js Core & Addons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FontLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/TextGeometry.js"></script>
 </head>
 <body class="cyber-bg converter-body">
   <header class="cyber-header">
     <div class="header-logo">
-      <span class="logo-icon">🗣️</span>
-      <h1 class="logo-text">3D TEXT <span class="accent-text">MAKER</span></h1>
+      <span class="logo-icon">🔤</span>
+      <h1 class="logo-text">3D TEXT <span class="accent-text">MAKER PRO</span></h1>
     </div>
     <div class="header-controls">
       <div class="lang-switcher">
@@ -24,82 +31,116 @@
         <button id="btn-lang-en" class="lang-btn">EN</button>
       </div>
       <a href="../../index.html" class="back-link">
-        <span class="back-icon">←</span> <span data-i18n="back_dashboard">Tableau de bord</span>
+        <span class="back-icon">←</span> <span data-i18n="back_dashboard">Free Tools Hub</span>
       </a>
     </div>
   </header>
 
   <div class="converter-layout">
-    <!-- Left: Inputs -->
+    <!-- Input Panel -->
     <div class="input-panel">
-      <h2 data-i18n="f3d_title" class="panel-title">Aperçu de Textes 3D (Google Fonts)</h2>
-      
-      <div class="form-group">
-        <label for="inp-text-3d" data-i18n="f3d_input_label">Saisissez votre texte</label>
-        <input type="text" id="inp-text-3d" class="form-input" value="IA STUDIO">
-      </div>
+      <h2 data-i18n="f3d_title" class="panel-title">Créateur de Texte 3D WebGL PBR</h2>
 
       <div class="form-group">
-        <label for="inp-font-style" data-i18n="f3d_font_label">Sélectionnez le style de police</label>
-        <select id="inp-font-style" class="form-input">
-          <option value="helvetiker">Helvetiker Modern</option>
-          <option value="gentilis">Gentilis Tech</option>
-          <option value="optimer">Optimer Sans</option>
-        </select>
+        <label for="inp-text" data-i18n="f3d_input_label">Saisissez votre texte 3D</label>
+        <input type="text" id="inp-text" class="form-input" value="IA STUDIO 3D" maxlength="32">
       </div>
 
-      <div class="form-group">
-        <label for="inp-depth" data-i18n="f3d_depth_label">Profondeur 3D</label>
-        <div class="slider-container">
-          <input type="range" id="inp-depth" min="1" max="15" value="4">
-          <span id="depth-val">0.4</span>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+        <div class="form-group" style="flex:1;min-width:160px;">
+          <label for="sel-font" data-i18n="f3d_font_label">Style de police 3D</label>
+          <select id="sel-font" class="form-input">
+            <option value="helvetiker_bold">Helvetiker Bold (Modern)</option>
+            <option value="optimer_bold">Optimer Bold (Cyber)</option>
+            <option value="gentilis_bold">Gentilis Bold (Classic)</option>
+            <option value="droid_sans_bold">Droid Sans Bold (Clean)</option>
+            <option value="droid_serif_bold">Droid Serif Bold (Luxury)</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="flex:1;min-width:160px;">
+          <label for="sel-material" data-i18n="f3d_material_label">Matériau PBR</label>
+          <select id="sel-material" class="form-input">
+            <option value="neon">⚡ Cyber Neon</option>
+            <option value="chrome">🪩 Liquid Chrome</option>
+            <option value="gold">🏆 Brushed 24K Gold</option>
+            <option value="wireframe">🧬 Hologram Wireframe</option>
+          </select>
         </div>
       </div>
 
       <div class="form-group">
-        <label for="inp-color-3d" data-i18n="f3d_color_label">Couleur du texte 3D</label>
-        <input type="color" id="inp-color-3d" class="form-input color-picker" value="#00f0ff" style="height: 40px;">
+        <label for="sel-anim" data-i18n="f3d_anim_label">Animation 3D</label>
+        <select id="sel-anim" class="form-input">
+          <option value="float">🌊 Smooth Float &amp; Sway</option>
+          <option value="spin">🔄 Continuous Spin</option>
+          <option value="pulse">💓 Neon Pulse</option>
+          <option value="tilt">🛰️ Spatial Tilt</option>
+          <option value="static">📷 Static (Best for PNG)</option>
+        </select>
       </div>
 
-      <div class="form-group">
-        <div class="checkbox-list">
-          <label class="checkbox-item">
-            <input type="checkbox" id="chk-bevel" checked>
-            <span data-i18n="f3d_bevel_label">Biseautage (Bevel)</span>
-          </label>
-          <label class="checkbox-item">
-            <input type="checkbox" id="chk-glow" checked>
-            <span data-i18n="f3d_glow_label">Activer le halo lumineux</span>
-          </label>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+        <div class="form-group" style="flex:1;min-width:160px;">
+          <label for="inp-depth" data-i18n="f3d_depth_label">Profondeur d'extrusion</label>
+          <div class="slider-container">
+            <input type="range" id="inp-depth" min="1" max="28" value="8">
+            <span id="val-depth">8</span>
+          </div>
+        </div>
+
+        <div class="form-group" style="flex:1;min-width:160px;">
+          <label for="inp-bevel" data-i18n="f3d_bevel_label">Biseautage (Bevel)</label>
+          <div class="slider-container">
+            <input type="range" id="inp-bevel" min="0" max="4" step="0.2" value="1.0">
+            <span id="val-bevel">1.0</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:1rem;">
+        <div class="form-group" style="flex:1;">
+          <label for="inp-color" data-i18n="f3d_color_label">Couleur principale</label>
+          <input type="color" id="inp-color" class="form-input color-picker" value="#00f0ff">
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label for="inp-glow" data-i18n="f3d_glow_label">Halo lumineux (Emissive)</label>
+          <input type="color" id="inp-glow" class="form-input color-picker" value="#8a2be2">
         </div>
       </div>
     </div>
 
-    <!-- Right: Outputs -->
+    <!-- Output Panel -->
     <div class="output-panel">
-      <h2 data-i18n="preview_panel" class="panel-title">Prévisualisation en direct</h2>
-      
-      <div class="visual-preview-box">
-        <div id="preview-container-box">
-          <!-- WebGL Canvas will render here -->
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <h2 data-i18n="preview_panel" class="panel-title" style="border:none;padding:0;margin:0;">Prévisualisation en direct</h2>
+        <div class="stats-pill-row">
+          <span class="stat-pill" id="f3d-status-pill">WebGL Ready</span>
         </div>
       </div>
 
+      <div class="visual-preview-box" style="height: 330px; background: radial-gradient(circle at 50% 45%, rgba(0,240,255,0.1), #05060b 80%);">
+        <div id="preview-container-box"></div>
+      </div>
+
       <div class="watermark-container">
-        <label class="watermark-toggle-label">
+        <label class="checkbox-item">
           <input type="checkbox" id="chk-watermark" checked>
           <span data-i18n="badge_label">Inclure le badge "Powered by IA Code Studio"</span>
         </label>
       </div>
 
       <h2 data-i18n="export_title" class="panel-title">Code à intégrer</h2>
-      <div class="code-output-area" style="flex: 1; min-height: 220px;">
+      <div class="code-output-area" style="height: 190px;">
         <textarea id="output-code" readonly></textarea>
         <div class="code-actions-row">
-          <button id="btn-copy-code" class="action-btn cyan-btn">
+          <button type="button" id="btn-copy-code" class="action-btn cyan-btn">
             <span>📋</span> <span data-i18n="copy_code">Copier le code</span>
           </button>
-          <button id="btn-download-html" class="action-btn">
+          <button type="button" id="btn-export-png" class="action-btn">
+            <span>🖼️</span> <span data-i18n="f3d_export_png">PNG Transparent</span>
+          </button>
+          <button type="button" id="btn-download-html" class="action-btn">
             <span>📥</span> <span data-i18n="download_html">Télécharger HTML</span>
           </button>
         </div>
@@ -107,14 +148,29 @@
     </div>
   </div>
 
-  <!-- Three.js & Font scripts via CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FontLoader.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/TextGeometry.js"></script>
+  <!-- Bilingual EN/FR SEO FAQ -->
+  <div class="seo-faq-section">
+    <h3 class="faq-section-title" data-fr="FAQ — Créateur de Texte 3D WebGL" data-en="FAQ — 3D WebGL Text Maker">FAQ — Créateur de Texte 3D WebGL</h3>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <div class="faq-question" data-fr="Puis-je exporter mon titre 3D en PNG sans fond ?" data-en="Can I export my 3D title as a transparent PNG?">Puis-je exporter mon titre 3D en PNG sans fond ?</div>
+        <div class="faq-answer" data-fr="Oui ! Faites pivoter la caméra 3D à la souris pour cadrer votre titre, puis cliquez sur 'PNG Transparent' pour capturer une image alpha nette prête pour Figma, Canva ou YouTube." data-en="Yes! Orbit the 3D camera with your mouse to frame your title, then click 'Transparent PNG' to capture a crisp alpha image ready for Figma, Canva, or thumbnails.">Oui ! Faites pivoter la caméra 3D à la souris puis cliquez sur 'PNG Transparent' pour capturer une image alpha prête pour Figma ou YouTube.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" data-fr="Le code HTML Three.js exporté gère-t-il les apostrophes et caractères spéciaux ?" data-en="Does the exported Three.js HTML handle apostrophes and special characters?">Le code HTML Three.js exporté gère-t-il les apostrophes et caractères spéciaux ?</div>
+        <div class="faq-answer" data-fr="Oui, le texte est sérialisé via JSON.stringify sécurisé et la géométrie WebGL est automatiquement libérée en mémoire à chaque mise à jour." data-en="Yes, text is safely serialized via JSON.stringify and WebGL geometries/materials are properly disposed on every update to prevent VRAM leaks.">Oui, le texte est sérialisé via JSON.stringify sécurisé et les ressources WebGL sont libérées automatiquement.</div>
+      </div>
+    </div>
+  </div>
 
+  <script src="../../js/hub-utils.js"></script>
   <script src="../../js/i18n.js"></script>
   <script src="../../js/main.js"></script>
   <script src="font-previewer-3d.js"></script>
+  <script>
+    document.querySelectorAll('.faq-question').forEach(item => {
+      item.addEventListener('click', () => item.parentElement.classList.toggle('active'));
+    });
+  </script>
 </body>
 </html>

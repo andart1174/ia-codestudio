@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Mesh Gradient, Smooth Shadow &amp; Neon Border Lab — Free CSS Generator</title>
+  <meta name="description" content="Créez des dégradés Mesh multi-orbes, des ombres lisses multi-couches (Smooth Shadow) et des bordures néon animées. Export CSS pur ou Tailwind gratuit.">
+  <link rel="canonical" href="https://ia-codestudio.com/free-tools/converters/css-mesh-lab/index.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="../converters-style.css">
+  <style>
+    .orb-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+    .orb-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .orb-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .orb-head input[type="color"] { width: 42px !important; height: 28px !important; border-radius: 6px !important; }
+    .orb-sliders { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 0.76rem; color: var(--text-muted); }
+    .orb-sliders input[type="range"] { width: 100%; accent-color: var(--accent-cyan); }
+    .mesh-stage {
+      width: 100%;
+      height: 310px;
+      border-radius: 14px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.25s ease;
+    }
+    .mesh-noise-layer {
+      position: absolute;
+      inset: 0;
+      opacity: 0.14;
+      pointer-events: none;
+      background-image: radial-gradient(rgba(255,255,255,0.35) 1px, transparent 0);
+      background-size: 6px 6px;
+    }
+    .shadow-demo-card {
+      width: 220px;
+      height: 140px;
+      border-radius: 20px;
+      background: #111827;
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      color: #fff;
+      font-family: var(--font-mono);
+      z-index: 2;
+    }
+    @property --ia-neon-angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+    @keyframes iaNeonSpin { to { --ia-neon-angle: 360deg; } }
+    .neon-demo-wrap {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: iaNeonSpin var(--neon-speed, 4s) linear infinite;
+    }
+    .neon-demo-inner {
+      width: 240px;
+      height: 140px;
+      background: #0b1020;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      color: #fff;
+      font-family: var(--font-mono);
+    }
+    @media (max-width: 600px) { .orb-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body class="cyber-bg converter-body">
+  <header class="cyber-header">
+    <div class="header-logo">
+      <span class="logo-icon">🌈</span>
+      <h1 class="logo-text">CSS MESH <span class="accent-text">SHADOW LAB</span></h1>
+    </div>
+    <div class="header-controls">
+      <div class="lang-switcher">
+        <button id="btn-lang-fr" class="lang-btn">FR</button>
+        <button id="btn-lang-en" class="lang-btn">EN</button>
+      </div>
+      <a href="../../index.html" class="back-link">
+        <span class="back-icon">←</span> <span data-i18n="back_dashboard">Free Tools Hub</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="converter-layout">
+    <!-- Input Controls -->
+    <div class="input-panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+        <h2 data-i18n="mesh_lab_title" class="panel-title" style="border:none;padding:0;margin:0;">CSS Mesh Gradient &amp; Smooth Shadow Lab</h2>
+        <button type="button" id="btn-randomize" class="action-btn cyan-btn" data-i18n="mesh_randomize">🎲 Palette Aléatoire</button>
+      </div>
+
+      <div class="segmented-toggle" id="mesh-mode-tabs">
+        <button type="button" class="active" data-mode="mesh" data-i18n="mesh_mode_mesh">Mesh Gradient</button>
+        <button type="button" data-mode="shadow" data-i18n="mesh_mode_shadow">Smooth Shadow</button>
+        <button type="button" data-mode="border" data-i18n="mesh_mode_border">Neon Border</button>
+      </div>
+
+      <!-- MODE 1: MESH GRADIENT -->
+      <div id="panel-mode-mesh" style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="preset-pill-bar" id="mesh-presets">
+          <button type="button" class="preset-chip active" data-preset="cyber">⚡ Cyber Aurora</button>
+          <button type="button" class="preset-chip" data-preset="stripe">💜 Stripe Violet</button>
+          <button type="button" class="preset-chip" data-preset="ocean">🌊 Ocean Glass</button>
+          <button type="button" class="preset-chip" data-preset="solar">🔥 Solar Flare</button>
+          <button type="button" class="preset-chip" data-preset="emerald">🌿 Emerald Mist</button>
+        </div>
+
+        <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap;">
+          <div class="form-group" style="flex:1;min-width:140px;">
+            <label for="mesh-base-color" data-fr="Couleur de fond" data-en="Base Background">Couleur de fond</label>
+            <input type="color" id="mesh-base-color" class="color-picker" value="#070b18">
+          </div>
+          <label class="checkbox-item" style="padding-top:18px;">
+            <input type="checkbox" id="mesh-grain" checked>
+            <span data-fr="Texture grain subtil" data-en="Subtle grain texture">Texture grain subtil</span>
+          </label>
+        </div>
+
+        <div class="orb-grid" id="orb-controls"></div>
+      </div>
+
+      <!-- MODE 2: SMOOTH LAYERED SHADOW -->
+      <div id="panel-mode-shadow" style="display:none;flex-direction:column;gap:1rem;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.9rem;">
+          <div class="form-group">
+            <label for="sh-layers" data-fr="Couches lissées" data-en="Smooth Layers">Couches lissées</label>
+            <input type="range" id="sh-layers" min="2" max="6" value="5">
+          </div>
+          <div class="form-group">
+            <label for="sh-y" data-fr="Élévation Y (px)" data-en="Elevation Y (px)">Élévation Y (px)</label>
+            <input type="range" id="sh-y" min="6" max="80" value="36">
+          </div>
+          <div class="form-group">
+            <label for="sh-blur" data-fr="Flou final (px)" data-en="Final Blur (px)">Flou final (px)</label>
+            <input type="range" id="sh-blur" min="12" max="120" value="64">
+          </div>
+          <div class="form-group">
+            <label for="sh-alpha" data-fr="Intensité ombre" data-en="Shadow Strength">Intensité ombre</label>
+            <input type="range" id="sh-alpha" min="8" max="65" value="34">
+          </div>
+        </div>
+        <div style="display:flex;gap:1rem;">
+          <div class="form-group" style="flex:1;">
+            <label for="sh-color" data-fr="Teinte de l'ombre" data-en="Shadow Tint">Teinte de l'ombre</label>
+            <input type="color" id="sh-color" class="color-picker" value="#00f0ff">
+          </div>
+          <div class="form-group" style="flex:1;">
+            <label for="sh-bg" data-fr="Fond scène" data-en="Stage Background">Fond scène</label>
+            <input type="color" id="sh-bg" class="color-picker" value="#0c1222">
+          </div>
+        </div>
+      </div>
+
+      <!-- MODE 3: ANIMATED NEON BORDER -->
+      <div id="panel-mode-border" style="display:none;flex-direction:column;gap:1rem;">
+        <div style="display:flex;gap:1rem;">
+          <div class="form-group" style="flex:1;">
+            <label for="nb-c1" data-fr="Couleur Néon 1" data-en="Neon Color 1">Couleur Néon 1</label>
+            <input type="color" id="nb-c1" class="color-picker" value="#00f0ff">
+          </div>
+          <div class="form-group" style="flex:1;">
+            <label for="nb-c2" data-fr="Couleur Néon 2" data-en="Neon Color 2">Couleur Néon 2</label>
+            <input type="color" id="nb-c2" class="color-picker" value="#a855f7">
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.9rem;">
+          <div class="form-group">
+            <label for="nb-width" data-fr="Épaisseur (px)" data-en="Border Width (px)">Épaisseur (px)</label>
+            <input type="range" id="nb-width" min="1" max="6" value="2">
+          </div>
+          <div class="form-group">
+            <label for="nb-radius" data-fr="Arrondi (px)" data-en="Radius (px)">Arrondi (px)</label>
+            <input type="range" id="nb-radius" min="8" max="36" value="20">
+          </div>
+          <div class="form-group">
+            <label for="nb-speed" data-fr="Vitesse rotation (s)" data-en="Rotation Speed (s)">Vitesse rotation (s)</label>
+            <input type="range" id="nb-speed" min="1" max="10" step="0.5" value="3.5">
+          </div>
+          <div class="form-group">
+            <label for="nb-glow" data-fr="Rayon Glow (px)" data-en="Glow Blur (px)">Rayon Glow (px)</label>
+            <input type="range" id="nb-glow" min="0" max="48" value="22">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preview & Export -->
+    <div class="output-panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <h2 data-i18n="preview_panel" class="panel-title" style="border:none;padding:0;margin:0;">Prévisualisation en direct</h2>
+        <div class="segmented-toggle" id="mesh-format-toggle">
+          <button type="button" class="active" data-fmt="css">Pure CSS</button>
+          <button type="button" data-fmt="tailwind">Tailwind</button>
+        </div>
+      </div>
+
+      <div id="mesh-stage" class="mesh-stage"></div>
+
+      <h2 data-i18n="export_title" class="panel-title">Code à intégrer</h2>
+      <div class="code-output-area" style="flex:1;min-height:210px;">
+        <textarea id="output-code" readonly></textarea>
+        <div class="code-actions-row">
+          <button type="button" id="btn-copy-code" class="action-btn cyan-btn">
+            <span>📋</span> <span data-i18n="copy_code">Copier le code</span>
+          </button>
+          <button type="button" id="btn-download-css" class="action-btn">
+            <span>📥</span> <span data-fr="Télécharger .CSS" data-en="Download .CSS">Télécharger .CSS</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bilingual EN/FR SEO FAQ -->
+  <div class="seo-faq-section">
+    <h3 class="faq-section-title" data-fr="FAQ — CSS Mesh &amp; Smooth Shadows" data-en="FAQ — CSS Mesh &amp; Smooth Shadows">FAQ — CSS Mesh &amp; Smooth Shadows</h3>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <div class="faq-question" data-fr="Pourquoi utiliser une ombre Smooth multi-couches au lieu d'un seul box-shadow ?" data-en="Why use a multi-layer Smooth Shadow instead of a single box-shadow?">Pourquoi utiliser une ombre Smooth multi-couches au lieu d'un seul box-shadow ?</div>
+        <div class="faq-answer" data-fr="Un seul box-shadow paraît souvent plat ou boueux. En superposant 4 à 6 couches exponentielles douces, on reproduit la diffusion réelle de la lumière façon Apple / Stripe en CSS natif." data-en="A single box-shadow often looks harsh or muddy. Layering 4 to 6 exponentially scaled shadows mimics real-world ambient occlusion and soft light diffusion in pure CSS.">Superposer 4 à 6 couches exponentielles reproduit la diffusion lumineuse naturelle façon Apple / Stripe en CSS pur.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" data-fr="Les bordures néon animées fonctionnent-elles sur tous les navigateurs modernes ?" data-en="Do animated conic neon borders work across modern browsers?">Les bordures néon animées fonctionnent-elles sur tous les navigateurs modernes ?</div>
+        <div class="faq-answer" data-fr="Oui, CSS @property est pris en charge par Chrome, Edge, Safari 16.4+ et Firefox 128+ pour animer fluidement un dégradé conique à 60 FPS sans JavaScript." data-en="Yes! CSS @property is natively supported in Chrome, Edge, Safari 16.4+, and Firefox 128+, animating conic gradients smoothly at 60 FPS with zero JavaScript.">Oui, CSS @property anime les dégradés coniques à 60 FPS sans JavaScript sur Chrome, Edge, Safari et Firefox.</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/hub-utils.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/main.js"></script>
+  <script src="css-mesh-lab.js"></script>
+  <script>
+    document.querySelectorAll('.faq-question').forEach(item => {
+      item.addEventListener('click', () => item.parentElement.classList.toggle('active'));
+    });
+  </script>
+</body>
+</html>

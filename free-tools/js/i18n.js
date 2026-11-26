@@ -1,184 +1,312 @@
 const translations = {
   fr: {
-    back_to_site: "Retour au Site",
-    hero_title: "Outils Créatifs & Sandbox Web Gratuits",
-    hero_subtitle: "Testez en direct, convertissez vos formats et intégrez des widgets interactifs premium en un clic.",
-    
-    // Cards
-    play_title: "Live Sandbox Playground",
-    play_desc: "Un éditeur de code complet en temps réel avec prévisualisation en écran scindé. Presets Three.js 3D et CSS intégrés.",
-    omni_title: "OmniConvert Pro",
-    omni_desc: "La boîte à outils ultime pour développeurs. Éditeur de code live, convertisseurs de formats (JSON, XML, YAML), Base64, minificateur et utilitaires dans une interface premium.",
-    text_title: "Text to Glassmorphic Card",
-    text_desc: "Générez instantanément des composants HTML/CSS ultra-modernes à partir de simples textes avec effets de verre trempé.",
-    tailwind_title: "Tailwind to CSS Converter",
-    tailwind_desc: "Convertissez vos structures Tailwind HTML complexes en code HTML autonome doté de styles CSS inline propres.",
-    svg_title: "SVG Optimizer & Code Extractor",
-    svg_desc: "Nettoyez les métadonnées inutiles de vos fichiers SVG, optimisez le tracé et prévisualisez le code d'intégration propre.",
-    fonts_title: "3D Google Fonts Previewer",
-    fonts_desc: "Saisissez votre texte, sélectionnez une police Google Fonts et générez un titre 3D animable en WebGL exportable en 1-clic.",
-    md_title: "Markdown to HTML Converter",
-    md_desc: "Traduisez instantanément vos notes structurées en Markdown vers du code HTML5 sémantique parfaitement formaté.",
-    
+    back_to_site: "Retour au Portail",
+    hero_title: "Sandbox Web & Outils Développeurs Gratuits",
+    hero_subtitle: "10 outils ultra-rapides, 100% gratuits et hors-ligne : Playground live, Tailwind→CSS, SVG Optimizer, Markdown GFM, 3D Text, Mesh Gradients, Bento Grid & Dev Kit.",
+    hub_search_ph: "Rechercher un outil gratuit... (Ctrl+K)",
+    cat_all: "Tous (10)",
+    cat_sandbox: "💻 Sandbox",
+    cat_css: "🎨 CSS & UI",
+    cat_vector: "📐 Vector & 3D",
+    cat_dev: "🧪 Text & Dev",
+    cat_fav: "⭐ Favoris",
+    hub_portal_banner: "Vous cherchez nos studios complets 3D/4D, IA Architecte, AD-GENIUS AI ou OmniConvert ?",
+    hub_portal_cta: "Ouvrir le Portail Complet →",
+    badge_free: "100% GRATUIT",
+    badge_new: "NOUVEAU",
+
+    // Cards (10 unique tools — 0 duplicates)
+    play_title: "Live Sandbox Playground v2.0",
+    play_desc: "Éditeur HTML/CSS/JS CodeMirror en temps réel avec Console intégrée, redimensionnement tactile, 8 presets (Three.js, Shaders, Bento), auto-save et lien de partage #code=.",
+    text_title: "Glassmorphic Card Studio",
+    text_desc: "Créez des cartes en verre dépoli avec 5 presets, effet 3D Tilt, lien CTA configurable et audit de contraste WCAG 2.1.",
+    tailwind_title: "Tailwind to Vanilla CSS Pro",
+    tailwind_desc: "Transpilez Tailwind v3/v4 (palette complète 50-950, Grid, Flexbox, hover:, md:) en HTML Email-Safe inline ou feuille <style> propre.",
+    svg_title: "SVG Optimizer & JSX Extractor",
+    svg_desc: "Nettoyez réellement les métadonnées Illustrator/Inkscape, sécurisez anti-XSS, suivez le % économisé et exportez en .svg, React JSX ou CSS Data URI.",
+    fonts_title: "3D Text Maker (WebGL PBR)",
+    fonts_desc: "Générez des titres 3D WebGL extrudés avec matériaux Néon/Chrome/Or, animations fluides et export PNG transparent ou HTML Three.js.",
+    md_title: "Markdown GFM to HTML Pro",
+    md_desc: "Compilez en direct tableaux GFM, checklists, blocs de code protégés et H1-H6 vers du HTML5 sémantique sanitizé avec thèmes Dark/Light.",
+    b64_title: "Base64 Toolkit (Text, Files & Reverse)",
+    b64_desc: "Encodez/décodez UTF-8, mode URL-Safe, CSS url(...), conversion fichiers/images et prévisualisation inverse Base64 → Image téléchargeable.",
+    mesh_title: "CSS Mesh Gradient & Shadow Lab",
+    mesh_desc: "Créez des dégradés Mesh multi-orbes, des ombres lisses multi-couches et bordures néon animées exportables en CSS pur ou Tailwind.",
+    grid_title: "CSS Grid & Bento Layout Builder",
+    grid_desc: "Construisez visuellement des grilles CSS Grid et Bento Box responsives par clic avec fusion de cellules et export HTML/CSS propre.",
+    swiss_title: "Regex Tester, JWT & Crypto IDs",
+    swiss_desc: "Testez vos expressions régulières en direct avec surlignage, inspectez des tokens JWT hors-ligne et générez UUID v4 / NanoID / clés sécurisées.",
+
     // Buttons
     btn_launch: "Lancer la Sandbox",
     btn_launch_tool: "Ouvrir l'outil",
-    footer_terms: "Tous droits réservés. Version Gratuite.",
-    
+    footer_terms: "Tous droits réservés. Suite Gratuite 100% Client-Side.",
+
     // Tools UI General
-    back_dashboard: "Tableau de bord",
+    back_dashboard: "Free Tools Hub",
     copy_code: "Copier le code",
     download_html: "Télécharger HTML",
     editor_panel: "Éditeur de code",
     preview_panel: "Prévisualisation en direct",
     badge_label: "Inclure le badge \"Powered by IA Code Studio\"",
     export_title: "Code à intégrer",
-    success_copy: "Code copié avec succès !",
-    
-    // Text to Glassmorphic Card Tool Specific
-    t2g_title: "Convertisseur Text vers Card Glassmorphism",
+    success_copy: "Code copié dans le presse-papiers !",
+
+    // Text to Glassmorphic Card Tool
+    t2g_title: "Studio Carte Glassmorphism Pro",
     t2g_label_title: "Titre de la carte",
     t2g_label_desc: "Description",
     t2g_label_btn: "Texte du bouton",
+    t2g_label_url: "Lien du bouton (URL)",
     t2g_label_color: "Couleur dominante (Glow)",
     t2g_label_blur: "Niveau de flou (Blur)",
+    t2g_label_radius: "Rayon de bordure",
+    t2g_label_tilt: "Activer l'effet 3D Tilt au survol",
     t2g_preview_card_title: "Mon Beau Projet 3D",
     t2g_preview_card_desc: "Créez de superbes interfaces en verre dépoli avec des reflets lumineux colorés.",
     t2g_preview_card_btn: "Découvrir →",
-    
-    // Tailwind to Vanilla Tool Specific
-    tw2v_title: "Convertisseur Tailwind vers CSS Standard",
+
+    // Tailwind to Vanilla Tool
+    tw2v_title: "Convertisseur Tailwind vers CSS Standard Pro",
     tw2v_input_placeholder: "Collez votre code HTML contenant des classes Tailwind ici...",
     tw2v_convert: "Convertir en CSS Standard",
-    
-    // SVG Optimizer Specific
-    svg_opt_title: "Optimiseur & Générateur de Code SVG",
-    svg_drop_zone: "Glissez votre fichier .svg ici ou cliquez pour en sélectionner un",
+    tw2v_mode_inline: "Inline (Email-Safe)",
+    tw2v_mode_style: "Feuille <style> CSS",
+
+    // SVG Optimizer
+    svg_opt_title: "Optimiseur & Extracteur SVG Pro",
+    svg_drop_zone: "Glissez un fichier .svg ici ou cliquez pour parcourir",
+    svg_paste_label: "Ou collez directement votre code SVG",
     svg_opt_settings: "Paramètres d'optimisation",
-    svg_remove_dimensions: "Retirer largeur/hauteur fixes (pour rendu responsive)",
-    svg_minify: "Minifier le code XML",
+    svg_remove_dimensions: "Rendre responsive (garder viewBox)",
+    svg_minify: "Minifier XML & supprimer métadonnées éditeurs",
+    svg_round_paths: "Arrondir les coordonnées (précision 2 décimales)",
     svg_accent_color: "Colorer les contours/remplissages (optionnel)",
-    
-    // 3D Font Previewer Specific
-    f3d_title: "Aperçu de Textes 3D (Google Fonts)",
-    f3d_input_label: "Saisissez votre texte",
-    f3d_font_label: "Sélectionnez le style de police",
-    f3d_depth_label: "Profondeur 3D",
+    svg_download_svg: "Télécharger .SVG",
+    svg_copy_jsx: "Copier JSX",
+    svg_copy_datauri: "CSS Data URI",
+
+    // 3D Font Previewer
+    f3d_title: "Créateur de Texte 3D WebGL PBR",
+    f3d_input_label: "Saisissez votre texte 3D",
+    f3d_font_label: "Style de police 3D",
+    f3d_material_label: "Matériau PBR",
+    f3d_anim_label: "Animation 3D",
+    f3d_depth_label: "Profondeur d'extrusion",
     f3d_bevel_label: "Biseautage (Bevel)",
-    f3d_color_label: "Couleur du texte 3D",
-    f3d_glow_label: "Activer le halo lumineux",
-    
-    // Markdown Converter Specific
-    md2h_title: "Convertisseur Markdown vers HTML Pro",
-    md2h_input_placeholder: "# Mon Titre Principal\n\nÉcrivez votre texte en **Markdown** ici...\n\n* Élément 1\n* Élément 2\n\n> Une citation inspirante.",
+    f3d_color_label: "Couleur principale",
+    f3d_glow_label: "Halo lumineux (Emissive)",
+    f3d_export_png: "PNG Transparent",
+
+    // Markdown Converter
+    md2h_title: "Compilateur Markdown GFM vers HTML Pro",
+    md2h_input_placeholder: "# Mon Titre\n\nÉcrivez votre **Markdown GFM** ici (tableaux, checklists, blocs de code)...",
     md2h_convert: "Compiler le HTML",
-    
-    // Playground Specific
-    play_presets: "Presets WebGL & CSS",
-    play_preset_cube: "Cube 3D Rotatif",
-    play_preset_matrix: "Pluie Matrix 3D",
-    play_preset_neon: "Texte Néon Pulsé",
-    play_preset_glass: "Formulaire Glassmorphic",
-    
-    // Base64 Specific
-    b64_title: "Convertisseur Base64 (Texte & Fichiers)",
-    b64_desc: "Encodez ou décodez du texte en Base64, ou convertissez des images et fichiers en Data URLs instantanément.",
-    b64_mode_text: "Mode Texte Base64",
-    b64_mode_file: "Mode Fichier / Image vers Base64",
-    b64_encode: "Encoder en Base64 🔒",
-    b64_decode: "Décoder le Base64 🔓",
+    md2h_theme_label: "Thème d'export HTML",
+
+    // Playground
+    play_presets: "Presets WebGL, Shaders & UI",
+    play_preset_cube: "Cube 3D",
+    play_preset_matrix: "Matrix Rain",
+    play_preset_neon: "Texte Néon",
+    play_preset_glass: "Form Glass",
+    play_preset_shader: "Vague Plasma",
+    play_preset_bento: "Bento SaaS",
+    play_preset_particles: "Particules",
+    play_preset_pricing: "Carte Prix",
+    play_console: "Console Live",
+    play_clear: "Effacer",
+    play_share: "Partager #code=",
+    play_format: "Formater",
+    play_reset: "Réinitialiser",
+
+    // Base64
+    b64_title: "Boîte à Outils Base64 (Texte, Fichiers & Reverse)",
+    b64_desc: "Encodez/décodez UTF-8, URL-Safe, CSS url() ou prévisualisez une image depuis un Base64.",
+    b64_mode_text: "Texte ou chaîne Base64 (supporte Data URI)",
+    b64_mode_file: "Fichier / Image vers Base64",
+    b64_encode: "Encoder 🔒",
+    b64_decode: "Décoder 🔓",
+    b64_urlsafe: "Mode URL-Safe (- / _)",
     b64_drop_zone: "Glissez une image ou un fichier ici (ou cliquez)",
-    b64_textarea_placeholder: "Saisissez ou collez votre texte ici..."
+    b64_textarea_placeholder: "Saisissez du texte ou collez un Base64 / data:image/...",
+    b64_preview_empty: "Aperçu texte ou média",
+    b64_copy_raw: "Copier Base64 Brut",
+    b64_copy_css: "Copier CSS url()",
+
+    // New Tool 1: CSS Mesh Lab
+    mesh_lab_title: "CSS Mesh Gradient & Smooth Shadow Lab",
+    mesh_randomize: "🎲 Palette Aléatoire",
+    mesh_mode_mesh: "Mesh Gradient",
+    mesh_mode_shadow: "Smooth Shadow",
+    mesh_mode_border: "Neon Border",
+
+    // New Tool 2: Grid Bento Builder
+    grid_lab_title: "Constructeur CSS Grid & Bento Box",
+    grid_cols: "Colonnes",
+    grid_rows: "Lignes",
+    grid_gap: "Espacement (Gap)",
+    grid_add_card: "+ Ajouter une tuile",
+
+    // New Tool 3: Dev Swiss Kit
+    swiss_lab_title: "Regex Live Tester, JWT & Crypto IDs",
+    swiss_tab_regex: "🔎 Regex Tester",
+    swiss_tab_jwt: "🔑 JWT Decoder",
+    swiss_tab_ids: "🔐 UUID & Keys"
   },
   en: {
-    back_to_site: "Back to Site",
-    hero_title: "Free Web Sandbox & Creative Tools",
-    hero_subtitle: "Live preview web components, convert formats, and embed premium interactive widgets in 1-click.",
-    
-    // Cards
-    play_title: "Live Sandbox Playground",
-    play_desc: "A complete real-time code editor with split-screen live preview. Pre-built Three.js 3D and CSS templates.",
-    omni_title: "OmniConvert Pro",
-    omni_desc: "The ultimate developer toolkit. Real-time code playground, format converters (JSON, XML, YAML), Base64 encoder/decoder, code minifier, and utility tools in a premium interface.",
-    text_title: "Text to Glassmorphic Card",
-    text_desc: "Instantly generate ultra-modern HTML/CSS card components from plain text with premium frosted glass styles.",
-    tailwind_title: "Tailwind to CSS Converter",
-    tailwind_desc: "Convert your complex Tailwind HTML structures into clean standalone HTML with inline CSS styles.",
-    svg_title: "SVG Optimizer & Code Extractor",
-    svg_desc: "Clean metadata from SVG files, optimize vector paths, and preview clean responsive embed codes.",
-    fonts_title: "3D Google Fonts Previewer",
-    fonts_desc: "Type your text, select a Google Font, and generate a fully animated 3D WebGL text title exportable in 1-click.",
-    md_title: "Markdown to HTML Converter",
-    md_desc: "Instantly compile structured Markdown text into clean, beautifully formatted semantic HTML5 code.",
-    
+    back_to_site: "Back to Portal",
+    hero_title: "Free Web Sandbox & Developer Tools",
+    hero_subtitle: "10 blazing-fast, 100% free & offline-ready tools: Live Playground, Tailwind→CSS, SVG Optimizer, GFM Markdown, 3D Text, Mesh Gradients, Bento Grid & Dev Kit.",
+    hub_search_ph: "Search free developer tools... (Ctrl+K)",
+    cat_all: "All (10)",
+    cat_sandbox: "💻 Sandbox",
+    cat_css: "🎨 CSS & UI",
+    cat_vector: "📐 Vector & 3D",
+    cat_dev: "🧪 Text & Dev",
+    cat_fav: "⭐ Favorites",
+    hub_portal_banner: "Looking for our flagship 3D/4D Studios, AI Architect, AD-GENIUS AI or OmniConvert?",
+    hub_portal_cta: "Open Full Portal →",
+    badge_free: "100% FREE",
+    badge_new: "NEW",
+
+    // Cards (10 unique tools — 0 duplicates)
+    play_title: "Live Sandbox Playground v2.0",
+    play_desc: "Real-time CodeMirror HTML/CSS/JS editor with Live Console, draggable split resizer, 8 presets (Three.js, Shaders, Bento), auto-save & #code= share links.",
+    text_title: "Glassmorphic Card Studio",
+    text_desc: "Generate frosted glass UI cards with 5 instant presets, interactive 3D tilt, editable CTA links, and WCAG 2.1 contrast auditing.",
+    tailwind_title: "Tailwind to Vanilla CSS Pro",
+    tailwind_desc: "Transpile Tailwind v3/v4 (full 50-950 colors, Grid, Flex, hover:, md:) into Email-Safe inline HTML or clean <style> CSS.",
+    svg_title: "SVG Optimizer & JSX Extractor",
+    svg_desc: "Strip Illustrator/Inkscape metadata, sanitize XSS, track byte savings live, and export clean .svg, React JSX, or CSS Data URI.",
+    fonts_title: "3D Text Maker (WebGL PBR)",
+    fonts_desc: "Create extruded 3D WebGL text titles with Neon/Chrome/Gold PBR materials, smooth animations, transparent PNG & Three.js HTML export.",
+    md_title: "Markdown GFM to HTML Pro",
+    md_desc: "Live-compile GFM tables, checklists, protected code blocks, and H1-H6 into sanitized semantic HTML5 with Dark/Light themes.",
+    b64_title: "Base64 Toolkit (Text, Files & Reverse)",
+    b64_desc: "UTF-8 encode/decode, URL-Safe mode, CSS url(...), file/image Data URIs, and reverse Base64 → Image preview & download.",
+    mesh_title: "CSS Mesh Gradient & Shadow Lab",
+    mesh_desc: "Design animated multi-orb Mesh Gradients, smooth layered box-shadows, and glowing neon borders exported as pure CSS or Tailwind.",
+    grid_title: "CSS Grid & Bento Layout Builder",
+    grid_desc: "Visually craft responsive CSS Grid and Apple-style Bento Box layouts with cell spanning and clean HTML/CSS export.",
+    swiss_title: "Regex Tester, JWT & Crypto IDs",
+    swiss_desc: "Live-highlight RegExp matches & capture groups, decode JWT tokens offline, and generate cryptographic UUID v4 / NanoID / API keys.",
+
     // Buttons
     btn_launch: "Launch Sandbox",
     btn_launch_tool: "Open Tool",
-    footer_terms: "All rights reserved. Free Version.",
-    
+    footer_terms: "All rights reserved. 100% Free Client-Side Suite.",
+
     // Tools UI General
-    back_dashboard: "Dashboard",
+    back_dashboard: "Free Tools Hub",
     copy_code: "Copy Code",
     download_html: "Download HTML",
     editor_panel: "Code Editor",
     preview_panel: "Live Preview",
     badge_label: "Include \"Powered by IA Code Studio\" badge",
     export_title: "Embed Code",
-    success_copy: "Code copied successfully!",
-    
-    // Text to Glassmorphic Card Tool Specific
-    t2g_title: "Text to Glassmorphism Card Converter",
+    success_copy: "Code copied to clipboard!",
+
+    // Text to Glassmorphic Card Tool
+    t2g_title: "Glassmorphism Card Studio Pro",
     t2g_label_title: "Card Title",
     t2g_label_desc: "Description",
     t2g_label_btn: "Button Text",
+    t2g_label_url: "Button Link (URL)",
     t2g_label_color: "Glow Color",
     t2g_label_blur: "Blur Amount",
+    t2g_label_radius: "Border Radius",
+    t2g_label_tilt: "Enable 3D Hover Tilt",
     t2g_preview_card_title: "My Beautiful 3D Project",
     t2g_preview_card_desc: "Create amazing interfaces with frosted glass effects and glowing color highlights.",
     t2g_preview_card_btn: "Discover →",
-    
-    // Tailwind to Vanilla Tool Specific
-    tw2v_title: "Tailwind to Vanilla HTML/CSS Converter",
+
+    // Tailwind to Vanilla Tool
+    tw2v_title: "Tailwind to Vanilla CSS Converter Pro",
     tw2v_input_placeholder: "Paste your HTML containing Tailwind utility classes here...",
     tw2v_convert: "Convert to Vanilla CSS",
-    
-    // SVG Optimizer Specific
-    svg_opt_title: "SVG Optimizer & Code Generator",
+    tw2v_mode_inline: "Inline (Email-Safe)",
+    tw2v_mode_style: "Clean <style> CSS",
+
+    // SVG Optimizer
+    svg_opt_title: "SVG Optimizer & JSX Extractor Pro",
     svg_drop_zone: "Drag and drop your .svg file here or click to browse",
+    svg_paste_label: "Or paste raw SVG code directly",
     svg_opt_settings: "Optimization Settings",
-    svg_remove_dimensions: "Remove fixed width/height (for responsive rendering)",
-    svg_minify: "Minify XML code",
+    svg_remove_dimensions: "Make responsive (preserve viewBox)",
+    svg_minify: "Minify XML & strip editor metadata",
+    svg_round_paths: "Round numeric coordinates (2 decimals)",
     svg_accent_color: "Color strokes/fills (optional)",
-    
-    // 3D Font Previewer Specific
-    f3d_title: "3D Google Fonts Text Previewer",
-    f3d_input_label: "Type your text",
-    f3d_font_label: "Select Font Style",
-    f3d_depth_label: "3D Extrusion Depth",
+    svg_download_svg: "Download .SVG",
+    svg_copy_jsx: "Copy JSX",
+    svg_copy_datauri: "CSS Data URI",
+
+    // 3D Font Previewer
+    f3d_title: "3D WebGL PBR Text Maker",
+    f3d_input_label: "Type your 3D text",
+    f3d_font_label: "3D Font Family",
+    f3d_material_label: "PBR Material",
+    f3d_anim_label: "3D Animation",
+    f3d_depth_label: "Extrusion Depth",
     f3d_bevel_label: "Bevel Controls",
-    f3d_color_label: "3D Text Color",
-    f3d_glow_label: "Enable Luminous Glow",
-    
-    // Markdown Converter Specific
-    md2h_title: "Pro Markdown to HTML Converter",
-    md2h_input_placeholder: "# My Main Heading\n\nWrite your **Markdown** content here...\n\n* Item 1\n* Item 2\n\n> An inspiring quote.",
+    f3d_color_label: "Primary Color",
+    f3d_glow_label: "Luminous Emissive Glow",
+    f3d_export_png: "Transparent PNG",
+
+    // Markdown Converter
+    md2h_title: "Pro Markdown GFM to HTML Compiler",
+    md2h_input_placeholder: "# My Heading\n\nWrite your **GFM Markdown** here (tables, checklists, fenced code)...",
     md2h_convert: "Compile HTML",
-    
-    // Playground Specific
-    play_presets: "WebGL & CSS Presets",
-    play_preset_cube: "Rotating 3D Cube",
-    play_preset_matrix: "Matrix 3D Digital Rain",
-    play_preset_neon: "Pulsing Neon Text",
-    play_preset_glass: "Glassmorphic Form",
-    
-    // Base64 Specific
-    b64_title: "Base64 Converter (Text & Files)",
-    b64_desc: "Encode or decode text in Base64, or convert images and files into Data URLs instantly.",
-    b64_mode_text: "Base64 Text Mode",
-    b64_mode_file: "Base64 File / Image Mode",
-    b64_encode: "Encode to Base64 🔒",
-    b64_decode: "Decode Base64 🔓",
+    md2h_theme_label: "HTML Export Theme",
+
+    // Playground
+    play_presets: "WebGL, Shaders & UI Presets",
+    play_preset_cube: "3D Cube",
+    play_preset_matrix: "Matrix Rain",
+    play_preset_neon: "Neon Text",
+    play_preset_glass: "Glass Form",
+    play_preset_shader: "Plasma Wave",
+    play_preset_bento: "Bento SaaS",
+    play_preset_particles: "Particles",
+    play_preset_pricing: "Pricing Card",
+    play_console: "Live Console",
+    play_clear: "Clear",
+    play_share: "Share #code=",
+    play_format: "Format",
+    play_reset: "Reset",
+
+    // Base64
+    b64_title: "Base64 Toolkit (Text, Files & Reverse)",
+    b64_desc: "UTF-8 encode/decode, URL-Safe, CSS url() or reverse preview Base64 images.",
+    b64_mode_text: "Text or Base64 string (supports Data URI)",
+    b64_mode_file: "File / Image to Base64",
+    b64_encode: "Encode 🔒",
+    b64_decode: "Decode 🔓",
+    b64_urlsafe: "URL-Safe Mode (- / _)",
     b64_drop_zone: "Drag and drop any file or image here (or click)",
-    b64_textarea_placeholder: "Type or paste your text here..."
+    b64_textarea_placeholder: "Type text or paste Base64 / data:image/...",
+    b64_preview_empty: "Text or media preview",
+    b64_copy_raw: "Copy Raw Base64",
+    b64_copy_css: "Copy CSS url()",
+
+    // New Tool 1: CSS Mesh Lab
+    mesh_lab_title: "CSS Mesh Gradient & Smooth Shadow Lab",
+    mesh_randomize: "🎲 Random Palette",
+    mesh_mode_mesh: "Mesh Gradient",
+    mesh_mode_shadow: "Smooth Shadow",
+    mesh_mode_border: "Neon Border",
+
+    // New Tool 2: Grid Bento Builder
+    grid_lab_title: "CSS Grid & Bento Layout Builder",
+    grid_cols: "Columns",
+    grid_rows: "Rows",
+    grid_gap: "Gap Size",
+    grid_add_card: "+ Add Tile",
+
+    // New Tool 3: Dev Swiss Kit
+    swiss_lab_title: "Regex Live Tester, JWT & Crypto IDs",
+    swiss_tab_regex: "🔎 Regex Tester",
+    swiss_tab_jwt: "🔑 JWT Decoder",
+    swiss_tab_ids: "🔐 UUID & Keys"
   }
 };

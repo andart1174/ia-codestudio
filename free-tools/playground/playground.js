@@ -1,133 +1,144 @@
-// Live Sandbox Playground Script
+// Live Sandbox Playground v2.0 — Console, Resizer, Auto-Save, #code= Share & CDN Injector
 
 let cmHtml, cmCss, cmJs;
 let debounceTimeout;
+let currentPreset = 'cube';
+let consoleCount = 0;
 
-const watermarkCode = `
-<!-- IA Code Studio Embed Watermark (Remove by upgrading to Premium) -->
-<div id="ia-code-watermark" style="position:fixed;bottom:15px;right:15px;z-index:999999;background:rgba(15,17,26,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(0,240,255,0.25);border-radius:30px;padding:8px 16px;box-shadow:0 4px 15px rgba(0,240,255,0.15);font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;cursor:pointer;transition:all 0.3s ease;user-select:none;" onclick="window.open('https://ia-codestudio.com','_blank')">
-  <span style="color:#00f0ff;animation:pulse-glow 1.5s infinite alternate;">⚡</span>
-  <span style="color:#fff;letter-spacing:0.5px;">3D Widget by <span style="background:linear-gradient(135deg,#00f0ff,#ff007f);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">IA Code Studio</span></span>
-</div>
-<style>
-  @keyframes pulse-glow {
-    0% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(0,240,255,0.4)); }
-    100% { transform: scale(1.1); filter: drop-shadow(0 0 8px rgba(0,240,255,0.8)); }
-  }
-  #ia-code-watermark:hover {
-    transform: translateY(-2px);
-    border-color: #00f0ff;
-    box-shadow: 0 6px 20px rgba(0,240,255,0.3);
-  }
-</style>
-`;
+const AUTOSAVE_KEY = 'ia_codeplay_autosave_v2';
 
-// Initialize CodeMirror Editors with safe fallback for offline/blocked CDN environments
+const CDN_SNIPPETS = {
+  three: '<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>',
+  gsap: '<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"><\/script>',
+  chart: '<script src="https://cdn.jsdelivr.net/npm/chart.js"><\/script>',
+  tailwind: '<script src="https://cdn.tailwindcss.com"><\/script>'
+};
+
+const CONSOLE_BRIDGE_SCRIPT = `<script>
+(function(){
+  function send(level, args) {
+    try {
+      var text = Array.prototype.slice.call(args).map(function(a){
+        if (typeof a === 'object') { try { return JSON.stringify(a); } catch(e) { return String(a); } }
+        return String(a);
+      }).join(' ');
+      parent.postMessage({ type: 'ia-playground-console', level: level, text: text }, '*');
+    } catch(e) {}
+  }
+  ['log','warn','error'].forEach(function(fn){
+    var orig = console[fn];
+    console[fn] = function(){ send(fn, arguments); if (orig) orig.apply(console, arguments); };
+  });
+  window.addEventListener('error', function(e){ send('error', [e.message + (e.lineno ? ' (line ' + e.lineno + ')' : '')]); });
+  window.addEventListener('unhandledrejection', function(e){ send('error', ['Promise Rejection: ' + (e.reason && e.reason.message ? e.reason.message : e.reason)]); });
+})();
+<\/script>`;
+
+function getWatermark() {
+  return (window.HubUtils && window.HubUtils.getWatermarkCode)
+    ? window.HubUtils.getWatermarkCode('Built with IA Code Studio Playground')
+    : '';
+}
+
+function appendConsoleLine(level, text) {
+  const logs = document.getElementById('console-logs');
+  const countEl = document.getElementById('console-count');
+  if (!logs) return;
+  const line = document.createElement('div');
+  line.className = `clog-line clog-${level || 'log'}`;
+  const prefix = level === 'error' ? '✖ ' : level === 'warn' ? '⚠ ' : '› ';
+  line.textContent = prefix + text;
+  logs.appendChild(line);
+  logs.scrollTop = logs.scrollHeight;
+  consoleCount++;
+  if (countEl) countEl.textContent = String(consoleCount);
+}
+
+function clearConsole() {
+  const logs = document.getElementById('console-logs');
+  const countEl = document.getElementById('console-count');
+  if (logs) logs.innerHTML = '';
+  consoleCount = 0;
+  if (countEl) countEl.textContent = '0';
+}
+
 function initEditors() {
   if (typeof CodeMirror !== 'undefined') {
     cmHtml = CodeMirror.fromTextArea(document.getElementById('editor-html'), {
-      mode: 'xml',
-      htmlMode: true,
-      theme: 'material-ocean',
-      lineNumbers: true,
-      lineWrapping: true,
-      autoCloseTags: true
+      mode: 'xml', htmlMode: true, theme: 'material-ocean', lineNumbers: true, lineWrapping: true
     });
-
     cmCss = CodeMirror.fromTextArea(document.getElementById('editor-css'), {
-      mode: 'css',
-      theme: 'material-ocean',
-      lineNumbers: true,
-      lineWrapping: true
+      mode: 'css', theme: 'material-ocean', lineNumbers: true, lineWrapping: true
     });
-
     cmJs = CodeMirror.fromTextArea(document.getElementById('editor-js'), {
-      mode: 'javascript',
-      theme: 'material-ocean',
-      lineNumbers: true,
-      lineWrapping: true
-    });
-
-    // Attach change listeners
-    [cmHtml, cmCss, cmJs].forEach(editor => {
-      editor.on('change', () => {
-        clearTimeout(debounceTimeout);
-        debounceTimeout = setTimeout(updatePreview, 300);
-      });
+      mode: 'javascript', theme: 'material-ocean', lineNumbers: true, lineWrapping: true
     });
   } else {
-    // Fallback Mock Editor interface using raw textareas
-    console.warn("CodeMirror failed to load. Running raw textarea fallback.");
-    
-    const createMockEditor = (id) => {
+    const createMock = (id) => {
       const el = document.getElementById(id);
       return {
         getValue: () => el.value,
         setValue: (val) => { el.value = val; },
-        on: (event, callback) => {
-          if (event === 'change') {
-            el.addEventListener('input', callback);
-          }
-        },
+        on: (ev, cb) => { if (ev === 'change') el.addEventListener('input', cb); },
         refresh: () => {}
       };
     };
-
-    cmHtml = createMockEditor('editor-html');
-    cmCss = createMockEditor('editor-css');
-    cmJs = createMockEditor('editor-js');
-
-    // Attach raw change listeners
-    [cmHtml, cmCss, cmJs].forEach(editor => {
-      editor.on('change', () => {
-        clearTimeout(debounceTimeout);
-        debounceTimeout = setTimeout(updatePreview, 300);
-      });
-    });
+    cmHtml = createMock('editor-html');
+    cmCss = createMock('editor-css');
+    cmJs = createMock('editor-js');
   }
+
+  [cmHtml, cmCss, cmJs].forEach(editor => {
+    editor.on('change', () => {
+      clearTimeout(debounceTimeout);
+      debounceTimeout = setTimeout(() => {
+        saveAutosave();
+        updatePreview();
+      }, 260);
+    });
+  });
 }
 
-// Update the live preview Iframe
+function saveAutosave() {
+  try {
+    localStorage.setItem(AUTOSAVE_KEY, JSON.stringify({
+      html: cmHtml.getValue(),
+      css: cmCss.getValue(),
+      js: cmJs.getValue()
+    }));
+  } catch (e) {}
+}
+
 function updatePreview() {
+  clearConsole();
   const html = cmHtml.getValue();
   const css = cmCss.getValue();
   const js = cmJs.getValue();
   const includeWatermark = document.getElementById('chk-watermark').checked || !checkIsPremium();
-
   const iframe = document.getElementById('preview-iframe');
 
-  const compiledContent = `<!DOCTYPE html>
+  iframe.srcdoc = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    ${css}
-  </style>
+  ${CONSOLE_BRIDGE_SCRIPT}
+  <style>${css}</style>
 </head>
 <body>
   ${html}
-  ${includeWatermark ? watermarkCode : ''}
+  ${includeWatermark ? getWatermark() : ''}
   <script>
-    // Catch and isolate iframe execution errors
-    window.addEventListener('error', function(e) {
-      console.error("Iframe JS Error: " + e.message);
-    });
-    
     try {
       ${js}
-    } catch(err) {
-      console.error("Sandbox Execution Error: " + err.message);
+    } catch (err) {
+      console.error(err && err.message ? err.message : String(err));
     }
-  </script>
+  <\/script>
 </body>
 </html>`;
-
-  // Use srcdoc to bypass same-origin/CORS restrictions when loaded via file://
-  iframe.srcdoc = compiledContent;
 }
 
-// Generate the fully compiled output string
 function generateFullOutput() {
   const html = cmHtml.getValue();
   const css = cmCss.getValue();
@@ -139,108 +150,212 @@ function generateFullOutput() {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WebGL Interactive Widget — IA Code Studio</title>
+  <title>Interactive Widget — IA Code Studio</title>
   <style>
-    ${css.replace(/\n/g, '\n    ')}
+${css}
   </style>
 </head>
 <body>
-  ${html.replace(/\n/g, '\n  ')}
-  ${includeWatermark ? watermarkCode.trim().replace(/\n/g, '\n  ') : ''}
+${html}
+${includeWatermark ? getWatermark() : ''}
   <script>
-    ${js.replace(/\n/g, '\n    ')}
-  </script>
+${js}
+  <\/script>
 </body>
 </html>`;
 }
 
-// Load Preset Template
 function loadPreset(presetName) {
   const preset = window.playgroundTemplates[presetName];
   if (!preset) return;
-
+  currentPreset = presetName;
   cmHtml.setValue(preset.html);
   cmCss.setValue(preset.css);
   cmJs.setValue(preset.js);
-
-  // Mark active preset button
   document.querySelectorAll('.preset-btn').forEach(btn => {
-    btn.classList.remove('active');
-    if (btn.getAttribute('data-preset') === presetName) {
-      btn.classList.add('active');
-    }
+    btn.classList.toggle('active', btn.getAttribute('data-preset') === presetName);
   });
-
+  saveAutosave();
   updatePreview();
+}
+
+function tryLoadFromHashOrAutosave() {
+  const h = window.location.hash || '';
+  if (h.startsWith('#code=')) {
+    try {
+      const payload = JSON.parse(decodeURIComponent(escape(atob(h.slice(6)))));
+      if (payload && typeof payload.html === 'string') {
+        cmHtml.setValue(payload.html);
+        cmCss.setValue(payload.css || '');
+        cmJs.setValue(payload.js || '');
+        updatePreview();
+        if (window.HubUtils) window.HubUtils.showToast(currentLang === 'en' ? '🔗 Shared snippet loaded!' : '🔗 Snippet partagé chargé !', 'success');
+        return true;
+      }
+    } catch (e) {}
+  }
+  try {
+    const saved = localStorage.getItem(AUTOSAVE_KEY);
+    if (saved) {
+      const data = JSON.parse(saved);
+      if (data && (data.html || data.css || data.js)) {
+        cmHtml.setValue(data.html || '');
+        cmCss.setValue(data.css || '');
+        cmJs.setValue(data.js || '');
+        updatePreview();
+        return true;
+      }
+    }
+  } catch (e) {}
+  return false;
+}
+
+function initResizer() {
+  const resizer = document.getElementById('split-resizer');
+  const layout = document.getElementById('playground-layout');
+  const leftPane = document.getElementById('editor-pane');
+  const iframe = document.getElementById('preview-iframe');
+  if (!resizer || !layout || !leftPane) return;
+
+  let dragging = false;
+  resizer.addEventListener('mousedown', () => {
+    dragging = true;
+    resizer.classList.add('dragging');
+    if (iframe) iframe.style.pointerEvents = 'none';
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (!dragging) return;
+    const rect = layout.getBoundingClientRect();
+    const pct = Math.min(75, Math.max(25, ((e.clientX - rect.left) / rect.width) * 100));
+    leftPane.style.width = `${pct}%`;
+  });
+  window.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    resizer.classList.remove('dragging');
+    if (iframe) iframe.style.pointerEvents = '';
+    if (cmHtml) cmHtml.refresh();
+    if (cmCss) cmCss.refresh();
+    if (cmJs) cmJs.refresh();
+  });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   initEditors();
-  
-  // Load Default Preset (Cube 3D)
-  loadPreset('cube');
+  initResizer();
 
-  // Set up Tabs switching logic
+  if (!tryLoadFromHashOrAutosave()) {
+    loadPreset('cube');
+  }
+
+  window.addEventListener('message', (e) => {
+    if (e.data && e.data.type === 'ia-playground-console') {
+      appendConsoleLine(e.data.level, e.data.text);
+    }
+  });
+
+  // Tab switching
   const tabBtns = document.querySelectorAll('.tab-btn');
   tabBtns.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const tab = e.target.getAttribute('data-tab');
-
-      // Update button classes
+    btn.addEventListener('click', () => {
+      const tab = btn.getAttribute('data-tab');
       tabBtns.forEach(b => b.classList.remove('active'));
-      e.target.classList.add('active');
-
-      // Update editor containers visibility
-      document.querySelectorAll('.editor-tab-content').forEach(cont => {
-        cont.classList.remove('active');
-      });
+      btn.classList.add('active');
+      document.querySelectorAll('.editor-tab-content').forEach(c => c.classList.remove('active'));
       document.getElementById(`wrapper-${tab}`).classList.add('active');
-
-      // CodeMirror bugfix: refresh layout when becoming visible
       if (tab === 'html') cmHtml.refresh();
       if (tab === 'css') cmCss.refresh();
       if (tab === 'js') cmJs.refresh();
     });
   });
 
-  // Set up preset click handlers
+  // Presets
   document.querySelectorAll('.preset-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const preset = e.target.getAttribute('data-preset');
-      loadPreset(preset);
+    btn.addEventListener('click', () => loadPreset(btn.getAttribute('data-preset')));
+  });
+
+  // CDN Quick-Injector
+  const cdnSel = document.getElementById('cdn-injector');
+  if (cdnSel) {
+    cdnSel.addEventListener('change', () => {
+      const key = cdnSel.value;
+      if (key && CDN_SNIPPETS[key]) {
+        const cur = cmHtml.getValue();
+        if (!cur.includes(CDN_SNIPPETS[key])) {
+          cmHtml.setValue(CDN_SNIPPETS[key] + '\n' + cur);
+          updatePreview();
+          if (window.HubUtils) window.HubUtils.showToast(`⚡ ${key.toUpperCase()} CDN injected!`, 'success');
+        }
+      }
+      cdnSel.value = '';
+    });
+  }
+
+  // Format active code tab cleanly
+  const fmtBtn = document.getElementById('btn-format-code');
+  if (fmtBtn) {
+    fmtBtn.addEventListener('click', () => {
+      const active = document.querySelector('.tab-btn.active')?.getAttribute('data-tab') || 'html';
+      const ed = active === 'css' ? cmCss : active === 'js' ? cmJs : cmHtml;
+      const cleaned = ed.getValue().split('\n').map(l => l.replace(/\s+$/, '')).join('\n').trim();
+      ed.setValue(cleaned);
+      if (window.HubUtils) window.HubUtils.showToast(currentLang === 'en' ? '✨ Code formatted!' : '✨ Code formaté !', 'success');
+    });
+  }
+
+  // Share #code= link
+  const shareBtn = document.getElementById('btn-share-code');
+  if (shareBtn) {
+    shareBtn.addEventListener('click', () => {
+      try {
+        const data = { html: cmHtml.getValue(), css: cmCss.getValue(), js: cmJs.getValue() };
+        const enc = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+        const url = window.location.origin + window.location.pathname + '#code=' + enc;
+        if (window.HubUtils) {
+          window.HubUtils.copyText(url, currentLang === 'en' ? '🔗 Shareable #code= link copied!' : '🔗 Lien partageable #code= copié !');
+        }
+      } catch (e) {
+        if (window.HubUtils) window.HubUtils.showToast('Snippet too large for URL hash', 'warn');
+      }
+    });
+  }
+
+  // Reset to current preset
+  const resetBtn = document.getElementById('btn-reset-code');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      try { localStorage.removeItem(AUTOSAVE_KEY); } catch (e) {}
+      loadPreset(currentPreset);
+    });
+  }
+
+  // Viewport switcher + Console toggle
+  document.querySelectorAll('.vp-btn[data-vp]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.vp-btn[data-vp]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const iframe = document.getElementById('preview-iframe');
+      if (iframe) iframe.style.width = btn.getAttribute('data-vp');
     });
   });
 
-  // Watermark checkbox change
+  const toggleConsole = document.getElementById('btn-toggle-console');
+  const drawer = document.getElementById('live-console-drawer');
+  if (toggleConsole && drawer) {
+    toggleConsole.addEventListener('click', () => drawer.classList.toggle('collapsed'));
+  }
+  const clearBtn = document.getElementById('btn-clear-console');
+  if (clearBtn) clearBtn.addEventListener('click', clearConsole);
+
   document.getElementById('chk-watermark').addEventListener('change', updatePreview);
 
-  // Copy code action
   document.getElementById('btn-copy-code').addEventListener('click', () => {
-    const code = generateFullOutput();
-    navigator.clipboard.writeText(code).then(() => {
-      // Show elegant toast or inline message
-      const activeLang = localStorage.getItem('hub_lang') || 'fr';
-      const msg = translations[activeLang].success_copy || 'Code copié avec succès !';
-      alert(msg);
-    }).catch(err => {
-      console.error('Failed to copy code: ', err);
-    });
+    const lang = localStorage.getItem('hub_lang') || 'fr';
+    const msg = (translations[lang] && translations[lang].success_copy) || 'Code copied!';
+    if (window.HubUtils) window.HubUtils.copyText(generateFullOutput(), msg);
   });
 
-  // Download standalone HTML file action
   document.getElementById('btn-download-html').addEventListener('click', () => {
-    const code = generateFullOutput();
-    const blob = new Blob([code], { type: 'text/html;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', 'playground-widget.html');
-    link.style.display = 'none';
-    
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    if (window.HubUtils) window.HubUtils.safeDownloadText(generateFullOutput(), 'playground-widget.html', 'text/html;charset=utf-8');
   });
 });

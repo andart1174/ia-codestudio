@@ -3,63 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Base64 Encoder & Decoder Online - Convertissez Image & Texte en Base64 Gratuitement</title>
-  <meta name="description" content="Convertissez facilement vos textes et images en Base64 ou décodez vos chaînes Base64 en un instant. Outil gratuit, rapide, sécurisé et 100% hors-ligne pour les développeurs.">
+  <title>Base64 Toolkit Pro — UTF-8, URL-Safe, CSS url() &amp; Reverse Image Preview</title>
+  <meta name="description" content="Encodez et décodez en Base64 UTF-8 ou URL-Safe, convertissez images/fichiers en Data URI CSS, et prévisualisez/téléchargez une image à partir d'un Base64.">
+  <link rel="canonical" href="https://ia-codestudio.com/free-tools/converters/base64/index.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
-  
   <link rel="stylesheet" href="../../style.css">
   <link rel="stylesheet" href="../converters-style.css">
   <link rel="stylesheet" href="base64.css">
-
-  <!-- JSON-LD FAQ Schema Markup -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Qu'est-ce que l'encodage Base64 et à quoi sert-il ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "L'encodage Base64 est un processus de conversion de données binaires (telles que des images, des fichiers ou des polices) en une chaîne de caractères ASCII. Il est principalement utilisé en développement web pour intégrer des médias directement dans le code HTML ou CSS (Inline), évitant ainsi des requêtes HTTP supplémentaires."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Comment convertir une image en Base64 ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Faites simplement glisser et déposer votre image (PNG, JPG, SVG, WEBP, etc.) dans notre zone de dépôt de fichiers. L'outil génère automatiquement le code Base64 enveloppé dans une balise de données HTML (Data URI) prête à être copiée et intégrée dans votre code."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "L'utilisation de ce convertisseur Base64 est-elle sécurisée ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Oui, notre convertisseur Base64 fonctionne entièrement côté client. Vos fichiers et textes ne sont jamais envoyés sur nos serveurs. Tout le traitement d'encodage et de décodage se fait directement dans votre navigateur web, garantissant une confidentialité totale."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Pourquoi utiliser le Base64 dans le développement web ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "L'utilisation du Base64 permet de réduire le nombre de requêtes HTTP en intégrant les petites images, icônes ou fichiers directement dans le code source de la page (HTML ou CSS). Cela simplifie également le partage de modèles ou d'e-mails HTML ne contenant aucun fichier externe."
-        }
-      }
-    ]
-  }
-  </script>
 </head>
 <body class="cyber-bg converter-body">
   <header class="cyber-header">
     <div class="header-logo">
-      <span class="logo-icon">🔒</span>
-      <h1 class="logo-text">BASE64 <span class="accent-text">CONVERTER</span></h1>
+      <span class="logo-icon">🔐</span>
+      <h1 class="logo-text">BASE64 <span class="accent-text">TOOLKIT PRO</span></h1>
     </div>
     <div class="header-controls">
       <div class="lang-switcher">
@@ -67,105 +25,103 @@
         <button id="btn-lang-en" class="lang-btn">EN</button>
       </div>
       <a href="../../index.html" class="back-link">
-        <span class="back-icon">←</span> <span data-i18n="back_dashboard">Tableau de bord</span>
+        <span class="back-icon">←</span> <span data-i18n="back_dashboard">Free Tools Hub</span>
       </a>
     </div>
   </header>
 
   <div class="converter-layout">
-    <!-- Left: Inputs -->
+    <!-- Input Panel -->
     <div class="input-panel">
-      <h2 data-i18n="b64_title" class="panel-title">Convertisseur Base64 (Texte & Fichiers)</h2>
-      
-      <!-- Text Mode -->
+      <h2 data-i18n="b64_title" class="panel-title">Boîte à Outils Base64 (Texte, Fichiers &amp; Reverse)</h2>
+
       <div class="form-group">
-        <label for="inp-text" data-i18n="b64_mode_text">Mode Texte Base64</label>
-        <textarea id="inp-text" class="form-input form-textarea" style="min-height: 140px;" data-i18n="b64_textarea_placeholder" placeholder="Saisissez ou collez votre texte ici..."></textarea>
+        <label for="inp-text" data-i18n="b64_mode_text">Texte ou chaîne Base64 (supporte Data URI)</label>
+        <textarea id="inp-text" class="form-input form-textarea" data-i18n-placeholder="b64_textarea_placeholder" placeholder="Saisissez du texte ou collez un Base64 / data:image/..." style="min-height: 140px;"></textarea>
       </div>
 
+      <label class="checkbox-item">
+        <input type="checkbox" id="chk-urlsafe">
+        <span data-i18n="b64_urlsafe">Mode URL-Safe (- / _)</span>
+      </label>
+
       <div class="action-buttons-row">
-        <button id="btn-encode" class="btn-primary half-width-btn" data-i18n="b64_encode">Encoder en Base64 🔒</button>
-        <button id="btn-decode" class="btn-primary half-width-btn btn-secondary" data-i18n="b64_decode">Décoder le Base64 🔓</button>
+        <button type="button" id="btn-encode" class="btn-primary half-width-btn" data-i18n="b64_encode">Encoder 🔒</button>
+        <button type="button" id="btn-decode" class="btn-primary btn-secondary half-width-btn" data-i18n="b64_decode">Décoder 🔓</button>
       </div>
 
       <div class="divider-line"></div>
 
-      <!-- File Mode -->
       <div class="form-group">
-        <label data-i18n="b64_mode_file">Mode Fichier / Image vers Base64</label>
-        <div id="drop-zone" class="drop-zone">
-          <span class="drop-zone-icon">🖼️</span>
+        <label data-i18n="b64_mode_file">Fichier / Image vers Base64</label>
+        <div id="drop-zone" class="drop-zone" style="padding: 1.8rem 1.2rem;">
+          <span class="drop-zone-icon" style="font-size: 2rem;">📁</span>
           <span id="drop-zone-text" data-i18n="b64_drop_zone" class="drop-zone-text">Glissez une image ou un fichier ici (ou cliquez)</span>
           <input type="file" id="file-input" style="display: none;">
         </div>
       </div>
     </div>
 
-    <!-- Right: Outputs -->
+    <!-- Output Panel -->
     <div class="output-panel">
-      <h2 data-i18n="preview_panel" class="panel-title">Prévisualisation en direct</h2>
-      
-      <div class="visual-preview-box base64-preview-box">
-        <div id="preview-container-box">
-          <div class="empty-state-text" id="preview-empty-text">Aperçu du média</div>
-          <!-- Images/Media rendered here -->
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <h2 data-i18n="preview_panel" class="panel-title" style="border:none;padding:0;margin:0;">Prévisualisation en direct</h2>
+        <div class="stats-pill-row">
+          <span class="stat-pill" id="b64-stat-in">In: 0 B</span>
+          <span class="stat-pill good" id="b64-stat-out">Out: 0 B</span>
+          <span class="stat-pill" id="b64-stat-mime" style="display:none;">image/png</span>
         </div>
       </div>
 
-      <div class="watermark-container">
-        <label class="watermark-toggle-label">
-          <input type="checkbox" id="chk-watermark" checked>
-          <span data-i18n="badge_label">Inclure le badge "Powered by IA Code Studio"</span>
-        </label>
+      <div class="visual-preview-box base64-preview-box" style="height: 220px;">
+        <div id="preview-container-box">
+          <span class="empty-state-text" data-i18n="b64_preview_empty">Aperçu texte ou média</span>
+        </div>
       </div>
 
       <h2 data-i18n="export_title" class="panel-title">Code à intégrer</h2>
-      <div class="code-output-area" style="flex: 1; min-height: 220px;">
-        <textarea id="output-code" readonly></textarea>
+      <div class="code-output-area" style="flex: 1; min-height: 200px;">
+        <textarea id="output-code" readonly placeholder="..."></textarea>
         <div class="code-actions-row">
-          <button id="btn-copy-code" class="action-btn cyan-btn">
-            <span>📋</span> <span data-i18n="copy_code">Copier le code</span>
+          <button type="button" id="btn-copy-raw" class="action-btn cyan-btn">
+            <span>📋</span> <span data-i18n="b64_copy_raw">Copier Base64 Brut</span>
           </button>
-          <button id="btn-download-html" class="action-btn">
-            <span>📥</span> <span data-i18n="download_html">Télécharger HTML</span>
+          <button type="button" id="btn-copy-css" class="action-btn">
+            <span>🎨</span> <span data-i18n="b64_copy_css">Copier CSS url()</span>
+          </button>
+          <button type="button" id="btn-download-media" class="action-btn" style="display:none;">
+            <span>🖼️</span> <span data-fr="Télécharger Média" data-en="Download Media">Télécharger Média</span>
+          </button>
+          <button type="button" id="btn-download-txt" class="action-btn">
+            <span>📥</span> <span data-fr="Télécharger .TXT" data-en="Download .TXT">Télécharger .TXT</span>
           </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- FAQ Section for SEO -->
+  <!-- Bilingual EN/FR SEO FAQ -->
   <div class="seo-faq-section">
-    <h3 class="faq-section-title">Foire Aux Questions (FAQ) — Convertisseur Base64</h3>
+    <h3 class="faq-section-title" data-fr="FAQ — Boîte à Outils Base64" data-en="FAQ — Base64 Toolkit">FAQ — Boîte à Outils Base64</h3>
     <div class="faq-grid">
       <div class="faq-item">
-        <div class="faq-question">Qu'est-ce que l'encodage Base64 et à quoi sert-il ?</div>
-        <div class="faq-answer">L'encodage Base64 est un processus de conversion de données binaires (telles que des images, des fichiers ou des polices) en une chaîne de caractères ASCII. Il est principalement utilisé en développement web pour intégrer des médias directement dans le code HTML ou CSS (Inline), évitant ainsi des requêtes HTTP supplémentaires.</div>
+        <div class="faq-question" data-fr="La sortie Base64 brute est-elle 100% propre sans texte ajouté ?" data-en="Is the raw Base64 output 100% clean with zero injected markup?">La sortie Base64 brute est-elle 100% propre sans texte ajouté ?</div>
+        <div class="faq-answer" data-fr="Oui ! Contrairement aux anciens convertisseurs, aucun badge HTML n'est jamais ajouté à vos chaînes Base64 ou Data URI — la sortie est directement utilisable en API, JWT, CSS ou JSON." data-en="Yes! No HTML attribution is ever appended to raw Base64 strings or Data URIs — output is 100% clean and ready for APIs, JWTs, CSS, or JSON.">Oui ! Aucun badge HTML n'est ajouté aux chaînes Base64 ou Data URI — la sortie est directement prête pour vos API, JWT, CSS ou JSON.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-question">Comment convertir une image en Base64 ?</div>
-        <div class="faq-answer">Faites simplement glisser et déposer votre image (PNG, JPG, SVG, WEBP, etc.) dans notre zone de dépôt de fichiers. L'outil génère automatiquement le code Base64 enveloppé dans une balise de données HTML (Data URI) prête à être copiée et intégrée dans votre code.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-question">L'utilisation de ce convertisseur Base64 est-elle sécurisée ?</div>
-        <div class="faq-answer">Oui, notre convertisseur Base64 fonctionne entièrement côté client. Vos fichiers et textes ne sont jamais envoyés sur nos serveurs. Tout le traitement d'encodage et de décodage se fait directement dans votre navigateur web, garantissant une confidentialité totale.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-question">Pourquoi utiliser le Base64 dans le développement web ?</div>
-        <div class="faq-answer">L'utilisation du Base64 permet de réduire le nombre de requêtes HTTP en intégrant les petites images, icônes ou fichiers directement dans le code source de la page (HTML ou CSS). Cela simplifie également le partage de modèles ou d'e-mails HTML ne contenant aucun fichier externe.</div>
+        <div class="faq-question" data-fr="Comment prévisualiser une image depuis une chaîne Base64 ?" data-en="How do I preview an image from a Base64 string?">Comment prévisualiser une image depuis une chaîne Base64 ?</div>
+        <div class="faq-answer" data-fr="Collez simplement votre Data URI (data:image/png;base64,...) ou même un Base64 brut PNG/JPG/GIF/WEBP/SVG puis cliquez sur 'Décoder 🔓' : l'outil détecte automatiquement le format, affiche l'aperçu sécurisé et permet de télécharger le fichier." data-en="Paste any Data URI (data:image/png;base64,...) or raw PNG/JPG/GIF/WEBP/SVG Base64 string and click 'Decode 🔓': the format is auto-detected, safely previewed, and ready to download.">Collez un Data URI ou un Base64 brut PNG/JPG/GIF/WEBP/SVG puis cliquez sur 'Décoder 🔓' pour afficher et télécharger le média.</div>
       </div>
     </div>
   </div>
 
+  <script src="../../js/hub-utils.js"></script>
   <script src="../../js/i18n.js"></script>
   <script src="../../js/main.js"></script>
   <script src="base64.js"></script>
   <script>
     document.querySelectorAll('.faq-question').forEach(item => {
-      item.addEventListener('click', () => {
-        const parent = item.parentElement;
-        parent.classList.toggle('active');
-      });
+      item.addEventListener('click', () => item.parentElement.classList.toggle('active'));
     });
   </script>
 </body>

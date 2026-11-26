@@ -351,3 +351,74 @@
   padding: 1.2rem 1.5rem;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
+
+/* Shared v2.0 Tool Utilities */
+.stats-pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.stat-pill {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.28);
+  color: #7dd3fc;
+}
+.stat-pill.good {
+  background: rgba(16, 185, 129, 0.14);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #34d399;
+}
+.preset-pill-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.preset-chip {
+  padding: 5px 11px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.preset-chip:hover, .preset-chip.active {
+  border-color: var(--accent-cyan);
+  color: #fff;
+  background: rgba(0, 240, 255, 0.14);
+}
+.segmented-toggle {
+  display: inline-flex;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 3px;
+  gap: 3px;
+}
+.segmented-toggle button {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.segmented-toggle button.active {
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+  color: #020617;
+  font-weight: 700;
+}
+.code-actions-row {
+  flex-wrap: wrap;
+}
