@@ -1,7 +1,7 @@
 // Service Worker for IA Code Studio (ia-codestudio.com)
 // PWA Offline Support & Asset Cache - Network-First Strategy
 
-const CACHE_NAME = 'iacodestudio-v2.3';
+const CACHE_NAME = 'iacodestudio-v2.4';
 const CORE_ASSETS = [
   '/',
   '/index.html',
@@ -37,7 +37,17 @@ const CORE_ASSETS = [
   '/hologram-hud-builder/modules/hologram-shaders-presets.js',
   '/hologram-hud-builder/modules/hud-director-ai-audio.js',
   '/hologram-hud-builder/modules/hud-pro-exporters.js',
-  '/hologram-hud-builder/modules/hud-vault-qr.js'
+  '/hologram-hud-builder/modules/hud-vault-qr.js',
+  '/3d-creative-studio/index.html',
+  '/3d-creative-studio/style.css',
+  '/3d-creative-studio/app.js',
+  '/3d-creative-studio/templates.js',
+  '/3d-creative-studio/js/premium-lock.js',
+  '/3d-creative-studio/modules/creative-templates-v2.js',
+  '/3d-creative-studio/modules/creative-stage-tools.js',
+  '/3d-creative-studio/modules/creative-gallery-ai.js',
+  '/3d-creative-studio/modules/creative-exporters.js',
+  '/3d-creative-studio/modules/creative-vault-share.js'
 ];
 
 // Install: Pre-cache core shell assets

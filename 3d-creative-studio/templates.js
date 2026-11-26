@@ -172,7 +172,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
 .glitch-btn {
   position: relative; padding: 18px 40px; font-size: 16px; font-weight: 800; color: #fff;
   background: transparent; border: 2px solid var(--c-prim); letter-spacing: 3px; cursor: pointer;
-  text-transform: uppercase; outline: none; box-shadow: 0 0 15px var(--c-prim)40;
+  text-transform: uppercase; outline: none; box-shadow: 0 0 15px color-mix(in srgb, var(--c-prim) 25%, transparent);
 }
 .glitch-btn:hover {
   border-color: var(--c-sec);
@@ -436,7 +436,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
 .cc-holder div, .cc-expiry div { font-size: 13px; font-weight: 700; color: #fff; text-transform: uppercase; }
 .cc-shine {
   position: absolute; inset: 0; border-radius: 16px; pointer-events: none; z-index: 3;
-  background: linear-gradient(135deg, transparent 40%, var(--c1)20 50%, var(--c2)20 60%, transparent 100%);
+  background: linear-gradient(135deg, transparent 40%, color-mix(in srgb, var(--c1) 13%, transparent) 50%, color-mix(in srgb, var(--c2) 13%, transparent) 60%, transparent 100%);
   background-size: 200% 200%; background-position: 0% 0%; opacity: 0.4;
 }
 .cc-strip { background: #000; height: 45px; width: 100%; margin-top: 25px; }
@@ -489,12 +489,12 @@ body { background: #030712; display: flex; justify-content: center; align-items:
   position: relative; width: 350px; height: 210px;
   background: linear-gradient(135deg, #1e1b4b 0%, #030712 100%);
   border: 2px solid var(--c1); border-radius: 12px; padding: 26px; box-sizing: border-box;
-  box-shadow: 0 25px 50px rgba(0,0,0,0.6), inset 0 0 15px var(--c2)40;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.6), inset 0 0 15px color-mix(in srgb, var(--c2) 25%, transparent);
   transform-style: preserve-3d; transition: transform 0.1s ease; overflow: hidden;
 }
 .metal-shine {
   position: absolute; inset: -100%; pointer-events: none; z-index: 1;
-  background: linear-gradient(45deg, transparent 35%, var(--c1)40, #fff 50%, var(--c2)60, transparent 65%);
+  background: linear-gradient(45deg, transparent 35%, color-mix(in srgb, var(--c1) 25%, transparent), #fff 50%, color-mix(in srgb, var(--c2) 38%, transparent), transparent 65%);
   background-size: 200% 200%; opacity: 0.25;
 }
 .metal-details { position: relative; z-index: 2; display: flex; flex-direction: column; height: 100%; transform: translateZ(40px); }
@@ -624,7 +624,7 @@ card.addEventListener('click', () => {
     inputs: ["gift_title", "gift_code", "gift_value"],
     html: (title, code, value, cPrim, cSec) => `
 <div class="gold-card-wrap">
-  <div class="gold-card" id="gold-card">
+  <div class="gold-card" id="gold-card" style="--c1: ${cPrim}; --c2: ${cSec}; border: 2px solid ${cPrim}; box-shadow: 0 20px 45px color-mix(in srgb, ${cSec} 28%, transparent), inset 0 0 12px rgba(255,255,255,0.45);">
     <div class="reflection"></div>
     <div class="gold-content">
       <div class="gold-val">${value}</div>
@@ -744,7 +744,10 @@ body { background: #030712; display: flex; justify-content: center; align-items:
 const canvas = document.getElementById('scratch-canvas');
 const ctx = canvas.getContext('2d');
 let w = canvas.width = 300; let h = canvas.height = 160;
-ctx.fillStyle = '${cPrim}';
+const grad = ctx.createLinearGradient(0, 0, w, h);
+grad.addColorStop(0, '${cPrim}');
+grad.addColorStop(1, '${cSec}');
+ctx.fillStyle = grad;
 ctx.fillRect(0, 0, w, h);
 ctx.fillStyle = '#fff';
 ctx.font = '700 16px Outfit';
@@ -1036,14 +1039,15 @@ body { background: #030712; display: flex; justify-content: center; align-items:
   cursor_neon: {
     category: "cursors",
     name: { fr: "Curseur: Traînée Néon", en: "Cursor: Neon Spark Trail" },
-    inputs: [],
-    html: () => `<canvas id="cursor-canvas"></canvas><div class="helper-msg">Move your mouse to draw neon trails ⚡</div>`,
+    inputs: ["text"],
+    defaultText: { fr: "Déplacez le curseur / doigt pour dessiner ⚡", en: "Move mouse or touch to draw neon trails ⚡" },
+    html: (text) => `<canvas id="cursor-canvas"></canvas><div class="helper-msg">${text}</div>`,
     css: (cPrim, cSec) => `
 body { background: #030712; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: 'Outfit', sans-serif; overflow: hidden; }
 #cursor-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 9999; }
-.helper-msg { color: #475569; font-weight: 600; font-size: 15px; letter-spacing: 0.5px; text-transform: uppercase; text-shadow: 0 0 8px rgba(0,0,0,0.5); }
+.helper-msg { color: #475569; font-weight: 600; font-size: 15px; letter-spacing: 0.5px; text-transform: uppercase; text-shadow: 0 0 8px rgba(0,0,0,0.5); text-align: center; padding: 0 16px; }
 `,
-    js: (cPrim, cSec) => `
+    js: (text, cPrim, cSec) => `
 const canvas = document.getElementById('cursor-canvas');
 const ctx = canvas.getContext('2d');
 let w = canvas.width = window.innerWidth;
@@ -1080,8 +1084,9 @@ draw();
   cursor_gooey: {
     category: "cursors",
     name: { fr: "Curseur: Liquide Gooey", en: "Cursor: Gooey Liquid Orb" },
-    inputs: [],
-    html: () => `
+    inputs: ["text"],
+    defaultText: { fr: "Curseur liquide actif 💧", en: "Gooey liquid cursor active 💧" },
+    html: (text) => `
 <div class="cursor-goo-wrap">
   <div class="cursor-dot" id="cursor-dot"></div>
 </div>
@@ -1094,7 +1099,7 @@ draw();
     </filter>
   </defs>
 </svg>
-<div class="helper-msg">Gooey liquid cursor active 💧</div>
+<div class="helper-msg">${text}</div>
 `,
     css: (cPrim, cSec) => `
 body { background: #030712; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: 'Outfit', sans-serif; overflow: hidden; cursor: none; }
@@ -1104,9 +1109,9 @@ body { background: #030712; display: flex; justify-content: center; align-items:
   transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, background 0.3s;
   box-shadow: 0 0 10px ${cPrim};
 }
-.helper-msg { color: #475569; font-weight: 600; font-size: 15px; text-transform: uppercase; }
+.helper-msg { color: #475569; font-weight: 600; font-size: 15px; text-transform: uppercase; text-align: center; padding: 0 16px; }
 `,
-    js: (cPrim, cSec) => `
+    js: (text, cPrim, cSec) => `
 const dot = document.getElementById('cursor-dot');
 let mx = 0, my = 0, cx = 0, cy = 0;
 let velX = 0, velY = 0, lastX = 0, lastY = 0;
@@ -1162,7 +1167,7 @@ body { background: #020617; display: flex; justify-content: center; align-items:
   text-shadow: 
     0 1px 0 rgba(255,255,255,0.4), 
     0 2px 0 rgba(255,255,255,0.3),
-    0 15px 30px rgba(0, 240, 255, 0.2);
+    0 15px 30px color-mix(in srgb, ${cSec} 45%, transparent);
   transition: transform 0.1s ease;
 }
 .glass-text:active { cursor: grabbing; }
@@ -1435,14 +1440,15 @@ animate();
   floating_spheres: {
     category: "background_assets",
     name: { fr: "Arrière-plan: Sphères 3D Interactives", en: "Background: Interactive 3D Spheres" },
-    inputs: [],
-    html: () => `<canvas id="spheres-canvas"></canvas><div class="bg-help">Move mouse to disturb floating 3D spheres 🔮</div>`,
+    inputs: ["text"],
+    defaultText: { fr: "Survolez les sphères 3D flottantes 🔮", en: "Move mouse to disturb floating 3D spheres 🔮" },
+    html: (text) => `<canvas id="spheres-canvas"></canvas><div class="bg-help">${text}</div>`,
     css: (cPrim, cSec) => `
 body { background: #030712; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: 'Outfit', sans-serif; overflow: hidden; }
 #spheres-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
-.bg-help { position: relative; z-index: 2; color: #475569; font-weight: 700; font-size: 14px; text-transform: uppercase; }
+.bg-help { position: relative; z-index: 2; color: #475569; font-weight: 700; font-size: 14px; text-transform: uppercase; text-align: center; padding: 0 16px; }
 `,
-    js: (cPrim, cSec) => `
+    js: (text, cPrim, cSec) => `
 const canvas = document.getElementById('spheres-canvas');
 const ctx = canvas.getContext('2d');
 let w = canvas.width = window.innerWidth;
@@ -1546,7 +1552,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
   position: relative; width: 32px; height: var(--h, 10px);
   background: var(--c1); transform-style: preserve-3d;
   transition: transform 0.3s ease, height 0.5s ease;
-  box-shadow: 0 0 15px var(--c1)30;
+  box-shadow: 0 0 15px color-mix(in srgb, var(--c1) 19%, transparent);
 }
 .bar-3d:hover { transform: translateZ(15px); background: var(--c2); }
 .bar-face { position: absolute; background: inherit; }
@@ -1704,7 +1710,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
 .ctrl-btn {
   width: 46px; height: 46px; border-radius: 50%; border: none;
   background: var(--c1); color: #fff; font-size: 18px; font-weight: 700; cursor: pointer;
-  box-shadow: 0 8px 20px var(--c1)40; transition: transform 0.2s, background 0.3s;
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--c1) 25%, transparent); transition: transform 0.2s, background 0.3s;
 }
 .ctrl-btn:hover { background: var(--c2); transform: scale(1.05); }
 `,
@@ -1717,11 +1723,39 @@ const canvas = document.getElementById('vis-canvas');
 const ctx = canvas.getContext('2d');
 
 let isPlaying = false;
+let vAudioCtx = null, vLoopTimer = null;
+function startVinylAudio() {
+  try {
+    if (!vAudioCtx) vAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (vAudioCtx.state === 'suspended') vAudioCtx.resume();
+    const chords = [[220, 261.63, 329.63], [196, 246.94, 293.66], [174.61, 220, 261.63], [164.81, 196, 246.94]];
+    let ci = 0;
+    const playChord = () => {
+      if (!isPlaying || !vAudioCtx) return;
+      const now = vAudioCtx.currentTime;
+      chords[ci % chords.length].forEach(f => {
+        const o = vAudioCtx.createOscillator();
+        const g = vAudioCtx.createGain();
+        o.type = 'triangle';
+        o.frequency.setValueAtTime(f, now);
+        g.gain.setValueAtTime(0.035, now);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.85);
+        o.connect(g); g.connect(vAudioCtx.destination);
+        o.start(now); o.stop(now + 0.9);
+      });
+      ci++;
+    };
+    playChord();
+    vLoopTimer = setInterval(playChord, 950);
+  } catch (e) {}
+}
 playBtn.addEventListener('click', () => {
   isPlaying = !isPlaying;
   vinyl.classList.toggle('playing', isPlaying);
   tonearm.classList.toggle('playing', isPlaying);
   playBtn.textContent = isPlaying ? "‖" : "▶";
+  if (isPlaying) startVinylAudio();
+  else if (vLoopTimer) { clearInterval(vLoopTimer); vLoopTimer = null; }
 });
 
 // Card Parallax
@@ -1864,7 +1898,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
   backface-visibility: hidden; transform-style: preserve-3d;
   box-shadow: 0 20px 40px rgba(0,0,0,0.5); transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
-.cover-card.active { border-color: var(--c1); box-shadow: 0 0 25px var(--c1)30; opacity: 1; }
+.cover-card.active { border-color: var(--c1); box-shadow: 0 0 25px color-mix(in srgb, var(--c1) 19%, transparent); opacity: 1; }
 .cover-card:not(.active) { opacity: 0.5; }
 .cover-title { font-family: 'Space Grotesk', sans-serif; color: #fff; font-size: 18px; font-weight: 700; }
 .cover-icon { font-size: 40px; color: var(--c2); filter: drop-shadow(0 0 10px var(--c2)); }
@@ -2033,7 +2067,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
 .phone-status { display: flex; justify-content: space-between; font-size: 8px; color: #64748b; font-weight: 700; }
 .phone-content-glow { margin: auto; text-align: center; display: flex; flex-direction: column; gap: 10px; }
 .phone-icon { font-size: 36px; color: var(--c1); filter: drop-shadow(0 0 10px var(--c1)); }
-.phone-txt { margin: 0; font-size: 14px; font-weight: 700; color: #fff; text-shadow: 0 0 8px var(--c1)60; }
+.phone-txt { margin: 0; font-size: 14px; font-weight: 700; color: #fff; text-shadow: 0 0 8px color-mix(in srgb, var(--c1) 38%, transparent); }
 /* Back styling */
 .phone-back {
   background: linear-gradient(135deg, #1e1b4b 0%, #020205 100%);
@@ -2119,7 +2153,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
   font-weight: 800; padding: 6px 16px; border-radius: 20px; letter-spacing: 1px;
 }
 .pricing-title { color: #94a3b8; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin: 0; transform: translateZ(20px); }
-.pricing-cost { color: #fff; font-size: 36px; font-weight: 900; font-family: 'Space Grotesk', sans-serif; transform: translateZ(50px); text-shadow: 0 0 15px var(--c1)40; }
+.pricing-cost { color: #fff; font-size: 36px; font-weight: 900; font-family: 'Space Grotesk', sans-serif; transform: translateZ(50px); text-shadow: 0 0 15px color-mix(in srgb, var(--c1) 25%, transparent); }
 .pricing-features { list-style: none; padding: 0; margin: 15px 0; display: flex; flex-direction: column; gap: 10px; transform: translateZ(25px); }
 .pricing-features li { color: #cbd5e1; font-size: 13px; font-weight: 500; }
 .pricing-btn {
@@ -2127,7 +2161,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
   font-weight: 700; font-size: 13px; cursor: pointer; transform: translateZ(35px);
   transition: all 0.2s ease;
 }
-.pricing-btn:hover { background: var(--c1); color: #fff; box-shadow: 0 5px 15px var(--c1)50; }
+.pricing-btn:hover { background: var(--c1); color: #fff; box-shadow: 0 5px 15px color-mix(in srgb, var(--c1) 31%, transparent); }
 `,
     js: () => `
 const card = document.getElementById('price-card');
@@ -2162,7 +2196,7 @@ body { background: #020205; display: flex; justify-content: center; align-items:
   position: relative; z-index: 2; color: #fff; font-size: 26px; font-weight: 900;
   letter-spacing: 4px; text-transform: uppercase; text-shadow: 0 0 20px var(--c1);
   padding: 40px; border-radius: 50%; border: 2px dashed var(--c2);
-  background: rgba(3,7,18,0.8); box-shadow: 0 0 50px var(--c1)30, inset 0 0 30px var(--c1)30;
+  background: rgba(3,7,18,0.8); box-shadow: 0 0 50px color-mix(in srgb, var(--c1) 19%, transparent), inset 0 0 30px color-mix(in srgb, var(--c1) 19%, transparent);
 }
 `,
     js: (text, cPrim, cSec) => `
@@ -2253,7 +2287,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
 }
 .stack-item.active {
   transform: translateZ(25px); background: var(--c1);
-  border-color: var(--c2); box-shadow: -15px 15px 25px rgba(0,0,0,0.35), 0 0 15px var(--c1)50;
+  border-color: var(--c2); box-shadow: -15px 15px 25px rgba(0,0,0,0.35), 0 0 15px color-mix(in srgb, var(--c1) 31%, transparent);
 }
 .stack-item:hover:not(.active) {
   transform: translateZ(15px); background: #334155;
@@ -2285,7 +2319,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
 .display-panel input:focus, .display-panel textarea:focus { border-color: var(--c1); }
 .panel-btn {
   width: 100%; padding: 12px; border: none; border-radius: 8px; background: var(--c1);
-  color: #fff; font-weight: 700; cursor: pointer; box-shadow: 0 5px 15px var(--c1)40;
+  color: #fff; font-weight: 700; cursor: pointer; box-shadow: 0 5px 15px color-mix(in srgb, var(--c1) 25%, transparent);
   transition: background 0.3s;
 }
 .panel-btn:hover { background: var(--c2); }
@@ -2453,7 +2487,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
 }
 .panel-btn {
   width: 100%; padding: 10px; border: none; border-radius: 8px; background: var(--c1);
-  color: #fff; font-weight: 700; cursor: pointer; box-shadow: 0 5px 15px var(--c1)40;
+  color: #fff; font-weight: 700; cursor: pointer; box-shadow: 0 5px 15px color-mix(in srgb, var(--c1) 25%, transparent);
 }
 .item-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 8px 12px; border-radius: 8px; margin-bottom: 6px; font-size: 12px; }
 
@@ -2653,7 +2687,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
 }
 .panel-btn {
   width: 100%; padding: 10px; border: none; border-radius: 8px; background: var(--c1);
-  color: #fff; font-weight: 700; cursor: pointer; box-shadow: 0 5px 15px var(--c1)40;
+  color: #fff; font-weight: 700; cursor: pointer; box-shadow: 0 5px 15px color-mix(in srgb, var(--c1) 25%, transparent);
 }
 .item-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 8px 12px; border-radius: 8px; margin-bottom: 6px; font-size: 12px; }
 `,
@@ -2758,7 +2792,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
   transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.4s ease;
   box-shadow: 0 10px 20px rgba(0,0,0,0.3);
 }
-.radial-item:hover { background: var(--c-prim); border-color: var(--c-sec); box-shadow: 0 0 15px var(--c-prim)50; }
+.radial-item:hover { background: var(--c-prim); border-color: var(--c-sec); box-shadow: 0 0 15px color-mix(in srgb, var(--c-prim) 31%, transparent); }
 .radial-wrap.open .radial-item { opacity: 1; }
 
 /* Modal overlay styling */
@@ -2789,7 +2823,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
 }
 .panel-btn {
   width: 100%; padding: 10px; border: none; border-radius: 8px; background: var(--c-prim);
-  color: #fff; font-weight: 700; cursor: pointer; box-shadow: 0 5px 15px var(--c-prim)40;
+  color: #fff; font-weight: 700; cursor: pointer; box-shadow: 0 5px 15px color-mix(in srgb, var(--c-prim) 25%, transparent);
 }
 .item-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 8px 12px; border-radius: 8px; margin-bottom: 6px; font-size: 12px; }
 `,
@@ -3038,8 +3072,8 @@ body { background: #030712; display: flex; justify-content: center; align-items:
 }
 .cal-day:hover { background: rgba(255,255,255,0.08); color: #fff; }
 .cal-day.has-event {
-  background: var(--c1)20; border: 1px solid var(--c1); color: #fff;
-  box-shadow: 0 0 10px var(--c1)50; position: relative;
+  background: color-mix(in srgb, var(--c1) 13%, transparent); border: 1px solid var(--c1); color: #fff;
+  box-shadow: 0 0 10px color-mix(in srgb, var(--c1) 31%, transparent); position: relative;
 }
 .cal-day.has-event::after {
   content: ''; position: absolute; bottom: 3px; right: 3px; width: 4px; height: 4px;
@@ -3291,7 +3325,7 @@ body { background: #020205; display: flex; justify-content: center; align-items:
   cursor: pointer; overflow: hidden; display: flex; align-items: center; justify-content: center;
   transform: translateZ(30px); transition: all 0.3s;
 }
-.scan-area:hover { border-color: var(--c1); box-shadow: 0 0 20px var(--c1)40; }
+.scan-area:hover { border-color: var(--c1); box-shadow: 0 0 20px color-mix(in srgb, var(--c1) 25%, transparent); }
 .fingerprint { font-size: 48px; filter: grayscale(1) opacity(0.3); transition: all 0.3s; }
 .scan-area.scanning .fingerprint { filter: grayscale(0) opacity(1); color: var(--c1); transform: scale(1.1); }
 
@@ -3488,10 +3522,11 @@ draw();
     html: (text, cPrim, cSec) => `
 <div class="gb-scene" id="gb-scene">
   <div class="gb-console" id="gb-console" style="--c1: ${cPrim}; --c2: ${cSec};">
-    <div class="gb-screen-bezel">
+    <div class="gb-screen-bezel" style="border-color: ${cPrim}; box-shadow: inset 0 0 12px color-mix(in srgb, ${cPrim} 35%, transparent);">
       <div class="battery-indicator active"></div>
       <canvas class="gb-screen" id="game-canvas" width="160" height="120"></canvas>
     </div>
+    <div style="text-align:center; font-size:10px; font-weight:900; letter-spacing:2px; color:#0f172a; background:linear-gradient(90deg, ${cPrim}, ${cSec}); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-top:6px;">${text}</div>
     
     <div class="gb-controls">
       <div class="gb-dpad">
@@ -3728,7 +3763,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
 .btn-primary-3d {
   background: linear-gradient(135deg, var(--c1), var(--c2)); border: none; padding: 14px 28px;
   border-radius: 12px; color: #fff; font-weight: 800; font-size: 13px; cursor: pointer;
-  box-shadow: 0 10px 25px var(--c1)40; transition: transform 0.2s ease;
+  box-shadow: 0 10px 25px color-mix(in srgb, var(--c1) 25%, transparent); transition: transform 0.2s ease;
 }
 .btn-primary-3d:hover { transform: translateY(-3px); }
 .btn-secondary-3d {
@@ -3804,7 +3839,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
 }
 .feat-card:hover {
   transform: translateY(-8px) rotateX(8deg); border-color: var(--c1);
-  box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 20px var(--c1)30;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 20px color-mix(in srgb, var(--c1) 19%, transparent);
 }
 .feat-icon {
   width: 44px; height: 44px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
@@ -3870,7 +3905,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
   transform-style: preserve-3d; transition: transform 0.3s ease, border-color 0.3s ease;
   box-shadow: 0 15px 35px rgba(0,0,0,0.3);
 }
-.stat-box:hover { transform: translateZ(20px) scale(1.04); border-color: var(--c1); box-shadow: 0 0 25px var(--c1)40; }
+.stat-box:hover { transform: translateZ(20px) scale(1.04); border-color: var(--c1); box-shadow: 0 0 25px color-mix(in srgb, var(--c1) 25%, transparent); }
 .stat-num {
   font-size: 32px; font-weight: 900; color: #fff; margin-bottom: 6px;
   background: linear-gradient(135deg, #fff, var(--c1)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
@@ -3944,7 +3979,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
   box-shadow: 0 25px 50px rgba(0,0,0,0.5);
 }
 .footer-badge {
-  display: inline-block; background: var(--c1)20; border: 1px solid var(--c1);
+  display: inline-block; background: color-mix(in srgb, var(--c1) 13%, transparent); border: 1px solid var(--c1);
   color: var(--c1); font-size: 10px; font-weight: 800; padding: 4px 14px;
   border-radius: 20px; letter-spacing: 2px; margin-bottom: 15px; transform: translateZ(15px);
 }
@@ -3960,7 +3995,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
 .sub-btn {
   background: var(--c1); border: none; padding: 12px 24px; border-radius: 12px;
   color: #fff; font-weight: 800; font-size: 13px; cursor: pointer;
-  box-shadow: 0 5px 15px var(--c1)40; transition: all 0.2s ease;
+  box-shadow: 0 5px 15px color-mix(in srgb, var(--c1) 25%, transparent); transition: all 0.2s ease;
 }
 .sub-btn:hover { background: var(--c2); transform: translateY(-2px); }
 `,
@@ -4043,7 +4078,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
 .plan-card-3d:hover { transform: translateY(-8px); border-color: rgba(255,255,255,0.2); }
 .plan-card-3d.popular {
   transform: translateZ(30px) scale(1.05); border-color: var(--c1);
-  box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 25px var(--c1)30; background: rgba(15,23,42,0.85);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 25px color-mix(in srgb, var(--c1) 19%, transparent); background: rgba(15,23,42,0.85);
 }
 .plan-badge-pop {
   position: absolute; top: -12px; right: 24px; background: linear-gradient(135deg, var(--c1), var(--c2));
@@ -4059,7 +4094,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
   border-radius: 12px; color: #fff; font-weight: 800; font-size: 12px; cursor: pointer; transition: all 0.2s ease;
 }
 .plan-btn-sub:hover { background: rgba(255,255,255,0.1); }
-.plan-btn-sub.active { background: var(--c1); border-color: var(--c1); box-shadow: 0 5px 15px var(--c1)40; }
+.plan-btn-sub.active { background: var(--c1); border-color: var(--c1); box-shadow: 0 5px 15px color-mix(in srgb, var(--c1) 25%, transparent); }
 .plan-btn-sub.active:hover { background: var(--c2); }
 `,
     js: (text) => `
@@ -4111,12 +4146,12 @@ body { background: #030712; display: flex; justify-content: center; align-items:
   transform-style: preserve-3d; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   box-shadow: 0 15px 35px rgba(0,0,0,0.3);
 }
-.step-card:hover { transform: translateY(-8px) rotateX(6deg); border-color: var(--c1); box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 20px var(--c1)30; }
+.step-card:hover { transform: translateY(-8px) rotateX(6deg); border-color: var(--c1); box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 20px color-mix(in srgb, var(--c1) 19%, transparent); }
 .step-num {
   width: 44px; height: 44px; background: linear-gradient(135deg, var(--c1), var(--c2));
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
   font-weight: 900; font-size: 16px; margin: 0 auto 20px auto; color: #fff;
-  box-shadow: 0 5px 15px var(--c1)40; transform: translateZ(20px);
+  box-shadow: 0 5px 15px color-mix(in srgb, var(--c1) 25%, transparent); transform: translateZ(20px);
 }
 .step-card h3 { font-size: 16px; font-weight: 800; margin: 0 0 10px 0; color: #fff; transform: translateZ(15px); }
 .step-card p { font-size: 12px; color: #94a3b8; line-height: 1.5; margin: 0; transform: translateZ(10px); }
@@ -4185,7 +4220,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
   box-shadow: 0 10px 25px rgba(0,0,0,0.3);
 }
 .logo-box-3d:hover {
-  color: #fff; border-color: var(--c1); box-shadow: 0 0 20px var(--c1)40;
+  color: #fff; border-color: var(--c1); box-shadow: 0 0 20px color-mix(in srgb, var(--c1) 25%, transparent);
 }
 `,
     js: (text) => `
@@ -4280,7 +4315,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
 /* 3D Faces of Body */
 .cube-face {
   position: absolute; width: 140px; height: 140px; background: linear-gradient(135deg, #1e1b4b 0%, #030712 100%);
-  border: 1px solid var(--c1); box-shadow: inset 0 0 15px var(--c1)30; display: flex; justify-content: center; align-items: center;
+  border: 1px solid var(--c1); box-shadow: inset 0 0 15px color-mix(in srgb, var(--c1) 19%, transparent); display: flex; justify-content: center; align-items: center;
 }
 .face-front  { transform: translateZ(70px); }
 .face-back   { transform: rotateY(180deg) translateZ(70px); }
@@ -4382,7 +4417,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
   background: linear-gradient(135deg, rgba(255,0,128,0.12), rgba(0,255,240,0.12), rgba(255,215,0,0.12)), #0f172a;
   border: 2px solid var(--c1); border-radius: 24px; box-sizing: border-box; text-align: center;
   transform-style: preserve-3d; transition: transform 0.1s ease;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 25px var(--c1)40, inset 0 0 15px var(--c2)30;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 25px color-mix(in srgb, var(--c1) 25%, transparent), inset 0 0 15px color-mix(in srgb, var(--c2) 19%, transparent);
   overflow: hidden;
 }
 .holo-glare {
@@ -4449,7 +4484,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
   background: rgba(15,23,42,0.85); border: 1px solid var(--c1); border-radius: 20px; box-sizing: border-box;
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
   transform-style: preserve-3d; transform: rotateX(10deg); transition: transform 0.1s ease;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 20px var(--c1)30;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 20px color-mix(in srgb, var(--c1) 19%, transparent);
 }
 .toast-speaker { font-size: 26px; animation: bounceSpeaker 2s infinite ease-in-out; transform: translateZ(20px); }
 @keyframes bounceSpeaker { 0%, 100% { transform: translateZ(20px) rotate(0deg); } 50% { transform: translateZ(25px) rotate(-15deg); } }
@@ -4457,7 +4492,7 @@ body { background: #030712; display: flex; justify-content: center; align-items:
 .toast-cta-btn {
   background: var(--c1); border: none; padding: 10px 18px; border-radius: 12px;
   color: #fff; font-weight: 800; font-size: 12px; cursor: pointer; white-space: nowrap;
-  box-shadow: 0 5px 15px var(--c1)40; transition: transform 0.2s ease; transform: translateZ(20px);
+  box-shadow: 0 5px 15px color-mix(in srgb, var(--c1) 25%, transparent); transition: transform 0.2s ease; transform: translateZ(20px);
 }
 .toast-cta-btn:hover { background: var(--c2); transform: translateZ(25px) scale(1.05); }
 `,
@@ -4487,14 +4522,17 @@ document.addEventListener('mouseleave', () => {
     <canvas id="wheel-canvas" width="240" height="240"></canvas>
     <button class="wheel-spin-btn" id="spin-btn">${text}</button>
   </div>
+  <div class="wheel-result" id="wheel-result">🎯</div>
 </div>
 `,
     css: (cPrim, cSec) => `
 body { background: #030712; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: 'Space Grotesk', sans-serif; perspective: 1000px; color: #fff; user-select: none; }
-.wheel-scene { width: 300px; height: 300px; display: flex; justify-content: center; align-items: center; }
+.wheel-scene { width: 300px; display: flex; flex-direction: column; gap: 18px; justify-content: center; align-items: center; }
+.wheel-result { padding: 7px 16px; border-radius: 20px; background: rgba(15,23,42,0.85); border: 1px solid var(--c1); color: #fff; font-size: 13px; font-weight: 800; letter-spacing: 1px; opacity: 0; transform: translateY(6px); transition: all 0.3s ease; }
+.wheel-result.show { opacity: 1; transform: translateY(0); box-shadow: 0 0 18px color-mix(in srgb, var(--c1) 40%, transparent); }
 .wheel-wrap { position: relative; width: 240px; height: 240px; display: flex; justify-content: center; align-items: center; transform-style: preserve-3d; transform: rotateX(20deg); transition: transform 0.1s ease; }
 .wheel-pointer { position: absolute; top: -15px; z-index: 20; font-size: 22px; color: var(--c2); text-shadow: 0 0 10px var(--c2); }
-#wheel-canvas { position: absolute; inset: 0; border-radius: 50%; box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 20px var(--c1)40; }
+#wheel-canvas { position: absolute; inset: 0; border-radius: 50%; box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 20px color-mix(in srgb, var(--c1) 25%, transparent); }
 .wheel-spin-btn {
   position: absolute; z-index: 10; width: 70px; height: 70px; border-radius: 50%;
   background: linear-gradient(135deg, var(--c1), var(--c2)); border: 3px solid #fff;
@@ -4542,27 +4580,55 @@ function drawWheel() {
 }
 drawWheel();
 
+const resultEl = document.getElementById('wheel-result');
+let wAudioCtx = null, lastSector = -1;
+function tickSound(freq = 720) {
+  try {
+    if (!wAudioCtx) wAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (wAudioCtx.state === 'suspended') wAudioCtx.resume();
+    const o = wAudioCtx.createOscillator(), g = wAudioCtx.createGain();
+    o.type = 'triangle'; o.frequency.setValueAtTime(freq, wAudioCtx.currentTime);
+    g.gain.setValueAtTime(0.05, wAudioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, wAudioCtx.currentTime + 0.045);
+    o.connect(g); g.connect(wAudioCtx.destination);
+    o.start(); o.stop(wAudioCtx.currentTime + 0.05);
+  } catch (e) {}
+}
+
 spinBtn.addEventListener('click', () => {
   if (isSpinning) return;
   isSpinning = true;
+  if (resultEl) resultEl.classList.remove('show');
 
-  const spins = 5 + Math.random() * 5;
-  const targetAngle = currentAngle + spins * Math.PI * 2 + Math.random() * Math.PI * 2;
-  const duration = 4000;
+  const startAngle = currentAngle;
+  const extraSpin = (5 + Math.random() * 4) * Math.PI * 2 + Math.random() * Math.PI * 2;
+  const duration = 3800;
   const startTime = performance.now();
 
   function animateSpin(now) {
     const elapsed = now - startTime;
     const progress = Math.min(elapsed / duration, 1);
-    // Ease out cubic
     const easeOut = 1 - Math.pow(1 - progress, 3);
-    currentAngle = targetAngle * easeOut;
+    currentAngle = startAngle + extraSpin * easeOut;
     drawWheel();
+
+    const pointerAngle = ((-Math.PI / 2 - currentAngle) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+    const sector = Math.floor(pointerAngle / arc) % numPrizes;
+    if (sector !== lastSector) {
+      lastSector = sector;
+      tickSound(640 + sector * 40);
+    }
 
     if (progress < 1) {
       requestAnimationFrame(animateSpin);
     } else {
       isSpinning = false;
+      const won = prizes[sector];
+      if (resultEl) {
+        resultEl.textContent = '🎉 ' + won;
+        resultEl.classList.add('show');
+      }
+      tickSound(980);
     }
   }
   requestAnimationFrame(animateSpin);
@@ -4692,7 +4758,7 @@ body { background: #020205; display: flex; justify-content: center; align-items:
 .ball-wrapper {
   position: relative; width: 220px; height: 220px; border-radius: 50%;
   transform-style: preserve-3d; transition: transform 0.1s ease;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 35px var(--c1)40, inset 0 0 25px rgba(255,255,255,0.2);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 35px color-mix(in srgb, var(--c1) 25%, transparent), inset 0 0 25px rgba(255,255,255,0.2);
 }
 #nebula-canvas { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle, #1e1b4b, #020205); }
 .glass-sphere-reflection {
@@ -4915,7 +4981,7 @@ body { background: #020205; display: flex; justify-content: center; align-items:
 }
 .hg-cap {
   width: 140px; height: 16px; background: linear-gradient(135deg, #334155, #0f172a);
-  border: 2px solid var(--c1); border-radius: 10px; box-shadow: 0 0 15px var(--c1)50, 0 10px 20px rgba(0,0,0,0.6); z-index: 10;
+  border: 2px solid var(--c1); border-radius: 10px; box-shadow: 0 0 15px color-mix(in srgb, var(--c1) 31%, transparent), 0 10px 20px rgba(0,0,0,0.6); z-index: 10;
 }
 .hg-glass-body {
   position: relative; width: 140px; height: 220px; display: flex; justify-content: center; align-items: center;
@@ -5069,7 +5135,7 @@ body { background: #020205; display: flex; justify-content: center; align-items:
   align-items: center; transform-style: preserve-3d; transition: transform 0.1s ease;
 }
 .scroll-roll {
-  width: 260px; height: 20px; background: linear-gradient(90deg, #d97706, #fef08a, #d97706);
+  width: 260px; height: 20px; background: linear-gradient(90deg, var(--c1), #fef08a, var(--c2));
   border-radius: 10px; border: 2px solid #78350f; box-shadow: 0 5px 15px rgba(0,0,0,0.6); z-index: 10;
 }
 .scroll-body {
@@ -5085,7 +5151,7 @@ body { background: #020205; display: flex; justify-content: center; align-items:
 .scroll-msg { font-size: 12px; font-weight: 700; line-height: 1.5; margin: 0; color: #451a03; }
 
 .wax-seal {
-  position: absolute; width: 44px; height: 44px; background: #dc2626; border: 2px dashed #fef08a;
+  position: absolute; width: 44px; height: 44px; background: linear-gradient(135deg, var(--c2), #b91c1c); border: 2px dashed var(--c1);
   border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 15; transition: transform 0.5s, opacity 0.5s;
 }
@@ -5136,7 +5202,7 @@ body { background: #020205; display: flex; justify-content: center; align-items:
 .eq-play-btn {
   position: absolute; z-index: 10; padding: 12px 24px; background: linear-gradient(135deg, var(--c1), var(--c2));
   border: none; border-radius: 20px; color: #fff; font-weight: 900; font-size: 11px; letter-spacing: 1px;
-  cursor: pointer; box-shadow: 0 10px 25px var(--c1)40; transition: transform 0.2s;
+  cursor: pointer; box-shadow: 0 10px 25px color-mix(in srgb, var(--c1) 25%, transparent); transition: transform 0.2s;
 }
 .eq-play-btn:hover { transform: scale(1.08); }
 .eq-caption { font-size: 12px; font-weight: 700; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase; text-align: center; }
@@ -5149,8 +5215,9 @@ const wrap = document.getElementById('eq-wrap');
 const scene = document.getElementById('eq-scene');
 
 let isPlaying = false;
-let audioCtx = null;
-let osc = null;
+let eqCtx = null;
+let eqTimer = null;
+let eqBeatEnergy = 0;
 
 const numBars = 32;
 const radius = 90;
@@ -5158,10 +5225,11 @@ const radius = 90;
 function drawEqualizer() {
   ctx.clearRect(0,0,260,260);
   const cx = 130, cy = 130;
+  eqBeatEnergy *= 0.92;
 
   for (let i = 0; i < numBars; i++) {
     const angle = (i / numBars) * Math.PI * 2;
-    const barLength = isPlaying ? (15 + Math.sin(Date.now() * 0.01 + i * 0.5) * 25 + Math.random() * 10) : 10;
+    const barLength = isPlaying ? (14 + eqBeatEnergy * 24 + Math.sin(Date.now() * 0.012 + i * 0.6) * 18) : 10;
 
     const x1 = cx + Math.cos(angle) * radius;
     const y1 = cy + Math.sin(angle) * radius;
@@ -5180,22 +5248,46 @@ function drawEqualizer() {
 }
 drawEqualizer();
 
-btn.addEventListener('click', () => {
+function playBeatStep(step) {
+  if (!eqCtx || !isPlaying) return;
+  const now = eqCtx.currentTime;
+  const notes = [110, 130.81, 164.81, 196, 220, 164.81, 146.83, 196];
+  const o = eqCtx.createOscillator(), g = eqCtx.createGain();
+  o.type = step % 2 === 0 ? 'sawtooth' : 'triangle';
+  o.frequency.setValueAtTime(notes[step % notes.length], now);
+  g.gain.setValueAtTime(0.06, now);
+  g.gain.exponentialRampToValueAtTime(0.001, now + 0.19);
+  o.connect(g); g.connect(eqCtx.destination);
+  o.start(now); o.stop(now + 0.2);
+  if (step % 2 === 0) {
+    const k = eqCtx.createOscillator(), kg = eqCtx.createGain();
+    k.type = 'sine';
+    k.frequency.setValueAtTime(140, now);
+    k.frequency.exponentialRampToValueAtTime(42, now + 0.14);
+    kg.gain.setValueAtTime(0.16, now);
+    kg.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+    k.connect(kg); kg.connect(eqCtx.destination);
+    k.start(now); k.stop(now + 0.17);
+  }
+  eqBeatEnergy = 1.0;
+}
+
+btn.addEventListener('click', (e) => {
+  e.stopPropagation();
   isPlaying = !isPlaying;
   btn.textContent = isPlaying ? '⏸ PAUSE BEAT' : '▶ PLAY BEAT';
 
   if (isPlaying) {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(220, audioCtx.currentTime);
-    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.start();
-  } else if (osc) {
-    osc.stop();
+    try {
+      if (!eqCtx) eqCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (eqCtx.state === 'suspended') eqCtx.resume();
+      let step = 0;
+      playBeatStep(step++);
+      eqTimer = setInterval(() => playBeatStep(step++), 210);
+    } catch (err) {}
+  } else if (eqTimer) {
+    clearInterval(eqTimer);
+    eqTimer = null;
   }
 });
 
@@ -5237,7 +5329,7 @@ body { background: #020205; display: flex; justify-content: center; align-items:
 }
 .knob-ring {
   position: absolute; inset: -10px; border-radius: 50%; border: 3px dashed var(--c1);
-  box-shadow: 0 0 20px var(--c1)50; opacity: 0.8;
+  box-shadow: 0 0 20px color-mix(in srgb, var(--c1) 31%, transparent); opacity: 0.8;
 }
 .knob-dial-3d {
   position: relative; width: 140px; height: 140px; border-radius: 50%;
@@ -5263,20 +5355,54 @@ const scene = document.getElementById('knob-scene');
 
 let rotation = 0;
 let isDragging = false;
-let startAngle = 0;
+let lastPointerX = 0;
+let knobCtx = null, knobOsc = null, knobGain = null, knobFilter = null;
 
-scene.addEventListener('mousedown', (e) => {
-  isDragging = true;
-});
-document.addEventListener('mouseup', () => isDragging = false);
+function ensureKnobSynth(on) {
+  try {
+    if (!on) {
+      if (knobGain && knobCtx) knobGain.gain.setTargetAtTime(0, knobCtx.currentTime, 0.04);
+      return;
+    }
+    if (!knobCtx) {
+      knobCtx = new (window.AudioContext || window.webkitAudioContext)();
+      knobOsc = knobCtx.createOscillator();
+      knobFilter = knobCtx.createBiquadFilter();
+      knobGain = knobCtx.createGain();
+      knobOsc.type = 'sawtooth';
+      knobOsc.frequency.setValueAtTime(110, knobCtx.currentTime);
+      knobFilter.type = 'lowpass';
+      knobFilter.frequency.setValueAtTime(600, knobCtx.currentTime);
+      knobGain.gain.setValueAtTime(0, knobCtx.currentTime);
+      knobOsc.connect(knobFilter); knobFilter.connect(knobGain); knobGain.connect(knobCtx.destination);
+      knobOsc.start();
+    }
+    if (knobCtx.state === 'suspended') knobCtx.resume();
+    knobGain.gain.setTargetAtTime(0.08, knobCtx.currentTime, 0.03);
+  } catch (e) {}
+}
+
+function updateKnobValue(dx) {
+  rotation = Math.max(-135, Math.min(135, rotation + dx * 1.4));
+  dial.style.transform = \`rotate(\${rotation}deg)\`;
+  const ratio = (rotation + 135) / 270;
+  valEl.textContent = \`\${Math.round(ratio * 100)}%\`;
+  if (knobCtx && knobFilter && knobOsc) {
+    knobFilter.frequency.setTargetAtTime(180 + ratio * 2400, knobCtx.currentTime, 0.02);
+    knobOsc.frequency.setTargetAtTime(82 + ratio * 220, knobCtx.currentTime, 0.02);
+  }
+}
+
+scene.addEventListener('mousedown', (e) => { isDragging = true; lastPointerX = e.clientX; ensureKnobSynth(true); });
+document.addEventListener('mouseup', () => { isDragging = false; ensureKnobSynth(false); });
+scene.addEventListener('touchstart', (e) => { isDragging = true; lastPointerX = e.touches[0].clientX; ensureKnobSynth(true); }, { passive: true });
+document.addEventListener('touchend', () => { isDragging = false; ensureKnobSynth(false); });
 
 document.addEventListener('mousemove', (e) => {
   if (isDragging) {
-    rotation += e.movementX * 1.5;
-    rotation = Math.max(-135, Math.min(135, rotation));
-    dial.style.transform = \`rotate(\${rotation}deg)\`;
-    const percent = Math.round(((rotation + 135) / 270) * 100);
-    valEl.textContent = \`\${percent}%\`;
+    const dx = e.movementX || (e.clientX - lastPointerX);
+    lastPointerX = e.clientX;
+    updateKnobValue(dx);
   } else {
     const r = scene.getBoundingClientRect();
     const x = e.clientX - r.left; const y = e.clientY - r.top;
@@ -5284,6 +5410,12 @@ document.addEventListener('mousemove', (e) => {
     wrap.style.transform = \`rotateX(\${rx}deg) rotateY(\${ry}deg)\`;
   }
 });
+document.addEventListener('touchmove', (e) => {
+  if (!isDragging || !e.touches[0]) return;
+  const dx = e.touches[0].clientX - lastPointerX;
+  lastPointerX = e.touches[0].clientX;
+  updateKnobValue(dx);
+}, { passive: true });
 `
   },
 
@@ -5315,13 +5447,13 @@ body { background: #020205; display: flex; justify-content: center; align-items:
   position: relative; width: 300px; padding: 24px; background: linear-gradient(135deg, #1e1b4b, #0f172a);
   border: 2px solid var(--c1); border-radius: 24px; box-sizing: border-box; text-align: center;
   transform-style: preserve-3d; transform: rotateX(15deg); transition: transform 0.1s ease;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 25px var(--c1)30;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 25px color-mix(in srgb, var(--c1) 19%, transparent);
 }
 .tubes-row { display: flex; justify-content: center; gap: 20px; margin-bottom: 16px; transform: translateZ(20px); }
 .tube {
   width: 36px; height: 50px; background: rgba(255,255,255,0.05); border: 1px solid var(--c1);
   border-radius: 18px 18px 6px 6px; display: flex; align-items: center; justify-content: center;
-  font-size: 18px; color: var(--c1); box-shadow: 0 0 12px var(--c1)50; animation: tubeGlow 1.5s infinite alternate;
+  font-size: 18px; color: var(--c1); box-shadow: 0 0 12px color-mix(in srgb, var(--c1) 31%, transparent); animation: tubeGlow 1.5s infinite alternate;
 }
 @keyframes tubeGlow { from { opacity: 0.6; } to { opacity: 1; } }
 .radio-screen {
@@ -5334,10 +5466,42 @@ body { background: #020205; display: flex; justify-content: center; align-items:
   background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 8px 16px;
   border-radius: 10px; color: #fff; font-weight: 800; font-size: 11px; cursor: pointer; transition: all 0.2s;
 }
-.radio-btn:hover, .radio-btn.active { background: var(--c1); border-color: var(--c1); box-shadow: 0 5px 15px var(--c1)40; }
+.radio-btn:hover, .radio-btn.active { background: var(--c1); border-color: var(--c1); box-shadow: 0 5px 15px color-mix(in srgb, var(--c1) 25%, transparent); }
 `,
     js: () => `
 const box = document.getElementById('radio-box');
+const screenEl = box.querySelector('.radio-screen');
+const prevBtn = document.getElementById('r-prev');
+const nextBtn = document.getElementById('r-next');
+const stations = [
+  screenEl ? screenEl.textContent : 'STATION 108.5 FM',
+  '104.2 FM // CYBER SYNTHWAVE NIGHTS',
+  '98.7 FM // ORBITAL LO-FI LOUNGE',
+  '112.0 FM // QUANTUM BASS FREQUENCY'
+];
+let stIdx = 0;
+let rAudioCtx = null;
+
+function tuneStation(delta) {
+  stIdx = (stIdx + delta + stations.length) % stations.length;
+  if (screenEl) screenEl.textContent = stations[stIdx];
+  try {
+    if (!rAudioCtx) rAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (rAudioCtx.state === 'suspended') rAudioCtx.resume();
+    const o = rAudioCtx.createOscillator(), g = rAudioCtx.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(520 + stIdx * 130, rAudioCtx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(880 + stIdx * 90, rAudioCtx.currentTime + 0.12);
+    g.gain.setValueAtTime(0.07, rAudioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, rAudioCtx.currentTime + 0.14);
+    o.connect(g); g.connect(rAudioCtx.destination);
+    o.start(); o.stop(rAudioCtx.currentTime + 0.15);
+  } catch (e) {}
+}
+
+if (prevBtn) prevBtn.addEventListener('click', (e) => { e.stopPropagation(); prevBtn.classList.add('active'); nextBtn?.classList.remove('active'); tuneStation(-1); });
+if (nextBtn) nextBtn.addEventListener('click', (e) => { e.stopPropagation(); nextBtn.classList.add('active'); prevBtn?.classList.remove('active'); tuneStation(1); });
+
 document.addEventListener('mousemove', (e) => {
   const r = box.getBoundingClientRect();
   const x = e.clientX - r.left; const y = e.clientY - r.top;
@@ -5375,7 +5539,7 @@ body { background: #020205; display: flex; justify-content: center; align-items:
   border: 3px solid var(--c1); border-radius: 30px; box-sizing: border-box; display: flex;
   justify-content: center; align-items: center; transform-style: preserve-3d;
   transform: rotateX(20deg); transition: transform 0.1s ease;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 25px var(--c1)40;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 25px color-mix(in srgb, var(--c1) 25%, transparent);
 }
 .sub-outer-ring {
   width: 170px; height: 170px; border-radius: 50%; background: #0f172a;
@@ -5396,9 +5560,23 @@ const scene = document.getElementById('sub-scene');
 const box = document.getElementById('sub-box');
 const cone = document.getElementById('sub-cone');
 
+let subCtx = null;
 scene.addEventListener('click', () => {
   cone.classList.add('pulse');
   setTimeout(() => cone.classList.remove('pulse'), 300);
+  try {
+    if (!subCtx) subCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (subCtx.state === 'suspended') subCtx.resume();
+    const now = subCtx.currentTime;
+    const o = subCtx.createOscillator(), g = subCtx.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(110, now);
+    o.frequency.exponentialRampToValueAtTime(42, now + 0.25);
+    g.gain.setValueAtTime(0.22, now);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+    o.connect(g); g.connect(subCtx.destination);
+    o.start(now); o.stop(now + 0.34);
+  } catch (e) {}
 });
 
 document.addEventListener('mousemove', (e) => {

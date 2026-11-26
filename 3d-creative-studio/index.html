@@ -3,11 +3,85 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3D Creative Assets & UI Studio</title>
+  <title>✨ 3D Creative Studio v2.0 — Interactive 3D Web Components &amp; UI Generator</title>
+
+  <!-- Strategic SEO Meta Tags -->
+  <meta name="description" content="Build, customize and preview 72+ interactive 3D UI components free online: 3D buttons, holographic cards, 3D globe, Bento grids, spin wheels, pricing sections, Web Audio synths &amp; pianos. Pro export ($10/mo) for HTML, React JSX, Vue 3 SFC, Web Components &amp; Split Bundles.">
+  <meta name="keywords" content="3D Creative Studio, 3D UI Component Generator, 3D CSS Buttons, Holographic Card Generator, React 3D UI, Vue 3D Component, Interactive Web Widgets, Free 3D UI Studio">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://ia-codestudio.com/3d-creative-studio/">
+  <link rel="icon" type="image/png" href="../logo-ia-codestudio.png">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ia-codestudio.com/3d-creative-studio/">
+  <meta property="og:title" content="3D Creative Studio v2.0 — 72+ Interactive 3D Web Assets Generator">
+  <meta property="og:description" content="Customize 72 interactive 3D web components live with AI Stylist, Smart List Editor &amp; Multi-Framework Pro Exports (HTML, React, Vue 3, Web Component).">
+  <meta property="og:image" content="https://ia-codestudio.com/og-social-banner.png">
+  <meta property="og:site_name" content="IA Code Studio">
+
+  <!-- Schema.org JSON-LD Structured Data (Freemium: $0 Studio + $10/mo Pro Exports) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "@id": "https://ia-codestudio.com/3d-creative-studio/#app",
+        "name": "3D Creative Studio",
+        "softwareVersion": "2.0",
+        "url": "https://ia-codestudio.com/3d-creative-studio/",
+        "applicationCategory": "DesignApplication, DeveloperApplication",
+        "operatingSystem": "Web Browser, Windows, macOS, Android, iOS",
+        "description": "High-end interactive 3D web component studio with 72 components across 20 categories, live HTML/CSS/JS inspector, AI Style Stylist, Web Audio SFX, Preset Vault, QR share, and Pro framework exports.",
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Free Live 3D Studio, Vault & QR Share",
+            "price": "0",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock"
+          },
+          {
+            "@type": "Offer",
+            "name": "IA Code Studio Pro — Unlimited Code, React, Vue & Split Exports",
+            "price": "10.00",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock"
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://ia-codestudio.com/3d-creative-studio/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What components can I build in 3D Creative Studio?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "You can customize 72 interactive 3D UI components across 20 categories including 3D buttons, holographic cards, 3D globe widgets, Bento spotlight grids, spin-to-win wheels, Web Audio synthesizers, interactive menus, and SaaS sections."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is free vs Pro ($10/month)?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Previewing and customizing all 72 3D models, Visual Gallery search, AI Stylist, Preset Vault, and QR link sharing are 100% free. Pro ($10/month) unlocks production code copy and export for HTML, React JSX, Vue 3 SFC, Web Components, and split project bundles."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Space+Grotesk:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js" defer></script>
 </head>
 <body class="cyber-bg">
 
@@ -23,21 +97,49 @@
       <h1>3D CREATIVE <span class="accent-glow">STUDIO</span></h1>
     </div>
     <div class="header-controls">
+      <button type="button" id="btn-open-gallery" class="header-action-btn" title="Open 72+ Components Visual Gallery">
+        <span>🗂️</span> <span data-i18n="btn_gallery">Galerie Visuelle (72+)</span>
+      </button>
       <div class="lang-selector">
-        <button id="btn-lang-fr" class="lang-btn active">FR</button>
-        <button id="btn-lang-en" class="lang-btn">EN</button>
+        <button type="button" id="btn-lang-fr" class="lang-btn active">FR</button>
+        <button type="button" id="btn-lang-en" class="lang-btn">EN</button>
       </div>
     </div>
   </header>
 
   <!-- Main Workspace -->
-  <main class="app-layout">
-    
-    <!-- Left Panel: Dynamic Customizer -->
+  <main class="app-layout" id="app-layout">
+
+    <!-- Left Panel: Dynamic Customizer v2.0 -->
     <section class="control-panel glass-card">
-      <h2 data-i18n="title_customizer">Personnalisation</h2>
-      
-      <!-- Category Selection -->
+      <div class="panel-top-row">
+        <h2 data-i18n="title_customizer">Personnalisation</h2>
+        <button type="button" id="btn-surprise-mix" class="mini-pill-btn" data-i18n="btn_surprise">🎲 Style Aléatoire</button>
+      </div>
+
+      <!-- Quick Search across all 72 templates -->
+      <div class="control-group search-group">
+        <label for="input-search-comp" data-i18n="label_search">Recherche rapide</label>
+        <input type="text" id="input-search-comp" class="custom-input" placeholder="🔍 Rechercher (ex: roue, tarif, bouton, piano)..." data-i18n-placeholder="search_placeholder" autocomplete="off">
+        <div id="quick-search-results" class="quick-search-results" style="display: none;"></div>
+      </div>
+
+      <!-- AI Style & Copy Stylist -->
+      <div class="control-group ai-stylist-box">
+        <label for="ai-stylist-input">✨ <span data-i18n="ai_title">Assistant Style IA</span></label>
+        <div class="ai-input-row">
+          <input type="text" id="ai-stylist-input" class="custom-input" placeholder="Ex: Tarifs SaaS or &amp; cyan..." data-i18n-placeholder="ai_placeholder">
+          <button type="button" id="btn-ai-stylist-run" class="icon-square-btn" title="Apply AI Style">⚡</button>
+        </div>
+        <div class="ai-chips">
+          <button type="button" class="ai-style-chip" data-prompt="Bento grid cyber neon">Bento Neon</button>
+          <button type="button" class="ai-style-chip" data-prompt="Pricing luxury gold">Gold Pricing</button>
+          <button type="button" class="ai-style-chip" data-prompt="3D globe matrix green">3D Globe</button>
+          <button type="button" class="ai-style-chip" data-prompt="Synth piano purple">3D Piano</button>
+        </div>
+      </div>
+
+      <!-- Category Selection (20 Categories) -->
       <div class="control-group">
         <label for="select-category" data-i18n="label_category">Catégorie</label>
         <select id="select-category" class="custom-select">
@@ -45,7 +147,7 @@
           <option value="business_cards" data-i18n="cat_cards">Cartes de Visite 3D</option>
           <option value="gift_cards" data-i18n="cat_gift">Cartes Cadeaux 3D</option>
           <option value="surprise_cards" data-i18n="cat_surprise">Cartes Surprises 3D</option>
-          <option value="toggles" data-i18n="cat_toggles">Switchs & Toggles 3D</option>
+          <option value="toggles" data-i18n="cat_toggles">Switchs &amp; Toggles 3D</option>
           <option value="parallax_cards" data-i18n="cat_parallax">Cartes Parallaxe 3D</option>
           <option value="cursors" data-i18n="cat_cursors">Curseurs 3D</option>
           <option value="typography" data-i18n="cat_typography">Typographie 3D</option>
@@ -58,37 +160,48 @@
           <option value="menus" data-i18n="cat_menus">Menus de Navigation 3D</option>
           <option value="widgets" data-i18n="cat_widgets">Widgets Interactifs 3D</option>
           <option value="sections" data-i18n="cat_sections">Sections Complètes 3D</option>
-          <option value="ads_promo" data-i18n="cat_ads_promo">Publicité & Bannières 3D</option>
-          <option value="gamification" data-i18n="cat_gamification">Gamification & Récompenses 3D</option>
-          <option value="audio_fx" data-i18n="cat_audio_fx">Visualiseurs & Synthétiseurs Audio 3D</option>
+          <option value="ads_promo" data-i18n="cat_ads_promo">Publicité &amp; Bannières 3D</option>
+          <option value="gamification" data-i18n="cat_gamification">Gamification &amp; Récompenses 3D</option>
+          <option value="audio_fx" data-i18n="cat_audio_fx">Visualiseurs &amp; Synthétiseurs Audio 3D</option>
         </select>
       </div>
 
-      <!-- Component Selection (Filtered dynamically via JS) -->
+      <!-- Component Selection + Favorite Toggle -->
       <div class="control-group">
         <label for="select-component" data-i18n="label_component">Modèle 3D</label>
-        <select id="select-component" class="custom-select"></select>
+        <div class="comp-select-row">
+          <select id="select-component" class="custom-select"></select>
+          <button type="button" id="btn-fav-toggle" class="icon-square-btn" title="Favorite Model">☆</button>
+        </div>
       </div>
 
       <!-- DYNAMIC INPUT FIELDS BASED ON SELECTION -->
-      
       <!-- 1. Default Simple Text Input -->
       <div class="control-group dynamic-field" id="field-default-text">
         <label for="input-text" data-i18n="label_text">Texte principal</label>
         <input type="text" id="input-text" class="custom-input" value="BOUTON 3D">
       </div>
 
+      <!-- Smart Multi-Item List Editor (Menus, Carousels, Charts, Bento, Grids) -->
+      <div class="control-group" id="smart-list-group" style="display: none;">
+        <div class="slider-header">
+          <label data-i18n="smart_list_title">Éditeur Rapide d'Éléments</label>
+          <button type="button" id="btn-smart-list-add" class="mini-pill-btn" data-i18n="btn_add_item">+ Ajouter</button>
+        </div>
+        <div id="smart-list-chips" class="smart-list-chips"></div>
+      </div>
+
       <!-- 2. Business Card Fields -->
       <div class="dynamic-group dynamic-field" id="field-group-business" style="display: none;">
         <div class="control-group">
-          <label for="input-card-name" data-i18n="label_card_name">Nom & Prénom</label>
+          <label for="input-card-name" data-i18n="label_card_name">Nom &amp; Prénom</label>
           <input type="text" id="input-card-name" class="custom-input" value="Alex Dev">
         </div>
-        <div class="control-group" style="margin-top: 12px;">
+        <div class="control-group" style="margin-top: 10px;">
           <label for="input-card-role" data-i18n="label_card_role">Profession / Rôle</label>
           <input type="text" id="input-card-role" class="custom-input" value="3D Web Developer">
         </div>
-        <div class="control-group" style="margin-top: 12px;">
+        <div class="control-group" style="margin-top: 10px;">
           <label for="input-card-contact" data-i18n="label_card_contact">Contact (Tel/Email)</label>
           <input type="text" id="input-card-contact" class="custom-input" value="contact@ia-codestudio.com">
         </div>
@@ -100,31 +213,23 @@
           <label for="input-gift-title" data-i18n="label_gift_title">Titre du cadeau</label>
           <input type="text" id="input-gift-title" class="custom-input" value="VIP GIFT CARD">
         </div>
-        <div class="control-group" style="margin-top: 12px;">
+        <div class="control-group" style="margin-top: 10px;">
           <label for="input-gift-code" data-i18n="label_gift_code">Code Promo / Promo Code</label>
           <input type="text" id="input-gift-code" class="custom-input" value="IA-STUDIO-3D">
         </div>
-        <div class="control-group" style="margin-top: 12px;">
+        <div class="control-group" style="margin-top: 10px;">
           <label for="input-gift-value" data-i18n="label_gift_value">Valeur ($ / € / %)</label>
           <input type="text" id="input-gift-value" class="custom-input" value="$150">
         </div>
       </div>
 
       <!-- 4. Surprise Card Fields -->
-      <div class="control-group dynamic-field" id="field-group-surprise" style="display: none;">
+      <div class="dynamic-group dynamic-field" id="field-group-surprise" style="display: none;">
         <label for="input-surprise-message" data-i18n="label_surprise_msg">Message Secret</label>
         <textarea id="input-surprise-message" class="custom-input" rows="3">Tu as gagné une consultation gratuite ! 🎁</textarea>
       </div>
 
-      <!-- Sound Effects Checkbox (Web Audio API synthesis) -->
-      <div class="control-group">
-        <label class="sound-toggle-label">
-          <input type="checkbox" id="chk-sound" checked>
-          <span data-i18n="label_sound_effects">Activer les effets sonores SFX (Web Audio)</span>
-        </label>
-      </div>
-
-      <!-- Color Customization (Common for all) -->
+      <!-- Color Customization + 10 Curated Palettes & Swap -->
       <div class="control-group dual-pickers">
         <div class="picker-item">
           <label for="color-primary" data-i18n="label_color_primary">Couleur 3D 1</label>
@@ -142,7 +247,15 @@
         </div>
       </div>
 
-      <!-- Sliders (Density / Speed for particles) -->
+      <div class="control-group">
+        <div class="slider-header">
+          <label data-i18n="palettes_title">Palettes Curées &amp; Mix</label>
+          <button type="button" id="btn-swap-colors" class="mini-pill-btn" title="Swap Primary &amp; Secondary">⇄ Swap</button>
+        </div>
+        <div id="curated-palettes-row" class="curated-palettes-row"></div>
+      </div>
+
+      <!-- Sliders: Global Stage Scale & Speed + Particle Density -->
       <div class="control-group" id="group-speed-density" style="display: none;">
         <div class="slider-header">
           <label for="range-density" data-i18n="label_density">Densité des particules</label>
@@ -151,39 +264,220 @@
         <input type="range" id="range-density" min="1" max="10" step="1" value="5" class="custom-range">
       </div>
 
-      <!-- Action buttons -->
+      <div class="dual-pickers">
+        <div class="control-group">
+          <div class="slider-header">
+            <label for="range-stage-scale" data-i18n="label_scale">Échelle Stage</label>
+            <span id="val-stage-scale" class="slider-val">1.0x</span>
+          </div>
+          <input type="range" id="range-stage-scale" min="0.6" max="1.4" step="0.1" value="1" class="custom-range">
+        </div>
+        <div class="control-group">
+          <div class="slider-header">
+            <label for="range-stage-speed" data-i18n="label_speed">Vitesse Anim</label>
+            <span id="val-stage-speed" class="slider-val">1.0x</span>
+          </div>
+          <input type="range" id="range-stage-speed" min="0.5" max="2.5" step="0.1" value="1" class="custom-range">
+        </div>
+      </div>
+
+      <!-- Sound Effects Checkbox -->
+      <div class="control-group">
+        <label class="sound-toggle-label">
+          <input type="checkbox" id="chk-sound" checked>
+          <span data-i18n="label_sound_effects">Activer les effets sonores SFX (Web Audio)</span>
+        </label>
+      </div>
+
+      <!-- Action buttons (Pro Exports + Free Share URL/QR) -->
       <div class="action-buttons">
-        <button id="btn-copy-code" class="btn btn-primary">
+        <button type="button" id="btn-copy-code" class="btn btn-primary">
           <span class="btn-icon">📋</span>
-          <span data-i18n="btn_copy">Copier le code</span>
+          <span data-i18n="btn_copy">Copier le Code</span>
+          <span class="pro-tag">PRO</span>
         </button>
-        <button id="btn-download-html" class="btn btn-secondary">
-          <span class="btn-icon">📥</span>
-          <span data-i18n="btn_download">Télécharger HTML</span>
+        <div class="btn-pair-row">
+          <button type="button" id="btn-download-html" class="btn btn-secondary">
+            <span>📥</span> <span data-i18n="btn_download">HTML</span> <span class="pro-tag">PRO</span>
+          </button>
+          <button type="button" id="btn-open-frameworks" class="btn btn-secondary">
+            <span>⚛️</span> <span data-i18n="btn_frameworks">React/Vue</span> <span class="pro-tag">PRO</span>
+          </button>
+        </div>
+        <button type="button" id="btn-share-creative" class="btn btn-share-free">
+          <span>🔗</span> <span data-i18n="btn_share_qr">Partager URL &amp; QR Code</span> <span class="free-tag">FREE</span>
         </button>
+      </div>
+
+      <!-- Free LocalStorage Preset Vault -->
+      <div class="vault-section">
+        <div class="slider-header">
+          <label><span data-i18n="vault_title">Coffre de Presets</span> <span class="free-tag">FREE</span></label>
+          <div class="vault-io-btns">
+            <button type="button" id="btn-creative-vault-export" class="mini-pill-btn">JSON</button>
+            <button type="button" id="btn-creative-vault-import" class="mini-pill-btn">Import</button>
+            <input type="file" id="creative-vault-file" accept=".json" style="display:none;">
+          </div>
+        </div>
+        <div class="ai-input-row" style="margin-top:8px;">
+          <input type="text" id="creative-vault-name" class="custom-input" placeholder="Nom du preset..." data-i18n-placeholder="vault_placeholder">
+          <button type="button" id="btn-creative-vault-save" class="icon-square-btn" title="Save Preset">💾</button>
+        </div>
+        <div id="creative-vault-list" class="creative-vault-list"></div>
       </div>
     </section>
 
-    <!-- Right Panel: Live Preview Frame -->
+    <!-- Right Panel: Live Preview Stage & Real-Time Code Inspector -->
     <section class="preview-panel glass-card">
       <div class="preview-header">
-        <div class="window-dots">
-          <span class="dot dot-red"></span>
-          <span class="dot dot-yellow"></span>
-          <span class="dot dot-green"></span>
+        <div class="preview-head-left">
+          <div class="window-dots">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+          </div>
+          <div class="preview-title" data-i18n="title_preview">Studio de Prévisualisation</div>
         </div>
-        <div class="preview-title" data-i18n="title_preview">Studio de Prévisualisation</div>
+
+        <!-- Inspector Tabs (Preview | HTML | CSS | JS) -->
+        <div class="inspector-tabs">
+          <button type="button" class="inspector-tab-btn active" data-itab="preview" data-i18n="tab_preview">👁️ Aperçu</button>
+          <button type="button" class="inspector-tab-btn" data-itab="html" data-i18n="tab_html">HTML</button>
+          <button type="button" class="inspector-tab-btn" data-itab="css" data-i18n="tab_css">CSS</button>
+          <button type="button" class="inspector-tab-btn" data-itab="js" data-i18n="tab_js">JS</button>
+        </div>
+
+        <!-- Viewport Switcher + Backdrop + Fullscreen -->
+        <div class="stage-toolbar">
+          <div class="vp-switcher">
+            <button type="button" class="vp-btn active" data-vp="desktop" title="Desktop 100%">🖥️</button>
+            <button type="button" class="vp-btn" data-vp="tablet" title="Tablet 768px">📱</button>
+            <button type="button" class="vp-btn" data-vp="mobile" title="Mobile 375px">📲</button>
+          </div>
+          <select id="select-stage-backdrop" class="backdrop-select" title="Stage Background">
+            <option value="dark">🌑 Dark</option>
+            <option value="mesh">🌌 Mesh</option>
+            <option value="checker">🏁 Alpha Grid</option>
+            <option value="light">☀️ Light</option>
+          </select>
+          <button type="button" id="btn-stage-fullscreen" class="icon-square-btn" title="Fullscreen Stage">⛶</button>
+        </div>
       </div>
-      
+
       <div class="preview-body">
-        <iframe id="preview-iframe" sandbox="allow-scripts"></iframe>
+        <iframe id="preview-iframe" sandbox="allow-scripts" title="3D Component Live Preview"></iframe>
+      </div>
+
+      <!-- Live Code Inspector View (Hidden when Preview tab is active) -->
+      <div id="code-inspector-wrap" class="code-inspector-wrap" style="display: none;">
+        <div class="code-inspector-bar">
+          <span id="code-inspector-stats" class="code-stats">HTML</span>
+          <button type="button" id="btn-inspector-copy-tab" class="mini-pill-btn">📋 Copy Tab (PRO)</button>
+        </div>
+        <pre id="code-inspector-pre" class="code-inspector-pre"></pre>
       </div>
     </section>
 
   </main>
 
+  <!-- Mobile Fixed Bottom Navigation (Screens <= 900px) -->
+  <nav class="creative-mobile-nav" id="creative-mobile-nav">
+    <button type="button" class="mob-tab-btn active" data-mobview="custom" onclick="switchCreativeMobileTab('custom')">
+      <span>🎛️</span><span data-i18n="mob_cust">Studio</span>
+    </button>
+    <button type="button" class="mob-tab-btn" id="mob-nav-gallery">
+      <span>🗂️</span><span data-i18n="mob_gallery">Galerie</span>
+    </button>
+    <button type="button" class="mob-tab-btn" data-mobview="preview" onclick="switchCreativeMobileTab('preview')">
+      <span>👁️</span><span data-i18n="mob_preview">Aperçu</span>
+    </button>
+    <button type="button" class="mob-tab-btn" data-mobview="code" onclick="switchCreativeMobileTab('code')">
+      <span>💻</span><span data-i18n="mob_code">Code</span>
+    </button>
+  </nav>
+
+  <!-- Modal 1: 72+ Visual Gallery & Favorites Browser (Free) -->
+  <div id="modal-gallery" class="studio-modal-backdrop">
+    <div class="studio-modal-card wide">
+      <div class="studio-modal-head">
+        <h3>🗂️ 3D Components Visual Gallery (<span id="gallery-count-label">72 / 72</span>)</h3>
+        <button type="button" id="btn-gallery-close" class="studio-modal-close">&times;</button>
+      </div>
+      <div class="gallery-controls-row">
+        <input type="text" id="gallery-search-input" class="custom-input" placeholder="Filter 72 components...">
+        <select id="gallery-cat-select" class="custom-select" style="max-width: 220px;"></select>
+        <button type="button" id="btn-gallery-favs-only" class="mini-pill-btn">★ Favorites</button>
+      </div>
+      <div id="gallery-grid" class="gallery-grid"></div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Multi-Framework & Split File Exporter (Pro $10/month) -->
+  <div id="modal-frameworks" class="studio-modal-backdrop">
+    <div class="studio-modal-card">
+      <div class="studio-modal-head">
+        <h3>⚛️ React, Vue 3, Web Component &amp; Split Export</h3>
+        <button type="button" id="btn-fw-close" class="studio-modal-close">&times;</button>
+      </div>
+      <div class="fw-tabs-row">
+        <button type="button" class="fw-tab-btn active" data-fwtab="react">⚛️ React JSX</button>
+        <button type="button" class="fw-tab-btn" data-fwtab="vue">💚 Vue 3 SFC</button>
+        <button type="button" class="fw-tab-btn" data-fwtab="webcomp">🧩 Web Component</button>
+        <button type="button" class="fw-tab-btn" data-fwtab="split">📦 HTML + CSS + JS</button>
+      </div>
+      <p id="fw-export-hint" class="modal-hint-txt"></p>
+      <textarea id="fw-export-code" class="fw-code-textarea" readonly></textarea>
+      <div class="studio-modal-actions">
+        <button type="button" id="btn-fw-download-split" class="btn btn-secondary" style="display:none; width:auto;">📦 Download 3 Split Files</button>
+        <button type="button" id="btn-fw-copy" class="btn btn-primary" style="width:auto; padding:12px 22px;">📋 Copy Code</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Share URL + Client-Side QR Code (100% Free) -->
+  <div id="modal-creative-share" class="studio-modal-backdrop">
+    <div class="studio-modal-card" style="max-width:430px; text-align:center;">
+      <div class="studio-modal-head">
+        <h3>🔗 Share 3D Component &amp; QR Code</h3>
+        <button type="button" id="btn-creative-share-close" class="studio-modal-close">&times;</button>
+      </div>
+      <p class="modal-hint-txt">Scan or send this direct link to reopen your exact 3D component setup (100% Free).</p>
+      <div class="qr-box">
+        <canvas id="creative-qr-canvas" width="200" height="200"></canvas>
+      </div>
+      <input type="text" id="creative-share-url" class="custom-input" readonly style="text-align:center; font-size:11px; margin-bottom:12px;">
+      <div class="studio-modal-actions" style="justify-content:center;">
+        <button type="button" id="btn-creative-qr-dl" class="btn btn-secondary" style="width:auto;">⬇ Save QR PNG</button>
+        <button type="button" id="btn-creative-url-copy" class="btn btn-primary" style="width:auto; padding:12px 22px;">📋 Copy Link</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchCreativeMobileTab(tab) {
+      const layout = document.getElementById('app-layout');
+      if (!layout) return;
+      layout.classList.remove('mob-show-preview', 'mob-show-code');
+      document.querySelectorAll('.mob-tab-btn[data-mobview]').forEach(b => b.classList.toggle('active', b.dataset.mobview === tab));
+      if (tab === 'preview') {
+        layout.classList.add('mob-show-preview');
+        window.__CreativeExportersV2?.switchInspectorTab('preview');
+      } else if (tab === 'code') {
+        layout.classList.add('mob-show-code');
+        window.__CreativeExportersV2?.switchInspectorTab('html');
+      }
+    }
+    window.switchCreativeMobileTab = switchCreativeMobileTab;
+  </script>
+
+  <!-- Core + Modular v2.0 Scripts -->
   <script src="js/premium-lock.js"></script>
   <script src="templates.js"></script>
+  <script src="modules/creative-templates-v2.js"></script>
   <script src="app.js"></script>
+  <script src="modules/creative-stage-tools.js"></script>
+  <script src="modules/creative-gallery-ai.js"></script>
+  <script src="modules/creative-exporters.js"></script>
+  <script src="modules/creative-vault-share.js"></script>
 </body>
 </html>
