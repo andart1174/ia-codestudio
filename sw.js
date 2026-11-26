@@ -1,7 +1,7 @@
 // Service Worker for IA Code Studio (ia-codestudio.com)
 // PWA Offline Support & Asset Cache - Network-First Strategy
 
-const CACHE_NAME = 'iacodestudio-v2.5';
+const CACHE_NAME = 'iacodestudio-v2.6';
 const CORE_ASSETS = [
   '/',
   '/index.html',

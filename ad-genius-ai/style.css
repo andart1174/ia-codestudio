@@ -894,11 +894,12 @@ input[type="checkbox"]:checked::before {
 .workspace:not(.core-ad-genius-workspace) {
   display: flex;
   flex: 1;
-  height: 100%;
+  min-height: 0;
   width: 100%;
   background: #050505;
   color: #fff;
   flex-direction: row;
+  overflow: hidden;
 }
 
 /* Ensure inactive workspaces remain hidden across all viewports */
@@ -1416,6 +1417,7 @@ input[type="checkbox"]:checked::before {
   flex-wrap: wrap;
 }
 .spb-select, .spb-btn {
+  width: auto !important;
   background: rgba(30, 41, 59, 0.85);
   color: #f1f5f9;
   border: 1px solid rgba(148, 163, 184, 0.24);
@@ -1425,6 +1427,10 @@ input[type="checkbox"]:checked::before {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.18s ease;
+}
+.spb-select {
+  min-width: 150px;
+  max-width: 220px;
 }
 .spb-btn:hover, .spb-select:hover, .spb-btn.active {
   border-color: #38bdf8;

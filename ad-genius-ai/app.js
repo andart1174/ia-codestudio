@@ -1069,6 +1069,10 @@ window.activateWorkspace = function(id) {
         if (targetWs) {
             targetWs.classList.add('active-workspace');
             targetWs.style.display = 'flex';
+            const cPanel = targetWs.querySelector('.center-panel');
+            const rPanel = targetWs.querySelector('.right-panel');
+            if (cPanel) cPanel.style.display = 'flex';
+            if (rPanel) rPanel.style.display = 'flex';
         }
     }
     

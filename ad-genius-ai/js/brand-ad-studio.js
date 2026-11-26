@@ -55,16 +55,18 @@
             var btn = document.getElementById('tab-brand-ad');
             if (btn) btn.classList.add('active');
 
-            var cp = document.querySelector('.center-panel'), rp = document.querySelector('.right-panel');
-            if (cp) cp.style.display = 'none';
-            if (rp) rp.style.display = 'none';
-
             document.querySelectorAll('[id$="-workspace"]').forEach(function(w) { w.style.display = 'none'; });
             var ws = document.getElementById('brand-ad-workspace');
             if (ws) ws.style.display = 'flex';
+            var c = document.getElementById('ba-center');
+            var r = document.getElementById('ba-right');
+            if (c) c.style.display = 'flex';
+            if (r) r.style.display = 'flex';
 
             buildUI();
-            setTimeout(initThree, 100);
+            setTimeout(function() {
+                if (window.activeTab === 'brand-ad') initThree();
+            }, 60);
             return;
         }
         
@@ -77,6 +79,7 @@
     function cleanupBrandAd() {
         S.active = false;
         if (S.animId) { cancelAnimationFrame(S.animId); S.animId = null; }
+        window.removeEventListener('resize', onResize);
         if (window.GeniusUtils && window.GeniusUtils.safeThreeDispose) {
             window.GeniusUtils.safeThreeDispose(S.renderer, S.scene);
             window.GeniusUtils.safeThreeDispose(null, S.orthoScene);
@@ -84,6 +87,7 @@
             try { S.renderer.dispose(); } catch (e) {}
         }
         S.renderer = null; S.scene = null; S.orthoScene = null; S.mesh = null;
+        S.textCanvas = null; S.textTex = null; S.textMesh = null; S.vfxPoints = null; S.vfxLines = null; S.lights = [];
     }
     if (window.GeniusUtils && window.GeniusUtils.registerCleanup) {
         window.GeniusUtils.registerCleanup('brand-ad', cleanupBrandAd);
@@ -557,7 +561,7 @@
     function onResize() {
         if (!S.active || !S.camera || !S.renderer) return;
         var ct = document.getElementById('ba-center');
-        if (!ct) return;
+        if (!ct || ct.clientWidth < 2 || ct.clientHeight < 2) return;
         S.camera.aspect = ct.clientWidth / ct.clientHeight;
         S.camera.updateProjectionMatrix();
         

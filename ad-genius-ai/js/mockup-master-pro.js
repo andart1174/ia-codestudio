@@ -30,16 +30,18 @@
             var btn = document.getElementById('tab-mockup-master');
             if (btn) btn.classList.add('active');
 
-            var cp = document.querySelector('.center-panel'), rp = document.querySelector('.right-panel');
-            if (cp) cp.style.display = 'none';
-            if (rp) rp.style.display = 'none';
-
             document.querySelectorAll('[id$="-workspace"]').forEach(function(w) { w.style.display = 'none'; });
             var ws = document.getElementById('mockup-master-workspace');
             if (ws) ws.style.display = 'flex';
+            var c = document.getElementById('mm-center');
+            var r = document.getElementById('mm-right');
+            if (c) c.style.display = 'flex';
+            if (r) r.style.display = 'flex';
 
             buildUI();
-            setTimeout(initThree, 100);
+            setTimeout(function() {
+                if (window.activeTab === 'mockup-master') initThree();
+            }, 60);
             return;
         }
         
@@ -58,6 +60,7 @@
             try { S.renderer.dispose(); } catch (e) {}
         }
         S.renderer = null; S.scene = null; S.wrapperGroup = null; S.deviceGroup = null; S.screenMesh = null;
+        S.textCanvas = null; S.textCtx = null; S.textTex = null;
     }
     if (window.GeniusUtils && window.GeniusUtils.registerCleanup) {
         window.GeniusUtils.registerCleanup('mockup-master', cleanupMockupMaster);
@@ -160,20 +163,25 @@
     function initThree() {
         if (!window.THREE) return;
         if (S.active) return;
+        cleanupMockupMaster();
         S.active = true;
 
         var ct = document.getElementById('mm-center');
         if (!ct) return;
+        ct.style.display = 'flex';
         ct.innerHTML = '';
+        var cw = Math.max(1, ct.clientWidth || 640);
+        var ch = Math.max(1, ct.clientHeight || 480);
 
         S.scene = new THREE.Scene();
         S.scene.background = new THREE.Color(0x0f172a); // dark slate
 
-        S.camera = new THREE.PerspectiveCamera(40, ct.clientWidth / ct.clientHeight, 0.1, 100);
+        S.camera = new THREE.PerspectiveCamera(40, cw / ch, 0.1, 100);
         S.camera.position.z = 12;
 
         S.renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
-        S.renderer.setSize(ct.clientWidth, ct.clientHeight);
+        S.renderer.setSize(cw, ch);
+        S.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
         S.renderer.shadowMap.enabled = true;
         S.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         S.renderer.outputEncoding = THREE.sRGBEncoding;
