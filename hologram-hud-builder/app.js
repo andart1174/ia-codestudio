@@ -5,13 +5,109 @@
 // --- 1. GLOBAL STATE & CONFIG ---
 let scene, camera, renderer, controls;
 let activeColor = 'cyan';
-let activeColorSecondary = 'cyan';
+let activeColorSecondary = 'purple';
+let customPrimaryHex = null;
+let customSecondaryHex = null;
 let rotationSpeed = 1.0;
 let soundEnabled = true;
 let voiceEnabled = true;
-let currentLang = 'fr';
+let currentLang = (function() { try { return localStorage.getItem('hub_lang') || 'en'; } catch(e) { return 'en'; } })();
+window.currentLang = currentLang;
 let explodedFactor = 0;
 let activePreset = 'reactor';
+let isPaused = false;
+let glitchIntensity = 20;
+let bloomEnabled = true;
+let redAlertActive = false;
+let hudBrandTitle = 'QUANTUM HUD BUILDER';
+let hudSectorCoord = 'SYSTEM LNK: SECURE | SEC-COORD: 45.981A // 002.E';
+let hudStatusMode = 'PROJECTION STABLE';
+
+// 2D fallback variables (properly declared!)
+let is2DFallback = false;
+let canvas2D = null;
+let ctx2D = null;
+let angle2D = 0;
+
+// Master Audio Bus (SFX + Synth + Mic + MP3 -> Analyser + Video Recorder MediaStream)
+let masterAudioGain = null;
+let masterMediaDest = null;
+
+function hexToRgbStr(hex) {
+    const clean = (hex || '#00f3ff').replace('#', '');
+    const n = parseInt(clean.length === 3 ? clean.split('').map(c => c + c).join('') : clean, 16);
+    if (isNaN(n)) return '0, 243, 255';
+    return ((n >> 16) & 255) + ', ' + ((n >> 8) & 255) + ', ' + (n & 255);
+}
+
+function getPrimaryColorInfo() {
+    if (redAlertActive) return { hex: '#ff2244', rgb: '255, 34, 68', three: 0xff2244 };
+    if (customPrimaryHex) {
+        return { hex: customPrimaryHex, rgb: hexToRgbStr(customPrimaryHex), three: parseInt(customPrimaryHex.replace('#', ''), 16) || 0x00f3ff };
+    }
+    return colorMap[activeColor] || colorMap.cyan;
+}
+
+function getSecondaryColorInfo() {
+    if (redAlertActive) return { hex: '#ff8800', rgb: '255, 136, 0', three: 0xff8800 };
+    if (customSecondaryHex) {
+        return { hex: customSecondaryHex, rgb: hexToRgbStr(customSecondaryHex), three: parseInt(customSecondaryHex.replace('#', ''), 16) || 0xbd00ff };
+    }
+    return colorMap[activeColorSecondary] || getPrimaryColorInfo();
+}
+
+// GPU Memory Hygiene Helper (eliminates WebGL VRAM leaks!)
+function disposeObject3D(root) {
+    if (!root) return;
+    const geos = new Set();
+    const mats = new Set();
+    const texs = new Set();
+    const disposeMat = (m) => {
+        if (!m || mats.has(m)) return;
+        mats.add(m);
+        ['map', 'normalMap', 'roughnessMap', 'metalnessMap', 'emissiveMap', 'alphaMap'].forEach(k => {
+            if (m[k] && typeof m[k].dispose === 'function' && !texs.has(m[k])) {
+                texs.add(m[k]);
+                try { m[k].dispose(); } catch(e) {}
+            }
+        });
+        if (typeof m.dispose === 'function') { try { m.dispose(); } catch(e) {} }
+    };
+    if (typeof root.traverse === 'function') {
+        root.traverse(obj => {
+            if (obj.geometry && typeof obj.geometry.dispose === 'function' && !obj.userData?.sharedGeometry && !geos.has(obj.geometry)) {
+                geos.add(obj.geometry);
+                try { obj.geometry.dispose(); } catch(e) {}
+            }
+            if (obj.material && !obj.userData?.sharedMaterial) {
+                if (Array.isArray(obj.material)) obj.material.forEach(disposeMat);
+                else disposeMat(obj.material);
+            }
+        });
+    }
+}
+
+function clearGroupWithDispose(grp) {
+    if (!grp) return;
+    while (grp.children.length > 0) {
+        const ch = grp.children[0];
+        grp.remove(ch);
+        disposeObject3D(ch);
+    }
+}
+
+function safeDownloadBlob(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(() => {
+        try { document.body.removeChild(link); } catch(e) {}
+        try { URL.revokeObjectURL(url); } catch(e) {}
+    }, 4000);
+}
 
 // Speech Synthesis AI Telemetry
 function speakAI(textFr, textEn) {
@@ -83,11 +179,37 @@ const hologramTranslations = {
             navigation: "Scénario Navigation Spatiale Activé",
             vitals: "Scénario Signaux Vitaux Cybernétiques Activé",
             neural: "Scénario Réseau Neural IA Activé",
+            neuralpulse: "Scénario Réseau Neural Pulsé Activé",
             brain: "Scénario Réseau Neural Cyberpunk Activé",
             radar: "Scénario Radar Tactique Spatial Activé",
             dna: "Scénario ADN Double Hélice Activé",
-            mech: "Scénario Scanner Mecha X-Ray Activé"
-        }
+            mech: "Scénario Scanner Mecha X-Ray Activé",
+            arcreactor: "Réacteur Arc Jarvis MK-85 en Ligne",
+            dyson: "Sphère de Dyson & Carte Stellaire Activée",
+            defense: "Bouclier Orbital & Satellites de Défense Activés",
+            tesseract4d: "Cœur Tesseract Quantique 4D Activé"
+        },
+        sec_import: "Import Modèle 3D",
+        sec_layers: "Couches Holographiques",
+        sec_css: "Tokens CSS en Direct",
+        sec_export: "Exportation Pro",
+        label_visuals: "Rendu Hologramme",
+        label_scale: "Échelle Modèle",
+        label_height: "Hauteur Y",
+        label_orbit: "Mode Orbite Auto",
+        btn_restore: "Restaurer Cœur Preset",
+        lbl_grid: "Grille de Projection",
+        lbl_radar: "Radar de Ciblage",
+        lbl_wave: "Moniteur Ondes",
+        lbl_term: "Flux Diagnostics",
+        lbl_bloom: "Quantum Bloom",
+        lbl_nebula: "Champ Nébuleuse Particules",
+        btn_share_url: "PARTAGER URL & QR CODE",
+        btn_exp_html: "EXPORTER HTML AUTONOME",
+        btn_exp_svg: "EXPORTER BLUEPRINT SVG",
+        btn_exp_png: "PNG TRANSPARENT (HD/4K)",
+        btn_exp_obs: "OBS OVERLAY & REACT/VUE",
+        btn_exp_vid: "STUDIO VIDÉO HUD (9:16 / 16:9)"
     },
     en: {
         btn_back: "Back",
@@ -124,16 +246,44 @@ const hologramTranslations = {
             navigation: "Deep Space Navigation Online",
             vitals: "Cybernetic Medical Vitals Online",
             neural: "AI Neural Network Online",
+            neuralpulse: "Neural Pulse Network Online",
             brain: "Cyberpunk Neural Network Online",
             radar: "Spacecraft Tactical Radar Online",
             dna: "Quantum Double Helix Online",
-            mech: "Mech X-Ray Scanner Online"
-        }
+            mech: "Mech X-Ray Scanner Online",
+            arcreactor: "Jarvis Arc Reactor MK-85 Online",
+            dyson: "Dyson Sphere Star-Map Online",
+            defense: "Orbital Defense Forcefield Online",
+            tesseract4d: "4D Quantum Tesseract Core Online"
+        },
+        sec_import: "3D Model Import",
+        sec_layers: "Widget Layer Toggles",
+        sec_css: "Live CSS Tokens",
+        sec_export: "Production Export",
+        label_visuals: "Hologram Visuals",
+        label_scale: "Model Scale",
+        label_height: "Height Offset",
+        label_orbit: "Auto Orbit Mode",
+        btn_restore: "Restore Preset Core",
+        lbl_grid: "Projection Grid",
+        lbl_radar: "Targeting Radar",
+        lbl_wave: "Waveform Monitor",
+        lbl_term: "Diagnostics Stream",
+        lbl_bloom: "Quantum Bloom",
+        lbl_nebula: "Particle Nebula Field",
+        btn_share_url: "SHARE HUD URL & QR CODE",
+        btn_exp_html: "EXPORT STANDALONE HTML",
+        btn_exp_svg: "EXPORT BLUEPRINT SVG",
+        btn_exp_png: "TRANSPARENT PNG (HD/4K)",
+        btn_exp_obs: "OBS OVERLAY & REACT/VUE",
+        btn_exp_vid: "PRO HUD VIDEO STUDIO (9:16 / 16:9)"
     }
 };
 
 function applyHologramLang(lang) {
-    currentLang = lang;
+    currentLang = (lang === 'fr') ? 'fr' : 'en';
+    window.currentLang = currentLang;
+    try { localStorage.setItem('hub_lang', currentLang); } catch(e) {}
     const btnFr = document.getElementById('btn-lang-fr');
     const btnEn = document.getElementById('btn-lang-en');
     if (btnFr) {
@@ -212,21 +362,42 @@ let audioCtx = null;
 
 function initAudio() {
     if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return;
+        audioCtx = new Ctx();
+        try {
+            masterAudioGain = audioCtx.createGain();
+            masterAudioGain.gain.setValueAtTime(1.0, audioCtx.currentTime);
+            if (!analyserNode) {
+                analyserNode = audioCtx.createAnalyser();
+                analyserNode.fftSize = 256;
+                analyserNode.smoothingTimeConstant = 0.8;
+                freqData = new Uint8Array(analyserNode.frequencyBinCount);
+            }
+            masterAudioGain.connect(analyserNode);
+            analyserNode.connect(audioCtx.destination);
+            if (typeof audioCtx.createMediaStreamDestination === 'function') {
+                masterMediaDest = audioCtx.createMediaStreamDestination();
+                masterAudioGain.connect(masterMediaDest);
+            }
+        } catch(e) {}
+    }
+    if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
     }
 }
 
 function playSound(type) {
     if (!soundEnabled) return;
     initAudio();
-    if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-    }
+    if (!audioCtx) return;
+    const validTypes = ['hover', 'click', 'sonar', 'error', 'lock-alert', 'confirm', 'alarm'];
+    if (!validTypes.includes(type)) return;
 
     const osc = audioCtx.createOscillator();
     const gainNode = audioCtx.createGain();
     osc.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
+    gainNode.connect(masterAudioGain || audioCtx.destination);
 
     const now = audioCtx.currentTime;
 
@@ -271,7 +442,6 @@ function playSound(type) {
         osc.start(now);
         osc.stop(now + 0.15);
     } else if (type === 'lock-alert') {
-        // High frequency lock sound
         osc.type = 'square';
         osc.frequency.setValueAtTime(980, now);
         osc.frequency.setValueAtTime(880, now + 0.04);
@@ -279,6 +449,22 @@ function playSound(type) {
         gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
         osc.start(now);
         osc.stop(now + 0.12);
+    } else if (type === 'confirm') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(660, now);
+        osc.frequency.exponentialRampToValueAtTime(1320, now + 0.16);
+        gainNode.gain.setValueAtTime(0.14, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+        osc.start(now);
+        osc.stop(now + 0.22);
+    } else if (type === 'alarm') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(420, now);
+        osc.frequency.linearRampToValueAtTime(220, now + 0.28);
+        gainNode.gain.setValueAtTime(0.14, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
+        osc.start(now);
+        osc.stop(now + 0.3);
     }
 }
 
@@ -301,7 +487,7 @@ function updateTelemetry() {
 }
 
 function runTelemetryCalculation() {
-    const target = customModel ? customModel : coreMesh;
+    const target = customModel ? customModel : coreGroup;
     if (!target) return;
     
     let totalTriangles = 0;
@@ -426,12 +612,25 @@ function init3D() {
     camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
     camera.position.set(0, 8, 18);
 
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+    try {
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+    } catch (webglErr) {
+        console.warn('WebGL init failed, switching to 2D fallback:', webglErr);
+        init2DFallback(container);
+        return;
+    }
     const w = container.clientWidth || (window.innerWidth * 0.6);
     const h = container.clientHeight || (window.innerHeight * 0.7);
     renderer.setSize(w, h);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.localClippingEnabled = true;
+    if (THREE.ACESFilmicToneMapping !== undefined) {
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.2;
+    }
+    if (THREE.sRGBEncoding !== undefined) {
+        renderer.outputEncoding = THREE.sRGBEncoding;
+    }
     renderer.domElement.style.position = 'absolute';
     renderer.domElement.style.top = '0';
     renderer.domElement.style.left = '0';
@@ -615,7 +814,6 @@ function animate2D() {
     }
     
     ctx2D.restore();
-    logTerminal('Hologram coordinate layers built.');
 }
 
 function onWindowResize() {
@@ -630,10 +828,10 @@ function onWindowResize() {
 
 // --- 5. GEOMETRY BUILDERS ---
 function buildGrid() {
-    gridGroup.clear();
+    clearGroupWithDispose(gridGroup);
     const size = 30;
     const divisions = 30;
-    const color = colorMap[activeColor].three;
+    const color = getPrimaryColorInfo().three;
 
     // Horizontal main grid plane
     const gridHelper = new THREE.GridHelper(size, divisions, color, color);
@@ -657,8 +855,8 @@ function buildGrid() {
 }
 
 function buildRadar() {
-    radarGroup.clear();
-    const color = colorMap[activeColor].three;
+    clearGroupWithDispose(radarGroup);
+    const color = getPrimaryColorInfo().three;
 
     // radar sweep circular sector
     const radarGeo = new THREE.RingGeometry(0.5, 12, 64, 1, 0, Math.PI / 4);
@@ -685,9 +883,9 @@ function buildRadar() {
 }
 
 function buildWaveforms() {
-    waveGroup.clear();
+    clearGroupWithDispose(waveGroup);
     waveLines = [];
-    const color = colorMap[activeColor].three;
+    const color = getPrimaryColorInfo().three;
 
     // Create 3 circular waveforms at different radii
     for (let rIdx = 0; rIdx < 3; rIdx++) {
@@ -714,21 +912,38 @@ function buildWaveforms() {
 }
 
 function buildCore() {
-    coreGroup.clear();
+    if (customModel && customModel.parent === coreGroup) coreGroup.remove(customModel);
+    clearGroupWithDispose(coreGroup);
     ring1 = null;
     ring2 = null;
     coreMesh = null;
 
-    const color = (colorMap[activeColor] && colorMap[activeColor].three) ? colorMap[activeColor].three : 0x00f3ff;
-    const colorSec = (colorMap[activeColorSecondary] && colorMap[activeColorSecondary].three) ? colorMap[activeColorSecondary].three : color;
+    const color = getPrimaryColorInfo().three;
+    const colorSec = getSecondaryColorInfo().three;
     const exp = explodedFactor || 0;
 
     // If a custom 3D model is loaded, display it inside coreGroup!
     if (customModel) {
         coreGroup.add(customModel);
         applyHologramMaterial();
+        applyFluidExplodedOffsets(customModel, exp);
         updateTelemetry();
         return;
+    }
+
+    // Delegate new flagship presets (arcreactor, dyson, defense, tesseract4d) to Shaders & Presets module
+    if (window.__QuantumHUDHooks && typeof window.__QuantumHUDHooks.onBuildCustomPreset === 'function') {
+        const built = window.__QuantumHUDHooks.onBuildCustomPreset(activePreset, coreGroup, color, colorSec, exp, localPlanes);
+        if (built) {
+            coreMesh = built.coreMesh || coreGroup.children[0] || null;
+            ring1 = built.ring1 || null;
+            ring2 = built.ring2 || null;
+            cacheCoreBasePositions(coreGroup);
+            applyFluidExplodedOffsets(coreGroup, exp);
+            removeScanPlane();
+            updateTelemetry();
+            return;
+        }
     }
 
     if (activePreset === 'reactor') {
@@ -1032,8 +1247,62 @@ function buildCore() {
         coreGroup.add(coreMesh);
     }
 
+    // Apply 3D slicing planes to built-in presets + cache positions for zero-leak fluid Exploded View
+    coreGroup.traverse(ch => {
+        if ((ch.isMesh || ch.isLine || ch.isPoints) && ch.material) {
+            ch.material.clippingPlanes = localPlanes;
+            ch.material.clipShadows = true;
+        }
+    });
+    if (window.__QuantumHUDHooks && typeof window.__QuantumHUDHooks.onPostBuildCore === 'function') {
+        window.__QuantumHUDHooks.onPostBuildCore(coreGroup, color, colorSec, localPlanes);
+    }
+    cacheCoreBasePositions(coreGroup);
+    applyFluidExplodedOffsets(coreGroup, exp);
     removeScanPlane();
     updateTelemetry();
+}
+
+function cacheCoreBasePositions(root) {
+    if (!root) return;
+    root.children.forEach((child, idx) => {
+        if (!child.userData.basePos) child.userData.basePos = child.position.clone();
+        if (!child.userData.explodeDir) {
+            const box = new THREE.Box3().setFromObject(child);
+            const ctr = new THREE.Vector3();
+            box.getCenter(ctr);
+            if (ctr.lengthSq() > 0.01) {
+                child.userData.explodeDir = ctr.normalize();
+            } else {
+                const ang = (idx / Math.max(1, root.children.length)) * Math.PI * 2;
+                child.userData.explodeDir = new THREE.Vector3(Math.cos(ang) * 0.7, (idx % 2 === 0 ? 1 : -1) * 0.85, Math.sin(ang) * 0.7).normalize();
+            }
+        }
+    });
+}
+
+function applyFluidExplodedOffsets(root, factor) {
+    if (!root) return;
+    if (root === customModel) {
+        root.traverse(child => {
+            if (child.isMesh && !child.userData.isOutline) {
+                if (!child.userData.basePos) child.userData.basePos = child.position.clone();
+                if (!child.userData.explodeDir) {
+                    child.geometry.computeBoundingBox();
+                    const c = new THREE.Vector3();
+                    if (child.geometry.boundingBox) child.geometry.boundingBox.getCenter(c);
+                    child.userData.explodeDir = c.lengthSq() > 0.001 ? c.normalize() : new THREE.Vector3(0, 1, 0);
+                }
+                child.position.copy(child.userData.basePos).addScaledVector(child.userData.explodeDir, factor * 1.15);
+            }
+        });
+        return;
+    }
+    root.children.forEach((child, idx) => {
+        if (idx === 0 && !child.userData.allowExplode) return; // keep central core anchored
+        if (!child.userData.basePos || !child.userData.explodeDir) cacheCoreBasePositions(root);
+        child.position.copy(child.userData.basePos).addScaledVector(child.userData.explodeDir, factor * 1.1);
+    });
 }
 
 // --- 3D REAL-TIME DIGITAL CLOCK BUILDER ---
@@ -1046,8 +1315,8 @@ function drawClockCanvas() {
     const ms = String(Math.floor(now.getMilliseconds() / 10)).padStart(2, '0');
     const timeStr = `${hrs}:${mins}:${secs}.${ms}`;
 
-    const mainHex = (colorMap[activeColor] && colorMap[activeColor].hex) ? colorMap[activeColor].hex : '#00f3ff';
-    const secHex = (colorMap[activeColorSecondary] && colorMap[activeColorSecondary].hex) ? colorMap[activeColorSecondary].hex : mainHex;
+    const mainHex = getPrimaryColorInfo().hex;
+    const secHex = getSecondaryColorInfo().hex;
 
     clockCtx.clearRect(0, 0, clockCanvas.width, clockCanvas.height);
 
@@ -1081,12 +1350,12 @@ function drawClockCanvas() {
 
 // --- PARTICLE NEBULA BUILDER ---
 function buildParticleNebula() {
-    if (nebulaGroup) { scene.remove(nebulaGroup); nebulaGroup = null; nebulaParticles = null; }
+    if (nebulaGroup) { scene.remove(nebulaGroup); disposeObject3D(nebulaGroup); nebulaGroup = null; nebulaParticles = null; }
     const particleCount = 1800;
     const positions = new Float32Array(particleCount * 3);
     const colors = new Float32Array(particleCount * 3);
-    const color = (colorMap[activeColor] && colorMap[activeColor].three) ? colorMap[activeColor].three : 0x00f3ff;
-    const secColor = (colorMap[activeColorSecondary] && colorMap[activeColorSecondary].three) ? colorMap[activeColorSecondary].three : color;
+    const color = getPrimaryColorInfo().three;
+    const secColor = getSecondaryColorInfo().three;
     const c1 = new THREE.Color(color);
     const c2 = new THREE.Color(secColor);
 
@@ -1127,11 +1396,12 @@ function buildParticleNebula() {
 function buildReticle() {
     if (reticleMesh) {
         scene.remove(reticleMesh);
+        disposeObject3D(reticleMesh);
         reticleMesh = null;
     }
-    const color = (colorMap[activeColor] && colorMap[activeColor].three) ? colorMap[activeColor].three : 0x00f3ff;
+    const color = getPrimaryColorInfo().three;
 
-    reticleGroup = new THREE.Group();
+    const reticleGroup = new THREE.Group();
 
     const centerGeo = new THREE.RingGeometry(0.08, 0.22, 32);
     const centerMat = new THREE.MeshBasicMaterial({ color: color, side: THREE.DoubleSide, transparent: true, opacity: 0.9 });
@@ -1151,7 +1421,7 @@ function buildReticle() {
 }
 
 function build3DClock() {
-    if (clockGroup) scene.remove(clockGroup);
+    if (clockGroup) { scene.remove(clockGroup); disposeObject3D(clockGroup); clockGroup = null; }
 
 
     clockCanvas = document.createElement('canvas');
@@ -1174,7 +1444,7 @@ function build3DClock() {
     });
     clockMesh = new THREE.Mesh(clockGeo, clockMat);
 
-    const mainColor = colorMap[activeColor] ? colorMap[activeColor].three : 0x00f3ff;
+    const mainColor = getPrimaryColorInfo().three;
     const frameGeo = new THREE.PlaneGeometry(6.3, 1.8);
     const frameMat = new THREE.MeshBasicMaterial({
         color: mainColor,
@@ -1194,12 +1464,17 @@ function build3DClock() {
     scene.add(clockGroup);
 }
 
-function update3DClock() {
+let lastClockDrawTime = 0;
+function update3DClock(forceRedraw = false) {
     if (!clockGroup) return;
     clockGroup.visible = clockVisible;
     if (!clockVisible) return;
 
-    drawClockCanvas();
+    const now = performance.now();
+    if (forceRedraw || now - lastClockDrawTime >= 66) {
+        lastClockDrawTime = now;
+        drawClockCanvas();
+    }
 
     clockGroup.position.set(clockPosX, clockPosY, clockPosZ);
     clockGroup.scale.set(clockScale, clockScale, clockScale);
@@ -1207,9 +1482,9 @@ function update3DClock() {
 
 // --- 3D WIREFRAME WORLD GLOBE ---
 function build3DGlobe() {
-    if (globeGroup) scene.remove(globeGroup);
+    if (globeGroup) { scene.remove(globeGroup); disposeObject3D(globeGroup); globeGroup = null; }
 
-    const mainColor = colorMap[activeColor].three;
+    const mainColor = getPrimaryColorInfo().three;
     const sphereGeo = new THREE.SphereGeometry(7, 24, 24);
     const sphereMat = new THREE.MeshBasicMaterial({
         color: mainColor,
@@ -1227,10 +1502,10 @@ function build3DGlobe() {
 
 // --- 3D LIVE FREQUENCY EQUALIZER BARS ---
 function build3DVisualizer() {
-    if (visualizerGroup) scene.remove(visualizerGroup);
+    if (visualizerGroup) { scene.remove(visualizerGroup); disposeObject3D(visualizerGroup); visualizerGroup = null; }
     visBars = [];
 
-    const mainColor = colorMap[activeColor].three;
+    const mainColor = getPrimaryColorInfo().three;
     const barCount = 16;
     visualizerGroup = new THREE.Group();
 
@@ -1253,125 +1528,103 @@ function build3DVisualizer() {
     scene.add(visualizerGroup);
 }
 
-// --- 6. ANIMATION RENDER LOOP ---
+// --- 6. ANIMATION RENDER LOOP (FPS-Independent DeltaTime) ---
 let timeClock = 0;
-function animate() {
+let prevAnimTime = performance.now();
+function animate(nowTime) {
     requestAnimationFrame(animate);
+    const now = typeof nowTime === 'number' ? nowTime : performance.now();
+    const rawDt = Math.min(0.05, Math.max(0.001, (now - prevAnimTime) / 1000));
+    prevAnimTime = now;
+    const dtScale = isPaused ? 0 : (rawDt * 60);
 
-    // Calculate volume multiplier if microphone analyzer is online
+    // Multi-source Audio Reactivity (Mic OR Built-in Synth OR Uploaded MP3)
     let volumeMultiplier = 1.0;
     let micBassFrequency = 0;
-    
-    if (micEnabled && analyserNode && freqData) {
+    const extAudioActive = !!(window.__QuantumAudioV2 && window.__QuantumAudioV2.isAudioSourceActive && window.__QuantumAudioV2.isAudioSourceActive());
+    const audioReactiveNow = micEnabled || extAudioActive;
+
+    if (audioReactiveNow && analyserNode && freqData) {
         analyserNode.getByteFrequencyData(freqData);
-        
         let sum = 0;
-        for (let i = 0; i < freqData.length; i++) {
-            sum += freqData[i];
-        }
-        const avg = sum / freqData.length; // 0 - 255
-        volumeMultiplier = 1.0 + (avg / 128) * 1.5; // up to 2.5x volume scaling
-        
-        // Take average of lower frequency bins for rotational speed variations
+        for (let i = 0; i < freqData.length; i++) sum += freqData[i];
+        const avg = sum / freqData.length;
+        volumeMultiplier = 1.0 + (avg / 128) * 1.25;
         let bassSum = 0;
-        for (let i = 0; i < 10; i++) {
-            bassSum += freqData[i];
-        }
+        for (let i = 0; i < 10; i++) bassSum += freqData[i];
         micBassFrequency = bassSum / 10;
     }
 
-    // Dynamic rotation scale calculations
-    const dynamicSpeed = rotationSpeed * volumeMultiplier * (1 + (micBassFrequency / 100));
+    const dynamicSpeed = rotationSpeed * volumeMultiplier * (1 + (micBassFrequency / 110)) * dtScale;
     timeClock += 0.01 * dynamicSpeed;
+
+    const priHex3 = getPrimaryColorInfo().three;
+    const secHex3 = getSecondaryColorInfo().three;
 
     // 1. Rotate Concentric Rings & Core or Custom Model
     if (customModel) {
         if (customModelOrbit) {
             customModel.rotation.y += 0.005 * dynamicSpeed;
-        } else {
-            // keep it static
         }
-        
-        // Scale custom model dynamically
         const scalePulse = customModelScale * volumeMultiplier;
         customModel.scale.set(scalePulse, scalePulse, scalePulse);
         customModel.position.y = customModelY;
-        
-        // Animate custom scan laser plane
+
         if (scanPlane) {
             scanPlane.position.y = -2.5 + Math.sin(timeClock * 3.5) * 3.2;
         }
 
-        // Color update for target locks
         customModel.traverse(child => {
             if (child.isMesh && child.material) {
                 if (Array.isArray(child.material)) {
-                    child.material.forEach(m => m.color.setHex(isTargetLocked ? 0xff3333 : colorMap[activeColor].three));
+                    child.material.forEach(m => { if (m.color) m.color.setHex(isTargetLocked ? 0xff3333 : priHex3); });
                 } else if (child.material.color) {
-                    child.material.color.setHex(isTargetLocked ? 0xff3333 : colorMap[activeColor].three);
+                    child.material.color.setHex(isTargetLocked ? 0xff3333 : priHex3);
                 }
-            } else if (child.isPoints && child.material) {
-                child.material.color.setHex(isTargetLocked ? 0xff3333 : colorMap[activeColor].three);
+            } else if (child.isPoints && child.material && child.material.color) {
+                child.material.color.setHex(isTargetLocked ? 0xff3333 : priHex3);
             }
         });
-    } 
-    else if (coreMesh) {
+    } else if (coreMesh) {
         coreMesh.rotation.y += 0.005 * dynamicSpeed;
         coreMesh.rotation.x += 0.002 * dynamicSpeed;
-        
-        // Pulsate Core size based on time waves OR mic input
         const scaleVal = (1 + Math.sin(timeClock * 5) * 0.05) * volumeMultiplier;
         coreMesh.scale.set(scaleVal, scaleVal, scaleVal);
-        
-        // Target lock warning colors override
-        const targetColorHex = isTargetLocked ? 0xff3333 : colorMap[activeColor].three;
-        if (coreMesh && coreMesh.material && coreMesh.material.color) {
-            coreMesh.material.color.setHex(targetColorHex);
+
+        // Preserve Secondary Accent Color on ring1 while allowing Target Lock red alert!
+        if (coreMesh.material && coreMesh.material.color) {
+            coreMesh.material.color.setHex(isTargetLocked ? 0xff3333 : priHex3);
         }
         if (ring1 && ring1.material && ring1.material.color) {
-            ring1.material.color.setHex(targetColorHex);
+            ring1.material.color.setHex(isTargetLocked ? 0xff3333 : secHex3);
         }
         if (ring2 && ring2.material && ring2.material.color) {
-            ring2.material.color.setHex(targetColorHex);
+            ring2.material.color.setHex(isTargetLocked ? 0xff3333 : priHex3);
         }
     }
 
-    if (ring1) {
-        ring1.rotation.z -= 0.01 * dynamicSpeed;
-    }
-    if (ring2) {
-        ring2.rotation.x += 0.008 * dynamicSpeed;
-    }
+    if (ring1) ring1.rotation.z -= 0.01 * dynamicSpeed;
+    if (ring2) ring2.rotation.x += 0.008 * dynamicSpeed;
+    if (radarLine) radarLine.rotation.z -= 0.02 * dynamicSpeed;
 
-    // 2. Rotate Targeting Radar Sweep
-    if (radarLine) {
-        radarLine.rotation.z -= 0.02 * dynamicSpeed;
-    }
-
-    // 3. Pulse Waveform Monitor vertices (sync with mic frequencies if online)
-    if (waveLines.length > 0) {
+    // 3. Pulse Waveform Monitor vertices
+    if (waveLines.length > 0 && dtScale > 0) {
         waveLines.forEach((wl, wlIdx) => {
             const posAttr = wl.mesh.geometry.attributes.position;
             const segments = posAttr.count;
-            
-            // Extract a frequency slice for this waveform line
             let subArray = [];
-            if (micEnabled && freqData) {
+            if (audioReactiveNow && freqData) {
                 const step = Math.floor(freqData.length / 3);
                 subArray = freqData.slice(wlIdx * step, (wlIdx + 1) * step);
             }
-            
             for (let i = 0; i < segments; i++) {
                 const theta = (i / (segments - 1)) * Math.PI * 2;
-                
                 let displacement = 0.3 * Math.cos(timeClock * 2);
-                if (micEnabled && subArray.length > 0) {
+                if (audioReactiveNow && subArray.length > 0) {
                     const binIdx = Math.floor((i / segments) * subArray.length);
                     displacement = (subArray[binIdx] / 255) * 1.5;
                 }
-                
-                // Animate noise height on y axis
-                const waveVal = Math.sin(theta * (micEnabled ? 16 : 8) + timeClock * wl.rate) * displacement;
+                const waveVal = Math.sin(theta * (audioReactiveNow ? 16 : 8) + timeClock * wl.rate) * displacement;
                 posAttr.setY(i, waveVal);
             }
             posAttr.needsUpdate = true;
@@ -1386,15 +1639,20 @@ function animate() {
     if (visBars && visBars.length > 0 && visualizerGroup && visualizerGroup.visible) {
         visBars.forEach((bar, idx) => {
             let scaleH = 1.0;
-            if (micEnabled && freqData) {
+            if (audioReactiveNow && freqData) {
                 const binIdx = Math.floor((idx / visBars.length) * (freqData.length / 2));
-                scaleH = 1.0 + (freqData[binIdx] / 255) * 3.5;
+                scaleH = 0.6 + (freqData[binIdx] / 255) * 3.8;
             } else {
-                scaleH = 1.0 + Math.sin(timeClock * 4 + idx * 0.5) * 1.2;
+                scaleH = Math.max(0.35, 1.0 + Math.sin(timeClock * 4 + idx * 0.5) * 1.1);
             }
             bar.scale.y = scaleH;
             bar.position.y = -1.8 + (scaleH * 0.5);
         });
+    }
+
+    // v2.0 Module Animation Hook (Fresnel Shader uniforms, Glitch RGB, 4D Tesseract, Camera Tour, Oscilloscope)
+    if (window.__QuantumHUDHooks && typeof window.__QuantumHUDHooks.onAnimate === 'function') {
+        window.__QuantumHUDHooks.onAnimate(now, dtScale, timeClock, volumeMultiplier, freqData);
     }
 
     // Controls update
@@ -1435,57 +1693,65 @@ function animate() {
 
 // --- 7. LIVE CODE GENERATOR & UI SYNCS ---
 function updateCodeOutput() {
-    const palette = colorMap[activeColor];
+    const palette = getPrimaryColorInfo();
+    const secPalette = getSecondaryColorInfo();
     const scanlineVal = document.getElementById('scanline-slider').value / 100;
     const glitchVal = document.getElementById('glitch-slider').value;
+    glitchIntensity = parseFloat(glitchVal) || 0;
     const speedVal = document.getElementById('speed-slider').value;
 
-    const output = `/* Generated Hologram CSS Variables */
+    const output = `/* Generated Quantum HUD CSS Variables */
 :root {
   --hud-accent: ${palette.hex};
-  --hud-glow: rgba(${palette.rgb}, 0.4);
-  --hud-glow-dim: rgba(${palette.rgb}, 0.1);
+  --hud-accent-secondary: ${secPalette.hex};
+  --hud-glow: rgba(${palette.rgb}, 0.45);
+  --hud-glow-dim: rgba(${palette.rgb}, 0.12);
   --scanline-opacity: ${scanlineVal};
-  --glitch-frequency: ${(100 - glitchVal) / 100}s;
-  --rotation-speed: ${speedVal}s;
+  --glitch-intensity: ${glitchVal}%;
+  --rotation-speed: ${speedVal}x;
 }`;
 
     document.getElementById('code-output').textContent = output;
     
-    // Apply styling tokens globally to live viewport
     document.documentElement.style.setProperty('--hud-accent', palette.hex);
-    document.documentElement.style.setProperty('--hud-glow', `rgba(${palette.rgb}, 0.4)`);
-    document.documentElement.style.setProperty('--hud-glow-dim', `rgba(${palette.rgb}, 0.1)`);
+    document.documentElement.style.setProperty('--hud-accent-secondary', secPalette.hex);
+    document.documentElement.style.setProperty('--hud-glow', `rgba(${palette.rgb}, 0.45)`);
+    document.documentElement.style.setProperty('--hud-glow-dim', `rgba(${palette.rgb}, 0.12)`);
     document.documentElement.style.setProperty('--scanline-opacity', scanlineVal);
-    document.documentElement.style.setProperty('--glitch-freq', `${(100 - glitchVal) / 100}s`);
+    document.documentElement.style.setProperty('--glitch-freq', `${Math.max(0.08, (100 - glitchVal) / 100)}s`);
     document.documentElement.style.setProperty('--rotation-speed', `${speedVal}s`);
 }
 
-// --- SHARE HUD URL CONFIG ---
+// --- SHARE HUD URL CONFIG (100% Free + Local QR Modal!) ---
+function buildShareHUDUrl() {
+    const scanlineVal = document.getElementById('scanline-slider').value;
+    const glitchVal = document.getElementById('glitch-slider').value;
+    const speedVal = document.getElementById('speed-slider').value;
+    const cfg = {
+        p: activePreset,
+        c: activeColor,
+        s: activeColorSecondary,
+        ch: customPrimaryHex || '',
+        sh: customSecondaryHex || '',
+        sp: speedVal,
+        sc: scanlineVal,
+        g: glitchVal,
+        ex: explodedFactor,
+        cv: clockVisible ? 1 : 0,
+        gv: globeVisible ? 1 : 0,
+        vv: visVisible ? 1 : 0,
+        nv: nebulaVisible ? 1 : 0,
+        l: currentLang
+    };
+    return window.location.href.split('#')[0] + '#cfg=' + btoa(JSON.stringify(cfg));
+}
+
 function shareHUD() {
-    if (typeof window.isUserPremium === 'function' && !window.isUserPremium()) {
-        if (typeof window.showPaywallModal === 'function') {
-            window.showPaywallModal();
-            return;
-        }
-    }
     try {
-        const scanlineVal = document.getElementById('scanline-slider').value;
-        const glitchVal = document.getElementById('glitch-slider').value;
-        const speedVal = document.getElementById('speed-slider').value;
-        const cfg = {
-            p: activePreset,
-            c: activeColor,
-            s: activeColorSecondary,
-            sp: speedVal,
-            sc: scanlineVal,
-            g: glitchVal,
-            cv: clockVisible ? 1 : 0,
-            nv: nebulaVisible ? 1 : 0,
-            l: currentLang
-        };
-        const encoded = btoa(JSON.stringify(cfg));
-        const url = window.location.href.split('#')[0] + '#cfg=' + encoded;
+        const url = buildShareHUDUrl();
+        if (window.__QuantumVaultV2 && typeof window.__QuantumVaultV2.openShareModal === 'function') {
+            window.__QuantumVaultV2.openShareModal(url);
+        }
         navigator.clipboard.writeText(url).then(() => {
             logTerminal('Share URL copied to clipboard!');
             playSound('confirm');
@@ -1536,8 +1802,27 @@ function loadHUDFromURL() {
         if (cfg.s) {
             activeColorSecondary = cfg.s;
             document.querySelectorAll('.color-btn-sec').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.color === cfg.s);
+                btn.classList.toggle('active', btn.dataset.secColor === cfg.s);
             });
+        }
+        customPrimaryHex = cfg.ch || null;
+        customSecondaryHex = cfg.sh || null;
+        if (cfg.ex !== undefined) {
+            explodedFactor = parseFloat(cfg.ex) || 0;
+            const es = document.getElementById('exploded-slider');
+            const ev = document.getElementById('exploded-value');
+            if (es) es.value = explodedFactor;
+            if (ev) ev.innerText = explodedFactor > 0 ? explodedFactor.toFixed(1) + 'x' : 'OFF';
+        }
+        if (cfg.gv !== undefined) {
+            globeVisible = !!cfg.gv;
+            const gChk = document.getElementById('layer-globe');
+            if (gChk) gChk.checked = globeVisible;
+        }
+        if (cfg.vv !== undefined) {
+            visVisible = !!cfg.vv;
+            const vChk = document.getElementById('layer-visualizer');
+            if (vChk) vChk.checked = visVisible;
         }
         if (cfg.sp) {
             const sl = document.getElementById('speed-slider');
@@ -1577,6 +1862,9 @@ function loadHUDFromURL() {
         buildCore();
         buildReticle();
         buildParticleNebula();
+        build3DClock();
+        build3DGlobe();
+        build3DVisualizer();
         updateLayerVisibilities();
         updateCodeOutput();
         logTerminal('✅ HUD configuration restored from shared URL.');
@@ -1671,24 +1959,64 @@ function applyPreset(presetKey) {
         document.getElementById('layer-radar').checked = false;
         document.getElementById('layer-wave').checked = false;
         document.getElementById('layer-terminal').checked = true;
+    } else if (presetKey === 'arcreactor') {
+        activeColor = 'cyan';
+        activeColorSecondary = 'gold';
+        rotationSpeed = 1.1;
+        document.getElementById('speed-slider').value = 1.1;
+        document.getElementById('layer-radar').checked = true;
+        document.getElementById('layer-wave').checked = true;
+        document.getElementById('layer-terminal').checked = true;
+    } else if (presetKey === 'dyson') {
+        activeColor = 'gold';
+        activeColorSecondary = 'cyan';
+        rotationSpeed = 0.7;
+        document.getElementById('speed-slider').value = 0.7;
+        document.getElementById('layer-radar').checked = true;
+        document.getElementById('layer-wave').checked = false;
+        document.getElementById('layer-terminal').checked = true;
+    } else if (presetKey === 'defense') {
+        activeColor = 'emerald';
+        activeColorSecondary = 'cyan';
+        rotationSpeed = 0.9;
+        document.getElementById('speed-slider').value = 0.9;
+        document.getElementById('layer-radar').checked = true;
+        document.getElementById('layer-wave').checked = true;
+        document.getElementById('layer-terminal').checked = true;
+    } else if (presetKey === 'tesseract4d') {
+        activeColor = 'purple';
+        activeColorSecondary = 'cyan';
+        rotationSpeed = 1.0;
+        document.getElementById('speed-slider').value = 1.0;
+        document.getElementById('layer-radar').checked = false;
+        document.getElementById('layer-wave').checked = true;
+        document.getElementById('layer-terminal').checked = true;
     }
+    customPrimaryHex = null;
+    customSecondaryHex = null;
 
     if (hologramTranslations[currentLang] && hologramTranslations[currentLang].scenarios[presetKey]) {
         speakAI(hologramTranslations.fr.scenarios[presetKey], hologramTranslations.en.scenarios[presetKey]);
     }
 
-    // Sync palettes active states
+    // Sync BOTH primary & secondary palettes active states
     document.querySelectorAll('.color-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.color === activeColor);
     });
+    document.querySelectorAll('.color-btn-sec').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.secColor === activeColorSecondary);
+    });
 
-    // Rebuild geometry
+    // Rebuild all color-dependent layers cleanly (with full GPU disposal)
     buildGrid();
     buildRadar();
     buildWaveforms();
     buildCore();
     buildReticle();
     buildParticleNebula();
+    build3DClock();
+    build3DGlobe();
+    build3DVisualizer();
     
     // Trigger toggles visibility updates
     updateLayerVisibilities();
@@ -1712,11 +2040,16 @@ function updateLayerVisibilities() {
         logBox.style.display = document.getElementById('layer-terminal').checked ? 'flex' : 'none';
     }
 
-    // Quantum Bloom fog setting
+    // Real Quantum Bloom Glow (canvas halo + additive core glow!)
+    bloomEnabled = document.getElementById('layer-bloom').checked;
     if (scene) {
-        scene.fog = document.getElementById('layer-bloom').checked 
-            ? new THREE.FogExp2(0x030308, 0.02) 
-            : null;
+        scene.fog = bloomEnabled ? new THREE.FogExp2(0x030308, 0.012) : null;
+    }
+    if (renderer && renderer.domElement) {
+        const hex = getPrimaryColorInfo().hex;
+        renderer.domElement.style.filter = bloomEnabled
+            ? `drop-shadow(0 0 12px ${hex}) drop-shadow(0 0 28px ${hex}55)`
+            : 'none';
     }
 }
 
@@ -1731,7 +2064,7 @@ function toggleMic() {
         }
         micEnabled = false;
         document.getElementById('btn-mic-toggle').classList.remove('active');
-        document.getElementById('btn-mic-toggle').innerHTML = `<i class="fa-solid fa-microphone-slash"></i> Mic: OFF`;
+        document.getElementById('btn-mic-toggle').innerHTML = `<i class="fa-solid fa-microphone-slash"></i> <span id="txt-mic">${hologramTranslations[currentLang].mic_off}</span>`;
         logTerminal('Audio Reactivity pipeline offline.');
         playSound('click');
     } else {
@@ -1745,16 +2078,17 @@ function toggleMic() {
                     audioCtx.resume();
                 }
                 
-                analyserNode = audioCtx.createAnalyser();
-                analyserNode.fftSize = 256;
-                freqData = new Uint8Array(analyserNode.frequencyBinCount);
-                
+                if (!analyserNode) {
+                    analyserNode = audioCtx.createAnalyser();
+                    analyserNode.fftSize = 256;
+                    freqData = new Uint8Array(analyserNode.frequencyBinCount);
+                }
                 micSource = audioCtx.createMediaStreamSource(stream);
                 micSource.connect(analyserNode);
                 
                 micEnabled = true;
                 document.getElementById('btn-mic-toggle').classList.add('active');
-                document.getElementById('btn-mic-toggle').innerHTML = `<i class="fa-solid fa-microphone"></i> Mic: ON`;
+                document.getElementById('btn-mic-toggle').innerHTML = `<i class="fa-solid fa-microphone"></i> <span id="txt-mic">${hologramTranslations[currentLang].mic_on}</span>`;
                 logTerminal('Audio Reactivity pipeline online.');
                 playSound('sonar');
             })
@@ -1900,7 +2234,7 @@ function handleFileSelect(file) {
 }
 
 function loadCustomModel(object, name) {
-    coreGroup.clear(); // Hide default preset geometries
+    clearGroupWithDispose(coreGroup); // Hide & dispose default preset geometries
     
     // Calculate polygons and vertices count
     let vertices = 0;
@@ -1987,7 +2321,12 @@ function loadCustomModel(object, name) {
 function applyHologramMaterial() {
     if (!customModel) return;
     
-    const color = colorMap[activeColor].three;
+    const color = getPrimaryColorInfo().three;
+    const secColor = getSecondaryColorInfo().three;
+    if (customModelMaterialMode === 'fresnel' && window.__QuantumShadersV2 && typeof window.__QuantumShadersV2.applyFresnelToObject === 'function') {
+        window.__QuantumShadersV2.applyFresnelToObject(customModel, color, secColor, localPlanes);
+        return;
+    }
     
     customModel.traverse(child => {
         // Skip helper outlines and points to prevent infinite traversal recursion!
@@ -2072,7 +2411,7 @@ function applyHologramMaterial() {
 function buildScanPlane(width) {
     removeScanPlane();
     
-    const color = colorMap[activeColor].three;
+    const color = getPrimaryColorInfo().three;
     const radius = Math.max(width * 0.6, 2.5);
     
     // Thin sweeping scanline laser ring
@@ -2092,6 +2431,7 @@ function buildScanPlane(width) {
 function removeScanPlane() {
     if (scanPlane) {
         scene.remove(scanPlane);
+        disposeObject3D(scanPlane);
         scanPlane = null;
     }
 }
@@ -2101,7 +2441,14 @@ function addAnnotation(position, text, targetObject) {
     const card = document.createElement('div');
     card.className = 'hud-label-card';
     card.id = id;
-    card.innerHTML = `<span>${text.toUpperCase()}</span><span class="delete-label-btn" onclick="deleteAnnotation('${id}')">&times;</span>`;
+    const lblSpan = document.createElement('span');
+    lblSpan.textContent = text.toUpperCase();
+    const delSpan = document.createElement('span');
+    delSpan.className = 'delete-label-btn';
+    delSpan.innerHTML = '&times;';
+    delSpan.addEventListener('click', () => window.deleteAnnotation(id));
+    card.appendChild(lblSpan);
+    card.appendChild(delSpan);
     document.getElementById('annotation-layer').appendChild(card);
     
     const localPos = targetObject.worldToLocal(position.clone());
@@ -2213,7 +2560,7 @@ function updateAnnotations() {
         line.setAttribute('y1', y.toFixed(1));
         line.setAttribute('x2', (x + offsetX).toFixed(1));
         line.setAttribute('y2', (y + offsetY + 8).toFixed(1));
-        line.setAttribute('stroke', colorMap[activeColor].hex);
+        line.setAttribute('stroke', getPrimaryColorInfo().hex);
         line.setAttribute('stroke-width', '1');
         line.setAttribute('stroke-opacity', '0.7');
         
@@ -2221,7 +2568,7 @@ function updateAnnotations() {
         circle.setAttribute('cx', x.toFixed(1));
         circle.setAttribute('cy', y.toFixed(1));
         circle.setAttribute('r', '3');
-        circle.setAttribute('fill', colorMap[activeColor].hex);
+        circle.setAttribute('fill', getPrimaryColorInfo().hex);
         
         svg.appendChild(line);
         svg.appendChild(circle);
@@ -2468,10 +2815,10 @@ function getSlicedGeometry(geometry, worldMatrix) {
 }
 
 function createSlicedModelClone(target) {
-    const clone = target.clone();
+    const clone = target.clone(true);
     target.updateMatrixWorld(true);
     
-    const color = colorMap[activeColor].three;
+    const color = getPrimaryColorInfo().three;
     
     const meshes = [];
     target.traverse(c => {
@@ -2523,27 +2870,25 @@ function exportGLB() {
         return;
     }
     const exporter = new THREE.GLTFExporter();
-    const exportTarget = customModel ? customModel : coreMesh;
+    const exportTarget = customModel ? customModel : coreGroup;
     const slicedClone = createSlicedModelClone(exportTarget);
     
-    logTerminal("Generating sliced GLB package...");
+    logTerminal("Generating full 3D GLB package...");
     playSound('click');
     
     exporter.parse(slicedClone, function (result) {
+        disposeObject3D(slicedClone);
         let blob;
         if (result instanceof ArrayBuffer) {
-            blob = new Blob([result], { type: 'application/octet-stream' });
+            blob = new Blob([result], { type: 'model/gltf-binary' });
         } else {
             const output = JSON.stringify(result, null, 2);
-            blob = new Blob([output], { type: 'text/plain' });
+            blob = new Blob([output], { type: 'application/json' });
         }
-        
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = (customModelName ? customModelName.split('.')[0] : 'core-reactor') + '-sliced.glb';
-        link.click();
+        safeDownloadBlob(blob, (customModelName ? customModelName.split('.')[0] : activePreset) + '-hud.glb');
         logTerminal("3D Model exported successfully to GLB format.");
     }, function(error) {
+        disposeObject3D(slicedClone);
         console.error(error);
         logTerminal("ERROR: Failed to export GLB.");
     }, { binary: true });
@@ -2562,18 +2907,16 @@ function exportOBJ() {
         return;
     }
     const exporter = new THREE.OBJExporter();
-    const exportTarget = customModel ? customModel : coreMesh;
+    const exportTarget = customModel ? customModel : coreGroup;
     const slicedClone = createSlicedModelClone(exportTarget);
     
-    logTerminal("Generating sliced OBJ mesh...");
+    logTerminal("Generating full 3D OBJ mesh...");
     playSound('click');
     
     const result = exporter.parse(slicedClone);
+    disposeObject3D(slicedClone);
     const blob = new Blob([result], { type: 'text/plain' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = (customModelName ? customModelName.split('.')[0] : 'core-reactor') + '-sliced.obj';
-    link.click();
+    safeDownloadBlob(blob, (customModelName ? customModelName.split('.')[0] : activePreset) + '-hud.obj');
     logTerminal("3D Model exported successfully to OBJ format.");
 }
 
@@ -2590,18 +2933,16 @@ function exportSTL() {
         return;
     }
     const exporter = new THREE.STLExporter();
-    const exportTarget = customModel ? customModel : coreMesh;
+    const exportTarget = customModel ? customModel : coreGroup;
     const slicedClone = createSlicedModelClone(exportTarget);
     
-    logTerminal("Generating sliced STL triangulation...");
+    logTerminal("Generating full 3D STL triangulation...");
     playSound('click');
     
     const result = exporter.parse(slicedClone, { binary: true });
+    disposeObject3D(slicedClone);
     const blob = new Blob([result], { type: 'application/octet-stream' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = (customModelName ? customModelName.split('.')[0] : 'core-reactor') + '-sliced.stl';
-    link.click();
+    safeDownloadBlob(blob, (customModelName ? customModelName.split('.')[0] : activePreset) + '-hud.stl');
     logTerminal("3D Model exported successfully to STL format.");
 }
 
@@ -2632,7 +2973,9 @@ function exportBlueprintSVG() {
     svg += `  </g>\n`;
     
     // Project meshes
-    svg += `  <g stroke="${colorMap[activeColor].hex}" stroke-width="0.75" stroke-opacity="0.8" fill="none">\n`;
+    const bpPriHex = getPrimaryColorInfo().hex;
+    const bpSecHex = getSecondaryColorInfo().hex;
+    svg += `  <g stroke="${bpPriHex}" stroke-width="0.75" stroke-opacity="0.85" fill="none">\n`;
     
     const tempV1 = new THREE.Vector3();
     const meshesToProject = [];
@@ -2641,11 +2984,11 @@ function exportBlueprintSVG() {
         customModel.traverse(c => {
             if (c.isMesh && c.visible && !c.userData.isOutline) meshesToProject.push(c);
         });
-    } else if (coreMesh && coreMesh.visible) {
-        meshesToProject.push(coreMesh);
+    } else if (coreGroup && coreGroup.visible) {
+        coreGroup.traverse(c => {
+            if ((c.isMesh || c.isLine || c.isLineSegments) && c.visible && !c.userData.isOutline) meshesToProject.push(c);
+        });
     }
-    if (ring1 && ring1.visible) meshesToProject.push(ring1);
-    if (ring2 && ring2.visible) meshesToProject.push(ring2);
     if (gridGroup && gridGroup.visible) {
         gridGroup.traverse(c => {
             if ((c.isMesh || c.isLine || c.isLineSegments) && c.visible) meshesToProject.push(c);
@@ -2752,15 +3095,30 @@ function exportBlueprintSVG() {
     svg += `    <text x="${width - 210}" y="${height - 30}">VER: 1.0.9-SYS</text>\n`;
     svg += `  </g>\n`;
     
-    svg += `  <rect x="15" y="15" width="${width - 30}" height="${height - 30}" fill="none" stroke="${colorMap[activeColor].hex}" stroke-opacity="0.3" stroke-width="1" />\n`;
+    if (annotations.length > 0) {
+        svg += `  <g stroke="${bpSecHex}" fill="${bpSecHex}" font-family="Orbitron, monospace" font-size="9">\n`;
+        const annV = new THREE.Vector3();
+        annotations.forEach(a => {
+            if (!a.object) return;
+            annV.copy(a.localPos).applyMatrix4(a.object.matrixWorld).project(camera);
+            if (annV.z > 1) return;
+            const ax = ((annV.x * 0.5 + 0.5) * width).toFixed(1);
+            const ay = ((-annV.y * 0.5 + 0.5) * height).toFixed(1);
+            const tx = (parseFloat(ax) + 34).toFixed(1);
+            const ty = (parseFloat(ay) - 22).toFixed(1);
+            const txt = (a.element?.querySelector('span')?.textContent || 'NODE').replace(/[<>&"]/g, '');
+            svg += `    <circle cx="${ax}" cy="${ay}" r="3" />\n`;
+            svg += `    <line x1="${ax}" y1="${ay}" x2="${tx}" y2="${ty}" stroke-width="1" />\n`;
+            svg += `    <text x="${tx}" y="${ty}" stroke="none">${txt}</text>\n`;
+        });
+        svg += `  </g>\n`;
+    }
+    svg += `  <rect x="15" y="15" width="${width - 30}" height="${height - 30}" fill="none" stroke="${bpPriHex}" stroke-opacity="0.35" stroke-width="1" />\n`;
     svg += `</svg>`;
     
     const blob = new Blob([svg], { type: 'image/svg+xml' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `blueprint-${customModelName ? customModelName.split('.')[0] : 'core-reactor'}.svg`;
-    link.click();
-    logTerminal('Vector Blueprint SVG exported successfully.');
+    safeDownloadBlob(blob, `blueprint-${customModelName ? customModelName.split('.')[0] : activePreset}.svg`);
+    logTerminal('Vector Blueprint SVG 2.0 exported successfully.');
 }
 
 // --- 12. PRODUCTION HTML EXPORTER ---
@@ -2790,11 +3148,12 @@ function exportStandaloneHTML() {
         ${css}
         /* Override customized variables */
         :root {
-          --hud-accent: ${colorMap[activeColor].hex};
-          --hud-glow: rgba(${colorMap[activeColor].rgb}, 0.4);
-          --hud-glow-dim: rgba(${colorMap[activeColor].rgb}, 0.1);
+          --hud-accent: ${getPrimaryColorInfo().hex};
+          --hud-accent-secondary: ${getSecondaryColorInfo().hex};
+          --hud-glow: rgba(${getPrimaryColorInfo().rgb}, 0.45);
+          --hud-glow-dim: rgba(${getPrimaryColorInfo().rgb}, 0.12);
           --scanline-opacity: ${document.getElementById('scanline-slider').value / 100};
-          --glitch-freq: ${(100 - document.getElementById('glitch-slider').value) / 100}s;
+          --glitch-freq: ${Math.max(0.08, (100 - document.getElementById('glitch-slider').value) / 100)}s;
           --rotation-speed: ${document.getElementById('speed-slider').value}s;
         }
     </style>
@@ -2851,10 +3210,16 @@ function exportStandaloneHTML() {
     <script>
         // Inline JS Engine
         let scene, camera, renderer, controls;
+        let currentLang = '${currentLang}';
         let activeColor = '${activeColor}';
         let activeColorSecondary = '${activeColorSecondary}';
+        let customPrimaryHex = ${JSON.stringify(customPrimaryHex)};
+        let customSecondaryHex = ${JSON.stringify(customSecondaryHex)};
         let rotationSpeed = ${rotationSpeed};
+        let explodedFactor = ${explodedFactor};
         let activePreset = '${activePreset}';
+        let visVisible = ${visVisible};
+        let visualizerGroup = null, visBars = [];
         let coreMesh, ring1, ring2, radarLine, waveLines = [];
         let gridGroup, radarGroup, waveGroup, coreGroup;
         let reticleMesh, raycaster, mouse;
@@ -2863,8 +3228,8 @@ function exportStandaloneHTML() {
         let micEnabled = false, micStream = null, analyserNode = null, freqData = null;
         let audioCtx = null;
 
-        // Clock state (exported from builder)
-        let clockVisible = ${clockVisible};
+        // Clock state (respects both clockVisible AND export-clock checkbox!)
+        let clockVisible = ${clockVisible && clockExport};
         let clockPosY = ${clockPosY};
         let clockPosX = ${clockPosX};
         let clockPosZ = ${clockPosZ};
@@ -2957,8 +3322,23 @@ function exportStandaloneHTML() {
             // Build Particle Nebula
             buildParticleNebula();
 
-            // Build 3D Wireframe World Globe if visible
+            // Build 3D Wireframe World Globe & Equalizer Visualizer
             if (globeVisible) build3DGlobe();
+            if (visVisible) {
+                visualizerGroup = new THREE.Group();
+                const visCol = colorMap[activeColor] ? colorMap[activeColor].three : 0x00f3ff;
+                for (let i = 0; i < 16; i++) {
+                    const bar = new THREE.Mesh(
+                        new THREE.BoxGeometry(0.3, 1, 0.3),
+                        new THREE.MeshBasicMaterial({ color: visCol, wireframe: true, transparent: true, opacity: 0.6 })
+                    );
+                    const ang = (i / 16) * Math.PI * 1.2 - Math.PI * 0.6;
+                    bar.position.set(Math.sin(ang) * 6.5, -1.8, Math.cos(ang) * 6.5);
+                    visualizerGroup.add(bar);
+                    visBars.push(bar);
+                }
+                scene.add(visualizerGroup);
+            }
 
             // Raycaster
             raycaster = new THREE.Raycaster();
@@ -3288,6 +3668,52 @@ function exportStandaloneHTML() {
                 coreGroup.add(ring1);
                 coreGroup.add(neuralNetGroup);
 
+            } else if (activePreset === 'arcreactor') {
+                coreMesh = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 1.1, 0.45, 6), new THREE.MeshBasicMaterial({ color: color, wireframe: true, transparent: true, opacity: 0.9 }));
+                coreMesh.rotation.x = Math.PI / 2;
+                coreGroup.add(coreMesh);
+                ring1 = new THREE.Mesh(new THREE.TorusGeometry(2.6, 0.22, 12, 48), new THREE.MeshBasicMaterial({ color: secColor, wireframe: true, transparent: true, opacity: 0.85 }));
+                coreGroup.add(ring1);
+                ring2 = new THREE.Mesh(new THREE.TorusGeometry(3.5, 0.08, 8, 64), new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.7 }));
+                coreGroup.add(ring2);
+                for (let i = 0; i < 10; i++) {
+                    const ang = (i / 10) * Math.PI * 2;
+                    const coil = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.85, 0.5), new THREE.MeshBasicMaterial({ color: i % 2 === 0 ? secColor : color, wireframe: true, transparent: true, opacity: 0.85 }));
+                    coil.position.set(Math.cos(ang) * 2.6, Math.sin(ang) * 2.6, 0);
+                    coil.rotation.z = ang;
+                    coreGroup.add(coil);
+                }
+            } else if (activePreset === 'dyson') {
+                coreMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(1.3, 2), new THREE.MeshBasicMaterial({ color: secColor, transparent: true, opacity: 0.85, wireframe: true }));
+                coreGroup.add(coreMesh);
+                const shell = new THREE.Mesh(new THREE.IcosahedronGeometry(3.0, 1), new THREE.MeshBasicMaterial({ color: color, wireframe: true, transparent: true, opacity: 0.55 }));
+                coreGroup.add(shell);
+                ring1 = new THREE.Mesh(new THREE.TorusGeometry(4.1, 0.06, 8, 64), new THREE.MeshBasicMaterial({ color: secColor, transparent: true, opacity: 0.7 }));
+                ring1.rotation.x = Math.PI / 2.6;
+                coreGroup.add(ring1);
+                ring2 = new THREE.Mesh(new THREE.TorusGeometry(4.8, 0.05, 8, 64), new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.55 }));
+                ring2.rotation.y = Math.PI / 3;
+                coreGroup.add(ring2);
+            } else if (activePreset === 'defense') {
+                coreMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(2.5, 2), new THREE.MeshBasicMaterial({ color: color, wireframe: true, transparent: true, opacity: 0.75 }));
+                coreGroup.add(coreMesh);
+                ring1 = new THREE.Mesh(new THREE.RingGeometry(3.4, 3.8, 48), new THREE.MeshBasicMaterial({ color: secColor, side: THREE.DoubleSide, transparent: true, opacity: 0.65, wireframe: true }));
+                ring1.rotation.x = Math.PI / 2;
+                coreGroup.add(ring1);
+                for (let i = 0; i < 3; i++) {
+                    const ang = (i / 3) * Math.PI * 2;
+                    const sat = new THREE.Mesh(new THREE.OctahedronGeometry(0.42, 0), new THREE.MeshBasicMaterial({ color: secColor, wireframe: true }));
+                    sat.position.set(Math.cos(ang) * 4.2, 0.6 * Math.sin(ang * 2), Math.sin(ang) * 4.2);
+                    coreGroup.add(sat);
+                }
+            } else if (activePreset === 'tesseract4d') {
+                coreMesh = new THREE.Mesh(new THREE.BoxGeometry(2.6, 2.6, 2.6), new THREE.MeshBasicMaterial({ color: color, wireframe: true, transparent: true, opacity: 0.9 }));
+                coreGroup.add(coreMesh);
+                const innerCube = new THREE.Mesh(new THREE.BoxGeometry(1.3, 1.3, 1.3), new THREE.MeshBasicMaterial({ color: secColor, wireframe: true, transparent: true, opacity: 0.9 }));
+                coreGroup.add(innerCube);
+                ring1 = new THREE.Mesh(new THREE.TorusGeometry(3.6, 0.06, 8, 48), new THREE.MeshBasicMaterial({ color: secColor, transparent: true, opacity: 0.65 }));
+                ring1.rotation.x = Math.PI / 3;
+                coreGroup.add(ring1);
             } else {
                 // Default sphere
                 coreGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1.9, 16, 16), new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.35, side: THREE.DoubleSide })));
@@ -3368,7 +3794,13 @@ function exportStandaloneHTML() {
             const card = document.createElement('div');
             card.className = 'hud-label-card';
             card.id = id;
-            card.innerHTML = '<span>' + text.toUpperCase() + '</span><span class="delete-label-btn" onclick="deleteAnnotation(\\'' + id + '\\')">&times;</span>';
+            const sp1 = document.createElement('span');
+            sp1.textContent = text.toUpperCase();
+            const sp2 = document.createElement('span');
+            sp2.className = 'delete-label-btn';
+            sp2.innerHTML = '&times;';
+            sp2.onclick = function() { window.deleteAnnotation(id); };
+            card.appendChild(sp1); card.appendChild(sp2);
             document.getElementById('annotation-layer').appendChild(card);
             
             const localPos = targetObject.worldToLocal(position.clone());
@@ -3770,7 +4202,14 @@ function exportStandaloneHTML() {
             }
             if (ring1) {
                 ring1.rotation.z -= 0.01 * speed;
-                if (ring1.material && ring1.material.color) ring1.material.color.setHex(isTargetLocked ? 0xff3333 : colorMap[activeColor].three);
+                const secCol3 = (colorMap[activeColorSecondary] ? colorMap[activeColorSecondary].three : colorMap[activeColor].three);
+                if (ring1.material && ring1.material.color) ring1.material.color.setHex(isTargetLocked ? 0xff3333 : secCol3);
+            }
+            if (visBars.length > 0 && visualizerGroup && visualizerGroup.visible) {
+                visBars.forEach((bar, idx) => {
+                    const sh = (micEnabled && freqData) ? (0.6 + (freqData[Math.floor((idx / visBars.length) * (freqData.length / 2))] / 255) * 3.5) : Math.max(0.35, 1.0 + Math.sin(clock * 4 + idx * 0.5) * 1.1);
+                    bar.scale.y = sh; bar.position.y = -1.8 + sh * 0.5;
+                });
             }
             if (radarLine) radarLine.rotation.z -= 0.02 * speed;
             
@@ -3951,12 +4390,9 @@ function exportStandaloneHTML() {
 </body>
 </html>`;
 
-        // Trigger file download
+        // Trigger file download with safe URL revocation
         const blob = new Blob([htmlContent], { type: 'text/html' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `sci-fi-hologram-${activePreset}.html`;
-        link.click();
+        safeDownloadBlob(blob, `sci-fi-hologram-${activePreset}.html`);
         logTerminal('Exported standalone HTML build successfully.');
     } catch (err) {
         console.error('Error generating HTML package for export:', err);
@@ -3976,6 +4412,7 @@ function bindEvents() {
     document.querySelectorAll('.color-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             activeColor = btn.dataset.color;
+            customPrimaryHex = null;
             document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             
@@ -3999,6 +4436,10 @@ function bindEvents() {
             
             buildReticle();
             buildParticleNebula();
+            build3DClock();
+            build3DGlobe();
+            build3DVisualizer();
+            updateLayerVisibilities();
             updateCodeOutput();
         });
     });
@@ -4007,12 +4448,15 @@ function bindEvents() {
     document.querySelectorAll('.color-btn-sec').forEach(btn => {
         btn.addEventListener('click', (e) => {
             activeColorSecondary = btn.dataset.secColor;
+            customSecondaryHex = null;
             document.querySelectorAll('.color-btn-sec').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             
             logTerminal(`Secondary color altered to ${activeColorSecondary.toUpperCase()}`);
             playSound('click');
             buildCore();
+            buildParticleNebula();
+            update3DClock(true);
             updateCodeOutput();
         });
     });
@@ -4043,7 +4487,7 @@ function bindEvents() {
             explodedFactor = parseFloat(e.target.value);
             const valEl = document.getElementById('exploded-value');
             if (valEl) valEl.innerText = explodedFactor > 0 ? `${explodedFactor.toFixed(1)}x` : "OFF";
-            buildCore();
+            applyFluidExplodedOffsets(customModel ? customModel : coreGroup, explodedFactor);
         });
     }
 
@@ -4053,8 +4497,8 @@ function bindEvents() {
         const btn = document.getElementById('btn-sound-toggle');
         btn.classList.toggle('active', soundEnabled);
         btn.innerHTML = soundEnabled 
-            ? `<i class="fa-solid fa-volume-high"></i> Audio: ON` 
-            : `<i class="fa-solid fa-volume-xmark"></i> Audio: OFF`;
+            ? `<i class="fa-solid fa-volume-high"></i> <span id="txt-sound">${hologramTranslations[currentLang].audio_on}</span>` 
+            : `<i class="fa-solid fa-volume-xmark"></i> <span id="txt-sound">${hologramTranslations[currentLang].audio_off}</span>`;
         
         playSound('click');
         logTerminal(`Acoustic feedback toggled ${soundEnabled ? 'ON' : 'OFF'}`);
@@ -4161,14 +4605,16 @@ function bindEvents() {
         }
     });
 
-    // Custom Model Sliders Controls
+    // Hologram Visuals Mode (works on BOTH custom 3D models AND all 13 built-in presets!)
     document.getElementById('material-mode').addEventListener('change', (e) => {
         customModelMaterialMode = e.target.value;
         if (customModel) {
             applyHologramMaterial();
-            logTerminal(`Hologram visuals switched to ${customModelMaterialMode.toUpperCase()}`);
-            playSound('click');
+        } else {
+            buildCore();
         }
+        logTerminal(`Hologram visuals switched to ${customModelMaterialMode.toUpperCase()}`);
+        playSound('click');
     });
 
     const mScale = document.getElementById('model-scale-slider');
@@ -4257,15 +4703,19 @@ function bindEvents() {
         playSound('sonar');
         logTerminal('Restored core shapes preset. Active model unloaded.');
 
-        // Hide Slice & Annotation Groups
-        document.getElementById('model-slice-group').style.display = 'none';
-        document.getElementById('model-annotation-group').style.display = 'none';
+        // Reset slicing planes back to OFF while keeping controls usable on all presets!
         customModelSliceY = 3.0;
         customModelSliceX = 3.0;
         customModelSliceZ = 3.0;
         localPlanes[0].constant = 3.0;
         localPlanes[1].constant = 3.0;
         localPlanes[2].constant = 3.0;
+        ['y', 'x', 'z'].forEach(ax => {
+            const sl = document.getElementById('model-slice-' + ax);
+            const vl = document.getElementById('model-slice-' + ax + '-val');
+            if (sl) sl.value = 3;
+            if (vl) vl.innerText = 'OFF';
+        });
         clearAnnotations();
     });
 
@@ -4306,11 +4756,18 @@ function bindEvents() {
         exportStandaloneHTML();
     });
 
-    // 5-Second HD Video Loop Recording for TikTok / Reels
+    // Pro HUD Video Studio (9:16 / 16:9 / 1:1 + Full HUD Overlays + Mixed Audio — Pro $10/mo)
     const btnRecordVideoHud = document.getElementById('btn-export-video-hud');
     if (btnRecordVideoHud) {
         let isRecordingHud = false;
         btnRecordVideoHud.addEventListener('click', () => {
+            if (typeof window.isUserPremium === 'function' && !window.isUserPremium()) {
+                if (typeof window.showPaywallModal === 'function') { window.showPaywallModal(); return; }
+            }
+            if (window.__QuantumExportersV2 && typeof window.__QuantumExportersV2.openVideoStudio === 'function') {
+                window.__QuantumExportersV2.openVideoStudio();
+                return;
+            }
             if (isRecordingHud) return;
             const canvas = (renderer && renderer.domElement) || document.querySelector('#viewport-canvas-stage canvas');
             if (!canvas) {
@@ -4399,14 +4856,184 @@ function bindEvents() {
     });
 }
 
-// --- 14. INITIALIZATION ON PAGE LOAD ---
+// --- 14. QUANTUM HUD v2.0 MODULAR BRIDGE ---
+window.__QuantumHUDHooks = window.__QuantumHUDHooks || {};
+window.__QuantumHUDCore = {
+    getScene: () => scene,
+    getCamera: () => camera,
+    getRenderer: () => renderer,
+    getControls: () => controls,
+    getCoreGroup: () => coreGroup,
+    getGridGroup: () => gridGroup,
+    getRadarGroup: () => radarGroup,
+    getWaveGroup: () => waveGroup,
+    getClockGroup: () => clockGroup,
+    getGlobeGroup: () => globeGroup,
+    getVisualizerGroup: () => visualizerGroup,
+    getNebulaGroup: () => nebulaGroup,
+    getCustomModel: () => customModel,
+    getLocalPlanes: () => localPlanes,
+    getAnnotations: () => annotations,
+    getActivePreset: () => activePreset,
+    getMaterialMode: () => customModelMaterialMode,
+    setMaterialMode: (m) => {
+        customModelMaterialMode = m;
+        const el = document.getElementById('material-mode');
+        if (el) el.value = m;
+        if (customModel) applyHologramMaterial(); else buildCore();
+    },
+    getActiveColor: () => activeColor,
+    getActiveColorSecondary: () => activeColorSecondary,
+    getPrimaryColorInfo,
+    getSecondaryColorInfo,
+    setCustomHexColors: (priHex, secHex) => {
+        if (priHex !== undefined) customPrimaryHex = priHex;
+        if (secHex !== undefined) customSecondaryHex = secHex;
+        buildGrid(); buildRadar(); buildWaveforms();
+        if (customModel) applyHologramMaterial(); else buildCore();
+        buildReticle(); buildParticleNebula(); build3DClock(); build3DGlobe(); build3DVisualizer();
+        updateLayerVisibilities(); updateCodeOutput();
+    },
+    getGlitchIntensity: () => glitchIntensity,
+    isBloomEnabled: () => bloomEnabled,
+    isPaused: () => isPaused,
+    setPaused: (v) => { isPaused = !!v; },
+    isRedAlert: () => redAlertActive,
+    setRedAlert: (v) => {
+        redAlertActive = !!v;
+        document.body.classList.toggle('red-alert-mode', redAlertActive);
+        buildGrid(); buildRadar(); buildWaveforms();
+        if (customModel) applyHologramMaterial(); else buildCore();
+        buildReticle(); buildParticleNebula(); build3DClock(); build3DGlobe(); build3DVisualizer();
+        updateLayerVisibilities(); updateCodeOutput();
+    },
+    getBranding: () => ({ title: hudBrandTitle, coord: hudSectorCoord, status: hudStatusMode }),
+    setBranding: (b) => {
+        if (b.title !== undefined) hudBrandTitle = b.title;
+        if (b.coord !== undefined) hudSectorCoord = b.coord;
+        if (b.status !== undefined) hudStatusMode = b.status;
+    },
+    getRotationSpeed: () => rotationSpeed,
+    setRotationSpeed: (v) => {
+        rotationSpeed = parseFloat(v) || 1.0;
+        const sl = document.getElementById('speed-slider');
+        const lb = document.getElementById('speed-value');
+        if (sl) sl.value = rotationSpeed;
+        if (lb) lb.innerText = rotationSpeed.toFixed(1) + 'x';
+        updateCodeOutput();
+    },
+    getExplodedFactor: () => explodedFactor,
+    setExplodedFactor: (v) => {
+        explodedFactor = parseFloat(v) || 0;
+        const sl = document.getElementById('exploded-slider');
+        const lb = document.getElementById('exploded-value');
+        if (sl) sl.value = explodedFactor;
+        if (lb) lb.innerText = explodedFactor > 0 ? explodedFactor.toFixed(1) + 'x' : 'OFF';
+        applyFluidExplodedOffsets(customModel ? customModel : coreGroup, explodedFactor);
+    },
+    getAudioContext: () => { initAudio(); return audioCtx; },
+    getMasterAudioGain: () => { initAudio(); return masterAudioGain; },
+    getAnalyser: () => { initAudio(); return analyserNode; },
+    getMasterMediaDest: () => { initAudio(); return masterMediaDest; },
+    getFreqData: () => freqData,
+    getLang: () => currentLang,
+    applyPreset,
+    applyHologramLang,
+    applyHologramMaterial,
+    buildCore,
+    buildShareHUDUrl,
+    updateLayerVisibilities,
+    updateCodeOutput,
+    updateTelemetry,
+    exportBlueprintSVG,
+    exportStandaloneHTML,
+    disposeObject3D,
+    safeDownloadBlob,
+    logTerminal,
+    playSound,
+    speakAI,
+    onWindowResize,
+    getSnapshotState: () => ({
+        preset: activePreset,
+        color: activeColor,
+        colorSec: activeColorSecondary,
+        customPrimaryHex,
+        customSecondaryHex,
+        speed: rotationSpeed,
+        exploded: explodedFactor,
+        scanline: document.getElementById('scanline-slider')?.value || '40',
+        glitch: document.getElementById('glitch-slider')?.value || '20',
+        clockVisible,
+        globeVisible,
+        visVisible,
+        nebulaVisible,
+        grid: document.getElementById('layer-grid')?.checked ?? true,
+        radar: document.getElementById('layer-radar')?.checked ?? true,
+        wave: document.getElementById('layer-wave')?.checked ?? true,
+        bloom: document.getElementById('layer-bloom')?.checked ?? true,
+        materialMode: customModelMaterialMode
+    }),
+    restoreSnapshotState: (st) => {
+        if (!st) return;
+        if (st.preset) {
+            activePreset = st.preset;
+            const sel = document.getElementById('preset-select');
+            if (sel) sel.value = st.preset;
+        }
+        if (st.color) activeColor = st.color;
+        if (st.colorSec) activeColorSecondary = st.colorSec;
+        customPrimaryHex = st.customPrimaryHex || null;
+        customSecondaryHex = st.customSecondaryHex || null;
+        if (st.speed !== undefined) {
+            rotationSpeed = parseFloat(st.speed);
+            const sl = document.getElementById('speed-slider'); if (sl) sl.value = rotationSpeed;
+            const lb = document.getElementById('speed-value'); if (lb) lb.innerText = rotationSpeed.toFixed(1) + 'x';
+        }
+        if (st.scanline !== undefined) {
+            const sl = document.getElementById('scanline-slider'); if (sl) sl.value = st.scanline;
+            const lb = document.getElementById('scanline-value'); if (lb) lb.innerText = st.scanline + '%';
+        }
+        if (st.glitch !== undefined) {
+            const sl = document.getElementById('glitch-slider'); if (sl) sl.value = st.glitch;
+            const lb = document.getElementById('glitch-value'); if (lb) lb.innerText = st.glitch + '%';
+        }
+        if (st.exploded !== undefined) {
+            explodedFactor = parseFloat(st.exploded) || 0;
+            const sl = document.getElementById('exploded-slider'); if (sl) sl.value = explodedFactor;
+            const lb = document.getElementById('exploded-value'); if (lb) lb.innerText = explodedFactor > 0 ? explodedFactor.toFixed(1) + 'x' : 'OFF';
+        }
+        if (st.clockVisible !== undefined) { clockVisible = !!st.clockVisible; const el = document.getElementById('layer-clock'); if (el) el.checked = clockVisible; }
+        if (st.globeVisible !== undefined) { globeVisible = !!st.globeVisible; const el = document.getElementById('layer-globe'); if (el) el.checked = globeVisible; }
+        if (st.visVisible !== undefined) { visVisible = !!st.visVisible; const el = document.getElementById('layer-visualizer'); if (el) el.checked = visVisible; }
+        if (st.nebulaVisible !== undefined) { nebulaVisible = !!st.nebulaVisible; const el = document.getElementById('toggle-nebula'); if (el) el.checked = nebulaVisible; }
+        if (st.grid !== undefined) { const el = document.getElementById('layer-grid'); if (el) el.checked = !!st.grid; }
+        if (st.radar !== undefined) { const el = document.getElementById('layer-radar'); if (el) el.checked = !!st.radar; }
+        if (st.wave !== undefined) { const el = document.getElementById('layer-wave'); if (el) el.checked = !!st.wave; }
+        if (st.bloom !== undefined) { const el = document.getElementById('layer-bloom'); if (el) el.checked = !!st.bloom; }
+        if (st.materialMode) { customModelMaterialMode = st.materialMode; const el = document.getElementById('material-mode'); if (el) el.value = st.materialMode; }
+
+        document.querySelectorAll('.color-btn').forEach(b => b.classList.toggle('active', !customPrimaryHex && b.dataset.color === activeColor));
+        document.querySelectorAll('.color-btn-sec').forEach(b => b.classList.toggle('active', !customSecondaryHex && b.dataset.secColor === activeColorSecondary));
+
+        buildGrid(); buildRadar(); buildWaveforms(); buildCore(); buildReticle(); buildParticleNebula();
+        build3DClock(); build3DGlobe(); build3DVisualizer();
+        updateLayerVisibilities(); updateCodeOutput();
+    }
+};
+
+// --- 15. INITIALIZATION ON PAGE LOAD ---
 window.onload = () => {
     init3D();
     animate();
     bindEvents();
+    applyHologramLang(currentLang);
+    updateLayerVisibilities();
     setTimeout(onWindowResize, 100);
     setTimeout(onWindowResize, 500);
     updateCodeOutput();
     loadHUDFromURL();
-    logTerminal('Quantum HUD Builder online. Système en ligne.');
+    if (window.__QuantumHUDHooks && typeof window.__QuantumHUDHooks.onReady === 'function') {
+        window.__QuantumHUDHooks.onReady();
+    }
+    logTerminal('Quantum 3D HUD Builder v2.0 online.');
 };
