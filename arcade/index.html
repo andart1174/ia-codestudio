@@ -63,7 +63,7 @@
           <button type="button" class="hub-lang-btn" data-lang="fr">FR</button>
         </div>
         <a href="../ia-architecte-app/index.html" class="hub-cta-primary">
-          <span>🚀</span><span class="cta-label-long" data-i18n="nav_cta">Open IDE</span>
+          <span>🚀</span> <span class="cta-label-long" data-i18n="nav_cta">Open IDE</span>
         </a>
         <button type="button" class="hub-mobile-toggle" id="hub-mob-btn" aria-label="Menu">☰</button>
       </div>
@@ -321,7 +321,7 @@
       const closeBtn = document.getElementById('arcade-modal-close');
 
       if (pill && !localStorage.getItem('genius_session') && !sessionStorage.getItem('arcade_gift_dismissed')) {
-        setTimeout(() => { pill.style.display = 'inline-flex'; }, 1500);
+        pill.style.display = 'inline-flex';
       }
       if (pill && modal) {
         pill.addEventListener('click', (e) => {

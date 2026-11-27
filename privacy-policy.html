@@ -132,13 +132,13 @@
 
   <footer class="hub-footer">
     <div class="hub-footer-inner">
-      <span>© 2026 IA Code Studio. All rights reserved.</span>
+      <span id="pp-footer-copy">© 2026 IA Code Studio. All rights reserved.</span>
       <div class="hub-footer-links">
-        <a href="index.html">Home</a>
-        <a href="3d-studios/index.html">3D Studios</a>
-        <a href="free-tools/index.html">Dev Tools</a>
-        <a href="marketing-widgets/index.html">Marketing</a>
-        <a href="arcade/index.html">Arcade Showcase</a>
+        <a href="index.html" id="pp-l1">AI Code IDE</a>
+        <a href="3d-studios/index.html" id="pp-l2">3D Studios</a>
+        <a href="free-tools/index.html" id="pp-l3">Dev Tools</a>
+        <a href="marketing-widgets/index.html" id="pp-l4">Marketing</a>
+        <a href="arcade/index.html" id="pp-l5">Arcade Showcase</a>
       </div>
     </div>
   </footer>
@@ -154,6 +154,12 @@
         document.title = lang === 'fr' ? 'Politique de Confidentialité — IA Code Studio' : 'Privacy Policy — IA Code Studio';
         const back = document.querySelector('[data-i18n="back_home"]');
         if (back) back.textContent = lang === 'fr' ? '← Retour au Studio' : '← Back to Studio';
+        const fc = document.getElementById('pp-footer-copy');
+        if (fc) fc.textContent = lang === 'fr' ? '© 2026 IA Code Studio. Tous droits réservés.' : '© 2026 IA Code Studio. All rights reserved.';
+        const labels = lang === 'fr'
+          ? ['IDE Code IA', 'Studios 3D', 'Outils Dev', 'Marketing', 'Vitrine Arcade']
+          : ['AI Code IDE', '3D Studios', 'Dev Tools', 'Marketing', 'Arcade Showcase'];
+        labels.forEach((txt, i) => { const el = document.getElementById('pp-l' + (i + 1)); if (el) el.textContent = txt; });
         document.querySelectorAll('.hub-lang-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-lang') === lang));
       }
       const q = new URLSearchParams(window.location.search).get('lang');

@@ -131,6 +131,8 @@ const translations = {
     reviews_r1: "\"In 30 seconds I generated a complete landing page with clean HTML, CSS, and Three.js animations. Editing live in Studio Pro feels effortless.\"",
     reviews_r4: "\"The 3D Liquid Chrome studio and 3D UI component exports rival desktop software — and everything runs smoothly right in the browser.\"",
     reviews_r8: "\"OmniConvert Pro and the offline dev tools stay open in my browser every day. Fast, zero tracking, and clean exports.\"",
+    rev_mod_3d: "3D Visual Studios",
+    rev_mod_tools: "Free Developer Tools",
 
     qa_title: "Frequently Asked Questions",
     qa_q1: "Does IA Architecte Studio Pro generate clean, exportable code?",
@@ -367,6 +369,8 @@ const translations = {
     reviews_r1: "\"En 30 secondes j'ai généré une landing page complète avec du HTML, CSS et Three.js propre. L'édition live dans Studio Pro est ultra-fluide.\"",
     reviews_r4: "\"Le studio 3D Liquid Chrome et l'export des composants UI 3D rivalisent avec des logiciels de bureau — et tout tourne directement dans le navigateur.\"",
     reviews_r8: "\"OmniConvert Pro et les outils dev hors-ligne restent ouverts dans mon navigateur chaque jour. Rapide, sans pistage et exports propres.\"",
+    rev_mod_3d: "Studios Visuels 3D",
+    rev_mod_tools: "Outils Développeurs Gratuits",
 
     qa_title: "Questions Fréquentes",
     qa_q1: "IA Architecte Studio Pro génère-t-il du code propre et exportable ?",
