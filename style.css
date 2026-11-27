@@ -262,6 +262,13 @@ html, body {
   text-align: center;
 }
 
+.mobile-nav-drawer a.mobile-drawer-ultra {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(236, 72, 153, 0.2));
+  border-color: rgba(245, 158, 11, 0.45);
+  color: #fde68a;
+  text-align: center;
+}
+
 .mobile-drawer-utils {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -502,6 +509,27 @@ html, body {
 
 .hero-btn-primary:hover {
   background: rgba(139, 92, 246, 0.3);
+  transform: translateY(-1px);
+}
+
+.hero-btn-ultra {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 22px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.16), rgba(236, 72, 153, 0.16));
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  color: #fde68a;
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+
+.hero-btn-ultra:hover {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.28), rgba(236, 72, 153, 0.28));
+  color: #ffffff;
   transform: translateY(-1px);
 }
 
@@ -823,6 +851,104 @@ html, body {
   flex: 1;
   border-radius: 5px 5px 2px 2px;
   background: linear-gradient(180deg, var(--aura-cyan), var(--aura-violet));
+}
+
+/* Companion Studio Ultra v2.0 Strip */
+.ultra-companion-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: 22px 28px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(236, 72, 153, 0.08), rgba(15, 23, 42, 0.9));
+  border: 1px solid rgba(245, 158, 11, 0.42);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.38);
+  margin-bottom: 24px;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.ultra-companion-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(245, 158, 11, 0.65);
+  box-shadow: 0 18px 44px rgba(245, 158, 11, 0.14);
+}
+
+.ultra-companion-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex: 1;
+  min-width: 260px;
+}
+
+.ultra-icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.22), rgba(236, 72, 153, 0.22));
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.55rem;
+  flex-shrink: 0;
+}
+
+.ultra-companion-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.ultra-companion-head h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.28rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.pill-ultra {
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--aura-amber), var(--aura-magenta));
+  color: #ffffff;
+}
+
+.ultra-companion-copy p {
+  color: #cbd5e1;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  max-width: 680px;
+}
+
+.btn-ultra-launch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 13px 22px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--aura-amber), var(--aura-magenta));
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 800;
+  white-space: nowrap;
+  box-shadow: 0 6px 22px rgba(245, 158, 11, 0.35);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-ultra-launch:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px rgba(236, 72, 153, 0.45);
 }
 
 /* 3 Companion Hub Cards */
