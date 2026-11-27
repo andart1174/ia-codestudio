@@ -4,9 +4,29 @@
   <!-- ===== HOMEPAGE / MAIN HUB ===== -->
   <url>
     <loc>https://ia-codestudio.com/</loc>
-    <lastmod>2026-10-21</lastmod>
+    <lastmod>2026-11-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+  </url>
+
+  <!-- ===== DEDICATED WORKSPACE HUBS ===== -->
+  <url>
+    <loc>https://ia-codestudio.com/3d-studios/</loc>
+    <lastmod>2026-11-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/marketing-widgets/</loc>
+    <lastmod>2026-11-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.92</priority>
+  </url>
+  <url>
+    <loc>https://ia-codestudio.com/arcade/</loc>
+    <lastmod>2026-11-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
   </url>
 
   <!-- ===== FLAGSHIP AI STUDIOS & 3D ENGINES ===== -->

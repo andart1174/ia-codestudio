@@ -1463,5 +1463,39 @@
   </script>
   <!-- ⚡ Central Tab Registry & On-Demand Lazy Loader -->
   <script src="js/studio-tab-loader.js"></script>
+  <!-- Homepage Prompt & Language Bridge (Non-Invasive) -->
+  <script>
+    (function () {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        var qLang = params.get('lang');
+        var qPrompt = params.get('prompt');
+
+        if (qLang === 'fr' || qLang === 'en') {
+          var applyLangRetry = function (tries) {
+            var btn = document.querySelector('.lang-btn[data-lang="' + qLang + '"]');
+            if (btn) { btn.click(); }
+            else if (tries > 0) { setTimeout(function () { applyLangRetry(tries - 1); }, 150); }
+          };
+          window.addEventListener('load', function () { applyLangRetry(10); });
+        }
+
+        if (qPrompt && qPrompt.trim()) {
+          var applyPromptRetry = function (tries) {
+            var inp = document.getElementById('ai-input');
+            var sendBtn = document.querySelector('.ai-send');
+            if (inp && sendBtn) {
+              inp.value = qPrompt.trim();
+              inp.focus();
+              setTimeout(function () { sendBtn.click(); }, 350);
+            } else if (tries > 0) {
+              setTimeout(function () { applyPromptRetry(tries - 1); }, 250);
+            }
+          };
+          window.addEventListener('load', function () { setTimeout(function () { applyPromptRetry(15); }, 450); });
+        }
+      } catch (e) {}
+    })();
+  </script>
 </body>
 </html>

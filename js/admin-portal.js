@@ -7,10 +7,12 @@
                 if (!btn) return;
                 
                 // 1. Get current logged user
+                const lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
+                const upgradeLabel = lang === 'fr' ? '💎 Passer à Pro ($10/mois)' : '💎 Upgrade to Pro ($10/mo)';
                 const session = localStorage.getItem('genius_session');
                 if (!session) {
                     btn.classList.remove('active-sub');
-                    btn.innerText = '💎 Devenir Premium ($10/mo)';
+                    btn.innerText = upgradeLabel;
                     return;
                 }
                 
@@ -20,7 +22,7 @@
                 // Admin bypass (matching premium-lock.js)
                 if (email === 'andart1174@gmail.com') {
                     btn.classList.add('active-sub');
-                    btn.innerText = currentLang === 'fr' ? '✅ Premium ACTIF (Admin)' : '✅ Premium ACTIVE (Admin)';
+                    btn.innerText = lang === 'fr' ? '✅ Premium ACTIF (Admin)' : '✅ Premium ACTIVE (Admin)';
                     return;
                 }
                 
@@ -36,7 +38,7 @@
                     
                     if (isUnlimited || daysLeft > 0) {
                         btn.classList.add('active-sub');
-                        btn.innerText = currentLang === 'fr' 
+                        btn.innerText = lang === 'fr' 
                             ? '✅ Premium ACTIF (' + (isUnlimited ? 'Illimité' : daysLeft + ' jours restants') + ')'
                             : '✅ Premium ACTIVE (' + (isUnlimited ? 'Unlimited' : daysLeft + ' days left') + ')';
                         return;
@@ -45,7 +47,7 @@
 
                 // Not premium
                 btn.classList.remove('active-sub');
-                btn.innerText = '💎 Devenir Premium ($10/mo)';
+                btn.innerText = upgradeLabel;
             }
             function triggerPremiumPortal() {
                 window.open('https://buy.stripe.com/bJecN61Fk3staax7mGbfO03', '_blank');

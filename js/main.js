@@ -31,6 +31,10 @@ function applyTranslations(lang) {
       btn.classList.add('active');
     }
   });
+
+  // Sync dynamic bilingual buttons/modals when language changes
+  if (typeof checkPremiumPortal === 'function') checkPremiumPortal();
+  if (typeof updateAuthUI === 'function') updateAuthUI();
 }
 window.applyTranslations = applyTranslations;
 
@@ -63,27 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
   currentLang = initialLang;
   applyTranslations(currentLang);
-
-  // Setup event listeners for language toggle
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const lang = e.target.getAttribute('data-lang');
-      setLanguage(lang);
-    });
-  });
-
-  // Simple scroll reveal animation for cards
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('reveal-visible');
-      }
-    });
-  });
-
-  document.querySelectorAll('.reveal').forEach((el) => {
-    observer.observe(el);
-  });
 });
 
 /* Modal Logic */

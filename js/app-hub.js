@@ -1198,6 +1198,8 @@ ${jsContent}
     return { allowed: true, isFirstToday: true };
   }
 
+  var activeHubCategory = "all";
+
   // --- RENDER APP CARDS IN SECTION ---
   function renderAppHub() {
     const grid = document.getElementById("hub-apps-grid");
@@ -1242,15 +1244,22 @@ ${jsContent}
     });
 
     updateQuotaUI();
+    if (activeHubCategory && activeHubCategory !== "all") {
+      const activeBtn = document.querySelector('.hub-filter-btn.active');
+      filterHubApps(activeHubCategory, activeBtn);
+    }
   }
 
   function filterHubApps(cat, btn) {
+    activeHubCategory = cat || "all";
     document.querySelectorAll(".hub-filter-btn").forEach((b) => b.classList.remove("active"));
     if (btn) btn.classList.add("active");
 
     const cards = document.querySelectorAll(".hub-app-card");
     cards.forEach((c) => {
-      if (cat === "all" || c.getAttribute("data-category") === cat) {
+      const cardCat = c.getAttribute("data-category");
+      const matchesCreative = (cat === "creative" && (cardCat === "ui" || cardCat === "canvas"));
+      if (cat === "all" || cardCat === cat || matchesCreative) {
         c.style.display = "flex";
       } else {
         c.style.display = "none";
