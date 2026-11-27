@@ -1,0 +1,57 @@
+# IA Code Studio (https://ia-codestudio.com)
+
+> IA Code Studio is a free-to-start bilingual (English & French) browser-based AI Web App Builder, Code IDE, 3D WebGL Studio, and offline Developer Tools platform. Built around **IA Architecte Studio Pro** and **IA Architecte Studio Ultra v2.0**, it lets developers, designers, and creators generate clean HTML, CSS, JavaScript, React, Vue, and Three.js code directly in the browser with zero setup.
+
+## Flagship AI Coding Workspaces
+- [IA Code Studio Home (EN)](https://ia-codestudio.com/) | [Version Française](https://ia-codestudio.com/fr/): Interactive AI prompt launcher, flagship IDE overview, 10 ready-to-export starter apps (1 free ZIP/day), and transparent pricing ($0 Free / $10/mo Pro).
+- [IA Architecte Studio Pro (Flagship IDE)](https://ia-codestudio.com/ia-architecte-app/): Monaco-based AI Web IDE generating complete HTML, CSS, and JavaScript web apps from text prompts with live split preview, API design, security audits, and 1-click export.
+- [IA Architecte Studio Pro Overview](https://ia-codestudio.com/ia-architecte-studio-pro/): Detailed feature breakdown, use cases, pricing, and FAQ for the flagship AI Web IDE.
+- [IA Architecte Studio Ultra v2.0](https://ia-codestudio.com/ia-architecte-studio-ultra/): Multi-screen companion AI workbench with 28+ functional app templates, visual CSS/database inspector, 3D/AR spatial previews, and DevOps packager.
+
+## 3D & WebGL Visual Studios Hub
+- [All 3D & WebGL Visual Studios](https://ia-codestudio.com/3d-studios/) | [Français](https://ia-codestudio.com/fr/3d-studios/):
+  - [3D Creative Studio v2.0](https://ia-codestudio.com/3d-creative-studio/): 72+ customizable interactive 3D UI components (buttons, holographic cards, Bento grids, 3D globes) with HTML, React JSX, and Vue 3 exports.
+  - [3D Liquid Chrome & Neon Studio](https://ia-codestudio.com/3d-liquid-chrome-studio/): 18 procedural 4D metallic shader scenes (Cyber-Mecha, Tourbillon Watch, Hypercar, Stargate) with 3MF, GLB, and 4K UHD export.
+  - [Studio 3D/4D Pro](https://ia-codestudio.com/studio-3d-4d-pro/): 2D SVG/DXF vector-to-3D extruder, STL/GLB/OBJ importer, and standalone Three.js exporter.
+  - [HyperStudio 3D/4D Engine](https://ia-codestudio.com/hyperstudio-3d-4d/): Real-time 3D/4D HTML code engine, WebAR export, audio FFT visuals, and cosmic flight simulator.
+  - [Quantum 3D HUD Builder](https://ia-codestudio.com/hologram-hud-builder/): Sci-fi holographic HUDs, tactical radars, GLSL Fresnel presets, and OBS overlays.
+  - [Cyber Creative Studio](https://ia-codestudio.com/cyber-creative-studio/): 3D animated video intros with talking AI robot hosts and synthwave beat maker.
+
+## Free Offline Developer Tools (100% Client-Side, Zero Upload)
+- [Free Developer Tools & Sandbox Hub](https://ia-codestudio.com/free-tools/):
+  - [OmniConvert Pro 2.0](https://ia-codestudio.com/free-tools/omni-convert/): Offline JSON, XML, YAML, Base64, QR code, and CSS gradient developer workstation.
+  - [Live HTML/CSS/JS Sandbox v2.0](https://ia-codestudio.com/free-tools/playground/): CodeMirror split-screen playground with console and shareable `#code=` URLs.
+  - [CSS Mesh Gradient & Shadow Lab](https://ia-codestudio.com/free-tools/converters/css-mesh-lab/)
+  - [CSS Grid & Bento Layout Builder](https://ia-codestudio.com/free-tools/converters/grid-bento-builder/)
+  - [Tailwind to Vanilla CSS Transpiler](https://ia-codestudio.com/free-tools/converters/tailwind-to-vanilla/)
+  - [SVG Optimizer & JSX Extractor](https://ia-codestudio.com/free-tools/converters/svg-optimizer/)
+  - [Dev Swiss Kit (Regex, JWT, UUID/Crypto)](https://ia-codestudio.com/free-tools/converters/dev-swiss-kit/)
+  - [3D WebGL Text Maker](https://ia-codestudio.com/free-tools/converters/font-previewer-3d/)
+  - [Markdown GFM to HTML Compiler](https://ia-codestudio.com/free-tools/converters/markdown-to-html/)
+  - [Base64 Toolkit Pro](https://ia-codestudio.com/free-tools/converters/base64/)
+  - [Glassmorphic Card Studio](https://ia-codestudio.com/free-tools/converters/text-to-html/)
+
+## Interactive Marketing & 3D Widgets Suite
+- [Marketing & Widgets Hub](https://ia-codestudio.com/marketing-widgets/) | [Français](https://ia-codestudio.com/fr/marketing-widgets/):
+  - [Ad-Genius AI Pro (23 Studios)](https://ia-codestudio.com/ad-genius-ai/)
+  - [3D Marketing Lab (9 Free Viral Tools)](https://ia-codestudio.com/3d-marketing-lab/)
+  - [AI Ad & Widget Studio](https://ia-codestudio.com/widget-studio/)
+  - Standalone Generators: [3D Product Showroom](https://ia-codestudio.com/3d-product-showroom-ai.html), [3D Scratch Card](https://ia-codestudio.com/ai-scratch-card-generator.html), [Spin Wheel Maker](https://ia-codestudio.com/spin-wheel-ad-maker.html), [Digital Business Card](https://ia-codestudio.com/digital-business-card-generator.html), [Certificate Generator](https://ia-codestudio.com/certificate-generator-online.html).
+
+## Comparisons & Alternatives Guides
+- [Comparisons Hub](https://ia-codestudio.com/compare/) | [Français](https://ia-codestudio.com/fr/compare/):
+  - [IA Code Studio vs CodePen](https://ia-codestudio.com/compare/ia-code-studio-vs-codepen.html)
+  - [IA Code Studio vs Spline 3D](https://ia-codestudio.com/compare/ia-code-studio-vs-spline.html)
+  - [IA Code Studio vs Bolt & Lovable](https://ia-codestudio.com/compare/ia-code-studio-vs-bolt.html)
+  - [Free Online SVG to 3D Converter Guide](https://ia-codestudio.com/compare/free-svg-to-3d-converter-online.html)
+  - [Best Free Offline Developer Tools](https://ia-codestudio.com/compare/best-offline-developer-tools.html)
+  - [Free 3D UI Components for React & Vue](https://ia-codestudio.com/compare/free-3d-ui-components-react-vue.html)
+
+## Showcase — Built with Our Engine
+- [Arcade Showcase (21 Playable Games & 3D Demos)](https://ia-codestudio.com/arcade/) | [Français](https://ia-codestudio.com/fr/arcade/): [Cyber Arcade 3D Arena (9 Games)](https://ia-codestudio.com/cyber-arcade/), [Retro 80s Arcade (12 Classics)](https://ia-codestudio.com/retro-arcade/), plus live Three.js simulations.
+
+## Languages & Full Reference
+- English: https://ia-codestudio.com/
+- Français: https://ia-codestudio.com/fr/
+- Full AI Reference: https://ia-codestudio.com/llms-full.txt
+- Sitemap: https://ia-codestudio.com/sitemap.xml

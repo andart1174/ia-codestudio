@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vitrine & Arcade — 21 Jeux WebGL Créés avec IA Code Studio</title>
+  <meta name="description" content="Jouez gratuitement à 21 jeux WebGL 3D, Réalité Augmentée et Rétro 80s conçus avec le moteur IA Code Studio : Cyber Arcade (9 jeux), Retro 80s (12 classiques) et Simulateur Spatial.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ia-codestudio.com/fr/arcade/">
+  <link rel="alternate" hreflang="en" href="https://ia-codestudio.com/arcade/">
+  <link rel="alternate" hreflang="fr" href="https://ia-codestudio.com/fr/arcade/">
+  <link rel="alternate" hreflang="x-default" href="https://ia-codestudio.com/arcade/">
+  <link rel="icon" type="image/png" href="/logo-ia-codestudio.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ia-codestudio.com/fr/arcade/">
+  <meta property="og:title" content="Vitrine & Arcade — 21 Jeux WebGL Créés avec IA Code Studio">
+  <meta property="og:description" content="Jouez gratuitement à 21 jeux WebGL 3D, Réalité Augmentée et Rétro 80s conçus avec le moteur IA Code Studio : Cyber Arcade (9 jeux), Retro 80s (12 classiques) et Simulateur Spatial.">
+  <meta property="og:image" content="https://ia-codestudio.com/og-social-banner.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "name": "Showcase & Arcade — Built with IA Code Studio",
+        "url": "https://ia-codestudio.com/arcade/",
+        "description": "21 playable 3D WebGL, Augmented Reality, and Retro 80s games showcasing the performance of the IA Code Studio engine."
+      },
+      {
+        "@type": "VideoGame",
+        "name": "Cyber Arcade 3D Arena & Cosmic Flight Simulator",
+        "url": "https://ia-codestudio.com/cyber-arcade/",
+        "image": "https://ia-codestudio.com/og-social-banner.png",
+        "genre": ["Arcade", "Space Flight Simulator", "WebGL 3D Game"],
+        "gamePlatform": ["Web Browser", "Mobile Browser", "Windows", "macOS", "iOS", "Android"],
+        "applicationCategory": "Game",
+        "playMode": "SinglePlayer",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock" }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="/css/hub-pages.css?v=20261127">
+</head>
+<body>
+  <div class="hub-bg-glow"></div>
+
+  <header class="hub-navbar">
+    <div class="hub-nav-inner">
+      <a href="/fr/index.html" class="hub-brand">
+        <img src="/logo-ia-codestudio.webp" alt="IA Code Studio">
+        <span>IA CODE STUDIO</span>
+      </a>
+      <nav class="hub-nav-links" aria-label="Main navigation">
+        <a href="/fr/index.html" class="hub-nav-link" data-i18n="nav_home">AI Code IDE</a>
+        <a href="/fr/3d-studios/index.html" class="hub-nav-link" data-i18n="nav_3d">3D Studios</a>
+        <a href="/free-tools/index.html" class="hub-nav-link" data-i18n="nav_tools">Dev Tools</a>
+        <a href="/fr/marketing-widgets/index.html" class="hub-nav-link" data-i18n="nav_marketing">Marketing &amp; Widgets</a>
+        <a href="/fr/arcade/index.html" class="hub-nav-link active" data-i18n="nav_arcade">Arcade Showcase</a>
+      </nav>
+      <div class="hub-nav-actions">
+        <div class="hub-lang-toggle" role="group" aria-label="Language">
+          <a href="/arcade/" class="hub-lang-btn" style="text-decoration:none;">EN</a>
+          <button type="button" class="hub-lang-btn active" data-lang="fr">FR</button>
+        </div>
+        <a href="/ia-architecte-app/index.html" class="hub-cta-primary">
+          <span>🚀</span> <span class="cta-label-long" data-i18n="nav_cta">Open IDE</span>
+        </a>
+        <button type="button" class="hub-mobile-toggle" id="hub-mob-btn" aria-label="Menu">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="hub-mobile-drawer" id="hub-mob-drawer">
+    <a href="/fr/index.html" data-i18n="nav_home">AI Code IDE</a>
+    <a href="/fr/3d-studios/index.html" data-i18n="nav_3d">3D Studios</a>
+    <a href="/free-tools/index.html" data-i18n="nav_tools">Dev Tools</a>
+    <a href="/fr/marketing-widgets/index.html" data-i18n="nav_marketing">Marketing &amp; Widgets</a>
+    <a href="/fr/arcade/index.html" class="active" data-i18n="nav_arcade">Arcade Showcase</a>
+  </div>
+
+  <main class="hub-main">
+    <div class="hub-breadcrumb">
+      <a href="/fr/index.html" data-i18n="crumb_home">Home</a>
+      <span>/</span>
+      <span data-i18n="crumb_current">Showcase — Built with Our Engine</span>
+    </div>
+
+    <section class="hub-hero">
+      <div class="hub-eyebrow" data-i18n="eyebrow">🎮 Vitrine — Créé avec Notre Moteur WebGL & HTML5</div>
+      <h1 data-i18n="hero_title">21 Jeux Navigateur & Démos 3D Live</h1>
+      <p data-i18n="hero_sub">See what pure browser code powered by Three.js and HTML5 Canvas can achieve. Zero downloads, 60 FPS on desktop and mobile — all built inside the IA Code Studio ecosystem.</p>
+    </section>
+
+    <section class="hub-grid">
+      <!-- 1. Cyber Arcade 3D -->
+      <article class="hub-card featured">
+        <div class="hub-card-top">
+          <div class="hub-card-icon">🎮</div>
+          <span class="hub-badge hot" data-i18n="b_9games">9 3D &amp; AR Games</span>
+        </div>
+        <h2>Cyber Arcade 3D Arena &amp; AR</h2>
+        <p data-i18n="c1_desc">Play 9 high-speed WebGL 3D &amp; Augmented Reality games: Cyber Racer 2077, Titan Mech Arena, Beat Slicer, Cosmic Surfer, AR Alien Invasion, with 3D Hangar, weapons shop, and virtual coins.</p>
+        <div class="hub-tags">
+          <span class="hub-tag">WebGL 3D</span>
+          <span class="hub-tag">Mobile AR Camera</span>
+          <span class="hub-tag">Virtual Coins</span>
+        </div>
+        <div class="hub-card-actions">
+          <a href="/cyber-arcade/index.html" class="hub-btn-launch" data-i18n="btn_play">Play Free Now →</a>
+        </div>
+      </article>
+
+      <!-- 2. Retro 80s Arcade -->
+      <article class="hub-card featured">
+        <div class="hub-card-top">
+          <div class="hub-card-icon">🕹️</div>
+          <span class="hub-badge hot" data-i18n="b_12games">12 Classic Games</span>
+        </div>
+        <h2>Retro 80s Arcade</h2>
+        <p data-i18n="c2_desc">12 faithful retro arcade classics rebuilt in pure HTML5 &amp; Canvas: Vintage Pinball 1979, Pac-Maze, Space Invaders, Brick Breaker, Asteroids Vector, Pong 1972, Neon Tetris, and Highway Racer.</p>
+        <div class="hub-tags">
+          <span class="hub-tag">HTML5 Canvas</span>
+          <span class="hub-tag">Zero Install</span>
+          <span class="hub-tag">100% Free</span>
+        </div>
+        <div class="hub-card-actions">
+          <a href="/retro-arcade/index.html" class="hub-btn-launch" data-i18n="btn_play">Play Free Now →</a>
+        </div>
+      </article>
+
+      <!-- 3. Cosmic Flight Simulator -->
+      <article class="hub-card">
+        <div class="hub-card-top">
+          <div class="hub-card-icon">🚀</div>
+          <span class="hub-badge free" data-i18n="b_sim">3D Space Sim</span>
+        </div>
+        <h2>HyperStudio Cosmic Flight Simulator</h2>
+        <p data-i18n="c3_desc">Pilot starships across 5 cosmic missions with asteroid laser mining, quantum slalom gates, boss battles, mobile touch gamepad, and live 3D code inspection.</p>
+        <div class="hub-tags">
+          <span class="hub-tag">Three.js 60 FPS</span>
+          <span class="hub-tag">Touch Gamepad</span>
+          <span class="hub-tag">Boss Combat</span>
+        </div>
+        <div class="hub-card-actions">
+          <a href="/hyperstudio-3d-4d/index.html" class="hub-btn-launch" data-i18n="btn_play">Play Free Now →</a>
+        </div>
+      </article>
+    </section>
+
+    <div class="hub-section-header">
+      <div>
+        <h2 data-i18n="demos_title">Interactive WebGL Tech Demos</h2>
+        <p data-i18n="demos_sub">Lightweight procedural shaders and particle engines running live in your browser.</p>
+      </div>
+    </div>
+
+    <section class="hub-strip-grid">
+      <a href="/demo-procedural-galaxy.html" target="_blank" class="hub-mini-card">
+        <span class="hub-mini-icon">🌌</span>
+        <div>
+          <strong data-i18n="d1_t">Procedural Galaxy 3D</strong>
+          <span data-i18n="d1_s">100k+ GPU particles in Three.js</span>
+        </div>
+      </a>
+      <a href="/demo-neon-fluid-simulation.html" target="_blank" class="hub-mini-card">
+        <span class="hub-mini-icon">⚡</span>
+        <div>
+          <strong data-i18n="d2_t">Neon Fluid Simulation</strong>
+          <span data-i18n="d2_s">Interactive metaball physics</span>
+        </div>
+      </a>
+      <a href="/demo-text-particle-explosion.html" target="_blank" class="hub-mini-card">
+        <span class="hub-mini-icon">💥</span>
+        <div>
+          <strong data-i18n="d3_t">Text Particle Explosion</strong>
+          <span data-i18n="d3_s">WebGL typography physics</span>
+        </div>
+      </a>
+      <a href="/index.html#app-hub-showcase" class="hub-mini-card">
+        <span class="hub-mini-icon">📦</span>
+        <div>
+          <strong data-i18n="d4_t">10 Exportable Starter Apps</strong>
+          <span data-i18n="d4_s">Download clean ZIP source code</span>
+        </div>
+      </a>
+    </section>
+
+    <section class="hub-ide-callout">
+      <div>
+        <h3 data-i18n="callout_title">Want to build your own web app or game?</h3>
+        <p data-i18n="callout_sub">Open IA Architecte Studio Pro to generate HTML, CSS, JavaScript, and Three.js projects with AI prompts and instant live preview.</p>
+      </div>
+      <a href="/ia-architecte-app/index.html" class="hub-cta-primary" style="padding: 13px 24px; font-size: 0.95rem;" data-i18n="callout_btn">🚀 Start Coding in Studio Pro</a>
+    </section>
+  </main>
+
+  <!-- Welcome Gift Pill (+2,500 Coins) — Placed cleanly in the Arcade Showcase -->
+  <div id="arcade-gift-pill" class="arcade-gift-pill" style="display:none;" role="button" tabindex="0">
+    <span style="font-size:1.3rem;">🎁</span>
+    <div>
+      <span style="display:block; font-size:10px; font-weight:800; color:#fbbf24; text-transform:uppercase; letter-spacing:0.05em;" data-i18n="gift_tag">ARCADE WELCOME BONUS</span>
+      <span style="font-size:13px; font-weight:800; color:#fff;" data-i18n="gift_coins">+2,500 Free Coins 🪙</span>
+    </div>
+    <button type="button" class="arcade-gift-pill-close" id="arcade-gift-dismiss" aria-label="Close">×</button>
+  </div>
+
+  <!-- Welcome Gift Modal -->
+  <div id="arcade-gift-modal" class="arcade-modal-overlay">
+    <div class="arcade-modal-card">
+      <button type="button" class="arcade-modal-close" id="arcade-modal-close" aria-label="Close">×</button>
+      <div style="font-size:3rem; margin-bottom:12px;">🎁</div>
+      <h2 style="font-family:'Outfit',sans-serif; font-size:1.55rem; font-weight:800; color:#fbbf24; margin-bottom:10px;" data-i18n="gift_modal_title">Arcade Welcome Bonus!</h2>
+      <p style="color:#cbd5e1; font-size:0.92rem; line-height:1.6; margin-bottom:22px;" data-i18n="gift_modal_desc">Create a free account in 5 seconds to unlock 2,500 virtual coins for the Cyber Arcade 3D Hangar &amp; Weapons Shop, plus free daily ZIP code exports.</p>
+      <a href="/index.html?auth=signup" class="hub-cta-primary" style="width:100%; justify-content:center; padding:13px 20px; font-size:0.95rem; background:linear-gradient(135deg,#f59e0b,#ec4899);" data-i18n="gift_modal_btn">🚀 Claim +2,500 Coins &amp; Sign Up</a>
+    </div>
+  </div>
+
+  <footer class="hub-footer">
+    <div class="hub-footer-inner">
+      <span data-i18n="footer_copy">© 2026 IA Code Studio. All rights reserved.</span>
+      <div class="hub-footer-links">
+        <a href="/fr/index.html" data-i18n="nav_home">AI Code IDE</a>
+        <a href="/fr/3d-studios/index.html" data-i18n="nav_3d">3D Studios</a>
+        <a href="/free-tools/index.html" data-i18n="nav_tools">Dev Tools</a>
+        <a href="/fr/marketing-widgets/index.html" data-i18n="nav_marketing">Marketing &amp; Widgets</a>
+        <a href="/privacy-policy.html" data-i18n="footer_privacy">Privacy Policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      const T = {
+        en: {
+          page_title: "Showcase & Arcade — 21 Browser Games Built with IA Code Studio",
+          nav_home: "AI Code IDE", nav_3d: "3D Studios", nav_tools: "Dev Tools", nav_marketing: "Marketing & Widgets", nav_arcade: "Arcade Showcase", nav_cta: "Open IDE",
+          crumb_home: "Home", crumb_current: "Showcase — Built with Our Engine",
+          eyebrow: "🎮 Showcase — Built with Our WebGL & HTML5 Engine",
+          hero_title: "21 Browser Games & Live 3D Demos",
+          hero_sub: "See what pure browser code powered by Three.js and HTML5 Canvas can achieve. Zero downloads, 60 FPS on desktop and mobile — all built inside the IA Code Studio ecosystem.",
+          b_9games: "9 3D & AR Games", b_12games: "12 Classic Games", b_sim: "3D Space Sim",
+          c1_desc: "Play 9 high-speed WebGL 3D & Augmented Reality games: Cyber Racer 2077, Titan Mech Arena, Beat Slicer, Cosmic Surfer, AR Alien Invasion, with 3D Hangar, weapons shop, and virtual coins.",
+          c2_desc: "12 faithful retro arcade classics rebuilt in pure HTML5 & Canvas: Vintage Pinball 1979, Pac-Maze, Space Invaders, Brick Breaker, Asteroids Vector, Pong 1972, Neon Tetris, and Highway Racer.",
+          c3_desc: "Pilot starships across 5 cosmic missions with asteroid laser mining, quantum slalom gates, boss battles, mobile touch gamepad, and live 3D code inspection.",
+          btn_play: "Play Free Now →",
+          demos_title: "Interactive WebGL Tech Demos",
+          demos_sub: "Lightweight procedural shaders and particle engines running live in your browser.",
+          d1_t: "Procedural Galaxy 3D", d1_s: "100k+ GPU particles in Three.js",
+          d2_t: "Neon Fluid Simulation", d2_s: "Interactive metaball physics",
+          d3_t: "Text Particle Explosion", d3_s: "WebGL typography physics",
+          d4_t: "10 Exportable Starter Apps", d4_s: "Download clean ZIP source code",
+          callout_title: "Want to build your own web app or game?",
+          callout_sub: "Open IA Architecte Studio Pro to generate HTML, CSS, JavaScript, and Three.js projects with AI prompts and instant live preview.",
+          callout_btn: "🚀 Start Coding in Studio Pro",
+          gift_tag: "ARCADE WELCOME BONUS", gift_coins: "+2,500 Free Coins 🪙",
+          gift_modal_title: "Arcade Welcome Bonus!",
+          gift_modal_desc: "Create a free account in 5 seconds to unlock 2,500 virtual coins for the Cyber Arcade 3D Hangar & Weapons Shop, plus free daily ZIP code exports.",
+          gift_modal_btn: "🚀 Claim +2,500 Coins & Sign Up",
+          footer_copy: "© 2026 IA Code Studio. All rights reserved.", footer_privacy: "Privacy Policy"
+        },
+        fr: {
+          page_title: "Vitrine & Arcade — 21 Jeux WebGL Créés avec IA Code Studio",
+          nav_home: "IDE Code IA", nav_3d: "Studios 3D", nav_tools: "Outils Dev", nav_marketing: "Marketing & Widgets", nav_arcade: "Vitrine Arcade", nav_cta: "Ouvrir l'IDE",
+          crumb_home: "Accueil", crumb_current: "Vitrine — Créé avec Notre Moteur",
+          eyebrow: "🎮 Vitrine — Créé avec Notre Moteur WebGL & HTML5",
+          hero_title: "21 Jeux Navigateur & Démos 3D Live",
+          hero_sub: "Découvrez la puissance du code WebGL Three.js et HTML5 Canvas. Sans installation, 60 FPS sur ordinateur et mobile — entièrement conçu dans l'écosystème IA Code Studio.",
+          b_9games: "9 Jeux 3D & RA", b_12games: "12 Jeux Rétro", b_sim: "Simulateur 3D",
+          c1_desc: "Jouez à 9 jeux WebGL 3D & Réalité Augmentée : Cyber Racer 2077, Titan Mech Arena, Beat Slicer, Cosmic Surfer, AR Alien Invasion, avec Hangar 3D, boutique d'armes et pièces virtuelles.",
+          c2_desc: "12 grands classiques rétro recréés en HTML5 & Canvas pur : Pinball 1979, Pac-Maze, Space Invaders, Brick Breaker, Asteroids, Pong 1972, Tetris Néon et Highway Racer.",
+          c3_desc: "Pilotez des vaisseaux spatiaux à travers 5 missions cosmiques : minage laser, slalom quantique, combats de boss, manette tactile mobile et inspection du code 3D.",
+          btn_play: "Jouer Gratuitement →",
+          demos_title: "Démos Techniques WebGL Interactives",
+          demos_sub: "Shaders procéduraux et moteurs de particules temps réel dans votre navigateur.",
+          d1_t: "Galaxie Procédurale 3D", d1_s: "100k+ particules GPU sous Three.js",
+          d2_t: "Simulation Fluide Néon", d2_s: "Physique métaballes interactive",
+          d3_t: "Explosion Particules 3D", d3_s: "Typographie WebGL interactive",
+          d4_t: "10 Apps Prêtes à Exporter", d4_s: "Téléchargez le code source ZIP",
+          callout_title: "Envie de coder votre propre application ou jeu ?",
+          callout_sub: "Ouvrez IA Architecte Studio Pro pour générer des projets HTML, CSS, JavaScript et Three.js par prompts IA avec aperçu en direct.",
+          callout_btn: "🚀 Coder dans Studio Pro",
+          gift_tag: "BONUS DE BIENVENUE ARCADE", gift_coins: "+2 500 Pièces Gratuites 🪙",
+          gift_modal_title: "Cadeau de Bienvenue Arcade !",
+          gift_modal_desc: "Créez un compte gratuit en 5 secondes pour débloquer 2 500 pièces virtuelles dans le Hangar Cyber Arcade 3D ainsi que vos exports de code quotidiens gratuits.",
+          gift_modal_btn: "🚀 Réclamer +2 500 Pièces & S'inscrire",
+          footer_copy: "© 2026 IA Code Studio. Tous droits réservés.", footer_privacy: "Confidentialité"
+        }
+      };
+
+      function applyLang(lang) {
+        const l = (lang === 'fr') ? 'fr' : 'en';
+        document.documentElement.lang = l;
+        localStorage.setItem('hub_lang', l);
+        const dict = T[l];
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const k = el.getAttribute('data-i18n');
+          if (dict[k]) el.textContent = dict[k];
+        });
+        document.querySelectorAll('.hub-lang-btn').forEach(b => {
+          b.classList.toggle('active', b.getAttribute('data-lang') === l);
+        });
+      }
+
+      const urlLang = new URLSearchParams(window.location.search).get('lang');
+      const saved = localStorage.getItem('hub_lang');
+      const initLang = (urlLang === 'en') ? 'en' : 'fr';
+      applyLang(initLang);
+
+      document.querySelectorAll('.hub-lang-btn').forEach(b => b.addEventListener('click', () => applyLang(b.getAttribute('data-lang'))));
+
+      const mobBtn = document.getElementById('hub-mob-btn');
+      const drawer = document.getElementById('hub-mob-drawer');
+      if (mobBtn && drawer) {
+        mobBtn.addEventListener('click', () => drawer.classList.toggle('open'));
+      }
+
+      // Welcome gift pill (only for non-logged-in users, dismissible)
+      const pill = document.getElementById('arcade-gift-pill');
+      const modal = document.getElementById('arcade-gift-modal');
+      const dismiss = document.getElementById('arcade-gift-dismiss');
+      const closeBtn = document.getElementById('arcade-modal-close');
+
+      if (pill && !localStorage.getItem('genius_session') && !sessionStorage.getItem('arcade_gift_dismissed')) {
+        pill.style.display = 'inline-flex';
+      }
+      if (pill && modal) {
+        pill.addEventListener('click', (e) => {
+          if (e.target === dismiss) return;
+          modal.classList.add('active');
+        });
+      }
+      if (dismiss && pill) {
+        dismiss.addEventListener('click', (e) => {
+          e.stopPropagation();
+          pill.style.display = 'none';
+          sessionStorage.setItem('arcade_gift_dismissed', '1');
+        });
+      }
+      if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+        modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+# IA Code Studio — Complete Technical Reference (llms-full.txt)
+
+Canonical URL: https://ia-codestudio.com/
+French Portal: https://ia-codestudio.com/fr/
+Sitemap: https://ia-codestudio.com/sitemap.xml
+Languages Supported: English (EN) and French (FR)
+Pricing Model: Freemium — $0 Free Starter (full live preview, 10+ offline dev tools, 1 starter app ZIP export/day, live demos & showcase) | $10/month Pro Creator (unlimited HTML/CSS/JS/ZIP/React/Vue/GLB/3MF exports across all studios via Stripe).
+Architecture: 100% browser-based Vanilla HTML5, CSS3, ES6+ JavaScript, Monaco & CodeMirror editors, Three.js WebGL, client-side JSZip, Firebase Auth/Firestore, Netlify CDN & Serverless Functions.
+
+---
+
+## 1. Flagship AI Web IDE Workspaces
+
+### IA Architecte Studio Pro
+- Live App: https://ia-codestudio.com/ia-architecte-app/
+- Feature Overview: https://ia-codestudio.com/ia-architecte-studio-pro/
+- Purpose: Flagship browser AI IDE for generating, editing, auditing, and exporting standalone HTML, CSS, JavaScript, and Three.js web applications from plain English or French prompts.
+- Capabilities: Monaco Code Editor, Prompt-to-App generation, Live split-screen 60 FPS preview, API design, SaaS templates, cybersecurity & accessibility auditing, Tailwind transpilation, 1-click standalone HTML & modular ZIP export.
+- Deep-Link Prompt Launch: Supports `https://ia-codestudio.com/ia-architecte-app/?prompt=YOUR_PROMPT&lang=en` (or `lang=fr`) to auto-fill and execute an AI prompt on launch.
+
+### IA Architecte Studio Ultra v2.0
+- Live App: https://ia-codestudio.com/ia-architecte-studio-ultra/
+- Purpose: Companion multi-screen AI workbench featuring 28+ functional app templates, visual CSS style editor, local database engine, 3D/AR spatial previews, and DevOps packager (Dockerfile, docker-compose, nginx.conf, Cloudflare Worker).
+
+---
+
+## 2. 3D & WebGL Visual Studios Hub (https://ia-codestudio.com/3d-studios/)
+
+1. **3D Creative Studio v2.0** (`https://ia-codestudio.com/3d-creative-studio/`): 72+ customizable 3D web UI components across 20 categories (3D buttons, holographic cards, 3D globes, Bento grids, interactive menus, Web Audio synths) with HTML, React JSX, Vue 3 SFC, and Web Component exports.
+2. **3D Liquid Chrome & Neon Studio** (`https://ia-codestudio.com/3d-liquid-chrome-studio/`): 18 procedural 4D WebGL compartments (Cyber-Mecha 4D, Haute Horlogerie Tourbillon, Hypercar, Stargate Portal, Alien Mothership, Living Fractals, Metaballs) with real-time liquid chrome reflection shaders, audio reactivity, and 3MF multicolor 3D-print / GLB / standalone HTML exports. Guide: `https://ia-codestudio.com/3d-liquid-chrome-generator.html`.
+3. **Studio 3D/4D Pro** (`https://ia-codestudio.com/studio-3d-4d-pro/`): 2D vector extruder (SVG & DXF to volumetric 3D Three.js meshes), 3D model importer (STL, GLB, OBJ), procedural generators, and standalone HTML/ZIP compiler.
+4. **HyperStudio 3D/4D Engine** (`https://ia-codestudio.com/hyperstudio-3d-4d/`): Real-time 3D/4D HTML code engine, PBR environments, 4D morphing, audio FFT visualizers, WebAR export, and cosmic space flight simulator.
+5. **Quantum 3D HUD Builder** (`https://ia-codestudio.com/hologram-hud-builder/`): Interactive sci-fi holographic interface builder with GLSL Fresnel presets, reactor cores, tactical radars, and OBS/PNG/Video exports.
+6. **Cyber Creative Studio** (`https://ia-codestudio.com/cyber-creative-studio/`): 3D cinematic video intro generator with talking AI robot hosts, 60 FPS video export, and darksynth beat maker.
+
+---
+
+## 3. Free Offline Developer Tools Hub (https://ia-codestudio.com/free-tools/)
+
+All developer tools execute 100% locally in the browser with zero server uploads, zero tracking, and offline PWA support:
+- **OmniConvert Pro 2.0** (`https://ia-codestudio.com/free-tools/omni-convert/`): JSON, XML, YAML, Base64, QR generator, hash/crypto & CSS gradient workstation.
+- **Live HTML/CSS/JS Sandbox v2.0** (`https://ia-codestudio.com/free-tools/playground/`): Split-screen CodeMirror editor with integrated console, Three.js/Bento presets, and `#code=` link sharing.
+- **CSS Mesh Gradient & Shadow Lab** (`https://ia-codestudio.com/free-tools/converters/css-mesh-lab/`): Multi-orb mesh gradients, smooth layered shadows, neon borders for CSS & Tailwind.
+- **CSS Grid & Bento Layout Builder** (`https://ia-codestudio.com/free-tools/converters/grid-bento-builder/`): Visual responsive Bento Box CSS Grid generator.
+- **Dev Swiss Kit Pro** (`https://ia-codestudio.com/free-tools/converters/dev-swiss-kit/`): Live Regex tester, offline JWT decoder, UUID & Web Crypto key generator.
+- **Tailwind to Vanilla CSS Pro** (`https://ia-codestudio.com/free-tools/converters/tailwind-to-vanilla/`): Transpile Tailwind utility classes into clean CSS or inline email styles.
+- **SVG Optimizer & JSX Extractor** (`https://ia-codestudio.com/free-tools/converters/svg-optimizer/`): Sanitize, minify, and convert SVGs into React JSX components.
+- **3D Text Maker Pro** (`https://ia-codestudio.com/free-tools/converters/font-previewer-3d/`): Extruded WebGL PBR 3D typography studio.
+- **Markdown GFM to HTML Pro** (`https://ia-codestudio.com/free-tools/converters/markdown-to-html/`): Live sanitized GitHub-Flavored Markdown compiler.
+- **Base64 Toolkit Pro** (`https://ia-codestudio.com/free-tools/converters/base64/`): UTF-8, URL-Safe Base64, CSS `url()` & image preview.
+- **Glassmorphic Card Studio** (`https://ia-codestudio.com/free-tools/converters/text-to-html/`): 3D tilt & WCAG contrast card generator.
+
+---
+
+## 4. Starter Apps Showcase (1 Free Standalone ZIP / Day)
+Located on `https://ia-codestudio.com/#app-hub-showcase`: 10 self-contained MIT-licensed browser apps previewable live at 60 FPS and downloadable as clean ZIP bundles (`index.html`, `style.css`, `script.js`): CyberBeats 16-Step Drum Machine, Cyberpunk 3D Speed Car, Matrix Digital Rain, Quantum Neural AI Globe 3D, Holographic Earth 3D, Neon Cyber Pong, Cyber Pomodoro Timer, Quantum Password Vault, 3D Glassmorphism Cards, and Ambient Rain & Lo-Fi Generator.
+
+---
+
+## 5. Marketing & Interactive 3D Widgets Suite (https://ia-codestudio.com/marketing-widgets/)
+- **Ad-Genius AI Pro** (`https://ia-codestudio.com/ad-genius-ai/`): 23 commercial advertising studios (3D Showroom, Scratch Card, Spin Wheel, AR Business Card, Digital Menus, Pricing Tables, Brand Ads).
+- **3D Marketing Lab** (`https://ia-codestudio.com/3d-marketing-lab/`): 9 free viral WebGL tools (`svg-to-3d-converter.html`, `3d-hologram-banner.html`, `neon-sign-generator.html`, `logo-exploder-3d.html`, `particle-logo-cloud.html`, `holographic-portal-generator.html`, `neon-wireframe-matrix.html`, `topographic-grid-deform.html`, `launch-countdown-3d.html`).
+- **AI Ad & Widget Studio** (`https://ia-codestudio.com/widget-studio/`): Real-time 3D/HTML5 banner & hologram card widget builder with 1-click embed code.
+
+---
+
+## 6. Comparison Guides (https://ia-codestudio.com/compare/)
+- `https://ia-codestudio.com/compare/ia-code-studio-vs-codepen.html`
+- `https://ia-codestudio.com/compare/ia-code-studio-vs-spline.html`
+- `https://ia-codestudio.com/compare/ia-code-studio-vs-bolt.html`
+- `https://ia-codestudio.com/compare/free-svg-to-3d-converter-online.html`
+- `https://ia-codestudio.com/compare/best-offline-developer-tools.html`
+- `https://ia-codestudio.com/compare/free-3d-ui-components-react-vue.html`
+
+---
+
+## 7. Showcase — Built with Our Engine (https://ia-codestudio.com/arcade/)
+Demonstrates 60 FPS WebGL and HTML5 Canvas capability with zero installs:
+- **Cyber Arcade 3D Arena & AR (9 Games)**: `https://ia-codestudio.com/cyber-arcade/`
+- **Retro 80s Arcade (12 Classic Games)**: `https://ia-codestudio.com/retro-arcade/`
+- **Live 3D Tech Demos**: `demo-procedural-galaxy.html`, `demo-neon-fluid-simulation.html`, `demo-text-particle-explosion.html`.
+
+---
+
+## 8. Frequently Asked Questions
+- **Is IA Code Studio free?** Yes, building and live previewing in IA Architecte Studio Pro, using all 10+ offline developer tools, downloading 1 starter ZIP/day, and testing 3D demos/showcase are 100% free. Pro ($10/month) unlocks unlimited source exports across all studios.
+- **Do developer tools upload my code or files?** Never. OmniConvert Pro and all Free Tools execute strictly client-side in your browser.
+- **What code formats can I export?** Clean standalone HTML, modular HTML/CSS/JS ZIP bundles, React JSX, Vue 3 SFC, Web Components, GLB, and multicolor 3MF.

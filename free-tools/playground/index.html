@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IA CODEPLAY — Live HTML/CSS/JS Sandbox v2.0</title>
   <meta name="description" content="Éditeur de code HTML/CSS/JS en direct avec prévisualisation scindée, console live, 8 presets Three.js/CSS, injecteur CDN et lien de partage #code=.">
-  <link rel="canonical" href="https://ia-codestudio.com/free-tools/playground/index.html">
+  <link rel="canonical" href="https://ia-codestudio.com/free-tools/playground/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="IA CODEPLAY — Live HTML/CSS/JS Sandbox v2.0">
   <meta property="og:description" content="Real-time split-screen HTML/CSS/JS playground with Live Console, 8 presets, CDN injector & share links.">
@@ -19,6 +19,89 @@
 
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="playground-style.css">
+
+  <!-- Technical SEO & Structured Data -->
+  <meta name="robots" content="index, follow">
+  <meta property="og:image" content="https://ia-codestudio.com/og-social-banner.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://ia-codestudio.com/og-social-banner.png">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "IA CODEPLAY — Live HTML/CSS/JS Sandbox v2.0",
+      "url": "https://ia-codestudio.com/free-tools/playground/",
+      "description": "Free live HTML, CSS, JavaScript & Three.js split-screen browser sandbox with integrated console, presets, and instant URL sharing.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "IA Code Studio",
+        "url": "https://ia-codestudio.com/"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "IA Code Studio",
+          "item": "https://ia-codestudio.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Free Developer Tools",
+          "item": "https://ia-codestudio.com/free-tools/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "IA CODEPLAY — Live HTML/CSS/JS Sandbox v2.0",
+          "item": "https://ia-codestudio.com/free-tools/playground/"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does the Live Sandbox run offline without sending my code to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. All code compiles and renders 100% client-side inside an isolated browser preview frame."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I test Three.js and WebGL inside this sandbox?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, presets include Three.js, shaders, and modern Bento grid templates ready to edit live."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I share my prototype?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Use the built-in share button to generate a self-contained #code= URL that opens directly in any browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
 </head>
 <body class="cyber-bg playground-body">
   <header class="cyber-header">
@@ -149,5 +232,23 @@
   <script src="../js/main.js"></script>
   <script src="templates.js"></script>
   <script src="playground.js"></script>
+
+  <!-- SEO Guide, FAQ & Internal Links (Below Interactive Tool) -->
+  <section id="ia-tool-seo-guide" style="max-width:1080px;margin:40px auto 32px;padding:24px 26px;background:rgba(15,23,42,0.72);border:1px solid rgba(255,255,255,0.08);border-radius:18px;font-family:'Inter',system-ui,sans-serif;color:#cbd5e1;">
+    <h2 style="font-size:1.15rem;font-weight:800;color:#fff;margin:0 0 8px;">About Live HTML/CSS/JS Sandbox v2.0</h2>
+    <p style="font-size:0.9rem;line-height:1.65;color:#94a3b8;margin:0 0 18px;">Prototype responsive layouts, JavaScript logic, and Three.js WebGL snippets directly in your browser with instant split-screen preview, console error inspection, and shareable #code= links — zero account or server required.</p>
+    <div style="margin-bottom:18px;">
+      <details style="border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;background:rgba(255,255,255,0.02);margin-bottom:8px;"><summary style="cursor:pointer;font-weight:600;color:#f1f5f9;font-size:13.5px;">Does the Live Sandbox run offline without sending my code to a server?</summary><p style="margin:8px 0 0;color:#94a3b8;font-size:13px;line-height:1.6;">Yes. All code compiles and renders 100% client-side inside an isolated browser preview frame.</p></details>
+      <details style="border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;background:rgba(255,255,255,0.02);margin-bottom:8px;"><summary style="cursor:pointer;font-weight:600;color:#f1f5f9;font-size:13.5px;">Can I test Three.js and WebGL inside this sandbox?</summary><p style="margin:8px 0 0;color:#94a3b8;font-size:13px;line-height:1.6;">Yes, presets include Three.js, shaders, and modern Bento grid templates ready to edit live.</p></details>
+      <details style="border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;background:rgba(255,255,255,0.02);margin-bottom:8px;"><summary style="cursor:pointer;font-weight:600;color:#f1f5f9;font-size:13.5px;">How do I share my prototype?</summary><p style="margin:8px 0 0;color:#94a3b8;font-size:13px;line-height:1.6;">Use the built-in share button to generate a self-contained #code= URL that opens directly in any browser.</p></details>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-top:14px;border-top:1px solid rgba(255,255,255,0.07);font-size:12.5px;">
+      <span style="color:#64748b;font-weight:700;">Explore more:</span>
+      <a href="/free-tools/" style="color:#38bdf8;text-decoration:none;padding:5px 10px;border-radius:8px;background:rgba(56,189,248,0.1);">All Free Dev Tools</a>
+      <a href="/free-tools/omni-convert/" style="color:#34d399;text-decoration:none;padding:5px 10px;border-radius:8px;background:rgba(16,185,129,0.1);">OmniConvert Pro</a>
+      <a href="/ia-architecte-app/" style="color:#c4b5fd;text-decoration:none;padding:5px 10px;border-radius:8px;background:rgba(139,92,246,0.14);font-weight:700;">🚀 Build Full Apps in IA Architecte Studio Pro</a>
+      <a href="/compare/best-offline-developer-tools.html" style="color:#fbbf24;text-decoration:none;padding:5px 10px;border-radius:8px;background:rgba(245,158,11,0.1);">Why Offline Dev Tools?</a>
+    </div>
+  </section>
 </body>
 </html>

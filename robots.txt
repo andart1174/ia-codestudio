@@ -1,12 +1,18 @@
-# robots.txt — IA Code Studio SEO & AI Optimization
+# robots.txt — IA Code Studio SEO & AI Search (GEO) Optimization
 User-agent: *
 Allow: /
 
-# Explicitly Allow AI Search Engines & Indexers (ChatGPT, Claude, Perplexity, Google SGE)
+# Search Engines & AI Search Crawlers
 User-agent: Googlebot
 Allow: /
 
+User-agent: Bingbot
+Allow: /
+
 User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
 Allow: /
 
 User-agent: ChatGPT-User
@@ -21,11 +27,12 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-User-agent: Bingbot
+User-agent: DuckAssistBot
 Allow: /
 
 User-agent: Applebot
 Allow: /
 
+# Sitemap & AI Reference
 Sitemap: https://ia-codestudio.com/sitemap.xml
-
+# LLMs Reference: https://ia-codestudio.com/llms.txt

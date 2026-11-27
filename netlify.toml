@@ -1,4 +1,8 @@
-# netlify.toml — High-Performance Security & Caching Configuration for ia-codestudio.com
+# netlify.toml — High-Performance Security, Functions & Caching Configuration for ia-codestudio.com
+
+[build]
+  publish = "."
+  functions = "netlify/functions"
 
 # 1. Global Security Headers for all responses
 [[headers]]

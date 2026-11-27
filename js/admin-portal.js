@@ -662,6 +662,7 @@
                     loadChallengesTab();
                     loadFeedModerationTab();
                     loadMessagesTab();
+                    if (typeof updateIndexNowStatusUI === 'function') updateIndexNowStatusUI();
                     
                     // Update global settings checkbox
                     db.collection('admin_config').doc('global').get().then(doc => {
@@ -1514,9 +1515,131 @@
                         if (tabId === 'analytics') {
                             setTimeout(renderAnalyticsCharts, 100);
                         }
+
+                        if (tabId === 'seo' && typeof updateIndexNowStatusUI === 'function') {
+                            updateIndexNowStatusUI();
+                        }
                     });
                 });
             });
+
+            // ============ BING / INDEXNOW LIVE PING ENGINE ============
+            async function _getAdminFirebaseBearerToken() {
+                if (typeof firebase === 'undefined' || typeof firebase.auth !== 'function') return null;
+                const currentUser = firebase.auth().currentUser;
+                if (!currentUser) return null;
+                try {
+                    return await currentUser.getIdToken(true);
+                } catch (e) {
+                    console.warn('getIdToken failed:', e);
+                    return null;
+                }
+            }
+
+            function updateIndexNowStatusUI() {
+                const lastEl = document.getElementById('indexnow-last-ping');
+                const badgeEl = document.getElementById('indexNowStatusBadge');
+                const authHint = document.getElementById('indexnow-auth-hint');
+                try {
+                    const saved = JSON.parse(localStorage.getItem('ia_last_indexnow_ping') || 'null');
+                    if (saved && lastEl) {
+                        const dt = new Date(saved.ts).toLocaleString();
+                        lastEl.innerHTML = `<span style="color:${saved.ok ? '#34d399' : '#f87171'}; font-weight:700;">${saved.ok ? '✅ HTTP ' + saved.status : '⚠️ HTTP ' + saved.status}</span> · ${saved.count} URLs · ${dt}`;
+                    }
+                    if (saved && saved.ok && badgeEl) {
+                        badgeEl.innerHTML = `✅ ${saved.count} URLs (HTTP ${saved.status}) · <a href="/c7f1a9b24e8d3c015b6a7e8f901234cd.txt" target="_blank" style="color:#7dd3fc; text-decoration:underline;">Verify .txt ↗</a>`;
+                    }
+                } catch (e) {}
+                if (authHint) {
+                    const hasFbUser = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser);
+                    authHint.style.display = hasFbUser ? 'none' : 'flex';
+                }
+            }
+
+            async function _executeIndexNowSubmission(customUrls, btnEl) {
+                const outEl = document.getElementById('indexnow-console-out');
+                const badgeEl = document.getElementById('indexNowStatusBadge');
+                const authHint = document.getElementById('indexnow-auth-hint');
+                const origHtml = btnEl ? btnEl.innerHTML : '';
+
+                const token = await _getAdminFirebaseBearerToken();
+                if (!token) {
+                    if (authHint) authHint.style.display = 'flex';
+                    if (outEl) outEl.innerHTML = '<span style="color:#fbbf24;">🔐 Please sign in with your Google Admin account (andart1174@gmail.com) first so the Netlify serverless proxy can cryptographically verify your session.</span>';
+                    if (badgeEl) badgeEl.innerHTML = '🔐 Sign in with Google Admin · <a href="/c7f1a9b24e8d3c015b6a7e8f901234cd.txt" target="_blank" style="color:#7dd3fc; text-decoration:underline;">Verify .txt ↗</a>';
+                    // Switch to SEO tab so user sees the 1-click Google Sign-in button
+                    const seoTabBtn = document.querySelector('.admin-tab-btn[data-tab="seo"]');
+                    if (seoTabBtn) seoTabBtn.click();
+                    return;
+                }
+
+                if (authHint) authHint.style.display = 'none';
+                if (btnEl) {
+                    btnEl.disabled = true;
+                    btnEl.innerHTML = '<span>⏳</span> <span>Submitting to Bing / IndexNow...</span>';
+                }
+                if (outEl) outEl.innerHTML = '<span style="color:#38bdf8;">⏳ Contacting /.netlify/functions/indexnow → api.indexnow.org/indexnow ...</span>';
+
+                try {
+                    const payload = Array.isArray(customUrls) && customUrls.length > 0 ? { urlList: customUrls } : {};
+                    const resp = await fetch('/.netlify/functions/indexnow', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    const data = await resp.json().catch(() => ({ ok: false, error: 'Non-JSON response (HTTP ' + resp.status + ')' }));
+
+                    localStorage.setItem('ia_last_indexnow_ping', JSON.stringify({
+                        ok: !!data.ok,
+                        status: data.status || resp.status,
+                        count: data.submittedCount || 0,
+                        ts: Date.now()
+                    }));
+
+                    if (data.ok) {
+                        if (outEl) {
+                            outEl.innerHTML = `<span style="color:#34d399; font-weight:700;">✅ SUCCESS — HTTP ${data.status}</span><br>Submitted <strong>${data.submittedCount} URLs</strong> for <code>ia-codestudio.com</code> to Bing, DuckDuckGo, Microsoft Copilot AI, ChatGPT Search &amp; Yahoo.<br>Key verified at: <a href="${data.keyLocation}" target="_blank" style="color:#7dd3fc;">${data.keyLocation}</a>`;
+                        }
+                        adminLog(`IndexNow ping OK: ${data.submittedCount} URLs (HTTP ${data.status})`);
+                    } else {
+                        if (outEl) {
+                            outEl.innerHTML = `<span style="color:#f87171; font-weight:700;">❌ FAILED — HTTP ${data.status || resp.status}</span><br>${data.error || 'Unknown error'}`;
+                        }
+                        adminLog(`IndexNow ping failed: ${data.error || resp.status}`);
+                    }
+                    updateIndexNowStatusUI();
+                } catch (err) {
+                    if (outEl) outEl.innerHTML = `<span style="color:#f87171;">❌ Network error: ${err.message} (Note: Netlify Functions run on live ia-codestudio.com, not file://)</span>`;
+                } finally {
+                    if (btnEl) {
+                        btnEl.disabled = false;
+                        btnEl.innerHTML = origHtml;
+                    }
+                }
+            }
+
+            async function pingIndexNowAllPages() {
+                const btn = document.getElementById('admIndexNowBtn');
+                await _executeIndexNowSubmission([], btn);
+            }
+
+            async function pingIndexNowCustomUrls() {
+                const ta = document.getElementById('indexnow-custom-urls');
+                const btn = document.getElementById('admIndexNowCustomBtn');
+                const raw = (ta ? ta.value : '').split(/[\n,\s]+/).map(s => s.trim()).filter(Boolean);
+                if (raw.length === 0) {
+                    alert(currentLang === 'fr' ? 'Veuillez entrer au moins une URL https://ia-codestudio.com/...' : 'Please enter at least one https://ia-codestudio.com/... URL.');
+                    return;
+                }
+                await _executeIndexNowSubmission(raw, btn);
+            }
+
+            window.pingIndexNowAllPages = pingIndexNowAllPages;
+            window.pingIndexNowCustomUrls = pingIndexNowCustomUrls;
+            window.updateIndexNowStatusUI = updateIndexNowStatusUI;
 
             // Real-time Banned Status Verification
             function verifyBannedStatus() {

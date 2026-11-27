@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IA Code Studio — IDE Web IA, Création d'Applications &amp; Studios 3D WebGL</title>
+  <meta name="description" content="Créez des applications web HTML, CSS, JavaScript et des composants 3D WebGL interactifs à partir de prompts IA dans votre navigateur. Propulsé par IA Architecte Studio Pro — gratuit pour démarrer.">
+  <meta name="keywords" content="IDE Web IA gratuit, générateur application web IA, IA Architecte Studio Pro, générateur Three.js gratuit, studio 3D WebGL navigateur, outils développeurs hors ligne, IA Code Studio">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <link rel="canonical" href="https://ia-codestudio.com/fr/">
+  <link rel="alternate" hreflang="en" href="https://ia-codestudio.com/">
+  <link rel="alternate" hreflang="fr" href="https://ia-codestudio.com/fr/">
+  <link rel="alternate" hreflang="x-default" href="https://ia-codestudio.com/">
+  <link rel="icon" type="image/png" href="/logo-ia-codestudio.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ia-codestudio.com/fr/">
+  <meta property="og:title" content="IA Code Studio — IDE Web IA &amp; Studios 3D WebGL Gratuits">
+  <meta property="og:description" content="Décrivez votre application web ou composant 3D en français et générez du code HTML, CSS, JavaScript et Three.js propre en direct dans votre navigateur.">
+  <meta property="og:image" content="https://ia-codestudio.com/og-social-banner.png">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:site_name" content="IA Code Studio">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="IA Code Studio — IDE Web IA &amp; Studios 3D WebGL">
+  <meta name="twitter:description" content="Codez des applications web HTML/CSS/JS et des interfaces 3D avec l'IA directement dans votre navigateur.">
+  <meta name="twitter:image" content="https://ia-codestudio.com/og-social-banner.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "url": "https://ia-codestudio.com/fr/",
+        "name": "IA Code Studio (Français)",
+        "inLanguage": "fr",
+        "description": "IDE Web IA dans le navigateur (IA Architecte Studio Pro & Ultra v2.0), 6 Studios 3D WebGL, 10+ Outils Développeurs hors-ligne et Suite Marketing."
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "IA Architecte Studio Pro — IA Code Studio",
+        "url": "https://ia-codestudio.com/ia-architecte-app/?lang=fr",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Web Browser",
+        "inLanguage": "fr",
+        "offers": [
+          { "@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Accès Gratuit" },
+          { "@type": "Offer", "price": "10.00", "priceCurrency": "USD", "name": "Créateur Pro" }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "IA Architecte Studio Pro génère-t-il du code propre et exportable ?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Oui, le code généré est du HTML, CSS et JavaScript pur, exportable en fichier autonome ou archive ZIP sans dépendance lourde." }
+          },
+          {
+            "@type": "Question",
+            "name": "Les outils développeurs gratuits envoient-ils mes données sur un serveur ?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Jamais. OmniConvert Pro et tous les outils de Free Tools s'exécutent 100% localement dans votre navigateur." }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="/style.css?v=20261127_v5">
+</head>
+<body>
+  <div class="aura-container" aria-hidden="true">
+    <div class="aura-orb orb-1"></div>
+    <div class="aura-orb orb-2"></div>
+    <div class="aura-orb orb-3"></div>
+  </div>
+
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="/fr/index.html" class="logo">
+        <img src="/logo-ia-codestudio.webp" alt="Logo IA Code Studio" class="logo-img">
+        <span>IA CODE STUDIO</span>
+      </a>
+      <nav class="nav-links" aria-label="Navigation principale">
+        <a href="#ecosystem" class="nav-link active">IDE Code IA</a>
+        <a href="/fr/3d-studios/index.html" class="nav-link">Studios 3D</a>
+        <a href="/free-tools/index.html" class="nav-link">Outils Dev</a>
+        <a href="/fr/marketing-widgets/index.html" class="nav-link">Marketing</a>
+        <a href="/fr/compare/index.html" class="nav-link">Comparatifs</a>
+        <a href="/fr/arcade/index.html" class="nav-link">Vitrine</a>
+      </nav>
+      <div class="nav-right">
+        <div class="lang-toggle" role="group" aria-label="Langue">
+          <a href="/index.html?lang=en" class="lang-btn" style="text-decoration:none;">EN</a>
+          <span class="lang-btn active">FR</span>
+        </div>
+        <a href="/ia-architecte-app/index.html?lang=fr" class="nav-cta-btn"><span>🚀</span> <span>Ouvrir l'IDE</span></a>
+        <button type="button" class="mobile-menu-btn" id="fr-mob-btn" aria-label="Menu">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-nav-drawer" id="fr-mob-drawer">
+    <a href="/ia-architecte-app/index.html?lang=fr" class="mobile-drawer-primary">🚀 Lancer IA Architecte Studio Pro</a>
+    <a href="/ia-architecte-studio-ultra/index.html?lang=fr" class="mobile-drawer-ultra">⚡ IA Architecte Studio Ultra v2.0</a>
+    <a href="/fr/3d-studios/index.html">✨ Studios 3D &amp; WebGL (6)</a>
+    <a href="/free-tools/index.html">🛠️ Outils Développeurs Gratuits &amp; OmniConvert</a>
+    <a href="/fr/marketing-widgets/index.html">📣 Marketing &amp; Widgets Interactifs</a>
+    <a href="/fr/compare/index.html">⚖️ Comparatifs &amp; Alternatives</a>
+    <a href="/fr/arcade/index.html">🎮 Vitrine Arcade (21 Jeux)</a>
+    <a href="/index.html?lang=en">🌐 Switch to English</a>
+  </div>
+
+  <main>
+    <section class="hero">
+      <a href="/ia-architecte-app/index.html?lang=fr" class="hero-eyebrow">
+        <span class="eyebrow-dot"></span>
+        <span>IA Architecte Studio Pro — IDE Web IA &amp; Moteur de Code 3D dans le Navigateur</span>
+        <span>→</span>
+      </a>
+      <h1>Codez des Applications Web &amp; 3D avec l'IA</h1>
+      <p class="hero-subtitle">Décrivez une application web, un tableau de bord SaaS ou un composant 3D interactif — générez du code HTML, CSS, JavaScript et Three.js propre en direct dans votre navigateur.</p>
+
+      <form class="prompt-launcher" onsubmit="frLaunchPrompt(event)">
+        <div class="prompt-mode-tabs">
+          <button type="button" class="prompt-mode-btn active" onclick="frSelectMode('pro', this)">🏛️ Studio Pro IDE</button>
+          <button type="button" class="prompt-mode-btn" onclick="frSelectMode('ultra', this)">⚡ Ultra IDE v2</button>
+          <button type="button" class="prompt-mode-btn" onclick="frSelectMode('ui3d', this)">✨ Studio UI 3D</button>
+          <button type="button" class="prompt-mode-btn" onclick="frSelectMode('chrome', this)">💎 Chrome Liquide 3D</button>
+        </div>
+        <div class="prompt-input-row">
+          <input type="text" id="fr-prompt-input" class="prompt-input" placeholder="Décrivez votre application... ex : Tableau de bord SaaS sombre avec graphiques et tarifs" autocomplete="off">
+          <button type="submit" class="prompt-submit-btn">⚡ Générer l'App</button>
+        </div>
+        <div class="prompt-chips">
+          <span class="prompt-chips-label">Essayer :</span>
+          <button type="button" class="prompt-chip" onclick="frQuickPrompt('Créer un tableau de bord SaaS moderne avec cartes KPI en mode sombre')">📊 Dashboard SaaS</button>
+          <button type="button" class="prompt-chip" onclick="frQuickPrompt('Créer une landing page startup avec section hero et fonctionnalités')">🌐 Landing Page</button>
+          <button type="button" class="prompt-chip" onclick="frQuickPrompt('Créer un tableau de prix à 3 offres avec bouton mensuel')">💳 Tableau de Prix</button>
+          <button type="button" class="prompt-chip" onclick="frQuickPrompt('Créer une section contact responsive au style glassmorphism')">✨ Contact Glass UI</button>
+        </div>
+      </form>
+
+      <div class="hero-actions-row">
+        <a href="/ia-architecte-app/index.html?lang=fr" class="hero-btn-primary">🚀 Lancer IA Architecte Studio Pro</a>
+        <a href="/ia-architecte-studio-ultra/index.html?lang=fr" class="hero-btn-ultra">⚡ IA Architecte Studio Ultra v2.0</a>
+        <a href="/free-tools/index.html" class="hero-btn-secondary">🛠️ Outils Développeurs Gratuits</a>
+      </div>
+
+      <div class="hero-trust-strip">
+        <span>✓ 100% Navigateur</span><span class="trust-dot">•</span>
+        <span>✓ Aperçu Live 60 FPS</span><span class="trust-dot">•</span>
+        <span>✓ Export HTML / CSS / JS Propre</span><span class="trust-dot">•</span>
+        <span>✓ Bilingue FR / EN</span>
+      </div>
+    </section>
+
+    <section id="ecosystem" class="ecosystem-section">
+      <div class="section-heading">
+        <span class="section-eyebrow">ARCHITECTURE DE LA PLATEFORME</span>
+        <h2>Un Studio de Codage IA. Trois Suites Spécialisées.</h2>
+        <p>Codez immédiatement dans notre IDE Web IA principal, ou accédez à un espace dédié pour vos visuels 3D, utilitaires développeurs ou widgets marketing.</p>
+      </div>
+
+      <article class="flagship-card">
+        <div class="flagship-copy">
+          <div class="flagship-badges">
+            <span class="pill-flagship">★ IDE WEB IA PRINCIPAL</span>
+            <span class="pill-subtle">Gratuit pour Créer &amp; Prévisualiser</span>
+          </div>
+          <h3>IA Architecte Studio Pro</h3>
+          <p>Notre IDE complet de développement web propulsé par l'IA. Transformez vos prompts en applications HTML, CSS et JavaScript fonctionnelles, éditez dans Monaco, concevez des API, auditez la sécurité et exportez un code propre.</p>
+          <div class="flagship-features">
+            <span class="feat-chip">⚡ Moteur Prompt-to-App</span>
+            <span class="feat-chip">💻 Éditeur Monaco</span>
+            <span class="feat-chip">👁️ Aperçu Scindé Live</span>
+            <span class="feat-chip">📦 Export HTML / ZIP en 1 Clic</span>
+          </div>
+          <div class="flagship-actions">
+            <a href="/ia-architecte-app/index.html?lang=fr" class="btn-flagship-primary">🚀 Ouvrir IA Architecte Studio Pro</a>
+            <a href="/ia-architecte-studio-pro/index.html" class="btn-flagship-ghost">Découvrir les Fonctions</a>
+          </div>
+        </div>
+        <div class="flagship-visual" aria-hidden="true">
+          <div class="ide-window">
+            <div class="ide-titlebar">
+              <div class="ide-dots"><span style="background:#ef4444"></span><span style="background:#f59e0b"></span><span style="background:#10b981"></span></div>
+              <span class="ide-filename">index.html — IA Architecte Studio Pro</span>
+              <span class="ide-live-pill">● LIVE 60 FPS</span>
+            </div>
+            <div class="ide-split">
+              <div class="ide-code-pane">
+                <div class="code-line"><span class="c-muted">01</span> <span class="c-kw">&lt;section</span> <span class="c-attr">class</span>=<span class="c-str">"saas-hero"</span><span class="c-kw">&gt;</span></div>
+                <div class="code-line"><span class="c-muted">02</span>   <span class="c-kw">&lt;h1&gt;</span>Analytique Pro<span class="c-kw">&lt;/h1&gt;</span></div>
+                <div class="code-line"><span class="c-muted">03</span>   <span class="c-cm">// Cartes KPI générées par IA</span></div>
+                <div class="code-line"><span class="c-muted">04</span>   <span class="c-fn">renderChart</span>(<span class="c-str">'revenus'</span>);</div>
+                <div class="code-line"><span class="c-muted">05</span> <span class="c-kw">&lt;/section&gt;</span></div>
+                <div class="ide-prompt-badge">✦ Prompt compilé en 2.4s · 0 erreur</div>
+              </div>
+              <div class="ide-preview-pane">
+                <div class="mock-kpi"><span class="mock-label">Croissance MRR</span><strong class="mock-val">$42 800</strong><span class="mock-delta">+28.4%</span></div>
+                <div class="mock-bars"><span style="height:40%"></span><span style="height:65%"></span><span style="height:52%"></span><span style="height:82%"></span><span style="height:95%"></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="ultra-companion-card">
+        <div class="ultra-companion-left">
+          <div class="ultra-icon-box">⚡</div>
+          <div class="ultra-companion-copy">
+            <div class="ultra-companion-head">
+              <h3>IA Architecte Studio Ultra v2.0</h3>
+              <span class="pill-ultra">IDE COMPAGNON · 28+ APPS</span>
+            </div>
+            <p>Atelier IA multi-écrans nouvelle génération avec 28+ applications fonctionnelles, inspecteur CSS et base de données visuel, aperçus spatiaux 3D/AR et packager DevOps.</p>
+          </div>
+        </div>
+        <a href="/ia-architecte-studio-ultra/index.html?lang=fr" class="btn-ultra-launch">⚡ Ouvrir Studio Ultra v2.0 →</a>
+      </article>
+
+      <div class="hubs-bento-grid">
+        <article class="bento-hub-card">
+          <div class="bento-card-head"><div class="bento-icon icon-cyan">💎</div><span class="bento-count">6 Studios Visuels</span></div>
+          <h3>Studios 3D &amp; WebGL</h3>
+          <p>72+ composants UI 3D (React/Vue/HTML), 18 shaders Chrome Liquide 4D, extrudeur SVG/DXF vers 3D, HUD Sci-Fi et intros vidéo 3D.</p>
+          <ul class="bento-list">
+            <li><a href="/3d-creative-studio/index.html">3D Creative Studio (72 Composants UI)</a></li>
+            <li><a href="/3d-liquid-chrome-studio/index.html">3D Liquid Chrome &amp; Néon (18 Studios 4D)</a></li>
+            <li><a href="/studio-3d-4d-pro/index.html">Studio 3D/4D Pro (SVG/DXF → 3D)</a></li>
+          </ul>
+          <a href="/fr/3d-studios/index.html" class="bento-cta">Explorer les 6 Studios 3D →</a>
+        </article>
+
+        <article class="bento-hub-card">
+          <div class="bento-card-head"><div class="bento-icon icon-emerald">🛠️</div><span class="bento-count">100% Gratuit &amp; Hors-Ligne</span></div>
+          <h3>Outils Dev &amp; Sandbox</h3>
+          <p>Outils rapides côté client pour le développement web : OmniConvert Pro, Sandbox HTML/CSS/JS live, Tailwind→CSS, Optimiseur SVG et Dev Swiss Kit.</p>
+          <ul class="bento-list">
+            <li><a href="/free-tools/omni-convert/index.html">OmniConvert Pro 2.0 (JSON/YAML/QR)</a></li>
+            <li><a href="/free-tools/playground/index.html">Sandbox Live HTML/CSS/JS v2.0</a></li>
+            <li><a href="/free-tools/converters/tailwind-to-vanilla/index.html">Tailwind → CSS &amp; Optimiseur SVG</a></li>
+          </ul>
+          <a href="/free-tools/index.html" class="bento-cta">Ouvrir les Outils Gratuits →</a>
+        </article>
+
+        <article class="bento-hub-card">
+          <div class="bento-card-head"><div class="bento-icon icon-amber">📣</div><span class="bento-count">30+ Générateurs</span></div>
+          <h3>Marketing &amp; Widgets 3D</h3>
+          <p>Créez des showrooms produits 3D, cartes à gratter, roues de la fortune, vCards numériques et bannières HTML5 intégrables sur Shopify et WordPress.</p>
+          <ul class="bento-list">
+            <li><a href="/ad-genius-ai/index.html">Ad-Genius AI Pro (23 Studios Pub)</a></li>
+            <li><a href="/3d-marketing-lab/index.html">3D Marketing Lab (9 Outils Viraux)</a></li>
+            <li><a href="/widget-studio/index.html">AI Ad &amp; Widget Studio</a></li>
+          </ul>
+          <a href="/fr/marketing-widgets/index.html" class="bento-cta">Explorer la Suite Marketing →</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="engine-showcase-section">
+      <div class="engine-showcase-card">
+        <div class="engine-showcase-copy">
+          <span class="engine-showcase-badge">🎮 CRÉÉ AVEC NOTRE MOTEUR WEBGL &amp; HTML5</span>
+          <h2>Découvrez ce que le code navigateur créé ici peut faire</h2>
+          <p>Explorez notre Vitrine Arcade dédiée : 21 jeux WebGL 3D, RA et Rétro 80s jouables plus des démos shaders 60 FPS — sans téléchargement.</p>
+          <div class="engine-showcase-links">
+            <a href="/fr/arcade/index.html" class="engine-btn-primary">Explorer la Vitrine Arcade (21 Jeux) →</a>
+            <a href="/index.html?lang=fr#app-hub-showcase" class="engine-demo-pill">📦 10 Apps de Départ (1 ZIP/Jour)</a>
+            <a href="/fr/compare/index.html" class="engine-demo-pill">⚖️ Comparatifs vs CodePen / Spline</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing" class="pricing-section">
+      <div class="section-heading">
+        <span class="section-eyebrow">TARIFS SIMPLES</span>
+        <h2>Codez Gratuitement. Passez Pro Quand Vous Publiez.</h2>
+        <p>Créez et prévisualisez sans limite. Débloquez les exports illimités sur tous les studios avec un seul abonnement transparent.</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <div class="pricing-tier">Gratuit</div>
+          <div class="pricing-price">$0 <span>/mois</span></div>
+          <p class="pricing-desc">Idéal pour prototyper des apps web, tester les prompts IA et utiliser les outils dev hors-ligne.</p>
+          <ul class="pricing-list">
+            <li>✓ Aperçu en direct complet d'IA Architecte Studio Pro</li>
+            <li>✓ Tous les 10+ Outils Dev Gratuits &amp; OmniConvert</li>
+            <li>✓ 1 export ZIP d'application de départ par jour</li>
+            <li>✓ Accès gratuit aux Démos 3D &amp; Vitrine Arcade</li>
+            <li class="muted-item">✕ Exports illimités Studio Pro &amp; Studios 3D</li>
+          </ul>
+          <a href="/ia-architecte-app/index.html?lang=fr" class="pricing-btn-secondary">Commencer Gratuitement →</a>
+        </div>
+        <div class="pricing-card pricing-card-pro">
+          <div class="pricing-popular-badge">★ ACCÈS COMPLET PRO</div>
+          <div class="pricing-tier">Créateur Pro</div>
+          <div class="pricing-price">$10 <span>/mois</span></div>
+          <p class="pricing-desc">Exports de production illimités dans l'IDE, les studios 3D et les suites marketing.</p>
+          <ul class="pricing-list">
+            <li>✓ Tout ce qui est inclus dans Gratuit</li>
+            <li>✓ Exports HTML, CSS, JS &amp; ZIP illimités</li>
+            <li>✓ Exports React, Vue, 3MF &amp; GLB dans les Studios 3D</li>
+            <li>✓ Accès aux 23 studios commerciaux Ad-Genius AI Pro</li>
+            <li>✓ Annulable à tout moment · Paiement sécurisé Stripe</li>
+          </ul>
+          <a href="https://buy.stripe.com/bJecN61Fk3staax7mGbfO03" target="_blank" rel="noopener" class="pricing-btn-secondary" style="background:linear-gradient(135deg,#f59e0b,#ec4899); border:none;">💎 Passer à Pro ($10/mois)</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="main-footer">
+    <div class="footer-container">
+      <div class="footer-brand-col">
+        <div class="footer-logo">
+          <img src="/logo-ia-codestudio.webp" alt="Logo IA Code Studio" class="footer-logo-img">
+          <span class="footer-logo-text">IA CODE STUDIO</span>
+        </div>
+        <p class="footer-tagline">IDE Web IA dans le navigateur pour coder des applications web, des composants 3D WebGL interactifs et des outils développeurs hors-ligne.</p>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-col-title">Codage IA &amp; 3D</h4>
+        <ul class="footer-links">
+          <li><a href="/ia-architecte-app/index.html?lang=fr">IA Architecte Studio Pro</a></li>
+          <li><a href="/ia-architecte-studio-ultra/index.html?lang=fr">IA Architecte Studio Ultra v2.0</a></li>
+          <li><a href="/fr/3d-studios/index.html">Tous les Studios 3D &amp; WebGL (6)</a></li>
+          <li><a href="/3d-creative-studio/index.html">3D Creative Studio (72 UI)</a></li>
+          <li><a href="/3d-liquid-chrome-studio/index.html">3D Liquid Chrome &amp; Néon</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-col-title">Outils &amp; Marketing</h4>
+        <ul class="footer-links">
+          <li><a href="/free-tools/index.html">Hub Outils Développeurs Gratuits</a></li>
+          <li><a href="/free-tools/omni-convert/index.html">OmniConvert Pro 2.0</a></li>
+          <li><a href="/fr/marketing-widgets/index.html">Suite Marketing &amp; Widgets</a></li>
+          <li><a href="/ad-genius-ai/index.html">Ad-Genius AI Pro (23 Studios)</a></li>
+          <li><a href="/3d-marketing-lab/index.html">3D Marketing Lab</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-col-title">Vitrine &amp; Ressources</h4>
+        <ul class="footer-links">
+          <li><a href="/fr/arcade/index.html">Vitrine Arcade (21 Jeux)</a></li>
+          <li><a href="/fr/compare/index.html">Comparatifs &amp; Alternatives</a></li>
+          <li><a href="/index.html?lang=en">English Version (EN)</a></li>
+          <li><a href="/privacy-policy.html?lang=fr">Politique de Confidentialité</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 IA CODE STUDIO. Tous droits réservés.</p>
+      <div class="footer-sub-links">
+        <a href="/index.html?lang=en">English</a>
+        <span class="footer-sep">•</span>
+        <a href="/privacy-policy.html?lang=fr">Confidentialité</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    localStorage.setItem('hub_lang', 'fr');
+    var frMode = 'pro';
+    function frSelectMode(m, btn) {
+      frMode = m;
+      document.querySelectorAll('.prompt-mode-btn').forEach(function(b) { b.classList.remove('active'); });
+      if (btn) btn.classList.add('active');
+    }
+    function frLaunchPrompt(e) {
+      if (e) e.preventDefault();
+      var txt = (document.getElementById('fr-prompt-input').value || '').trim();
+      var map = {
+        pro: '/ia-architecte-app/index.html',
+        ultra: '/ia-architecte-studio-ultra/index.html',
+        ui3d: '/3d-creative-studio/index.html',
+        chrome: '/3d-liquid-chrome-studio/index.html'
+      };
+      var p = new URLSearchParams();
+      p.set('lang', 'fr');
+      if (txt) p.set('prompt', txt);
+      window.location.href = (map[frMode] || map.pro) + '?' + p.toString();
+    }
+    function frQuickPrompt(txt) {
+      document.getElementById('fr-prompt-input').value = txt;
+      frMode = 'pro';
+      frLaunchPrompt();
+    }
+    var mb = document.getElementById('fr-mob-btn'), dr = document.getElementById('fr-mob-drawer');
+    if (mb && dr) mb.addEventListener('click', function() { dr.classList.toggle('open'); });
+  </script>
+</body>
+</html>

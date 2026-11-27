@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — Page Not Found | IA Code Studio</title>
+  <meta name="robots" content="noindex, follow">
+  <link rel="icon" type="image/png" href="/logo-ia-codestudio.png">
+  <link rel="stylesheet" href="/css/hub-pages.css?v=20261127">
+</head>
+<body>
+  <div class="hub-bg-glow"></div>
+
+  <header class="hub-navbar">
+    <div class="hub-nav-inner">
+      <a href="/index.html" class="hub-brand">
+        <img src="/logo-ia-codestudio.webp" alt="IA Code Studio">
+        <span>IA CODE STUDIO</span>
+      </a>
+      <div class="hub-nav-actions">
+        <div class="hub-lang-toggle" role="group" aria-label="Language">
+          <button type="button" class="hub-lang-btn active" data-lang="en">EN</button>
+          <button type="button" class="hub-lang-btn" data-lang="fr">FR</button>
+        </div>
+        <a href="/ia-architecte-app/index.html" class="hub-cta-primary">
+          <span>🚀</span> <span class="cta-label-long" data-i18n="nav_cta">Open IDE</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="hub-main" style="text-align:center; padding-top:80px;">
+    <div class="hub-eyebrow">404 · PAGE NOT FOUND</div>
+    <h1 style="font-family:'Outfit',sans-serif; font-size:clamp(2.4rem,5vw,3.6rem); font-weight:900; margin-bottom:14px;" data-i18n="title">This page does not exist.</h1>
+    <p style="color:#94a3b8; max-width:560px; margin:0 auto 36px; font-size:1.05rem;" data-i18n="desc">The route may have moved during our platform reorganization. Jump directly to one of our main workspaces below:</p>
+
+    <section class="hub-strip-grid" style="max-width:860px; margin:0 auto 40px; text-align:left;">
+      <a href="/index.html" class="hub-mini-card">
+        <span class="hub-mini-icon">🏠</span>
+        <div>
+          <strong data-i18n="l1_t">IA Code Studio Home</strong>
+          <span data-i18n="l1_s">AI Prompt Launcher &amp; Platform Hub</span>
+        </div>
+      </a>
+      <a href="/ia-architecte-app/index.html" class="hub-mini-card">
+        <span class="hub-mini-icon">🏛️</span>
+        <div>
+          <strong>IA Architecte Studio Pro</strong>
+          <span data-i18n="l2_s">Flagship Browser AI Web IDE</span>
+        </div>
+      </a>
+      <a href="/3d-studios/index.html" class="hub-mini-card">
+        <span class="hub-mini-icon">💎</span>
+        <div>
+          <strong data-i18n="l3_t">3D &amp; WebGL Studios</strong>
+          <span data-i18n="l3_s">6 Visual 3D &amp; 4D Studios</span>
+        </div>
+      </a>
+      <a href="/free-tools/index.html" class="hub-mini-card">
+        <span class="hub-mini-icon">🛠️</span>
+        <div>
+          <strong data-i18n="l4_t">Free Developer Tools</strong>
+          <span data-i18n="l4_s">10+ Offline Converters &amp; Sandbox</span>
+        </div>
+      </a>
+      <a href="/marketing-widgets/index.html" class="hub-mini-card">
+        <span class="hub-mini-icon">📣</span>
+        <div>
+          <strong data-i18n="l5_t">Marketing &amp; Widgets</strong>
+          <span data-i18n="l5_s">Ad-Genius AI &amp; 3D Marketing Lab</span>
+        </div>
+      </a>
+      <a href="/arcade/index.html" class="hub-mini-card">
+        <span class="hub-mini-icon">🎮</span>
+        <div>
+          <strong data-i18n="l6_t">Arcade Showcase</strong>
+          <span data-i18n="l6_s">21 Playable WebGL &amp; Retro Games</span>
+        </div>
+      </a>
+    </section>
+  </main>
+
+  <script>
+    (function() {
+      const T = {
+        en: {
+          nav_cta: "Open IDE",
+          title: "This page does not exist.",
+          desc: "The route may have moved during our platform reorganization. Jump directly to one of our main workspaces below:",
+          l1_t: "IA Code Studio Home", l1_s: "AI Prompt Launcher & Platform Hub",
+          l2_s: "Flagship Browser AI Web IDE",
+          l3_t: "3D & WebGL Studios", l3_s: "6 Visual 3D & 4D Studios",
+          l4_t: "Free Developer Tools", l4_s: "10+ Offline Converters & Sandbox",
+          l5_t: "Marketing & Widgets", l5_s: "Ad-Genius AI & 3D Marketing Lab",
+          l6_t: "Arcade Showcase", l6_s: "21 Playable WebGL & Retro Games"
+        },
+        fr: {
+          nav_cta: "Ouvrir l'IDE",
+          title: "Cette page n'existe pas.",
+          desc: "Cette adresse a peut-être été déplacée lors de la réorganisation de la plateforme. Accédez directement à nos espaces principaux :",
+          l1_t: "Accueil IA Code Studio", l1_s: "Lanceur de Prompts IA & Portail",
+          l2_s: "IDE Web IA Principal dans le Navigateur",
+          l3_t: "Studios 3D & WebGL", l3_s: "6 Studios Visuels 3D & 4D",
+          l4_t: "Outils Développeurs Gratuits", l4_s: "10+ Convertisseurs Hors-Ligne & Sandbox",
+          l5_t: "Marketing & Widgets", l5_s: "Ad-Genius AI & 3D Marketing Lab",
+          l6_t: "Vitrine Arcade", l6_s: "21 Jeux WebGL & Rétro Jouables"
+        }
+      };
+      function applyLang(l) {
+        const lang = l === 'fr' ? 'fr' : 'en';
+        document.documentElement.lang = lang;
+        localStorage.setItem('hub_lang', lang);
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const k = el.getAttribute('data-i18n');
+          if (T[lang][k]) el.textContent = T[lang][k];
+        });
+        document.querySelectorAll('.hub-lang-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-lang') === lang));
+      }
+      const saved = localStorage.getItem('hub_lang') || (window.location.pathname.startsWith('/fr/') ? 'fr' : 'en');
+      applyLang(saved);
+      document.querySelectorAll('.hub-lang-btn').forEach(b => b.addEventListener('click', () => applyLang(b.getAttribute('data-lang'))));
+    })();
+  </script>
+</body>
+</html>
