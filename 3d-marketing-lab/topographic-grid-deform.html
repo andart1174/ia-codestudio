@@ -253,6 +253,39 @@
   ]
 }
   </script>
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How does the interactive cursor gravity effect work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Raycasting maps your mouse coordinates onto the 3D terrain plane and applies a smooth Gaussian elevation well that ripples outward as you move."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use the topographic grid without a logo as a pure abstract background?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. You can showcase pure undulating 3D wireframe terrain or emboss your SVG brand mark directly over the waves."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will this widget scale cleanly across mobile and ultrawide screens?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The exported Three.js canvas listens for container resize events and adjusts camera aspect ratio automatically."
+      }
+    }
+  ]
+}
+  </script>
 </head>
 <body>
     <div class="app-container">
@@ -340,7 +373,33 @@
         <main class="main-viewport" id="viewport">
             <span class="badge-live" data-i18n="badge_preview">Aperçu interactif 3D</span>
             <div id="canvas-container" class="viewport-canvas"></div>
-        </main>
+        
+    <!-- Technical Guide, Workflow & FAQ (SEO & GEO) -->
+    <section id="ia-lab-seo-guide" style="max-width:1120px;margin:48px auto 28px;padding:30px 32px;background:rgba(15,23,42,0.74);border:1px solid rgba(255,255,255,0.09);border-radius:20px;color:#cbd5e1;font-family:'Inter',system-ui,sans-serif;backdrop-filter:blur(12px);">
+      <h2 style="font-family:'Outfit',sans-serif;font-size:1.45rem;font-weight:800;color:#fff;margin:0 0 12px;">Generate Interactive 3D Topographic Terrain & Gravity Grid Visuals</h2>
+      <p style="font-size:0.94rem;line-height:1.72;color:#94a3b8;margin:0 0 18px;">The 3D Topographic Grid Deform Generator sculpts a flowing wireframe elevation mesh that reacts dynamically to pointer gravity wells while embossing your logo or centerpiece cleanly onto undulating contour waves. Popular for fintech, geospatial tech, AI analytics, and modern architectural portfolios.</p>
+      <h3 style="font-family:'Outfit',sans-serif;font-size:1.08rem;font-weight:700;color:#e2e8f0;margin:0 0 10px;">How to Customize &amp; Embed in 3 Steps</h3>
+      <ol style="padding-left:20px;margin:0 0 18px;font-size:0.92rem;line-height:1.75;color:#cbd5e1;">
+        <li><strong>Step 1:</strong> Choose a logo overlay or pure procedural elevation terrain and set your mesh resolution, wave amplitude, and contour grid spacing.</li>
+        <li><strong>Step 2:</strong> Adjust cursor gravitational distortion strength, camera tilt angle, topographic color gradient, and wave propagation frequency.</li>
+        <li><strong>Step 3:</strong> Copy the clean standalone Three.js embed snippet and integrate it as an interactive hero backdrop on your landing page.</li>
+      </ol>
+      <p style="font-size:0.92rem;line-height:1.7;color:#94a3b8;margin:0 0 22px;">Vertex displacement runs per-frame on an indexed Three.js PlaneGeometry buffer, creating fluid topographic contour deformation at 60 FPS with minimal CPU footprint and crisp responsive resizing.</p>
+      <h3 style="font-family:'Outfit',sans-serif;font-size:1.08rem;font-weight:700;color:#e2e8f0;margin:0 0 12px;">Frequently Asked Questions</h3>
+      <div style="margin-bottom:20px;">
+        <details style="border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:13px 16px;background:rgba(255,255,255,0.025);margin-bottom:9px;"><summary style="cursor:pointer;font-weight:700;color:#f8fafc;font-size:0.93rem;">How does the interactive cursor gravity effect work?</summary><p style="margin:8px 0 0;color:#94a3b8;font-size:0.89rem;line-height:1.65;">Raycasting maps your mouse coordinates onto the 3D terrain plane and applies a smooth Gaussian elevation well that ripples outward as you move.</p></details>
+        <details style="border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:13px 16px;background:rgba(255,255,255,0.025);margin-bottom:9px;"><summary style="cursor:pointer;font-weight:700;color:#f8fafc;font-size:0.93rem;">Can I use the topographic grid without a logo as a pure abstract background?</summary><p style="margin:8px 0 0;color:#94a3b8;font-size:0.89rem;line-height:1.65;">Yes. You can showcase pure undulating 3D wireframe terrain or emboss your SVG brand mark directly over the waves.</p></details>
+        <details style="border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:13px 16px;background:rgba(255,255,255,0.025);margin-bottom:9px;"><summary style="cursor:pointer;font-weight:700;color:#f8fafc;font-size:0.93rem;">Will this widget scale cleanly across mobile and ultrawide screens?</summary><p style="margin:8px 0 0;color:#94a3b8;font-size:0.89rem;line-height:1.65;">Yes. The exported Three.js canvas listens for container resize events and adjusts camera aspect ratio automatically.</p></details>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);font-size:0.84rem;">
+        <span style="color:#64748b;font-weight:700;">Explore IA Code Studio:</span>
+        <a href="/3d-marketing-lab/index.html" style="color:#38bdf8;text-decoration:none;padding:6px 12px;border-radius:9px;background:rgba(56,189,248,0.11);font-weight:600;">🧪 All 9 3D Lab Generators</a>
+        <a href="/3d-studios/index.html" style="color:#c4b5fd;text-decoration:none;padding:6px 12px;border-radius:9px;background:rgba(139,92,246,0.14);font-weight:600;">✨ 6 3D &amp; WebGL Studios</a>
+        <a href="/marketing-widgets/index.html" style="color:#f472b6;text-decoration:none;padding:6px 12px;border-radius:9px;background:rgba(236,72,153,0.12);font-weight:600;">📣 Marketing &amp; Widgets Suite</a>
+        <a href="/ia-architecte-app/index.html" style="color:#34d399;text-decoration:none;padding:6px 12px;border-radius:9px;background:rgba(16,185,129,0.13);font-weight:700;">🚀 Open IA Architecte Studio Pro</a>
+      </div>
+    </section>
+  </main>
     </div>
 
     <!-- Script imports -->

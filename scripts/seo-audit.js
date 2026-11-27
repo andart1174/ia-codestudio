@@ -14,9 +14,24 @@ const warnings = [];
 // 1. Validate sitemap.xml
 const sitemap = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
 const smUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1].trim());
-if (smUrls.length < 70) errors.push(`Expected 70+ URLs in sitemap.xml, found ${smUrls.length}`);
+if (smUrls.length < 65) errors.push(`Expected 65+ URLs in sitemap.xml, found ${smUrls.length}`);
 
-let missingMeta = 0, missingCan = 0, badCan = 0, missingOg = 0, missingH1 = 0, missingLd = 0;
+let missingMeta = 0, missingCan = 0, badCan = 0, missingOg = 0, missingH1 = 0, missingLd = 0, thinPages = 0;
+const MIN_WORDS = 340;
+
+function countVisibleWords(html) {
+  const txt = html
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<svg[\s\S]*?<\/svg>/gi, ' ')
+    .replace(/<head[\s\S]*?<\/head>/gi, ' ')
+    .replace(/<!--[\s\S]*?-->/g, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&\w+;/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return txt ? txt.split(' ').filter(w => w.length > 1).length : 0;
+}
 
 for (const u of smUrls) {
   let rel = u.replace(`${HOST}/`, '');
@@ -34,11 +49,29 @@ for (const u of smUrls) {
   if (!/property=["']og:image["']/i.test(html)) { missingOg++; warnings.push(`Missing og:image: ${rel}`); }
   if (!/<h1[\s>]/i.test(html)) { missingH1++; errors.push(`Missing H1: ${rel}`); }
   if (!/application\/ld\+json/i.test(html)) { missingLd++; warnings.push(`Missing JSON-LD: ${rel}`); }
+  if (/content=["'][^"']*noindex/i.test(html)) { errors.push(`Sitemap URL has noindex meta: ${rel}`); }
+  const wc = countVisibleWords(html);
+  if (wc < MIN_WORDS) { thinPages++; errors.push(`Thin content (<${MIN_WORDS} words): ${rel} (${wc} words)`); }
 
   // Validate JSON-LD blocks
   for (const m of html.matchAll(/<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/gi)) {
     try { JSON.parse(m[1].trim()); }
     catch (e) { errors.push(`Invalid JSON-LD in ${rel}: ${e.message}`); }
+  }
+}
+
+// 1b. Verify thin standalone templates & individual retro games have noindex, follow
+for (const dir of ['templates', 'retro-arcade']) {
+  const dirFull = path.join(ROOT, dir);
+  if (!fs.existsSync(dirFull)) continue;
+  for (const name of fs.readdirSync(dirFull)) {
+    if (!name.endsWith('.html')) continue;
+    if (dir === 'retro-arcade' && !/^\d{2}-/.test(name)) continue;
+    const rel = `${dir}/${name}`;
+    const html = fs.readFileSync(path.join(dirFull, name), 'utf8');
+    if (!/content=["']noindex,\s*follow["']/i.test(html)) {
+      errors.push(`Expected noindex, follow on excluded thin page: ${rel}`);
+    }
   }
 }
 
@@ -79,6 +112,7 @@ console.log(`SEO Audit Summary (${smUrls.length} sitemap URLs):`);
 console.log(`  Missing meta desc: ${missingMeta}`);
 console.log(`  Missing canonical: ${missingCan} | /index.html canonicals: ${badCan}`);
 console.log(`  Missing H1:        ${missingH1}`);
+console.log(`  Thin pages (<340w): ${thinPages}`);
 console.log(`  Missing og:image:  ${missingOg} (warnings)`);
 console.log(`  Missing JSON-LD:   ${missingLd} (warnings)`);
 console.log(`  IndexNow unit test: OK (${clean.length} sanitized URLs)`);

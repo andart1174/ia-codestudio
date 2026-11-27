@@ -11,7 +11,8 @@
 
     body {
       background-color: #020409;
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto;
       font-family: 'Outfit', sans-serif;
       color: #ffffff;
     }
@@ -128,6 +129,23 @@
       background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
       transform: scale(1.02);
     }
+  
+    .demo-hero-stage { position: relative; width: 100%; height: 100vh; overflow: hidden; }
+    .demo-guide-jump { position: absolute; bottom: 24px; right: 24px; z-index: 12; display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 999px; background: rgba(15, 23, 42, 0.82); border: 1px solid rgba(139, 92, 246, 0.35); color: #e2e8f0; text-decoration: none; font-size: 12px; font-weight: 600; backdrop-filter: blur(12px); transition: all 0.2s ease; }
+    .demo-guide-jump:hover { border-color: #a78bfa; color: #fff; transform: translateY(-2px); }
+    #ia-demo-tech-guide { position: relative; z-index: 20; max-width: 960px; margin: 0 auto; padding: 56px 24px 64px; color: #cbd5e1; font-family: 'Outfit', system-ui, sans-serif; }
+    .demo-guide-card { background: rgba(15, 23, 42, 0.86); border: 1px solid rgba(255,255,255,0.09); border-radius: 22px; padding: 34px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    .demo-guide-card h2 { font-size: 1.65rem; font-weight: 800; color: #fff; margin: 0 0 8px; }
+    .demo-guide-sub { font-size: 0.98rem; color: #a78bfa; margin: 0 0 20px; font-weight: 600; }
+    .demo-guide-card p { font-size: 0.95rem; line-height: 1.7; color: #94a3b8; margin: 0 0 16px; }
+    .demo-guide-card h3 { font-size: 1.15rem; font-weight: 700; color: #fff; margin: 24px 0 12px; }
+    .demo-guide-card ul { padding-left: 20px; margin: 0 0 20px; color: #cbd5e1; font-size: 0.93rem; line-height: 1.75; }
+    .demo-guide-card details { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+    .demo-guide-card summary { cursor: pointer; font-weight: 700; color: #f8fafc; font-size: 0.94rem; }
+    .demo-guide-card details p { margin: 8px 0 0; font-size: 0.9rem; }
+    .demo-guide-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.08); }
+    .demo-guide-links a { text-decoration: none; font-size: 0.85rem; font-weight: 700; padding: 9px 15px; border-radius: 10px; background: rgba(139,92,246,0.16); color: #ddd6fe; border: 1px solid rgba(139,92,246,0.3); }
+    .demo-guide-links a:hover { background: rgba(139,92,246,0.28); color: #fff; }
   </style>
 
   <!-- Technical SEO & Structured Data -->
@@ -190,10 +208,43 @@
   ]
 }
   </script>
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How does WebGL render 100,000 stars smoothly without lagging the browser?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "All star positions and RGB colors are stored in compact typed Float32Arrays inside one Three.js Points object, so the GPU draws the entire galaxy in a single WebGL draw call."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I modify the number of spiral arms, colors, or rotation speed?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. You can prompt IA Architecte Studio Pro to generate a customized Three.js galaxy component with your exact brand colors, custom star count, and interactive OrbitControls."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where can I use procedural 3D scenes like this?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Developers embed procedural WebGL galaxies as SaaS hero backgrounds, Web3/AI product launches, interactive portfolios, and WebGL game starfields."
+      }
+    }
+  ]
+}
+  </script>
 </head>
 <body>
   <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Procedural Galaxy 3D — Interactive Three.js WebGL Demo</h1>
-
+  <div class="demo-hero-stage">
   <div id="webgl-container"></div>
 
   <div class="hint-label">MOVE MOUSE TO ORBIT · REFRESH FOR NEW GALAXY</div>
@@ -207,6 +258,35 @@
       Create More 3D Widgets on IA Code Studio 🚀
     </a>
   </div>
+  <a href="#ia-demo-tech-guide" class="demo-guide-jump">↓ Technical Breakdown &amp; FAQ</a>
+  </div>
+  <article id="ia-demo-tech-guide">
+    <div class="demo-guide-card">
+      <h2>How the 100,000-Star Procedural 3D Galaxy Generator Works</h2>
+      <p class="demo-guide-sub">Logarithmic spiral arm distribution and GPU point-cloud shaders powered by Three.js WebGL.</p>
+      <p>This procedural Three.js WebGL demonstration generates over 100,000 animated stars arranged along logarithmic spiral galaxy arms in real time. Rather than loading static skybox textures or large pre-baked 3D files, a mathematical distribution script computes each star coordinate using radial distance, spiral branch angle, cubic random scatter, and core-to-rim temperature color interpolation.</p>
+      <p>Hot luminous white-blue and violet stars concentrate near the dense galactic core while cooler indigo and cyan stars trail along the outer spiral arms. All star positions and colors are uploaded once into a single GPU BufferGeometry with additive blending, enabling fluid orbital camera motion and mouse parallax at 60 frames per second even on integrated laptop GPUs.</p>
+      <h3>Key Technical Highlights</h3>
+      <ul>
+        <li>Single draw-call Three.js BufferGeometry rendering tens of thousands of glowing additive star points.</li>
+        <li>Procedural spiral arm math with configurable arm count, spin curvature, scatter randomness, and color gradients.</li>
+        <li>Interactive camera drift and cursor-driven parallax depth for immersive space-themed hero sections.</li>
+        <li>Zero asset downloads — pure JavaScript math running offline in any WebGL-capable browser.</li>
+      </ul>
+      <h3>Frequently Asked Questions</h3>
+      <div>
+        <details><summary>How does WebGL render 100,000 stars smoothly without lagging the browser?</summary><p>All star positions and RGB colors are stored in compact typed Float32Arrays inside one Three.js Points object, so the GPU draws the entire galaxy in a single WebGL draw call.</p></details>
+        <details><summary>Can I modify the number of spiral arms, colors, or rotation speed?</summary><p>Yes. You can prompt IA Architecte Studio Pro to generate a customized Three.js galaxy component with your exact brand colors, custom star count, and interactive OrbitControls.</p></details>
+        <details><summary>Where can I use procedural 3D scenes like this?</summary><p>Developers embed procedural WebGL galaxies as SaaS hero backgrounds, Web3/AI product launches, interactive portfolios, and WebGL game starfields.</p></details>
+      </div>
+      <div class="demo-guide-links">
+        <a href="/ia-architecte-app/index.html">🚀 Build Custom WebGL Apps in IA Architecte Studio Pro</a>
+        <a href="/3d-studios/index.html">✨ Explore All 6 3D &amp; WebGL Studios</a>
+        <a href="/3d-marketing-lab/index.html">🧪 3D Marketing Lab Generators</a>
+        <a href="/arcade/index.html">🎮 21 Playable WebGL Games Showcase</a>
+      </div>
+    </div>
+  </article>
 
   <script>
     function initGalaxy() {

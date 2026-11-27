@@ -16,7 +16,12 @@ const EXCLUDE_PREFIXES = [
   'netlify',
   'scripts',
   'ia-code-studio-templates',
+  'templates',
   'tools/'
+];
+
+const EXCLUDE_PATTERNS = [
+  /^retro-arcade\/\d{2}-.*\.html$/i
 ];
 
 const EXCLUDE_FILES = new Set([
@@ -31,7 +36,7 @@ function walk(dir, relBase = '', out = []) {
     if (EXCLUDE_PREFIXES.some(p => rel === p || rel.startsWith(p + '/') || rel.startsWith(p))) continue;
     if (entry.isDirectory()) {
       walk(path.join(dir, entry.name), rel, out);
-    } else if (entry.name.endsWith('.html') && !EXCLUDE_FILES.has(rel)) {
+    } else if (entry.name.endsWith('.html') && !EXCLUDE_FILES.has(rel) && !EXCLUDE_PATTERNS.some(re => re.test(rel))) {
       out.push(rel);
     }
   }

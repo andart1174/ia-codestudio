@@ -11,7 +11,8 @@
 
     body {
       background-color: #030712;
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto;
       font-family: 'Outfit', sans-serif;
       color: #ffffff;
     }
@@ -116,6 +117,23 @@
       background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
       transform: scale(1.02);
     }
+  
+    .demo-hero-stage { position: relative; width: 100%; height: 100vh; overflow: hidden; }
+    .demo-guide-jump { position: absolute; bottom: 24px; right: 24px; z-index: 12; display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 999px; background: rgba(15, 23, 42, 0.82); border: 1px solid rgba(139, 92, 246, 0.35); color: #e2e8f0; text-decoration: none; font-size: 12px; font-weight: 600; backdrop-filter: blur(12px); transition: all 0.2s ease; }
+    .demo-guide-jump:hover { border-color: #a78bfa; color: #fff; transform: translateY(-2px); }
+    #ia-demo-tech-guide { position: relative; z-index: 20; max-width: 960px; margin: 0 auto; padding: 56px 24px 64px; color: #cbd5e1; font-family: 'Outfit', system-ui, sans-serif; }
+    .demo-guide-card { background: rgba(15, 23, 42, 0.86); border: 1px solid rgba(255,255,255,0.09); border-radius: 22px; padding: 34px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    .demo-guide-card h2 { font-size: 1.65rem; font-weight: 800; color: #fff; margin: 0 0 8px; }
+    .demo-guide-sub { font-size: 0.98rem; color: #a78bfa; margin: 0 0 20px; font-weight: 600; }
+    .demo-guide-card p { font-size: 0.95rem; line-height: 1.7; color: #94a3b8; margin: 0 0 16px; }
+    .demo-guide-card h3 { font-size: 1.15rem; font-weight: 700; color: #fff; margin: 24px 0 12px; }
+    .demo-guide-card ul { padding-left: 20px; margin: 0 0 20px; color: #cbd5e1; font-size: 0.93rem; line-height: 1.75; }
+    .demo-guide-card details { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+    .demo-guide-card summary { cursor: pointer; font-weight: 700; color: #f8fafc; font-size: 0.94rem; }
+    .demo-guide-card details p { margin: 8px 0 0; font-size: 0.9rem; }
+    .demo-guide-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.08); }
+    .demo-guide-links a { text-decoration: none; font-size: 0.85rem; font-weight: 700; padding: 9px 15px; border-radius: 10px; background: rgba(139,92,246,0.16); color: #ddd6fe; border: 1px solid rgba(139,92,246,0.3); }
+    .demo-guide-links a:hover { background: rgba(139,92,246,0.28); color: #fff; }
   </style>
 
   <!-- Technical SEO & Structured Data -->
@@ -178,10 +196,43 @@
   ]
 }
   </script>
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How can I customize the text and colors for my own website hero?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Open IA Architecte Studio Pro or our 3D Marketing Lab SVG/Particle tools to swap the text string, pick your brand color palette, adjust particle density, and export clean standalone HTML and Three.js code."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this Three.js particle animation work smoothly on mobile devices?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Because all vertices live in a single BufferGeometry draw call with capped pixel ratio, modern mobile and desktop browsers maintain smooth frame rates with minimal memory overhead."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I embed similar WebGL hero effects in React, Vue, or WordPress?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. You can mount the self-contained Three.js canvas inside a React useEffect hook, a Vue onMounted lifecycle, or a responsive WordPress HTML block without external build steps."
+      }
+    }
+  ]
+}
+  </script>
 </head>
 <body>
   <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">3D Text Particle Explosion — Interactive Three.js Demo</h1>
-
+  <div class="demo-hero-stage">
   <div id="webgl-container"></div>
 
   <div class="hint-label">HOVER OVER THE TEXT</div>
@@ -194,6 +245,35 @@
       Create More 3D Widgets on IA Code Studio 🚀
     </a>
   </div>
+  <a href="#ia-demo-tech-guide" class="demo-guide-jump">↓ Technical Breakdown &amp; FAQ</a>
+  </div>
+  <article id="ia-demo-tech-guide">
+    <div class="demo-guide-card">
+      <h2>How the 3D Text Particle Explosion Engine Works</h2>
+      <p class="demo-guide-sub">Interactive Three.js BufferGeometry typography physics running at 60 FPS inside your browser.</p>
+      <p>This live WebGL showcase demonstrates how rasterized HTML5 2D canvas typography can be sampled pixel-by-pixel and transformed into thousands of real-time 3D particles rendered by Three.js. Every letter in the scene is converted into a lightweight Float32Array coordinate buffer so the GPU animates position, velocity, and RGB shimmer without creating individual DOM elements or heavy polygon meshes.</p>
+      <p>When your cursor enters the central interaction zone, the physics loop applies radial impulse vectors with subtle Z-axis depth dispersion and velocity damping. Moving your mouse through the exploded cloud applies a soft magnetic attraction field, while leaving the trigger zone smoothly interpolates every particle back to its original typographic anchor using spring easing and sinusoidal breathing motion.</p>
+      <h3>Key Technical Highlights</h3>
+      <ul>
+        <li>GPU-accelerated Three.js Points & BufferGeometry pipeline with dynamic vertex color updates.</li>
+        <li>Zero external 3D model downloads — typography is procedurally sampled at runtime from an offscreen canvas.</li>
+        <li>Interactive hover shatter physics, cursor gravity field, and smooth spring reassembly at 60 FPS.</li>
+        <li>Built to demonstrate the kind of interactive hero animations you can generate with AI prompts in IA Architecte Studio Pro.</li>
+      </ul>
+      <h3>Frequently Asked Questions</h3>
+      <div>
+        <details><summary>How can I customize the text and colors for my own website hero?</summary><p>Open IA Architecte Studio Pro or our 3D Marketing Lab SVG/Particle tools to swap the text string, pick your brand color palette, adjust particle density, and export clean standalone HTML and Three.js code.</p></details>
+        <details><summary>Does this Three.js particle animation work smoothly on mobile devices?</summary><p>Yes. Because all vertices live in a single BufferGeometry draw call with capped pixel ratio, modern mobile and desktop browsers maintain smooth frame rates with minimal memory overhead.</p></details>
+        <details><summary>Can I embed similar WebGL hero effects in React, Vue, or WordPress?</summary><p>Yes. You can mount the self-contained Three.js canvas inside a React useEffect hook, a Vue onMounted lifecycle, or a responsive WordPress HTML block without external build steps.</p></details>
+      </div>
+      <div class="demo-guide-links">
+        <a href="/ia-architecte-app/index.html">🚀 Build Custom WebGL Apps in IA Architecte Studio Pro</a>
+        <a href="/3d-studios/index.html">✨ Explore All 6 3D &amp; WebGL Studios</a>
+        <a href="/3d-marketing-lab/index.html">🧪 3D Marketing Lab Generators</a>
+        <a href="/arcade/index.html">🎮 21 Playable WebGL Games Showcase</a>
+      </div>
+    </div>
+  </article>
 
   <script>
     document.fonts.ready.then(() => {

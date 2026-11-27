@@ -541,6 +541,15 @@ function buildCompareHub(lang) {
 
     <section class="hub-grid">${cards}
     </section>
+
+    <section style="margin:36px 0 12px;padding:28px 30px;background:rgba(15,23,42,0.72);border:1px solid rgba(255,255,255,0.08);border-radius:20px;">
+      <h2 style="font-size:1.3rem;font-weight:800;color:#fff;margin:0 0 10px;">${isFr ? 'Comment nous évaluons les IDE Web IA et Studios 3D' : 'How We Benchmark Browser AI IDEs &amp; 3D Studios'}</h2>
+      <p style="color:#94a3b8;font-size:0.93rem;line-height:1.7;margin:0 0 16px;">${isFr ? 'Chaque comparatif est rédigé pour aider les développeurs, créateurs et fondateurs SaaS à choisir l’outil adapté à leur flux de travail réel : propriété du code exporté (HTML, CSS, JS, React, Vue, 3MF/GLB), confidentialité hors-ligne dans le navigateur, performances WebGL 60 FPS et transparence tarifaire.' : 'Every guide on this page is written to help developers, designers, and SaaS founders choose the right browser tool based on real production criteria: full code ownership (HTML, CSS, JS, React, Vue, 3MF/GLB), 100% client-side offline privacy, 60 FPS WebGL rendering speed, and transparent pricing with zero vendor lock-in.'}</p>
+      <div class="cmp-faq">
+        <details><summary>${isFr ? 'Puis-je tester IA Code Studio gratuitement avant de choisir ?' : 'Can I test IA Code Studio free before choosing?'}</summary><p>${isFr ? 'Oui. IA Architecte Studio Pro, la Sandbox Live, OmniConvert Pro et les 9 générateurs du 3D Marketing Lab s’ouvrent gratuitement sans carte bancaire.' : 'Yes. IA Architecte Studio Pro, Live Sandbox Playground, OmniConvert Pro, and all 9 tools in 3D Marketing Lab launch free in your browser with no credit card required.'}</p></details>
+        <details><summary>${isFr ? 'Le code exporté fonctionne-t-il en dehors d’IA Code Studio ?' : 'Does exported code work independently outside IA Code Studio?'}</summary><p>${isFr ? 'Absolument. Vous exportez du HTML/CSS/JS standard, des composants React/Vue ou des modèles 3D ouverts déployables sur Netlify, Vercel, GitHub Pages ou WordPress.' : 'Yes. Every export produces clean standard HTML/CSS/JS, React/Vue components, or open 3D formats deployable on Netlify, Vercel, GitHub Pages, Shopify, or WordPress.'}</p></details>
+      </div>
+    </section>
   </main>
 
   <footer class="hub-footer">
@@ -576,6 +585,28 @@ function buildNativeFrHub(srcRel, outRel, slug, frHead) {
   html = html.replace(`property="og:url" content="${HOST}/${slug}"`, `property="og:url" content="${HOST}/fr/${slug}"`);
   html = html.replace(/property="og:title" content="[^"]*"/, `property="og:title" content="${frHead.title}"`);
   html = html.replace(/property="og:description" content="[^"]*"/, `property="og:description" content="${frHead.desc}"`);
+  // Update JSON-LD CollectionPage url, name, description & language to native French
+  html = html.replace(`"url": "${HOST}/${slug}"`, `"url": "${HOST}/fr/${slug}",\n      "inLanguage": "fr"`);
+  html = html.replace(/"name":\s*"[^"]*IA Code Studio"/, `"name": "${frHead.title.replace(/"/g, '\\"')}"`);
+  // Extract inline T.fr dictionary and pre-render every static data-i18n element into native French!
+  const vm = require('vm');
+  const dictMatch = html.match(/const T = (\{[\s\S]*?\n\s{6}\});/);
+  if (dictMatch) {
+    try {
+      const T = vm.runInNewContext(`(${dictMatch[1]})`);
+      if (T && T.fr) {
+        const escHtml = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        html = html.replace(/(<([a-z0-9]+)[^>]*\sdata-i18n="([^"]+)"[^>]*>)([\s\S]*?)(<\/\2>)/gi, (full, open, tag, key, inner, close) => {
+          if (T.fr[key] && !/<[a-z]/i.test(inner)) {
+            return `${open}${escHtml(T.fr[key])}${close}`;
+          }
+          return full;
+        });
+      }
+    } catch (e) {
+      console.warn('Could not pre-render static FR i18n for', srcRel, e.message);
+    }
+  }
   // Fix relative paths ../ -> / so /fr/<hub>/ resolves every asset and studio cleanly!
   html = html.replace(/(href|src)="\.\.\//g, '$1="/');
   // Point internal hub nav links inside /fr/ to French equivalents where available
@@ -583,7 +614,7 @@ function buildNativeFrHub(srcRel, outRel, slug, frHead) {
   html = html.replace(/href="\/3d-studios\/index\.html"/g, 'href="/fr/3d-studios/index.html"');
   html = html.replace(/href="\/marketing-widgets\/index\.html"/g, 'href="/fr/marketing-widgets/index.html"');
   html = html.replace(/href="\/arcade\/index\.html"/g, 'href="/fr/arcade/index.html"');
-  // Replace visible static H1 + subtitle + eyebrow + force default 'fr' on init
+  // Replace visible static H1 + eyebrow + force default 'fr' on init
   html = html.replace(/<h1[^>]*>[\s\S]*?<\/h1>/i, `<h1 data-i18n="hero_title">${frHead.h1}</h1>`);
   html = html.replace(/<div class="hub-eyebrow"[^>]*>[\s\S]*?<\/div>/i, `<div class="hub-eyebrow" data-i18n="eyebrow">${frHead.eyebrow}</div>`);
   html = html.replace(
