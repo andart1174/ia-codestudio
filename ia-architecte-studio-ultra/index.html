@@ -8768,6 +8768,33 @@ if (document.readyState === 'loading') {
           if (window.APP) APP.chatCollapsed = true;
         }
       }
+
+      // Neural Forge -> Ultra IDE Seamless Code Handoff
+      try {
+        const qFrom = new URLSearchParams(window.location.search).get('from');
+        if (qFrom === 'forge') {
+          const applyUltraHandoff = (tries) => {
+            const raw = localStorage.getItem('ia_forge_handoff');
+            const handoff = raw ? JSON.parse(raw) : null;
+            if (handoff && window.APP && APP.editor) {
+              APP.html = handoff.html || '';
+              APP.css = handoff.css || '';
+              APP.js = handoff.js || '';
+              APP.currentTab = 'html';
+              APP.isFullMode = false;
+              APP.editor.setOption('mode', 'htmlmixed');
+              APP.editor.setValue(APP.html);
+              APP.editor.refresh();
+              if (typeof updateTabDots === 'function') updateTabDots();
+              if (typeof refreshPreview === 'function') refreshPreview();
+              localStorage.removeItem('ia_forge_handoff');
+            } else if (tries > 0) {
+              setTimeout(() => applyUltraHandoff(tries - 1), 250);
+            }
+          };
+          setTimeout(() => applyUltraHandoff(20), 400);
+        }
+      } catch (e) {}
     });
   </script>
 

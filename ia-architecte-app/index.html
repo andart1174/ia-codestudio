@@ -1471,6 +1471,7 @@
         var params = new URLSearchParams(window.location.search);
         var qLang = params.get('lang');
         var qPrompt = params.get('prompt');
+        var qFrom = params.get('from');
 
         if (qLang === 'fr' || qLang === 'en') {
           var applyLangRetry = function (tries) {
@@ -1479,6 +1480,23 @@
             else if (tries > 0) { setTimeout(function () { applyLangRetry(tries - 1); }, 150); }
           };
           window.addEventListener('load', function () { applyLangRetry(10); });
+        }
+
+        if (qFrom === 'forge') {
+          var applyForgeHandoff = function (tries) {
+            try {
+              var raw = localStorage.getItem('ia_forge_handoff');
+              var handoff = raw ? JSON.parse(raw) : null;
+              if (handoff && handoff.combinedHtml && window.editor && typeof window.editor.setValue === 'function') {
+                window.editor.setValue(handoff.combinedHtml);
+                if (typeof window.updatePreview === 'function') window.updatePreview();
+                localStorage.removeItem('ia_forge_handoff');
+              } else if (tries > 0) {
+                setTimeout(function () { applyForgeHandoff(tries - 1); }, 250);
+              }
+            } catch (e) {}
+          };
+          window.addEventListener('load', function () { setTimeout(function () { applyForgeHandoff(20); }, 500); });
         }
 
         if (qPrompt && qPrompt.trim()) {

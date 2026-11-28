@@ -1,7 +1,7 @@
 // Service Worker for IA Code Studio (ia-codestudio.com)
 // PWA Offline Support & Asset Cache - Network-First Strategy
 
-const CACHE_NAME = 'iacodestudio-v2.10';
+const CACHE_NAME = 'iacodestudio-v2.11';
 const CORE_ASSETS = [
   '/',
   '/index.html',
@@ -9,6 +9,9 @@ const CORE_ASSETS = [
   '/404.html',
   '/style.css',
   '/css/hub-pages.css',
+  '/css/neural-forge.css',
+  '/js/neural-demos.js',
+  '/js/neural-forge.js',
   '/3d-studios/index.html',
   '/marketing-widgets/index.html',
   '/arcade/index.html',
@@ -148,8 +151,8 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   if (!url.protocol.startsWith('http')) return;
 
-  // Do not cache external tracking, Firebase auth, or Stripe checkout
-  if (url.hostname.includes('firebase') || url.hostname.includes('stripe') || url.hostname.includes('analytics')) {
+  // Do not cache external tracking, Firebase auth, Stripe checkout, or Netlify serverless APIs
+  if (url.pathname.startsWith('/.netlify/functions/') || url.hostname.includes('firebase') || url.hostname.includes('stripe') || url.hostname.includes('analytics')) {
     return;
   }
 

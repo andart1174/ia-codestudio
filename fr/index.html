@@ -66,6 +66,9 @@
   }
   </script>
   <link rel="stylesheet" href="/style.css?v=20261127_v5">
+  <link rel="stylesheet" href="/css/neural-forge.css?v=20261128">
+  <script src="/js/app-service-core.js?v=20260922_v2"></script>
+  <script src="/js/app-service-auth.js?v=20260922_v2"></script>
 </head>
 <body>
   <div class="aura-container" aria-hidden="true">
@@ -133,10 +136,10 @@
         </div>
         <div class="prompt-chips">
           <span class="prompt-chips-label">Essayer :</span>
-          <button type="button" class="prompt-chip" onclick="frQuickPrompt('Créer un tableau de bord SaaS moderne avec cartes KPI en mode sombre')">📊 Dashboard SaaS</button>
-          <button type="button" class="prompt-chip" onclick="frQuickPrompt('Créer une landing page startup avec section hero et fonctionnalités')">🌐 Landing Page</button>
-          <button type="button" class="prompt-chip" onclick="frQuickPrompt('Créer un tableau de prix à 3 offres avec bouton mensuel')">💳 Tableau de Prix</button>
-          <button type="button" class="prompt-chip" onclick="frQuickPrompt('Créer une section contact responsive au style glassmorphism')">✨ Contact Glass UI</button>
+          <button type="button" class="prompt-chip" onclick="frQuickDemo('saas')">📊 Dashboard SaaS</button>
+          <button type="button" class="prompt-chip" onclick="frQuickDemo('landing')">🌐 Landing Page</button>
+          <button type="button" class="prompt-chip" onclick="frQuickDemo('pricing')">💳 Tableau de Prix</button>
+          <button type="button" class="prompt-chip" onclick="frQuickDemo('contact')">✨ Contact Glass UI</button>
         </div>
       </form>
 
@@ -360,17 +363,41 @@
     </div>
   </footer>
 
+  <script src="/js/neural-demos.js?v=20261128"></script>
+  <script src="/js/neural-forge.js?v=20261128"></script>
   <script>
     localStorage.setItem('hub_lang', 'fr');
+    window.currentLang = 'fr';
+    if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+      firebase.initializeApp({
+        apiKey: "AIzaSyBXJ0LstZF7c3-GI2eDtv6V7vsx0scgXHk",
+        authDomain: "ia-codestudio.firebaseapp.com",
+        projectId: "ia-codestudio",
+        storageBucket: "ia-codestudio.firebasestorage.app",
+        messagingSenderId: "977495027432",
+        appId: "1:977495027432:web:fb93e8ae7712c70df2635d"
+      });
+    }
+    window.handleGoogleSignIn = async function() {
+      if (typeof firebase === 'undefined' || !firebase.auth) return;
+      var provider = new firebase.auth.GoogleAuthProvider();
+      await firebase.auth().signInWithPopup(provider);
+      if (window.IANeuralForge) window.IANeuralForge.refreshProStatus();
+    };
     var frMode = 'pro';
     function frSelectMode(m, btn) {
       frMode = m;
       document.querySelectorAll('.prompt-mode-btn').forEach(function(b) { b.classList.remove('active'); });
       if (btn) btn.classList.add('active');
+      if (window.IANeuralForge) window.IANeuralForge.setMode(m);
     }
     function frLaunchPrompt(e) {
       if (e) e.preventDefault();
       var txt = (document.getElementById('fr-prompt-input').value || '').trim();
+      if (window.IANeuralForge) {
+        window.IANeuralForge.handlePromptSubmit(txt, frMode);
+        return;
+      }
       var map = {
         pro: '/ia-architecte-app/index.html',
         ultra: '/ia-architecte-studio-ultra/index.html',
@@ -382,10 +409,10 @@
       if (txt) p.set('prompt', txt);
       window.location.href = (map[frMode] || map.pro) + '?' + p.toString();
     }
-    function frQuickPrompt(txt) {
-      document.getElementById('fr-prompt-input').value = txt;
-      frMode = 'pro';
-      frLaunchPrompt();
+    function frQuickDemo(demoId) {
+      if (window.IANeuralForge) {
+        window.IANeuralForge.handleQuickChip(demoId);
+      }
     }
     var mb = document.getElementById('fr-mob-btn'), dr = document.getElementById('fr-mob-drawer');
     if (mb && dr) mb.addEventListener('click', function() { dr.classList.toggle('open'); });

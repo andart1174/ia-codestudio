@@ -217,6 +217,7 @@
         display: flex !important;
       }
     </style>
+    <link rel="stylesheet" href="css/neural-forge.css?v=20261128">
     <script>
       function openModal(id) {
         var m = document.getElementById('modal-' + id);
@@ -872,16 +873,16 @@
 
                 <div class="prompt-chips">
                     <span class="prompt-chips-label" data-i18n="prompt_try">Try:</span>
-                    <button type="button" class="prompt-chip" data-prompt-en="Build a modern SaaS analytics dashboard with KPI cards and dark mode" data-prompt-fr="Créer un tableau de bord SaaS moderne avec cartes KPI en mode sombre" onclick="runQuickPrompt(this)">
+                    <button type="button" class="prompt-chip" data-demo="saas" data-prompt-en="Build a modern SaaS analytics dashboard with KPI cards and dark mode" data-prompt-fr="Créer un tableau de bord SaaS moderne avec cartes KPI en mode sombre" onclick="runQuickPrompt(this)">
                         📊 <span data-i18n="chip_saas">SaaS Dashboard</span>
                     </button>
-                    <button type="button" class="prompt-chip" data-prompt-en="Create a startup landing page with hero section and features" data-prompt-fr="Créer une landing page startup avec section hero et fonctionnalités" onclick="runQuickPrompt(this)">
+                    <button type="button" class="prompt-chip" data-demo="landing" data-prompt-en="Create a startup landing page with hero section and features" data-prompt-fr="Créer une landing page startup avec section hero et fonctionnalités" onclick="runQuickPrompt(this)">
                         🌐 <span data-i18n="chip_landing">Landing Page</span>
                     </button>
-                    <button type="button" class="prompt-chip" data-prompt-en="Build a pricing table with 3 tiers and monthly toggle" data-prompt-fr="Créer un tableau de prix à 3 offres avec bouton mensuel" onclick="runQuickPrompt(this)">
+                    <button type="button" class="prompt-chip" data-demo="pricing" data-prompt-en="Build a pricing table with 3 tiers and monthly toggle" data-prompt-fr="Créer un tableau de prix à 3 offres avec bouton mensuel" onclick="runQuickPrompt(this)">
                         💳 <span data-i18n="chip_pricing">Pricing Table</span>
                     </button>
-                    <button type="button" class="prompt-chip" data-prompt-en="Create a responsive contact section with glassmorphism design" data-prompt-fr="Créer une section contact responsive au style glassmorphism" onclick="runQuickPrompt(this)">
+                    <button type="button" class="prompt-chip" data-demo="contact" data-prompt-en="Create a responsive contact section with glassmorphism design" data-prompt-fr="Créer une section contact responsive au style glassmorphism" onclick="runQuickPrompt(this)">
                         ✨ <span data-i18n="chip_contact">Glass Contact UI</span>
                     </button>
                 </div>
@@ -1385,8 +1386,10 @@
     <script src="js/admin-portal.js?v=20261127_v6"></script>
     <script src="js/jszip.min.js"></script>
     <script src="js/app-hub.js?v=20261127_v3"></script>
+    <script src="js/neural-demos.js?v=20261128"></script>
+    <script src="js/neural-forge.js?v=20261128"></script>
 
-    <!-- Homepage Interactive Logic (Prompt Launcher, Mobile Drawer, Q&A, Share, Auth Deep Link & PWA) -->
+    <!-- Homepage Interactive Logic (Neural Forge Pro AI, 4 Zero-Cost Demos, Mobile Drawer, Q&A, Share, Auth & PWA) -->
     <script>
     (function() {
         var selectedPromptMode = 'pro';
@@ -1397,12 +1400,19 @@
                 b.classList.remove('active');
             });
             if (btn) btn.classList.add('active');
+            if (window.IANeuralForge && typeof window.IANeuralForge.setMode === 'function') {
+                window.IANeuralForge.setMode(mode);
+            }
         };
 
         window.launchFromPrompt = function(e) {
             if (e) e.preventDefault();
             var input = document.getElementById('hero-prompt-input');
             var promptText = input ? input.value.trim() : '';
+            if (window.IANeuralForge && typeof window.IANeuralForge.handlePromptSubmit === 'function') {
+                window.IANeuralForge.handlePromptSubmit(promptText, selectedPromptMode);
+                return;
+            }
             var lang = window.currentLang || 'en';
             var targetMap = {
                 pro: 'ia-architecte-app/index.html',
@@ -1418,6 +1428,11 @@
         };
 
         window.runQuickPrompt = function(btn) {
+            var demoId = btn.getAttribute('data-demo') || 'saas';
+            if (window.IANeuralForge && typeof window.IANeuralForge.handleQuickChip === 'function') {
+                window.IANeuralForge.handleQuickChip(demoId);
+                return;
+            }
             var lang = window.currentLang || 'en';
             var text = btn.getAttribute(lang === 'fr' ? 'data-prompt-fr' : 'data-prompt-en') || '';
             var input = document.getElementById('hero-prompt-input');
@@ -1448,7 +1463,7 @@
                 });
             }
 
-            // Support ?auth=signup deep link from /arcade/ Welcome Bonus modal
+            // Support ?auth=signup or ?auth=login deep links
             var params = new URLSearchParams(window.location.search);
             if (params.get('auth') === 'signup' && !localStorage.getItem('genius_session')) {
                 setTimeout(function() {
@@ -1457,6 +1472,8 @@
                         toggleAuthMode();
                     }
                 }, 250);
+            } else if (params.get('auth') === 'login' && !localStorage.getItem('genius_session')) {
+                setTimeout(function() { openModal('login'); }, 250);
             }
         });
 
