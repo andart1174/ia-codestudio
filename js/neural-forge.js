@@ -246,7 +246,7 @@ ${app.js || ''}
       css: app.css,
       js: app.js,
       dnaUsed: app.dnaUsed || [],
-      model: app.model || 'gemini-2.5-flash',
+      model: app.model || 'gemini-3.8-flash',
       createdAt: app.createdAt || Date.now()
     });
     try {
@@ -309,7 +309,7 @@ ${app.js || ''}
           <div class="nf-logo-orb">⚡</div>
           <div class="nf-title-wrap">
             <div class="nf-app-title" id="nf-app-title">IA Neural Architect</div>
-            <div class="nf-meta-badge" id="nf-meta-badge">Gemini 2.5 Flash · IA DNA</div>
+            <div class="nf-meta-badge" id="nf-meta-badge">Gemini 3.8 Flash · IA DNA</div>
           </div>
         </div>
 
@@ -383,7 +383,7 @@ ${app.js || ''}
     <div id="nf-paywall-modal" class="nf-paywall-overlay" role="dialog" aria-modal="true" aria-label="Creator Pro AI Required">
       <div class="nf-paywall-card">
         <button type="button" class="nf-paywall-close" id="nf-pw-close">×</button>
-        <div class="nf-pw-badge">⚡ CREATOR PRO · GOOGLE GEMINI 2.5 ENGINE</div>
+        <div class="nf-pw-badge">⚡ CREATOR PRO · GOOGLE GEMINI 3.8 ENGINE</div>
         <h2 id="nf-pw-heading">Unlock Unlimited Custom AI App Generation</h2>
         <div class="nf-pw-prompt-box" id="nf-pw-prompt-preview"></div>
         <ul class="nf-pw-list" id="nf-pw-features"></ul>
@@ -680,14 +680,14 @@ ${app.js || ''}
 
     const feats = isFr
       ? [
-          '✓ Moteur IA Google Gemini 2.5 Flash + Mémoire DNA 3D IA Code Studio',
+          '✓ Moteur IA Google Gemini 3.8 Flash + Mémoire DNA 3D IA Code Studio',
           '✓ Créez n’importe quelle app complète (SaaS, boutique, CRM, jeux, 3D WebGL)',
           '✓ Mode Boost 3D WebGL, Photo/Croquis → App & Dictée vocale FR/EN',
           '✓ Chat itératif avec mémoire + Auto-Réparation JS invisible',
           '✓ Exports HTML / ZIP illimités + accès complet à tous les studios (10 $/mois)'
         ]
       : [
-          '✓ Real Google Gemini 2.5 Flash Engine + IA Code Studio 3D DNA Memory',
+          '✓ Real Google Gemini 3.8 Flash Engine + IA Code Studio 3D DNA Memory',
           '✓ Build ANY custom working app (SaaS, booking, e-commerce, games, 3D WebGL)',
           '✓ 3D WebGL Boost toggle, Sketch/Screenshot → App & Voice-to-App (EN/FR)',
           '✓ Multi-turn iterative chat with memory + invisible JS Auto-Repair',
@@ -769,7 +769,7 @@ ${app.js || ''}
 
     const steps = [
       t('🧠 Analyzing request & injecting IA Code Studio 3D DNA...', '🧠 Analyse du prompt & injection du DNA 3D IA Code Studio...'),
-      t('⚡ Google Gemini 2.5 Flash architecting HTML, CSS & JS...', '⚡ Google Gemini 2.5 Flash génère HTML, CSS & JS...'),
+      t('⚡ Google Gemini 3.8 Flash architecting HTML, CSS & JS...', '⚡ Google Gemini 3.8 Flash génère HTML, CSS & JS...'),
       t('✨ Wiring interactive state, responsiveness & visuals...', '✨ Connexion de la logique interactive et des animations...')
     ];
     let stepIdx = 0;
@@ -817,7 +817,7 @@ ${app.js || ''}
         id: 'app_' + Date.now(),
         ...data.app,
         dnaUsed: data.dnaUsed || [],
-        model: data.model || 'gemini-2.5-flash',
+        model: data.model || 'gemini-3.8-flash',
         createdAt: Date.now(),
         isDemo: false
       };
@@ -848,7 +848,7 @@ ${app.js || ''}
     state.autoRepairedOnce = false;
     appendChat('user', instruction);
     document.getElementById('nf-chat-send').disabled = true;
-    setLoader(true, t('Refining Your App...', 'Modification en cours...'), t('⚡ Applying changes with Gemini 2.5 Memory...', '⚡ Application des modifications avec Gemini 2.5...'));
+    setLoader(true, t('Refining Your App...', 'Modification en cours...'), t('⚡ Applying changes with Gemini 3.8 Memory...', '⚡ Application des modifications avec Gemini 3.8...'));
 
     try {
       const res = await fetch(API_ENDPOINT, {
@@ -945,7 +945,7 @@ ${app.js || ''}
     reader.onload = () => {
       const img = new Image();
       img.onload = () => {
-        const maxSide = 1024;
+        const maxSide = 768;
         let w = img.width, h = img.height;
         if (w > maxSide || h > maxSide) {
           const scale = maxSide / Math.max(w, h);
@@ -955,7 +955,7 @@ ${app.js || ''}
         const c = document.createElement('canvas');
         c.width = w; c.height = h;
         c.getContext('2d').drawImage(img, 0, 0, w, h);
-        const dataUrl = c.toDataURL('image/jpeg', 0.84);
+        const dataUrl = c.toDataURL('image/jpeg', 0.78);
         state.imageBase64 = dataUrl.split(',')[1] || '';
         state.imageMime = 'image/jpeg';
         state.imageName = file.name;

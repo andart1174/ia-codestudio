@@ -2,7 +2,7 @@
 // Handles Gemini API calls + intelligent Demo Mode fallback
 
 const AIEngine = (() => {
-  const GEMINI_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
+  const GEMINI_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent';
 
   // ─── SYSTEM PROMPT ──────────────────────────────────────────────────────────
   const SYSTEM_PROMPT = `You are an expert senior web developer specializing in beautiful, functional web applications.

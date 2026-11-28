@@ -14,7 +14,7 @@ const crypto = require('crypto');
 const FIREBASE_PROJECT_ID = 'ia-codestudio';
 const ADMIN_EMAIL = String(process.env.IA_ADMIN_EMAIL || 'andart1174@gmail.com').toLowerCase().trim();
 const GOOGLE_CERTS_URL = 'https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com';
-const GEMINI_MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash'];
+const GEMINI_MODELS = ['gemini-3.8-flash', 'gemini-3.5-flash', 'gemini-3.5-flash-lite', 'gemini-2.5-flash'];
 const MAX_PROMPT_LEN = 4000;
 const MAX_IMAGE_BASE64_LEN = 4_500_000; // ~3.3 MB raw image max
 const PRO_CACHE_TTL_MS = 5 * 60 * 1000; // 5 min warm-lambda cache
@@ -399,64 +399,108 @@ function extractAppJson(rawText) {
   };
 }
 
+async function discoverLatestFlashModel(apiKey, requestImpl = httpsRequest) {
+  try {
+    const res = await requestImpl('https://generativelanguage.googleapis.com/v1beta/models', {
+      method: 'GET',
+      timeout: 7000,
+      headers: { 'x-goog-api-key': apiKey }
+    });
+    if (res.status !== 200 || !res.body) return null;
+    const data = JSON.parse(res.body);
+    const models = Array.isArray(data.models) ? data.models : [];
+    const candidates = models
+      .filter((m) => Array.isArray(m.supportedGenerationMethods) && m.supportedGenerationMethods.includes('generateContent'))
+      .map((m) => String(m.name || '').replace(/^models\//, ''))
+      .filter((id) => /^gemini-[3-9].*flash/i.test(id) && !/tts|audio|image|embedding|vision|live/i.test(id));
+    candidates.sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
+    return candidates[0] || null;
+  } catch (e) {
+    return null;
+  }
+}
+
 async function callGeminiArchitect({ apiKey, systemInstruction, userPromptText, imageBase64, imageMime }, requestImpl = httpsRequest) {
   const userParts = [{ text: userPromptText }];
   if (imageBase64 && typeof imageBase64 === 'string' && imageBase64.length <= MAX_IMAGE_BASE64_LEN) {
     const allowedMimes = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
-    const safeMime = allowedMimes.includes(imageMime) ? imageMime : 'image/png';
+    const safeMime = allowedMimes.includes(imageMime) ? imageMime : 'image/jpeg';
     userParts.push({
-      inline_data: {
-        mime_type: safeMime,
+      inlineData: {
+        mimeType: safeMime,
         data: imageBase64.replace(/^data:[^;]+;base64,/, '')
       }
     });
   }
 
   const payload = {
-    system_instruction: { parts: [{ text: systemInstruction }] },
+    systemInstruction: { parts: [{ text: systemInstruction }] },
     contents: [{ role: 'user', parts: userParts }],
     generationConfig: {
       temperature: 0.72,
       topP: 0.95,
-      maxOutputTokens: 16384,
+      maxOutputTokens: 12288,
       responseMimeType: 'application/json'
     }
   };
   const bodyStr = JSON.stringify(payload);
 
-  let lastErr = null;
-  for (const model of GEMINI_MODELS) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
-    try {
-      const res = await requestImpl(url, {
-        method: 'POST',
-        timeout: 24500,
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8',
-          'Content-Length': Buffer.byteLength(bodyStr)
-        }
-      }, bodyStr);
-
-      if (res.status === 200) {
-        const data = JSON.parse(res.body);
-        const text = data.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
-        const app = extractAppJson(text);
-        return { app, model };
+  const tried = [];
+  const attemptModel = async (model) => {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
+    const res = await requestImpl(url, {
+      method: 'POST',
+      timeout: 22000,
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'x-goog-api-key': apiKey,
+        'Content-Length': Buffer.byteLength(bodyStr)
       }
+    }, bodyStr);
 
-      let apiErrMsg = `Gemini HTTP ${res.status}`;
-      try {
-        const parsedErr = JSON.parse(res.body);
-        if (parsedErr.error && parsedErr.error.message) apiErrMsg = parsedErr.error.message;
-      } catch (e) {}
-      lastErr = new Error(apiErrMsg);
-      // Only fallback to secondary model on 404/503/429
-      if (![404, 429, 500, 503].includes(res.status)) break;
+    if (res.status === 200) {
+      const data = JSON.parse(res.body);
+      const text = data.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
+      const app = extractAppJson(text);
+      return { ok: true, app, model };
+    }
+
+    let apiErrMsg = `HTTP ${res.status}`;
+    try {
+      const parsedErr = JSON.parse(res.body);
+      if (parsedErr.error && parsedErr.error.message) apiErrMsg = parsedErr.error.message;
+    } catch (e) {}
+    return { ok: false, status: res.status, error: apiErrMsg };
+  };
+
+  const modelList = process.env.GEMINI_MODEL
+    ? [process.env.GEMINI_MODEL.trim(), ...GEMINI_MODELS.filter(m => m !== process.env.GEMINI_MODEL.trim())]
+    : [...GEMINI_MODELS];
+
+  for (const model of modelList) {
+    try {
+      const r = await attemptModel(model);
+      if (r.ok) return { app: r.app, model: r.model };
+      tried.push(`${model}: ${r.error}`);
+      if (![400, 404, 429, 500, 503].includes(r.status)) break;
     } catch (err) {
-      lastErr = err;
+      tried.push(`${model}: ${err && err.message ? err.message : 'network error'}`);
     }
   }
-  throw lastErr || new Error('Gemini API request failed.');
+
+  // Self-healing fallback: query live Google Models API for newest active Gemini Flash model
+  const discovered = await discoverLatestFlashModel(apiKey, requestImpl);
+  if (discovered && !modelList.includes(discovered)) {
+    try {
+      const r = await attemptModel(discovered);
+      if (r.ok) return { app: r.app, model: r.model };
+      tried.push(`${discovered}: ${r.error}`);
+    } catch (err) {
+      tried.push(`${discovered}: ${err && err.message ? err.message : 'network error'}`);
+    }
+  }
+
+  throw new Error(tried.join(' | ') || 'Gemini API request failed.');
 }
 
 function jsonResponse(statusCode, payload) {
