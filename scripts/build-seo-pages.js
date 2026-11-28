@@ -1021,7 +1021,7 @@ const frHomeHtml = `<!DOCTYPE html>
   </footer>
 
   <script src="/js/neural-demos.js?v=20261128"></script>
-  <script src="/js/neural-forge.js?v=20261128_v2"></script>
+  <script src="/js/neural-forge.js?v=20261128_v3"></script>
   <script>
     localStorage.setItem('hub_lang', 'fr');
     window.currentLang = 'fr';

@@ -597,6 +597,27 @@ ${app.js || ''}
     log.scrollTop = log.scrollHeight;
   }
 
+  function appendChatWithRetry(errText, retryOpts) {
+    const log = document.getElementById('nf-chat-log');
+    if (!log) return;
+    const div = document.createElement('div');
+    div.className = 'nf-msg repair';
+    const p = document.createElement('div');
+    p.textContent = '⚠️ ' + errText;
+    div.appendChild(p);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = t('↻ Retry Build Now', '↻ Réessayer maintenant');
+    btn.style.cssText = 'margin-top:10px;padding:7px 14px;border-radius:8px;border:none;background:linear-gradient(135deg,#8b5cf6,#06b6d4);color:#fff;font-weight:800;font-size:0.78rem;cursor:pointer;';
+    btn.addEventListener('click', () => {
+      div.remove();
+      runGeminiBuild(retryOpts);
+    });
+    div.appendChild(btn);
+    log.appendChild(div);
+    log.scrollTop = log.scrollHeight;
+  }
+
   function renderCodeInspector() {
     const pre = document.getElementById('nf-code-pre');
     if (!pre || !state.currentApp) return;
@@ -809,7 +830,7 @@ ${app.js || ''}
         return;
       }
       if (!res.ok || !data.ok || !data.app) {
-        appendChat('repair', '⚠️ ' + (data.error || t('Generation failed. Please try again.', 'Échec de génération. Réessayez.')));
+        appendChatWithRetry(data.error || t('Generation failed. Please try again.', 'Échec de génération. Réessayez.'), opts);
         return;
       }
 

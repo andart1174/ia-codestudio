@@ -14,7 +14,15 @@ const crypto = require('crypto');
 const FIREBASE_PROJECT_ID = 'ia-codestudio';
 const ADMIN_EMAIL = String(process.env.IA_ADMIN_EMAIL || 'andart1174@gmail.com').toLowerCase().trim();
 const GOOGLE_CERTS_URL = 'https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com';
-const GEMINI_MODELS = ['gemini-3.8-flash', 'gemini-3.5-flash', 'gemini-3.5-flash-lite', 'gemini-2.5-flash'];
+const GEMINI_MODELS = [
+  'gemini-3.8-flash',
+  'gemini-3.7-flash',
+  'gemini-3.6-flash',
+  'gemini-3.5-flash',
+  'gemini-3.5-flash-lite',
+  'gemini-3.1-flash-lite',
+  'gemini-3-flash'
+];
 const MAX_PROMPT_LEN = 4000;
 const MAX_IMAGE_BASE64_LEN = 4_500_000; // ~3.3 MB raw image max
 const PRO_CACHE_TTL_MS = 5 * 60 * 1000; // 5 min warm-lambda cache
@@ -317,8 +325,9 @@ STRICT OUTPUT & ENGINEERING RULES:
    }
 2. NEVER leave placeholder comments like "// TODO" or "add logic here". Every button, tab, search input, chart, calculator, form, or 3D control MUST genuinely work.
 3. Keep external dependencies minimal: pure HTML5/CSS3/ES6 JS (and optional Three.js r128 CDN only when 3D is active). Never require npm, React build steps, or backend API keys.
-4. Make the UI immediately impressive above the fold at both 1280px desktop and 390px mobile widths.
-5. Never use alert() or prompt() — build sleek custom toast notifications or modals inside the app.`;
+4. Keep code tight, clean, and fast (target ~150-280 total lines across HTML+CSS+JS — zero bloat, maximum visual polish and interactivity).
+5. Make the UI immediately impressive above the fold at both 1280px desktop and 390px mobile widths.
+6. Never use alert() or prompt() — build sleek custom toast notifications or modals inside the app.`;
 }
 
 function buildUserContent(action, bodyObj) {
@@ -433,24 +442,36 @@ async function callGeminiArchitect({ apiKey, systemInstruction, userPromptText, 
     });
   }
 
-  const payload = {
-    systemInstruction: { parts: [{ text: systemInstruction }] },
-    contents: [{ role: 'user', parts: userParts }],
-    generationConfig: {
+  const makeBody = (thinkingLevel) => {
+    const genCfg = {
       temperature: 0.72,
       topP: 0.95,
-      maxOutputTokens: 12288,
+      maxOutputTokens: 8192,
       responseMimeType: 'application/json'
+    };
+    if (thinkingLevel) {
+      genCfg.thinkingConfig = { thinkingLevel };
     }
+    return JSON.stringify({
+      systemInstruction: { parts: [{ text: systemInstruction }] },
+      contents: [{ role: 'user', parts: userParts }],
+      generationConfig: genCfg
+    });
   };
-  const bodyStr = JSON.stringify(payload);
 
+  const deadlineMs = Date.now() + 23500;
   const tried = [];
-  const attemptModel = async (model) => {
+
+  const attemptModel = async (model, thinkingLevel = 'minimal') => {
+    const remainingMs = deadlineMs - Date.now();
+    if (remainingMs < 3500) {
+      return { ok: false, status: 504, error: 'Time budget reached' };
+    }
+    const bodyStr = makeBody(thinkingLevel);
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
     const res = await requestImpl(url, {
       method: 'POST',
-      timeout: 22000,
+      timeout: Math.min(18500, remainingMs),
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
         'x-goog-api-key': apiKey,
@@ -460,7 +481,8 @@ async function callGeminiArchitect({ apiKey, systemInstruction, userPromptText, 
 
     if (res.status === 200) {
       const data = JSON.parse(res.body);
-      const text = data.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
+      const parts = data.candidates?.[0]?.content?.parts || [];
+      const text = parts.filter(p => !p.thought).map(p => p.text || '').join('') || parts.map(p => p.text || '').join('');
       const app = extractAppJson(text);
       return { ok: true, app, model };
     }
@@ -470,6 +492,12 @@ async function callGeminiArchitect({ apiKey, systemInstruction, userPromptText, 
       const parsedErr = JSON.parse(res.body);
       if (parsedErr.error && parsedErr.error.message) apiErrMsg = parsedErr.error.message;
     } catch (e) {}
+
+    // If model rejects thinkingLevel "minimal" with 400, immediately retry without thinkingConfig
+    if (res.status === 400 && thinkingLevel && /thinking/i.test(apiErrMsg)) {
+      return attemptModel(model, null);
+    }
+
     return { ok: false, status: res.status, error: apiErrMsg };
   };
 
@@ -478,29 +506,36 @@ async function callGeminiArchitect({ apiKey, systemInstruction, userPromptText, 
     : [...GEMINI_MODELS];
 
   for (const model of modelList) {
+    if (Date.now() > deadlineMs - 3500) break;
     try {
-      const r = await attemptModel(model);
+      const r = await attemptModel(model, 'minimal');
       if (r.ok) return { app: r.app, model: r.model };
       tried.push(`${model}: ${r.error}`);
       if (![400, 404, 429, 500, 503].includes(r.status)) break;
     } catch (err) {
-      tried.push(`${model}: ${err && err.message ? err.message : 'network error'}`);
+      tried.push(`${model}: ${err && err.message ? err.message : 'timeout'}`);
     }
   }
 
-  // Self-healing fallback: query live Google Models API for newest active Gemini Flash model
-  const discovered = await discoverLatestFlashModel(apiKey, requestImpl);
-  if (discovered && !modelList.includes(discovered)) {
-    try {
-      const r = await attemptModel(discovered);
-      if (r.ok) return { app: r.app, model: r.model };
-      tried.push(`${discovered}: ${r.error}`);
-    } catch (err) {
-      tried.push(`${discovered}: ${err && err.message ? err.message : 'network error'}`);
+  // Self-healing fallback: discover newest active Flash model if time remains
+  if (Date.now() < deadlineMs - 6000) {
+    const discovered = await discoverLatestFlashModel(apiKey, requestImpl);
+    if (discovered && !modelList.includes(discovered)) {
+      try {
+        const r = await attemptModel(discovered, 'minimal');
+        if (r.ok) return { app: r.app, model: r.model };
+        tried.push(`${discovered}: ${r.error}`);
+      } catch (err) {
+        tried.push(`${discovered}: ${err && err.message ? err.message : 'timeout'}`);
+      }
     }
   }
 
-  throw new Error(tried.join(' | ') || 'Gemini API request failed.');
+  const allHighDemand = tried.length > 0 && tried.every(m => /high demand|503|429|timeout|timed out/i.test(m));
+  if (allHighDemand) {
+    throw new Error('Google Gemini is briefly experiencing peak demand. Click Retry in a few seconds (enabling Google AI Studio Pay-as-you-go billing also eliminates Free Tier 503 spikes).');
+  }
+  throw new Error(tried.slice(0, 3).join(' | ') || 'Gemini API request failed.');
 }
 
 function jsonResponse(statusCode, payload) {
