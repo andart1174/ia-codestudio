@@ -8769,9 +8769,12 @@ if (document.readyState === 'loading') {
         }
       }
 
-      // Neural Forge -> Ultra IDE Seamless Code Handoff
+      // Neural Forge -> Ultra IDE Seamless Code Handoff & Direct ?template=<id> Loader
       try {
-        const qFrom = new URLSearchParams(window.location.search).get('from');
+        const urlParams = new URLSearchParams(window.location.search);
+        const qFrom = urlParams.get('from');
+        const qTemplate = urlParams.get('template');
+
         if (qFrom === 'forge') {
           const applyUltraHandoff = (tries) => {
             const raw = localStorage.getItem('ia_forge_handoff');
@@ -8793,6 +8796,27 @@ if (document.readyState === 'loading') {
             }
           };
           setTimeout(() => applyUltraHandoff(20), 400);
+        } else if (qTemplate) {
+          const applyTemplateById = (tries) => {
+            const tplList = window.ULTRA_TEMPLATES || [];
+            const tpl = tplList.find(t => t.id === qTemplate);
+            if (tpl && window.APP && APP.editor) {
+              APP.html = tpl.html || '';
+              APP.css = tpl.css || '';
+              APP.js = tpl.js || '';
+              APP.currentTab = 'html';
+              APP.isFullMode = false;
+              APP.editor.setOption('mode', 'htmlmixed');
+              APP.editor.setValue(APP.html);
+              APP.editor.refresh();
+              if (typeof updateTabDots === 'function') updateTabDots();
+              if (typeof refreshPreview === 'function') refreshPreview();
+              if (typeof showToast === 'function') showToast('⚡ Loaded editable template: ' + (tpl.name || qTemplate), 'success');
+            } else if (tries > 0) {
+              setTimeout(() => applyTemplateById(tries - 1), 250);
+            }
+          };
+          setTimeout(() => applyTemplateById(20), 450);
         }
       } catch (e) {}
     });

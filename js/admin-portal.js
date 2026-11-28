@@ -202,9 +202,6 @@
                     // Sync Firebase and check premium
                     syncFirebaseWithLocal().then(() => {
                         if (typeof checkPremiumPortal === 'function') checkPremiumPortal();
-                        if (window.IANeuralForge && typeof window.IANeuralForge.refreshProStatus === 'function') {
-                            window.IANeuralForge.refreshProStatus();
-                        }
                     }).catch(e => console.log(e));
 
                     if (isAdmin) {

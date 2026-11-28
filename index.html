@@ -217,7 +217,7 @@
         display: flex !important;
       }
     </style>
-    <link rel="stylesheet" href="css/neural-forge.css?v=20261128">
+    <link rel="stylesheet" href="css/smart-finder.css?v=20261128">
     <script>
       function openModal(id) {
         var m = document.getElementById('modal-' + id);
@@ -839,20 +839,20 @@
                 Describe any web app, SaaS dashboard, or interactive 3D component — generate clean HTML, CSS, JavaScript &amp; Three.js code live in your browser.
             </p>
 
-            <!-- Interactive Prompt Launcher (Opens Flagship IA Architecte Studio Pro or Companion Studio) -->
+            <!-- Instant Smart Ad & App Finder (100% Local · 0ms · 140+ Studios & Editable Apps) -->
             <form class="prompt-launcher" id="hero-prompt-form" onsubmit="launchFromPrompt(event)">
-                <div class="prompt-mode-tabs" role="tablist" aria-label="Target workspace">
-                    <button type="button" class="prompt-mode-btn active" data-target="pro" onclick="selectPromptMode('pro', this)">
-                        <span>🏛️</span> <span data-i18n="mode_pro">Studio Pro IDE</span>
+                <div class="prompt-mode-tabs" role="tablist" aria-label="Filter studios and apps">
+                    <button type="button" class="prompt-mode-btn active" data-target="all" onclick="selectPromptMode('all', this)">
+                        <span>⚡</span> <span data-i18n="mode_pro">All Studios (140+)</span>
                     </button>
-                    <button type="button" class="prompt-mode-btn" data-target="ultra" onclick="selectPromptMode('ultra', this)">
-                        <span>⚡</span> <span data-i18n="mode_ultra">Ultra IDE v2</span>
+                    <button type="button" class="prompt-mode-btn" data-target="ads" onclick="selectPromptMode('ads', this)">
+                        <span>📣</span> <span data-i18n="mode_ultra">Ad Studios (28)</span>
                     </button>
-                    <button type="button" class="prompt-mode-btn" data-target="ui3d" onclick="selectPromptMode('ui3d', this)">
-                        <span>✨</span> <span data-i18n="mode_ui3d">3D UI Studio</span>
+                    <button type="button" class="prompt-mode-btn" data-target="3d" onclick="selectPromptMode('3d', this)">
+                        <span>✨</span> <span data-i18n="mode_ui3d">3D WebGL &amp; Lab</span>
                     </button>
-                    <button type="button" class="prompt-mode-btn" data-target="chrome" onclick="selectPromptMode('chrome', this)">
-                        <span>💎</span> <span data-i18n="mode_chrome">3D Liquid Chrome</span>
+                    <button type="button" class="prompt-mode-btn" data-target="apps" onclick="selectPromptMode('apps', this)">
+                        <span>💻</span> <span data-i18n="mode_chrome">Editable Apps (38)</span>
                     </button>
                 </div>
 
@@ -861,29 +861,29 @@
                         type="text"
                         id="hero-prompt-input"
                         class="prompt-input"
-                        placeholder="Describe your app... e.g. Dark SaaS analytics dashboard with charts and pricing"
+                        placeholder="Find any ad studio or editable app... e.g. restaurant, spin wheel, reels, whatsapp, 3D logo, ecommerce"
                         data-i18n-placeholder="prompt_placeholder"
                         autocomplete="off"
                     >
                     <button type="submit" class="prompt-submit-btn">
-                        <span>⚡</span>
-                        <span data-i18n="prompt_submit">Generate App</span>
+                        <span>🔍</span>
+                        <span data-i18n="prompt_submit">Find Studio</span>
                     </button>
                 </div>
 
                 <div class="prompt-chips">
                     <span class="prompt-chips-label" data-i18n="prompt_try">Try:</span>
-                    <button type="button" class="prompt-chip" data-demo="saas" data-prompt-en="Build a modern SaaS analytics dashboard with KPI cards and dark mode" data-prompt-fr="Créer un tableau de bord SaaS moderne avec cartes KPI en mode sombre" onclick="runQuickPrompt(this)">
-                        📊 <span data-i18n="chip_saas">SaaS Dashboard</span>
+                    <button type="button" class="prompt-chip" data-query="restaurant menu" data-cat="all" onclick="runQuickPrompt(this)">
+                        🍽️ <span data-i18n="chip_saas">Restaurant &amp; Menu</span>
                     </button>
-                    <button type="button" class="prompt-chip" data-demo="landing" data-prompt-en="Create a startup landing page with hero section and features" data-prompt-fr="Créer une landing page startup avec section hero et fonctionnalités" onclick="runQuickPrompt(this)">
-                        🌐 <span data-i18n="chip_landing">Landing Page</span>
+                    <button type="button" class="prompt-chip" data-query="flash spin scratch reels" data-cat="ads" onclick="runQuickPrompt(this)">
+                        📣 <span data-i18n="chip_landing">Promo &amp; Video Ads</span>
                     </button>
-                    <button type="button" class="prompt-chip" data-demo="pricing" data-prompt-en="Build a pricing table with 3 tiers and monthly toggle" data-prompt-fr="Créer un tableau de prix à 3 offres avec bouton mensuel" onclick="runQuickPrompt(this)">
-                        💳 <span data-i18n="chip_pricing">Pricing Table</span>
+                    <button type="button" class="prompt-chip" data-query="3d logo showroom neon" data-cat="all" onclick="runQuickPrompt(this)">
+                        🛍️ <span data-i18n="chip_pricing">3D Product &amp; Logo</span>
                     </button>
-                    <button type="button" class="prompt-chip" data-demo="contact" data-prompt-en="Create a responsive contact section with glassmorphism design" data-prompt-fr="Créer une section contact responsive au style glassmorphism" onclick="runQuickPrompt(this)">
-                        ✨ <span data-i18n="chip_contact">Glass Contact UI</span>
+                    <button type="button" class="prompt-chip" data-query="whatsapp quote before after" data-cat="ads" onclick="runQuickPrompt(this)">
+                        ✨ <span data-i18n="chip_contact">Lead &amp; Quote Ads</span>
                     </button>
                 </div>
             </form>
@@ -982,6 +982,32 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </article>
+
+            <!-- CO-FLAGSHIP ADVERTISING POWERHOUSE — AD-GENIUS AI PRO (28 COMMERCIAL STUDIOS + IDE CODE EDITING) -->
+            <article class="ad-spotlight-card">
+                <div class="ad-spotlight-top">
+                    <div class="ad-spotlight-copy">
+                        <div class="flagship-badges">
+                            <span class="pill-flagship" style="background:linear-gradient(135deg,#f59e0b,#ec4899);" data-i18n="ad_spot_badge">📣 28 COMMERCIAL ADVERTISING STUDIOS</span>
+                            <span class="pill-subtle" data-i18n="ad_spot_sub">1-Click Visual Builder + Live Code Editing in IDE</span>
+                        </div>
+                        <h3 data-i18n="ad_spot_title">Ad-Genius AI Pro — Interactive Advertising Suite</h3>
+                        <p data-i18n="ad_spot_desc">Launch high-converting ads for e-commerce, restaurants, salons &amp; agencies in seconds — then click “Edit Code in IDE” inside any studio to write custom code, add pixels, or export standalone HTML5/WebM.</p>
+                    </div>
+                    <a href="ad-genius-ai/index.html" class="ad-spotlight-cta" data-i18n="ad_spot_cta">⚡ Open All 28 Ad Studios →</a>
+                </div>
+                <div class="ad-spotlight-pill-row">
+                    <a href="ad-genius-ai/index.html?studio=flash-sale" class="ad-quick-pill is-new">⏳ Flash Sale FOMO ★</a>
+                    <a href="ad-genius-ai/index.html?studio=before-after" class="ad-quick-pill is-new">⚖️ Before / After Slider ★</a>
+                    <a href="ad-genius-ai/index.html?studio=whatsapp-lead" class="ad-quick-pill is-new">💬 WhatsApp Lead Widget ★</a>
+                    <a href="ad-genius-ai/index.html?studio=quote-calc" class="ad-quick-pill is-new">🧾 Quote / ROI Calc ★</a>
+                    <a href="ad-genius-ai/index.html?studio=reels-animator" class="ad-quick-pill is-new">🎬 9:16 Reels Video ★</a>
+                    <a href="ad-genius-ai/index.html?studio=digital-menu" class="ad-quick-pill">🍽️ Digital Menu QR</a>
+                    <a href="ad-genius-ai/index.html?studio=spin-wheel" class="ad-quick-pill">🎡 Spin Wheel Ad</a>
+                    <a href="ad-genius-ai/index.html?studio=scratch-card" class="ad-quick-pill">🎫 Scratch Card</a>
+                    <a href="ad-genius-ai/index.html?studio=showroom-3d" class="ad-quick-pill">🛍️ 3D Product Showroom</a>
                 </div>
             </article>
 
@@ -1385,60 +1411,24 @@
     <script src="js/main.js?v=20261127_v3"></script>
     <script src="js/admin-portal.js?v=20261127_v6"></script>
     <script src="js/jszip.min.js"></script>
-    <script src="js/app-hub.js?v=20261127_v3"></script>
-    <script src="js/neural-demos.js?v=20261128"></script>
-    <script src="js/neural-forge.js?v=20261128_v3"></script>
+    <script src="js/app-hub.js?v=20261128"></script>
+    <script src="js/smart-finder.js?v=20261128"></script>
 
-    <!-- Homepage Interactive Logic (Neural Forge Pro AI, 4 Zero-Cost Demos, Mobile Drawer, Q&A, Share, Auth & PWA) -->
+    <!-- Homepage Interactive Logic (Instant Smart Ad & App Finder, Mobile Drawer, Q&A, Share, Auth & PWA) -->
     <script>
     (function() {
-        var selectedPromptMode = 'pro';
-
         window.selectPromptMode = function(mode, btn) {
-            selectedPromptMode = mode;
-            document.querySelectorAll('.prompt-mode-btn').forEach(function(b) {
-                b.classList.remove('active');
-            });
-            if (btn) btn.classList.add('active');
-            if (window.IANeuralForge && typeof window.IANeuralForge.setMode === 'function') {
-                window.IANeuralForge.setMode(mode);
-            }
+            if (window.IASmartFinder) window.IASmartFinder.setCategory(mode, btn);
         };
 
         window.launchFromPrompt = function(e) {
-            if (e) e.preventDefault();
-            var input = document.getElementById('hero-prompt-input');
-            var promptText = input ? input.value.trim() : '';
-            if (window.IANeuralForge && typeof window.IANeuralForge.handlePromptSubmit === 'function') {
-                window.IANeuralForge.handlePromptSubmit(promptText, selectedPromptMode);
-                return;
-            }
-            var lang = window.currentLang || 'en';
-            var targetMap = {
-                pro: 'ia-architecte-app/index.html',
-                ultra: 'ia-architecte-studio-ultra/index.html',
-                ui3d: '3d-creative-studio/index.html',
-                chrome: '3d-liquid-chrome-studio/index.html'
-            };
-            var url = targetMap[selectedPromptMode] || targetMap.pro;
-            var params = new URLSearchParams();
-            params.set('lang', lang);
-            if (promptText) params.set('prompt', promptText);
-            window.location.href = url + '?' + params.toString();
+            if (window.IASmartFinder) window.IASmartFinder.submit(e);
         };
 
         window.runQuickPrompt = function(btn) {
-            var demoId = btn.getAttribute('data-demo') || 'saas';
-            if (window.IANeuralForge && typeof window.IANeuralForge.handleQuickChip === 'function') {
-                window.IANeuralForge.handleQuickChip(demoId);
-                return;
-            }
-            var lang = window.currentLang || 'en';
-            var text = btn.getAttribute(lang === 'fr' ? 'data-prompt-fr' : 'data-prompt-en') || '';
-            var input = document.getElementById('hero-prompt-input');
-            if (input) input.value = text;
-            selectedPromptMode = 'pro';
-            window.launchFromPrompt();
+            var q = btn.getAttribute('data-query') || '';
+            var cat = btn.getAttribute('data-cat') || 'all';
+            if (window.IASmartFinder) window.IASmartFinder.search(q, cat);
         };
 
         // Mobile navigation drawer

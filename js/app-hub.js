@@ -1235,8 +1235,11 @@ ${jsContent}
           <button type="button" class="hub-btn-preview" onclick="openAppPreview('${app.id}')">
             <span>👁️</span> <span>${lang === "fr" ? "Démo Live" : "Live Demo"}</span>
           </button>
+          <button type="button" class="hub-btn-preview" style="border-color:rgba(16,185,129,0.4);color:#6ee7b7;" onclick="editHubAppInIde('${app.id}')">
+            <span>💻</span> <span>${lang === "fr" ? "Éditer Code" : "Edit Code"}</span>
+          </button>
           <button type="button" class="hub-btn-download" onclick="triggerAppDownload('${app.id}')">
-            <span>📦</span> <span>${lang === "fr" ? "Exporter ZIP" : "Export ZIP"}</span>
+            <span>📦</span> <span>${lang === "fr" ? "ZIP" : "ZIP"}</span>
           </button>
         </div>
       `;
@@ -1294,6 +1297,25 @@ ${jsContent}
       quotaDisplay.innerHTML = `<span>⏳</span> <span>${lang === "fr" ? "Cota du jour utilisée :" : "Today's Quota Used:"}</span> <span class="hub-quota-badge quota-used">0 / 1 (${lang === "fr" ? "REVENEZ DEMAIN" : "COME BACK TOMORROW"})</span>`;
     }
   }
+
+  function editHubAppInIde(appId) {
+    const app = APP_CATALOG.find((x) => x.id === appId);
+    if (!app) return;
+    const lang = window.currentLang || "en";
+    const files = app.getFiles(lang);
+    try {
+      localStorage.setItem("ia_forge_handoff", JSON.stringify({
+        title: lang === "fr" ? app.nameFr : app.nameEn,
+        html: files["index.html"] || "",
+        css: files["style.css"] || "",
+        js: files["script.js"] || "",
+        combinedHtml: files["index.html"] || "",
+        ts: Date.now()
+      }));
+    } catch (e) {}
+    window.location.href = "ia-architecte-app/index.html?from=forge&lang=" + lang;
+  }
+  window.editHubAppInIde = editHubAppInIde;
 
   // --- LIVE PREVIEW MODAL LOGIC ---
   function openAppPreview(appId) {

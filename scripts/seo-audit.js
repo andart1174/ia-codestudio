@@ -80,8 +80,8 @@ for (const reqFile of ['robots.txt', 'llms.txt', 'llms-full.txt', '404.html', 'c
   if (!fs.existsSync(path.join(ROOT, reqFile))) errors.push(`Missing required SEO file: ${reqFile}`);
 }
 
-// 3. Validate JS syntax of IndexNow & Neural Architect functions & scripts
-for (const jsFile of ['netlify/functions/indexnow.js', 'netlify/functions/ai-architect.js', 'scripts/ping-indexnow.js', 'scripts/build-seo-pages.js', 'js/admin-portal.js', 'js/i18n.js', 'js/neural-demos.js', 'js/neural-forge.js']) {
+// 3. Validate JS syntax of IndexNow, Smart Finder, Ad Expansion & IDE Enhancer scripts
+for (const jsFile of ['netlify/functions/indexnow.js', 'scripts/ping-indexnow.js', 'scripts/build-seo-pages.js', 'js/admin-portal.js', 'js/i18n.js', 'js/smart-finder.js', 'ad-genius-ai/js/ad-studios-expansion.js', 'ia-architecte-app/js/smart-code-enhancer.js', '3d-marketing-lab/ide-bridge.js']) {
   try {
     new vm.Script(fs.readFileSync(path.join(ROOT, jsFile), 'utf8'), { filename: jsFile });
   } catch (e) {
@@ -89,7 +89,7 @@ for (const jsFile of ['netlify/functions/indexnow.js', 'netlify/functions/ai-arc
   }
 }
 
-// 4. Unit-test Netlify IndexNow & AI Architect functions
+// 4. Unit-test Netlify IndexNow function internals
 const idxFn = require(path.join(ROOT, 'netlify/functions/indexnow.js'));
 if (idxFn._internals.HOST !== 'ia-codestudio.com') errors.push('IndexNow HOST mismatch');
 if (idxFn._internals.KEY !== 'c7f1a9b24e8d3c015b6a7e8f901234cd') errors.push('IndexNow KEY mismatch');
@@ -101,13 +101,6 @@ const clean = idxFn._internals.sanitizeUrlList([
   'https://ia-codestudio.com/'
 ]);
 if (clean.length !== 2) errors.push(`sanitizeUrlList expected 2 valid URLs, got ${clean.length}`);
-
-const aiFn = require(path.join(ROOT, 'netlify/functions/ai-architect.js'));
-if (aiFn._internals.FIREBASE_PROJECT_ID !== 'ia-codestudio') errors.push('AI Architect Firebase project mismatch');
-const dna3d = aiFn._internals.selectDnaBlueprints('Build a 3D SaaS dashboard', 'pro', true);
-if (!dna3d.some(d => /Three\.js|Liquid Chrome/i.test(d.name))) errors.push('AI Architect 3D DNA blueprint missing');
-const parsedApp = aiFn._internals.extractAppJson('```json\n{"title":"Demo","summary":"Ok","html":"<h1>Hi</h1>","css":"body{}","js":"console.log(1);"}\n```');
-if (parsedApp.title !== 'Demo' || parsedApp.html !== '<h1>Hi</h1>') errors.push('AI Architect extractAppJson failed');
 
 // 5. Check Romanian leak in new SEO pages
 for (const rel of ['llms.txt', 'llms-full.txt', '404.html', 'compare/index.html', 'fr/index.html', 'fr/3d-studios/index.html', 'fr/marketing-widgets/index.html', 'fr/arcade/index.html', 'fr/compare/index.html']) {

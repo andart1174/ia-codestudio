@@ -1,7 +1,7 @@
 // Service Worker for IA Code Studio (ia-codestudio.com)
 // PWA Offline Support & Asset Cache - Network-First Strategy
 
-const CACHE_NAME = 'iacodestudio-v2.13';
+const CACHE_NAME = 'iacodestudio-v2.14';
 const CORE_ASSETS = [
   '/',
   '/index.html',
@@ -9,9 +9,11 @@ const CORE_ASSETS = [
   '/404.html',
   '/style.css',
   '/css/hub-pages.css',
-  '/css/neural-forge.css',
-  '/js/neural-demos.js',
-  '/js/neural-forge.js',
+  '/css/smart-finder.css',
+  '/js/smart-finder.js',
+  '/3d-marketing-lab/ide-bridge.js',
+  '/ad-genius-ai/js/ad-studios-expansion.js',
+  '/ia-architecte-app/js/smart-code-enhancer.js',
   '/3d-studios/index.html',
   '/marketing-widgets/index.html',
   '/arcade/index.html',

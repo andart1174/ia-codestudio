@@ -141,8 +141,8 @@
         <div id="dashboard-toolbar" class="dashboard-toolbar">
             <div class="dash-search-wrap">
                 <span class="dash-search-icon">🔍</span>
-                <input type="search" id="dash-search-input" class="dash-search-input" placeholder="Search 23 AI advertising studios... (Ctrl+K)" data-i18n-placeholder="dash_search_ph">
-                <span class="dash-count-badge" id="dash-count-badge">23 / 23</span>
+                <input type="search" id="dash-search-input" class="dash-search-input" placeholder="Search 28 commercial advertising studios... (Ctrl+K)" data-i18n-placeholder="dash_search_ph">
+                <span class="dash-count-badge" id="dash-count-badge">28 / 28</span>
             </div>
             <div class="dash-cat-pills" id="dash-cat-pills">
                 <button type="button" class="dash-cat-pill active" data-cat="all" data-i18n="cat_all">All Studios</button>
@@ -340,6 +340,47 @@
                 <div class="card-item-content">
                     <h4 data-i18n="card_sc_title">Scratch Card Studio</h4>
                     <p data-i18n="card_sc_desc">Design gamified scratch-off cards to reveal promotions.</p>
+                </div>
+            </div>
+            <!-- NEW 5 COMMERCIAL HIGH-ROI ADVERTISING STUDIOS (24-28) -->
+            <div class="dash-card-item" data-studio="flash-sale" data-cat="ai" onclick="activateWorkspace('flash-sale')" style="--card-color: #f59e0b; border: 1px solid #f59e0b55; background: linear-gradient(135deg, #f59e0b1f 0%, rgba(3, 7, 18, 0.85) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="flash-sale" title="Favorite" aria-label="Toggle favorite">☆</button>
+                <div class="card-item-icon">⏳</div>
+                <div class="card-item-content">
+                    <h4>★ Flash Sale &amp; FOMO Studio</h4>
+                    <p>Countdown urgency bars, low-stock meters, 1-click promo codes &amp; live social proof.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" data-studio="before-after" data-cat="3d" onclick="activateWorkspace('before-after')" style="--card-color: #06b6d4; border: 1px solid #06b6d455; background: linear-gradient(135deg, #06b6d41f 0%, rgba(3, 7, 18, 0.85) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="before-after" title="Favorite" aria-label="Toggle favorite">☆</button>
+                <div class="card-item-icon">⚖️</div>
+                <div class="card-item-content">
+                    <h4>★ Before / After Slider Ad</h4>
+                    <p>Interactive drag-to-reveal comparison ad for clinics, salons, fitness, auto &amp; real estate.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" data-studio="whatsapp-lead" data-cat="social" onclick="activateWorkspace('whatsapp-lead')" style="--card-color: #10b981; border: 1px solid #10b98155; background: linear-gradient(135deg, #10b9811f 0%, rgba(3, 7, 18, 0.85) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="whatsapp-lead" title="Favorite" aria-label="Toggle favorite">☆</button>
+                <div class="card-item-icon">💬</div>
+                <div class="card-item-content">
+                    <h4>★ Smart WhatsApp Lead Widget</h4>
+                    <p>Floating WhatsApp &amp; booking lead bubble with quick replies for local businesses.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" data-studio="quote-calc" data-cat="ai" onclick="activateWorkspace('quote-calc')" style="--card-color: #8b5cf6; border: 1px solid #8b5cf655; background: linear-gradient(135deg, #8b5cf61f 0%, rgba(3, 7, 18, 0.85) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="quote-calc" title="Favorite" aria-label="Toggle favorite">☆</button>
+                <div class="card-item-icon">🧾</div>
+                <div class="card-item-content">
+                    <h4>★ Interactive Quote / ROI Calc</h4>
+                    <p>Interactive slider price estimator that calculates live quotes &amp; captures leads.</p>
+                </div>
+            </div>
+            <div class="dash-card-item" data-studio="reels-animator" data-cat="gamify" onclick="activateWorkspace('reels-animator')" style="--card-color: #ec4899; border: 1px solid #ec489955; background: linear-gradient(135deg, #ec48991f 0%, rgba(3, 7, 18, 0.85) 100%);">
+                <button type="button" class="dash-fav-btn" data-fav="reels-animator" title="Favorite" aria-label="Toggle favorite">☆</button>
+                <div class="card-item-icon">🎬</div>
+                <div class="card-item-content">
+                    <h4>★ 9:16 Reels / TikTok Video Ad</h4>
+                    <p>Animated vertical 9:16 promo video builder with kinetic headlines &amp; WebM export.</p>
                 </div>
             </div>
         </div>
@@ -650,6 +691,27 @@
             <div id="sc-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#0f172a;overflow:hidden;"></div>
             <div id="sc-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:15px;overflow-y:auto;"></div>
         </div>
+        <!-- 5 New Commercial Advertising Workspaces (24-28) -->
+        <div id="flash-sale-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="fs-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#030712;overflow:hidden;"></div>
+            <div id="fs-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:12px;overflow-y:auto;"></div>
+        </div>
+        <div id="before-after-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="ba2-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#030712;overflow:hidden;"></div>
+            <div id="ba2-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:12px;overflow-y:auto;"></div>
+        </div>
+        <div id="whatsapp-lead-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="wa-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#030712;overflow:hidden;"></div>
+            <div id="wa-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:12px;overflow-y:auto;"></div>
+        </div>
+        <div id="quote-calc-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="qc-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#030712;overflow:hidden;"></div>
+            <div id="qc-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:12px;overflow-y:auto;"></div>
+        </div>
+        <div id="reels-animator-workspace" class="workspace" style="display:none;flex:1;background:#050505;color:#fff;flex-direction:row;">
+            <div id="ra-center" class="center-panel" style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #333;border-right:1px solid #333;background:#030712;overflow:hidden;padding:16px;"></div>
+            <div id="ra-right" class="right-panel" style="width:300px;background:#1e293b;display:flex;flex-direction:column;padding:15px;gap:12px;overflow-y:auto;"></div>
+        </div>
 
     </div>
 <!-- Scripts -->
@@ -688,8 +750,9 @@
     <script src="js/brand-ad-studio.js"></script>
     <script src="js/3d-showroom.js"></script>
     <script src="js/scratch-card-studio.js"></script>
+    <script src="js/ad-studios-expansion.js"></script>
 
-    <!-- Pro Suite: Search/Filters, Brand Kit, AI Director, Safe-Zones, WebM Recorder, Bundle ZIP, Vault, WCAG -->
+    <!-- Pro Suite: Search/Filters, Brand Kit, AI Director, Safe-Zones, WebM Recorder, Bundle ZIP, Vault, WCAG, IDE Handoff -->
     <script src="js/genius-pro-suite.js"></script>
 </body>
 </html>

@@ -473,10 +473,15 @@
         var studioId = window.activeTab || 'core-ad-genius';
         var htmlCode = '';
 
-        if (studioId === 'core-ad-genius') {
+        if (typeof window.__getExpandedStudioHTML === 'function') {
+            var expandedCode = window.__getExpandedStudioHTML(studioId);
+            if (expandedCode) htmlCode = expandedCode;
+        }
+
+        if (!htmlCode && studioId === 'core-ad-genius') {
             var ta = document.getElementById('code-output');
             htmlCode = ta ? ta.value : '';
-        } else if (activeWs) {
+        } else if (!htmlCode && activeWs) {
             var iframe = activeWs.querySelector('iframe');
             var cvs = activeWs.querySelector('canvas');
             if (iframe && iframe.srcdoc) {
@@ -771,6 +776,7 @@
             '<span id="spb-wcag-pill" class="spb-wcag-pill" title="WCAG 2.1 Readability Contrast">♿ --</span>' +
             '</div>' +
             '<div class="spb-group">' +
+            '<button type="button" id="spb-edit-ide-btn" class="spb-btn" style="background:linear-gradient(135deg,#8b5cf6,#06b6d4);color:#fff;border:none;font-weight:800;">💻 ' + (fr ? 'Éditer le Code (IDE)' : 'Edit Code in IDE') + '</button>' +
             '<button type="button" id="spb-apply-brand" class="spb-btn">🎨 ' + (fr ? 'Appliquer Brand' : 'Apply Brand') + '</button>' +
             '<button type="button" id="spb-roi-btn" class="spb-btn">📈 ROI</button>' +
             '<button type="button" id="spb-webm-btn" class="spb-btn spb-pro" data-pro-export="1">🎬 ' + (fr ? 'Vidéo 60fps' : '60fps WebM') + '</button>' +
@@ -817,6 +823,27 @@
             }
         };
 
+        var editIdeBtn = bar.querySelector('#spb-edit-ide-btn');
+        if (editIdeBtn) {
+            editIdeBtn.onclick = function () {
+                var htmlSnap = buildActiveAdHTMLSnapshot('', '', '', window.lang || 'en');
+                if (!htmlSnap) {
+                    if (U().showToast) U().showToast(fr ? 'Générez d’abord un aperçu dans ce studio.' : 'Configure the studio first before sending to IDE.', 'warn');
+                    return;
+                }
+                try {
+                    localStorage.setItem('ia_forge_handoff', JSON.stringify({
+                        title: 'Ad-Genius — ' + (window.activeTab || 'Ad'),
+                        html: htmlSnap,
+                        css: '',
+                        js: '',
+                        combinedHtml: htmlSnap,
+                        ts: Date.now()
+                    }));
+                } catch (e) {}
+                window.location.href = '/ia-architecte-app/index.html?from=forge&lang=' + (fr ? 'fr' : 'en');
+            };
+        }
         bar.querySelector('#spb-apply-brand').onclick = function () { applyBrandKitToActiveStudio(); };
         bar.querySelector('#spb-roi-btn').onclick = openROICalculatorModal;
         bar.querySelector('#spb-bundle-btn').onclick = openBundleExportModal;

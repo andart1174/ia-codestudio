@@ -1191,7 +1191,9 @@ function reRenderActiveWorkspace() {
         'sspInitialized', 'laInitialized', 'swInitialized', 'izInitialized',
         'gsInitialized', 'gspInitialized', 'abcInitialized', 'pabInitialized',
         'ktpInitialized', 'mmInitialized', 'mbsInitialized', 'baInitialized',
-        'srInitialized', 'scInitialized'
+        'srInitialized', 'scInitialized',
+        'fsStudioInitialized', 'ba2StudioInitialized', 'waStudioInitialized',
+        'qcStudioInitialized', 'raStudioInitialized'
     ];
     flags.forEach(flag => {
         window[flag] = false;
@@ -1436,7 +1438,9 @@ const EXPORT_BUTTON_IDS = [
     // Smart vCard Pro
     'svc-btn-html',
     // Spin Wheel Ads
-    'sw-export'
+    'sw-export',
+    // Expansion 5 Commercial Studios (24-28)
+    'fs-btn-html', 'ba2-btn-html', 'wa-btn-html', 'qc-btn-html', 'ra-btn-html', 'ra-btn-webm'
 ];
 
 /**

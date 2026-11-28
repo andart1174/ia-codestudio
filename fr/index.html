@@ -66,9 +66,7 @@
   }
   </script>
   <link rel="stylesheet" href="/style.css?v=20261127_v5">
-  <link rel="stylesheet" href="/css/neural-forge.css?v=20261128">
-  <script src="/js/app-service-core.js?v=20260922_v2"></script>
-  <script src="/js/app-service-auth.js?v=20260922_v2"></script>
+  <link rel="stylesheet" href="/css/smart-finder.css?v=20261128">
 </head>
 <body>
   <div class="aura-container" aria-hidden="true">
@@ -125,21 +123,21 @@
 
       <form class="prompt-launcher" onsubmit="frLaunchPrompt(event)">
         <div class="prompt-mode-tabs">
-          <button type="button" class="prompt-mode-btn active" onclick="frSelectMode('pro', this)">🏛️ Studio Pro IDE</button>
-          <button type="button" class="prompt-mode-btn" onclick="frSelectMode('ultra', this)">⚡ Ultra IDE v2</button>
-          <button type="button" class="prompt-mode-btn" onclick="frSelectMode('ui3d', this)">✨ Studio UI 3D</button>
-          <button type="button" class="prompt-mode-btn" onclick="frSelectMode('chrome', this)">💎 Chrome Liquide 3D</button>
+          <button type="button" class="prompt-mode-btn active" onclick="frSelectMode('all', this)">⚡ Tous (140+)</button>
+          <button type="button" class="prompt-mode-btn" onclick="frSelectMode('ads', this)">📣 Studios Pub (28)</button>
+          <button type="button" class="prompt-mode-btn" onclick="frSelectMode('3d', this)">✨ 3D WebGL &amp; Lab</button>
+          <button type="button" class="prompt-mode-btn" onclick="frSelectMode('apps', this)">💻 Apps Éditables (38)</button>
         </div>
         <div class="prompt-input-row">
-          <input type="text" id="fr-prompt-input" class="prompt-input" placeholder="Décrivez votre application... ex : Tableau de bord SaaS sombre avec graphiques et tarifs" autocomplete="off">
-          <button type="submit" class="prompt-submit-btn">⚡ Générer l'App</button>
+          <input type="text" id="fr-prompt-input" class="prompt-input" placeholder="Trouvez un studio pub ou une app modifiable... ex : restaurant, roue, reels, whatsapp, logo 3D" autocomplete="off">
+          <button type="submit" class="prompt-submit-btn">🔍 Trouver</button>
         </div>
         <div class="prompt-chips">
           <span class="prompt-chips-label">Essayer :</span>
-          <button type="button" class="prompt-chip" onclick="frQuickDemo('saas')">📊 Dashboard SaaS</button>
-          <button type="button" class="prompt-chip" onclick="frQuickDemo('landing')">🌐 Landing Page</button>
-          <button type="button" class="prompt-chip" onclick="frQuickDemo('pricing')">💳 Tableau de Prix</button>
-          <button type="button" class="prompt-chip" onclick="frQuickDemo('contact')">✨ Contact Glass UI</button>
+          <button type="button" class="prompt-chip" onclick="frQuickSearch('restaurant menu','all')">🍽️ Restaurant &amp; Menu</button>
+          <button type="button" class="prompt-chip" onclick="frQuickSearch('flash spin scratch reels','ads')">📣 Pubs Promo &amp; Vidéo</button>
+          <button type="button" class="prompt-chip" onclick="frQuickSearch('3d logo showroom neon','all')">🛍️ Produit &amp; Logo 3D</button>
+          <button type="button" class="prompt-chip" onclick="frQuickSearch('whatsapp quote before after','ads')">✨ Leads &amp; Devis</button>
         </div>
       </form>
 
@@ -205,6 +203,31 @@
               </div>
             </div>
           </div>
+        </div>
+      </article>
+
+      <article class="ad-spotlight-card">
+        <div class="ad-spotlight-top">
+          <div class="ad-spotlight-copy">
+            <div class="flagship-badges">
+              <span class="pill-flagship" style="background:linear-gradient(135deg,#f59e0b,#ec4899);">📣 28 STUDIOS DE PUBLICITÉ COMMERCIALE</span>
+              <span class="pill-subtle">Constructeur Visuel 1-Clic + Édition de Code dans l’IDE</span>
+            </div>
+            <h3>Ad-Genius AI Pro — Suite Publicitaire Interactive</h3>
+            <p>Créez des publicités à forte conversion pour e-commerce, restaurants, salons et agences — puis cliquez « Éditer le Code (IDE) » dans chaque studio pour personnaliser le code, ajouter vos pixels ou exporter en HTML5/WebM.</p>
+          </div>
+          <a href="/ad-genius-ai/index.html" class="ad-spotlight-cta">⚡ Ouvrir les 28 Studios Pub →</a>
+        </div>
+        <div class="ad-spotlight-pill-row">
+          <a href="/ad-genius-ai/index.html?studio=flash-sale" class="ad-quick-pill is-new">⏳ Promo Flash FOMO ★</a>
+          <a href="/ad-genius-ai/index.html?studio=before-after" class="ad-quick-pill is-new">⚖️ Slider Avant / Après ★</a>
+          <a href="/ad-genius-ai/index.html?studio=whatsapp-lead" class="ad-quick-pill is-new">💬 Widget WhatsApp Leads ★</a>
+          <a href="/ad-genius-ai/index.html?studio=quote-calc" class="ad-quick-pill is-new">🧾 Calculateur Devis / ROI ★</a>
+          <a href="/ad-genius-ai/index.html?studio=reels-animator" class="ad-quick-pill is-new">🎬 Vidéo 9:16 Reels ★</a>
+          <a href="/ad-genius-ai/index.html?studio=digital-menu" class="ad-quick-pill">🍽️ Menu Digital QR</a>
+          <a href="/ad-genius-ai/index.html?studio=spin-wheel" class="ad-quick-pill">🎡 Roue de la Fortune</a>
+          <a href="/ad-genius-ai/index.html?studio=scratch-card" class="ad-quick-pill">🎫 Carte à Gratter</a>
+          <a href="/ad-genius-ai/index.html?studio=showroom-3d" class="ad-quick-pill">🛍️ Showroom 3D</a>
         </div>
       </article>
 
@@ -363,56 +386,18 @@
     </div>
   </footer>
 
-  <script src="/js/neural-demos.js?v=20261128"></script>
-  <script src="/js/neural-forge.js?v=20261128_v3"></script>
+  <script src="/js/smart-finder.js?v=20261128"></script>
   <script>
     localStorage.setItem('hub_lang', 'fr');
     window.currentLang = 'fr';
-    if (typeof firebase !== 'undefined' && !firebase.apps.length) {
-      firebase.initializeApp({
-        apiKey: "AIzaSyBXJ0LstZF7c3-GI2eDtv6V7vsx0scgXHk",
-        authDomain: "ia-codestudio.firebaseapp.com",
-        projectId: "ia-codestudio",
-        storageBucket: "ia-codestudio.firebasestorage.app",
-        messagingSenderId: "977495027432",
-        appId: "1:977495027432:web:fb93e8ae7712c70df2635d"
-      });
-    }
-    window.handleGoogleSignIn = async function() {
-      if (typeof firebase === 'undefined' || !firebase.auth) return;
-      var provider = new firebase.auth.GoogleAuthProvider();
-      await firebase.auth().signInWithPopup(provider);
-      if (window.IANeuralForge) window.IANeuralForge.refreshProStatus();
-    };
-    var frMode = 'pro';
     function frSelectMode(m, btn) {
-      frMode = m;
-      document.querySelectorAll('.prompt-mode-btn').forEach(function(b) { b.classList.remove('active'); });
-      if (btn) btn.classList.add('active');
-      if (window.IANeuralForge) window.IANeuralForge.setMode(m);
+      if (window.IASmartFinder) window.IASmartFinder.setCategory(m, btn);
     }
     function frLaunchPrompt(e) {
-      if (e) e.preventDefault();
-      var txt = (document.getElementById('fr-prompt-input').value || '').trim();
-      if (window.IANeuralForge) {
-        window.IANeuralForge.handlePromptSubmit(txt, frMode);
-        return;
-      }
-      var map = {
-        pro: '/ia-architecte-app/index.html',
-        ultra: '/ia-architecte-studio-ultra/index.html',
-        ui3d: '/3d-creative-studio/index.html',
-        chrome: '/3d-liquid-chrome-studio/index.html'
-      };
-      var p = new URLSearchParams();
-      p.set('lang', 'fr');
-      if (txt) p.set('prompt', txt);
-      window.location.href = (map[frMode] || map.pro) + '?' + p.toString();
+      if (window.IASmartFinder) window.IASmartFinder.submit(e);
     }
-    function frQuickDemo(demoId) {
-      if (window.IANeuralForge) {
-        window.IANeuralForge.handleQuickChip(demoId);
-      }
+    function frQuickSearch(q, cat) {
+      if (window.IASmartFinder) window.IASmartFinder.search(q, cat || 'all');
     }
     var mb = document.getElementById('fr-mob-btn'), dr = document.getElementById('fr-mob-drawer');
     if (mb && dr) mb.addEventListener('click', function() { dr.classList.toggle('open'); });
